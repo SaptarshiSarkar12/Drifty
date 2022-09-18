@@ -3,9 +3,9 @@ import java.sql.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.print("\u001B[32m" + "==================================" + "\u001B[0m");
-        System.out.print("\u001B[34m\t" + "DRIFTY" + "\u001B[0m");
-        System.out.print("\u001B[32m" + "==================================" + "\u001B[0m");
+        System.out.println("\u001B[32m" + "==================================" + "\u001B[0m");
+        System.out.println("\u001B[34m\t" + "DRIFTY\t" + "\u001B[0m");
+        System.out.println("\u001B[32m" + "==================================" + "\u001B[0m");
 
         Scanner sc = new Scanner(System.in);
         Connection connection = null;
