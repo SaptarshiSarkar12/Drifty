@@ -33,12 +33,10 @@ class FileDownloader implements Runnable {
             }
             url = new URL(link);
             urlConn = url.openConnection();
-            dir = dir.replace('\\', '/');
+            dir = dir.replace('/', '\\');
             if (dir.length() != 0) {
-                if (dir.equals(".//") || dir.equals("./")) {
+                if (dir.equals(".\\\\") || dir.equals(".\\")) {
                     dir = "";
-                } else {
-                    dir = DefaultDownloadFolderLocationFinder.findPath();
                 }
             } else {
                 System.out.println(Drifty_CLI.COLOR_RED + "Invalid Directory !" + Drifty_CLI.COLOR_RESET);
@@ -68,8 +66,10 @@ class FileDownloader implements Runnable {
             if (dir.length() == 0){
                 dir = System.getProperty("user.dir");
             }
-            dir = dir + System.getProperty("file.separator");
-            System.out.println("Downloaded " + fileName + " of size " + sizeWithUnit + " at " + dir + fileName + Drifty_CLI.COLOR_RESET);
+            if (!(dir.endsWith("\\"))) {
+                dir = dir + System.getProperty("file.separator");
+            }
+            System.out.println("Downloaded " + fileName + " of size " + Drifty_CLI.COLOR_BRIGHT_BLUE_BOLD + sizeWithUnit + Drifty_CLI.COLOR_CYAN + " at " + dir + fileName + Drifty_CLI.COLOR_RESET);
         } catch (MalformedURLException e) {
             System.out.println(Drifty_CLI.COLOR_RED + "Invalid Link!" + Drifty_CLI.COLOR_RESET);
         } catch (IOException e) {

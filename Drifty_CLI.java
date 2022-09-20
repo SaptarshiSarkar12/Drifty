@@ -27,7 +27,7 @@ public class Drifty_CLI {
             char default_folder = SC.nextLine().toLowerCase().charAt(0);
             switch (default_folder) {
                 case 'y' -> {
-                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath();
+                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
                     if (downloadsFolder == null) {
                         System.out.println(COLOR_RED + "Failed to retrieve default download folder!" + COLOR_RESET);
                         enterDownloadsFolder();
@@ -49,6 +49,9 @@ public class Drifty_CLI {
 
     private static void enterDownloadsFolder(){
         System.out.print(COLOR_PURPLE + "Enter the directory in which you want to download the file : " + COLOR_RESET);
-        downloadsFolder = SC.nextLine();
+        downloadsFolder = SC.nextLine().replace('/', '\\');
+        if (!(downloadsFolder.endsWith("\\"))) {
+            downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+        }
     }
 }
