@@ -4,11 +4,11 @@ import java.net.URL;
 import java.net.URLConnection;
 
 class FileDownloader implements Runnable {
-    String link;
-    String fileName;
-    String dir;
-    URL url;
-    URLConnection urlConn;
+    private String link;
+    private final String fileName;
+    private String dir;
+    private URL url;
+    private URLConnection urlConn;
 
     public FileDownloader(String link, String fileName, String dir){
         this.link = link;
@@ -18,7 +18,7 @@ class FileDownloader implements Runnable {
     }
 
     public static void main(String[] args) {
-        FileDownloader o = new FileDownloader("https:///www.youtube.com/watch?v=BQLOfws52Rs", "he.mp4", ".//");
+        FileDownloader o = new FileDownloader("https://github.com/mattermost/.github/blob/master/CODE_OF_CONDUCT.md", "he.md", ".//");
         o.run();
     }
 
@@ -26,7 +26,7 @@ class FileDownloader implements Runnable {
     public void run() {
         try {
             if (!(link.startsWith("http://") || link.startsWith("https://"))){
-
+                link = "http://" + link;
             }
             url = new URL(link);
             urlConn = url.openConnection();
