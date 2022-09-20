@@ -2,16 +2,16 @@ import java.util.Scanner;
 
 public class Drifty_CLI {
     private static String downloadsFolder;
-    private static final String COLOR_BRIGHT_BLUE_BOLD = "\033[1;94m";
-    private static final String COLOR_RED = "\u001B[31m";
-    private static final String COLOR_CYAN_BOLD = "\033[1;36m";
-    private static final String COLOR_PURPLE = "\u001B[35m";
-    private static final String COLOR_GREEN = "\u001B[32m";
-    private static final String COLOR_BLUE = "\u001B[34m";
-    private static final String COLOR_RESET = "\u001B[0m";
+    protected static final String COLOR_BRIGHT_BLUE_BOLD = "\033[1;94m";
+    protected static final String COLOR_RED = "\u001B[31m";
+    protected static final String COLOR_CYAN_BOLD = "\033[1;36m";
+    protected static final String COLOR_PURPLE = "\u001B[35m";
+    protected static final String COLOR_GREEN = "\u001B[32m";
+    protected static final String COLOR_BLUE = "\u001B[34m";
+    protected static final String COLOR_RESET = "\u001B[0m";
     private static final Scanner SC = new Scanner(System.in);
-    private static final String COLOR_BLUE_BOLD = "\033[1;34m";
-    private static final String COLOR_CYAN = "\u001B[36m";
+    protected static final String COLOR_BLUE_BOLD = "\033[1;34m";
+    protected static final String COLOR_CYAN = "\u001B[36m";
     public static void main(String[] args) {
         System.out.println(COLOR_GREEN + "====================================================================" + COLOR_RESET);
         System.out.println(COLOR_BRIGHT_BLUE_BOLD + "\t\t\tDRIFTY" + COLOR_RESET);

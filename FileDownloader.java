@@ -19,39 +19,61 @@ class FileDownloader implements Runnable {
 
     }
 
-    public static void main(String[] args) {
-        FileDownloader o = new FileDownloader("https://github.com/mattermost/.github/blob/master/CODE_OF_CONDUCT.md", "he.md", ".//");
-        o.run();
-    }
-
     @Override
     public void run() {
+        link = link.replace('\\', '/');
         try {
             if (!(link.startsWith("http://") || link.startsWith("https://"))){
                 link = "http://" + link;
             }
+            if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))){
+                if (!(link.endsWith("?raw=true"))){
+                    link = link + "?raw=true";
+                }
+            }
             url = new URL(link);
             urlConn = url.openConnection();
+            dir = dir.replace('\\', '/');
             if (dir.length() != 0) {
-                if (dir.equals(".\\\\") || dir.equals(".//") || dir.equals(".\\") || dir.equals("./")) {
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
+                if (dir.equals(".//") || dir.equals("./")) {
+                    dir = "";
                 } else {
                     dir = DefaultDownloadFolderLocationFinder.findPath();
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(dir + System.getProperty("file.separator") + fileName));
                 }
             } else {
-                System.out.println("Invalid Directory !");
+                System.out.println(Drifty_CLI.COLOR_RED + "Invalid Directory !" + Drifty_CLI.COLOR_RESET);
             }
-            System.out.println(dir+fileName);
-//            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
-//            try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
-//                fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-//            }
-
+            System.out.println(Drifty_CLI.COLOR_CYAN + "Downloading " + fileName + " ...");
+            long size = 0;
+            String sizeWithUnit = "";
+            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+            try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
+                fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                size = fos.getChannel().size();
+                if (size > 1000) {
+                    size = size/1024;
+                    sizeWithUnit = size + " kilobytes";
+                    if (size > 1000) {
+                        size = size/1024;
+                        sizeWithUnit = size + " megabytes";
+                        if (size > 1000){
+                            size = size/1024;
+                            sizeWithUnit = size + "gigabytes";
+                        }
+                    }
+                } else {
+                    sizeWithUnit = size + " bytes";
+                }
+            }
+            if (dir.length() == 0){
+                dir = System.getProperty("user.dir");
+            }
+            dir = dir + System.getProperty("file.separator");
+            System.out.println("Downloaded " + fileName + " of size " + sizeWithUnit + " at " + dir + fileName + Drifty_CLI.COLOR_RESET);
         } catch (MalformedURLException e) {
-            System.out.println("Invalid Link!");
+            System.out.println(Drifty_CLI.COLOR_RED + "Invalid Link!" + Drifty_CLI.COLOR_RESET);
         } catch (IOException e) {
-            System.out.println("Failed to connect to " + url + "");
+            System.out.println(Drifty_CLI.COLOR_RED + "Failed to connect to " + url + " !" + Drifty_CLI.COLOR_RESET);
         }
     }
 }
