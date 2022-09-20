@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 class FileDownloader implements Runnable {
     private String link;
@@ -40,6 +42,12 @@ class FileDownloader implements Runnable {
             } else {
                 System.out.println("Invalid Directory !");
             }
+            System.out.println(dir+fileName);
+//            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+//            try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
+//                fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+//            }
+
         } catch (MalformedURLException e) {
             System.out.println("Invalid Link!");
         } catch (IOException e) {
