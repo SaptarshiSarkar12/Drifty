@@ -14,40 +14,36 @@ class FileDownloader implements Runnable {
         this.link = link;
         this.fileName = fileName;
         this.dir = dir;
+
     }
 
     public static void main(String[] args) {
-        FileDownloader o = new FileDownloader("https://www.youtube.com/watch?v=BQLOfws52Rs", "he", "://");
-        System.out.println("\\");
-
-        try {
-            o.url = new URL(o.link);
-            o.urlConn = o.url.openConnection();
-            if (o.dir.length() != 0) {
-                if (o.dir.equals(".\\") || o.dir.equals(".//")) {}
-            }
-//            File direc = new File();
-//            boolean v = direc.setWritable(true, false);
-//            System.out.println(v);
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(System.getProperty("user.home") + System.getProperty("file.separator") + "Downloads"));
-        } catch (MalformedURLException e) {
-            System.out.println("Invalid Link!");
-        } catch (IOException e) {
-            System.out.println("Failed to connect to " + o.url);
-        }
+        FileDownloader o = new FileDownloader("https:///www.youtube.com/watch?v=BQLOfws52Rs", "he.mp4", ".//");
+        o.run();
     }
 
     @Override
     public void run() {
         try {
+            if (!(link.startsWith("http://") || link.startsWith("https://"))){
+
+            }
             url = new URL(link);
             urlConn = url.openConnection();
+            if (dir.length() != 0) {
+                if (dir.equals(".\\\\") || dir.equals(".//") || dir.equals(".\\") || dir.equals("./")) {
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(fileName));
+                } else {
+                    dir = DefaultDownloadFolderLocationFinder.findPath();
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(dir + System.getProperty("file.separator") + fileName));
+                }
+            } else {
+                System.out.println("Invalid Directory !");
+            }
         } catch (MalformedURLException e) {
             System.out.println("Invalid Link!");
         } catch (IOException e) {
-            System.out.println("Failed to connect to " + url);
-        } finally {
-            System.out.println(url);
+            System.out.println("Failed to connect to " + url + "");
         }
     }
 }
