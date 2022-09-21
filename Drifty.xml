@@ -4,7 +4,7 @@
   <headerType>console</headerType>
   <jar>D:\Drifty\out\artifacts\Drifty_jar\Drifty.jar</jar>
   <outfile>D:\Drifty\Drifty.exe</outfile>
-  <errTitle>You need to download latest JDK version</errTitle>
+  <errTitle>You have to download the latest JDK and JRE for this application.</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
@@ -18,16 +18,16 @@
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
-    <minVersion>2.0.0</minVersion>
-    <maxVersion>18.0.0</maxVersion>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion>1.8</maxVersion>
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
     <fileVersion>1.0.0.0</fileVersion>
     <txtFileVersion>1.0.0.0</txtFileVersion>
-    <fileDescription>Drifty is an open-source interactive File Downloader system built with java</fileDescription>
-    <copyright>Copyright © 2022-30 Saptarshi Sarkar</copyright>
+    <fileDescription>Drifty is an open-source interactive File Downloader system built with java.</fileDescription>
+    <copyright>Copyright © 2022 - 30 Saptarshi Sarkar</copyright>
     <productVersion>1.0.0.0</productVersion>
     <txtProductVersion>1.0.0.0</txtProductVersion>
     <productName>Drifty</productName>
@@ -38,10 +38,10 @@
     <language>ENGLISH_US</language>
   </versionInfo>
   <messages>
-    <startupErr>An error occurred while starting the application. (Error Code : 1x)</startupErr>
-    <bundledJreErr>This application requires a Java Runtime Environment. It might be missing or corrputed. (Error Code : 2x)</bundledJreErr>
-    <jreVersionErr>This application requires a Java Runtime Environment of version 18.0.0 . (Error Code : 3x)</jreVersionErr>
-    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted. (Error Code : 4x)</launcherErr>
-    <instanceAlreadyExistsMsg>An application instance is already running. (Error Code : 5x)</instanceAlreadyExistsMsg>
+    <startupErr>An error occurred while starting the application. (Error Code : 0x1)</startupErr>
+    <bundledJreErr>This application requires a Java Runtime Environment which might be missing or corrupted. (Error Code : 0x2)</bundledJreErr>
+    <jreVersionErr>This application requires a Java Runtime Environment which might be missing or corrupted. (Error Code : 0x3)</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted. (Error Code : 0x4)</launcherErr>
+    <instanceAlreadyExistsMsg>An application instance is already running. (Error Code : 0x5)</instanceAlreadyExistsMsg>
   </messages>
 </launch4jConfig>
