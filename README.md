@@ -1,7 +1,7 @@
 <h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
 <p float="left">
     <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty.ico" width="98" height="105">
-    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty%20Banner.png" width="100" height="80">
+    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty%20Banner.png" height="80">
 </p>
 
 ---
