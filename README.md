@@ -1,6 +1,6 @@
 <h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
 <p float="left">
-    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty.ico" width="50" height="50">
+    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty.ico" width="70" height="70">
     <img align=center src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty%20Banner.png">
 </p>
 
