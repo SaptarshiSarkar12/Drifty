@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>console</headerType>
+  <jar>D:\Drifty\out\artifacts\Drifty_jar\Drifty.jar</jar>
+  <outfile>D:\Drifty\Drifty.exe</outfile>
+  <errTitle>You need to download latest JDK version</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose</supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>true</restartOnCrash>
+  <manifest></manifest>
+  <icon>D:\Drifty\Drifty.ico</icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>2.0.0</minVersion>
+    <maxVersion>18.0.0</maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0.0</txtFileVersion>
+    <fileDescription>Drifty is an open-source interactive File Downloader system built with java</fileDescription>
+    <copyright>Copyright © 2022-30 Saptarshi Sarkar</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>1.0.0.0</txtProductVersion>
+    <productName>Drifty</productName>
+    <companyName></companyName>
+    <internalName>Drifty</internalName>
+    <originalFilename>Drifty.exe</originalFilename>
+    <trademarks>Saptarshi Sarkar</trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+  <messages>
+    <startupErr>An error occurred while starting the application. (Error Code : 1x)</startupErr>
+    <bundledJreErr>This application requires a Java Runtime Environment. It might be missing or corrputed. (Error Code : 2x)</bundledJreErr>
+    <jreVersionErr>This application requires a Java Runtime Environment of version 18.0.0 . (Error Code : 3x)</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted. (Error Code : 4x)</launcherErr>
+    <instanceAlreadyExistsMsg>An application instance is already running. (Error Code : 5x)</instanceAlreadyExistsMsg>
+  </messages>
+</launch4jConfig>
