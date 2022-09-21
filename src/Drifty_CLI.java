@@ -1,8 +1,11 @@
+package src;
+
 import java.util.Scanner;
 
 public class Drifty_CLI {
     private static String downloadsFolder;
     protected static final String COLOR_BRIGHT_BLUE_BOLD = "\033[1;94m";
+    protected static final String COLOR_BLUE_UNDERLINED = "\033[4;34m";
     protected static final String COLOR_RED = "\u001B[31m";
     protected static final String COLOR_CYAN_BOLD = "\033[1;36m";
     protected static final String COLOR_PURPLE = "\u001B[35m";

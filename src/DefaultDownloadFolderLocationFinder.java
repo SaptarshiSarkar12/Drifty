@@ -1,3 +1,5 @@
+package src;
+
 import java.io.*;
 
 class DefaultDownloadFolderLocationFinder {
