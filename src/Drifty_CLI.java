@@ -15,6 +15,7 @@ public class Drifty_CLI {
     private static final Scanner SC = new Scanner(System.in);
     protected static final String COLOR_CYAN = "\u001B[36m";
     public static void main(String[] args) {
+        boolean flag = false;
         System.out.println(COLOR_GREEN + "====================================================================" + COLOR_RESET);
         System.out.println(COLOR_BRIGHT_BLUE_BOLD + "\t\t\tDRIFTY" + COLOR_RESET);
         System.out.println(COLOR_GREEN + "====================================================================" + COLOR_RESET);
