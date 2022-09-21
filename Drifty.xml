@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>console</headerType>
-  <jar>D:\Drifty\out\artifacts\Drifty_jar\Drifty.jar</jar>
-  <outfile>D:\Drifty\Drifty.exe</outfile>
+  <jar>D:\Drifty\out\artifacts\Drifty_CLI_jar\Drifty.jar</jar>
+  <outfile>D:\Drifty\Drifty_CLI.exe</outfile>
   <errTitle>You have to download the latest JDK and JRE for this application.</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -32,8 +32,8 @@
     <txtProductVersion>1.0.0.0</txtProductVersion>
     <productName>Drifty</productName>
     <companyName></companyName>
-    <internalName>Drifty</internalName>
-    <originalFilename>Drifty.exe</originalFilename>
+    <internalName>Drifty CLI</internalName>
+    <originalFilename>Drifty CLI.exe</originalFilename>
     <trademarks>Saptarshi Sarkar</trademarks>
     <language>ENGLISH_US</language>
   </versionInfo>

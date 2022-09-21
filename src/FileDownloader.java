@@ -39,18 +39,18 @@ class FileDownloader implements Runnable {
                     dir = "";
                 }
             } else {
-                System.out.println(Drifty_CLI.COLOR_RED + "Invalid Directory !" + Drifty_CLI.COLOR_RESET);
+                System.out.println("Invalid Directory !");
             }
             try {
                 new CheckDirectory(dir);
             } catch (IOException e){
-                System.out.println(Drifty_CLI.COLOR_RED + "Failed to create the directory : " + Drifty_CLI.COLOR_BLUE_UNDERLINED + dir + Drifty_CLI.COLOR_RESET + Drifty_CLI.COLOR_RED + " !" + Drifty_CLI.COLOR_RESET);
+                System.out.println("Failed to create the directory : " + dir + " !");
             }
             downloadFile();
         } catch (MalformedURLException e) {
-            System.out.println(Drifty_CLI.COLOR_RED + "Invalid Link!" + Drifty_CLI.COLOR_RESET);
+            System.out.println("Invalid Link!");
         } catch (IOException e) {
-            System.out.println(Drifty_CLI.COLOR_RED + "Failed to connect to " + url + " !" + Drifty_CLI.COLOR_RESET);
+            System.out.println("Failed to connect to " + url + " !");
         }
     }
 
@@ -61,10 +61,10 @@ class FileDownloader implements Runnable {
         try {
             readableByteChannel = Channels.newChannel(url.openStream());
         } catch (IOException e) {
-            System.out.println(Drifty_CLI.COLOR_RED + "Failed to get a data stream !" + Drifty_CLI.COLOR_RESET);
+            System.out.println("Failed to get a data stream !");
         }
         try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
-            System.out.println(Drifty_CLI.COLOR_CYAN + "Downloading " + fileName + " ...");
+            System.out.println("Downloading " + fileName + " ...");
             fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             size = fos.getChannel().size();
             if (size > 1000) {
@@ -90,6 +90,6 @@ class FileDownloader implements Runnable {
         if (!(dir.endsWith("\\"))) {
             dir = dir + System.getProperty("file.separator");
         }
-        System.out.println("Successfully downloaded " + fileName + " of size " + Drifty_CLI.COLOR_BRIGHT_BLUE_BOLD + sizeWithUnit + Drifty_CLI.COLOR_CYAN + " at " + Drifty_CLI.COLOR_BLUE_UNDERLINED + dir + fileName + Drifty_CLI.COLOR_RESET);
+        System.out.println("Successfully downloaded " + fileName + " of size " + sizeWithUnit + " at " + dir + fileName);
     }
 }

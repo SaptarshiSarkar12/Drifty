@@ -21,7 +21,7 @@ class CheckDirectory {
                 found = true;
             }
         } catch (Exception e) {
-            System.out.println(Drifty_CLI.COLOR_RED + "Error while checking for directory !" + Drifty_CLI.COLOR_RESET);
+            System.out.println("Error while checking for directory !");
         }
         return found;
     }
