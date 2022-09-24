@@ -13,3 +13,9 @@
 [![Size](https://img.shields.io/github/size/SaptarshiSarkar12/Drifty/Drifty_CLI.exe?label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty_CLI.exe)
 [![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
+
+
+## Contributing
+
+Please feel to contribute to this project. See [`contributing.md`]() for ways to get started. Please adhere to this project's [`code of conduct`]().
+
