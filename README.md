@@ -26,3 +26,10 @@ For Users :
 ![Download Instructions Video](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Download%20Video.mp4)
 3. Go to the downloads folder and run the file.
 4. See Demo for demonstrations on how to use the app.
+
+For Contributors : 
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty) and clone the repository. Refer to GitHub docs on how to clone a repository.
+2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make.
+3. Make the changes and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
+4. The Pull Request will be reviewed and merged if approved. ✔ 
+
