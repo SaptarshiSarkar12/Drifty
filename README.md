@@ -20,5 +20,9 @@ Please feel to contribute to this project. See [`Contribuing Guidelines`](https:
 
 ## Get Started 🚀🚀
 For Users :
-1. Open the [`Latest Release Link`](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/) and then download the files according to the directions in the release description.
-![]()
+1. Open the [`Latest Release Link`](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/) </p>
+![Releases](https://user-images.githubusercontent.com/105960032/192133804-7a77f446-3e69-48dd-9e51-1f3f408a5ae5.png)
+2. Click on the files according to the directions in the release description and the file will be downloaded in the default downloads folder.
+![Download Instructions Video](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Download%20Video.mp4)
+3. Go to the downloads folder and run the file.
+4. See Demo for demonstrations on how to use the app.
