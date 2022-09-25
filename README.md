@@ -16,6 +16,8 @@
 
 
 ## Contributing
-
 Please feel to contribute to this project. See [`Contribuing Guidelines`](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. Please adhere to this project's [`Code Of Conduct`](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md).
 
+## Get Started 🚀🚀
+For Users :
+1. Open
