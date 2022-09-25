@@ -36,4 +36,4 @@ For **Contributors** :
 
 ## Demo
 See the below video how to use the application. </p>
-![Usage](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Downloading.webm)
+![Usage Video](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Downloading.webm)
