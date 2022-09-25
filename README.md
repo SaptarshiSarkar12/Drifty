@@ -20,4 +20,5 @@ Please feel to contribute to this project. See [`Contribuing Guidelines`](https:
 
 ## Get Started 🚀🚀
 For Users :
-1. Open
+1. Open the [`Latest Release Link`](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/) and then download the files according to the directions in the release description.
+![]()
