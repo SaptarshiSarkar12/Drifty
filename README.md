@@ -31,6 +31,9 @@ For **Users** :
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty) and clone the repository. Refer to GitHub docs on how to clone a repository.
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make.
-3. Make the changes and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
+3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed and merged if approved. ✔ 
 
+## Demo
+See the below video how to use the application. </p>
+![Usage](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Downloading.webm)
