@@ -23,7 +23,9 @@ For **Users** :
 1. Open the [`Latest Release Link`](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/) </p>
 ![Releases](https://user-images.githubusercontent.com/105960032/192133804-7a77f446-3e69-48dd-9e51-1f3f408a5ae5.png)
 2. Click on the files according to the directions in the release description and the file will be downloaded in the default downloads folder.</p>
-![Download Instructions Video](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Download%20Video.mp4)
+
+https://user-images.githubusercontent.com/105960032/192246551-5895f08c-f4b7-4bde-8ec7-19572842b52b.mp4
+
 3. Go to the downloads folder and run the file.
 4. See Demo for demonstrations on how to use the app.
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
@@ -35,5 +37,7 @@ For **Contributors** :
 4. The Pull Request will be reviewed and merged if approved. ✔ 
 
 ## Demo
-See the below video how to use the application. </p>
-![Usage Video](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Assets/Downloading.webm)
+See the below video how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
+
+https://user-images.githubusercontent.com/105960032/192246875-6b188bdf-2de9-49cb-940d-d47d50768767.mp4
+
