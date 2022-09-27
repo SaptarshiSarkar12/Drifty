@@ -32,7 +32,8 @@ https://user-images.githubusercontent.com/105960032/192246551-5895f08c-f4b7-4bde
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
-1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty) and clone the repository. Refer to GitHub docs on how to clone a repository.
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty) and clone the repository.</p>
+![Clone Drifty](https://user-images.githubusercontent.com/105960032/192598857-09c32cdc-23ba-4564-8b13-8e9782a689be.gif)
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make.
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed and merged if approved. ✔ 
