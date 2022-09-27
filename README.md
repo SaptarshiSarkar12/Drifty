@@ -12,6 +12,7 @@
 [![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers)
 [![Size](https://img.shields.io/github/size/SaptarshiSarkar12/Drifty/Drifty_CLI.exe?label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty_CLI.exe)
 [![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
+[![](https://img.shields.io/github/discussions/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/discussions)
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
 
 
