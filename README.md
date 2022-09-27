@@ -27,7 +27,7 @@ For **Users** :
 https://user-images.githubusercontent.com/105960032/192246551-5895f08c-f4b7-4bde-8ec7-19572842b52b.mp4
 
 3. Go to the downloads folder and run the file.
-4. See Demo for demonstrations on how to use the app.
+4. See [`Demo`](https://github.com/SaptarshiSarkar12/Drifty#demo) for demonstrations on how to use the app.
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
