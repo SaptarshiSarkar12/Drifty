@@ -12,12 +12,12 @@
 [![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers)
 [![Size](https://img.shields.io/github/size/SaptarshiSarkar12/Drifty/Drifty_CLI.exe?label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty_CLI.exe)
 [![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
-[![](https://img.shields.io/github/discussions/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/discussions)
+[![GitHub Discussions](https://img.shields.io/github/discussions/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/discussions)
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
 
 
 ## Contributing
-Please feel to contribute to this project. See [`Contribuing Guidelines`](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. Please adhere to this project's [`Code Of Conduct`](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [`Semantic Versioning`](https://semver.org/) for the releases.
+Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
 
 ## Get Started 🚀🚀
 For **Users** :
@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/105960032/192246551-5895f08c-f4b7-4bde
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
-1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty) and clone the repository.</p>
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory.</p>
 ![Clone Drifty](https://user-images.githubusercontent.com/105960032/192598857-09c32cdc-23ba-4564-8b13-8e9782a689be.gif)
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make.
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
