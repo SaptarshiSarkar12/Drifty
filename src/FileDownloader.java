@@ -3,6 +3,7 @@ package src;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
@@ -11,12 +12,13 @@ class FileDownloader implements Runnable {
     private static String fileName;
     private static String dir;
     private static URL url;
+    private static long downloadedBytes;
 
     public FileDownloader(String link, String fileName, String dir){
         FileDownloader.link = link;
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
-
+        FileDownloader.downloadedBytes = 0;
     }
 
     @Override
@@ -32,7 +34,10 @@ class FileDownloader implements Runnable {
                 }
             }
             url = new URL(link);
-            url.openConnection();
+            URLConnection openConnection = url.openConnection();
+            openConnection.connect();
+            long totalDownloadBytes = Long.valueOf(openConnection.getHeaderField("content-length"));
+            System.out.println(totalDownloadBytes);
             dir = dir.replace('/', '\\');
             if (dir.length() != 0) {
                 if (dir.equals(".\\\\") || dir.equals(".\\")) {
@@ -59,7 +64,10 @@ class FileDownloader implements Runnable {
         String sizeWithUnit = "";
         ReadableByteChannel readableByteChannel = null;
         try {
-            readableByteChannel = Channels.newChannel(url.openStream());
+            System.out.print(url.getFile());
+            InputStream urlStream = url.openStream();
+            System.out.println();
+            readableByteChannel = Channels.newChannel(urlStream);
         } catch (IOException e) {
             System.out.println("Failed to get a data stream !");
         }
@@ -91,5 +99,14 @@ class FileDownloader implements Runnable {
             dir = dir + System.getProperty("file.separator");
         }
         System.out.println("Successfully downloaded " + fileName + " of size " + sizeWithUnit + " at " + dir + fileName);
+    }
+    private static void setCurrentDownloadedBytes(long bytes) {
+        downloadedBytes = bytes;
+    }
+    private static long getCurrentDownloadedBytes() {
+        return downloadedBytes;
+    }
+    private static void progressBar() {
+        //Runnable runnable = () -> {}
     }
 }
