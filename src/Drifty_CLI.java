@@ -5,12 +5,18 @@ import java.util.Scanner;
 public class Drifty_CLI {
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     public static void main(String[] args) {
         if (!flag) {
-            System.out.println("====================================================================");
-            System.out.println("\t\t\t   DRIFTY CLI");
-            System.out.println("====================================================================");
+            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+           // System.out.println();
+            System.out.println(ANSI_BLUE
+                    + "\t\t\t   DRIFTY CLI"
+                    + ANSI_RESET);
+            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         }
         flag = true;
         System.out.print("Enter the link to the file : ");
