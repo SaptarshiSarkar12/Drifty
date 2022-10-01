@@ -1,7 +1,4 @@
-package src;
-
 import java.io.*;
-
 class DefaultDownloadFolderLocationFinder {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
     private static final String REG_NAME = "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /v {374DE290-123F-4565-9164-39C4925E467B}";
@@ -38,7 +35,9 @@ class DefaultDownloadFolderLocationFinder {
                 while ((c = is.read()) != -1)
                     sw.write(c);
             }
-            catch (IOException ignored) {}
+            catch (IOException ignored) {
+
+            }
         }
         String getResult() {
             return sw.toString();
