@@ -1,6 +1,4 @@
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
