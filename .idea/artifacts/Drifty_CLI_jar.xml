@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Drifty_CLI:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Drifty_CLI_jar</output-path>
+    <root id="archive" name="Drifty.jar">
+      <element id="module-output" name="Drifty" />
+    </root>
+  </artifact>
+</component>
