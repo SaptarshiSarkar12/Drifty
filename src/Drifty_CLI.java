@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Drifty_CLI {
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
-    static CreateLogs cl = new CreateLogs("Logs.log", Drifty_CLI.class.getName());
+    static CreateLogs cl = new CreateLogs("Drifty_CLI_LOG.log", Drifty_CLI.class.getName());
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
