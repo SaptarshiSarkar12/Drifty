@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 
 public class Drifty_CLI {
     private static String downloadsFolder;
