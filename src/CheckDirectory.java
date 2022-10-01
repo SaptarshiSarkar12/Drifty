@@ -1,14 +1,8 @@
-package src;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 class CheckDirectory {
     private static Logger dLog= LogManager.getLogger(CheckDirectory.class.getName());
     CheckDirectory(String dir) throws IOException {
