@@ -1,8 +1,12 @@
 package src;
 
+import java.io.IOException;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.*;
+
 public class Drifty_CLI {
+    private static Logger dLog=LogManager.getLogger(Drifty_CLI.class.getName());
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
     public static final String ANSI_RESET = "\u001B[0m";
@@ -10,9 +14,12 @@ public class Drifty_CLI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     public static void main(String[] args) {
+
+        dLog.log(Level.INFO,"Application Started");
+
         if (!flag) {
+
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
-           // System.out.println();
             System.out.println(ANSI_BLUE
                     + "\t\t\t   DRIFTY CLI"
                     + ANSI_RESET);
@@ -30,15 +37,18 @@ public class Drifty_CLI {
             if (default_folder == 'y') {
                 downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
                 if (downloadsFolder == null) {
-                    System.out.println("Failed to retrieve default download folder!");
+                    //System.out.println("Failed to retrieve default download folder!");
+                    dLog.error("Failed to retrieve default download folder!");
                     enterDownloadsFolder();
                 } else {
-                    System.out.println("Default download folder detected : " + downloadsFolder);
+                   // System.out.println("Default download folder detected : " + downloadsFolder);
+                    dLog.info("Default download folder detected : " + downloadsFolder);
                 }
             } else if (default_folder == 'n') {
                 enterDownloadsFolder();
             } else {
-                System.out.println("Invalid input!");
+                //System.out.println("Invalid input!");
+                dLog.error("Invalid input");
                 continue;
             }
             break;
