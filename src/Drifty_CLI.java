@@ -20,9 +20,12 @@ public class Drifty_CLI {
         if (!flag) {
 
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
-            System.out.println(ANSI_BLUE
-                    + "\t\t\t   DRIFTY CLI"
-                    + ANSI_RESET);
+            System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
+            System.out.println(ANSI_CYAN+" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /"+ANSI_RESET);
+            System.out.println(ANSI_CYAN+" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /"+ANSI_RESET);
+            System.out.println(ANSI_CYAN+" | |  | ||  _  /   | |  |  __|     | |     \\   / "+ANSI_RESET);
+            System.out.println(ANSI_CYAN+" | |__| || | \\ \\  _| |_ | |        | |      | |  "+ANSI_RESET);
+            System.out.println(ANSI_CYAN+" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  "+ANSI_RESET);            
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         }
         flag = true;
