@@ -10,7 +10,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Downloads/apache-log4j-2.19.0-bin/log4j-api-2.19.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/Resources/log4j-api-2.19.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/Resources/log4j-core-2.19.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
