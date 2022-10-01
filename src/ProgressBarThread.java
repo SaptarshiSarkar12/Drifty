@@ -1,4 +1,3 @@
-package src;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -9,7 +8,7 @@ public class ProgressBarThread extends Thread {
     private long downloadSpeed;
     private String fileName;
     private FileOutputStream fos;   
-    private long totalDownloadBytes;
+    public static long totalDownloadBytes;
     private int charAmt;
     
    
