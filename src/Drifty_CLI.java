@@ -8,24 +8,15 @@ public class Drifty_CLI {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
-
-    public static final String banner ="" +
-            "\t██████╗ ██████╗ ██╗███████╗████████╗██╗   ██╗\n" +
-            "\t██╔══██╗██╔══██╗██║██╔════╝╚══██╔══╝╚██╗ ██╔╝\n" +
-            "\t██║  ██║██████╔╝██║█████╗     ██║    ╚████╔╝ \n" +
-            "\t██║  ██║██╔══██╗██║██╔══╝     ██║     ╚██╔╝  \n" +
-            "\t██████╔╝██║  ██║██║██║        ██║      ██║   \n" +
-            "\t╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝      ╚═╝   ";
-
     private static boolean flag = false;
     public static void main(String[] args) {
         if (!flag) {
-            System.out.println(ANSI_PURPLE+"====================================================================="+ANSI_RESET);
+            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
            // System.out.println();
             System.out.println(ANSI_BLUE
-                    + ""+banner+""
+                    + "\t\t\t   DRIFTY CLI"
                     + ANSI_RESET);
-            System.out.println(ANSI_PURPLE+"======================================================================"+ANSI_RESET);
+            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         }
         flag = true;
         System.out.print("Enter the link to the file : ");
