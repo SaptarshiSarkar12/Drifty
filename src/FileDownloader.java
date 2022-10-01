@@ -67,8 +67,10 @@ class FileDownloader implements Runnable {
             System.out.println("Failed to get a data stream !");
             Drifty_CLI.cl.log("ERROR", "Failed to get a data stream !" + e.getMessage());
         }
-        try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
+        try {
+            FileOutputStream fos = new FileOutputStream(dir + fileName);
             System.out.println("Downloading " + fileName + " ...");
+            Drifty_CLI.cl.log("INFO", "Downloading " + fileName + " ...");
             fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             size = fos.getChannel().size();
             if (size > 1000) {
