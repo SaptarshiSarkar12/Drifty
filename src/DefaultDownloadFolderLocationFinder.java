@@ -38,7 +38,9 @@ class DefaultDownloadFolderLocationFinder {
                 while ((c = is.read()) != -1)
                     sw.write(c);
             }
-            catch (IOException ignored) {}
+            catch (IOException ignored) {
+
+            }
         }
         String getResult() {
             return sw.toString();
