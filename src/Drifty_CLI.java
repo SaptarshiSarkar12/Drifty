@@ -1,3 +1,4 @@
+import java.net.URL;
 import java.util.Scanner;
 
 public class Drifty_CLI {
@@ -24,6 +25,16 @@ public class Drifty_CLI {
         while(true) {
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
+            while (true) {
+                if (!validURL(link)) {
+                    System.out.println("Invalid URL. Please enter again");
+                    System.out.print("Enter the link to the file : ");
+                    link = SC.next();
+                }
+                else{
+                    break;
+                }
+            }
             SC.nextLine();
             System.out.print("Enter the filename (with file extension) : ");
             String fName = SC.nextLine();
@@ -67,6 +78,16 @@ public class Drifty_CLI {
         downloadsFolder = SC.nextLine().replace('/', '\\');
         if (!(downloadsFolder.endsWith("\\"))) {
             downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+        }
+    }
+
+    private static boolean validURL(String link){
+        try{
+            new URL(link).toURI();
+            return true;
+        }
+        catch (Exception e){
+            return false;
         }
     }
 }
