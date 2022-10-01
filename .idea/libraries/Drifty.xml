@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Drifty">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/out/artifacts/Drifty_CLI_jar/Drifty.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
