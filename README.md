@@ -43,3 +43,7 @@ See the below video how to use the application. For any help, you can open an [`
 
 https://user-images.githubusercontent.com/105960032/192246875-6b188bdf-2de9-49cb-940d-d47d50768767.mp4
 
+## Thanks to all contributors ❤️
+<a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
+   <img src = "https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty"/>
+</a>
