@@ -21,4 +21,5 @@ Doesn't tell me anything about why you're doing that
 
 > Add files to make the app more user friendly
 
-Tells me the problem that you have found, and the pull request shows me the action you have taken to solve it. 
+Tells me the problem that you have found, and the pull request shows me
+the action you have taken to solve it. 
