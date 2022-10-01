@@ -1,27 +1,16 @@
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.*;
 
 public class Drifty_CLI {
     private static String downloadsFolder;
+    private static final Logger dLog = LogManager.getLogger(Drifty_CLI.class.getName());
     private static final Scanner SC = new Scanner(System.in);
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     public static void main(String[] args) {
-        boolean logFileCreationFailed = false;
-        Logger logger = Logger.getLogger(Drifty_CLI.class.getName());
-        try {
-            FileHandler fileLog = new FileHandler("/Log/Drifty_Log.log");
-            logger.addHandler(fileLog);
-        } catch (IOException e){
-            System.out.println("Failed to create log file !");
-            logFileCreationFailed = true;
-        }
-        dLog.log(Level.INFO,"Application Started");
+        dLog.info("Application Started");
         if (!flag) {
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
             System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
