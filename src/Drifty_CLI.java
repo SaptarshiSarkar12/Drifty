@@ -21,35 +21,45 @@ public class Drifty_CLI {
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         }
         flag = true;
-        System.out.print("Enter the link to the file : ");
-        String link = SC.next();
-        SC.nextLine();
-        System.out.print("Enter the filename (with file extension) : ");
-        String fName = SC.nextLine();
-        while (true) {
-            System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
-            char default_folder = SC.nextLine().toLowerCase().charAt(0);
-            if (default_folder == 'y') {
-                downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
-                if (downloadsFolder == null) {
-                    System.out.println("Failed to retrieve default download folder!");
-                    cl.log("ERROR", "Failed to retrieve default download folder!");
+        while(true) {
+            System.out.print("Enter the link to the file : ");
+            String link = SC.next();
+            SC.nextLine();
+            System.out.print("Enter the filename (with file extension) : ");
+            String fName = SC.nextLine();
+            while (true) {
+                System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
+                char default_folder = SC.nextLine().toLowerCase().charAt(0);
+                if (default_folder == 'y') {
+                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+                    if (downloadsFolder == null) {
+                        System.out.println("Failed to retrieve default download folder!");
+                        cl.log("ERROR", "Failed to retrieve default download folder!");
+                        enterDownloadsFolder();
+                    } else {
+                        System.out.println("Default download folder detected : " + downloadsFolder);
+                        cl.log("INFO", "Default download folder detected : " + downloadsFolder);
+                    }
+                } else if (default_folder == 'n') {
                     enterDownloadsFolder();
                 } else {
-                    System.out.println("Default download folder detected : " + downloadsFolder);
-                    cl.log("INFO", "Default download folder detected : " + downloadsFolder);
+                    System.out.println("Invalid input!");
+                    cl.log("ERROR", "Invalid input");
+                    continue;
                 }
-            } else if (default_folder == 'n') {
-                enterDownloadsFolder();
-            } else {
-                System.out.println("Invalid input!");
-                cl.log("ERROR", "Invalid input");
+                break;
+            }
+            FileDownloader fDownload = new FileDownloader(link, fName, downloadsFolder);
+            fDownload.run();
+            System.out.println("Press Q to Quit Or Press any Key to Continue");
+            String quit = SC.nextLine();
+            if(quit.equals("Q") || quit.equals("q")){
+                break;
+            }
+            else {
                 continue;
             }
-            break;
         }
-        FileDownloader fDownload = new FileDownloader(link, fName, downloadsFolder);
-        fDownload.run();
     }
 
     private static void enterDownloadsFolder(){
