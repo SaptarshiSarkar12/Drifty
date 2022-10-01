@@ -1,16 +1,15 @@
 import java.util.Scanner;
-import org.apache.logging.log4j.*;
 
 public class Drifty_CLI {
     private static String downloadsFolder;
-    private static final Logger dLog = LogManager.getLogger(Drifty_CLI.class.getName());
     private static final Scanner SC = new Scanner(System.in);
+    static CreateLogs cl = new CreateLogs("Logs.log", Drifty_CLI.class.getName());
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     public static void main(String[] args) {
-        dLog.info("Application Started");
+        cl.log("INFO", "Application Started !");
         if (!flag) {
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
             System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
@@ -34,17 +33,17 @@ public class Drifty_CLI {
                 downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
                 if (downloadsFolder == null) {
                     System.out.println("Failed to retrieve default download folder!");
-                    dLog.error("Failed to retrieve default download folder!");
+                    cl.log("ERROR", "Failed to retrieve default download folder!");
                     enterDownloadsFolder();
                 } else {
                     System.out.println("Default download folder detected : " + downloadsFolder);
-                    dLog.info("Default download folder detected : " + downloadsFolder);
+                    cl.log("INFO", "Default download folder detected : " + downloadsFolder);
                 }
             } else if (default_folder == 'n') {
                 enterDownloadsFolder();
             } else {
                 System.out.println("Invalid input!");
-                dLog.error("Invalid input");
+                cl.log("ERROR", "Invalid input");
                 continue;
             }
             break;
