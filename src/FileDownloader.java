@@ -1,5 +1,5 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -8,7 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 class FileDownloader implements Runnable {
-    private static Logger dLog= LogManager.getLogger(FileDownloader.class.getName());
+    private static final Logger dLog= LogManager.getLogger(FileDownloader.class.getName());
     private static String link;
     private static String fileName;
     private static String dir;
@@ -43,20 +43,21 @@ class FileDownloader implements Runnable {
                     dir = "";
                 }
             } else {
-                System.out.println("Invalid Directory !");
+                System.out.println("Invalid Directory Entered !");
+                dLog.error("Invalid Directory Entered !");
             }
             try {
                 new CheckDirectory(dir);
             } catch (IOException e){
-               // System.out.println("Failed to create the directory : " + dir + " !");
+                System.out.println("Failed to create the directory : " + dir + " !");
                 dLog.error("Failed to create the directory : " + dir + " !");
             }
             downloadFile();
         } catch (MalformedURLException e) {
-            //System.out.println("Invalid Link!");
+            System.out.println("Invalid Link!");
             dLog.error("Invalid Link!");
         } catch (IOException e) {
-           // System.out.println("Failed to connect to " + url + " !");
+            System.out.println("Failed to connect to " + url + " !");
             dLog.error("Failed to connect to " + url + " !");
         }
     }
@@ -68,8 +69,8 @@ class FileDownloader implements Runnable {
         try {
             readableByteChannel = Channels.newChannel(url.openStream());
         } catch (IOException e) {
-            //System.out.println("Failed to get a data stream !");
-            dLog.error("Failed to get a data stream !"+e.getMessage());
+            System.out.println("Failed to get a data stream !");
+            dLog.error("Failed to get a data stream !" + e.getMessage());
         }
         try (FileOutputStream fos = new FileOutputStream(dir + fileName)) {
             System.out.println("Downloading " + fileName + " ...");
