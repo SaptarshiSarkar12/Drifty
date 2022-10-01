@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drifty</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-family: "Rubik", sans-serif;
+        color: #444;
+      }
+
+      .container {
+        margin: 0px 20px;
+        width: 1200px;
+      }
+      #btn1 {
+        width:100px;
+        height: 60px;
+    
+      }
+
+      header {
+        height: 100vh;
+        position :static;
+
+        background-image: linear-gradient(
+            rgb(170, 217, 247),
+            rgb(6, 23, 25)
+          ),
+          url();
+        background-size: cover;
+        color: #fff;
+      }
+
+      nav {
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        justify-content:space-between;
+        padding-top: 40px;
+        
+      }
+
+      .header-container {
+        width: 1200px;
+        position: absolute;
+
+       
+        left: 50%;
+        top: 50%;
+
+        
+        transform: translate(-50%, -50%);
+
+        
+      }
+
+      .header-container-inner {
+        width: 50%;
+      
+      }
+
+      h1 {
+        font-size: 52px;
+        margin-bottom: 32px;
+        line-height: 1.05;
+      }
+
+      p {
+        font-size: 20px;
+        line-height: 1.6;
+        margin-bottom: 48px;
+      }
+      .btn2{
+        color: black;
+        
+      }
+      .btn2:hover{
+        transition:1s;
+        color:darkred;
+        font-size: large;
+        
+      }
+    
+      .btn{
+        font-size: 20px;
+        font-weight: 600;
+        background-color: #1c0099;
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        padding: 16px 32px;
+        border-radius: 9px;
+      }
+      .btn:hover{
+        transition: 1s;
+        background-color:darkred;
+        font-size: larger;
+      }
+      .btn4{
+        font-size: 20px;
+        font-weight: 600;
+        background-color: #f40b0b;
+        color: rgb(5, 5, 5);
+        text-decoration: none;
+        display: inline-block;
+        padding: 16px 32px;
+        border-radius: 9px;
+      }
+      .btn4:hover{
+        transition: 1s;
+        color:#fff;
+        background-color:rgb(28, 1, 47);
+        font-size: larger;
+      }
+
+      h2 {
+        font-size: 44px;
+        margin-bottom: 48px;
+      }
+
+      section {
+        padding: 96px 0;
+        background-color: #f7f7f7;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div id=><img src="img/Driftyicon.ico" id="btn1"/> </div>
+        <div class="btn2" >CONTACT US</div>
+        <div class="btn2" >ABOUT US</div>
+        <div class="btn2" >DOWNLOAD</div>
+      </nav>
+
+      <div class="header-container">
+        <div class="header-container-inner">
+          <h1>DRIFTY</h1>
+          
+          <p>
+            Drifty is an open-source interactive File Downloader system built with java.
+            It takes the link to the file, the directory where it needs to be saved and the filename
+             of the downloaded file as input and downloads it.
+          </p>
+          <a href="#" class="btn">more info</a>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div class="container">
+        <h2>More Information About Drifty</h2>
+        <p>
+          It is currently available in CLI mode. It uses URL class for connecting to the server to get the file,
+           FileSystems, Files and Path classes to check existence of the directory and create them if needed,
+           and ReadableByteChannel and FileOutputStream clases for downloading the file.
+        </p>
+        <a href="#" class="btn4">download now</a>
+      </div>
+    </section>
+  </body>
+</html>
