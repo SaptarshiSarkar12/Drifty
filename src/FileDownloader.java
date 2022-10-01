@@ -96,6 +96,6 @@ class FileDownloader implements Runnable {
             dir = dir + System.getProperty("file.separator");
         }
         System.out.println(ANSI_YELLOW+ "Successfully downloaded " + fileName );
-        Drifty_CLI.cl.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + dir + fileName);
+        Drifty_CLI.cl.log("INFO", "Downloaded " + fileName + " of size " + ProgressBarThread.totalDownloadBytes + " at " + dir + fileName);
     }
 }
