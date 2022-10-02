@@ -2,14 +2,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ProgressBarThread extends Thread {
-    private float charPercent;
+    private final float charPercent;
     private long downloadedBytes;
     private boolean downloading;
     private long downloadSpeed;
-    private String fileName;
-    private FileOutputStream fos;   
+    private final String fileName;
+    private final FileOutputStream fos;
     public static long totalDownloadBytes;
-    private int charAmt;
+    private final int charAmt;
     
    
     public ProgressBarThread(FileOutputStream fos, long totalDownloadBytes, String fileName) {
@@ -34,8 +34,7 @@ public class ProgressBarThread extends Thread {
         float filled = downloadedBytes/charPercent;
         String bar = "=".repeat((int)filled)+".".repeat(charAmt-(int)filled);
         bar = bar.substring(0, charAmt/2-2) + String.format("%02d", (int)(downloadedBytes*100/totalDownloadBytes)) +"%" + bar.substring(charAmt/2+1);
-        String output = "["+spinner+"]  "+fileName+"  (0KB)["+bar+"]("+convertBytes(totalDownloadBytes)+")  " + (float)downloadSpeed/1000000 + " MB/s      ";
-        return output;
+        return "["+spinner+"]  "+fileName+"  (0KB)["+bar+"]("+convertBytes(totalDownloadBytes)+")  " + (float)downloadSpeed/1000000 + " MB/s      ";
     }
     private String convertBytes(long bytes) {
         String sizeWithUnit;
@@ -46,7 +45,6 @@ public class ProgressBarThread extends Thread {
                 bytes = bytes/1024;
                 sizeWithUnit = bytes + " megabytes";
                 if (bytes > 1000){
-                    bytes = bytes/1024;
                     sizeWithUnit = totalDownloadBytes + "gigabytes";
                 }
             }
@@ -58,12 +56,14 @@ public class ProgressBarThread extends Thread {
     private void cleanup(){
         System.out.println("\r"+generateProgressBar("/"));
         if (downloadedBytes == totalDownloadBytes) {
-            System.out.println("Download "+fileName+" ("+convertBytes(downloadedBytes)+") successful!");
+            String sizeWithUnit = convertBytes(downloadedBytes);
+            System.out.println("Downloaded "+fileName+" of size "+ sizeWithUnit +" successfully !");
+            Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName);
         } else {
             System.out.println("Download failed...");
         }
     }
-    public void run() {   
+    public void run() {
         long initialMeasurement;
         String[] spinner = new String[]{"/", "-", "\\", "|"};
         while (downloading) {
@@ -73,11 +73,10 @@ public class ProgressBarThread extends Thread {
                     Thread.sleep(250);
                     downloadedBytes = fos.getChannel().size();
                     downloadSpeed = (downloadedBytes - initialMeasurement)*4;
-                    System.out.print("\r"+generateProgressBar(spinner[i]));
+                    System.out.print("\r" + generateProgressBar(spinner[i]));
                 }
-            } catch (InterruptedException e) {
-            } catch (IOException e) {}
-            
+            } catch (InterruptedException | IOException ignored) {
+            }
         }
         cleanup();
     }
