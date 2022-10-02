@@ -4,14 +4,14 @@ import java.util.Scanner;
 public class Drifty_CLI {
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
-    static CreateLogs cl = new CreateLogs("Drifty_CLI_LOG.log", Drifty_CLI.class.getName());
+    public static CreateLogs logger = new CreateLogs("Drifty_CLI_LOG.log", Drifty_CLI.class.getName());
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     private static String fName = null;
     public static void main(String[] args) {
-        cl.log("INFO", "Application Started !");
+        logger.log("INFO", "Application Started !");
         if (!flag) {
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
             System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
@@ -55,7 +55,7 @@ public class Drifty_CLI {
                     }
                     else {
                         System.out.println("Invalid input!");
-                        cl.log("ERROR", "Invalid input");
+                        logger.log("ERROR", "Invalid input");
                     }
                 } else{
                     System.out.print("Enter the filename (with file extension) : ");
@@ -68,19 +68,19 @@ public class Drifty_CLI {
                 char default_folder = SC.nextLine().toLowerCase().charAt(0);
                 if (default_folder == 'y') {
                     downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
-                    if (downloadsFolder == null) {
+                    if (downloadsFolder.equals(System.getProperty("file.separator"))) {
                         System.out.println("Failed to retrieve default download folder!");
-                        cl.log("ERROR", "Failed to retrieve default download folder!");
+                        logger.log("ERROR", "Failed to retrieve default download folder!");
                         enterDownloadsFolder();
                     } else {
                         System.out.println("Default download folder detected : " + downloadsFolder);
-                        cl.log("INFO", "Default download folder detected : " + downloadsFolder);
+                        logger.log("INFO", "Default download folder detected : " + downloadsFolder);
                     }
                 } else if (default_folder == 'n') {
                     enterDownloadsFolder();
                 } else {
                     System.out.println("Invalid input!");
-                    cl.log("ERROR", "Invalid input");
+                    logger.log("ERROR", "Invalid input");
                     continue;
                 }
                 break;

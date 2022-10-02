@@ -8,7 +8,7 @@ class CheckDirectory {
         if (!(checkIfFolderExists(dir))){
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
-            Drifty_CLI.cl.log("INFO", "Directory Created");
+            Drifty_CLI.logger.log("INFO", "Directory Created");
         }
     }
     private static boolean checkIfFolderExists(String folderName) {
@@ -20,7 +20,7 @@ class CheckDirectory {
             }
         } catch (Exception e) {
             System.out.println("Error while checking for directory !");
-            Drifty_CLI.cl.log("ERROR", "Error while checking for directory !");
+            Drifty_CLI.logger.log("ERROR", "Error while checking for directory !");
         }
         return found;
     }
