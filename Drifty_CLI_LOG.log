@@ -1,10 +1,6 @@
-01-Oct-2022 17:17:12 INFO - Application Started !
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 ERROR - Invalid input
-01-Oct-2022 17:17:12 INFO - Default download folder detected : D:\Downloads\
-01-Oct-2022 17:17:12 INFO - Downloading gh ...
-01-Oct-2022 17:17:12 INFO - Downloaded gh of size 14 megabytes at D:\Downloads\gh
+02-Oct-2022 13:49:55 INFO - Application Started !
+02-Oct-2022 13:49:55 INFO - Default download folder detected : C:\Users\aryan\Downloads\
+02-Oct-2022 13:49:55 ERROR - Failed to connect to https://www.collinsdictionary.com/images/full/apple_158989157.jpg !
+02-Oct-2022 13:49:55 INFO - Default download folder detected : C:\Users\aryan\Downloads\
+02-Oct-2022 13:49:55 INFO - Downloading p7zz5dxZ_400x400.jpg ...
+02-Oct-2022 13:49:55 INFO - Downloaded p7zz5dxZ_400x400.jpg of size 5080 at C:\Users\aryan\Downloads\p7zz5dxZ_400x400.jpg
