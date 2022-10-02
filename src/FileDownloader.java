@@ -12,9 +12,6 @@ class FileDownloader implements Runnable {
     private static long totalSize;
     private static URL url;
 
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_RESET = "\u001B[01m";
-
     public FileDownloader(String link, String fileName, String dir){
         FileDownloader.link = link;
         FileDownloader.fileName = fileName;
@@ -91,7 +88,7 @@ class FileDownloader implements Runnable {
             progressBarThread.setDownloading(false);
             // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
             try {
-                Thread.sleep(500);
+                Thread.sleep(1000);
             } catch (InterruptedException ignored) {}
             
         } catch (IOException e) {

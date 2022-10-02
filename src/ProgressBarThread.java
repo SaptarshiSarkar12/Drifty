@@ -32,7 +32,10 @@ public class ProgressBarThread extends Thread {
     }
     private String generateProgressBar(String spinner) {
         float filled = downloadedBytes/charPercent;
-        String bar = "=".repeat((int)filled)+".".repeat(charAmt-(int)filled);
+//        String bar = "=".repeat((int)filled)+".".repeat(charAmt-(int)filled);
+        String a = new String(new char[(int)filled]).replace("\0", "=");
+        String b = new String(new char[charAmt-(int)filled]).replace("\0", ".");
+        String bar = a + b;
         bar = bar.substring(0, charAmt/2-2) + String.format("%02d", (int)(downloadedBytes*100/totalDownloadBytes)) +"%" + bar.substring(charAmt/2+1);
         return "["+spinner+"]  "+fileName+"  (0KB)["+bar+"]("+convertBytes(totalDownloadBytes)+")  " + (float)downloadSpeed/1000000 + " MB/s      ";
     }
