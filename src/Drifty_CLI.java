@@ -43,8 +43,7 @@ public class Drifty_CLI {
             SC.nextLine();
             while (true){
                 if (fName != null) {
-                    System.out.print(
-                        "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+                    System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     char rename_file = SC.nextLine().toLowerCase().charAt(0);
                     if (rename_file == 'y') {
                         System.out.print("Enter the filename (with file extension) : ");
