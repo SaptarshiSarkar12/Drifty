@@ -56,8 +56,9 @@ public class ProgressBarThread extends Thread {
     private void cleanup(){
         System.out.println("\r"+generateProgressBar("/"));
         if (downloadedBytes == totalDownloadBytes) {
-            System.out.println("Download "+fileName+" ("+convertBytes(downloadedBytes)+") successful!");
-            Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + ProgressBarThread.totalDownloadBytes + " at " + FileDownloader.getDir() + fileName);
+            String sizeWithUnit = convertBytes(downloadedBytes);
+            System.out.println("Downloaded "+fileName+" of size "+ sizeWithUnit +" successfully !");
+            Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName);
         } else {
             System.out.println("Download failed...");
         }
