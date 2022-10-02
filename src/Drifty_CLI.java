@@ -67,12 +67,13 @@ public class Drifty_CLI {
                 System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
                 char default_folder = SC.nextLine().toLowerCase().charAt(0);
                 if (default_folder == 'y') {
-                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath();
                     if (downloadsFolder == null) {
                         System.out.println("Failed to retrieve default download folder!");
                         cl.log("ERROR", "Failed to retrieve default download folder!");
                         enterDownloadsFolder();
                     } else {
+                        downloadsFolder = downloadsFolder.concat(System.getProperty("file.separator"));
                         System.out.println("Default download folder detected : " + downloadsFolder);
                         cl.log("INFO", "Default download folder detected : " + downloadsFolder);
                     }
