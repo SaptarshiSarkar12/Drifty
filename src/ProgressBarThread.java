@@ -63,7 +63,8 @@ public class ProgressBarThread extends Thread {
             System.out.println("Downloaded "+fileName+" of size "+ sizeWithUnit +" successfully !");
             Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName);
         } else {
-            System.out.println("Download failed...");
+            System.out.println("Download failed!");
+            Drifty_CLI.logger.log("ERROR", "Download failed!");
         }
     }
     public void run() {
