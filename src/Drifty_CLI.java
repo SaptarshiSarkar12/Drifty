@@ -184,6 +184,16 @@ public class Drifty_CLI {
     }
 
     private static void help(){
-        // TODO MINI DOC
+        System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m--=| DRIFTY CLI HELP |=--"+ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m        v 1.1.0"+ANSI_RESET);
+        System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
+        System.out.println("\033[31;1mRequired parameter: File URL"+ANSI_RESET+" \033[3m(This must be the first arg. you pass)"+ANSI_RESET);
+        System.out.println("\033[33;1mOptional parameters:");
+        System.out.println("\033[97;1mName        ShortForm     Default     Description"+ANSI_RESET);
+        System.out.println("-location   -l            Downloads   The location on your computer where content downloaded from Drifty are placed.");
+        System.out.println("-name       -n            Source      Renames file.");
+        System.out.println("-help       -h            N/A         Provides concise information for Drifty CLI.\n");
+        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example"+ ANSI_RESET );
+        System.out.println("\033[37;3m* Requires java 18 or higher. \n"+ANSI_RESET);
     }
 }
