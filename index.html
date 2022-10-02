@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />">
     <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
 <script>
   function addDarkmodeWidget() {
@@ -33,6 +34,7 @@
       .container {
         margin: 0px 20px;
         width: 1200px;
+        text-align: center;
       }
       #btn1 {
         width:100px;
@@ -94,6 +96,7 @@
       }
       .btn2{
         color: black;
+        margin:0px 20px; 
         
       }
       .btn2:hover{
@@ -144,12 +147,39 @@
         padding: 96px 0;
         background-color: #f7f7f7;
       }
+      .footer{
+        padding: 40px 0px;
+        background-color: rgb(1, 1, 1);
+      }
+      .footer .social{
+        text-align: center;
+        padding-bottom: 25px;
+     
+      }
+      .footer .social a{
+        font-size: 30px;
+        color: rgb(3, 242, 255);
+        border: 1px solid white;
+        width: 60px;
+        height: 60px;
+        line-height: 58px;
+        text-align: center;
+        display: inline-block;
+        border-radius: 50%;
+        margin: 0px 10px;
+        opacity: 0.75;
+
+      }
+      .footer .social a:hover{
+        opacity: 1;
+
+      }
     </style>
   </head>
   <body>
     <header>
       <nav class="container">
-        <div id=><img src="img/Driftyicon.ico" id="btn1"/> </div>
+        <div id=><img src="img/Driftyicon.ico" id="btn1"/></div>
         <div class="btn2" >CONTACT US</div>
         <div class="btn2" >ABOUT US</div>
         <div class="btn2" >DOWNLOAD</div>
@@ -168,7 +198,7 @@
         </div>
       </div>
     </header>
-
+     
     <section>
       <div class="container">
         <h2>More Information About Drifty</h2>
@@ -178,6 +208,16 @@
            and ReadableByteChannel and FileOutputStream clases for downloading the file.
         </p>
         <a href="#" class="btn4">download now</a>
+      </div>
+    </section>
+    <section class="footer">
+      <div class="social">
+        <a href="https://www.twitter.com/SSarkar2007"><i class="fab fa-twitter"></i></a>
+        <a href="https://github.com/SaptarshiSarkar12"><i class="fab fa-github"></i></a>
+        <a href="saptarshi.programmer@gmail.com "><i class="fa-sharp fa-solid fa-envelope"></i></a>
+        <a href="https://saptarshisarkar.hashnode.dev/" ><i class="fa-brands fa-hashnode"></i></a>
+        <a href="- https://www.bio.link/saptarshi"><i class="fa-sharp fa-solid fa-link"></i></a>
+      <!--added footers -->
       </div>
     </section>
   </body>
