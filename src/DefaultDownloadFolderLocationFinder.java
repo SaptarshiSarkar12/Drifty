@@ -14,7 +14,11 @@ class DefaultDownloadFolderLocationFinder {
             if (p == -1) {
                 return null;
             }
-            return result.substring(p + REG_TOKEN.length()).trim();
+
+            result = result.substring(p + REG_TOKEN.length()).trim();
+            result = result.replace("%USERPROFILE%", System.getProperty("user.home"));
+
+            return result;
         }
         catch (Exception e) {
             return null;
