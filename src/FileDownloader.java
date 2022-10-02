@@ -13,6 +13,7 @@ class FileDownloader implements Runnable {
     private static URL url;
 
     public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RESET = "\u001B[01m";
 
     public FileDownloader(String link, String fileName, String dir){
         FileDownloader.link = link;
@@ -102,6 +103,5 @@ class FileDownloader implements Runnable {
         if (!(dir.endsWith("\\"))) {
             dir = dir + System.getProperty("file.separator");
         }
-        System.out.println(ANSI_YELLOW+ "Successfully downloaded " + fileName );
     }
 }
