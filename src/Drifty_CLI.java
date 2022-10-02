@@ -9,6 +9,7 @@ public class Drifty_CLI {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
+    private static String fName = null;
     public static void main(String[] args) {
         cl.log("INFO", "Application Started !");
         if (!flag) {
@@ -23,6 +24,7 @@ public class Drifty_CLI {
         }
         flag = true;
         while(true) {
+            fName = null;
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
             while (true) {
@@ -30,14 +32,37 @@ public class Drifty_CLI {
                     System.out.println("Invalid URL. Please enter again");
                     System.out.print("Enter the link to the file : ");
                     link = SC.next();
-                }
-                else{
+                } else if (!containsFile(link)) {
+                    System.out.println("[" + ANSI_CYAN + "INFO" + ANSI_RESET
+                        + "] Automatic file detection failed!");
+                    break;
+                } else {
                     break;
                 }
             }
             SC.nextLine();
-            System.out.print("Enter the filename (with file extension) : ");
-            String fName = SC.nextLine();
+            while (true){
+                if (fName != null) {
+                    System.out.print(
+                        "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+                    char rename_file = SC.nextLine().toLowerCase().charAt(0);
+                    if (rename_file == 'y') {
+                        System.out.print("Enter the filename (with file extension) : ");
+                        fName = SC.nextLine();
+                        break;
+                    } else if (rename_file =='n'){
+                        break;
+                    }
+                    else {
+                        System.out.println("Invalid input!");
+                        cl.log("ERROR", "Invalid input");
+                    }
+                } else{
+                    System.out.print("Enter the filename (with file extension) : ");
+                    fName = SC.nextLine();
+                    break;
+                }
+            }
             while (true) {
                 System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
                 char default_folder = SC.nextLine().toLowerCase().charAt(0);
@@ -89,5 +114,27 @@ public class Drifty_CLI {
         catch (Exception e){
             return false;
         }
+    }
+    /**
+     Check and inform user if the url contains file.
+     Eg: "example.com/file.txt" prints "[INFO] File found: file.txt"
+     Comment Template: Before -> After
+     **/
+    private static boolean containsFile(String link){
+        // example.com/file.json -> file.json
+        String file = link.substring(link.lastIndexOf("/")+1);
+        int index = file.lastIndexOf(".");
+        if (index < 0 || index > file.length()){
+            return false;
+        }
+        String extension = file.substring(index);
+        // edge case 1 : "example.com/."
+        if (extension.length()==1){
+            return false;
+        }
+        // file.png?width=200 -> file.png
+        fName = file.split("([?])")[0];
+        System.out.println("[" + ANSI_CYAN + "INFO" + ANSI_RESET + "] File found: " + fName + ANSI_RESET);
+        return true;
     }
 }
