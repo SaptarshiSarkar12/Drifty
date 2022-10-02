@@ -1,4 +1,7 @@
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Drifty_CLI {
@@ -10,6 +13,7 @@ public class Drifty_CLI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     private static String fName = null;
+    
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         if (!flag) {
@@ -23,6 +27,42 @@ public class Drifty_CLI {
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         }
         flag = true;
+        if (args.length > 0){
+            String URL = args[0];
+            String name = null;
+            String location = null;
+            for (int i = 0; i<args.length;i++){
+                if (Objects.equals(args[i], "-help") || Objects.equals(args[i], "-h")){
+                    help();
+                    System.exit(0);
+                } else if (Objects.equals(args[i], "-name") || (Objects.equals(args[i], "-n"))){
+                    name = args[i+1];
+                } else if (Objects.equals(args[i], "-location") || (Objects.equals(args[i], "-l"))){
+                    location = args[i+1];
+                }
+            }
+            if (!validURL(URL)){
+                System.exit(0);
+            }
+            containsFile(URL);
+            fName = name==null? fName: name;
+            if (fName==null){
+                System.out.print("Enter the filename (with file extension) : ");
+                fName = SC.nextLine();
+            }
+            downloadsFolder = location;
+            if (downloadsFolder == null){
+                saveToDefault();
+            } else{
+                downloadsFolder = downloadsFolder.replace('/', '\\');
+                if (!(downloadsFolder.endsWith("\\"))) {
+                    downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+                }
+            }
+            FileDownloader fDownload = new FileDownloader(URL, fName, downloadsFolder);
+            fDownload.run();
+            System.exit(0);
+        }
         while(true) {
             fName = null;
             System.out.print("Enter the link to the file : ");
@@ -66,17 +106,7 @@ public class Drifty_CLI {
                 System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
                 char default_folder = SC.nextLine().toLowerCase().charAt(0);
                 if (default_folder == 'y') {
-                    System.out.println("Trying to auto-detect default Downloads folder...");
-                    logger.log("INFO", "Trying to auto-detect default Downloads folder...");
-                    downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
-                    if (downloadsFolder.equals(System.getProperty("file.separator"))) {
-                        System.out.println("Failed to retrieve default download folder!");
-                        logger.log("ERROR", "Failed to retrieve default download folder!");
-                        enterDownloadsFolder();
-                    } else {
-                        System.out.println("Default download folder detected : " + downloadsFolder);
-                        logger.log("INFO", "Default download folder detected : " + downloadsFolder);
-                    }
+                    saveToDefault();
                 } else if (default_folder == 'n') {
                     enterDownloadsFolder();
                 } else {
@@ -101,6 +131,20 @@ public class Drifty_CLI {
         downloadsFolder = SC.nextLine().replace('/', '\\');
         if (!(downloadsFolder.endsWith("\\"))) {
             downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+        }
+    }
+
+    private static void saveToDefault(){
+        System.out.println("Trying to auto-detect default Downloads folder...");
+        logger.log("INFO", "Trying to auto-detect default Downloads folder...");
+        downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+        if (downloadsFolder.equals(System.getProperty("file.separator"))) {
+            System.out.println("Failed to retrieve default download folder!");
+            logger.log("ERROR", "Failed to retrieve default download folder!");
+            enterDownloadsFolder();
+        } else {
+            System.out.println("Default download folder detected : " + downloadsFolder);
+            logger.log("INFO", "Default download folder detected : " + downloadsFolder);
         }
     }
 
@@ -133,5 +177,13 @@ public class Drifty_CLI {
         fName = file.split("([?])")[0];
         System.out.println("Filename detected : " + fName);
         return true;
+    }
+
+    private static String getCurrentTimeAsName(){
+        return new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
+    }
+
+    private static void help(){
+        // TODO MINI DOC
     }
 }
