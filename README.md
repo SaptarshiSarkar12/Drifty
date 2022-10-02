@@ -43,6 +43,33 @@ See the below video how to use the application. For any help, you can open an [`
 
 https://user-images.githubusercontent.com/105960032/192246875-6b188bdf-2de9-49cb-940d-d47d50768767.mp4
 
+## Seeing warning while Downloading
+
+![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
+
+It is because Microsoft Defender could not verify it safe it is not commonly downloaded. Feel free to proceed by following steps:
+- Tap on the three dots. 
+- Tap on keep.
+
+![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
+
+- Tap "Show More".
+- Tap "Keep anyway".
+
+![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
+
+- Now its downloaded, you can proceed.🎉
+
+### Provide a Feedback
+
+**Also**, you also can provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
+- Tap on three dots.
+- Tap on "Report this file as safe" instead of tapping on "Keep".
+
+![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
+
+- It will take you to "Report a download" page. You can provide your feedback there.😄
+
 ## Thanks to all contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
    <img src = "https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty"/>
