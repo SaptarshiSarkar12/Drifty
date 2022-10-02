@@ -5,56 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drifty</title>
-
+  </head>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />">
-    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
-<script>
-  function addDarkmodeWidget() {
-    new Darkmode().showWidget();
-  }
-  window.addEventListener('load', addDarkmodeWidget);
-</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+   
+   
     <style>
+      
+      
+      
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-
+      
+       
+       
+      
+        :root{
+          --background-color:rgb(41, 41, 42);
+          --text-color:rgb(244, 253, 254);
+          --primary-color:rgb(0, 174, 255);
+          --background-color1:rgb(114, 117, 117);
+       }
+       
       html {
         font-family: "Rubik", sans-serif;
-        color: #444;
+        color: var(--text-color);
       }
 
       .container {
         margin: 0px 20px;
         width: 1200px;
-        text-align: center;
-      }
+        flex: 1; 
+        text-align: right;
+      } 
       #btn1 {
-        width:100px;
+        width:80px;
         height: 60px;
     
       }
+      
 
       header {
         height: 100vh;
         position :static;
 
-        background-image: linear-gradient(
-            rgb(170, 217, 247),
-            rgb(6, 23, 25)
-          ),
-          url();
-        background-size: cover;
-        color: #fff;
+      
+      background-color: var(--background-color);
+      color: var(--text-color);
       }
-
+        
       nav {
         font-size: 20px;
         font-weight: 700;
@@ -95,13 +101,13 @@
         margin-bottom: 48px;
       }
       .btn2{
-        color: black;
+        color: var(--text-color);
         margin:0px 20px; 
         
       }
       .btn2:hover{
         transition:1s;
-        color:darkred;
+        color:var(--primary-color);
         font-size: large;
         
       }
@@ -124,8 +130,8 @@
       .btn4{
         font-size: 20px;
         font-weight: 600;
-        background-color: #f40b0b;
-        color: rgb(5, 5, 5);
+        background-color: var(--primary-color);
+        color: var(--text-color);
         text-decoration: none;
         display: inline-block;
         padding: 16px 32px;
@@ -145,11 +151,11 @@
 
       section {
         padding: 96px 0;
-        background-color: #f7f7f7;
+        background-color:var(--background-color1);
       }
       .footer{
         padding: 40px 0px;
-        background-color: rgb(1, 1, 1);
+        background-color: rgb(0, 0, 0)
       }
       .footer .social{
         text-align: center;
@@ -158,8 +164,8 @@
       }
       .footer .social a{
         font-size: 30px;
-        color: rgb(3, 242, 255);
-        border: 1px solid white;
+        color: rgb(1, 128, 125);
+        border: 1px solid rgb(218, 127, 0);
         width: 60px;
         height: 60px;
         line-height: 58px;
@@ -174,16 +180,28 @@
         opacity: 1;
 
       }
+      #dark{
+        width:30px;
+        cursor: pointer;
+      }
+      
+        
+
+      
+    
     </style>
-  </head>
+  
   <body>
     <header>
+      
       <nav class="container">
         <div id=><img src="img/Driftyicon.ico" id="btn1"/></div>
         <div class="btn2" >CONTACT US</div>
         <div class="btn2" >ABOUT US</div>
         <div class="btn2" >DOWNLOAD</div>
+       
       </nav>
+
 
       <div class="header-container">
         <div class="header-container-inner">
@@ -220,5 +238,7 @@
       <!--added footers -->
       </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script src="script.js" ></script>
   </body>
 </html>
