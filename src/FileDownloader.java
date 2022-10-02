@@ -35,8 +35,8 @@ class FileDownloader implements Runnable {
             url = new URL(link);
             URLConnection openConnection = url.openConnection();
             openConnection.connect();
-            totalSize = Long.valueOf(openConnection.getHeaderField("content-length"));
-            if (fileName == "") {
+            totalSize = Long.parseLong(openConnection.getHeaderField("content-length"));
+            if (fileName.length() == 0) {
                  String[] webPaths = url.getFile().trim().split("/");
                  fileName = webPaths[webPaths.length-1];
             }
@@ -83,8 +83,10 @@ class FileDownloader implements Runnable {
             Drifty_CLI.cl.log("INFO", "Downloading " + fileName + " ...");
             fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             progressBarThread.setDownloading(false);
-            //keep main thread from closing the IO for short amt. of time so UI thread can finish and output
-            try {Thread.sleep(500);} catch (InterruptedException e) {}; 
+            // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {}
             
         } catch (IOException e) {
             Drifty_CLI.cl.log("ERROR", "Failed to download the contents !");
