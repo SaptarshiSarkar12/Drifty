@@ -5,7 +5,7 @@
 </p>
 
 ---
-[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built with java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode. It uses URL class for connecting to the server to get the file, FileSystems, Files and Path classes to check existence of the directory and create them if needed, and ReadableByteChannel and FileOutputStream clases for downloading the file.
+[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built with java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode. 
 
 [![Issues](https://img.shields.io/github/issues/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/issues)
 [![License](https://img.shields.io/github/license/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE)
