@@ -115,7 +115,7 @@ public class Drifty_CLI {
     }
     /**
      * Check and inform user if the url contains file.
-     * Example : "example.com/file.txt" prints "[INFO] File found: file.txt"
+     * Example : "example.com/file.txt" prints "Filename detected: file.txt"
      **/
     private static boolean containsFile(String link){
         // example.com/file.json -> file.json
@@ -131,7 +131,7 @@ public class Drifty_CLI {
         }
         // file.png?width=200 -> file.png
         fName = file.split("([?])")[0];
-        System.out.println("File Name detected : " + fName);
+        System.out.println("Filename detected : " + fName);
         return true;
     }
 }
