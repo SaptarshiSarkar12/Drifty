@@ -11,10 +11,10 @@ public class CreateLogs {
     static String clsName;
     static DateFormat df;
     static boolean isLogEmpty;
-    static String filePath;
+    static Path filePath;
     static Calendar calObj = Calendar.getInstance();
     public CreateLogs(String logFileName, String className){
-        filePath = logFileName;
+        filePath = FileSystems.getDefault().getPath(logFileName);
         clsName = className;
         df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }
@@ -27,8 +27,8 @@ public class CreateLogs {
         try {
             isLogEmpty = true;
 //            Files.writeString(filePath, dateAndTime + " " + type.toUpperCase() + " - " + msg + "\n", StandardOpenOption.APPEND);
-            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filePath)));
-            writer.println(dateAndTime + " " + type.toUpperCase() + " - " + msg);
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+            writer.write(dateAndTime + " " + type.toUpperCase() + " - " + msg + "\n");
         } catch (IOException e) {
             System.out.println("Failed to create log : " + msg);
         }

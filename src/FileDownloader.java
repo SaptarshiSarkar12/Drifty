@@ -40,7 +40,7 @@ class FileDownloader implements Runnable {
             url = new URL(link);
             URLConnection openConnection = url.openConnection();
             openConnection.connect();
-            totalSize = Long.parseLong(openConnection.getHeaderField("content-length"));
+            totalSize = openConnection.getContentLength();
             if (fileName.length() == 0) {
                  String[] webPaths = url.getFile().trim().split("/");
                  fileName = webPaths[webPaths.length-1];
