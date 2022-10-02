@@ -77,7 +77,7 @@ class FileDownloader implements Runnable {
             readableByteChannel = Channels.newChannel(urlStream);
         } catch (IOException e) {
             System.out.println("Failed to get a data stream !");
-            Drifty_CLI.logger.log("ERROR", "Failed to get a data stream !" + e.getMessage());
+            Drifty_CLI.logger.log("ERROR", "Failed to get a data stream ! " + e.getMessage());
         }
         try {
             FileOutputStream fos = new FileOutputStream(dir + fileName);

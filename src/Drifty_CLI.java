@@ -33,8 +33,8 @@ public class Drifty_CLI {
                     System.out.print("Enter the link to the file : ");
                     link = SC.next();
                 } else if (!containsFile(link)) {
-                    System.out.println("[" + ANSI_CYAN + "INFO" + ANSI_RESET
-                        + "] Automatic file detection failed!");
+                    System.out.println("Automatic file name detection failed!");
+                    logger.log("ERROR", "Automatic file name detection failed!");
                     break;
                 } else {
                     break;
@@ -66,6 +66,8 @@ public class Drifty_CLI {
                 System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
                 char default_folder = SC.nextLine().toLowerCase().charAt(0);
                 if (default_folder == 'y') {
+                    System.out.println("Trying to auto-detect default Downloads folder...");
+                    logger.log("INFO", "Trying to auto-detect default Downloads folder...");
                     downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
                     if (downloadsFolder.equals(System.getProperty("file.separator"))) {
                         System.out.println("Failed to retrieve default download folder!");
@@ -91,9 +93,6 @@ public class Drifty_CLI {
             if(quit.equals("Q") || quit.equals("q")){
                 break;
             }
-            else {
-                continue;
-            }
         }
     }
 
@@ -115,9 +114,8 @@ public class Drifty_CLI {
         }
     }
     /**
-     Check and inform user if the url contains file.
-     Eg: "example.com/file.txt" prints "[INFO] File found: file.txt"
-     Comment Template: Before -> After
+     * Check and inform user if the url contains file.
+     * Example : "example.com/file.txt" prints "[INFO] File found: file.txt"
      **/
     private static boolean containsFile(String link){
         // example.com/file.json -> file.json
@@ -133,7 +131,7 @@ public class Drifty_CLI {
         }
         // file.png?width=200 -> file.png
         fName = file.split("([?])")[0];
-        System.out.println("[" + ANSI_CYAN + "INFO" + ANSI_RESET + "] File found: " + fName + ANSI_RESET);
+        System.out.println("File Name detected : " + fName);
         return true;
     }
 }
