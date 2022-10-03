@@ -17,14 +17,7 @@ public class Drifty_CLI {
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         if (!flag) {
-            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
-            System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
-            System.out.println(ANSI_CYAN+" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /"+ANSI_RESET);
-            System.out.println(ANSI_CYAN+" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /"+ANSI_RESET);
-            System.out.println(ANSI_CYAN+" | |  | ||  _  /   | |  |  __|     | |     \\   / "+ANSI_RESET);
-            System.out.println(ANSI_CYAN+" | |__| || | \\ \\  _| |_ | |        | |      | |  "+ANSI_RESET);
-            System.out.println(ANSI_CYAN+" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  "+ANSI_RESET);
-            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+            printBanner();
         }
         flag = true;
         if (args.length > 0){
@@ -123,6 +116,7 @@ public class Drifty_CLI {
             if(quit.equals("Q") || quit.equals("q")){
                 break;
             }
+            printBanner();
         }
     }
 
@@ -196,5 +190,17 @@ public class Drifty_CLI {
         System.out.println("-help       -h            N/A         Provides concise information for Drifty CLI.\n");
         System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example"+ ANSI_RESET );
         System.out.println("\033[37;3m* Requires java 18 or higher. \n"+ANSI_RESET);
+    }
+
+    private static void printBanner(){
+        System.out.print("\033[H\033[2J");
+        System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+        System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
+        System.out.println(ANSI_CYAN+" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /"+ANSI_RESET);
+        System.out.println(ANSI_CYAN+" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /"+ANSI_RESET);
+        System.out.println(ANSI_CYAN+" | |  | ||  _  /   | |  |  __|     | |     \\   / "+ANSI_RESET);
+        System.out.println(ANSI_CYAN+" | |__| || | \\ \\  _| |_ | |        | |      | |  "+ANSI_RESET);
+        System.out.println(ANSI_CYAN+" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  "+ANSI_RESET);
+        System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
     }
 }
