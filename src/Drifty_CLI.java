@@ -17,7 +17,7 @@ public class Drifty_CLI {
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         if (!flag) {
-            printBanner();
+            printBanner(); 	 
         }
         flag = true;
         if (args.length > 0){
