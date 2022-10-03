@@ -39,7 +39,7 @@ For **Contributors** :
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed and merged if approved. ✔ 
 
-## Seeing warning while Downloading
+## Seeing warning ⚠ while Downloading ⬇
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
@@ -56,7 +56,7 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 
 - Now its downloaded, you can proceed.🎉
 
-### Provide a Feedback
+### Provide a Feedback 💬
 
 **Also**, you also can provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
 - Tap on three dots.
