@@ -22,14 +22,12 @@ Please feel to contribute to this project. See [**`Contribuing Guidelines`**](ht
 
 ## Get Started 🚀🚀
 For **Users** :
-1. Open the [`Latest Release Link`](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/) </p>
-![Releases](https://user-images.githubusercontent.com/105960032/192133804-7a77f446-3e69-48dd-9e51-1f3f408a5ae5.png)
-2. Click on the files according to the directions in the release description and the file will be downloaded in the default downloads folder.</p>
-
-https://user-images.githubusercontent.com/105960032/192246551-5895f08c-f4b7-4bde-8ec7-19572842b52b.mp4
-
+1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
+![Drifty Website](https://user-images.githubusercontent.com/105960032/193514247-436fabb8-7853-459d-bc23-c5999d3cbbe1.png)
+2. If you are a Windows User, click on [`Download Now (For Windows Users)`] button and for other users, click on [`Download Now (For Other Users)`]. The file will be downloaded.
+![Download Options](https://user-images.githubusercontent.com/105960032/193521265-cc796417-29a0-4cd1-8f78-b32f6fea2982.png)
 3. Go to the downloads folder and run the file.
-4. See [`Demo`](https://github.com/SaptarshiSarkar12/Drifty#demo) for demonstrations on how to use the app.
+4. See [`Demo`](https://github.com/SaptarshiSarkar12/Drifty#demo) for demonstrations on how to use the application.
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
