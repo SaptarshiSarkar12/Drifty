@@ -17,7 +17,7 @@ public class Drifty_CLI {
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         if (!flag) {
-            System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+  	    System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
             System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
             System.out.println(ANSI_CYAN+" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /"+ANSI_RESET);
             System.out.println(ANSI_CYAN+" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /"+ANSI_RESET);
@@ -25,6 +25,9 @@ public class Drifty_CLI {
             System.out.println(ANSI_CYAN+" | |__| || | \\ \\  _| |_ | |        | |      | |  "+ANSI_RESET);
             System.out.println(ANSI_CYAN+" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  "+ANSI_RESET);
             System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+    }
+}
+
         }
         flag = true;
         if (args.length > 0){
