@@ -12,7 +12,9 @@
 [![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers)
 [![GitHub Pages Deployment](https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Deployment)](https://github.com/SaptarshiSarkar12/Drifty/deployments)
 [![Size](https://img.shields.io/github/size/SaptarshiSarkar12/Drifty/Drifty_CLI.exe?label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty_CLI.exe)
-[![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
+[![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
+[![No. Of Downloads of Drifty jar](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar)
+[![No. Of Downloads of Drifty exe](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe)
 [![GitHub Discussions](https://img.shields.io/github/discussions/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/discussions)
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
 
@@ -24,7 +26,7 @@ Please feel to contribute to this project. See [**`Contribuing Guidelines`**](ht
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
 ![Drifty Website](https://user-images.githubusercontent.com/105960032/193514247-436fabb8-7853-459d-bc23-c5999d3cbbe1.png)
-2. If you are a Windows User, click on **`Download Now (For Windows Users)`** button and for other users, click on **`Download Now (For Other Users)`**. The file will be downloaded.
+2. If you are a Windows User, click on **`Download Now (For Windows Users)`** button and for other users, click on **`Download Now (For Other Users)`**. The file will be downloaded. </p>
 ![Download Options](https://user-images.githubusercontent.com/105960032/193521265-cc796417-29a0-4cd1-8f78-b32f6fea2982.png)
 3. Go to the downloads folder and run the file.
 4. See [`Demo`](https://github.com/SaptarshiSarkar12/Drifty#demo) for demonstrations on how to use the application.
