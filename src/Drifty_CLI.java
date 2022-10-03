@@ -174,10 +174,6 @@ public class Drifty_CLI {
         return true;
     }
 
-    private static String getCurrentTimeAsName(){
-        return new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
-    }
-
     private static void help(){
         System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----"+ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m            v1.1.0"+ANSI_RESET);
