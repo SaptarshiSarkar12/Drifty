@@ -59,9 +59,9 @@ body:
     validations:
       required: false
   - type: textarea
-      attributes:
-        label: Additional information
-        description: Add any other context about the problem here.  
-  - type: markdown
+    id: extrainfo
     attributes:
-      value: "Thank you for opening an issue!"
+      label: Additional information
+      description: Add any other context about the problem here.
+    validations:
+      required: false
