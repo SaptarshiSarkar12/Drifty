@@ -45,7 +45,7 @@ public class Drifty_CLI {
                 System.exit(0);
             }
             containsFile(URL);
-            fName = name==null? fName: name;
+            fName = (name==null) ? fName : name;
             if (fName==null){
                 System.out.print("Enter the filename (with file extension) : ");
                 fName = SC.nextLine();
@@ -132,6 +132,7 @@ public class Drifty_CLI {
         if (!(downloadsFolder.endsWith("\\"))) {
             downloadsFolder = downloadsFolder + System.getProperty("file.separator");
         }
+        logger.log("INFO", "Custom Directory Entered : " + downloadsFolder);
     }
 
     private static void saveToDefault(){
@@ -183,11 +184,11 @@ public class Drifty_CLI {
         return new SimpleDateFormat("yyyy-MM-dd-HHmmss").format(new Date());
     }
 
-    private static void help(){
-        System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m--=| DRIFTY CLI HELP |=--"+ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m        v 1.1.0"+ANSI_RESET);
+    public static void help(){
+        System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----"+ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m            v1.1.0"+ANSI_RESET);
         System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
-        System.out.println("\033[31;1mRequired parameter: File URL"+ANSI_RESET+" \033[3m(This must be the first arg. you pass)"+ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL"+ANSI_RESET+" \033[3m(This must be the first argument you are passing)"+ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default     Description"+ANSI_RESET);
         System.out.println("-location   -l            Downloads   The location on your computer where content downloaded from Drifty are placed.");
