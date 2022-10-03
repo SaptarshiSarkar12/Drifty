@@ -59,7 +59,6 @@ body:
     validations:
       required: false
   - type: textarea
-      id: extrainfo
       attributes:
         label: Additional information
         description: Add any other context about the problem here.  
