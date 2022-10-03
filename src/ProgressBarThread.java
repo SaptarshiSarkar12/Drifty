@@ -8,7 +8,7 @@ public class ProgressBarThread extends Thread {
     private long downloadSpeed;
     private final String fileName;
     private final FileOutputStream fos;
-    public static long totalDownloadBytes;
+    private final long totalDownloadBytes;
     private final int charAmt;
     
    
@@ -20,7 +20,7 @@ public class ProgressBarThread extends Thread {
         this.totalDownloadBytes = totalDownloadBytes;
         this.fileName = fileName;
         this.fos = fos;
-        this.charPercent = (this.totalDownloadBytes/charAmt);
+        this.charPercent = (int)(this.totalDownloadBytes/charAmt);
 
     }
     public void setDownloading(boolean downloading) {
@@ -28,11 +28,9 @@ public class ProgressBarThread extends Thread {
         if (downloading) {
             System.out.println("Downloading " + fileName + " ...");
         }
-        
     }
     private String generateProgressBar(String spinner) {
         float filled = downloadedBytes/charPercent;
-//        String bar = "=".repeat((int)filled)+".".repeat(charAmt-(int)filled);
         String a = new String(new char[(int)filled]).replace("\0", "=");
         String b = new String(new char[charAmt-(int)filled]).replace("\0", ".");
         String bar = a + b;
@@ -60,13 +58,14 @@ public class ProgressBarThread extends Thread {
         System.out.println("\r"+generateProgressBar("/"));
         if (downloadedBytes == totalDownloadBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            System.out.println("Downloaded "+fileName+" of size "+ sizeWithUnit +" successfully !");
-            Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName);
+            System.out.println("Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + " successfully !");
+            Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + " successfully !");
         } else {
             System.out.println("Download failed!");
             Drifty_CLI.logger.log("ERROR", "Download failed!");
         }
     }
+    @Override
     public void run() {
         long initialMeasurement;
         String[] spinner = new String[]{"/", "-", "\\", "|"};
@@ -76,7 +75,7 @@ public class ProgressBarThread extends Thread {
                     initialMeasurement = fos.getChannel().size();
                     Thread.sleep(250);
                     downloadedBytes = fos.getChannel().size();
-                    downloadSpeed = (downloadedBytes - initialMeasurement)*4;
+                    downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
                     System.out.print("\r" + generateProgressBar(spinner[i]));
                 }
             } catch (InterruptedException | IOException ignored) {
