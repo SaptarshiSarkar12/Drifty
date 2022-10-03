@@ -5,7 +5,7 @@
 </p>
 
 ---
-[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built with java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode. 
+[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built with java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and has the GUI version under active development. 
 
 [![Issues](https://img.shields.io/github/issues/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/issues)
 [![License](https://img.shields.io/github/license/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE)
@@ -53,8 +53,8 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 
 ![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
 
-- Tap "Show More".
-- Tap "Keep anyway".
+- Tap **`Show More`**.
+- Tap **`Keep anyway`**.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
 
@@ -64,11 +64,11 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 
 **Also**, you also can provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
 - Tap on three dots.
-- Tap on "Report this file as safe" instead of tapping on "Keep".
+- Tap on **`Report this file as safe`** instead of tapping on **`Keep`**.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
 
-- It will take you to "Report a download" page. You can provide your feedback there.😄
+- It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
 ## Thanks to all contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
