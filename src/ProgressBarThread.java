@@ -1,6 +1,9 @@
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * This is the class responsible for showing the progress bar in the console.
+ */
 public class ProgressBarThread extends Thread {
     private final float charPercent;
     private long downloadedBytes;

@@ -8,6 +8,9 @@ import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+/**
+ * This class deals with downloading the file.
+ */
 class FileDownloader implements Runnable {
     private static String dir;
     private static String fileName;
@@ -15,16 +18,29 @@ class FileDownloader implements Runnable {
     private static long totalSize;
     private static URL url;
 
+    /**
+     * This is a constructor to initialise values of link, fileName and dir variables.
+     * @param link Link to the file that the user wants to download
+     * @param fileName Filename of the file that the user wants to save as after it is downloaded
+     * @param dir Directory in which the file needs to be saved.
+     */
     public FileDownloader(String link, String fileName, String dir){
         FileDownloader.link = link;
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
     }
 
+    /**
+     * This function is used to get the value of dir variable.
+     * @return The directory in which the user wants to save the file.
+     */
     public static String getDir(){
         return dir;
     }
 
+    /**
+     * This is the overridden run method of the Runnable interface and deals with the main part of opening connections and downloading the file.
+     */
     @Override
     public void run() {
         link = link.replace('\\', '/');
@@ -72,6 +88,10 @@ class FileDownloader implements Runnable {
             Drifty_CLI.logger.log("ERROR", "Failed to connect to " + url + " ! " + e.getMessage());
         }
     }
+
+    /**
+     * This method deals with downloading the file.
+     */
     private static void downloadFile(){
         ReadableByteChannel readableByteChannel;
         try {

@@ -3,12 +3,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 /**
- * This is the main class for the CLI version of Drifty
+ * This is the main class for the CLI version of Drifty.
  */
 public class Drifty_CLI {
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
-    public static CreateLogs logger = new CreateLogs("Drifty_CLI_LOG.log", Drifty_CLI.class.getName());
+    public static CreateLogs logger = new CreateLogs("Drifty_CLI_LOG.log");
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
@@ -16,8 +16,8 @@ public class Drifty_CLI {
     private static String fName = null;
 
     /**
-     * This function is the main method of the whole application
-     * @param args Command Line Arguments
+     * This function is the main method of the whole application.
+     * @param args Command Line Arguments as a String array.
      */
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
