@@ -39,11 +39,6 @@ For **Contributors** :
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed and merged if approved. ✔ 
 
-## Demo
-See the below video how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
-
-https://user-images.githubusercontent.com/105960032/192246875-6b188bdf-2de9-49cb-940d-d47d50768767.mp4
-
 ## Seeing warning while Downloading
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
@@ -70,6 +65,11 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 ![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
 
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
+
+## Demo
+See the below video how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
+
+https://user-images.githubusercontent.com/105960032/193530137-d66a5e07-fb81-4df6-a547-7174ccf637e6.mp4
 
 ## Thanks to all contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
