@@ -1,9 +1,10 @@
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * This is the main class for the CLI version of Drifty
+ */
 public class Drifty_CLI {
     private static String downloadsFolder;
     private static final Scanner SC = new Scanner(System.in);
@@ -13,7 +14,11 @@ public class Drifty_CLI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     private static String fName = null;
-    
+
+    /**
+     * This function is the main method of the whole application
+     * @param args Command Line Arguments
+     */
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         if (!flag) {
@@ -34,7 +39,7 @@ public class Drifty_CLI {
                     location = args[i+1];
                 }
             }
-            if (!validURL(URL)){
+            if (!isURLValid(URL)){
                 System.exit(0);
             }
             containsFile(URL);
@@ -61,7 +66,7 @@ public class Drifty_CLI {
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
             while (true) {
-                if (!validURL(link)) {
+                if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
                     System.out.print("Enter the link to the file : ");
                     link = SC.next();
@@ -120,6 +125,9 @@ public class Drifty_CLI {
         }
     }
 
+    /**
+     * This function takes a folder path as input from the user, where the file will be saved.
+     */
     private static void enterDownloadsFolder(){
         System.out.print("Enter the directory in which you want to download the file : ");
         downloadsFolder = SC.nextLine().replace('/', '\\');
@@ -129,6 +137,9 @@ public class Drifty_CLI {
         logger.log("INFO", "Custom Directory Entered : " + downloadsFolder);
     }
 
+    /**
+     * This function tries to detect the default downloads folder and save the file in that folder
+     */
     private static void saveToDefault(){
         System.out.println("Trying to auto-detect default Downloads folder...");
         logger.log("INFO", "Trying to auto-detect default Downloads folder...");
@@ -143,7 +154,11 @@ public class Drifty_CLI {
         }
     }
 
-    private static boolean validURL(String link){
+    /**
+     * @param link Link to the file that the user wants to download
+     * @return true if link is valid and false if link is invalid
+     */
+    private static boolean isURLValid(String link){
         try{
             new URL(link).toURI();
             return true;
@@ -152,11 +167,14 @@ public class Drifty_CLI {
             return false;
         }
     }
+
     /**
-     * Check and inform user if the url contains file.
-     * Example : "example.com/file.txt" prints "Filename detected: file.txt"
-     **/
+     * @param link Link to the file that the user wants to download
+     * @return true if the filename is detected and false if the filename is not detected
+     */
     private static boolean containsFile(String link){
+        // Check and inform user if the url contains file.
+        // Example : "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
         String file = link.substring(link.lastIndexOf("/")+1);
         int index = file.lastIndexOf(".");
@@ -174,6 +192,9 @@ public class Drifty_CLI {
         return true;
     }
 
+    /**
+     * This function provides help about how to use the application through command line arguments.
+     */
     private static void help(){
         System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----"+ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m            v1.1.0"+ANSI_RESET);
@@ -188,6 +209,9 @@ public class Drifty_CLI {
         System.out.println("\033[37;3m* Requires java 18 or higher. \n"+ANSI_RESET);
     }
 
+    /**
+     * This function prints the banner of the application in the console.
+     */
     private static void printBanner(){
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
