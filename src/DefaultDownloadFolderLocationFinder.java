@@ -1,8 +1,16 @@
 import java.io.*;
 
+/**
+ * This class deals with finding the path of the default downloads folder.
+ */
 class DefaultDownloadFolderLocationFinder {
     //    private static final String REG_NAME = "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /v {374DE290-123F-4565-9164-39C4925E467B}";
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
+
+    /**
+     * This function finds the path of the default downloads folder.
+     * @return The path of the default downloads folder as a String object.
+     */
     public static String findPath() {
         try {
 //            Process process = Runtime.getRuntime().exec(REG_NAME); // Deprecated
