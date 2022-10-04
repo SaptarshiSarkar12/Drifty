@@ -1,0 +1,260 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body::-webkit-scrollbar {
+    /* Hiding the scroll bar */
+    display: none;
+}
+
+:root {
+    --background-color: #E8F9FD;
+    --text-color: #0AA1DD;
+    --primary-color: #79DAE8;
+    --background-color1: #79DAE8;
+}
+
+a {
+    text-decoration: none;
+}
+
+html {
+    font-family: "Rubik", sans-serif;
+    color: black;
+}
+
+nav {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.container {
+    display: flex;
+    padding: 0.625rem 0 0 1rem;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background-color1);
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    width: 40%;
+    justify-content: space-around;
+}
+
+.btn2 {
+    color: pink;
+    margin: 0;
+    transition: 0.25s ease-out;
+    cursor: pointer;
+}
+
+.btn2:hover a {
+    animation: slide_underline 0.2s ease-out;
+    text-decoration: underline maroon wavy;
+}
+
+@keyframes slide_underline {
+    0% {
+        text-underline-offset: 100%;
+    }
+
+    50% {
+        text-underline-offset: 55%;
+    }
+
+    100% {
+        text-underline-offset: 10%;
+    }
+}
+
+#btn1 {
+    width:80px;
+    height: 60px;
+}
+
+header {
+    width: 100%;
+    height: 80vh;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: row;
+}
+
+.header-container {
+    margin: 5rem 1rem 2rem 5rem;
+    width: 50%;
+    z-index: 1;
+}
+
+.header-container > h1 {
+    font-size: 52px;
+    margin-bottom: 32px;
+    line-height: 1.05;
+}
+
+.header-container > p {
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+}
+
+.header-container > .btn {
+    font-size: 20px;
+    font-weight: 600;
+    background-color: #1c0099;
+    color: #fff;
+    padding: 16px 32px;
+    border-radius: 9px;
+    transition: 0.5s;
+}
+
+.header-container > .btn:hover {
+    background-color: yellow;
+    color: black;
+    box-shadow: 5px 5px 1px black;
+}
+
+header > img {
+    position: absolute;
+    right: 0;
+    margin: 5rem 2rem 5rem 5rem;
+    aspect-ratio: 1;
+    opacity: 10%;
+}
+
+.info {
+    background-color: #0AA1DD;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 2rem 2rem 1rem;
+    text-align: center;
+}
+
+.info > h2 {
+    padding: 1rem;
+    font-size: 2.188rem;
+}
+
+.info > p {
+    font-size: 1.5rem;
+}
+
+.download_section {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+}
+
+.btn4 {
+    font-size: 20px;
+    font-weight: 600;
+
+    background-color: #1c0099;
+    color: #fff;
+
+    margin: 1rem;
+    padding: 16px 32px;
+    border-radius: 500px;
+    transition: 0.5s;
+}
+
+.btn4:hover {
+    background-color: yellow;
+    color: black;
+    box-shadow: 5px 5px 1px black;
+}
+
+.more-info {
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(12, calc(100%/12));
+    align-items: center;
+    margin: 0 2rem;
+}
+
+.more-info > .text {
+    grid-column-start: 1;
+    grid-column-end: 5;
+}
+
+.more-info > .text > h2 {
+    font-size: 52px;
+}
+
+.more-info > .text > p {
+    font-size: 24px;
+}
+
+.more-info > video {
+    grid-column-start: 5;
+    grid-column-end: 13;
+
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+#contact {
+    background-color: var(--background-color1);
+}
+
+#contact > h2 {
+    text-align: center;
+    padding: 1rem;
+    font-size: 2rem;
+}
+
+.contact_section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.footer {
+    padding: 40px 0;
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+}
+
+.footer .social {
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+.footer .social a {
+    font-size: 30px;
+    color: #0AA1DD;
+
+    border: 1px solid yellow;
+    width: 60px;
+    aspect-ratio: 1;
+
+    line-height: 58px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 10px;
+
+    opacity: 0.5;
+    transition: 0.25s linear;
+}
+
+.footer .social a:hover {
+    opacity: 1;
+    box-shadow: 2px 2px 1px yellow, 2px -2px 1px yellow, -2px -2px 1px yellow, -2px 2px 1px yellow;
+}
+
+.footer > p {
+    font-size: 15px;
+}
+
+#dark {
+    width: 30px;
+    cursor: crosshair;
+}
