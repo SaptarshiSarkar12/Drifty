@@ -55,7 +55,6 @@
         height: 60px;
     
       }
-      
 
       header {
         height: 100vh;
@@ -126,9 +125,9 @@
         display: inline-block;
         padding: 16px 32px;
         border-radius: 9px;
+        transition:all 1s ease;
       }
       .btn:hover{
-        transition: 1s;
         background-color:darkred;
         font-size: larger;
       }
@@ -141,9 +140,9 @@
         display: inline-block;
         padding: 16px 32px;
         border-radius: 9px;
+        transition:all 1s ease;
       }
       .btn4:hover{
-        transition: 1s;
         color:#fff;
         background-color:rgb(28, 1, 47);
         font-size: larger;
@@ -189,12 +188,15 @@
         width:30px;
         cursor: pointer;
       }
+
+      .more-info-section{
+        overflow: hidden;
+      }
       
       .more-info {  
         position: relative;     
         left: 5%;
         top: 50%;   
-        
       }
       
       video{
@@ -290,15 +292,13 @@ color: white;
         </a>
       </div>
     </section>
-    <section>
+    <section class="more-info-section">
       <div class="more-info" id="demo">
         <h2>Demonstration of using Drifty</h2>
         <p>
           Here is a quick demo of using Drifty.
         </p>
-        <p>
           <video src="Resources/Usage.mp4" height=700 width=1250 controls></video>
-        </p>
     </section>>
     <section class="footer">
       <div class="social">
