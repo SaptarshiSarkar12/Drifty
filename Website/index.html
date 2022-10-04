@@ -40,10 +40,10 @@
       }
 
       .container {
-        margin: 0px 20px;
+        margin: 0px 10px;
         width: 1200px;
         flex: 1; 
-        text-align: right;
+        text-align: center;
       } 
       #btn1 {
         width:80px;
@@ -185,9 +185,15 @@
         cursor: pointer;
       }
       
-        
-
+      .more-info {       
+        left: 50%;
+        top: 50%;   
+        text-align: center;
+      }
       
+      video{
+        position: relative;
+      }
     
     </style>
   
@@ -195,7 +201,7 @@
     <header>
       
       <nav class="container">
-        <div id=><img src="img/Driftyicon.ico" id="btn1"/></div>
+        <div id=><a href="https://saptarshisarkar12.github.io/Drifty/"><img src="img/Driftyicon.ico" id="btn1"/></a></div>
         <div class="btn2" >CONTACT US</div>
         <div class="btn2" >ABOUT US</div>
         <a style="text-decoration: none;" href="#download_section"><div class="btn2" >DOWNLOAD</div></a>
@@ -206,32 +212,43 @@
 
       <div class="header-container">
         <div class="header-container-inner">
-          <h1>DRIFTY</h1>
-          
+          <h1>DRIFTY</h1>          
           <p>
             Drifty is an open-source interactive File Downloader system built with java.
             It takes the link to the file, the directory where it needs to be saved and the filename
-             of the downloaded file as input and downloads it.
+             of the downloaded file as input and downloads it in the given directory with the given filename.
           </p>
-          <a href="#" class="btn">More Info</a>
+          <a href="#info" class="btn">More Info</a>
         </div>
       </div>
     </header>
      
     <section>
-      <div class="container">
+      <div class="container" id="info">
         <h2>More Information About Drifty</h2>
         <p>
-          It is currently available in CLI mode and has the GUI version under active development. It uses URL class for connecting to the server to get the file,
-           FileSystems, Files and Path classes to check existence of the directory and create them if needed,
-           and ReadableByteChannel and FileOutputStream clases for downloading the file.
+          It is currently available in CLI (Command Line Interface) mode and has the GUI (Graphical User Interface) version under active development. 
+          You may contribute to this project here.
         </p>
+        <p>
+          <a href="https://github.com/SaptarshiSarkar12/Drifty" class="btn4"><i class="fab fa-github"></i> Contribute to Drifty</a>
+        </p>        
         <a id="download_section">
-            <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe" class="btn4">Download Now (For Windows Users)</a>
-            <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar" class="btn4">Download Now (For Other users)</a>
+            <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe" class="btn4">Download Now <i class="fab fa-windows"></i></a>
+            <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar" class="btn4">Download Now <i class="fab fa-apple"></i> <i class="fab fa-linux"></i></a>
         </a>
       </div>
     </section>
+    <section>
+      <div class="more-info" id="demo">
+        <h2>Demonstration of using Drifty</h2>
+        <p>
+          Here is a quick demo of using Drifty.
+        </p>
+        <p>
+          <video src="Resources/Usage.mp4" height=700 width=1250 controls></video>
+        </p>
+    </section>>
     <section class="footer">
       <div class="social">
         <a href="https://www.twitter.com/SSarkar2007"><i class="fab fa-twitter"></i></a>
