@@ -260,7 +260,7 @@ header > img {
     margin: 0 10px;
 
     opacity: 0.75;
-    transition: 0.25s linear;
+    transition: 0.05s linear;
 }
 
 .footer .social a:hover {
