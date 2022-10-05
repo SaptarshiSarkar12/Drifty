@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -14,9 +18,29 @@ body::-webkit-scrollbar {
     --text-color: #0AA1DD;
     --primary-color: #79DAE8;
     --background-color1: #79DAE8;
+
     --black: black;
     --maroon: maroon;
+
     --button-background: #1c0099;
+    --button-onhover-background: yellow;
+    --button-onhover-shadow: black;
+    --button-text: white;
+    --button-onhover-text: black;
+}
+
+.darkmode {
+    --background-color: #041C32;
+    --background-color1: #064663;
+
+    --black: #ECB365;
+    --maroon: #F1D00A;
+
+    --button-background: #064663;
+    --button-onhover-background: #ECB365;
+    --button-onhover-shadow: #F1D00A;
+    --button-text: white;
+    --button-onhover-text: black;
 }
 
 a {
@@ -52,10 +76,13 @@ nav {
 }
 
 .btn2 {
-    color: pink;
     margin: 0;
     transition: 0.25s ease-out;
     cursor: pointer;
+}
+
+.btn2 > a {
+    color: var(--maroon)
 }
 
 .btn2:hover a {
@@ -94,9 +121,11 @@ header {
     margin: 5rem 1rem 2rem 5rem;
     width: 50%;
     z-index: 1;
+    color: var(--black);
 }
 
 .header-container > h1 {
+    font-family: "Playfair Display", sans-serif;
     font-size: 52px;
     margin-bottom: 32px;
     line-height: 1.05;
@@ -113,7 +142,7 @@ header {
     font-weight: 600;
 
     background-color: var(--button-background);
-    color: #fff;
+    color: var(--button-text);
 
     padding: 16px 32px;
     border-radius: 9px;
@@ -121,9 +150,9 @@ header {
 }
 
 .header-container > .btn:hover {
-    background-color: yellow;
-    color: black;
-    box-shadow: 5px 5px 1px black;
+    background-color: var(--button-onhover-background);
+    color: var(--button-onhover-text);
+    box-shadow: 5px 5px 1px var(--button-onhover-shadow);
 }
 
 header > img {
@@ -135,13 +164,15 @@ header > img {
 }
 
 .info {
-    background-color: #0AA1DD;
+    background-color: var(--background-color1);
     display: flex;
     flex-direction: column;
     align-items: center;
 
     padding: 2rem 2rem 1rem;
     text-align: center;
+
+    color: var(--black);
 }
 
 .info > h2 {
@@ -158,9 +189,13 @@ header > img {
     flex-direction: column;
     text-align: center;
     background-color: var(--background-color);
+    color: var(--black);
 }
 
 .download > h2 {
+    font-family: Lora, sans-serif;
+    font-style: italic;
+    color: var(--maroon);
     margin-top: 2rem;
 }
 
@@ -203,7 +238,7 @@ header > img {
     font-weight: 600;
 
     background-color: var(--button-background);
-    color: #fff;
+    color: var(--button-text);
 
     margin: 1rem;
     padding: 16px 32px;
@@ -212,13 +247,16 @@ header > img {
 }
 
 .btn4:hover {
-    background-color: yellow;
-    color: black;
-    box-shadow: 5px 5px 1px black;
+    background-color: var(--button-onhover-background);
+    color: var(--button-onhover-text);
+    box-shadow: 5px 5px 1px var(--button-onhover-shadow);
 }
 
 #contact {
     background-color: var(--background-color1);
+    color: var(--black);
+    font-family: Lora, sans-serif;
+    font-style: italic;
 }
 
 #contact > h2 {
@@ -264,11 +302,13 @@ header > img {
 }
 
 .footer .social a:hover {
+    color: var(--maroon);
     opacity: 1;
-    box-shadow: 2px 2px 10px black, 2px -2px 10px black, -2px -2px 10px black, -2px 2px 10px black;
+    box-shadow: 2px 2px 10px var(--maroon), 2px -2px 10px var(--maroon), -2px -2px 10px var(--maroon), -2px 2px 10px var(--maroon);
 }
 
 .footer > p {
+    color: var(--black);
     font-size: 15px;
 }
 
@@ -313,4 +353,30 @@ header > img {
         width: 100%;
         z-index: 1;
     }
+}
+
+.btn-toggle {
+    position: fixed;
+    right: 4rem;
+    bottom: 4rem;
+
+    font-size: 30px;
+    color: var(--black);
+
+    border: 1px solid black;
+    width: 60px;
+    aspect-ratio: 1;
+
+    line-height: 58px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 50%;
+    margin: 0 10px;
+
+    opacity: 0.75;
+    transition: 0.2s linear;
+}
+
+.btn-toggle:hover {
+    opacity: 1;
 }
