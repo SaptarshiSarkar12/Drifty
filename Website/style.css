@@ -377,13 +377,15 @@ input {
 
 input:before {
   content: "";
-  position: fixed;
-  right: 4rem;
-  bottom: 4rem;
+  position: relative;
+  top:0px;
+  left:0px;
+/*   right: 4rem;
+  bottom: 4rem; */
   height: 100px;
-  width: 60px;
+  width: 100px;
   background-color: navy;
-  border-radius: 50%;
+  border-radius: 50px;
   transition: all .9s;
   background-color: #F7CA33;
 }
