@@ -362,7 +362,7 @@ header > img {
     }
 }
 
-input {
+/* input {
   -webkit-appearance: none;
   position: fixed;
   width: 60px;
@@ -396,10 +396,10 @@ input:checked:before {
   transform: translate(100%);
   transition: all .9s;
   background-color: #ECF0F3;
-}
+} */
 
 
-/* .btn-toggle {
+.btn-toggle {
     position: fixed;
     right: 4rem;
     bottom: 4rem;
@@ -424,4 +424,4 @@ input:checked:before {
 .btn-toggle:hover {
     opacity: 1;
 }
- */
+
