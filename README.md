@@ -25,12 +25,14 @@ Please feel to contribute to this project. See [**`Contribuing Guidelines`**](ht
 ## Get Started 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-![Drifty Website](https://user-images.githubusercontent.com/105960032/193514247-436fabb8-7853-459d-bc23-c5999d3cbbe1.png)
-2. If you are a Windows User, click on **`Download Now (For Windows Users)`** button and for other users, click on **`Download Now (For Other Users)`**. The file will be downloaded. </p>
-![Download Options](https://user-images.githubusercontent.com/105960032/193521265-cc796417-29a0-4cd1-8f78-b32f6fea2982.png)
-3. Go to the downloads folder and run the file.
-4. See [`Demo`](https://github.com/SaptarshiSarkar12/Drifty#demo) for demonstrations on how to use the application.
-5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+![Drifty Website](https://user-images.githubusercontent.com/105960032/194129886-f17e2378-21eb-4dd6-b02a-b1168ea8fd50.png)
+2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download)
+![image](https://user-images.githubusercontent.com/105960032/194130246-dc453a6a-8ad7-4de9-a71b-e61f961f2206.png)
+3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
+![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
+4. Go to the downloads folder and run the file.
+5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
+6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory.</p>
