@@ -1,24 +1,24 @@
-// let darkMode = localStorage.getItem('darkMode');
-// const darkModeToggle = document.querySelector('.btn-toggle');
+let darkMode = localStorage.getItem('darkMode');
+const darkModeToggle = document.querySelector('input');
 
-// const enableDarkMode = () => {
-//   document.body.classList.add('darkmode');
-//   localStorage.setItem('darkMode', 'enabled');
-// }
+const enableDarkMode = () => {
+  document.body.classList.add('darkmode');
+  localStorage.setItem('darkMode', 'enabled');
+}
 
-// const disableDarkMode = () => {
-//   document.body.classList.remove('darkmode');
-//   localStorage.setItem('darkMode', null);
-// }
+const disableDarkMode = () => {
+  document.body.classList.remove('darkmode');
+  localStorage.setItem('darkMode', null);
+}
 
-// if (darkMode === 'enabled')
-//   enableDarkMode();
+if (darkMode === 'enabled')
+  enableDarkMode();
 
-// darkModeToggle.addEventListener('click', () => {
-//   darkMode = localStorage.getItem('darkMode');
-//   if (darkMode !== 'enabled')
-//     enableDarkMode();
-//   else
-//     disableDarkMode();
-// });
+darkModeToggle.addEventListener('click', () => {
+  darkMode = localStorage.getItem('darkMode');
+  if (darkMode !== 'enabled')
+    enableDarkMode();
+  else
+    disableDarkMode();
+});
 
