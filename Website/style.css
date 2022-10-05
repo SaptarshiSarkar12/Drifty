@@ -233,6 +233,13 @@ header > img {
     width: 100%;
 }
 
+.demo_section {
+    margin: 1rem auto 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .btn4 {
     font-size: 20px;
     font-weight: 600;
