@@ -362,66 +362,44 @@ header > img {
     }
 }
 
-/* input {
-  -webkit-appearance: none;
-  position: fixed;
-  width: 60px;
-  height: 30px;
-  background-image: url(https://i.postimg.cc/857jHw2q/Screenshot-2020-04-16-at-1-07-06-PM.png);
-  background-size: cover;
-  border-radius: 50px;
-  outline: none;
-  transition: background-image .90s;
-  box-shadow: 0px 2px 5px 1px gray;
-}
-
-input:before {
-  content: "";
-  position: fixed;
-  height: 30px;
-  width: 30px;
-  background-color: navy;
-  border-radius: 50px;
-  transition: all .9s;
-  background-color: #F7CA33;
-}
-
-input:checked {
-  background-image: url(https://i.postimg.cc/Hn0nstVK/Screenshot-2020-04-16-at-1-07-19-PM.png);
-  transition: background-image .90s;
-
-}
-
-input:checked:before {
-  transform: translate(100%);
-  transition: all .9s;
-  background-color: #ECF0F3;
-} */
-
-
 .btn-toggle {
     position: fixed;
     right: 4rem;
     bottom: 4rem;
 
-    font-size: 30px;
-    color: var(--black);
+    -webkit-appearance: none;
+    width: 50px;
+    height: 25px;
 
-    border: 1px solid black;
-    width: 60px;
-    aspect-ratio: 1;
+    background-image: url(https://i.postimg.cc/857jHw2q/Screenshot-2020-04-16-at-1-07-06-PM.png);
+    background-size: cover;
+    border-radius: 50px;
+    outline: none;
 
-    line-height: 58px;
-    text-align: center;
-    display: inline-block;
-    border-radius: 50%;
-    margin: 0 10px;
-
-    opacity: 0.75;
-    transition: 0.2s linear;
+    transition: background-image .90s;
+    box-shadow: 0 2px 5px 1px gray;
 }
 
-.btn-toggle:hover {
-    opacity: 1;
+.btn-toggle:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 50px;
+    transition: all .9s;
+    background-color: #F7CA33;
+}
+
+.btn-toggle:checked {
+    background-image: url(https://i.postimg.cc/Hn0nstVK/Screenshot-2020-04-16-at-1-07-19-PM.png);
+    transition: background-image .90s;
+}
+
+.btn-toggle:checked:before {
+    transform: translate(100%);
+    transition: all .9s;
+    background-color: #ECF0F3;
 }
 
