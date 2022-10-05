@@ -364,7 +364,7 @@ header > img {
 
 input {
   -webkit-appearance: none;
-  position: fixed;  
+  position: fixed;
   width: 60px;
   height: 30px;
   background-image: url(https://i.postimg.cc/857jHw2q/Screenshot-2020-04-16-at-1-07-06-PM.png);
@@ -378,8 +378,6 @@ input {
 input:before {
   content: "";
   position: fixed;
-  bottom: 0%;
-  right: 2.2%;
   height: 30px;
   width: 30px;
   background-color: navy;
