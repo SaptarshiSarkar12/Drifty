@@ -19,8 +19,6 @@
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
 
 
-## Contributing
-Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
 
 ## Get Started 🚀🚀
 For **Users** :
@@ -72,6 +70,9 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 See the below video how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
 
 https://user-images.githubusercontent.com/105960032/193530137-d66a5e07-fb81-4df6-a547-7174ccf637e6.mp4
+
+## Contributing
+Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
 
 ## Thanks to all contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
