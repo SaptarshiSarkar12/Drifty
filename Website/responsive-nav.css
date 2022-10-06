@@ -1,0 +1,117 @@
+/* TABLETS  */
+@media only screen and (min-device-width: 800px) and (max-device-width: 1024px) {
+    .nav-sticky {
+        border-radius: 3rem;
+        margin: 10px 50px;
+        width: auto;
+        padding: 10px 3vw;
+        bottom: 20px;
+        height: fit-content;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+    }
+    .nav-bar {
+        padding: 10px 3vw;
+    }
+    .nav-sticky .logo {
+        display: none;
+    }
+    .nav-sticky .button {
+        margin: 0 0;
+    }
+}
+
+/* ALL MOBILE  */
+@media screen and (max-width: 800px) {
+    .nav-sticky {
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        border-radius: 1.5rem;
+        margin: 10px 50px;
+        width: auto;
+        bottom: 20px;
+        padding: 10px 10px;
+        box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
+    }
+    .nav-sticky .logo {
+        display: none;
+    }
+    .nav-bar {
+        justify-content: space-between;
+        text-align: center;
+    }
+    .nav-bar .logo {
+        margin: 0;
+    }
+
+    #menu {
+        display: block;
+    }
+
+    .nav-sticky button {
+        margin: 0;
+    }
+
+    .menu {
+        display: block;
+    }
+    nav {
+        height: 0;
+        width: 0;
+        pointer-events: none;
+        opacity: 0;
+    }
+    .show {
+        opacity: 1;
+        pointer-events: all;
+        height: fit-content !important;
+        width: auto;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .nav-links a > button {
+        background: transparent !important;
+        margin: 0px;
+        padding: 0px;
+    }
+    .nav-links:last-child {
+        margin-bottom: 10px;
+    }
+
+    .nav-links:first-child {
+        margin-top: 10px;
+    }
+
+    /* NAV ANIMATION */
+    .nav-links li {
+        opacity: 0;
+    }
+    .nav-links li:nth-child(1) {
+        transition: all 0.3s ease 0.1s;
+    }
+    .nav-links li:nth-child(2) {
+        transition: all 0.3s ease 0.2s;
+    }
+    .nav-links li:nth-child(3) {
+        transition: all 0.3s ease 0.3s;
+    }
+    .nav-links li:nth-child(4) {
+        transition: all 0.3s ease 0.4s;
+    }
+    .nav-links li:nth-child(5) {
+        transition: all 0.3s ease 0.5s;
+    }
+    li.fade {
+        opacity: 1;
+        transition: none;
+    }
+}
