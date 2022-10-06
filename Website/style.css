@@ -342,7 +342,7 @@ header {
     width: 50px;
     height: 25px;
     
-    background-image: url(https://i.postimg.cc/857jHw2q/Screenshot-2020-04-16-at-1-07-06-PM.png);
+    background-image: url("Resources/Day.webp");
     background-size: cover;
     border-radius: 50px;
     outline: none;
@@ -365,7 +365,7 @@ header {
 }
 
 .btn-toggle:checked {
-    background-image: url(https://i.postimg.cc/Hn0nstVK/Screenshot-2020-04-16-at-1-07-19-PM.png);
+    background-image: url("Resources/Night.webp");
     transition: background-image .90s;
 }
 
