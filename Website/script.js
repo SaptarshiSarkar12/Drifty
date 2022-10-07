@@ -34,11 +34,18 @@ darkModeToggle.addEventListener('click', () => {
 // NAV ---------
 
 window.addEventListener("scroll", function () {
-  nav.classList.toggle("nav-sticky", this.window.scrollY > 80);
+  nav.classList.toggle("nav-sticky", this.window.scrollY > 10);
   });
   
   menu.addEventListener("click", function () {
   miniNav.classList.toggle("show");
+  if (!nav.classList.contains("nav-sticky")){
+    nav.classList.toggle("temp-color");
+  } else {
+    if (nav.classList.contains("temp-color")){
+      nav.classList.remove("temp-color");
+    }
+  }
   links.forEach((x) => x.classList.toggle("fade"));
   toggleNavIcon();
   });
