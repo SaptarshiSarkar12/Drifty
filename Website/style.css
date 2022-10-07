@@ -240,14 +240,6 @@ body::-webkit-scrollbar-thumb {
     }
 }
 
-.container {
-    display: flex;
-    padding: 0.625rem 0 0 1rem;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--background-color1);
-}
 
 .buttons {
     display: flex;
