@@ -129,7 +129,7 @@ body::-webkit-scrollbar-thumb {
     position: absolute;
     width: 100vw;
     height: 100vh;
-    background-image: url("https://hacktoberfest.com/_next/static/media/grain-dark.9d5983e6.png");
+    background-image: url("Resources/grain-dark.webp");
     opacity: 0.5;
     overflow: hidden;
     pointer-events: none;
