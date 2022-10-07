@@ -3,6 +3,6 @@
 Usually it will have instructions on how to download, install, run and contribute to the project but we've already worked on it which is the main [README](https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md) file of our project.**
 
 - This section contain information of website like how's your website look like, you can see instructions videos, 
-layers section and lots of images that are used to make website and lot more options
+layers section and lots of images that are used to make website and lot more options.
 
 - and this website section also contain files like html, css, and js by which you can make necessary changes in this project
