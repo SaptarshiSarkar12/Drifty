@@ -7,5 +7,5 @@ Usually it will have instructions on how to download, install, run and contribut
 and lots of images (located in [Resources](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Website/Resources) folder) that are used to make the website.
 
 
-- and this website section also contain files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
+- this website folder also contains files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
 
