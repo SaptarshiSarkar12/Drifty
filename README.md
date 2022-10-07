@@ -5,7 +5,7 @@
 </p>
 
 ---
-[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built with java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and has the GUI version under active development. 
+[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built using Java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and the GUI version is under active development. 
 
 [![Issues](https://img.shields.io/github/issues/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/issues)
 [![License](https://img.shields.io/github/license/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE)
@@ -19,8 +19,7 @@
 [![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
 
 
-
-## Get Started 🚀🚀
+## Getting Started 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
 ![Drifty Website](https://user-images.githubusercontent.com/105960032/194129886-f17e2378-21eb-4dd6-b02a-b1168ea8fd50.png)
@@ -28,7 +27,7 @@ For **Users** :
 ![image](https://user-images.githubusercontent.com/105960032/194130246-dc453a6a-8ad7-4de9-a71b-e61f961f2206.png)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
 ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
-4. Go to the downloads folder and run the file.
+4. Go to the Downloads folder and run the file.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
@@ -39,7 +38,7 @@ For **Contributors** :
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed and merged if approved. ✔ 
 
-## Seeing warning ⚠ while Downloading ⬇
+## Safety warning ⚠ while Downloading ⬇
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
@@ -56,9 +55,9 @@ It is because Microsoft Defender could not verify it safe it is not commonly dow
 
 - Now its downloaded, you can proceed.🎉
 
-### Provide a Feedback 💬
+### Report the file as safe
 
-**Also**, you also can provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
+You can also provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
 - Tap on three dots.
 - Tap on **`Report this file as safe`** instead of tapping on **`Keep`**.
 
@@ -71,10 +70,10 @@ See the below video how to use the application. For any help, you can open an [`
 
 https://user-images.githubusercontent.com/105960032/193530137-d66a5e07-fb81-4df6-a547-7174ccf637e6.mp4
 
-## Contributing
+## Contributing to the project
 Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
 
-## Thanks to all contributors ❤️
+## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
    <img src = "https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty"/>
 </a>
