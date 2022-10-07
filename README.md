@@ -22,9 +22,9 @@
 ## Getting Started 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-![Drifty Website](https://user-images.githubusercontent.com/105960032/194129886-f17e2378-21eb-4dd6-b02a-b1168ea8fd50.png)
+![Drifty Website](https://user-images.githubusercontent.com/105960032/194504016-c2a6d761-bc04-49ee-b8fd-cecb2d36faa8.png)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-![image](https://user-images.githubusercontent.com/105960032/194130246-dc453a6a-8ad7-4de9-a71b-e61f961f2206.png)
+![image](https://user-images.githubusercontent.com/105960032/194505674-96352e1c-8842-4b98-952d-80a0635d06e4.png)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
 ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
 4. Go to your Downloads folder and run the file.
