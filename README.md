@@ -23,20 +23,26 @@
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
 ![Drifty Website](https://user-images.githubusercontent.com/105960032/194129886-f17e2378-21eb-4dd6-b02a-b1168ea8fd50.png)
-2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download)
+2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
 ![image](https://user-images.githubusercontent.com/105960032/194130246-dc453a6a-8ad7-4de9-a71b-e61f961f2206.png)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
 ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
-4. Go to the Downloads folder and run the file.
+4. Go to your Downloads folder and run the file.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 For **Contributors** : 
-1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory.</p>
-![Clone Drifty](https://user-images.githubusercontent.com/105960032/192598857-09c32cdc-23ba-4564-8b13-8e9782a689be.gif)
-2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make.
-3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
-4. The Pull Request will be reviewed and merged if approved. ✔ 
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in bash.
+```bash
+git clone git@github.com:SaptarshiSarkar12/Drifty.git
+```
+</p>
+
+![Clone Drifty](https://user-images.githubusercontent.com/105960032/194497334-856c610e-39cd-4538-a998-18afb10dac04.gif) </p>
+2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make. </p>
+3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request. </p>
+4. The Pull Request will be reviewed and merged if approved. ✔ </p>
+5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 
 ## Safety warning ⚠ while Downloading ⬇
 
