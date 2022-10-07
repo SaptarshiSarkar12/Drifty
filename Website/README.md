@@ -5,4 +5,5 @@ Usually it will have instructions on how to download, install, run and contribut
 - This section contain information of website like how's your website look like, you can see instructions videos, 
 layers section and lots of images that are used to make website and lot more options.
 
-- and this website section also contain files like html, css, and js by which you can make necessary changes in this project
+- and this website section also contain files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
+
