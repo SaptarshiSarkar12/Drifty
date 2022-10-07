@@ -16,6 +16,7 @@
 </head>
 
 <body>
+	<div class="texture"></div>
 	<div class="nav-container">
 		<div class="nav-bar">
 			<img class="logo" src="Resources/Driftyicon.webp" alt="Drifty-icon" />
@@ -26,15 +27,17 @@
 					<li><a href="#download">Download</a></li>
 					<li><a href="#contrib">Contribute</a></li>
 					<li><a href="#contact"><button class="button">Contact</button></a></li>
+					<li><input type="checkbox" class="btn-toggle"></li>
 				</ul>
 			</nav>
 			<button id="menu" class="button"><i class="fas fa-bars"></i></button>
 		</div>
 	</div>
+
 	<section id="hero">
 		<header>
 			<div class="header-container">
-				<h1><span style="font-size: 110px">D</span>RIFTY</h1>
+				<h1>DRIFTY</h1>
 				<p>
 					Drifty is an open-source interactive File Downloader system built with java.
 					It takes the link to the file, the directory where it needs to be saved and the filename
@@ -43,11 +46,21 @@
 				<a href="#info" class="btn">More Info</a>
 				<a href="#demo" class="btn">Demo</a>
 			</div>
-			<img src="Resources/drifty.webp" alt="drifty_console_img" />
+			<!-- <img src="Resources/drifty.webp" alt="drifty_console_img" /> -->
+			<div class="img-layer" id="imgLayer">
+				<img src="./Resources/Layers/2.png" alt="..." srcset="">
+				<img src="./Resources/Layers/3.png" alt="..." srcset="">
+				<img src="./Resources/Layers/4.png" alt="..." srcset="">
+				<img src="./Resources/Layers/5.png" alt="..." srcset="">
+				<img src="./Resources/Layers/6.png" alt="..." srcset="">
+				<img src="./Resources/Layers/7.png" alt="..." srcset="">
+			</div>
+
+
 		</header>
 	</section>
 
-	<section id="info" class="info">
+	<section id="contrib" class="info">
 		<h2>More Information About Drifty</h2>
 		<p>It is currently available in CLI (Command Line Interface) mode and has the GUI (Graphical User Interface)
 			version under active development. You may contribute to this project here.</p>
@@ -98,7 +111,6 @@
 	</footer>
 
 	<!-- Scripts -->
-	<label><input type="checkbox" class="btn-toggle"></label>
 	<script src="script.js"></script>
 </body>
 

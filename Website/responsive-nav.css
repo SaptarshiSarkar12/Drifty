@@ -1,10 +1,10 @@
 /* TABLETS  */
-@media only screen and (min-device-width: 800px) and (max-device-width: 1024px) {
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .nav-sticky {
         border-radius: 3rem;
         margin: 10px 50px;
         width: auto;
-        padding: 10px 3vw;
+        padding: 10px 3vw !important;
         bottom: 20px;
         height: fit-content;
         box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
@@ -12,7 +12,7 @@
         -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
     }
     .nav-bar {
-        padding: 10px 3vw;
+        padding: 32px 3vw;
     }
     .nav-sticky .logo {
         display: none;
@@ -20,10 +20,19 @@
     .nav-sticky .button {
         margin: 0 0;
     }
+    .img-layer {
+        display: none;
+     
+     }
+     .header-container {
+        transform: none;
+        width: 70%;
+    }
+
 }
 
 /* ALL MOBILE  */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 767px) {
     .nav-sticky {
         flex-direction: column;
         justify-content: space-between;
@@ -33,7 +42,7 @@
         margin: 10px 50px;
         width: auto;
         bottom: 20px;
-        padding: 10px 10px;
+        padding: 10px 10px !important;
         box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
         -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
         -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.5);
@@ -42,6 +51,7 @@
         display: none;
     }
     .nav-bar {
+        padding: 15px 5vw ;
         justify-content: space-between;
         text-align: center;
     }
@@ -92,8 +102,8 @@
     }
 
     /* NAV ANIMATION */
-    .nav-links li {
-        opacity: 0;
+    .nav-links li{
+        opacity: 0 ;
     }
     .nav-links li:nth-child(1) {
         transition: all 0.3s ease 0.1s;
@@ -110,8 +120,22 @@
     .nav-links li:nth-child(5) {
         transition: all 0.3s ease 0.5s;
     }
+    .nav-links li:nth-child(6) {
+        transition: all 0.3s ease 0.6s;
+    }
     li.fade {
         opacity: 1;
         transition: none;
     }
+    .img-layer {
+
+       display: none;
+    
+    }
+    .header-container {
+        transform: none;
+    }
+
+
+
 }
