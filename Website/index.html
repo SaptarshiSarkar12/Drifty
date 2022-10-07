@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,47 +8,74 @@
 	<title>Drifty</title>
 	<link rel="preconnect" href="https://fonts.gstatic.com" />
 	<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+		integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+		crossorigin="anonymous" referrerpolicy="no-referrer">
 	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="responsive-nav.css">
 </head>
 
 <body>
-	<nav class="container">
-		<div>
-			<a href="https://saptarshisarkar12.github.io/Drifty/"><img src="Resources/Driftyicon.webp" id="btn1" alt="Drifty-icon"/></a>
+	<div class="texture"></div>
+	<div class="nav-container">
+		<div class="nav-bar">
+			<a href="https://saptarshisarkar12.github.io/Drifty/"><img class="logo" src="Resources/Driftyicon.webp"
+					alt="Drifty-icon" /></a>
+			<nav>
+				<ul class="nav-links">
+					<li><a href="#hero"><button class="button">Home</button></a></li>
+					<li><a href="#aboutus"><button class="button">About</button></a></li>
+					<li><a href="#download"><button class="button">Download</button></a></li>
+					<li><a href="#contrib"><button class="button">Contribute</button></a></li>
+					<li><a href="#contact"><button class="button">Contact</button></a></li>
+					<li><input type="checkbox" class="btn-toggle"></li>
+				</ul>
+			</nav>
+			<button id="menu" class="button"><i class="fas fa-bars"></i></button>
 		</div>
-		<div class="buttons">
-			<div class="btn2"><a href="#contact">CONTACT US</a></div>
-			<div class="btn2"><a href="#">ABOUT US</a></div>
-			<div class="btn2"><a href="#download">DOWNLOAD</a></div>
-		</div>
-	</nav>
+	</div>
 
-	<header>
-		<div class="header-container">
-			<h1><span style="font-size: 110px">D</span>RIFTY</h1>
-			<p>
-				Drifty is an open-source interactive File Downloader system built with java.
-				It takes the link to the file, the directory where it needs to be saved and the filename
-				of the downloaded file as input and downloads it in the given directory with the given filename.
-			</p>
-			<a href="#info" class="btn">More Info</a>
-			<a href="#demo" class="btn">Demo</a>
-		</div>
-		<img src="Resources/drifty.webp" alt="drifty_console_img">
-	</header>
+	<section id="hero">
+		<header>
+			<div class="header-container">
+				<h1>DRIFTY</h1>
+				<p>
+					Drifty is an open-source interactive File Downloader system built with java.
+					It takes the link to the file, the directory where it needs to be saved and the filename
+					of the downloaded file as input and downloads it in the given directory with the given filename.
+				</p>
+				<a href="#contrib" class="btn">More Info</a>
+				<a href="#demo" class="btn">Demo</a>
+			</div>
+			<!-- <img src="Resources/drifty.webp" alt="drifty_console_img" /> -->
+			<div class="img-layer" id="imgLayer">
+				<img src="./Resources/Layers/2.png" alt="..." srcset="">
+				<img src="./Resources/Layers/3.png" alt="..." srcset="">
+				<img src="./Resources/Layers/4.png" alt="..." srcset="">
+				<img src="./Resources/Layers/5.png" alt="..." srcset="">
+				<img src="./Resources/Layers/6.png" alt="..." srcset="">
+				<img src="./Resources/Layers/7.png" alt="..." srcset="">
+			</div>
 
-	<section id="info" class="info">
+
+		</header>
+	</section>
+
+	<section id="contrib" class="info">
 		<h2>More Information About Drifty</h2>
-		<p>It is currently available in CLI (Command Line Interface) mode and has the GUI (Graphical User Interface) version under active development. You may contribute to this project here.</p>
-		<a href="https://github.com/SaptarshiSarkar12/Drifty" class="btn4"><i class="fab fa-github"></i> Contribute to Drifty</a>
+		<p>It is currently available in CLI (Command Line Interface) mode and the GUI (Graphical User Interface)
+			version is under active development. You may contribute to this project here.</p>
+		<a href="https://github.com/SaptarshiSarkar12/Drifty" class="btn4"><i class="fab fa-github"></i> Contribute to
+			Drifty</a>
 	</section>
 
 	<section id="download" class="download">
 		<h2>✨Download Here✨</h2>
 		<div id="download_section" class="download_section">
-			<a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe" class="btn4">Download Now <i class="fab fa-windows"></i></a>
-			<a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar" class="btn4">Download Now <i class="fab fa-apple"></i> <i class="fab fa-linux"></i></a>			
+			<a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
+				class="btn4">Download Now <i class="fab fa-windows"></i></a>
+			<a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"
+				class="btn4">Download Now <i class="fab fa-apple"></i> <i class="fab fa-linux"></i></a>
 		</div>
 
 		<div id="demo" class="demo">
@@ -55,7 +83,7 @@
 				<h2>Demonstration of Drifty</h2>
 				<p>Here is a quick demo of using Drifty.</p>
 			</div>
-			<video src="Resources/Usage.webp" playsinline autoplay muted loop></video>
+			<video src="Resources/Usage.webm" playsinline autoplay muted loop></video>
 		</div>
 	</section>
 
@@ -63,9 +91,11 @@
 	<section id="contact">
 		<h2>Contact Us</h2>
 		<div class="contact_section">
-			<a href="https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose" class="btn4"><i class="fab fa-github"></i> Help & Support <i class="fa-solid fa-headset"></i> </a>
+			<a href="https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose" class="btn4"><i
+					class="fab fa-github"></i> Help & Support <i class="fa-solid fa-headset"></i> </a>
 			<a href="https://www.twitter.com/SSarkar2007" class="btn4"> <i class="fab fa-twitter"></i> My Twitter</a>
-			<a href="mailto:saptarshi.programmer@gmail.com " class="btn4"><i class="fa-sharp fa-solid fa-envelope"></i> My Email </a>
+			<a href="mailto:saptarshi.programmer@gmail.com " class="btn4"><i class="fa-sharp fa-solid fa-envelope"></i>
+				My Email </a>
 		</div>
 	</section>
 
@@ -74,7 +104,7 @@
 			<a href="https://www.twitter.com/SSarkar2007"><i class="fab fa-twitter"></i></a>
 			<a href="https://github.com/SaptarshiSarkar12"><i class="fab fa-github"></i></a>
 			<a href="mailto:saptarshi.programmer@gmail.com"><i class="fa-sharp fa-solid fa-envelope"></i></a>
-			<a href="https://saptarshisarkar.hashnode.dev/" ><i class="fa-brands fa-hashnode"></i></a>
+			<a href="https://saptarshisarkar.hashnode.dev/"><i class="fa-brands fa-hashnode"></i></a>
 			<a href="https://www.bio.link/saptarshi"><i class="fa-sharp fa-solid fa-link"></i></a>
 			<!--added footers -->
 		</div>
@@ -82,7 +112,7 @@
 	</footer>
 
 	<!-- Scripts -->
-	<label><input type="checkbox" class="btn-toggle"></label>
-	<script src="script.js" ></script>
-	</body>
+	<script src="script.js"></script>
+</body>
+
 </html>
