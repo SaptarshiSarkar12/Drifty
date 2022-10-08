@@ -401,7 +401,7 @@ header {
     perspective: 500px;
     width: 100%;
     height: 100vh;
-    padding: 10rem 0 ;
+    padding: 10rem 0;
     background: var(--background-color);
     display: flex;
     flex-direction: row;
@@ -415,7 +415,7 @@ header {
 .contrib{
     background:var(--nav-bg2);
     color: white;
-    padding: 2rem 5rem;
+    padding: 2rem 4rem;
     box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
     -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
     -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
@@ -434,14 +434,18 @@ header {
     justify-content: center;
     flex-direction: column;
     align-items: flex-start;
-    padding: 1rem;
-    gap: 32px;
+    padding: 2.5rem;
+    gap: 28px;
     flex: 1;
 }
 
 .contrib-container:nth-child(1){
 text-align: start !important;
 line-height: 1.6 !important;
+}
+.contrib-container:nth-child(1) {
+    text-align: start !important;
+    line-height: 1.6 !important;
 }
 
 .contrib-container p {
@@ -454,6 +458,7 @@ line-height: 1.6 !important;
 }
 
 .contrib-container .btn4 {
+    font-size: 16px;
     margin: 0 !important;
     background-color: transparent;
     border: solid white 2px;
@@ -582,8 +587,37 @@ line-height: 1.6 !important;
     font-family: Lora, sans-serif;
     font-style: italic;
 }
+.contact-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 10px;
+    gap: 10px;
+    padding: 20px 0 ;
+    text-align: center;
+}
+.contact-container a{
+    width: auto;
+    padding: 20px;
+    font-size: 20px;
+    font-style: normal;
+    background-color: var(--text-color);
+    border-radius: 5rem;
+    margin: 0 0 34px 0 ;
+}
+.contact-container a:hover{
+    filter: brightness(1.2);
+}
+.contact-container i{
+   line-height: none;
+   padding: 0;
+   margin: 0;
+}
 
 #contact > h2 {
+    font-family: "Poppins", sans-serif !important;
+    font-style: normal;
     text-align: center;
     padding: 1rem;
     font-size: 2rem;
@@ -690,13 +724,27 @@ line-height: 1.6 !important;
 
 @media screen and (max-width: 750px) {
     .header-container {
+        padding-top: 30px;
         margin: 5rem 2rem 2rem;
-        width: 100%;
         z-index: 1;
+    }
+    .header-container > .btn{
+        margin: 10px 0px;
     }
     .contrib-container{
         display: block;
+        padding: 2.5rem 0;
     }
+    .contrib-container .btn4 {
+       text-align: center;   
+    }
+    .contrib{
+        padding: 0;
+    }
+    .contrib-container .content {
+        padding: 1rem 2rem  !important;
+    }
+
 }
 
 @media screen and (max-width: 1345px) {
