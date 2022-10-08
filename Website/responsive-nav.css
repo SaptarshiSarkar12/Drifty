@@ -21,7 +21,7 @@
         margin: 0 0;
     }
     .img-layer {
-        display: none;
+        display: none !important;
      }
      .header-container {
         transform: none;
@@ -29,7 +29,11 @@
     }
 
 }
-
+@media screen and (max-width: 1024px) {
+    .nav-bar{
+        padding: 10px 2vw !important;
+    }
+}
 /* ALL MOBILE  */
 @media screen and (max-width: 767px) {
     .nav-sticky {
@@ -65,7 +69,6 @@
     .nav-sticky .button {
         margin: 0;
     }
-
 
     nav {
         height: 0;
@@ -125,10 +128,11 @@
         transition: none;
     }
     .img-layer {
-       display: none;
+       display: none !important;
     }
     .header-container {
-        transform: none;
+        transform: none !important;
+        width: 100% !important;
     }
 
 }
