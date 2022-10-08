@@ -55,7 +55,7 @@
         display: none;
     }
     .nav-bar {
-        padding: 15px 5vw ;
+        padding: 15px 5vw !important;
         justify-content: space-between !important;
         text-align: center;
     }

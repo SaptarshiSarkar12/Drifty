@@ -437,6 +437,7 @@ header {
     padding: 2.5rem;
     gap: 28px;
     flex: 1;
+    transition: all 0.3s ease;
 }
 
 .contrib-container:nth-child(1){
@@ -742,9 +743,21 @@ line-height: 1.6 !important;
         padding: 0;
     }
     .contrib-container .content {
-        padding: 1rem 2rem  !important;
+        padding: 1.5rem 2rem  !important;
+        transition: all 0.3s ease;
     }
 
+}
+
+@media screen and (max-width: 864px) {
+    .contrib-container{
+        display: block;
+        padding: 2.5rem 0;
+        transition: all 0.3s ease;
+    }
+    .contrib-container .btn4 {
+       text-align: center;   
+    }
 }
 
 @media screen and (max-width: 1345px) {
