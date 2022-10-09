@@ -71,6 +71,8 @@ let requestedAt = localStorage.getItem("requestedAt");
 if (parseInt(requestedAt)>23) localStorage.removeItem("requestedAt");
 if (contrib == null ||  requestedAt == null) getContrib();
 else if (currentHour!=requestedAt) getContrib();
+else updateContrib();
+
 function getContrib() {
     fetch("https://api.github.com/repos/SaptarshiSarkar12/Drifty/contributors")
     .then(x=>x.json())
@@ -78,10 +80,10 @@ function getContrib() {
       contrib = data;
       localStorage.setItem('contrib', JSON.stringify(data));
       localStorage.setItem('requestedAt', date.getHours());
+      updateContrib();
   }).catch(err => console.log(err));
 }
 
-updateContrib();
 function updateContrib(){
   try{
     contrib = JSON.parse(contrib);
