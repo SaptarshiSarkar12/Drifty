@@ -35,3 +35,4 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: './Website'
+          preview-branch: master
