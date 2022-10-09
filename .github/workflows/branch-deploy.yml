@@ -27,6 +27,7 @@ jobs:
         id: branch-deploy
         with:
           trigger: ".deploy"
+          stable_branch: "main"
 
       # Run your deployment logic for your project here - examples seen below
       - name: Checkout
@@ -41,3 +42,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+      - name: update deployment status
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          env: ${{ steps.deployment.outputs.env }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
