@@ -6,10 +6,10 @@ let darkMode = localStorage.getItem('darkMode');
 const darkModeToggle = document.querySelector('.btn-toggle');
 
 const nav = document.querySelector(".nav-bar");
-const menu = document.getElementById("menu");
-const toggleBtn = document.querySelector("#menu>i");
-const miniNav = document.querySelector("nav");
-const links = document.querySelectorAll(".nav-links > li");
+// const menu = document.getElementById("menu");
+// const toggleBtn = document.querySelector("#menu>i");
+// const miniNav = document.querySelector("nav");
+// const links = document.querySelectorAll(".nav-links > li");
 
 const enableDarkMode = () => {
   document.body.classList.add('darkmode');
@@ -36,8 +36,9 @@ darkModeToggle.addEventListener('click', () => {
 
 // NAV ---------
 
+
 window.addEventListener("scroll", function () {
-  nav.classList.toggle("nav-sticky", this.window.scrollY > 10);
+  nav.classList.toggle("nav-sticky", this.window.scrollY > 5);
   });
   
   menu.addEventListener("click", function () {
@@ -111,4 +112,4 @@ function generateDiv(x) {
     div.style.margin = "5px"
     return div;
 }
-// END CONTRIB ---- 
+// END CONTRIB ----
