@@ -503,8 +503,8 @@ line-height: 1.6 !important;
 }
 
 .download > h2 {
-    font-family: Lora, sans-serif;
-    font-style: italic;
+    font-family: "Poppins", sans-serif;
+    font-size: 2rem;
     color: var(--maroon);
     margin-top: 2rem;
 }
@@ -531,6 +531,10 @@ line-height: 1.6 !important;
     grid-column-start: 1;
     grid-column-end: 5;
     text-align: left;
+}
+
+.demo h2{
+    font-family: 'Poppins';
 }
 
 .demo .text > h2 {
@@ -773,7 +777,7 @@ line-height: 1.6 !important;
         text-align: center;
     }
     
-    .demo > .text > h2 {
+    .demo .text h2 {
         font-size: 36px;
     }
 
