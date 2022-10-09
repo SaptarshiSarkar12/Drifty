@@ -1,0 +1,28 @@
+# This file configures Reviewpad action to run on Issues and Pull Requests! 🦄
+name: Reviewpad
+
+on:
+  pull_request_target:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - edited
+# These permissions are necessary to automate pull requests from forks.
+permissions:
+  pull-requests: write
+
+jobs:
+  reviewpad_job:
+    runs-on: ubuntu-latest
+    name: Reviewpad
+    steps:
+      - name: Start web server
+        run: python -m http.server 8000
+      - name: Reviewpad
+        uses: reviewpad/action@v3.x
+        with:
+          # Uncomment next line to use your own configuration file 💪
+          file: reviewpad.yml
+          
