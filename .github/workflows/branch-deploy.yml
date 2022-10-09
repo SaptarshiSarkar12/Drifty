@@ -10,6 +10,7 @@ permissions:
   pull-requests: write
   deployments: write
   contents: write
+  id-token: write
 
 jobs:
   deploy:
@@ -25,7 +26,6 @@ jobs:
         id: branch-deploy
         with:
           trigger: ".deploy"
-          github_token: ${{ github.token }}
 
       # Run your deployment logic for your project here - examples seen below
       - name: Checkout
