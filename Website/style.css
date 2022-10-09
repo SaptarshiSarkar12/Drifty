@@ -789,3 +789,86 @@ line-height: 1.6 !important;
         font-size: min(2vw, 30px);
     }
 }
+
+/* Contact Section */
+
+form { max-width:420px; margin:10px auto; justify-content: center;}
+
+.contact-me {
+  background: rgb(75, 195, 255) ;
+  border: 2px solid rgb(75, 195, 255);
+  line-height: 22px;
+  transition: all 0.3s;
+  padding: 16px;
+  margin-bottom: -10px;
+  width:35%;
+  align-items: center;
+  margin-left: 33%;
+  border-radius: 10px ;
+  box-sizing: border-box;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+}
+.feedback-input {
+  color:black;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight:500;
+  font-size: 18px;
+  border-radius: 15px;
+  line-height: 22px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  background-color: transparent;
+  border:2px solid rgb(0, 231, 216);
+  transition: all 0.3s;
+  padding: 15px;
+  margin-bottom: 15px;
+  width:100%;
+  box-sizing: border-box;
+  outline:0;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+}
+.feedback-input:hover{
+  background-color: rgb(154, 255, 236);
+}
+
+.feedback-input:focus { border:2px solid rgb(0, 231, 216); }
+
+textarea {
+  height: 100px;
+  line-height: 150%;
+  resize:vertical;
+}
+
+[type="submit"] {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  width: 30%;
+  align-items: center;
+  position: relative;
+  margin-left: 35%;
+  background:rgb(0, 231, 216);  
+  border-radius:5px;
+  border:0;
+  cursor:pointer;
+  color:white;
+  font-size:20px;
+  padding-top:10px;
+  padding-bottom:10px;
+  transition: all 0.3s;
+  margin-top:-4px;
+  font-weight:700;
+}
+[type="submit"]:hover { background:#7bbdff;
+  width:40%;
+  margin-left: 30%;
+ }
