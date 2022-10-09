@@ -746,6 +746,9 @@ line-height: 1.6 !important;
         padding: 1.5rem 2rem  !important;
         transition: all 0.3s ease;
     }
+    .img-layer {
+        opacity: 0.3;
+    }
 
 }
 
