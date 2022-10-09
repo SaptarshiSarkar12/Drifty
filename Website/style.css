@@ -668,13 +668,21 @@ line-height: 1.6 !important;
 
 /* Dark mode toggle */
 
-.btn-toggle {
+/* .btn-toggle {
+    position: fixed;
+    bottom: 10%;
+    right: 3%;
+    background: #0FACF3;
+    width: 180px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    border-radius: 3px;
+    box-shadow: 4px 4px 4px #0a78aa;
+    cursor: pointer;
     position: relative;    
     appearance: none;
     -webkit-appearance: none;
-    width: 50px;
-    height: 25px;
-    
     background-image: url("Resources/Day.webp");
     background-size: cover;
     border-radius: 50px;
@@ -704,7 +712,7 @@ line-height: 1.6 !important;
     transform: translate(100%);
     transition: all .9s;
     background-color: #ECF0F3;
-}
+} */
 /* Animations */
 
 @keyframes slide_underline {
@@ -789,3 +797,33 @@ line-height: 1.6 !important;
         font-size: min(2vw, 30px);
     }
 }
+
+
+/* dark button */
+
+.btn-toggle{
+    position: fixed;
+    bottom: 6%;
+    right: 3%;
+    background: #0FACF3;
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px #0a78aa;
+    cursor: pointer;
+  }
+  
+  .btn-toggle p{
+    text-transform: uppercase;
+    font-family: arial;
+    font-weight: 900;
+    color: #fff;
+  }
+  
+  .fb{
+   font-size: 2.3rem;
+   position: relative;
+   top: 20px;
+  }
+ 
