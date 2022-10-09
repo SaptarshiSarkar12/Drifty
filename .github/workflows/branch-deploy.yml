@@ -25,6 +25,7 @@ jobs:
         id: branch-deploy
         with:
           trigger: ".deploy"
+          github_token: ${{ github.token }}
 
       # Run your deployment logic for your project here - examples seen below
       - name: Checkout
