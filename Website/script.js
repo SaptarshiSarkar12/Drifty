@@ -10,16 +10,27 @@ const menu = document.getElementById("menu");
 const toggleBtn = document.querySelector("#menu>i");
 const miniNav = document.querySelector("nav");
 const links = document.querySelectorAll(".nav-links > li");
+const darkTxt = document.querySelector(".Txt");
+const symb = document.getElementById("symb");
 
 const enableDarkMode = () => {
   document.body.classList.add('darkmode');
   darkModeToggle.checked = true; // Check only if the darkmode is on
+  symb.classList.remove("fa-moon");
+  symb.classList.add("fa-sun");
+  darkTxt.innerHTML= "Light"
+
   localStorage.setItem('darkMode', 'enabled');
 }
 
 const disableDarkMode = () => {
   document.body.classList.remove('darkmode');
   darkModeToggle.checked = false;
+  darkTxt.innerHTML= "Dark"
+  symb.classList.add("fa-moon");
+  symb.classList.remove("fa-sun");
+
+  
   localStorage.setItem('darkMode', null);
 }
 
@@ -28,6 +39,8 @@ if (darkMode === 'enabled')
 
 darkModeToggle.addEventListener('click', () => {
   darkMode = localStorage.getItem('darkMode');
+  // darkTxt.innerHTML= "Dark"
+
   if (darkMode !== 'enabled')
     enableDarkMode();
   else
