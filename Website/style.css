@@ -499,10 +499,17 @@ header {
 }
 
 .download > h2 {
+
+    font-family: "Poppins", sans-serif;
+    font-size: 2rem;
+    color: var(--maroon);
+    margin-top: 2rem;
+
   font-family: Lora, sans-serif;
   font-style: italic;
   color: var(--maroon);
   margin-top: 2rem;
+
 }
 
 /* -Download section- */
@@ -527,6 +534,10 @@ header {
   grid-column-start: 1;
   grid-column-end: 5;
   text-align: left;
+}
+
+.demo h2{
+    font-family: 'Poppins';
 }
 
 .demo .text > h2 {
@@ -729,6 +740,33 @@ header {
 /* Media Queries */
 
 @media screen and (max-width: 750px) {
+    .header-container {
+        padding-top: 30px;
+        margin: 5rem 2rem 2rem;
+        z-index: 1;
+    }
+    .header-container > .btn{
+        margin: 10px 0px;
+    }
+    .contrib-container{
+        display: block;
+        padding: 2.5rem 0;
+    }
+    .contrib-container .btn4 {
+       text-align: center;   
+    }
+    .contrib{
+        padding: 0;
+    }
+    .contrib-container .content {
+        padding: 1.5rem 2rem  !important;
+        transition: all 0.3s ease;
+    }
+    .img-layer {
+        opacity: 0.3;
+    }
+
+=======
   .header-container {
     padding-top: 30px;
     margin: 5rem 2rem 2rem;
@@ -751,6 +789,7 @@ header {
     padding: 1.5rem 2rem !important;
     transition: all 0.3s ease;
   }
+
 }
 
 @media screen and (max-width: 864px) {
@@ -765,6 +804,36 @@ header {
 }
 
 @media screen and (max-width: 1345px) {
+
+    .demo {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .demo > .text {
+        text-align: center;
+    }
+    
+    .demo .text h2 {
+        font-size: 36px;
+    }
+
+    .demo > .text > p {
+        font-size: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .buttons {
+        width: min(100%, 700px);
+        column-gap: 1rem;
+        font-size: min(4vw, 24px);
+    }
+
+    .btn4 {
+        font-size: min(2vw, 30px);
+    }
+}
+=======
   .demo {
     display: flex;
     flex-direction: column;
