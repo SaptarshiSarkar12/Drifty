@@ -356,6 +356,8 @@ body::-webkit-scrollbar-thumb {
   transform: translateX(-50%);
   z-index: 1;
   color: var(--black);
+  position: relative;
+  top:65px;
 }
 
 header img {
@@ -493,7 +495,7 @@ header {
 /* Info */
 
 .info {
-  background-color: var(--background-color1);
+  background-color: var(--background-color);
   padding: 2rem 5rem;
   color: var(--black);
 }
