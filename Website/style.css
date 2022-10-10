@@ -96,7 +96,7 @@ body::-webkit-scrollbar-thumb {
 .darkmode {
   --background-color: #041c32;
   --background-color1: #064663;
-
+  
   --black: #ecb365;
   --maroon: #f1d00a;
 
@@ -248,14 +248,11 @@ body::-webkit-scrollbar-thumb {
   width: 70px;
   height: 70px;  
   cursor: pointer;
-}
-
-.nav-links > .btn-toggle p {
   font-family: arial;
   font-weight: 900;
-  color: #fff;
   position: relative;
 }
+
 
 .button {
   border: none;
