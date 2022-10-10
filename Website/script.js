@@ -25,7 +25,7 @@ const disableDarkMode = () => {
   document.body.classList.remove('darkmode');
   darkModeToggle.checked = false;  
   symb.classList.add("fa-moon");
-  symb.classList.remove("fa-sun");  
+  symb.classList.remove("fa-sun");   
   localStorage.setItem('darkMode', null);
 }
 
