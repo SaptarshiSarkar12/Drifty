@@ -263,7 +263,8 @@ body::-webkit-scrollbar-thumb {
 
 
 .primary-navigation a:hover{
-color: #080f5c;
+    color:yellow;
+    
 /* transform: scale(1.5); */
 }
 
@@ -397,15 +398,20 @@ color: #080f5c;
     display: inline-block;
     font-size: 20px;
     font-weight: 600;
-    background-color: var(--button-background);
+    background-color: var(--m);
     color: var(--button-text);
     padding: 16px 32px;
-    border-radius: 9px;
+    border-radius: 30px;
+    border:2px solid white;
     transition: 0.5s;
 }
 
 .header-container > .btn:hover {
-    background-color: var(--button-onhover-background);
+    background:linear-gradient(
+        -45deg,
+        var(--ascent-col-2l),
+        var(--ascent-col-1l)
+    ) !important;;
     color: var(--button-onhover-text);
     box-shadow: 5px 5px 1px var(--button-onhover-shadow);
 }
@@ -636,21 +642,28 @@ line-height: 1.6 !important;
     
     background-color: var(--button-background);
     color: var(--button-text);
-    
+    border: 2px solid white;
     margin: 1rem;
     padding: 16px 32px;
     border-radius: 500px;
     transition: 0.5s;
 }
-
+.download .btn4{
+    background-color: #72c8de;
+    box-shadow: 2px 2px 4px #0AA1DD;
+}
 .btn4:hover {
-    background-color: var(--button-onhover-background);
+    background:linear-gradient(
+        -45deg,
+        var(--ascent-col-2l),
+        var(--ascent-col-1l)
+    ) !important;
     color: var(--button-onhover-text);
     box-shadow: 5px 5px 1px var(--button-onhover-shadow);
 }
 
 #contact {
-    background-color: var(--background-color1);
+    background-color:var(--m-light-col);
     color: var(--black);
     font-family: Lora, sans-serif;
     font-style: italic;
@@ -672,10 +685,16 @@ line-height: 1.6 !important;
     font-style: normal;
     background-color: var(--text-color);
     border-radius: 5rem;
+    border: 2px solid white;
     margin: 0 0 34px 0 ;
 }
 .contact-container a:hover{
-    filter: brightness(1.2);
+    /* filter: brightness(1.2); */
+    background:linear-gradient(
+        -45deg,
+        aqua,
+        blue
+    ) !important;;
 }
 .contact-container i{
    line-height: none;
@@ -695,7 +714,7 @@ line-height: 1.6 !important;
 
 .footer {
     padding: 40px 0;
-    background-color: var(--background-color);
+    background-color: black;
     text-align: center;
 }
 
@@ -706,8 +725,8 @@ line-height: 1.6 !important;
 
 .footer .social a {
     font-size: 30px;
-    color: var(--black);
-    
+    color: white;
+    overflow: hidden;
     border: 1px solid black;
     width: 60px;
     aspect-ratio: 1;
@@ -723,9 +742,9 @@ line-height: 1.6 !important;
 }
 
 .footer .social a:hover {
-    color: var(--maroon);
+    color:blue;
     opacity: 1;
-    box-shadow: 2px 2px 10px var(--maroon), 2px -2px 10px var(--maroon), -2px -2px 10px var(--maroon), -2px 2px 10px var(--maroon);
+    box-shadow: 2px 2px 10px blue, 2px -2px 10px aqua, -2px -2px 10px white, -2px 2px 10px purple;
 }
 
 .footer > p {
