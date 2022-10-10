@@ -21,9 +21,9 @@
 ## Getting Started 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-![Drifty Website](https://user-images.githubusercontent.com/105960032/194504016-c2a6d761-bc04-49ee-b8fd-cecb2d36faa8.png)
+![image](https://user-images.githubusercontent.com/105960032/194826380-64ba7add-b49a-4772-b8ad-6c8312693d66.png)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-![image](https://user-images.githubusercontent.com/105960032/194505674-96352e1c-8842-4b98-952d-80a0635d06e4.png)
+![image](https://user-images.githubusercontent.com/105960032/194829345-b814089b-8b55-421e-9df7-d837c8b13226.png)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
 ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
 4. Go to your Downloads folder and run the file.
