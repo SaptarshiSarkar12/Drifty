@@ -766,7 +766,6 @@ header {
         opacity: 0.3;
     }
 
-=======
   .header-container {
     padding-top: 30px;
     margin: 5rem 2rem 2rem;
@@ -833,7 +832,7 @@ header {
         font-size: min(2vw, 30px);
     }
 }
-=======
+
   .demo {
     display: flex;
     flex-direction: column;
@@ -861,11 +860,10 @@ header {
   .btn4 {
     font-size: min(2vw, 30px);
   }
-}
 
 /* dark button */
 
-.btn-toggle {
+/* .btn-toggle {
   position: fixed;
   bottom: 6%;
   right: 3%;
@@ -885,7 +883,7 @@ header {
   color: #fff;
   position: relative;
   top: 20px;
-}
+} */
 
 .fb {
   font-size: 1.3rem;
