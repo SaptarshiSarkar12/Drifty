@@ -244,6 +244,20 @@ body::-webkit-scrollbar-thumb {
   animation: blink 0.5s ease infinite;
 }
 
+.nav-links > .btn-toggle {
+  width: 70px;
+  height: 70px;  
+  cursor: pointer;
+}
+
+.nav-links > .btn-toggle p {
+  font-family: arial;
+  font-weight: 900;
+  color: #fff;
+  position: relative;
+  top: 20px;
+}
+
 .button {
   border: none;
   cursor: pointer;
@@ -860,30 +874,6 @@ header {
   .btn4 {
     font-size: min(2vw, 30px);
   }
-
-/* dark button */
-
-/* .btn-toggle {
-  position: fixed;
-  bottom: 6%;
-  right: 3%;
-  background: #0facf3;
-  width: 70px;
-  height: 70px;
-  text-align: center;
-  border-radius: 50%;
-  box-shadow: 2px 2px 2px #0a78aa;
-  cursor: pointer;
-}
-
-.btn-toggle p {
-  text-transform: uppercase;
-  font-family: arial;
-  font-weight: 900;
-  color: #fff;
-  position: relative;
-  top: 20px;
-} */
 
 .fb {
   font-size: 1.3rem;

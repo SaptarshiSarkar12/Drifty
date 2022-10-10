@@ -18,19 +18,14 @@ const enableDarkMode = () => {
   darkModeToggle.checked = true; // Check only if the darkmode is on
   symb.classList.remove("fa-moon");
   symb.classList.add("fa-sun");
-  darkTxt.innerHTML= "Light"
-
   localStorage.setItem('darkMode', 'enabled');
 }
 
 const disableDarkMode = () => {
   document.body.classList.remove('darkmode');
-  darkModeToggle.checked = false;
-  darkTxt.innerHTML= "Dark"
+  darkModeToggle.checked = false;  
   symb.classList.add("fa-moon");
-  symb.classList.remove("fa-sun");
-
-  
+  symb.classList.remove("fa-sun");  
   localStorage.setItem('darkMode', null);
 }
 
