@@ -53,12 +53,10 @@ public class Drifty_CLI {
                 saveToDefault();
             }
             else{
-                if (!(downloadsFolder.endsWith("\\"))) {
-                    if (System.getProperty("os.name").contains("Windows")) {
-                        downloadsFolder = SC.nextLine().replace('/', '\\');
-                        if (!(downloadsFolder.endsWith("\\"))) {
-                            downloadsFolder = downloadsFolder + System.getProperty("file.separator");
-                        }
+                if (System.getProperty("os.name").contains("Windows")) {
+                    downloadsFolder = SC.nextLine().replace('/', '\\');
+                    if (!(downloadsFolder.endsWith("\\"))) {
+                        downloadsFolder = downloadsFolder + System.getProperty("file.separator");
                     }
                 }
             }
