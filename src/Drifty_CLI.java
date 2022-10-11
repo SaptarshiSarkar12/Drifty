@@ -44,17 +44,22 @@ public class Drifty_CLI {
             }
             containsFile(URL);
             fName = (name==null) ? fName : name;
-            if (fName==null){
+            if (fName==null && !isYoutubeURL(URL)){
                 System.out.print("Enter the filename (with file extension) : ");
                 fName = SC.nextLine();
             }
             downloadsFolder = location;
             if (downloadsFolder == null){
                 saveToDefault();
-            } else{
-                downloadsFolder = downloadsFolder.replace('/', '\\');
+            }
+            else{
                 if (!(downloadsFolder.endsWith("\\"))) {
-                    downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+                    if (System.getProperty("os.name").contains("Windows")) {
+                        downloadsFolder = SC.nextLine().replace('/', '\\');
+                        if (!(downloadsFolder.endsWith("\\"))) {
+                            downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+                        }
+                    }
                 }
             }
             FileDownloader fDownload = new FileDownloader(URL, fName, downloadsFolder);
