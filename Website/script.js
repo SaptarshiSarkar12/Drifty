@@ -179,3 +179,16 @@ function renderAssets(assets) {
   }, "");
 }
 // END RELEASE
+
+function downloadWindows() {
+        var a = document.getElementById('windowsDownloadButton');
+		a.href = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe';
+		window.open('https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe');
+}
+
+function downloadMacLinux() {
+		var a = document.getElementById('macLinuxButton');
+		a.href = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos';
+		window.open('https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar');
+}
+
