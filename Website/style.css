@@ -533,6 +533,34 @@ header {
   justify-content: center;
 }
 
+.release_section {
+  margin: 0rem auto 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.release{
+  margin: 1rem;
+
+}
+
+.assets {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;  
+
+}
+.assets a {
+  background-color: var(--button-background);
+  color: var(--button-text);
+  border-radius: 500px;
+  padding: 0.3rem 1rem;
+  margin-top: 0.6rem;
+}
+
+
 /* -Dowload demo- */
 
 .demo {
@@ -912,3 +940,4 @@ header {
 .lightTxt {
   display: none;
 }
+
