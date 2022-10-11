@@ -66,6 +66,10 @@ public class Drifty_CLI {
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
             while (true) {
+                if (isYoutubeURL(link)){
+                    System.out.println("YOUTUBE URL DETECTED");
+                    break;
+                }
                 if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
                     System.out.print("Enter the link to the file : ");
@@ -80,6 +84,9 @@ public class Drifty_CLI {
             }
             SC.nextLine();
             while (true){
+                if (isYoutubeURL(link)){
+                    break;
+                }
                 if (fName != null) {
                     System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     char rename_file = SC.nextLine().toLowerCase().charAt(0);
@@ -130,9 +137,12 @@ public class Drifty_CLI {
      */
     private static void enterDownloadsFolder(){
         System.out.print("Enter the directory in which you want to download the file : ");
-        downloadsFolder = SC.nextLine().replace('/', '\\');
-        if (!(downloadsFolder.endsWith("\\"))) {
-            downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+        downloadsFolder = SC.nextLine();
+        if (System.getProperty("os.name").contains("Windows")) {
+            downloadsFolder = SC.nextLine().replace('/', '\\');
+            if (!(downloadsFolder.endsWith("\\"))) {
+                downloadsFolder = downloadsFolder + System.getProperty("file.separator");
+            }
         }
         logger.log("INFO", "Custom Directory Entered : " + downloadsFolder);
     }
@@ -166,6 +176,11 @@ public class Drifty_CLI {
         catch (Exception e){
             return false;
         }
+    }
+
+    public static boolean isYoutubeURL(String url) {
+        String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+        return url.matches(pattern);
     }
 
     /**
