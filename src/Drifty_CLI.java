@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
 import java.util.Scanner;
@@ -156,8 +157,14 @@ public class Drifty_CLI {
     private static void saveToDefault(){
         System.out.println("Trying to auto-detect default Downloads folder...");
         logger.log("INFO", "Trying to auto-detect default Downloads folder...");
-        downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
-        if (downloadsFolder.equals(System.getProperty("file.separator"))) {
+        if (!System.getProperty("os.name").contains("Windows")) {
+            String home = System.getProperty("user.home");
+            downloadsFolder = home + "/Downloads/";
+        }
+        else {
+            downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+        }
+        if (downloadsFolder.equals(System.getProperty("file.separator")) || downloadsFolder.equals(null)) {
             System.out.println("Failed to retrieve default download folder!");
             logger.log("ERROR", "Failed to retrieve default download folder!");
             enterDownloadsFolder();
