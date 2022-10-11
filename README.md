@@ -26,7 +26,7 @@ For **Users** :
 ![image](https://user-images.githubusercontent.com/105960032/194829345-b814089b-8b55-421e-9df7-d837c8b13226.png)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**.</p>
 ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
-4. 2 files will be downloaded. If you are on linux, a macos binary for yt-dlp will be downloaded. You can ignore that and download yt-dlp through your package manager. For debian based distros you can type sudo apt install yt-dlp in your terminal.
+4. 2 files will be downloaded. If you are on linux, a macos binary for yt-dlp will be downloaded. You can ignore that and download yt-dlp through your package manager. For debian based distros you can type `sudo apt install yt-dlp` in your terminal.
 5. Go to your Downloads folder and run Drifty. Make sure yt-dlp is in the same folder as Drifty.
 6. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 7. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
