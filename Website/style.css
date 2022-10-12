@@ -217,7 +217,7 @@ body::-webkit-scrollbar-thumb {
 .logo {
     display:flex-end;
     cursor: pointer;
-    width: 50px;
+    width: 60px;
     height: 50px;
     margin-left: 4rem;
     padding:1px;
@@ -374,7 +374,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .btn2:hover a {
-    animation: slide_underline 0.3s ease-out;
+    animation: slide_underline 0.2s ease-out;
     text-decoration: underline var(--maroon) wavy;
 }
 
@@ -725,6 +725,7 @@ line-height: 1.6 !important;
     padding: 40px 0;
     background-color: black;
     text-align: center;
+    color: #48abf7;
 }
 
 .footer .social {
@@ -757,7 +758,7 @@ line-height: 1.6 !important;
 }
 
 .footer > p {
-    color: var(--black);
+    color:white;
     font-size: 15px;
 }
 
