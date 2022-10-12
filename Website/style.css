@@ -186,13 +186,13 @@ body::-webkit-scrollbar-thumb {
 
 .nav-bar {
     z-index: 100;
-    display: flex;
+    display:inline-flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content:space-between;
     position: absolute;
-    width: 100vw;
+    /* width: 100px; */
     /* padding: 32px 10vw; */
-    padding-top:20px ;
+    /* padding-top:20px ; */
     background: transparent;
     transition: padding 0.3s ease-out;
 }
@@ -213,16 +213,22 @@ body::-webkit-scrollbar-thumb {
 }
 
 .nav-bar > a{
-    margin-right:auto ;
+    /* margin-right:auto ; */
 
 }
 
 .logo {
+    display:flex-end;
     cursor: pointer;
     width: 70px;
     height: 70px;
     margin-left: 4rem;
-    /* padding:20px; */
+    padding:1px;
+    margin-right:200px ;
+    padding-left: 2px;
+    nav-left: 3px;
+    /* gap:var(--gap, 1 rem); */
+    
 }
 
 
@@ -230,14 +236,17 @@ body::-webkit-scrollbar-thumb {
 .flex{
     display: flex;
     gap: var(--gap, 1rem);
+    justify-content: space-between;
+    padding: 0%;
 }
 .primary-navigation{
+    display:flexbox;
     align-items: center;
-    justify-content: space-between;
+    justify-content:flex-end;
     list-style:none;
     background:rgba(2, 2, 2, 0.15);
     backdrop-filter: blur(1rem);
-    padding: 12px;
+    /* padding: 12px; */
 }
 
 .mobile-nav-toggle{
@@ -271,23 +280,23 @@ body::-webkit-scrollbar-thumb {
 @media(max-width:1000px){
     .primary-navigation{
         position: fixed;
-        z-index: 1000;
+        z-index:1000;
         inset:0 0 0 30%;
 
         flex-direction: column;
         padding: min(30vh, 10rem) 2em;
         background: hsl(0 0% 100% /0.3);
         backdrop-filter: blur(1rem);
-        opacity: 80%;
+        /* opacity: 80%; */
 
     transform: translateX(100%);
     transition: transform 350ms ease;
      } 
-     .primary-navigation[data-visible="true"]{
+.primary-navigation[data-visible="true"]{
     transform:translate(0%);
     }
 
-    .mobile-nav-toggle{
+.mobile-nav-toggle{
         display: block;
         position:absolute;
         background: red;
@@ -303,7 +312,7 @@ body::-webkit-scrollbar-thumb {
         border: none;
         
      }
-    .mobile-nav-toggle[aria-expanded="true"]{
+.mobile-nav-toggle[aria-expanded="true"]{
         background-image: url("Resources/icons8-close.svg");
     }
 }

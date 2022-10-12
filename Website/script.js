@@ -12,12 +12,12 @@ const nav = document.querySelector(".nav-bar");
 // const miniNav = document.querySelector("nav");
 // const links = document.querySelectorAll(".nav-links > li");
 
-const menu = document.getElementById("menu");
-const toggleBtn = document.querySelector("#menu>i");
-const miniNav = document.querySelector("nav");
-const links = document.querySelectorAll(".nav-links > li");
-const darkTxt = document.querySelector(".Txt");
-const symb = document.getElementById("symb");
+// const menu = document.getElementById("menu");
+// const toggleBtn = document.querySelector("#menu>i");
+// const miniNav = document.querySelector("nav");
+// const links = document.querySelectorAll(".nav-links > li");
+// const darkTxt = document.querySelector(".Txt");
+// const symb = document.getElementById("symb");
 
 
 const enableDarkMode = () => {
