@@ -1,5 +1,5 @@
 /* TABLETS  */
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+/* @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .nav-sticky {
         border-radius: 3rem;
         margin: 10px 50px;
@@ -20,6 +20,7 @@
     .nav-sticky .button {
         margin: 0 0;
     }
+
      .header-container {
         transform: none;
         width: 70%;
@@ -32,7 +33,7 @@
     }
 }
 /* ALL MOBILE  */
-@media screen and (max-width: 767px) {
+/* @media screen and (max-width: 767px) {
     .nav-sticky {
         width: fit-content !important;
         flex-direction: column;
@@ -52,7 +53,7 @@
         display: none;
     }
     .nav-bar {
-        /* padding: 15px 5vw !important; */
+        padding: 15px 5vw !important;
         justify-content: space-between !important;
         text-align: center;
     }
@@ -66,13 +67,13 @@
     .nav-sticky .button {
         margin: 0;
     }
-
+/* 
     nav {
         height: 0;
         width: 0;
         pointer-events: none;
-        opacity: 0;
-    }
+        /* opacity: 0; */
+    /* }
     .show {
         opacity: 1;
         pointer-events: all;
@@ -80,8 +81,8 @@
         width: auto;
     }
 
-    .nav-links {
-        display: flex;
+    .nav-links { */ */
+        /* display: flex;
         flex-direction: column;
         gap: 10px;
     }
@@ -96,10 +97,12 @@
 
     .nav-links:first-child {
         margin-top: 10px;
-    }
+    } */
+
+    
 
     /* NAV ANIMATION */
-    .nav-links li{
+    /* .nav-links li{
         opacity: 0 ;
     }
     .nav-links li:nth-child(1) {
@@ -132,4 +135,4 @@
         text-transform: uppercase;
     }
 
-}
+} */ */ */

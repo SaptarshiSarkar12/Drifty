@@ -186,11 +186,11 @@ body::-webkit-scrollbar-thumb {
 
 .nav-bar {
     z-index: 100;
-    display:inline-flex;
+    display:flex;
     align-items: center;
-    justify-content:space-between;
+    justify-content:flex-end;
     position: absolute;
-    /* width: 100px; */
+    width: 100vw;
     /* padding: 32px 10vw; */
     /* padding-top:20px ; */
     background: transparent;
@@ -212,12 +212,15 @@ body::-webkit-scrollbar-thumb {
     transition: padding 0.3s ease-out; */
 }
 
+.nav-bar > a{
+    margin-right:auto ;
 
+}
 
 .logo {
     display:flex-end;
     cursor: pointer;
-    width: 50px;
+    width: 60px;
     height: 50px;
     margin-left: 4rem;
     padding:1px;
@@ -236,22 +239,29 @@ body::-webkit-scrollbar-thumb {
     justify-content: space-between;
     padding: 0%;
 }
-.primary-navigation{
+/* .primary-navigation{
     display:flexbox;
     align-items: center;
     justify-content:flex-end;
     list-style:none;
-    background:rgba(2, 2, 2, 0.15);
+    background:rgba(2, 2, 2, 0.15)z;
     width: auto;
     backdrop-filter: blur(1rem);
     /* padding: 12px; */
-    padding-bottom: 12px;
-}
+    /* padding-bottom: 12px;
+} */ 
 
 .mobile-nav-toggle{
     display: none;
 }
+.primary-navigation{
+    list-style: none;
+    padding: 0;
+    margin: 0;
 
+    background: rgba(82, 80, 80, 0.3);
+    backdrop-filter: blur(1rem);
+}
 
 @supports(  backdrop-filter: blur(1rem)){
     .primary-navigation{
@@ -297,10 +307,10 @@ body::-webkit-scrollbar-thumb {
 
 .mobile-nav-toggle{
         display: block;
-        position:absolute;
+        position:fixed;
         background: red;
         z-index: 9999; 
-         width: 1rem;
+        width: 1rem;
         aspect-ratio: 1;
         top:2rem;
         right:2rem;
@@ -313,6 +323,9 @@ body::-webkit-scrollbar-thumb {
      }
 .mobile-nav-toggle[aria-expanded="true"]{
         background-image: url("Resources/icons8-close.svg");
+    }
+    .logo{
+display: none;
     }
 }
 
@@ -337,11 +350,11 @@ body::-webkit-scrollbar-thumb {
 
 
  
-/* #menu {   */
-    /* display: none;
+/* #menu {  
+ display: none;
     font-size: 20px;
     margin: 0;
-}  */ 
+}   */
 
 /* @keyframes blink {
     0% {
@@ -354,7 +367,7 @@ body::-webkit-scrollbar-thumb {
         filter: brightness(1.2);
     }
 } */
-}
+
 
 .buttons {
     display: flex;
@@ -725,6 +738,7 @@ line-height: 1.6 !important;
     padding: 40px 0;
     background-color: black;
     text-align: center;
+    color: #48abf7;
 }
 
 .footer .social {
@@ -757,7 +771,7 @@ line-height: 1.6 !important;
 }
 
 .footer > p {
-    color: var(--black);
+    color:white;
     font-size: 15px;
 }
 
@@ -883,4 +897,4 @@ line-height: 1.6 !important;
     .btn4 {
         font-size: min(2vw, 30px);
     }
-}
+}}
