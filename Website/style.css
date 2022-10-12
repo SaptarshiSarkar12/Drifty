@@ -212,22 +212,19 @@ body::-webkit-scrollbar-thumb {
     transition: padding 0.3s ease-out; */
 }
 
-.nav-bar > a{
-    /* margin-right:auto ; */
 
-}
 
 .logo {
     display:flex-end;
     cursor: pointer;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     margin-left: 4rem;
     padding:1px;
     margin-right:200px ;
     padding-left: 2px;
     nav-left: 3px;
-    /* gap:var(--gap, 1 rem); */
+    gap:var(--gap, 1 rem);
     
 }
 
@@ -245,8 +242,10 @@ body::-webkit-scrollbar-thumb {
     justify-content:flex-end;
     list-style:none;
     background:rgba(2, 2, 2, 0.15);
+    width: auto;
     backdrop-filter: blur(1rem);
     /* padding: 12px; */
+    padding-bottom: 12px;
 }
 
 .mobile-nav-toggle{
@@ -389,6 +388,7 @@ body::-webkit-scrollbar-thumb {
 
 .header-container > h1 {
     font-family: "Poppins", sans-serif;
+    padding-top: 80px;
     font-size: 52px;
     font-weight: bold;
     margin-bottom: 32px;
