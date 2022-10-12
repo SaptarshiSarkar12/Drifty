@@ -334,7 +334,9 @@ display: none;
         display :none; 
 
      }
-
+     .img-layer{
+        
+     }
     }
 @media (min-width: 1000px){
     .primary-navigation{
@@ -896,5 +898,8 @@ line-height: 1.6 !important;
 
     .btn4 {
         font-size: min(2vw, 30px);
+    }
+    .img-layer{
+        overflow: hidden;
     }
 }}

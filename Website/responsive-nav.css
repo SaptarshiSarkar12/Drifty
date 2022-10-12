@@ -1,5 +1,5 @@
-/* TABLETS  */
-/* @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+/* TABLETS 
+ @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
     .nav-sticky {
         border-radius: 3rem;
         margin: 10px 50px;
@@ -33,8 +33,8 @@
     }
 }
 /* ALL MOBILE  */
-/* @media screen and (max-width: 767px) {
-    .nav-sticky {
+@media screen and (max-width: 767px) {
+    /* .nav-sticky {
         width: fit-content !important;
         flex-direction: column;
         justify-content: space-between;
@@ -56,22 +56,22 @@
         padding: 15px 5vw !important;
         justify-content: space-between !important;
         text-align: center;
-    }
-    .nav-bar > a {
+    } */
+    /* .nav-bar > a {
         margin: 0 !important; 
-    }
+    } */
     #menu {
         display: block !important;
     }
 
-    .nav-sticky .button {
+    /* .nav-sticky .button {
         margin: 0;
-    }
-/* 
-    nav {
+    } */
+
+    /* nav {
         height: 0;
         width: 0;
-        pointer-events: none;
+        pointer-events: none; */
         /* opacity: 0; */
     /* }
     .show {
@@ -81,7 +81,7 @@
         width: auto;
     }
 
-    .nav-links { */ */
+    .nav-links { */ 
         /* display: flex;
         flex-direction: column;
         gap: 10px;
@@ -99,10 +99,10 @@
         margin-top: 10px;
     } */
 
-    
+     */
 
     /* NAV ANIMATION */
-    /* .nav-links li{
+    .nav-links li{
         opacity: 0 ;
     }
     .nav-links li:nth-child(1) {
@@ -135,4 +135,4 @@
         text-transform: uppercase;
     }
 
-} */ */ */
+}
