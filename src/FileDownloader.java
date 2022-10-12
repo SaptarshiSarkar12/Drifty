@@ -1,10 +1,9 @@
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.Buffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
@@ -43,6 +42,8 @@ class FileDownloader implements Runnable {
      */
     @Override
     public void run() {
+
+
         link = link.replace('\\', '/');
         if (!(link.startsWith("http://") || link.startsWith("https://"))){
             link = "http://" + link;
@@ -53,30 +54,55 @@ class FileDownloader implements Runnable {
             }
         }
         try {
-            url = new URL(link);
-            URLConnection openConnection = url.openConnection();
-            openConnection.connect();
-            totalSize = openConnection.getContentLength();
-            if (fileName.length() == 0) {
-                 String[] webPaths = url.getFile().trim().split("/");
-                 fileName = webPaths[webPaths.length-1];
-            }
-            dir = dir.replace('/', '\\');
-            if (dir.length() != 0) {
-                if (dir.equals(".\\\\") || dir.equals(".\\")) {
-                    dir = "";
+            //If link is from youtube
+            if (Drifty_CLI.isYoutubeURL(link)) {
+                //download youtube video
+                System.out.println("Downloading from youtube....");
+                System.out.println("Directory: " + dir);
+
+                try {
+                    Runtime runtime = Runtime.getRuntime();
+                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-P", dir, link);
+                    processBuilder.directory(new File(dir));
+
+                    Process yt_dlp = processBuilder.start();
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(yt_dlp.getInputStream()));
+                    String line = "";
+                    while ((line = br.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } else {
-                System.out.println("Invalid Directory Entered !");
-                Drifty_CLI.logger.log("ERROR", "Invalid Directory Entered !");
+                //System.exit(0);
             }
-            try {
-                new CheckDirectory(dir);
-            } catch (IOException e){
-                System.out.println("Failed to create the directory : " + dir + " ! " + e.getMessage());
-                Drifty_CLI.logger.log("ERROR", "Failed to create the directory : " + dir + " ! " + e.getMessage());
+            else {
+                url = new URL(link);
+                URLConnection openConnection = url.openConnection();
+                openConnection.connect();
+                totalSize = openConnection.getContentLength();
+                if (fileName.length() == 0) {
+                    String[] webPaths = url.getFile().trim().split("/");
+                    fileName = webPaths[webPaths.length-1];
+                }
+                dir = dir.replace('/', '\\');
+                if (dir.length() != 0) {
+                    if (dir.equals(".\\\\") || dir.equals(".\\")) {
+                        dir = "";
+                    }
+                } else {
+                    System.out.println("Invalid Directory Entered !");
+                    Drifty_CLI.logger.log("ERROR", "Invalid Directory Entered !");
+                }
+                try {
+                    new CheckDirectory(dir);
+                } catch (IOException e){
+                    System.out.println("Failed to create the directory : " + dir + " ! " + e.getMessage());
+                    Drifty_CLI.logger.log("ERROR", "Failed to create the directory : " + dir + " ! " + e.getMessage());
+                }
+                downloadFile();
             }
-            downloadFile();
         } catch (MalformedURLException e) {
             System.out.println("Invalid Link!");
             Drifty_CLI.logger.log("ERROR", "Invalid Link! " + e.getMessage());
