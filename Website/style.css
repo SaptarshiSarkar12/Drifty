@@ -374,7 +374,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .btn2:hover a {
-    animation: slide_underline 0.2s ease-out;
+    animation: slide_underline 0.3s ease-out;
     text-decoration: underline var(--maroon) wavy;
 }
 
