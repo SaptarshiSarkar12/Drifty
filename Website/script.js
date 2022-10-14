@@ -6,8 +6,6 @@ let darkMode = localStorage.getItem('darkMode');
 const darkModeToggle = document.querySelector('.btn-toggle');
 
 const nav = document.querySelector(".nav-bar");
-const menu = document.getElementById("menu");
-const toggleBtn = document.querySelector("#menu>i");
 const miniNav = document.querySelector("nav");
 const links = document.querySelectorAll(".nav-links > li");
 

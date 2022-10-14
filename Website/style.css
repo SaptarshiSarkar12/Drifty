@@ -171,18 +171,13 @@ body::-webkit-scrollbar-thumb {
     height: 100vh;
     background-image: url("Resources/grain-dark.webp");
     opacity: 0.5;
-    overflow: hidden;
+    
     pointer-events: none;
 }
 
-/* Navbar */
+/* Navbar*/
 
-.nav-container {
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-}
+
 
 .nav-bar {
     z-index: 100;
@@ -191,16 +186,11 @@ body::-webkit-scrollbar-thumb {
     justify-content:flex-end;
     position: absolute;
     width: 100vw;
-    /* padding: 32px 10vw; */
-    /* padding-top:20px ; */
     background: transparent;
     transition: padding 0.3s ease-out;
 }
 
-/* .nav-bar * {
-    color: white;
 
-} */
 
 .nav-sticky {
     position: fixed;
@@ -244,17 +234,7 @@ body::-webkit-scrollbar-thumb {
     justify-content: space-between;
     padding: 0%;
 }
-/* .primary-navigation{
-    display:flexbox;
-    align-items: center;
-    justify-content:flex-end;
-    list-style:none;
-    background:rgba(2, 2, 2, 0.15)z;
-    width: auto;
-    backdrop-filter: blur(1rem);
-    /* padding: 12px; */
-    /* padding-bottom: 12px;
-} */ 
+
 
 .mobile-nav-toggle{
     display: none;
@@ -276,7 +256,7 @@ body::-webkit-scrollbar-thumb {
 
 .primary-navigation a{
     text-decoration: none;
-    /* transition: transform .2s; */
+    
 }
 
 .primary-navigation a>span{
@@ -287,8 +267,7 @@ body::-webkit-scrollbar-thumb {
 
 .primary-navigation a:hover{
     color:orange;
-    
-/* transform: scale(1.5); */
+
 }
 
 @media(max-width:1000px){
@@ -311,7 +290,7 @@ body::-webkit-scrollbar-thumb {
     width: 80px;
     height: 80px;
     padding: 12px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
 }
 .primary-navigation[data-visible="true"]{
     transform:translate(0%);
@@ -320,7 +299,6 @@ body::-webkit-scrollbar-thumb {
 .mobile-nav-toggle{
         display: block;
         position:fixed;
-        background: red;
         z-index: 9999; 
         width: 1rem;
         aspect-ratio: 1;
@@ -357,37 +335,6 @@ body::-webkit-scrollbar-thumb {
     
  }
 
-
- 
-
-
-
- 
-/* #menu {  
- display: none;
-    font-size: 20px;
-    margin: 0;
-}   */
-
-/* @keyframes blink {
-    0% {
-        filter: brightness(1.2);
-    }
-    70% {
-        filter: brightness(1);
-    }
-    100% {
-        filter: brightness(1.2);
-    }
-} */
-
-
-.buttons {
-    display: flex;
-    flex-direction: row;
-    width: 40%;
-    justify-content: space-around;
-}
 
 .btn2 {
     margin: 0;
