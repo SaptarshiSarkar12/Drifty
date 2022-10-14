@@ -5,10 +5,6 @@ const date = new Date();
 let darkMode = localStorage.getItem('darkMode');
 const darkModeToggle = document.querySelector('.btn-toggle');
 
-const nav = document.querySelector(".nav-bar");
-const miniNav = document.querySelector("nav");
-const links = document.querySelectorAll(".nav-links > li");
-
 const enableDarkMode = () => {
   document.body.classList.add('darkmode');
   darkModeToggle.checked = true; // Check only if the darkmode is on
