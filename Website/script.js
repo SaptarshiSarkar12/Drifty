@@ -29,14 +29,6 @@ darkModeToggle.addEventListener('click', () => {
 });
 
 
-   
-
-
-
-
-// END NAV ---------
-  // links.fo
-
 // CONTRIB SECTION ---- 
 let currentHour = date.getHours();
 let contrib = localStorage.getItem('contrib');

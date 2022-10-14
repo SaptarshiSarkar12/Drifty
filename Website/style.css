@@ -702,7 +702,7 @@ line-height: 1.6 !important;
 
 .footer {
     padding: 40px 0;
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     text-align: center;
     color: #48abf7;
 }
