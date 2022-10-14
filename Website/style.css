@@ -336,9 +336,7 @@ body::-webkit-scrollbar-thumb {
 .mobile-nav-toggle[aria-expanded="true"]{
         background-image: url("Resources/icons8-close.svg");
     }
-     .img-layer{
-        overflow:auto;
-     }
+     
     }
 }
 
@@ -347,9 +345,7 @@ body::-webkit-scrollbar-thumb {
         display :none; 
 
      }
-     .img-layer{
-        overflow:hidden;
-     }
+    
      
     }
 @media (min-width: 1000px){
@@ -630,6 +626,35 @@ line-height: 1.6 !important;
     justify-content: center;
 }
 
+
+
+.release_section {
+  margin: 0rem auto 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.release{
+  margin: 1rem;
+
+}
+
+.assets {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;  
+
+}
+.assets a {
+  background-color: var(--button-background);
+  color: var(--button-text);
+  border-radius: 500px;
+  padding: 0.3rem 1rem;
+  margin-top: 0.6rem;
+}
+
 /* -Dowload demo- */
 
 .demo {
@@ -681,6 +706,7 @@ line-height: 1.6 !important;
     
     background-color: var(--button-background);
     color: var(--button-text);
+   
     border: 2px solid white;
     margin: 1rem;
     padding: 16px 32px;
@@ -702,7 +728,7 @@ line-height: 1.6 !important;
 }
 
 #contact {
-    background-color:var(--m-light-col);
+    background-color: var(--background-color1);
     color: var(--black);
     font-family: Lora, sans-serif;
     font-style: italic;
@@ -724,16 +750,10 @@ line-height: 1.6 !important;
     font-style: normal;
     background-color: var(--text-color);
     border-radius: 5rem;
-    border: 2px solid white;
     margin: 0 0 34px 0 ;
 }
 .contact-container a:hover{
-    /* filter: brightness(1.2); */
-    background:linear-gradient(
-        -45deg,
-        aqua,
-        blue
-    ) !important;;
+    filter: brightness(1.2);
 }
 .contact-container i{
    line-height: none;
@@ -748,7 +768,6 @@ line-height: 1.6 !important;
     padding: 1rem;
     font-size: 2rem;
 }
-
 /* Footer */
 
 .footer {
@@ -854,9 +873,22 @@ line-height: 1.6 !important;
         padding-top: 30px;
         margin: 5rem 2rem 2rem;
         z-index: 1;
+    
     }
     .header-container > .btn{
         margin: 10px 0px;
+    }
+    .img-layer {
+        position: absolute;
+        margin-left: 0;
+        margin-top: -20rem;
+        margin-right: -3rem;
+        align-items: center;
+        max-width: 100vw;
+        transform: rotateX(0deg) rotateY(300deg);
+    }
+    .img-layer img {
+        max-width: 50vw;
     }
     .contrib-container{
         display: block;
@@ -885,10 +917,9 @@ line-height: 1.6 !important;
     .contrib-container .btn4 {
        text-align: center;   
     }
-    /* .img-layer{
-        overflow-x: auto;
-    } */
+   
 }
+
 
 @media screen and (max-width: 1345px) {
     .demo {
@@ -918,7 +949,5 @@ line-height: 1.6 !important;
     .btn4 {
         font-size: min(2vw, 30px);
     }
-    /* .img-layer{
-        overflow: hidden;
-    } */
+   
 }
