@@ -184,7 +184,7 @@ body::-webkit-scrollbar-thumb {
     display:flex;
     align-items: center;
     justify-content:flex-end;
-    position: absolute;
+    position:fixed;
     width: 100vw;
     background: transparent;
     transition: padding 0.3s ease-out;
@@ -192,15 +192,6 @@ body::-webkit-scrollbar-thumb {
 
 
 
-.nav-sticky {
-    position: fixed;
-    padding: 10px 10vw;
-    background: var(--nav-bg2);
-    box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
-    transition: padding 0.3s ease-out;
-  }
 
 .nav-bar > a{
     margin-right:auto ;
@@ -244,7 +235,7 @@ body::-webkit-scrollbar-thumb {
     padding: 0;
     margin: 0;
 
-    background: rgba(82, 80, 80, 0.3);
+    background: rgba(116, 124, 238, 0.3);
     backdrop-filter: blur(1rem);
 }
 
@@ -280,7 +271,7 @@ body::-webkit-scrollbar-thumb {
         padding: min(30vh, 10rem) 2em;
         background: hsl(0 0% 100% /0.3);
         backdrop-filter: blur(1rem);
-        /* opacity: 80%; */
+       
 
     transform: translateX(100%);
     transition: transform 350ms ease;
@@ -290,7 +281,7 @@ body::-webkit-scrollbar-thumb {
     width: 80px;
     height: 80px;
     padding: 12px;
-    /* padding-bottom: 40px; */
+   
 }
 .primary-navigation[data-visible="true"]{
     transform:translate(0%);
@@ -336,20 +327,7 @@ body::-webkit-scrollbar-thumb {
  }
 
 
-.btn2 {
-    margin: 0;
-    transition: 0.25s ease-out;
-    cursor: pointer;
-}
 
-.btn2 > a {
-    color: var(--maroon)
-}
-
-.btn2:hover a {
-    animation: slide_underline 0.2s ease-out;
-    text-decoration: underline var(--maroon) wavy;
-}
 
 #btn1 {
     width:80px;
@@ -825,7 +803,7 @@ line-height: 1.6 !important;
         padding-top: 30px;
         margin: 5rem 2rem 2rem;
         z-index: 100;
-        width:;
+       
     
     }
     .header-container >p{
