@@ -194,13 +194,13 @@ body::-webkit-scrollbar-thumb {
 
 .nav-sticky {
     position: fixed;
-    /* padding: 10px 10vw; */
-    background: transparent/*var(--nav-bg2)*/;
-    /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
+    padding: 10px 10vw;
+    background: var(--nav-bg2);
+    box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
-    transition: padding 0.3s ease-out; */
-}
+    transition: padding 0.3s ease-out;
+  }
 
 .nav-bar > a{
     margin-right:auto ;
@@ -290,7 +290,7 @@ body::-webkit-scrollbar-thumb {
     width: 80px;
     height: 80px;
     padding: 12px;
-    padding-bottom: 40px;
+    /* padding-bottom: 40px; */
 }
 .primary-navigation[data-visible="true"]{
     transform:translate(0%);
@@ -361,18 +361,23 @@ body::-webkit-scrollbar-thumb {
 
 .header-container > h1 {
     font-family: "Poppins", sans-serif;
-    padding-top: 80px;
+    padding-top: 100px;
     font-size: 52px;
     font-weight: bold;
     margin-bottom: 32px;
     line-height: 1.05;
+    text-align: justify;
 }
 
 .header-container > p {
     font-size: 22px;
     line-height: 1.6;
     font-weight: 500;
-    text-align: justify;
+    
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 .header-container > .btn {
@@ -819,8 +824,12 @@ line-height: 1.6 !important;
     .header-container {
         padding-top: 30px;
         margin: 5rem 2rem 2rem;
-        z-index: 1;
+        z-index: 100;
+        width:;
     
+    }
+    .header-container >p{
+        width:300px;
     }
     .header-container > .btn{
         margin: 10px 0px;
@@ -851,6 +860,38 @@ line-height: 1.6 !important;
         padding: 1.5rem 2rem  !important;
         transition: all 0.3s ease;
     }
+    .img-layer {
+        opacity: 0.3;
+    }
+    .download_section {
+        flex-direction: column;
+    }
+    .btn4 {
+        width: 100%;
+        font-size: 20px !important;
+    }
+  .header-container {
+    padding-top: 30px;
+    margin: 5rem 2rem 2rem;
+    z-index: 1;
+  }
+  .header-container > .btn {
+    margin: 10px 0px;
+  }
+  .contrib-container {
+    display: block;
+    padding: 2.5rem 0;
+  }
+  .contrib-container .btn4 {
+    text-align: center;
+  }
+  .contrib {
+    padding: 0;
+  }
+  .contrib-container .content {
+    padding: 1.5rem 2rem !important;
+    transition: all 0.3s ease;
+  }
 
 
 }
@@ -864,6 +905,13 @@ line-height: 1.6 !important;
     .contrib-container .btn4 {
        text-align: center;   
     }
+    .download_section {
+        flex-direction: column;
+      }
+      .btn4 {
+        width: 80vw;
+        font-size: 20px !important;
+      }
    
 }
 
@@ -898,3 +946,46 @@ line-height: 1.6 !important;
     }
    
 }
+.demo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .demo > .text {
+    text-align: center;
+  }
+
+  .demo > .text > h2 {
+    font-size: 36px;
+  }
+
+  .demo > .text > p {
+    font-size: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .buttons {
+    width: min(100%, 700px);
+    column-gap: 1rem;
+    font-size: min(4vw, 24px);
+  }
+
+  .btn4 {
+    font-size: min(2vw, 30px);
+  }
+
+.fb {
+  font-size: 1.3rem;
+}
+
+.Txt {
+  font-size: small;
+}
+.darkTxt {
+  display: none;
+}
+
+.lightTxt {
+  display: none;
+}
+
