@@ -574,15 +574,24 @@ line-height: 1.6 !important;
 .assets {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;  
+  justify-content: space-around;
+    
 
 }
 .assets a {
-  background-color: var(--button-background);
-  color: var(--button-text);
-  border-radius: 500px;
-  padding: 0.3rem 1rem;
-  margin-top: 0.6rem;
+    font-size: 12px;
+    font-weight: 600;
+    
+    background-color:#6db9d7;
+    color: var(--button-text);
+   
+    border: 2px solid white;
+    margin: 0.4rem;
+    padding: 5px 30px;
+    border-radius: 500px;
+    transition: 0.5s;
+    box-shadow: 2px 2px 4px #0AA1DD;
+
 }
 
 /* -Dowload demo- */
