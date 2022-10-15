@@ -842,6 +842,7 @@ line-height: 1.6 !important;
     }
     .header-container > .btn{
         margin: 10px 0px;
+        
     }
     .img-layer {
         position: absolute;
@@ -887,7 +888,7 @@ line-height: 1.6 !important;
   .header-container > .btn {
     margin: 3px 0px;
     padding:15px;
-    width: 36vh;
+    /* width: 36vh; */
   }
   .contrib-container {
     display: block;
