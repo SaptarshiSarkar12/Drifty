@@ -347,7 +347,11 @@ body::-webkit-scrollbar-thumb {
     }
     
  }
-
+ #menu {
+    display: none;
+    font-size: 20px;
+    margin: 0;
+}
 
 
 
