@@ -900,7 +900,10 @@ line-height: 1.6 !important;
         width: 80vw;
         font-size: 20px !important;
       }
-   
+   .img-layer{
+    width: 42vh;
+    overflow: hidden;
+   }
 }
 
 
