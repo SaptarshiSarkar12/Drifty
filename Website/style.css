@@ -281,6 +281,7 @@ body::-webkit-scrollbar-thumb {
     width: 80px;
     height: 80px;
     padding: 12px;
+    
    
 }
 .primary-navigation[data-visible="true"]{
@@ -309,12 +310,16 @@ body::-webkit-scrollbar-thumb {
     }
 }
 
+@media(max-width:)
+
 @media(min-width:1000rem) and (max-width:55rem){
     .primary-navigation a >span[aria-hidden]{
         display :none; 
 
      }
-    
+    .menu{
+        display: block;
+    }
      
     }
 @media (min-width: 1000px){
