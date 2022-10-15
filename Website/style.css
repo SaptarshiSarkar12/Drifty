@@ -934,6 +934,9 @@ line-height: 1.6 !important;
   .contrib-container .btn4 {
     text-align: center;
   }
+  #menu {
+    display: block !important;
+    }
   .contrib {
     padding: 0;
   }
