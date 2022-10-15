@@ -932,6 +932,12 @@ line-height: 1.6 !important;
     .btn4 {
         font-size: min(2vw, 30px);
     }
+
+    .img-layer{
+        width:42vh;
+        overflow: hidden;
+    }
+    
    
 }
 .demo {
@@ -981,7 +987,7 @@ line-height: 1.6 !important;
     width: 100%;
   }
   
-  @media only screen and (min-width: 600px) {
+  @media only screen and (min-width: 1350px) {
     /* For tablets: */
     .col-s-1 {width: 8.33%;}
     .col-s-2 {width: 16.66%;}
