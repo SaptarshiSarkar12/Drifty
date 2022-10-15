@@ -865,6 +865,7 @@ line-height: 1.6 !important;
   .header-container > .btn {
     margin: 3px 0px;
     padding:15px;
+    width: 36vh;
   }
   .contrib-container {
     display: block;
@@ -900,6 +901,9 @@ line-height: 1.6 !important;
         width: 80vw;
         font-size: 20px !important;
       }
+      .img-layer img {
+        max-width: 38vw;
+    }
    
 }
 
@@ -977,3 +981,6 @@ line-height: 1.6 !important;
   display: none;
 }
 
+.img-layer img {
+    max-width: 38vw;
+}
