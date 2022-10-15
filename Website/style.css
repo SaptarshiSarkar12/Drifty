@@ -997,11 +997,11 @@ line-height: 1.6 !important;
     .col-s-12 {width: 100%;}
   }
   
-  @media only screen and (max-width: 400px) {
+  @media only screen and (max-width: 350px) {
     .logo-mobile{
         display:flex;
     }
     .mobile-nav-toggle{
-        display: flex;
+        display:inherit;
     }
   }
