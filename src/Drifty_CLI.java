@@ -68,16 +68,17 @@ public class Drifty_CLI {
         }
         while(true) {
             fName = null;
-            String link = "";
+            System.out.print("Enter the link to the file : ");
+            String link = SC.next();
             while (true) {
-                System.out.print("Enter the link to the file : ");
-                link = SC.next();
                 isYoutubeURL = isYoutubeLink(link);
                 if (isYoutubeURL){
                     break;
                 }
                 if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
+                    System.out.print("Enter the link to the file : ");
+                    link = SC.next();
                 } else if (!containsFilename(link)) {
                     System.out.println("Automatic file name detection failed!");
                     logger.log("ERROR", "Automatic file name detection failed!");

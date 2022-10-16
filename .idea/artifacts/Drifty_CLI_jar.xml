@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Drifty_CLI_jar</output-path>
     <root id="archive" name="Drifty.jar">
       <element id="module-output" name="Drifty" />
+      <element id="file-copy" path="$PROJECT_DIR$/yt-dlp.exe" />
     </root>
   </artifact>
 </component>
