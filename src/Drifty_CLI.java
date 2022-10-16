@@ -14,6 +14,7 @@ public class Drifty_CLI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static boolean flag = false;
     private static String fName = null;
+    protected static boolean isYoutubeURL;
 
     /**
      * This function is the main method of the whole application.
@@ -29,7 +30,7 @@ public class Drifty_CLI {
             String URL = args[0];
             String name = null;
             String location = null;
-            for (int i = 0; i<args.length;i++){
+            for (int i = 0; i < args.length; i++){
                 if (Objects.equals(args[i], "-help") || Objects.equals(args[i], "-h")){
                     help();
                     System.exit(0);
@@ -39,12 +40,14 @@ public class Drifty_CLI {
                     location = args[i+1];
                 }
             }
-            if (!isURLValid(URL)){
+            if (!isURLValid(URL)) {
+                System.out.println("URL is invalid!");
+                logger.log("ERROR", "URL is invalid!");
                 System.exit(0);
             }
-            containsFile(URL);
+            isYoutubeURL = isYoutubeLink(URL);
             fName = (name==null) ? fName : name;
-            if (fName==null && !isYoutubeURL(URL)){
+            if ((fName==null || !containsFilename(URL)) && (!isYoutubeURL)) {
                 System.out.print("Enter the filename (with file extension) : ");
                 fName = SC.nextLine();
             }
@@ -60,8 +63,7 @@ public class Drifty_CLI {
                     }
                 }
             }
-            FileDownloader fDownload = new FileDownloader(URL, fName, downloadsFolder);
-            fDownload.run();
+            new FileDownloader(URL, fName, downloadsFolder).run();
             System.exit(0);
         }
         while(true) {
@@ -69,15 +71,15 @@ public class Drifty_CLI {
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
             while (true) {
-                if (isYoutubeURL(link)){
-                    System.out.println("YOUTUBE URL DETECTED");
+                isYoutubeURL = isYoutubeLink(link);
+                if (isYoutubeURL){
                     break;
                 }
                 if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
                     System.out.print("Enter the link to the file : ");
                     link = SC.next();
-                } else if (!containsFile(link)) {
+                } else if (!containsFilename(link)) {
                     System.out.println("Automatic file name detection failed!");
                     logger.log("ERROR", "Automatic file name detection failed!");
                     break;
@@ -87,7 +89,7 @@ public class Drifty_CLI {
             }
             SC.nextLine();
             while (true){
-                if (isYoutubeURL(link)){
+                if (isYoutubeURL){
                     break;
                 }
                 if (fName != null) {
@@ -124,11 +126,11 @@ public class Drifty_CLI {
                 }
                 break;
             }
-            FileDownloader fDownload = new FileDownloader(link, fName, downloadsFolder);
-            fDownload.run();
+            new FileDownloader(link, fName, downloadsFolder).run();
             System.out.println("Press Q to Quit Or Press any Key to Continue");
             String quit = SC.nextLine();
             if(quit.equals("Q") || quit.equals("q")){
+                logger.log("INFO", "Application Terminated!");
                 break;
             }
             printBanner();
@@ -187,7 +189,7 @@ public class Drifty_CLI {
         }
     }
 
-    public static boolean isYoutubeURL(String url) {
+    public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
         return url.matches(pattern);
     }
@@ -196,8 +198,8 @@ public class Drifty_CLI {
      * @param link Link to the file that the user wants to download
      * @return true if the filename is detected and false if the filename is not detected
      */
-    private static boolean containsFile(String link){
-        // Check and inform user if the url contains file.
+    private static boolean containsFilename(String link){
+        // Check and inform user if the url contains filename.
         // Example : "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
         String file = link.substring(link.lastIndexOf("/")+1);
@@ -213,6 +215,7 @@ public class Drifty_CLI {
         // file.png?width=200 -> file.png
         fName = file.split("([?])")[0];
         System.out.println("Filename detected : " + fName);
+        logger.log("INFO", "Filename detected : " + fName);
         return true;
     }
 
