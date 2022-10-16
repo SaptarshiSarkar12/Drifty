@@ -20,6 +20,9 @@
     .nav-sticky .button {
         margin: 0 0;
     }
+    .img-layer {
+        display: none !important;
+     }
      .header-container {
         transform: none;
         width: 70%;
@@ -52,7 +55,7 @@
         display: none;
     }
     .nav-bar {
-        /* padding: 15px 5vw !important; */
+        padding: 15px 5vw !important;
         justify-content: space-between !important;
         text-align: center;
     }
@@ -124,12 +127,12 @@
         opacity: 1;
         transition: none;
     }
+    .img-layer {
+       display: none !important;
+    }
     .header-container {
         transform: none !important;
         width: 100% !important;
-    }
-    .nav-links .button{
-        text-transform: uppercase;
     }
 
 }
