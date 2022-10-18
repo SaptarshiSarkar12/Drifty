@@ -675,7 +675,7 @@ header {
 
 .footer {
   padding: 40px 0;
-  background-color: var(--background-color);
+  background-color:black;
   text-align: center;
 }
 
@@ -686,9 +686,9 @@ header {
 
 .footer .social a {
   font-size: 30px;
-  color: var(--black);
+  color: white;
 
-  border: 1px solid black;
+  border: 1px solid white;
   width: 60px;
   aspect-ratio: 1;
 
@@ -697,20 +697,21 @@ header {
   display: inline-block;
   border-radius: 50%;
   margin: 0 10px;
-
+  border-color: black;
   opacity: 0.75;
   transition: all 0.25s linear;
 }
 
 .footer .social a:hover {
-  color: var(--maroon);
+  background:linear-gradient( 2px 2px 10px rgb(42, 59, 248), 2px -2px 10px rgb(54, 216, 249),
+  -2px -2px 10px rgb(102, 97, 167), -2px 2px 10px rgb(224, 11, 217)) ;
   opacity: 1;
-  box-shadow: 2px 2px 10px var(--maroon), 2px -2px 10px var(--maroon),
-    -2px -2px 10px var(--maroon), -2px 2px 10px var(--maroon);
+  box-shadow: 2px 2px 10px rgb(42, 59, 248), 2px -2px 10px rgb(54, 216, 249),
+    -2px -2px 10px rgb(102, 97, 167), -2px 2px 10px rgb(224, 11, 217);
 }
 
 .footer > p {
-  color: var(--black);
+  color:white;
   font-size: 15px;
 }
 
@@ -940,4 +941,3 @@ header {
 .lightTxt {
   display: none;
 }
-
