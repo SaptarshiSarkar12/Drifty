@@ -675,7 +675,7 @@ header {
 
 .footer {
   padding: 40px 0;
-  background-color:black;
+  background-color: var(--background-color);
   text-align: center;
 }
 
@@ -686,9 +686,9 @@ header {
 
 .footer .social a {
   font-size: 30px;
-  color: white;
+  color: var(--black);
 
-  border: 1px solid white;
+  border: 1px solid black;
   width: 60px;
   aspect-ratio: 1;
 
@@ -703,15 +703,14 @@ header {
 }
 
 .footer .social a:hover {
-  background:linear-gradient( 2px 2px 10px rgb(42, 59, 248), 2px -2px 10px rgb(54, 216, 249),
-  -2px -2px 10px rgb(102, 97, 167), -2px 2px 10px rgb(224, 11, 217)) ;
+  color: var(--maroon);
   opacity: 1;
-  box-shadow: 2px 2px 10px rgb(42, 59, 248), 2px -2px 10px rgb(54, 216, 249),
-    -2px -2px 10px rgb(102, 97, 167), -2px 2px 10px rgb(224, 11, 217);
+  box-shadow: 2px 2px 10px var(--maroon), 2px -2px 10px var(--maroon),
+    -2px -2px 10px var(--maroon), -2px 2px 10px var(--maroon);
 }
 
 .footer > p {
-  color:white;
+  color: var(--black);
   font-size: 15px;
 }
 
