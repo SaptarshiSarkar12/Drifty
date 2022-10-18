@@ -629,32 +629,75 @@ header {
   box-shadow: 5px 5px 1px var(--button-onhover-shadow);
 }
 
+#contact {
+  background-color: var(--background-color1);
+  color: var(--black);
+  font-family: Lora, sans-serif;
+  font-style: italic;
+}
+.contact-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px;
+  gap: 10px;
+  padding: 20px 0;
+  text-align: center;
+}
+.contact-container a {
+  width: auto;
+  padding: 20px;
+  font-size: 20px;
+  font-style: normal;
+  background-color: var(--text-color);
+  border-radius: 5rem;
+  margin: 0 0 34px 0;
+}
+.contact-container a:hover {
+  filter: brightness(1.2);
+}
+.contact-container i {
+  line-height: none;
+  padding: 0;
+  margin: 0;
+}
+
+#contact > h2 {
+  font-family: "Poppins", sans-serif !important;
+  font-style: normal;
+  text-align: center;
+  padding: 1rem;
+  font-size: 2rem;
+}
 
 /* Footer */
 
 .footer {
   padding: 40px 0;
-  background-color: var(--text-color);
+  background-color: var(--background-color);
   text-align: center;
 }
 
 .footer .social {
   text-align: center;
-  padding-bottom: 35px;
+  padding-bottom: 25px;
 }
 
 .footer .social a {
   font-size: 30px;
   color: var(--black);
+
   border: 1px solid black;
   width: 60px;
   aspect-ratio: 1;
+
   line-height: 58px;
   text-align: center;
   display: inline-block;
   border-radius: 50%;
   margin: 0 10px;
-
+  border-color: white;
   opacity: 0.75;
   transition: all 0.25s linear;
 }
@@ -670,11 +713,7 @@ header {
   color: var(--black);
   font-size: 15px;
 }
-.connect{
-  font-size: 20px;
-    display: block;
-    height: 80px;
-}
+
 /* Dark mode toggle */
 
 /* .btn-toggle {
@@ -901,4 +940,3 @@ header {
 .lightTxt {
   display: none;
 }
-
