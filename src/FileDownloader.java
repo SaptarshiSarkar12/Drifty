@@ -3,7 +3,6 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.Buffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
@@ -54,17 +53,14 @@ class FileDownloader implements Runnable {
             }
         }
         try {
-            //If link is from youtube
-            if (Drifty_CLI.isYoutubeURL(link)) {
+            //If link is from YouTube
+            if (Drifty_CLI.isYoutubeLink(link)) {
                 //download youtube video
-                System.out.println("Downloading from youtube....");
-                System.out.println("Directory: " + dir);
+                System.out.println("Downloading ...");
+                Drifty_CLI.logger.log("INFO", "Downloading ...");
 
                 try {
-                    Runtime runtime = Runtime.getRuntime();
-                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-P", dir, link);
-                    processBuilder.directory(new File(dir));
-
+                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-q", "--progress", "-P", dir, link);
                     Process yt_dlp = processBuilder.start();
 
                     BufferedReader br = new BufferedReader(new InputStreamReader(yt_dlp.getInputStream()));
@@ -74,8 +70,10 @@ class FileDownloader implements Runnable {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Drifty_CLI.logger.log("ERROR", e.getMessage());
                 }
-                //System.exit(0);
+                System.out.println("Successfully downloaded the file.");
+                Drifty_CLI.logger.log("INFO", "Successfully downloaded the file");
             }
             else {
                 url = new URL(link);
