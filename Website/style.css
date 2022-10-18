@@ -697,7 +697,7 @@ header {
   display: inline-block;
   border-radius: 50%;
   margin: 0 10px;
-  border-color: white;
+  border-color: black;
   opacity: 0.75;
   transition: all 0.25s linear;
 }
