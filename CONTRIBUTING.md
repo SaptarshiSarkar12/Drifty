@@ -1,7 +1,7 @@
 <h1 align=center>Contributing</h1>
 
 ## Issues
-[Issues](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) are very valuable to this project. Please check if any similar issues are already present, then feel free to open that issue.
+[Issues](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) are very valuable to this project. Please check if any similar issues are already present. If not, then feel free to open that issue.
   - Feature Request are a valuable source of contributions others can make
   - Bug Reports show where this project is lacking
   - With a question you show where contributors can improve the user experience
