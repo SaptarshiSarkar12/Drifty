@@ -71,7 +71,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
 ## Demo
-See the below video how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
+See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
 
 https://user-images.githubusercontent.com/105960032/193530137-d66a5e07-fb81-4df6-a547-7174ccf637e6.mp4
 
