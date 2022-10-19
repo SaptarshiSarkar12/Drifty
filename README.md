@@ -47,7 +47,7 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
-It is because Microsoft Defender could not verify it safe it is not commonly downloaded. Feel free to proceed by following steps:
+It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed by following steps:
 - Tap on the three dots. 
 - Tap on keep.
 
