@@ -680,8 +680,10 @@ header {
 }
 
 .footer .social {
-  text-align: center;
-  padding-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }
 
 .footer .social a {
@@ -696,19 +698,47 @@ header {
   text-align: center;
   display: inline-block;
   border-radius: 50%;
-  margin: 0 10px;
-  border-color: black;
+  margin: 0 6px;
   opacity: 0.75;
   transition: all 0.25s linear;
 }
-
-.footer .social a:hover {
-  color: var(--maroon);
-  opacity: 1;
-  box-shadow: 2px 2px 10px var(--maroon), 2px -2px 10px var(--maroon),
-    -2px -2px 10px var(--maroon), -2px 2px 10px var(--maroon);
+.footer .social .social-icons a{
+  color: #0f0f0f;
+  padding: 0.7rem;
+  border: 1px solid #0f0f0f;
+  border-radius: 50%;
+  width: auto;
 }
 
+#twitter:hover {
+  background-color: #00acee ;
+  color: #fff;
+  transition: 0.3s ease;
+  border: none;
+  transform: scale(1.2);
+}
+
+.footer .social :nth-child(2):hover {
+  background-color: #0f0f0f ;
+  color: #fff;
+  transition: 0.3s ease;
+  border: none;
+  transform: scale(1.2);
+}
+.footer .social :nth-child(3):hover {
+  background-color: #2962FF ;
+  color: #fff;
+  transition: 0.3s ease;
+  border: none;
+  transform: scale(1.2);
+}
+.footer .social :nth-child(4):hover {
+  background-color: var(--maroon) ;
+  color: #fff;
+  transition: 0.3s ease;
+  border: none;
+  transform: scale(1.2);
+}
 .footer > p {
   color: var(--black);
   font-size: 15px;
