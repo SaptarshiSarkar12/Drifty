@@ -1,5 +1,8 @@
 "use strict";
 
+function download_alert() {
+  alert("Download will Begin Shortly");
+}
 const date = new Date();
 
 let darkMode = localStorage.getItem("darkMode");
