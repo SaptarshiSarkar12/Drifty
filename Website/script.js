@@ -1,7 +1,7 @@
 "use strict";
 
 function download_alert() {
-  alert("Download will Begin Shortly");
+  alert("Download will begin shortly");
 }
 const date = new Date();
 
