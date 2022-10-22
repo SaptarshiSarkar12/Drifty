@@ -41,8 +41,6 @@ class FileDownloader implements Runnable {
      */
     @Override
     public void run() {
-
-
         link = link.replace('\\', '/');
         if (!(link.startsWith("http://") || link.startsWith("https://"))){
             link = "http://" + link;
@@ -60,20 +58,19 @@ class FileDownloader implements Runnable {
                 Drifty_CLI.logger.log("INFO", "Downloading ...");
 
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-q", "--progress", "-P", dir, link);
+                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, link);
+                    processBuilder.inheritIO();
                     Process yt_dlp = processBuilder.start();
 
-                    BufferedReader br = new BufferedReader(new InputStreamReader(yt_dlp.getInputStream()));
-                    String line = "";
-                    while ((line = br.readLine()) != null) {
-                        System.out.println(line);
-                    }
+                    yt_dlp.waitFor();
+
+                    System.out.println("\nDONE");
+                    Drifty_CLI.logger.log("INFO", "Successfully downloaded the file");
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Drifty_CLI.logger.log("ERROR", e.getMessage());
                 }
-                System.out.println("Successfully downloaded the file.");
-                Drifty_CLI.logger.log("INFO", "Successfully downloaded the file");
             }
             else {
                 url = new URL(link);
