@@ -148,9 +148,10 @@ function generateDiv(x) {
 // Release SECTION ----
 let releases = localStorage.getItem("releases");
 let releasesRequestedAt = localStorage.getItem("releasesRequestedAt");
-if (parseInt(releasesRequestedAt) > 23) localStorage.removeItem("requestedAt"); // fetch release information every day
+if (parseInt(releasesRequestedAt) > 23) localStorage.removeItem("requestedAt");
 if (releases == null || releasesRequestedAt == null) getReleases();
-else if (currentHour != releasesRequestedAt) getReleases();
+else if (currentHour - releasesRequestedAt >= 4)
+  getReleases(); // get release info every 4 hours
 else updateReleases();
 
 function getReleases() {
