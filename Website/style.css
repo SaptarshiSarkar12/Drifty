@@ -976,6 +976,7 @@ header {
   overflow: hidden;
   transition: max-height 200ms;
   max-height: 0;
+  text-align: center;
 }
 
 .release-note a, .release-note li {
@@ -986,4 +987,5 @@ header {
 }
 .release ul{
   margin-left:2rem;
+  text-align: left;
 }
