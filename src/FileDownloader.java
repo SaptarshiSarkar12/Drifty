@@ -54,8 +54,8 @@ class FileDownloader implements Runnable {
             //If link is from YouTube
             if (Drifty_CLI.isYoutubeLink(link)) {
                 //download youtube video
-                System.out.println("Downloading ...");
-                Drifty_CLI.logger.log("INFO", "Downloading ...");
+                System.out.println("Trying to download the file ...");
+                Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
 
                 try {
                     ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, link);
@@ -63,9 +63,14 @@ class FileDownloader implements Runnable {
                     Process yt_dlp = processBuilder.start();
 
                     yt_dlp.waitFor();
-
-                    System.out.println("\nDONE");
-                    Drifty_CLI.logger.log("INFO", "Successfully downloaded the file");
+                    int exitValueOfYt_Dlp = yt_dlp.exitValue();
+                    if (exitValueOfYt_Dlp == 0){
+                        System.out.println("\nSuccessfully downloaded the file!");
+                        Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
+                    } else if (exitValueOfYt_Dlp == 1) {
+                        System.out.println("\nFailed to download the file!");
+                        Drifty_CLI.logger.log("INFO", "Failed to download the file!");
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
