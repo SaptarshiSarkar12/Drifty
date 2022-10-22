@@ -181,11 +181,16 @@ function renderReleases(releases) {
 }
 
 function renderRelease(all, release) {
-  console.log(release);
+  release.totalCount = release.assets.reduce(
+    (total, rel) => total + rel.download_count,
+    0
+  );
   let assets = renderAssets(release.assets.reverse());
   return `${all} <div class="release">
   <div style="text-align:center"><b>${release.name}</b></div>
-  <div style="text-align:center">${new Date(release.published_at)}</div>
+  <div style="text-align:center">${new Date(release.published_at)} with <b>${
+    release.totalCount
+  } </b> Downloads</div>
   <div onclick="toggleMore(this,'${
     release.id
   }')" style="text-align:center;cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</div>
