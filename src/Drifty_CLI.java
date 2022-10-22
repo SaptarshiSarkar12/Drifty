@@ -240,6 +240,7 @@ public class Drifty_CLI {
      * This function prints the banner of the application in the console.
      */
     private static void printBanner(){
+        System.out.println("Initializing Drifty ...");
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
