@@ -188,7 +188,7 @@ function renderRelease(all, release) {
   <div>${new Date(release.published_at)}</div>
   <span onclick="toggleMore(this,'${
     release.id
-  }')" style="cursor:pointer;font-weight:bolder;opacity: 0.4;">Click here for More</span>
+  }')" style="cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</span>
   <div id="${release.id}" class="release-note">
     ${marked.parse(release.body)}
   </div>
@@ -200,12 +200,17 @@ function renderRelease(all, release) {
 
 function toggleMore(btn, id) {
   let release_note = document.getElementById(id);
-  if (release_note.style.maxHeight == "1000px") {
-    release_note.style.maxHeight = "0";
-    release_note.style.margin = "0";
-    btn.innerText = "See More";
+  // calculate the real height of the element which is scrollHeight + margin(1rem top and 1 rem bottom) + border(0)
+  // let height = release_note.scrollHeight + parseFloat( getComputedStyle(document.documentElement).fontSize.split("px")[0] ) *2;
+  // or simply we could multiply the scroll height by two and the height could not be more that this
+  let height = release_note.scrollHeight * 2;
+
+  if (btn.innerText == "Hide") {
+    release_note.style.maxHeight = "0px";
+    release_note.style.margin = "0rem";
+    btn.innerText = "Learn More";
   } else {
-    release_note.style.maxHeight = "1000px";
+    release_note.style.maxHeight = height + "px";
     release_note.style.margin = "1rem";
     btn.innerText = "Hide";
   }
