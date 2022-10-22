@@ -1,28 +1,29 @@
 "use strict";
 
 /* Javascript alert */
-function download_alert_window(){
+function download_alert_window() {
   var w = confirm("Do you want to Downlaod");
-  if(w==true){
+  if (w == true) {
     alert("Thanks for Downloading");
-    window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe");
-  }
-  else{
+    window.open(
+      "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
+    );
+  } else {
     alert("Sorry! You cancelled the Download!");
   }
 }
 
-function download_alert_apple(){
+function download_alert_apple() {
   var a = confirm("Do you want to Downlaod");
-  if(a==true){
+  if (a == true) {
     alert("Thanks for Downloading");
-    window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar");
-  }
-  else{
+    window.open(
+      "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"
+    );
+  } else {
     alert("Sorry! You cancelled the Download!");
   }
 }
-
 
 const date = new Date();
 
@@ -185,10 +186,29 @@ function renderRelease(all, release) {
   return `${all} <div class="release">
   <div><b>${release.name}</b></div>
   <div>${new Date(release.published_at)}</div>
+  <span onclick="toggleMore(this,'${
+    release.id
+  }')" style="cursor:pointer;font-weight:bolder;opacity: 0.4;">Click here for More</span>
+  <div id="${release.id}" class="release-note">
+    ${marked.parse(release.body)}
+  </div>
       <div class="assets">
              ${assets}
       </div>
   </div>`;
+}
+
+function toggleMore(btn, id) {
+  let release_note = document.getElementById(id);
+  if (release_note.style.maxHeight == "1000px") {
+    release_note.style.maxHeight = "0";
+    release_note.style.margin = "0";
+    btn.innerText = "See More";
+  } else {
+    release_note.style.maxHeight = "1000px";
+    release_note.style.margin = "1rem";
+    btn.innerText = "Hide";
+  }
 }
 
 function renderAssets(assets) {
