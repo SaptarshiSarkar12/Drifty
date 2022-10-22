@@ -8,7 +8,7 @@ function download_alert_window(){
     window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe");
   }
   else{
-    alert("Sorry!,You cancelled the Download");
+    alert("Sorry! You cancelled the Download!");
   }
 }
 
@@ -19,7 +19,7 @@ function download_alert_apple(){
     window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar");
   }
   else{
-    alert("Sorry!,You cancelled the Download");
+    alert("Sorry! You cancelled the Download!");
   }
 }
 
