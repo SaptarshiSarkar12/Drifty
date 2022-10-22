@@ -22,9 +22,7 @@ public class Drifty_CLI {
      */
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
-        if (!flag) {
-            printBanner(); 	 
-        }
+        initialPrintBanner();
         flag = true;
         if (args.length > 0){
             String URL = args[0];
@@ -240,7 +238,6 @@ public class Drifty_CLI {
      * This function prints the banner of the application in the console.
      */
     private static void printBanner(){
-        System.out.println("Initializing Drifty ...");
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
         System.out.println(ANSI_CYAN+"  _____   _____   _____  ______  _______ __     __"+ANSI_RESET);
@@ -250,5 +247,16 @@ public class Drifty_CLI {
         System.out.println(ANSI_CYAN+" | |__| || | \\ \\  _| |_ | |        | |      | |  "+ANSI_RESET);
         System.out.println(ANSI_CYAN+" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  "+ANSI_RESET);
         System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
+    }
+
+    private static void initialPrintBanner(){
+        System.out.println("====================================================================");
+        System.out.println("  _____   _____   _____  ______  _______ __     __");
+        System.out.println(" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /");
+        System.out.println(" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /");
+        System.out.println(" | |  | ||  _  /   | |  |  __|     | |     \\   / ");
+        System.out.println(" | |__| || | \\ \\  _| |_ | |        | |      | |  ");
+        System.out.println(" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  ");
+        System.out.println("====================================================================");
     }
 }
