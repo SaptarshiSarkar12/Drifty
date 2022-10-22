@@ -539,6 +539,7 @@ header {
   flex-direction: column;
   justify-content: center;
   text-align: left;
+  max-width: min(100%,max(50%,500px));
 }
 
 .release{
@@ -969,4 +970,20 @@ header {
 
 .lightTxt {
   display: none;
+}
+
+.release-note {
+  overflow: hidden;
+  transition: max-height 200ms;
+  max-height: 0;
+}
+
+.release-note a, .release-note li {
+ color: var(--black);
+}
+.release h2, .release h3{
+  color: var(--text-color);;
+}
+.release ul{
+  margin-left:2rem;
 }
