@@ -1,5 +1,29 @@
 "use strict";
 
+/* Javascript alert */
+function download_alert_window(){
+  var w = confirm("Do you want to Downlaod");
+  if(w==true){
+    alert("Thanks for Downloading");
+    window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe");
+  }
+  else{
+    alert("Sorry! You cancelled the Download!");
+  }
+}
+
+function download_alert_apple(){
+  var a = confirm("Do you want to Downlaod");
+  if(a==true){
+    alert("Thanks for Downloading");
+    window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar");
+  }
+  else{
+    alert("Sorry! You cancelled the Download!");
+  }
+}
+
+
 const date = new Date();
 
 let darkMode = localStorage.getItem("darkMode");
