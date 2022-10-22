@@ -539,7 +539,7 @@ header {
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  max-width: max(50%,500px);
+  max-width: min(100%,max(50%,500px));
 }
 
 .release{
