@@ -989,3 +989,15 @@ header {
   margin-left:2rem;
   text-align: left;
 }
+.label{    
+  display: inline-block;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 2em;
+  background-color: #4caf50;
+  color: var(--font-color);
+}
