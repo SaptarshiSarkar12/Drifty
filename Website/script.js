@@ -184,11 +184,11 @@ function renderRelease(all, release) {
   console.log(release);
   let assets = renderAssets(release.assets.reverse());
   return `${all} <div class="release">
-  <div><b>${release.name}</b></div>
-  <div>${new Date(release.published_at)}</div>
-  <span onclick="toggleMore(this,'${
+  <div style="text-align:center"><b>${release.name}</b></div>
+  <div style="text-align:center">${new Date(release.published_at)}</div>
+  <div onclick="toggleMore(this,'${
     release.id
-  }')" style="cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</span>
+  }')" style="text-align:center;cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</div>
   <div id="${release.id}" class="release-note">
     ${marked.parse(release.body)}
   </div>
