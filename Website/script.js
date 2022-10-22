@@ -2,7 +2,7 @@
 
 /* Javascript alert */
 function download_alert_window() {
-  var w = confirm("Do you want to Downlaod");
+  var w = confirm("Do you want to download Drifty?");
   if (w == true) {
     alert("Thanks for Downloading");
     window.open(
@@ -14,7 +14,7 @@ function download_alert_window() {
 }
 
 function download_alert_apple() {
-  var a = confirm("Do you want to Downlaod");
+  var a = confirm("Do you want to download Drifty?");
   if (a == true) {
     alert("Thanks for Downloading");
     window.open(
