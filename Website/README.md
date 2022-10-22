@@ -3,9 +3,9 @@
 Usually it will have instructions on how to download, install, run and contribute to the project but we've already worked on it which is the main [README](https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md) file of our [project](https://github.com/SaptarshiSarkar12/Drifty).**
 
 
-- This section contain information of website like how the [website of this project](https://saptarshisarkar12.github.io/Drifty/) look like, you can see instructions videos, 
+- This section contains information about how the [website of this project](https://saptarshisarkar12.github.io/Drifty/) looks like. You can see instruction videos, 
 and lots of images (located in [Resources](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Website/Resources) folder) that are used to make the website.
 
 
-- this website folder also contains files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
+- The website folder also contains files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
 
