@@ -65,10 +65,10 @@ class FileDownloader implements Runnable {
                     yt_dlp.waitFor();
                     int exitValueOfYt_Dlp = yt_dlp.exitValue();
                     if (exitValueOfYt_Dlp == 0){
-                        System.out.println("\nSuccessfully downloaded the file!");
+                        System.out.println("Successfully downloaded the file!");
                         Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
                     } else if (exitValueOfYt_Dlp == 1) {
-                        System.out.println("\nFailed to download the file!");
+                        System.out.println("Failed to download the file!");
                         Drifty_CLI.logger.log("INFO", "Failed to download the file!");
                     }
 
