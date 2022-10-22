@@ -1,5 +1,30 @@
 "use strict";
 
+/* Javascript alert */
+function download_alert_window() {
+  var w = confirm("Do you want to download Drifty?");
+  if (w == true) {
+    alert("Thanks for Downloading");
+    window.open(
+      "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
+    );
+  } else {
+    alert("Sorry! You cancelled the Download!");
+  }
+}
+
+function download_alert_apple() {
+  var a = confirm("Do you want to download Drifty?");
+  if (a == true) {
+    alert("Thanks for Downloading");
+    window.open(
+      "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"
+    );
+  } else {
+    alert("Sorry! You cancelled the Download!");
+  }
+}
+
 const date = new Date();
 
 let darkMode = localStorage.getItem("darkMode");
@@ -124,9 +149,10 @@ function generateDiv(x) {
 // Release SECTION ----
 let releases = localStorage.getItem("releases");
 let releasesRequestedAt = localStorage.getItem("releasesRequestedAt");
-if (parseInt(releasesRequestedAt) > 23) localStorage.removeItem("requestedAt"); // fetch release information every day
+if (parseInt(releasesRequestedAt) > 23) localStorage.removeItem("requestedAt");
 if (releases == null || releasesRequestedAt == null) getReleases();
-else if (currentHour != releasesRequestedAt) getReleases();
+else if (currentHour - releasesRequestedAt >= 4)
+  getReleases(); // get release info every 4 hours
 else updateReleases();
 
 function getReleases() {
@@ -158,12 +184,36 @@ function renderRelease(all, release) {
   console.log(release);
   let assets = renderAssets(release.assets.reverse());
   return `${all} <div class="release">
-  <div><b>${release.name}</b></div>
-  <div>${new Date(release.published_at)}</div>
+  <div style="text-align:center"><b>${release.name}</b></div>
+  <div style="text-align:center">${new Date(release.published_at)}</div>
+  <div onclick="toggleMore(this,'${
+    release.id
+  }')" style="text-align:center;cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</div>
+  <div id="${release.id}" class="release-note">
+    ${marked.parse(release.body)}
+  </div>
       <div class="assets">
              ${assets}
       </div>
   </div>`;
+}
+
+function toggleMore(btn, id) {
+  let release_note = document.getElementById(id);
+  // calculate the real height of the element which is scrollHeight + margin(1rem top and 1 rem bottom) + border(0)
+  // let height = release_note.scrollHeight + parseFloat( getComputedStyle(document.documentElement).fontSize.split("px")[0] ) *2;
+  // or simply we could multiply the scroll height by two and the height could not be more that this
+  let height = release_note.scrollHeight * 2;
+
+  if (btn.innerText == "Hide") {
+    release_note.style.maxHeight = "0px";
+    release_note.style.margin = "0rem";
+    btn.innerText = "Learn More";
+  } else {
+    release_note.style.maxHeight = height + "px";
+    release_note.style.margin = "1rem";
+    btn.innerText = "Hide";
+  }
 }
 
 function renderAssets(assets) {

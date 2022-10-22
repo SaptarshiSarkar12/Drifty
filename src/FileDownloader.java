@@ -41,8 +41,6 @@ class FileDownloader implements Runnable {
      */
     @Override
     public void run() {
-
-
         link = link.replace('\\', '/');
         if (!(link.startsWith("http://") || link.startsWith("https://"))){
             link = "http://" + link;
@@ -56,24 +54,28 @@ class FileDownloader implements Runnable {
             //If link is from YouTube
             if (Drifty_CLI.isYoutubeLink(link)) {
                 //download youtube video
-                System.out.println("Downloading ...");
-                Drifty_CLI.logger.log("INFO", "Downloading ...");
+                System.out.println("Trying to download the file ...");
+                Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
 
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "-q", "--progress", "-P", dir, link);
+                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, link);
+                    processBuilder.inheritIO();
                     Process yt_dlp = processBuilder.start();
 
-                    BufferedReader br = new BufferedReader(new InputStreamReader(yt_dlp.getInputStream()));
-                    String line = "";
-                    while ((line = br.readLine()) != null) {
-                        System.out.println(line);
+                    yt_dlp.waitFor();
+                    int exitValueOfYt_Dlp = yt_dlp.exitValue();
+                    if (exitValueOfYt_Dlp == 0){
+                        System.out.println("\nSuccessfully downloaded the file!");
+                        Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
+                    } else if (exitValueOfYt_Dlp == 1) {
+                        System.out.println("\nFailed to download the file!");
+                        Drifty_CLI.logger.log("INFO", "Failed to download the file!");
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Drifty_CLI.logger.log("ERROR", e.getMessage());
                 }
-                System.out.println("Successfully downloaded the file.");
-                Drifty_CLI.logger.log("INFO", "Successfully downloaded the file");
             }
             else {
                 url = new URL(link);
