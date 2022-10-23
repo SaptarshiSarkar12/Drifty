@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 /**
  * This is the main class for the CLI version of Drifty.
+ * @author Saptarshi Sarkar, AndrexUni, Anurag-Bharati, Naachiket Pant, Fonta22
+ * @version 1.2.2
  */
 public class Drifty_CLI {
     private static String downloadsFolder;
@@ -12,7 +14,6 @@ public class Drifty_CLI {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
-    private static boolean flag = false;
     private static String fName = null;
     protected static boolean isYoutubeURL;
 
@@ -23,7 +24,6 @@ public class Drifty_CLI {
     public static void main(String[] args) {
         logger.log("INFO", "Application Started !");
         initialPrintBanner();
-        flag = true;
         if (args.length > 0){
             String URL = args[0];
             String name = null;
@@ -187,6 +187,11 @@ public class Drifty_CLI {
         }
     }
 
+    /**
+     * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
+     * @param url link to the file to be downloaded.
+     * @return true if the url is of YouTube and false if it is not.
+     */
     public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
         return url.matches(pattern);
@@ -249,6 +254,9 @@ public class Drifty_CLI {
         System.out.println(ANSI_PURPLE+"===================================================================="+ANSI_RESET);
     }
 
+    /**
+     * This method prints the banner without any colour of text except white.
+     */
     private static void initialPrintBanner(){
         System.out.println("====================================================================");
         System.out.println("  _____   _____   _____  ______  _______ __     __");

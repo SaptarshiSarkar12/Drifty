@@ -51,30 +51,32 @@ class FileDownloader implements Runnable {
             }
         }
         try {
-            //If link is from YouTube
+            // If link is of an YouTube video, then the following block of code will execute.
             if (Drifty_CLI.isYoutubeLink(link)) {
-                //download youtube video
-                System.out.println("Trying to download the file ...");
-                Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
-
                 try {
-                    ProcessBuilder processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, link);
-                    processBuilder.inheritIO();
-                    Process yt_dlp = processBuilder.start();
-
-                    yt_dlp.waitFor();
-                    int exitValueOfYt_Dlp = yt_dlp.exitValue();
-                    if (exitValueOfYt_Dlp == 0){
-                        System.out.println("Successfully downloaded the file!");
-                        Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
-                    } else if (exitValueOfYt_Dlp == 1) {
-                        System.out.println("Failed to download the file!");
-                        Drifty_CLI.logger.log("INFO", "Failed to download the file!");
+                    downloadFromYouTube("");
+                } catch (IOException e) {
+                    try {
+                        System.out.println("Getting ready to download the file...");
+                        Drifty_CLI.logger.log("INFO", "Getting ready to download the file...");
+                        copyYt_dlp cy = new copyYt_dlp();
+                        cy.copyToTemp();
+                        try {
+                            downloadFromYouTube(copyYt_dlp.tempDir);
+                        } catch (InterruptedException ie) {
+                            System.out.println("User interrupted while downloading the file!");
+                            Drifty_CLI.logger.log("ERROR", "User interrupted while downloading the file! " + ie.getMessage());
+                        } catch (IOException io1){
+                            System.out.println("Failed to download YouTube video!");
+                            Drifty_CLI.logger.log("ERROR", "Failed to download YouTube video! " + io1.getMessage());
+                        }
+                    } catch (IOException io){
+                        System.out.println("Failed to initialise YouTube video downloader!");
+                        Drifty_CLI.logger.log("ERROR", "Failed to initialise YouTube video downloader! " + io.getMessage());
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Drifty_CLI.logger.log("ERROR", e.getMessage());
+                } catch (InterruptedException e) {
+                    System.out.println("User interrupted while downloading the file!");
+                    Drifty_CLI.logger.log("ERROR", "User interrupted while downloading the file! " + e.getMessage());
                 }
             }
             else {
@@ -134,8 +136,7 @@ class FileDownloader implements Runnable {
                 // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException ignored) {
-                }
+                } catch (InterruptedException ignored) {}
 
             } catch (SecurityException e) {
                 System.out.println("Write access to " + dir + fileName + " denied !");
@@ -156,6 +157,29 @@ class FileDownloader implements Runnable {
         }
         if (!(dir.endsWith("\\"))) {
             dir = dir + System.getProperty("file.separator");
+        }
+    }
+
+    /**
+     * This method deals with downloading videos from YouTube in mp4 format.
+     * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to.
+     * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
+     * @throws IOException When an I/O problem appears while downloading the YouTube video.
+     */
+    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
+        System.out.println("Trying to download the file ...");
+        Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
+        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link);
+        processBuilder.inheritIO();
+        Process yt_dlp = processBuilder.start();
+        yt_dlp.waitFor();
+        int exitValueOfYt_Dlp = yt_dlp.exitValue();
+        if (exitValueOfYt_Dlp == 0){
+            System.out.println("Successfully downloaded the file!");
+            Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
+        } else if (exitValueOfYt_Dlp == 1) {
+            System.out.println("Failed to download the file!");
+            Drifty_CLI.logger.log("INFO", "Failed to download the file!");
         }
     }
 }
