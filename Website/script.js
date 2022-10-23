@@ -155,11 +155,22 @@ else if (currentHour - releasesRequestedAt >= 4)
   getReleases(); // get release info every 4 hours
 else updateReleases();
 
+// latest release could be defined as release with higher id;
+function setLatest(releases) {
+  let maxiId = Math.max(...releases.map((re) => re.id));
+  releases = releases.map((release) => {
+    release.isLatest = release.id == maxiId;
+    return release;
+  });
+  return releases;
+}
+
 function getReleases() {
   fetch("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases")
     .then((x) => x.json())
     .then((data) => {
       releases = data;
+      releases = setLatest(releases);
       localStorage.setItem("releases", JSON.stringify(data));
       localStorage.setItem("releasesRequestedAt", date.getHours());
       updateReleases();
@@ -181,11 +192,18 @@ function renderReleases(releases) {
 }
 
 function renderRelease(all, release) {
-  console.log(release);
+  release.totalCount = release.assets.reduce(
+    (total, rel) => total + rel.download_count,
+    0
+  );
   let assets = renderAssets(release.assets.reverse());
   return `${all} <div class="release">
-  <div style="text-align:center"><b>${release.name}</b></div>
-  <div style="text-align:center">${new Date(release.published_at)}</div>
+  <div style="text-align:center"><b>${release.name}</b> ${
+    release.isLatest ? "<b class='label'>Latest</b>" : ""
+  }</div>
+  <div style="text-align:center">${new Date(release.published_at)} with <b>${
+    release.totalCount
+  } </b> Downloads</div>
   <div onclick="toggleMore(this,'${
     release.id
   }')" style="text-align:center;cursor:pointer;font-weight:bolder;opacity: 0.4;">Learn More</div>
