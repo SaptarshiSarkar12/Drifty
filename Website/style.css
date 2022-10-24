@@ -951,6 +951,15 @@ header {
     font-size: 20px;
     margin-bottom: 1rem;
   }
+  .demo > .demoVideoContainer{
+    position: relative;
+    width:"80%";
+    overflow: hidden;
+  }
+  .demo > video {
+    position: absolute;
+    width: "100%";
+  }
 
   .buttons {
     width: min(100%, 700px);
