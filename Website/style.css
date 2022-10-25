@@ -695,7 +695,6 @@ header {
 
 .footer .social a {
   font-size: 30px;
-  /* color: var(--black); */
 color: black;
   border: 1px solid black;
   width: 60px;
