@@ -1069,3 +1069,23 @@ li {
   text-align: center;
   padding: 20px;
 }
+/* Scroll to top button styling starts from here */
+#mybtn{
+  display: none;
+  position: fixed;
+  bottom: 18px;
+  right: 19px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: #0a5a97;
+  color: wheat;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 200px;
+  font-size: 18px;
+
+}
+#mybtn:hover{
+  background-color: rgb(18, 29, 59);
+}
