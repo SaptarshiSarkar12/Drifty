@@ -57,13 +57,35 @@
   <section id="hero">
     <header>
       <div class="header-container">
-        <h1>DRIFTY</h1>
+        <h1 class="cssanimation sequence leRotateYZoomIn">DRIFTY</h1>
         <p>
           Drifty is an open-source interactive File Downloader system built
           with Java. It takes the link to the file, the directory where it
           needs to be saved and the filename of the downloaded file as input
           and downloads it in the given directory with the given filename.
         </p>
+        <!-- <div>
+        <p>
+            <span>Drift is an</span>
+            <span>open-source</span>
+            <span>interaction file</span>
+            <span>Downloader system built</span>
+            <span>with java.</span>
+            <span>It takes the</span>
+            <span>link to the file,</span>
+            <span>the directory</span>
+            <span>where it</span>
+            <span>needs to be</span>
+            <span>saved and the</span>
+            <span>filename of</span>
+            <span>the downloaded</span>
+            <span>file as input</span>
+            <span>and downloads</span>
+            <span>it in the given</span>
+            <span>directory with the</span>
+            <span>given filename.</span>
+        </p>
+    </div> -->
         <a href="#contrib" class="btn">More Info</a>
         <a href="#demo" class="btn">Demo</a>
       </div>
@@ -141,18 +163,27 @@
   <!-- Scroll to top button -->
   <button onclick="totop()" id="mybtn" title="Go to top "> <i class="fa fa-arrow-up"></i> </button>
 
+  <!-- <div class="divfooter"> -->
   <footer class="footer">
-    <div class="social">
-      <a href="https://www.twitter.com/SSarkar2007" id="twitter"><i class="fab fa-twitter"></i></a>
-      <a href="https://github.com/SaptarshiSarkar12"><i class="fab fa-github"></i></a>
-      <a href="https://saptarshisarkar.hashnode.dev/"><i class="fa-brands fa-hashnode"></i></a>
-      <a href="https://www.bio.link/saptarshi"><i class="fa-sharp fa-solid fa-link"></i></a>
-      <!--added footers -->
+    <div class="waves">
+      <div class="wave" id="wave1"></div>
+      <div class="wave" id="wave2"></div>
+      <div class="wave" id="wave3"></div>
+      <div class="wave" id="wave4"></div>
     </div>
-    <p><i class="fa-solid fa-copyright"></i> Drifty
-      <script>document.write(new Date().getFullYear())</script>
-    </p>
+    <div class="social">
+        <a href="https://www.twitter.com/SSarkar2007" id="twitter"><i class="fab fa-twitter"></i></a>
+        <a href="https://github.com/SaptarshiSarkar12"><i class="fab fa-github"></i></a>
+        <a href="https://saptarshisarkar.hashnode.dev/"><i class="fa-brands fa-hashnode"></i></a>
+        <a href="https://www.bio.link/saptarshi"><i class="fa-sharp fa-solid fa-link"></i></a>
+        <!--added footers -->
+      </div>
+      <p><i class="fa-solid fa-copyright"></i> Drifty
+        <script>document.write(new Date().getFullYear())</script>
+      </p>
   </footer>
+<!-- </div> -->
+
   <!-- Scripts -->
   <script src="script.js"></script>
 </body>
