@@ -1,7 +1,6 @@
 "use strict";
 
 /* Javascript alert */
-
 const gtbStars = document.querySelector(".github-stars-count");
 const gtbForks = document.querySelector(".github-forks-count");
 fetch(
@@ -9,7 +8,6 @@ fetch(
 )
   .then((res) => res.json())
   .then((res) => {
-    console.log(res);
     gtbStars.innerHTML = `Stars: ${res?.items[0]?.stargazers_count}`;
     gtbForks.innerHTML = `Forks: ${res?.items[0]?.forks_count}`;
   });
