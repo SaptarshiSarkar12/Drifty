@@ -97,7 +97,7 @@ body::-webkit-scrollbar-thumb {
   --background-color: #041c32;
   --background-color1: #064663;
   
-  --black: #ecb365;
+  /* --black: #ecb365; */
   --maroon: #f1d00a;
 
   --button-background: #064663;
@@ -1027,10 +1027,6 @@ header {
 #mybtn:hover{
   background-color: rgb(18, 29, 59);
 }
-
-
-
-
 
 
 .footer {
