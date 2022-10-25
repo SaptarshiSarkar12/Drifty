@@ -630,7 +630,7 @@ header {
 }
 
 #contact {
-  background-color: var(--background-color1);
+  background-color: var(--background-color);
   color: var(--black);
   font-family: Lora, sans-serif;
   font-style: italic;
@@ -683,31 +683,37 @@ header {
 
 .legal {
   flex: 3;
+  color: var(--black);
+  
 }
-
+.career{
+  color: var(--black);
+}
+.social-container{
+  color: var(--black);
+}
 li {
+  margin-top: 8px;
   list-style-type: none;
   line-height: 180%;
 }
 
 .legal a {
-  color: #0f0f0f;
-  list-style-type: none;
-
+  color: var(--black);
 }
 
 .career a {
-  color: #0f0f0f;
+  color: var(--black);
 }
 
-.legal a:hover{
+.legal a:hover, .career a:hover{
   color:#00acee;
   border-radius:10%;
 }
-.career a:hover{
+ /*.career a:hover{
   color:#00acee;
   border-radius:10%;
-}
+} */
 .footer .social {
   display: flex;
   justify-content: center;
@@ -717,7 +723,30 @@ li {
 
 .social-container {
   flex: 3;
+  border-bottom: tomato;
 }
+ /*scroll to top*/
+
+#mybtn{
+  display: none;
+  position: fixed;
+  bottom: 18px;
+  right: 19px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: #0a5a97;
+  color: wheat;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 200px;
+  font-size: 18px;
+
+}
+#mybtn:hover{
+  background-color: rgb(18, 29, 59);
+}
+
 .footer .social a {
   font-size: 20px;
   color: var(--black);
@@ -1035,6 +1064,7 @@ li {
 }
 
 .copyright{
+  color: var(--black);
   background-color: var(--background-color);
   text-align: center;
   padding: 20px;
