@@ -97,7 +97,7 @@ body::-webkit-scrollbar-thumb {
   --background-color: #041c32;
   --background-color1: #064663;
   
-  /* --black: #ecb365; */
+  --black: #ecb365;
   --maroon: #f1d00a;
 
   --button-background: #064663;
@@ -695,8 +695,8 @@ header {
 
 .footer .social a {
   font-size: 30px;
-  color: var(--black);
-
+  /* color: var(--black); */
+color: black;
   border: 1px solid black;
   width: 60px;
   aspect-ratio: 1;
@@ -747,7 +747,7 @@ header {
   transform: scale(1.2);
 }
 .footer > p {
-  color: var(--black);
+  /* color: var(--black); */
   font-size: 15px;
 }
 
