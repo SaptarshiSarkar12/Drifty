@@ -16,9 +16,9 @@ class FileDownloader implements Runnable {
     private static URL url;
     private static boolean supportsMultithreading;
     // default number of threads to download with
-    private final static int numberOfThreads = 5;
+    private final static int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
-    private final static long threadingThreshold = 1024 * 1024 * 50;
+    private final static long threadingThreshold = 1024 * 50;
 
     /**
      * This is a constructor to initialise values of link, fileName and dir variables.
@@ -92,7 +92,7 @@ class FileDownloader implements Runnable {
                 totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
 
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                FileDownloader.supportsMultithreading = totalSize>threadingThreshold && acceptRange != null && acceptRange.equalsIgnoreCase("bytes");
+                FileDownloader.supportsMultithreading = totalSize > threadingThreshold && acceptRange != null && acceptRange.equalsIgnoreCase("bytes");
 
                 if (fileName.length() == 0) {
                     String[] webPaths = url.getFile().trim().split("/");
@@ -145,9 +145,9 @@ class FileDownloader implements Runnable {
                     FileOutputStream fileOut;
                     File file;
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
-                        file = File.createTempFile(fileName.hashCode()+""+i,".tmp");
+                        file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
                         fileOut = new FileOutputStream(file);
-                        start = i == 0 ? 0: (i * partSize) + 1;
+                        start = i == 0 ? 0 : (i * partSize) + 1;
                         end = FileDownloader.numberOfThreads - 1 == i ? totalSize : ((i * partSize) + partSize);
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
@@ -156,13 +156,20 @@ class FileDownloader implements Runnable {
                         downloaderThreads.add(downloader);
                         tempFiles.add(file);
                     }
+
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName);
+                    progressBarThread.start();
                     //check if all file are downloaded
                     try {
                         do {
                             Thread.sleep(1000);
-                        } while (!merge(fileOutputStreams, partSizes, downloaderThreads,tempFiles));
-                        System.out.println("Downloaded " + fileName + " of size " + totalSize + " at " + FileDownloader.getDir() + fileName + " successfully !");
-                        Drifty_CLI.logger.log("INFO", "Downloaded " + fileName + " of size " + totalSize + " at " + FileDownloader.getDir() + fileName + " successfully !");
+                        } while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles));
+                        progressBarThread.setDownloading(false);
+                        // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ignored) {
+                        }
                     } catch (InterruptedException ignored) {
                     }
                 } else {
@@ -229,15 +236,16 @@ class FileDownloader implements Runnable {
     }
 
     /**
-     *  This method check if all the downloader threads are completed correctly and merges the downloaded parts.
+     * This method check if all the downloader threads are completed correctly and merges the downloaded parts.
+     *
      * @param fileOutputStreams FileOutputStream of all the parts
-     * @param partSizes Size each of the parts
+     * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
-     * @param tempFiles Temporary files containing the parts
+     * @param tempFiles         Temporary files containing the parts
      * @return true if merge is successful and false if the file is still being downloaded
      * @throws IOException if the threads exit without downloading the whole part or if there are any IO error thrown by  getChannel().size() method of FileOutputStream
      */
-    public static boolean merge(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads,List<File> tempFiles) throws IOException {
+    public static boolean merge(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
         //check if all file are downloaded
         int completed = 0;
         FileOutputStream fout;
