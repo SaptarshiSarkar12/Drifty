@@ -18,7 +18,7 @@ class FileDownloader implements Runnable {
     // default number of threads to download with
     private final static int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
-    private final static long threadingThreshold = 1024 * 50;
+    private final static long threadingThreshold = 1024 * 1024 * 50;
 
     /**
      * This is a constructor to initialise values of link, fileName and dir variables.
