@@ -806,7 +806,53 @@ header {
     text-underline-offset: 10%;
   }
 }
+.github {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
 
+.github-stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.github-stars {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  place-items: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 6px 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-radius: 50px;
+  width: 8rem;
+  background-color: rgb(26, 32, 53);
+  color: rgb(255, 255, 255);
+  border: solid white 2px;
+}
+.github-forks {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  place-items: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 6px 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-radius: 50px;
+  width: 8rem;
+  background-color: rgb(26, 32, 53);
+  color: rgb(255, 255, 255);
+  border: solid white 2px;
+}
 /* Media Queries */
 
 @media screen and (max-width: 750px) {
@@ -875,6 +921,13 @@ header {
   .contrib-container .content {
     padding: 1.5rem 2rem !important;
     transition: all 0.3s ease;
+  }
+  .github {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   }
 }
 
@@ -1018,43 +1071,4 @@ header {
 }
 #mybtn:hover {
   background-color: rgb(18, 29, 59);
-}
-.github-stats {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-.github-stars {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  place-items: center;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 6px 16px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  border-radius: 50px;
-  width: 8rem;
-  background-color: rgb(26, 32, 53);
-  color: rgb(255, 255, 255);
-  border: solid white 2px;
-}
-.github-forks {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  place-items: center;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 6px 16px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  border-radius: 50px;
-  width: 8rem;
-  background-color: rgb(26, 32, 53);
-  color: rgb(255, 255, 255);
-  border: solid white 2px;
 }
