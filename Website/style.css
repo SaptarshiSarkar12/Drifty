@@ -679,19 +679,27 @@ header {
   text-align: center;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0 4px;
 }
 
 .legal {
   flex: 3;
   color: var(--black);
-  
+  margin-top: 5%;
 }
 .career{
   color: var(--black);
+  margin-top: 5%;
 }
 .social-container{
   color: var(--black);
+  margin-top: 5%;
 }
+.social{
+
+}
+
 li {
   margin-top: 8px;
   list-style-type: none;
