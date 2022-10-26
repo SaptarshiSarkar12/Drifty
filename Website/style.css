@@ -1024,33 +1024,33 @@ header {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 5rem;
-  width: auto;
   gap: 1rem;
 }
 .github-stars {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  place-items: center;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   padding: 6px 16px;
   border-radius: 50px;
-  background: linear-gradient(
-    -45deg,
-    var(--background-color1),
-    var(--text-color)
-  );
-  width: 10rem;
+  width: 8rem;
+  background-color: rgb(26, 32, 53);
+  color: rgb(255, 255, 255);
+  border: solid white 2px;
 }
 .github-forks {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  place-items: center;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   padding: 6px 16px;
   border-radius: 50px;
-  background: linear-gradient(
-    -45deg,
-    var(--background-color1),
-    var(--text-color)
-  );
-  width: 10rem;
+  width: 8rem;
+  background-color: rgb(26, 32, 53);
+  color: rgb(255, 255, 255);
+  border: solid white 2px;
 }
