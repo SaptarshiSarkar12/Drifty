@@ -1031,9 +1031,11 @@ header {
   grid-template-columns: 1fr 4fr;
   place-items: center;
   font-family: "Poppins", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   padding: 6px 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   border-radius: 50px;
   width: 8rem;
   background-color: rgb(26, 32, 53);
@@ -1045,9 +1047,11 @@ header {
   grid-template-columns: 1fr 4fr;
   place-items: center;
   font-family: "Poppins", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   padding: 6px 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   border-radius: 50px;
   width: 8rem;
   background-color: rgb(26, 32, 53);
