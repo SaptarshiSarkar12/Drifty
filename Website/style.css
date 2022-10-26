@@ -609,7 +609,7 @@ header {
   flex-direction: row;
   justify-content: center;
 }
-
+*/
 .btn4 {
   font-size: 20px;
   font-weight: 600;
@@ -627,7 +627,7 @@ header {
   background-color: var(--button-onhover-background);
   color: var(--button-onhover-text);
   box-shadow: 5px 5px 10px var(--button-onhover-shadow);
-} */
+}
 /* 
 #contact {
   background-color: var(--background-color);
