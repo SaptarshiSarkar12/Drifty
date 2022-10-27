@@ -12,8 +12,9 @@
 [![No. Of Downloads of Drifty jar](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar)
 [![No. Of Downloads of Drifty exe](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe)
 
-[![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers)
-[![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
+[![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers) 
+[![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007) 
+[![Discord](https://img.shields.io/discord/1034035416300519454?label=Discord&logo=discord)](https://discord.gg/DeT4jXPfkG)
 
 [Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built using Java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and the GUI version is under active development. 
 
@@ -29,6 +30,7 @@ For **Users** :
 4. Go to your Downloads folder and run the file.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
 
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in bash.
@@ -41,7 +43,8 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make. </p>
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request. </p>
 4. The Pull Request will be reviewed and merged if approved. ✔ </p>
-5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project. </br>
+6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
 ## Safety warning ⚠ while Downloading ⬇
 
@@ -76,7 +79,12 @@ See the video below to know how to use the application. For any help, you can op
 [Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
 
 ## Contributing to the project
-Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
+Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. 
+**Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
+Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. Join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
+
+## Stats 📊
+![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
 
 ## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
