@@ -508,7 +508,7 @@ header {
   text-align: center;
   background-color: var(--background-color);
   color: var(--black);
-  padding-top: 100px;
+  padding-top: 50px;
 }
 
 .download > h2 {
