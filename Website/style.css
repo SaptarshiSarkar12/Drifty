@@ -508,6 +508,7 @@ header {
   text-align: center;
   background-color: var(--background-color);
   color: var(--black);
+  padding-top: 50px;
 }
 
 .download > h2 {
@@ -699,7 +700,7 @@ header {
   margin-top: 5%;
 }
 
-li {
+.footer li {
   margin-top: 8px;
   list-style-type: none;
   line-height: 180%;
