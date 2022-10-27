@@ -1,6 +1,17 @@
 "use strict";
 
 /* Javascript alert */
+const gtbStars = document.querySelector(".github-stars-count");
+const gtbForks = document.querySelector(".github-forks-count");
+fetch(
+  "https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty"
+)
+  .then((res) => res.json())
+  .then((res) => {
+    gtbStars.innerHTML = `Stars: ${res?.items[0]?.stargazers_count}`;
+    gtbForks.innerHTML = `Forks: ${res?.items[0]?.forks_count}`;
+  });
+
 function download_alert_window() {
   var w = confirm("Do you want to download Drifty?");
   if (w == true) {
@@ -247,19 +258,22 @@ function renderAssets(assets) {
   }, "");
 }
 
-let mybutton = document.getElementById("mybtn")
-window.onscroll = function() {scrollFunction()}
-function scrollFunction(){
-  if(document.body.scrollTop > 650 || document.documentElement.scrollTop > 650){
-    mybutton.style.display = "block"
+let mybutton = document.getElementById("mybtn");
+window.onscroll = function () {
+  scrollFunction();
+};
+function scrollFunction() {
+  if (
+    document.body.scrollTop > 650 ||
+    document.documentElement.scrollTop > 650
+  ) {
+    mybutton.style.display = "block";
   } else {
-    mybutton.style.display = "none"
+    mybutton.style.display = "none";
   }
 }
-function totop(){
+function totop() {
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
 }
-
-
 // END RELEASE
