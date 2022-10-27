@@ -43,8 +43,8 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make. </p>
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request. </p>
 4. The Pull Request will be reviewed and merged if approved. ✔ </p>
-5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
-6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) for discussions on the changes you want to bring.
+5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project. </br>
+6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
 ## Safety warning ⚠ while Downloading ⬇
 
@@ -79,7 +79,12 @@ See the video below to know how to use the application. For any help, you can op
 [Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
 
 ## Contributing to the project
-Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases.
+Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. 
+**Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
+Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. Join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
+
+## Stats 📊
+![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
 
 ## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
