@@ -12,8 +12,9 @@
 [![No. Of Downloads of Drifty jar](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar)
 [![No. Of Downloads of Drifty exe](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe)
 
-[![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers)
-[![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007)
+[![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers) 
+[![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007) 
+[![Discord](https://img.shields.io/discord/1034035416300519454?label=Discord&logo=discord)](https://discord.gg/DeT4jXPfkG)
 
 [Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built using Java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and the GUI version is under active development. 
 
@@ -29,6 +30,7 @@ For **Users** :
 4. Go to your Downloads folder and run the file.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
 
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in bash.
@@ -42,6 +44,7 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request. </p>
 4. The Pull Request will be reviewed and merged if approved. ✔ </p>
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) for discussions on the changes you want to bring.
 
 ## Safety warning ⚠ while Downloading ⬇
 
