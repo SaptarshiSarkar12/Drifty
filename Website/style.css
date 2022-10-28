@@ -128,7 +128,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .temp-color {
-  background-color: #1a2035 !important;
+  background-color: #243b8d !important;
 }
 .text-gradient-blue {
   background: linear-gradient(
@@ -153,11 +153,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 .text-gradient-yellow {
-  background: linear-gradient(
+  /* background: linear-gradient(
     -45deg,
     var(--ascent-col-1),
     var(--ascent-col-1l)
-  ) !important;
+  ) !important; */
   background-clip: text;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
@@ -182,18 +182,21 @@ body::-webkit-scrollbar-thumb {
   overflow: hidden;
   display: flex;
   justify-content: center;
+  background-color: white;
 }
 
 .nav-bar {
+  /* background-color: whitesmoke; */
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   position: absolute;
   width: 100vw;
-  padding: 32px 10vw;
-  background: transparent;
+  padding: 10px 2vw;
+  background-color: #243b8d ;
   transition: padding 0.3s ease-out;
+  /* border-bottom: 1px solid black; */
 }
 
 .nav-bar * {
@@ -202,12 +205,12 @@ body::-webkit-scrollbar-thumb {
 
 .nav-sticky {
   position: fixed;
-  padding: 10px 10vw;
-  background: var(--nav-bg2);
+  padding: 10px 2vw;
+  /* background: var(--nav-bg2); */
   box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
-  transition: padding 0.3s ease-out;
+  transition: padding 0.1s ease-out;
 }
 
 .nav-bar > a {
@@ -241,7 +244,7 @@ body::-webkit-scrollbar-thumb {
 }
 .nav-links li a:hover {
   color: #0aa1dd;
-  animation: blink 0.5s ease infinite;
+  /* animation: blink 0.5s ease infinite; */
 }
 
 .nav-links > .btn-toggle {
@@ -257,19 +260,22 @@ body::-webkit-scrollbar-thumb {
 .button {
   border: none;
   cursor: pointer;
-  padding: 6px 16px;
-  border-radius: 50px;
-  background: linear-gradient(
+  padding: 6px 10px;
+  border-radius: 5px;
+  background-color: transparent;
+  /* background: linear-gradient(
     -45deg,
     var(--background-color1),
     var(--text-color)
-  ) !important;
-  transition: all 0.3s ease;
+  ) !important; */
+  /* transition: all 0.3s ease; */
 }
 
 .button:hover {
-  animation: blink 3s ease infinite;
-  box-shadow: 2px 2px 10px darkblue;
+  border-bottom: 2px solid black;
+  border-radius: none;
+  /* text-decoration: underline; */
+  /* box-shadow: 2px 2px 10px darkblue; */
 }
 
 #menu {
