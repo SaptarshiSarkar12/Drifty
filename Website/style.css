@@ -410,7 +410,7 @@ header img {
 header {
   perspective: 500px;
   width: 100%;
-  height: 100vh;
+  height: fit-content;
   padding: 10rem 0;
   background: var(--background-color);
   display: flex;
@@ -508,6 +508,7 @@ header {
   text-align: center;
   background-color: var(--background-color);
   color: var(--black);
+  padding-top: 50px;
 }
 
 .download > h2 {
@@ -699,7 +700,7 @@ header {
   margin-top: 5%;
 }
 
-li {
+.footer li {
   margin-top: 8px;
   list-style-type: none;
   line-height: 180%;
@@ -1105,7 +1106,7 @@ li {
     font-size: 20px;
     margin-bottom: 1rem;
   }
-
+  
   .buttons {
     width: min(100%, 700px);
     column-gap: 1rem;
