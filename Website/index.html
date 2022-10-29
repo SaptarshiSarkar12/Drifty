@@ -12,6 +12,7 @@
     integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.scss" />
   <link rel="stylesheet" href="responsive-nav.css" />
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
@@ -60,7 +61,13 @@
   <section id="hero">
     <header>
       <div class="header-container">
-        <h1>DRIFTY</h1>
+        <div class="driftylogo">
+          <h2>Drifty</h2>
+          <h2>Drifty</h2>
+        </div>
+        <br>
+        <br>
+        <br>
         <p>
           Drifty is an open-source interactive File Downloader system built
           with Java. It takes the link to the file, the directory where it
@@ -82,9 +89,31 @@
     </header>
   </section>
 
+  <!-- About section -->
+
+  <Section id="about" class="about">
+    
+    <div class="about-container">
+      <h1>About</h1>
+      <div class="img-container">
+      <img src="https://avatars.githubusercontent.com/u/105960032?v=4" alt="avatar">
+      <h3><a href="https://bio.link/saptarshi"><b>Saptarshi Sarkar</b></a></h3>
+      </div>
+      <div class="about-us">
+      <h4 class="text-gradient-ry">Open Source Software Developer</h4>
+      </div>
+      <div class="about-content">
+      <p>I am a passionate Software Developer and an open-source enthusiast building this file downloading system called <a href="" class="text-gradient-ry"><b>Drifty</b></a> using Java. I am open for collaboration on open-source projects and love contributing to those.</p>
+      <p><a href="https://bio.link/saptarshi" class="text-gradient-ry">Connect with me</a></p>
+      </div>
+    </div>
+  </Section>
+
+<!-- contibute section -->
+
   <section id="contrib" class="contrib">
     <div class="contrib-container">
-      <div class="content">
+      <div class="content" >
         <h2 class="text-gradient-ry">More Information About Drifty</h2>
         <p>
           It is currently available in CLI (Command Line Interface) mode and
@@ -122,7 +151,7 @@
   </section>
   <section id="download" class="download">
     <div class="text" style="font-size: 36px;">
-      <h4>✨Download Here✨</h4>
+      <h3>✨Download Here✨</h3>
     </div>
     <div id="download_section" class="download_section">
       <a onclick="download_alert_window()" class="btn4">Download Now <i class="fab fa-windows"></i></a>
