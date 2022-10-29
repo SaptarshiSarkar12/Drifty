@@ -1272,7 +1272,7 @@ h4{
 }
 
 .driftylogo {
-	position: fixed;
+	position: relative;
   left: 165px;
   top:-15px;
   /*right: -100px;*/
