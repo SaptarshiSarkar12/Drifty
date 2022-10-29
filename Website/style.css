@@ -1290,7 +1290,8 @@ h4{
 
 .driftylogo h2 {
 	color: #fff;
-	font-size: 8em;
+	font-size: 6.8em;
+  	width: auto;
 	position: absolute;
 	transform: translate(-50%, -50%);
   
