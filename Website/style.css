@@ -44,6 +44,7 @@ body {
 
   --black: black;
   --maroon: maroon;
+  --driftylogo:#034ff4;
 
   --button-background: #1c0099;
   --button-onhover-background: yellow;
@@ -99,7 +100,7 @@ body::-webkit-scrollbar-thumb {
 
   --black: #ecb365;
   --maroon: #f1d00a;
-
+  --driftylogo:#fea947;
   --button-background: #064663;
   --button-onhover-background: #ecb365;
   --button-onhover-shadow: #f1d00a;
@@ -1291,7 +1292,7 @@ h4{
 
 .driftylogo h2:nth-child(1) {
 	color: transparent;
-	-webkit-text-stroke: 2px #034ff4;
+	-webkit-text-stroke: 2px var(--driftylogo);
   
   
 }
@@ -1299,6 +1300,8 @@ h4{
 .driftylogo h2:nth-child(2) {
 	color: #0a6ad7;
 	animation: animate 4s ease-in-out infinite;
+  transition: filter 0.3s ease
+  
   
 }
 
@@ -1316,6 +1319,7 @@ h4{
 			100% 100%,
 			0% 100%
 		);
+    will-change: filter;
 	}
 
 	50% {
@@ -1330,5 +1334,6 @@ h4{
 			100% 100%,
 			0% 100%
 		);
+    will-change: filter;
 	}
 }
