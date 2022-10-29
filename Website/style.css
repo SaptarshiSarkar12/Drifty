@@ -462,6 +462,13 @@ h4{
   padding: 20px;
   background-color: #041c32;
   border-radius: 10px;
+  animation-name: example;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+@keyframes example {
+  0%   {background-color:#041c32;}
+  25%  {background-color:green;}
 }
 .about-content p , .about-content a{
   color: var(--font-color);
