@@ -1284,7 +1284,7 @@ h4{
   left: 165px;
   top:-15px;
   /*right: -100px;*/
-  width: 10%;
+  max-width: fit-content;
 	
 }
 
