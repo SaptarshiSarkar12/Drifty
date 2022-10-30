@@ -44,6 +44,7 @@ body {
 
   --black: black;
   --maroon: maroon;
+  --driftylogo:#034ff4;
 
   --button-background: #1c0099;
   --button-onhover-background: yellow;
@@ -99,7 +100,7 @@ body::-webkit-scrollbar-thumb {
 
   --black: #ecb365;
   --maroon: #f1d00a;
-
+  --driftylogo:#fea947;
   --button-background: #064663;
   --button-onhover-background: #ecb365;
   --button-onhover-shadow: #f1d00a;
@@ -410,7 +411,7 @@ header img {
 header {
   perspective: 500px;
   width: 100%;
-  height: fit-content;
+  height: 100vh;
   padding: 10rem 0;
   background: var(--background-color);
   display: flex;
@@ -422,7 +423,6 @@ header {
 }
 
 /* about us */
-
 .about{
   /* width: 100%; */
   text-align: center;
@@ -436,8 +436,6 @@ header {
 .about-container{
   background-color: var(--background-color1)
 }
-
-
 .about-container h1{
   margin-top: 20px;
   font-size: 40px;
@@ -461,7 +459,11 @@ h4{
   padding: 20px;
   background-color: #041c32;
   border-radius: 10px;
+  animation-name: example;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
 }
+
 .about-content p , .about-content a{
   color: var(--font-color);
   font-size: 24px;
@@ -472,6 +474,7 @@ h4{
   /* height: 100px; */
   border-radius: 50%;
 }
+
 
 /* Contributors */
 .contrib {
@@ -655,7 +658,7 @@ h4{
 }
 
 /* Contact */
-/* 
+/*
 .contact_section {
   width: 100%;
   display: flex;
@@ -681,7 +684,7 @@ h4{
   color: var(--button-onhover-text);
   box-shadow: 5px 5px 10px var(--button-onhover-shadow);
 }
-/* 
+/*
 #contact {
   background-color: var(--background-color);
   color: var(--black);
@@ -884,7 +887,7 @@ color: black;
     border-radius: 3px;
     box-shadow: 4px 4px 4px #0a78aa;
     cursor: pointer;
-    position: relative;    
+    position: relative;
     appearance: none;
     -webkit-appearance: none;
     background-image: url("Resources/Day.webp");
@@ -1162,7 +1165,7 @@ color: black;
     font-size: 20px;
     margin-bottom: 1rem;
   }
-  
+
   .buttons {
     width: min(100%, 700px);
     column-gap: 1rem;
@@ -1342,3 +1345,69 @@ color: black;
       background-positon-x: 0px;
     }
   }
+.driftylogo {
+	position: relative;
+  left: 165px;
+  top:-15px;
+  /*right: -100px;*/
+  max-width: fit-content;
+	
+}
+
+.driftylogo h2 {
+	color: #fff;
+	font-size: 6.8em;
+  	width: auto;
+	position: absolute;
+	transform: translate(-50%, -50%);
+  
+  
+}
+
+.driftylogo h2:nth-child(1) {
+	color: transparent;
+	-webkit-text-stroke: 2px var(--driftylogo);
+  
+  
+}
+
+.driftylogo h2:nth-child(2) {
+	color: #0a6ad7;
+	animation: animate 4s ease-in-out infinite;
+  transition: filter 0.3s ease
+  
+  
+}
+
+@keyframes animate {
+	0%,
+	100% {
+		clip-path: polygon(
+			0% 45%,
+			16% 44%,
+			33% 50%,
+			54% 60%,
+			70% 61%,
+			84% 59%,
+			100% 52%,
+			100% 100%,
+			0% 100%
+		);
+    will-change: filter;
+	}
+
+	50% {
+		clip-path: polygon(
+			0% 60%,
+			15% 65%,
+			34% 66%,
+			51% 62%,
+			67% 50%,
+			84% 45%,
+			100% 46%,
+			100% 100%,
+			0% 100%
+		);
+    will-change: filter;
+	}
+}
