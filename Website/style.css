@@ -1342,19 +1342,28 @@ h4{
 }
 
 
+#temp{
+    width: 100%;
+    height: 33px;
+    background-color: #3586ff;
+}
+
 
 .footer {
     position: relative;
     width: 100%;
     background: #3586ff;
     min-height: 100px;
-    padding: 20px 50px;
+    padding: 0px 50px;
+    padding-bottom: 40px;
     display: flex;
     /* justify-content: center; */
     /* align-items: center; */
     /* flex-direction: column; */
   }
-  
+  .waves{
+    z-index: 1;
+  }
   .wave {
     position: absolute;
     top: -100px;
