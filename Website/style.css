@@ -1003,8 +1003,7 @@ h4{
 /* Media Queries */
 
 @media screen and (max-width: 750px) {
-
-  .header-container {
+ .header-container {
     padding-top: 30px;
     margin: 5rem 2rem 2rem;
     z-index: 1;
