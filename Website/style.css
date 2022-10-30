@@ -1277,8 +1277,9 @@ h4{
 .driftylogo {
 	position: relative;
   left: 165px;
-  top:-15px;
-  /*right: -100px;*/
+  top:-15px; 
+	left: 156px;
+
   max-width: fit-content;
 	
 }
