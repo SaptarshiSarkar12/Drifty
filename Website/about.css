@@ -427,7 +427,7 @@ header img {
     color: var(--black);
   }
 
-  .img-container h5 a{
+  .img-container h2 a{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: var(--button-onhover-shadow)
   }
@@ -496,17 +496,6 @@ header img {
     max-width: 100%;
     height: auto;
   }
-.activity ol{
-    list-style-position: inside;
-    line-height: 3;
-    color: var(--background-color2);
-}
-
-.activity ol li a{
-    font-weight: 300;
-    font-style: italic;
-}
-
 
 /* Footer */
 
@@ -650,53 +639,6 @@ header img {
   font-size: 15px;
 }
 
-/* Dark mode toggle */
-
-/* .btn-toggle {
-    position: fixed;
-    bottom: 10%;
-    right: 3%;
-    background: #0FACF3;
-    width: 180px;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-    border-radius: 3px;
-    box-shadow: 4px 4px 4px #0a78aa;
-    cursor: pointer;
-    position: relative;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("Resources/Day.webp");
-    background-size: cover;
-    border-radius: 50px;
-    outline: none;
-    cursor: pointer;
-    transition: background-image .90s;
-}
-
-.btn-toggle:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    border-radius: 50px;
-    transition: all .9s;
-    background-color: #F7CA33;
-}
-
-.btn-toggle:checked {
-    background-image: url("Resources/Night.webp");
-    transition: background-image .90s;
-}
-
-.btn-toggle:checked:before {
-    transform: translate(100%);
-    transition: all .9s;
-    background-color: #ECF0F3;
-} */
 /* Animations */
 
 @keyframes slide_underline {
