@@ -23,7 +23,7 @@ button {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 1rem;
-  color: var(--font-color);
+  color: var(--font-color1);
   text-decoration: none;
 }
 body {
@@ -44,6 +44,7 @@ body {
 
   --black: black;
   --maroon: maroon;
+  --driftylogo:#034ff4;
 
   --button-background: #1c0099;
   --button-onhover-background: yellow;
@@ -99,7 +100,7 @@ body::-webkit-scrollbar-thumb {
 
   --black: #ecb365;
   --maroon: #f1d00a;
-
+  --driftylogo:#fea947;
   --button-background: #064663;
   --button-onhover-background: #ecb365;
   --button-onhover-shadow: #f1d00a;
@@ -416,7 +417,7 @@ header img {
 header {
   perspective: 500px;
   width: 100%;
-  height: fit-content;
+  height: 100vh;
   padding: 10rem 0;
   background: var(--background-color);
   display: flex;
@@ -426,6 +427,60 @@ header {
   background: var(--grad);
   background-repeat: no-repeat !important;
 }
+
+/* about us */
+.about{
+  /* width: 100%; */
+  text-align: center;
+  line-height: 1.6 !important;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 25px;
+  padding-right: 25px;
+  background-color: var(--background-color1);
+}
+.about-container{
+  background-color: var(--background-color1)
+}
+.about-container h1{
+  margin-top: 20px;
+  font-size: 40px;
+  color: var(--black);
+}
+
+.img-container h5 a{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: var(--button-onhover-shadow)
+}
+h4{
+  font-size: 20px;
+}
+.img-container{
+  padding-top : 20px;
+}
+.about-us{
+  padding-bottom: 20px;
+}
+.about-content{
+  padding: 20px;
+  background-color: #041c32;
+  border-radius: 10px;
+  animation-name: example;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+
+.about-content p , .about-content a{
+  color: var(--font-color);
+  font-size: 24px;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.about img{
+  width: 200px;
+  /* height: 100px; */
+  border-radius: 50%;
+}
+
 
 /* Contributors */
 .contrib {
@@ -609,7 +664,7 @@ header {
 }
 
 /* Contact */
-/* 
+/*
 .contact_section {
   width: 100%;
   display: flex;
@@ -635,7 +690,7 @@ header {
   color: var(--button-onhover-text);
   box-shadow: 5px 5px 10px var(--button-onhover-shadow);
 }
-/* 
+/*
 #contact {
   background-color: var(--background-color);
   color: var(--black);
@@ -834,7 +889,7 @@ header {
     border-radius: 3px;
     box-shadow: 4px 4px 4px #0a78aa;
     cursor: pointer;
-    position: relative;    
+    position: relative;
     appearance: none;
     -webkit-appearance: none;
     background-image: url("Resources/Day.webp");
@@ -1112,7 +1167,7 @@ header {
     font-size: 20px;
     margin-bottom: 1rem;
   }
-  
+
   .buttons {
     width: min(100%, 700px);
     column-gap: 1rem;
@@ -1224,3 +1279,150 @@ header {
 #mybtn:hover {
   background-color: rgb(18, 29, 59);
 }
+
+.driftylogo {
+	position: relative;
+  left: 165px;
+  top:-15px; 
+	left: 156px;
+
+  max-width: fit-content;
+	
+}
+
+.driftylogo h2 {
+	color: #fff;
+	font-size: 6.8em;
+  	width: auto;
+	position: absolute;
+	transform: translate(-50%, -50%);
+  
+  
+}
+
+.driftylogo h2:nth-child(1) {
+	color: transparent;
+	-webkit-text-stroke: 2px var(--driftylogo);
+  
+  
+}
+
+.driftylogo h2:nth-child(2) {
+	color: #0a6ad7;
+	animation: animate 4s ease-in-out infinite;
+  transition: filter 0.3s ease
+  
+  
+}
+
+@keyframes animate {
+	0%,
+	100% {
+		clip-path: polygon(
+			0% 45%,
+			16% 44%,
+			33% 50%,
+			54% 60%,
+			70% 61%,
+			84% 59%,
+			100% 52%,
+			100% 100%,
+			0% 100%
+		);
+    will-change: filter;
+	}
+
+	50% {
+		clip-path: polygon(
+			0% 60%,
+			15% 65%,
+			34% 66%,
+			51% 62%,
+			67% 50%,
+			84% 45%,
+			100% 46%,
+			100% 100%,
+			0% 100%
+		);
+    will-change: filter;
+	}
+}
+
+
+#temp{
+    width: 100%;
+    height: 33px;
+    background-color: #3586ff;
+}
+
+
+.footer {
+    position: relative;
+    width: 100%;
+    background: #3586ff;
+    min-height: 100px;
+    padding: 0px 50px;
+    padding-bottom: 40px;
+    display: flex;
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* flex-direction: column; */
+  }
+  .waves{
+    z-index: 1;
+  }
+  .wave {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url("https://i.ibb.co/wQZVxxk/wave.png");
+    background-size: 1000px 100px;
+  }
+  
+  .wave#wave1 {
+    z-index: 1000;
+    opacity: 1;
+    bottom: 0;
+    animation: animateWaves 4s linear infinite;
+  }
+  
+  .wave#wave2 {
+    z-index: 999;
+    opacity: 0.5;
+    bottom: 10px;
+    animation: animate 4s linear infinite !important;
+  }
+  
+  .wave#wave3 {
+    z-index: 1000;
+    opacity: 0.2;
+    bottom: 15px;
+    animation: animateWaves 3s linear infinite;
+  }
+  
+  .wave#wave4 {
+    z-index: 999;
+    opacity: 0.7;
+    bottom: 20px;
+    animation: animate 3s linear infinite;
+  }
+  
+  @keyframes animateWaves {
+    0% {
+      background-position-x: 1000px;
+    }
+    100% {
+      background-positon-x: 0px;
+    }
+  }
+  
+  @keyframes animate {
+    0% {
+      background-position-x: -1000px;
+    }
+    100% {
+      background-positon-x: 0px;
+    }
+  }
