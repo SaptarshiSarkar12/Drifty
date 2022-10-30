@@ -16,6 +16,7 @@ public class Drifty_CLI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     private static String fName = null;
     protected static boolean isYoutubeURL;
+    public static String versionNumber = "v1.2.2";
 
     /**
      * This function is the main method of the whole application.
@@ -36,6 +37,9 @@ public class Drifty_CLI {
                     name = args[i+1];
                 } else if (Objects.equals(args[i], "-location") || (Objects.equals(args[i], "-l"))){
                     location = args[i+1];
+                } else if (Objects.equals(args[i], "-version") || (Objects.equals(args[i], "-v"))) {
+                    System.out.println("Drifty " + versionNumber);
+                    System.exit(0);
                 }
             }
             if (!isURLValid(URL)) {
@@ -66,17 +70,16 @@ public class Drifty_CLI {
         }
         while(true) {
             fName = null;
-            System.out.print("Enter the link to the file : ");
-            String link = SC.next();
+            String link;
             while (true) {
+                System.out.print("Enter the link to the file : ");
+                link = SC.nextLine();
                 isYoutubeURL = isYoutubeLink(link);
                 if (isYoutubeURL){
                     break;
                 }
                 if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
-                    System.out.print("Enter the link to the file : ");
-                    link = SC.next();
                 } else if (!containsFilename(link)) {
                     System.out.println("Automatic file name detection failed!");
                     logger.log("ERROR", "Automatic file name detection failed!");
@@ -85,49 +88,32 @@ public class Drifty_CLI {
                     break;
                 }
             }
-            SC.nextLine();
-            while (true){
-                if (isYoutubeURL){
-                    break;
-                }
+            if (!isYoutubeURL) {
                 if (fName != null) {
                     System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
-                    char rename_file = SC.nextLine().toLowerCase().charAt(0);
-                    if (rename_file == 'y') {
+                    String renameFile = SC.nextLine().toLowerCase();
+                    boolean yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+                    if (yesOrNo) {
                         System.out.print("Enter the filename (with file extension) : ");
                         fName = SC.nextLine();
-                        break;
-                    } else if (rename_file =='n'){
-                        break;
                     }
-                    else {
-                        System.out.println("Invalid input!");
-                        logger.log("ERROR", "Invalid input");
-                    }
-                } else{
+                } else {
                     System.out.print("Enter the filename (with file extension) : ");
                     fName = SC.nextLine();
-                    break;
                 }
             }
-            while (true) {
-                System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
-                char default_folder = SC.nextLine().toLowerCase().charAt(0);
-                if (default_folder == 'y') {
-                    saveToDefault();
-                } else if (default_folder == 'n') {
-                    enterDownloadsFolder();
-                } else {
-                    System.out.println("Invalid input!");
-                    logger.log("ERROR", "Invalid input");
-                    continue;
-                }
-                break;
+            System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
+            String default_folder = SC.nextLine().toLowerCase();
+            boolean yesOrNo = yesNoValidation(default_folder, "Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
+            if (yesOrNo) {
+                saveToDefault();
+            } else {
+                enterDownloadsFolder();
             }
             new FileDownloader(link, fName, downloadsFolder).run();
             System.out.println("Press Q to Quit Or Press any Key to Continue");
-            String quit = SC.nextLine();
-            if(quit.equals("Q") || quit.equals("q")){
+            String quit = SC.nextLine().toLowerCase();
+            if(quit.equals("q")){
                 logger.log("INFO", "Application Terminated!");
                 break;
             }
@@ -223,18 +209,52 @@ public class Drifty_CLI {
     }
 
     /**
+     * This method performs Yes-No validation and returns the boolean value accordingly.
+     * @param input Input String to validate.
+     * @param printMsg The message to print to re-input the confirmation.
+     * @return true if the user enters Y [Yes] and false if not.
+     */
+    public static boolean yesNoValidation(String input, String printMsg){
+        while (true) {
+            if (input.length() == 0) {
+                System.out.println("Please enter Y for yes and N for no!");
+                logger.log("ERROR", "Please enter Y for yes and N for no!");
+            } else {
+                break;
+            }
+            System.out.print(printMsg);
+            input = SC.nextLine().toLowerCase();
+        }
+        char choice = input.charAt(0);
+        if (choice == 'y') {
+            return true;
+        } else if (choice =='n'){
+            return false;
+        }
+        else {
+            System.out.println("Invalid input!");
+            logger.log("ERROR", "Invalid input");
+            System.out.print(printMsg);
+            input = SC.nextLine().toLowerCase();
+            yesNoValidation(input, printMsg);
+        }
+        return false;
+    }
+
+    /**
      * This function provides help about how to use the application through command line arguments.
      */
     private static void help(){
         System.out.println(ANSI_RESET+"\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----"+ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m            v1.1.0"+ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m            v1.2.2"+ANSI_RESET);
         System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
         System.out.println("\033[31;1mRequired parameter: File URL"+ANSI_RESET+" \033[3m(This must be the first argument you are passing)"+ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default     Description"+ANSI_RESET);
-        System.out.println("-location   -l            Downloads   The location on your computer where content downloaded from Drifty are placed.");
-        System.out.println("-name       -n            Source      Renames file.");
-        System.out.println("-help       -h            N/A         Provides concise information for Drifty CLI.\n");
+        System.out.println("-location   -l            Downloads                   The location on your computer where content downloaded from Drifty are placed.");
+        System.out.println("-name       -n            Source                      Renames file.");
+        System.out.println("-help       -h            N/A                         Provides concise information for Drifty CLI.\n");
+        System.out.println("-version    -v            Current Version Number      Displays version number of Drifty.");
         System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example"+ ANSI_RESET );
         System.out.println("\033[37;3m* Requires java 18 or higher. \n"+ANSI_RESET);
     }
