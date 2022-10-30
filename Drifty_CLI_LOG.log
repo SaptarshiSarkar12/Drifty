@@ -1,6 +1,0 @@
-30-Oct-2022 17:29:21 INFO - Application Started !
-30-Oct-2022 17:29:21 INFO - Filename detected : spark-3.3.1-bin-hadoop3.tgz
-30-Oct-2022 17:29:21 INFO - Trying to auto-detect default Downloads folder...
-30-Oct-2022 17:29:21 INFO - Default download folder detected : D:\Downloads\
-30-Oct-2022 17:29:21 INFO - Trying to download the file...
-30-Oct-2022 17:29:21 INFO - Downloaded spark-3.3.1-bin-hadoop3.tgz of size 285.48 MB at D:\Downloads\spark-3.3.1-bin-hadoop3.tgz successfully !
