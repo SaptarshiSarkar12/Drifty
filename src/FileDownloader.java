@@ -113,6 +113,8 @@ class FileDownloader implements Runnable {
                     System.out.println("Failed to create the directory : " + dir + " ! " + e.getMessage());
                     Drifty_CLI.logger.log("ERROR", "Failed to create the directory : " + dir + " ! " + e.getMessage());
                 }
+                System.out.println("Trying to download the file...");
+                Drifty_CLI.logger.log("INFO", "Trying to download the file...");
                 downloadFile();
             }
         } catch (MalformedURLException e) {
@@ -161,15 +163,14 @@ class FileDownloader implements Runnable {
                     progressBarThread.start();
                     //check if all file are downloaded
                     try {
-                        do {
+                        while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                             Thread.sleep(1000);
-                        } while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles));
+                        }
                         progressBarThread.setDownloading(false);
                         // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
                         try {
                             Thread.sleep(1000);
-                        } catch (InterruptedException ignored) {
-                        }
+                        } catch (InterruptedException ignored) {}
                     } catch (InterruptedException ignored) {
                     }
                 } else {
@@ -237,7 +238,6 @@ class FileDownloader implements Runnable {
 
     /**
      * This method check if all the downloader threads are completed correctly and merges the downloaded parts.
-     *
      * @param fileOutputStreams FileOutputStream of all the parts
      * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
