@@ -70,17 +70,16 @@ public class Drifty_CLI {
         }
         while(true) {
             fName = null;
-            System.out.print("Enter the link to the file : ");
-            String link = SC.next();
+            String link;
             while (true) {
+                System.out.print("Enter the link to the file : ");
+                link = SC.nextLine();
                 isYoutubeURL = isYoutubeLink(link);
                 if (isYoutubeURL){
                     break;
                 }
                 if (!isURLValid(link)) {
                     System.out.println("Invalid URL. Please enter again");
-                    System.out.print("Enter the link to the file : ");
-                    link = SC.next();
                 } else if (!containsFilename(link)) {
                     System.out.println("Automatic file name detection failed!");
                     logger.log("ERROR", "Automatic file name detection failed!");
@@ -89,9 +88,9 @@ public class Drifty_CLI {
                     break;
                 }
             }
-            SC.nextLine();
             if (!isYoutubeURL) {
                 if (fName != null) {
+                    System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     String renameFile = SC.nextLine().toLowerCase();
                     boolean yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     if (yesOrNo) {
@@ -103,6 +102,7 @@ public class Drifty_CLI {
                     fName = SC.nextLine();
                 }
             }
+            System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
             String default_folder = SC.nextLine().toLowerCase();
             boolean yesOrNo = yesNoValidation(default_folder, "Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
             if (yesOrNo) {
@@ -223,20 +223,22 @@ public class Drifty_CLI {
                 break;
             }
             System.out.print(printMsg);
-            input = SC.nextLine();
+            input = SC.nextLine().toLowerCase();
         }
-        while (true) {
-            char choice = input.charAt(0);
-            if (choice == 'y') {
-                return true;
-            } else if (choice =='n'){
-                return false;
-            }
-            else {
-                System.out.println("Invalid input!");
-                logger.log("ERROR", "Invalid input");
-            }
+        char choice = input.charAt(0);
+        if (choice == 'y') {
+            return true;
+        } else if (choice =='n'){
+            return false;
         }
+        else {
+            System.out.println("Invalid input!");
+            logger.log("ERROR", "Invalid input");
+            System.out.print(printMsg);
+            input = SC.nextLine().toLowerCase();
+            yesNoValidation(input, printMsg);
+        }
+        return false;
     }
 
     /**
