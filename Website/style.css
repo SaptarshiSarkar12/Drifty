@@ -1044,9 +1044,9 @@ h4{
 }
 .driftylogo {
 	position: relative;
-  left: 165px;
+  /* left: 165px; */
   top:-15px; 
-	left: 156px;
+	left: 140px;
   max-width: fit-content;	
 }
 .driftylogo h2 {
