@@ -1101,7 +1101,7 @@ h4{
 .footer {
   position: relative;
   width: 100%;
-  background: #3586ff;
+  background: var(--background-color);
   min-height: 100px;
   padding: 0px 50px;
   padding-bottom: 40px;
