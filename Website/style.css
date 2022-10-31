@@ -204,7 +204,7 @@ body::-webkit-scrollbar-thumb {
 .nav-sticky {
   position: fixed;
   padding: 10px 10vw;
-  background: var(--nav-bg2);
+  /* background: var(--nav-bg2); */
   box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3);
@@ -255,13 +255,14 @@ body::-webkit-scrollbar-thumb {
 }
 
 .button {
+  font-weight: 700;
   border: none;
   cursor: pointer;
   padding: 6px 16px;
-  border-radius: 50px;
+  border-radius: 5px;
   background: linear-gradient(
     -45deg,
-    var(--background-color1),
+    var(--background-color2),
     var(--text-color)
   ) !important;
   transition: all 0.3s ease;
