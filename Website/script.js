@@ -264,8 +264,8 @@ window.onscroll = function () {
 };
 function scrollFunction() {
   if (
-    document.body.scrollTop > 650 ||
-    document.documentElement.scrollTop > 650
+    document.body.scrollTop > 1 ||
+    document.documentElement.scrollTop > 100
   ) {
     mybutton.style.display = "block";
   } else {
