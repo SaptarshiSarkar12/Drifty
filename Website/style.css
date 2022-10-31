@@ -126,10 +126,6 @@ body::-webkit-scrollbar-thumb {
     var(--m-light-col)
   );
 }
-
-.temp-color {
-  background-color: #1a2035 !important;
-}
 .text-gradient-blue {
   background: linear-gradient(
     -45deg,
@@ -1102,13 +1098,6 @@ h4{
     will-change: filter;
 	}
 }
-
-#temp{
-  width: 100%;
-  height: 33px;
-  background-color: #3586ff;
-}
-
 .footer {
   position: relative;
   width: 100%;
