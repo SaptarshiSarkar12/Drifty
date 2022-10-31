@@ -50,25 +50,20 @@ body {
   --button-onhover-shadow: black;
   --button-text: white;
   --button-onhover-text: black;
-
   --nav-bg: transparent;
   --nav-bg2: #1a2035;
-
   --font-color: #1a2035;
   --font-color: #fff;
-
   --black-col: #151515;
   --dark-col: #1a2035;
   --m-deep-col: #0a5a97;
   --m-dark-col: #1572e8;
   --main-col: #3697e1;
   --m-light-col: #48abf7;
-
   --ascent-col-1: #ff9e27;
   --ascent-col-1l: #ffad46;
   --ascent-col-2: #ea4d56;
   --ascent-col-2l: #f25961;
-
   --grad: radial-gradient(
     circle farthest-corner at 22.4% 21.7%,
     rgba(4, 189, 228, 1) 0%,
@@ -96,16 +91,13 @@ body::-webkit-scrollbar-thumb {
 .darkmode {
   --background-color: #041c32;
   --background-color1: #064663;
-
   --black: #ecb365;
   --maroon: #f1d00a;
-
   --button-background: #064663;
   --button-onhover-background: #ecb365;
   --button-onhover-shadow: #f1d00a;
   --button-text: white;
   --button-onhover-text: black;
-
   --grad: linear-gradient(
     to left top,
     var(--black-col),
