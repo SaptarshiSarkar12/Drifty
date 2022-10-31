@@ -429,9 +429,9 @@ header {
   color: var(--black);
 }
 
-.img-container h5 a{
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  color: var(--button-onhover-shadow)
+.img-container h2 a{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', 'Arial', 'sans-serif';
+  color: var(--button-onhover-shadow);
 }
 h4{
   font-size: 20px;
