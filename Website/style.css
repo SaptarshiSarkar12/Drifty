@@ -4,7 +4,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 /* Global styles */
-
 * {
   margin: 0;
   padding: 0;
@@ -127,10 +126,6 @@ body::-webkit-scrollbar-thumb {
     var(--m-light-col)
   );
 }
-
-.temp-color {
-  background-color: #1a2035 !important;
-}
 .text-gradient-blue {
   background: linear-gradient(
     -45deg,
@@ -164,20 +159,7 @@ body::-webkit-scrollbar-thumb {
   -webkit-text-fill-color: transparent !important;
 }
 
-/* TEXTURE LAYER */
-.texture {
-  z-index: 100;
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("Resources/grain-dark.webp");
-  opacity: 0.5;
-  overflow: hidden;
-  pointer-events: none;
-}
-
 /* Navbar */
-
 .nav-container {
   width: 100%;
   overflow: hidden;
@@ -423,29 +405,9 @@ header {
   background-repeat: no-repeat !important;
 }
 
-/* about us */
-.about{
-  /* width: 100%; */
-  text-align: center;
-  line-height: 1.6 !important;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  padding-left: 25px;
-  padding-right: 25px;
-  background-color: var(--background-color1);
-}
-.about-container{
-  background-color: var(--background-color1)
-}
-.about-container h1{
-  margin-top: 20px;
-  font-size: 40px;
-  color: var(--black);
-}
-
-.img-container h5 a{
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  color: var(--button-onhover-shadow)
+.img-container h2 a{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', 'Arial', 'sans-serif';
+  color: var(--button-onhover-shadow);
 }
 h4{
   font-size: 20px;
@@ -453,29 +415,6 @@ h4{
 .img-container{
   padding-top : 20px;
 }
-.about-us{
-  padding-bottom: 20px;
-}
-.about-content{
-  padding: 20px;
-  background-color: #041c32;
-  border-radius: 10px;
-  animation-name: example;
-  animation-duration: 4s;
-  animation-iteration-count: infinite;
-}
-
-.about-content p , .about-content a{
-  color: var(--font-color);
-  font-size: 24px;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-.about img{
-  width: 200px;
-  /* height: 100px; */
-  border-radius: 50%;
-}
-
 
 /* Contributors */
 .contrib {
@@ -549,7 +488,6 @@ h4{
 }
 
 /* Info */
-
 .info {
   background-color: var(--background-color);
   padding: 2rem 5rem;
@@ -557,7 +495,6 @@ h4{
 }
 
 /* Download */
-
 .download {
   display: flex;
   flex-direction: column;
@@ -566,7 +503,6 @@ h4{
   color: var(--black);
   padding-top: 50px;
 }
-
 .download > h2 {
   font-family: "Poppins", sans-serif;
   font-size: 2rem;
@@ -580,14 +516,12 @@ h4{
 }
 
 /* -Download section- */
-
 .download_section {
   margin: 1rem auto 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-
 .release_section {
   margin: 0rem auto 2rem;
   display: flex;
@@ -596,11 +530,9 @@ h4{
   text-align: left;
   max-width: min(100%, max(50%, 500px));
 }
-
 .release {
   margin: 1rem;
 }
-
 .assets {
   display: flex;
   flex-direction: row;
@@ -618,55 +550,38 @@ h4{
   box-shadow: 2px 2px 5px darkblue;
 }
 
-/* -Dowload demo- */
-
+/* -Download demo- */
 .demo {
   display: grid;
   grid-template-columns: repeat(12, calc(100% / 12));
   margin: 0 2rem 2rem 2rem;
   align-items: center;
 }
-
 .demo > .text {
   grid-column-start: 1;
   grid-column-end: 5;
   text-align: left;
 }
-
 .demo h2 {
   font-family: "Poppins";
 }
-
 .demo .text > h2 {
   font-size: 3.25rem;
 }
-
 .demo .text > p {
   font-size: 1.5rem;
 }
-
 .demo > video {
   grid-column-start: 5;
   grid-column-end: 13;
   width: 100%;
 }
-
 .demo_section {
   margin: 1rem auto 2rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-
-/* Contact */
-/*
-.contact_section {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-*/
 .btn4 {
   font-size: 20px;
   font-weight: 600;
@@ -679,57 +594,12 @@ h4{
   border-radius: 500px;
   transition: 0.5s;
 }
-
 .btn4:hover {
   background-color: var(--button-onhover-background);
   color: var(--button-onhover-text);
   box-shadow: 5px 5px 10px var(--button-onhover-shadow);
 }
-/*
-#contact {
-  background-color: var(--background-color);
-  color: var(--black);
-  font-family: Lora, sans-serif;
-  font-style: italic;
-}
-.contact-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 0px 10px;
-  gap: 10px;
-  padding: 20px 0;
-  text-align: center;
-}
-.contact-container a {
-  width: auto;
-  padding: 20px;
-  font-size: 20px;
-  font-style: normal;
-  background-color: var(--text-color);
-  border-radius: 5rem;
-  margin: 0 0 34px 0;
-}
-.contact-container a:hover {
-  filter: brightness(1.2);
-}
-.contact-container i {
-  line-height: none;
-  padding: 0;
-  margin: 0;
-}
-
-#contact > h2 {
-  font-family: "Poppins", sans-serif !important;
-  font-style: normal;
-  text-align: center;
-  padding: 1rem;
-  font-size: 2rem;
-} */
-
 /* Footer */
-
 .footer {
   padding: 40px 0;
   background-color: var(--background-color);
@@ -740,7 +610,6 @@ h4{
   padding: 0 4px;
   flex: 12px;
 }
-
 .legal {
   flex: 3;
   color: var(--black);
@@ -755,42 +624,32 @@ h4{
   color: var(--black);
   margin-top: 5%;
 }
-
 .footer li {
   margin-top: 8px;
   list-style-type: none;
   line-height: 180%;
 }
-
 .legal a {
   color: var(--black);
 }
-
 .career a {
   color: var(--black);
 }
-
 .legal a:hover, .career a:hover{
   color:#00acee;
   border-radius:10%;
 }
- /*.career a:hover{
-  color:#00acee;
-  border-radius:10%;
-} */
 .footer .social {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
 }
-
 .social-container {
   flex: 3;
   border-bottom: tomato;
 }
  /*scroll to top*/
-
 #mybtn{
   display: none;
   position: fixed;
@@ -810,7 +669,6 @@ h4{
 #mybtn:hover{
   background-color: rgb(18, 29, 59);
 }
-
 .footer .social a {
   font-size: 20px;
   color: var(--black);
@@ -835,7 +693,6 @@ h4{
   border-radius: 50%;
   width: auto;
 }
-
 #twitter:hover {
   background-color: #00acee;
   color: #fff;
@@ -843,7 +700,6 @@ h4{
   border: none;
   transform: scale(1.2);
 }
-
 .footer .social :nth-child(2):hover {
   background-color: #0f0f0f;
   color: #fff;
@@ -869,56 +725,7 @@ h4{
   color: var(--black);
   font-size: 15px;
 }
-
-/* Dark mode toggle */
-
-/* .btn-toggle {
-    position: fixed;
-    bottom: 10%;
-    right: 3%;
-    background: #0FACF3;
-    width: 180px;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-    border-radius: 3px;
-    box-shadow: 4px 4px 4px #0a78aa;
-    cursor: pointer;
-    position: relative;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("Resources/Day.webp");
-    background-size: cover;
-    border-radius: 50px;
-    outline: none;
-    cursor: pointer;
-    transition: background-image .90s;
-}
-
-.btn-toggle:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    border-radius: 50px;
-    transition: all .9s;
-    background-color: #F7CA33;
-}
-
-.btn-toggle:checked {
-    background-image: url("Resources/Night.webp");
-    transition: background-image .90s;
-}
-
-.btn-toggle:checked:before {
-    transform: translate(100%);
-    transition: all .9s;
-    background-color: #ECF0F3;
-} */
 /* Animations */
-
 @keyframes slide_underline {
   0% {
     text-underline-offset: 100%;
@@ -1002,9 +809,7 @@ h4{
   -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
 }
 /* Media Queries */
-
 @media screen and (max-width: 750px) {
-
   .header-container {
     padding-top: 30px;
     margin: 5rem 2rem 2rem;
@@ -1123,7 +928,6 @@ h4{
     align-items: center;
     gap: 1rem;
   }
-
 }
 
 @media screen and (max-width: 864px) {
@@ -1149,26 +953,21 @@ h4{
     display: flex;
     flex-direction: column;
   }
-
   .demo > .text {
     text-align: center;
   }
-
   .demo .text h2 {
     font-size: 36px;
   }
-
   .demo > .text > p {
     font-size: 20px;
     margin-bottom: 1rem;
   }
-
   .buttons {
     width: min(100%, 700px);
     column-gap: 1rem;
     font-size: min(4vw, 24px);
   }
-
   .btn4 {
     font-size: min(2vw, 30px);
   }
@@ -1178,52 +977,42 @@ h4{
   display: flex;
   flex-direction: column;
 }
-
 .demo > .text {
   text-align: center;
 }
-
 .demo > .text > h2 {
   font-size: 36px;
 }
-
 .demo > .text > p {
   font-size: 20px;
   margin-bottom: 1rem;
 }
-
 .buttons {
   width: min(100%, 700px);
   column-gap: 1rem;
   font-size: min(4vw, 24px);
 }
-
 .btn4 {
   font-size: min(2vw, 30px);
 }
-
 .fb {
   font-size: 1.3rem;
 }
-
 .Txt {
   font-size: small;
 }
 .darkTxt {
   display: none;
 }
-
 .lightTxt {
   display: none;
 }
-
 .release-note {
   overflow: hidden;
   transition: max-height 200ms;
   max-height: 0;
   text-align: center;
 }
-
 .release-note a,
 .release-note li {
   color: var(--black);
@@ -1248,66 +1037,34 @@ h4{
   background-color: #4caf50;
   color: var(--font-color);
 }
-
 .copyright{
   color: var(--black);
   background-color: var(--background-color);
   text-align: center;
   padding: 20px;
 }
-/* Scroll to top button styling starts from here */
-#mybtn {
-  display: none;
-  position: fixed;
-  bottom: 18px;
-  right: 19px;
-  z-index: 99;
-  border: none;
-  outline: none;
-  background-color: #0a5a97;
-  color: wheat;
-  cursor: pointer;
-  padding: 15px;
-  border-radius: 200px;
-  font-size: 18px;
-}
-#mybtn:hover {
-  background-color: rgb(18, 29, 59);
-}
-
 .driftylogo {
 	position: relative;
-  left: 165px;
+  /* left: 165px; */
   top:-15px; 
-	left: 156px;
-
-  max-width: fit-content;
-	
+	left: 140px;
+  max-width: fit-content;	
 }
-
 .driftylogo h2 {
 	color: #fff;
 	font-size: 6.8em;
-  	width: auto;
+  width: auto;
 	position: absolute;
 	transform: translate(-50%, -50%);
-  
-  
 }
-
 .driftylogo h2:nth-child(1) {
 	color: transparent;
 	-webkit-text-stroke: 2px var(--driftylogo);
-  
-  
 }
-
 .driftylogo h2:nth-child(2) {
 	color: #0a6ad7;
 	animation: animate 4s ease-in-out infinite;
   transition: filter 0.3s ease
-  
-  
 }
 
 @keyframes animate {
@@ -1342,68 +1099,54 @@ h4{
     will-change: filter;
 	}
 }
-
-
-#temp{
-    width: 100%;
-    height: 33px;
-    background-color: #3586ff;
+.footer {
+  position: relative;
+  width: 100%;
+  background: var(--background-color);
+  min-height: 100px;
+  padding: 0px 50px;
+  padding-bottom: 40px;
+  display: flex;
+}
+.waves{
+  z-index: 1;
+}
+.wave {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: url("https://i.ibb.co/wQZVxxk/wave.png");
+  background-size: 1000px 100px;
+}  
+.wave#wave1 {
+  z-index: 1000;
+  opacity: 1;
+  bottom: 0;
+  animation: animateWaves 4s linear infinite;
+}  
+.wave#wave2 {
+  z-index: 999;
+  opacity: 0.5;
+  bottom: 10px;
+  animation: animate 4s linear infinite !important;
 }
 
+.wave#wave3 {
+  z-index: 1000;
+  opacity: 0.2;
+  bottom: 15px;
+  animation: animateWaves 3s linear infinite;
+}
 
-.footer {
-    position: relative;
-    width: 100%;
-    background: #3586ff;
-    min-height: 100px;
-    padding: 0px 50px;
-    padding-bottom: 40px;
-    display: flex;
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* flex-direction: column; */
-  }
-  .waves{
-    z-index: 1;
-  }
-  .wave {
-    position: absolute;
-    top: -100px;
-    left: 0;
-    width: 100%;
-    height: 100px;
-    background: url("https://i.ibb.co/wQZVxxk/wave.png");
-    background-size: 1000px 100px;
-  }
-  
-  .wave#wave1 {
-    z-index: 1000;
-    opacity: 1;
-    bottom: 0;
-    animation: animateWaves 4s linear infinite;
-  }
-  
-  .wave#wave2 {
-    z-index: 999;
-    opacity: 0.5;
-    bottom: 10px;
-    animation: animate 4s linear infinite !important;
-  }
-  
-  .wave#wave3 {
-    z-index: 1000;
-    opacity: 0.2;
-    bottom: 15px;
-    animation: animateWaves 3s linear infinite;
-  }
-  
-  .wave#wave4 {
-    z-index: 999;
-    opacity: 0.7;
-    bottom: 20px;
-    animation: animate 3s linear infinite;
-  }
-  
+.wave#wave4 {
+  z-index: 999;
+  opacity: 0.7;
+  bottom: 20px;
+  animation: animate 3s linear infinite;
+}
+
   @keyframes animateWaves {
     0% {
       background-position-x: 1000px;
