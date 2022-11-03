@@ -92,7 +92,7 @@ public class ProgressBarThread extends Thread {
             float filled;
             totalDownloadBytes=0;
             for (int i = 0; i < fileOutputStreams.size(); i++) {
-                filled = downloadedBytesPerPart.get(i) / charPercents.get(i);
+                filled = downloadedBytesPerPart.get(i) / ((float) charPercents.get(i));
                 totalDownloadBytes += downloadedBytesPerPart.get(i);
                 String a = new String(new char[(int) filled]).replace("\0", "=");
                 String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
@@ -110,15 +110,16 @@ public class ProgressBarThread extends Thread {
      */
     private String convertBytes(long bytes) {
         String sizeWithUnit;
-        if (bytes > 1000) {
-            bytes = bytes / 1024;
-            sizeWithUnit = String.format("%.2f",(float)bytes)  + " KB";
-            if (bytes > 1000) {
-                bytes = bytes / 1024;
-                sizeWithUnit = String.format("%.2f",(float)bytes)  + " MB";
-                if (bytes > 1000) {
-                    bytes = bytes / 1024;
-                    sizeWithUnit = String.format("%.2f",(float)bytes) + "GB";
+        double bytesWithDecimals;
+        if (bytes > 1024) {
+            bytesWithDecimals = bytes / 1024.0;
+            sizeWithUnit = String.format("%.2f", bytesWithDecimals)  + " KB";
+            if (bytesWithDecimals > 1024) {
+                bytesWithDecimals = bytesWithDecimals / 1024;
+                sizeWithUnit = String.format("%.2f",bytesWithDecimals)  + " MB";
+                if (bytesWithDecimals > 1024) {
+                    bytesWithDecimals = bytesWithDecimals / 1024;
+                    sizeWithUnit = String.format("%.2f",bytesWithDecimals) + "GB";
                 }
             }
             return sizeWithUnit;
