@@ -28,11 +28,10 @@ button {
 }
 body {
   overflow-x: hidden !important;
-  display: table;
 }
 
 .hidden {
-  display: none !important;
+  display: table !important;
 }
 
 /* Variables */
