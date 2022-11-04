@@ -31,7 +31,7 @@ body {
 }
 
 .hidden {
-  display: table !important;
+  display: none !important;
 }
 
 /* Variables */
