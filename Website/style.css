@@ -425,8 +425,8 @@ header {
 
 /* Contributors */
 .contrib {
-  background: var(--nav-bg2);
-  color: white;
+  background: var(--background-color);
+  color: var(--black);
   padding: 2rem 4rem;
   box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
@@ -470,7 +470,8 @@ header {
 .contrib-container .btn4 {
   font-size: 16px;
   margin: 0 !important;
-  background-color: transparent;
+  /* background-color: transparent;   */
+  background-color: rgb(26, 32, 53);
   border: solid white 2px;
   box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
@@ -483,7 +484,7 @@ header {
   -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
 }
 .contributors {
-  display: flex;
+  display: flex;  
   flex-direction: row;
   justify-content: start;
   align-items: flex-start;
