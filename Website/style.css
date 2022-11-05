@@ -883,9 +883,9 @@ h4{
     outline: none;
     cursor: pointer;
     transition: background-image .90s;
-}
+} */
 
-.btn-toggle:before {
+/* .btn-toggle:before {
     content: "";
     position: absolute;
     top: 0;
@@ -895,17 +895,15 @@ h4{
     border-radius: 50px;
     transition: all .9s;
     background-color: #F7CA33;
-}
+} */
 
-.btn-toggle:checked {
+/* .btn-toggle{
     background-image: url("Resources/Night.webp");
     transition: background-image .90s;
-}
+} */
 
-.btn-toggle:checked:before {
-    transform: translate(100%);
-    transition: all .9s;
-    background-color: #ECF0F3;
+/* .btn-toggle{
+    text-decoration: #0f0594;
 } */
 /* Animations */
 
