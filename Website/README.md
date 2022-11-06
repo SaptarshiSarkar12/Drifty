@@ -1,4 +1,5 @@
 # Website
+
 **A README file can be described as documentation with guidelines on how to use a project. 
 Usually it will have instructions on how to download, install, run and contribute to the project but we've already worked on it which is the main [README](https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md) file of our [project](https://github.com/SaptarshiSarkar12/Drifty).**
 
@@ -9,3 +10,31 @@ and lots of images (located in [Resources](https://github.com/SaptarshiSarkar12/
 
 - The website folder also contains files like HTML, CSS, and JavaScript by which you can make necessary changes in this project's website.
 
+## Docker Deployment
+
+Containerized website uses Nginx server.
+
+### Requirements
+
+* [Docker](https://docs.docker.com/get-docker/) (including [Docker Compose](https://docs.docker.com/compose/install/))
+
+### How to get started
+
+1. Easy! Build the image and run the container:
+
+    ```sh
+    docker-compose up -d --build
+    ```
+
+2. Navigate to http://localhost:8080/ to view the website.
+
+> **Note**  
+> Check for errors in the logs if this doesn't work via `docker-compose logs -f`.
+
+### Teardown
+
+Bring down the container:
+
+```sh
+docker-compose down
+```
