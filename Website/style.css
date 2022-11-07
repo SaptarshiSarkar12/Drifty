@@ -472,16 +472,16 @@ header {
   margin: 0 !important;
   /* background-color: transparent;   */
   background-color: rgb(26, 32, 53);
-  border: solid white 2px;
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  border: solid black 2px;
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 .contrib-container .btn4:hover {
   margin: 0 !important;
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 .contributors {
   display: flex;  
@@ -628,7 +628,7 @@ header {
 .btn4:hover {
   background-color: var(--button-onhover-background);
   color: var(--button-onhover-text);
-  box-shadow: 5px 5px 10px var(--button-onhover-shadow);
+  /* box-shadow: 5px 5px 10px var(--button-onhover-shadow); */
 }
 
 /* about us */
@@ -950,18 +950,18 @@ h4{
   width: 8rem;
   background-color: rgb(26, 32, 53);
   color: rgb(255, 255, 255);
-  border: solid white 2px;
-  transition: 0.5s;
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  border: solid black 2px;
+  /* transition: 0.5s; */
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 .github-stars:hover {
   background-color: var(--button-onhover-background);
   color: var(--button-onhover-text);
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 .github-forks {
   display: grid;
@@ -977,18 +977,18 @@ h4{
   width: 8rem;
   background-color: rgb(26, 32, 53);
   color: rgb(255, 255, 255);
-  border: solid white 2px;
+  border: solid black 2px;
   transition: 0.5s;
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 .github-forks:hover {
   background-color: var(--button-onhover-background);
   color: var(--button-onhover-text);
-  box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  /* box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
   -webkit-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
-  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset;
+  -moz-box-shadow: 0px 10px 15px 3px rgba(0, 0, 0, 0.3) inset; */
 }
 /* Media Queries */
 
