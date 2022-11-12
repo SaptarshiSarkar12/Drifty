@@ -101,6 +101,16 @@ public class Drifty_CLI {
                     System.out.print("Enter the filename (with file extension) : ");
                     fName = SC.nextLine();
                 }
+            } else {
+                System.out.println("Would you like to rename the YouTube video being downloaded? (Enter Y for yes and N for no) : ");
+                String renameFile = SC.nextLine().toLowerCase();
+                boolean yesOrNo = yesNoValidation(renameFile, System.out.println("Would you like to rename the YouTube video being downloaded? (Enter Y for yes and N for no) : "));
+                if (yesOrNo) {
+                    System.out.println("What would you like to name the YouTube video being downloaded? ");
+                    fName = SC.nextLine();
+                } else {
+                    System.out.println("Please note that the YouTube video downloaded would be saved as [video id] video title");
+                }
             }
             System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
             String default_folder = SC.nextLine().toLowerCase();
