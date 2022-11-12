@@ -1,15 +1,16 @@
+import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.Scanner;
 
 /**
  * This is the main class for the CLI version of Drifty.
- * @author Saptarshi Sarkar, AndrexUni, Anurag-Bharati, Naachiket Pant, Fonta22
+ * @author Saptarshi Sarkar, Akshat Jain, Anurag Bharati, Naachiket Pant, Fonta22
  * @version 1.2.2
  */
 public class Drifty_CLI {
     private static String downloadsFolder;
-    private static final Scanner SC = new Scanner(System.in);
+    protected static final Scanner SC = new Scanner(System.in);
     public static CreateLogs logger = new CreateLogs("Drifty_CLI_LOG.log");
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
@@ -57,7 +58,7 @@ public class Drifty_CLI {
             if (downloadsFolder == null){
                 saveToDefault();
             }
-            else{
+            else {
                 if (System.getProperty("os.name").contains("Windows")) {
                     downloadsFolder = SC.nextLine().replace('/', '\\');
                     if (!(downloadsFolder.endsWith("\\"))) {
@@ -88,11 +89,19 @@ public class Drifty_CLI {
                     break;
                 }
             }
+            System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
+            String default_folder = SC.nextLine().toLowerCase();
+            boolean yesOrNo = yesNoValidation(default_folder, "Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
+            if (yesOrNo) {
+                saveToDefault();
+            } else {
+                enterDownloadsFolder();
+            }
             if (!isYoutubeURL) {
                 if (fName != null) {
                     System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     String renameFile = SC.nextLine().toLowerCase();
-                    boolean yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+                    yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
                     if (yesOrNo) {
                         System.out.print("Enter the filename (with file extension) : ");
                         fName = SC.nextLine();
@@ -101,24 +110,6 @@ public class Drifty_CLI {
                     System.out.print("Enter the filename (with file extension) : ");
                     fName = SC.nextLine();
                 }
-            } else {
-                System.out.println("Would you like to rename the YouTube video being downloaded? (Enter Y for yes and N for no) : ");
-                String renameFile = SC.nextLine().toLowerCase();
-                boolean yesOrNo = yesNoValidation(renameFile, System.out.println("Would you like to rename the YouTube video being downloaded? (Enter Y for yes and N for no) : "));
-                if (yesOrNo) {
-                    System.out.println("What would you like to name the YouTube video being downloaded? ");
-                    fName = SC.nextLine();
-                } else {
-                    System.out.println("Please note that the YouTube video downloaded would be saved as [video id] video title");
-                }
-            }
-            System.out.print("Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
-            String default_folder = SC.nextLine().toLowerCase();
-            boolean yesOrNo = yesNoValidation(default_folder, "Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ");
-            if (yesOrNo) {
-                saveToDefault();
-            } else {
-                enterDownloadsFolder();
             }
             new FileDownloader(link, fName, downloadsFolder).run();
             System.out.println("Press Q to Quit Or Press any Key to Continue");
@@ -159,7 +150,7 @@ public class Drifty_CLI {
         else {
             downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
         }
-        if (downloadsFolder.equals(System.getProperty("file.separator")) || downloadsFolder.equals(null)) {
+        if (downloadsFolder.equals(System.getProperty("file.separator")) || downloadsFolder == null) {
             System.out.println("Failed to retrieve default download folder!");
             logger.log("ERROR", "Failed to retrieve default download folder!");
             enterDownloadsFolder();
