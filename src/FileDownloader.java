@@ -215,18 +215,40 @@ class FileDownloader implements Runnable {
     /**
      * This method deals with downloading videos from YouTube in mp4 format.
      *
-     * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to.
+     * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to (the temporary files' folder).
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException          When an I/O problem appears while downloading the YouTube video.
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
-        System.out.println("Trying to download the file ...");
-        Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link);
+        String fName = "";
+        System.out.println("Trying to auto-detect filename...");
+        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
         processBuilder.inheritIO();
+        System.out.print("Filename : ");
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
+        if (exitValueOfYt_Dlp != 0){
+            return;
+        }
+        System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
+        String renameFile = Drifty_CLI.SC.nextLine().toLowerCase();
+        boolean yesOrNo = Drifty_CLI.yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+        if (yesOrNo) {
+            System.out.print("Enter the filename (with file extension) : ");
+            fName = Drifty_CLI.SC.nextLine();
+        }
+        System.out.println("Trying to download the file ...");
+        Drifty_CLI.logger.log("INFO", "Trying to download the file ...");
+        if (fName.equals("")){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.mp4");
+        } else {
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", fName);
+        }
+        processBuilder.inheritIO();
+        yt_dlp = processBuilder.start();
+        yt_dlp.waitFor();
+        exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
             System.out.println("Successfully downloaded the file!");
             Drifty_CLI.logger.log("INFO", "Successfully downloaded the file!");
