@@ -187,7 +187,7 @@ class FileDownloader implements Runnable {
                     progressBarThread.setDownloading(false);
                     // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException ignored) {
                     }
                 }
