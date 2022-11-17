@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="about.css" />
     <link rel="stylesheet" href="contact.css" />
     <link rel="stylesheet" href="responsive-nav.css" />
+    <script src="check.js"></script>
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png" />
@@ -51,53 +52,75 @@
     </div>
 </div>
 
+<!-- About section -->
+
 <div class="container top-spacer">
 	<div class="row">
-	    <h1>Contact Us</h1>
+			<h1>contact us</h1>
 	</div>
 	<div class="row">
-	    <h4 style="text-align:center">We'd love to hear from you!</h4>
+			<h4 style="text-align:center">We'd love to hear from you!</h4>
 	</div>
 	<div class="row input-container">
             <form action="https://formsubmit.co/saptarshi.programmer@gmail.com" method="POST">
-	        <div class="col-xs-12">
-		    <div class="styled-input wide">
-			<input type="text" required name="name"/>
-			    <label>Name</label> 
+			<div class="col-xs-12">
+				<div class="styled-input wide">
+					<input type="text" required name="name"/>
+					<label>Name</label> 
+				</div>
 			</div>
-		    </div>
-		    <div class="col-md-6 col-sm-12">
-			<div class="styled-input">
-			    <input type="text" required name="email"/>
-				<label>Email</label> 
+			<div class="col-md-6 col-sm-12">
+				<div class="styled-input">
+					<input type="text" required name="email"/>
+					<label>Email</label> 
+				</div>
 			</div>
-		    </div>
-		    <div class="col-md-6 col-sm-12">
-			<div class="styled-input" style="float:right;">
-			    <input type="text" required name="phone"/>
-				<label>Phone Number</label> 
-			    </div>
-		    </div>
-		    <div class="col-xs-12">
-			<div class="styled-input wide">
-			    <textarea required name="Message"></textarea>
-				<label>Message</label>
+			<div class="col-md-6 col-sm-12">
+				<div class="styled-input" style="float:right;">
+					<input type="text" required name="phone"/>
+					<label>Phone Number</label> 
+				</div>
 			</div>
-		    </div>
-		    <div class="col-xs-12">
-                    <input type="hidden" name="_autoresponse" value="Thank You! We shall get back on you!">
- 		    <button class="btn-lrg submit-btn" id="btnShowMsg" type="submit" onClick="showMessage()">Send Message</button> 
-		    </div>
+			<div class="col-xs-12">
+				<div class="styled-input wide">
+					<textarea required name="Message"></textarea>
+					<label>Message</label>
+				</div>
+			</div>
+			<div class="col-xs-12">
+                <input type="hidden" name="_autoresponse" value="Thank You! We shall get back on you!">
+				<button class="btn-lrg submit-btn" id="btnShowMsg" type="submit" onClick="required()">Send Message</button>
+                <input type="hidden" name="_next" value="https://saptarshisarkar12.github.io/Drifty/thanks.html">
+			</div>
             </form>
 	</div>
 </div>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
     function showMessage() {
         alert("Thank You! We shall get back to you!.");
     }
-</script>
+</script>-->
 
+
+
+
+
+
+
+
+
+<!--<script type="text/javascript">
+function required(inputtx) 
+{
+  if (inputtx.value.length == 0)
+   { 
+      alert("message");  	
+      return false; 
+   }  	
+   return true; 
+ }
+</script>-->
 
 <button onclick="totop()" id="mybtn" title="Go to top"> <i class="fa fa-arrow-up"></i> </button>
 <!-- footer -->
