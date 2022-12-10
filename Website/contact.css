@@ -41,7 +41,7 @@ body {
   --text-color: #0aa1dd;
   --primary-color: #79dae8;
   --background-color1: #79dae8;
-
+  --color-greet:#ecb365;
   --black: black;
   --maroon: maroon;
 
@@ -91,6 +91,9 @@ body::-webkit-scrollbar-thumb {
   border-radius: 10px;
 }
 
+.greetcolor {
+  color: var(--black);
+}
 /* Darkmode */
 
 .darkmode {
