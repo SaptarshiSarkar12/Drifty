@@ -127,55 +127,6 @@ body::-webkit-scrollbar-thumb {
     var(--m-light-col)
   );
 }
-
-.temp-color {
-  background-color: #1a2035 !important;
-}
-.text-gradient-blue {
-  background: linear-gradient(
-    -45deg,
-    var(--main-col),
-    var(--m-light-col)
-  ) !important;
-  background-clip: text;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-.text-gradient-ry {
-  background: linear-gradient(
-    -45deg,
-    var(--ascent-col-2l),
-    var(--ascent-col-1l)
-  ) !important;
-  background-clip: text;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-.text-gradient-yellow {
-  background: linear-gradient(
-    -45deg,
-    var(--ascent-col-1),
-    var(--ascent-col-1l)
-  ) !important;
-  background-clip: text;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
-
-/* TEXTURE LAYER */
-.texture {
-  z-index: 100;
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("Resources/grain-dark.webp");
-  opacity: 0.5;
-  overflow: hidden;
-  pointer-events: none;
-}
-
 /* Navbar */
 
 .nav-container {
