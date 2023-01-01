@@ -7,35 +7,41 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static constants.DriftyConstants.*;
+
 /**
  * This class deals with creating Log files for Drifty.
  */
 public class CreateLogs {
-    static DateFormat dateFormat;
-    static boolean isLogEmpty;
-    static Path filePath;
-    static Calendar calendarObject = Calendar.getInstance();
+    private static CreateLogs createLogsInstance;
+    Path filePath;
+    DateFormat dateFormat;
+    boolean isLogEmpty;
+    Calendar calendarObject = Calendar.getInstance();
 
     /**
      * This is the constructor used to initialise the variables in this class.
-     *
-     * @param logFileName Filename of the Log file.
      */
-    public CreateLogs(String logFileName) {
-        filePath = FileSystems.getDefault().getPath(logFileName);
+    private CreateLogs() {
+        filePath = FileSystems.getDefault().getPath(DRIFTY_CLI_LOG);
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+    }
+
+    public static CreateLogs getInstance() {
+        if (createLogsInstance != null) return createLogsInstance;
+        createLogsInstance = new CreateLogs();
+        return createLogsInstance;
     }
 
     /**
      * This function clears the contents of the previous log file.
      */
-    private static void clearLog() {
+    private void clearLog() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream("Drifty_CLI_LOG.log", false))))) {
             isLogEmpty = true;
             out.write("");
         } catch (IOException e) {
-            System.out.println("Failed to clear Log contents !");
-//            Drifty_CLI.logger.log("ERROR", "Failed to clear Log contents !");
+            System.out.println(FAILED_TO_CLEAR_LOG);
         }
     }
 
@@ -54,7 +60,7 @@ public class CreateLogs {
             isLogEmpty = true;
             out.println(dateAndTime + " " + type.toUpperCase() + " - " + msg);
         } catch (IOException e) {
-            System.out.println("Failed to create log : " + msg);
+            System.out.println(FAILED_TO_CREATE_LOG + msg);
         }
     }
 }

@@ -150,11 +150,11 @@ class FileDownloader implements Runnable {
             return;
         }
         System.out.print("Would you like to rename this file? (Enter Y for yes and N for no) : ");
-        String renameFile = Drifty_CLI.SC.nextLine().toLowerCase();
+        String renameFile = Drifty_CLI.SCANNER.nextLine().toLowerCase();
         boolean yesOrNo = DriftyValidation.yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
         if (yesOrNo) {
             System.out.print("Enter the filename (with file extension) : ");
-            fName = Drifty_CLI.SC.nextLine();
+            fName = Drifty_CLI.SCANNER.nextLine();
         }
         System.out.println("Trying to download the file ...");
         Drifty_CLI.logger.log("INFO", "Trying to download the file ...");

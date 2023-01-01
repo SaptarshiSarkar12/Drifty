@@ -1,4 +1,5 @@
 import singleton.CreateLogs;
+import singleton.ScannerFactory;
 import utility.DriftyUtility;
 import validation.DriftyValidation;
 
@@ -15,9 +16,9 @@ import static constants.DriftyConstants.*;
  * @version 1.2.2
  */
 public class Drifty_CLI {
-    public static final CreateLogs logger = new CreateLogs("Drift_CLI_LOG.log");
-    public static final String VERSION_NUMBER = "v1.2.2";
-    protected static final Scanner SC = new Scanner(System.in);
+    public static final CreateLogs logger = CreateLogs.getInstance();
+
+    protected static final Scanner SCANNER = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
     private static String downloadsFolder;
     private static String fileName = null;
@@ -56,14 +57,14 @@ public class Drifty_CLI {
             fileName = (name == null) ? fileName : name;
             if ((fileName == null || !containsFilename(URL)) && (!isYoutubeURL)) {
                 System.out.print(FILE_NAME_WITH_EXTENSION);
-                fileName = SC.nextLine();
+                fileName = SCANNER.nextLine();
             }
             downloadsFolder = location;
             if (downloadsFolder == null) {
                 saveToDefault();
             } else {
                 if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-                    downloadsFolder = SC.nextLine().replace('/', '\\');
+                    downloadsFolder = SCANNER.nextLine().replace('/', '\\');
                     if (!(downloadsFolder.endsWith("\\"))) {
                         downloadsFolder = downloadsFolder + System.getProperty("file.separator");
                     }
@@ -77,7 +78,7 @@ public class Drifty_CLI {
             String link;
             while (true) {
                 System.out.print(FILE_LINK);
-                link = SC.nextLine();
+                link = SCANNER.nextLine();
                 isYoutubeURL = DriftyUtility.isYoutubeLink(link);
                 if (isYoutubeURL) {
                     break;
@@ -93,7 +94,7 @@ public class Drifty_CLI {
                 }
             }
             System.out.print(DOWNLOAD_DEFAULT_LOCATION);
-            String defaultFolder = SC.nextLine().toLowerCase();
+            String defaultFolder = SCANNER.nextLine().toLowerCase();
             boolean yesOrNo = DriftyValidation.yesNoValidation(defaultFolder, DOWNLOAD_DEFAULT_LOCATION);
             if (yesOrNo) {
                 saveToDefault();
@@ -103,20 +104,20 @@ public class Drifty_CLI {
             if (!isYoutubeURL) {
                 if (fileName != null) {
                     System.out.print(RENAME_FILE);
-                    String renameFile = SC.nextLine().toLowerCase();
+                    String renameFile = SCANNER.nextLine().toLowerCase();
                     yesOrNo = DriftyValidation.yesNoValidation(renameFile, RENAME_FILE);
                     if (yesOrNo) {
                         System.out.print(FILE_NAME_WITH_EXTENSION);
-                        fileName = SC.nextLine();
+                        fileName = SCANNER.nextLine();
                     }
                 } else {
                     System.out.print(FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.nextLine();
+                    fileName = SCANNER.nextLine();
                 }
             }
             new FileDownloader(link, fileName, downloadsFolder).run();
             System.out.println(QUIT_OR_CONTINUE);
-            String quit = SC.nextLine().toLowerCase();
+            String quit = SCANNER.nextLine().toLowerCase();
             if (quit.equals("q")) {
                 logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
                 break;
@@ -130,9 +131,9 @@ public class Drifty_CLI {
      */
     private static void enterDownloadsFolder() {
         System.out.print(DIRECTORY_TO_DOWNLOAD_FILE);
-        downloadsFolder = SC.nextLine();
+        downloadsFolder = SCANNER.nextLine();
         if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-            downloadsFolder = SC.nextLine().replace('/', '\\');
+            downloadsFolder = SCANNER.nextLine().replace('/', '\\');
             if (!(downloadsFolder.endsWith("\\"))) {
                 downloadsFolder = downloadsFolder + System.getProperty("file.separator");
             }

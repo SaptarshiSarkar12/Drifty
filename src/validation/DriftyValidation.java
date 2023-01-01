@@ -1,14 +1,15 @@
 package validation;
 
-
 import singleton.CreateLogs;
+
+import static constants.DriftyConstants.*;
 
 import java.util.Scanner;
 
 
 public final class DriftyValidation {
 
-    public static final CreateLogs logger = new CreateLogs("Drift_CLI_LOG.log");
+    public static final CreateLogs logger = CreateLogs.getInstance();
     private static Scanner SC = new Scanner(System.in);
 
     /**
