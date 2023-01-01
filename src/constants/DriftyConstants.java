@@ -2,7 +2,9 @@ package constants;
 
 public final class DriftyConstants {
 
+    public static final String VERSION_NUMBER = "v1.2.2";
     public static final String APPLICATION_NAME = "Drifty";
+    public static final String DRIFTY_CLI_LOG = "Drift_CLI_LOG.log";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
@@ -35,8 +37,15 @@ public final class DriftyConstants {
     public static final String FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER = "Failed to retrieve default download folder!";
     public static final String DEFAULT_DOWNLOAD_FOLDER = "Default download folder detected : ";
     public static final String FILENAME_DETECTED = "Filename detected : ";
-
     public static final String BANNER_BORDER = "====================================================================";
+    public static final String FAILED_TO_CREATE_LOG = "Failed to create log : ";
+    public static final String FAILED_TO_CLEAR_LOG = "Failed to clear Log contents !";
+
+    public static final String DOWNLOADED = "Downloaded ";
+    public static final String DOWNLOADING = "Downloading ";
+    public static final String DOWNLOAD_FAILED = "Download failed!";
+    public static final String SUCCESSFULLY = " successfully !";
+    public static final String OFF_SIZE = " of size ";
 
     private DriftyConstants() {
     }
