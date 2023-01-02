@@ -145,8 +145,8 @@ public class Drifty_CLI {
      * This function tries to detect the default downloads folder and save the file in that folder
      */
     private static void saveToDefault() {
-        System.out.println(TRYING_TO_AUTOMATICALLY_DETECT_FILE);
-        logger.log(LOGGER_ERROR, TRYING_TO_AUTOMATICALLY_DETECT_FILE);
+        System.out.println(TRYING_TO_AUTO_DETECT_FILE);
+        logger.log(LOGGER_ERROR, TRYING_TO_AUTO_DETECT_FILE);
         if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;

@@ -18,7 +18,7 @@ public final class DriftyConstants {
     public static final String INVALID_URL_ENTER_AGAIN = "Invalid URL. Please enter again";
     public static final String INVALID_DIRECTORY = "Invalid Directory Entered !";
     public static final String AUTOMATIC_FILE_DETECTION = "Automatic file name detection failed!";
-    public static final String TRYING_TO_AUTOMATICALLY_DETECT_FILE = "Trying to auto-detect default Downloads folder...";
+    public static final String TRYING_TO_AUTO_DETECT_FILE = "Trying to auto-detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
     public static final String NAME_FLAG = "-name";
@@ -65,6 +65,8 @@ public final class DriftyConstants {
 
     public static final String GETTING_READY_TO_DOWNLOAD_FILE = "Getting ready to download the file...";
     public static final String USER_INTERRUPTION = "User interrupted while downloading the file!";
+
+    public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
 
     private DriftyConstants() {
     }
