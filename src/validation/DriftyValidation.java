@@ -23,8 +23,8 @@ public final class DriftyValidation {
 
         while (true) {
             if (input.length() == 0) {
-                System.out.println("Please enter Y for yes and N for no!");
-                logger.log("ERROR", "Please enter Y for yes and N for no!");
+                System.out.println(ENTER_Y_OR_N);
+                logger.log(LOGGER_ERROR, ENTER_Y_OR_N);
             } else {
                 break;
             }
