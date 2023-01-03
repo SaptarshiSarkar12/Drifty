@@ -25,7 +25,6 @@ public class Drifty_CLI {
 
     /**
      * This function is the main method of the whole application.
-     *
      * @param args Command Line Arguments as a String array.
      */
     public static void main(String[] args) {
