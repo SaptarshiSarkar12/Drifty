@@ -16,7 +16,6 @@ import static constants.DriftyConstants.*;
  */
 public class Drifty_CLI {
     public static final CreateLogs logger = CreateLogs.getInstance();
-
     protected static final Scanner SCANNER = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
     private static String downloadsFolder;
