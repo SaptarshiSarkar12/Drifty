@@ -12,7 +12,6 @@ import static constants.DriftyConstants.*;
 class CheckDirectory {
     /**
      * This constructor creates the directory if it does not exist.
-     *
      * @param dir Name of the folder where the user wants to download the file.
      * @throws IOException when creating the directory fails.
      */
