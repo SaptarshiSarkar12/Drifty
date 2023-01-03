@@ -26,7 +26,6 @@ class CheckDirectory {
 
     /**
      * This function checks if a folder exists or not.
-     *
      * @param folderName Name of the folder where the user wants to download the file.
      * @return true if the folder exists and false if the folder is missing.
      */
