@@ -11,7 +11,6 @@ import static constants.DriftyConstants.*;
 
 /**
  * This is the main class for the CLI version of Drifty.
- *
  * @author Saptarshi Sarkar, Akshat Jain, Anurag Bharati, Naachiket Pant, Fonta22
  * @version 1.2.2
  */
