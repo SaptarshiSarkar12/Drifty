@@ -13,8 +13,8 @@ fetch(
   });
 
 function download_alert_window() {
-  var w = confirm("Do you want to download Drifty?");
-  if (w == true) {
+  let w = confirm("Do you want to download Drifty?");
+  if (w === true) {
     alert("Thanks for Downloading");
     window.open(
       "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
@@ -25,8 +25,8 @@ function download_alert_window() {
 }
 
 function download_alert_apple() {
-  var a = confirm("Do you want to download Drifty?");
-  if (a == true) {
+  let a = confirm("Do you want to download Drifty?");
+  if (a === true) {
     alert("Thanks for Downloading");
     window.open(
       "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"
@@ -248,7 +248,7 @@ function toggleMore(btn, id) {
 function renderAssets(assets) {
   return assets.reduce((all, asset) => {
     //check if it is for windows
-    let is_windows = asset.name.split(".").pop().toLocaleLowerCase() == "exe";
+    let is_windows = asset.name.split(".").pop().toLocaleLowerCase() === "exe";
 
     if (is_windows) {
       return `${all} <a href="${asset.browser_download_url}">Download <i class="fab fa-windows"></i></a>`;
