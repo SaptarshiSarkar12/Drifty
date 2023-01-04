@@ -4,6 +4,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static constants.DriftyConstants.*;
+
 /**
  * This class checks if a directory exists or not. if it doesn't, the directory is created.
  */
@@ -14,10 +16,10 @@ class CheckDirectory {
      * @throws IOException when creating the directory fails.
      */
     CheckDirectory(String dir) throws IOException {
-        if (!(checkIfFolderExists(dir))){
+        if (!(checkIfFolderExists(dir))) {
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
-            Drifty_CLI.logger.log("INFO", "Directory Created");
+            Drifty_CLI.logger.log(LOGGER_INFO, DIRECTORY_CREATED);
         }
     }
 
@@ -34,8 +36,8 @@ class CheckDirectory {
                 found = true;
             }
         } catch (Exception e) {
-            System.out.println("Error while checking for directory !");
-            Drifty_CLI.logger.log("ERROR", "Error while checking for directory !");
+            System.out.println(ERROR_WHILE_CHECKING_FOR_DIRECTORY);
+            Drifty_CLI.logger.log(LOGGER_ERROR, ERROR_WHILE_CHECKING_FOR_DIRECTORY);
         }
         return found;
     }
