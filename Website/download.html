@@ -5,11 +5,13 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drifty - A File Downloader System</title>
+  <title>Drifty</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="responsive-nav.css" />
   <!-- Favicons -->
@@ -27,19 +29,19 @@
     <nav>
       <ul class="nav-links">
         <li>
-          <a href="#hero"><button class="button">Home</button></a>
+          <a href="index.html#hero"><button class="button">Home</button></a>
         </li>
         <li>
           <a href="about.html"><button class="button">About</button></a>
         </li>
         <li>
-          <a href="download.html"><button class="button">Download</button></a>
+          <a href=""><button class="button">Download</button></a>
         </li>
         <li>
           <a href="contribute.html"><button class="button">Contribute</button></a>
         </li>
         <li>
-          <a href="contact.html"><button class="button">Contact</button></a>
+          <a href="index.html#contact"><button class="button">Contact</button></a>
         </li>
         <li>
           <div class="btn-toggle"><i id="symb" class="fa-solid fa-moon fb" style='color: tomato'></i></div>
@@ -50,52 +52,44 @@
   </div>
 </div>
 
-<!-- <i id="symb" class="fa-solid fa-moon fb" style='color: blue'></i> -->
-<section id="hero">
-  <header>
-    <div class="header-container">
-      <div class="driftylogo">
-          <h2>Drifty</h2>
-          <h2>Drifty</h2>
-      </div>
-      </br>
-      </br>
-      </br>
-      </br>
-      <p>
-        Drifty is an open-source interactive File Downloader system built
-        with Java. It takes the link to the file, the directory where it
-        needs to be saved and the filename of the downloaded file as input
-        and downloads it in the given directory with the given filename.
-      </p>
-        <a href="contribute.html#contrib" class="btn">More Info</a>
-        <a href="download.html#demo" class="btn">Demo</a>
-        </br>
-        </br>
-        </br>
-        </br>
+
+<!-- download -->
+
+  </section>
+  <section id="download" class="download">
+    <div class="text" style="font-size: 36px;">
+      <h3>✨Download Here✨</h3>
     </div>
-    <div class="img-layer" id="imgLayer">
-      <img src="./Resources/Layers/2.webp" alt="..." srcset="" />
-      <img src="./Resources/Layers/3.webp" alt="..." srcset="" />
-      <img src="./Resources/Layers/4.webp" alt="..." srcset="" />
-      <img src="./Resources/Layers/5.webp" alt="..." srcset="" />
-      <img src="./Resources/Layers/6.webp" alt="..." srcset="" />
-      <img src="./Resources/Layers/7.webp" alt="..." srcset="" />
+    <div id="download_section" class="download_section">
+      <a onclick="download_alert_window()" class="btn4">Download Now <i class="fab fa-windows"></i></a>
+      <a onclick="download_alert_apple()" class="btn4">Download
+        Now <i class="fab fa-apple"></i> <i class="fab fa-linux"></i></a>
     </div>
-  </header>
+    <span><b>All releases</b>
+      <div id="releases" class="release_section">
+        <div class="contributors" id="contributors"></div>
+    </div>
+    </span>
+  </div>
+  <hr>
+  <div id="demo" class="demo">
+    <div class="text">
+      <h2>Demonstration of Drifty</h2>
+      <p>Here is a quick demo of using Drifty.</p>
+    </div>
+    <video src="Resources/Usage.webm" playsinline autoplay muted loop></video>
+  </div>
 </section>
 
 <hr>
 <!-- Scroll to top button -->
 <button onclick="totop()" id="mybtn" title="Go to top "> <i class="fa fa-arrow-up"></i> </button>
-
 <!-- <footer> -->
 <footer id="contact" class="footer">
   <div class="legal">
     <h2>Legal</h2>
     <li>
-      <a href="https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/master/Privacy%20Policy.txt">
+      <a href="">
         <i class="fa fa-user-secret" aria-hidden="true"></i>
         Privacy
       </a>
@@ -106,7 +100,7 @@
       </a>
     </li>
     <li>
-      <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/SECURITY.md"><i class="fa fa-lock" aria-hidden="true"></i>
+      <a href=""><i class="fa fa-lock" aria-hidden="true"></i>
         Security
       </a></li>
   </div>

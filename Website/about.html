@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Drifty - A File Downloader System</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />    
-    <link rel="stylesheet" href="about.css" />
-    <link rel="stylesheet" href="responsive-nav.css" />
-    <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png" />
-    <link rel="manifest" href="./favicons/site.webmanifest" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drifty</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="responsive-nav.css" />
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png" />
+  <link rel="manifest" href="./favicons/site.webmanifest" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -32,16 +33,16 @@
                     <a href="about.html"><button class="button">About</button></a>
                 </li>
                 <li>
-                    <a href="index.html#download"><button class="button">Download</button></a>
+                    <a href="download.html"><button class="button">Download</button></a>
                 </li>
                 <li>
-                    <a href="index.html#contrib"><button class="button">Contribute</button></a>
+                    <a href="contribute.html"><button class="button">Contribute</button></a>
                 </li>
                 <li>
                     <a href="contact.html"><button class="button">Contact</button></a>
                 </li>
                 <li>
-                    <div class="btn-toggle"><i id="symb" class="fa-solid fa-moon fb"></i></div>
+                    <div class="btn-toggle"><i id="symb" class="fa-solid fa-moon fb" style='color: tomato'></i></div>
                 </li>
             </ul>
         </nav>
@@ -69,15 +70,22 @@
         </div>
     </div>
 </Section>
+
+<!-- about content -->
+
 <div class="about-sec">
     <h3>My Stats</h3>
     <div class="stats">
-        <img src="https://camo.githubusercontent.com/2f7acdab286378e9ff3e74df744514ea37a5bc76efac4f94b3a041d910de7fa6/68747470733a2f2f6769746875622d726561646d652d73746174732e76657263656c2e6170702f6170693f757365726e616d653d7361707461727368697361726b617231322673686f775f69636f6e733d74727565267468656d653d746f6b796f6e69676874" alt="">
-        <img src="https://camo.githubusercontent.com/d3db268ce53079d1d54d77e08e530839458b6d7600ee25c899f9037f617add1a/68747470733a2f2f6769746875622d726561646d652d73747265616b2d73746174732e6865726f6b756170702e636f6d2f3f757365723d7361707461727368697361726b61723132267468656d653d746f6b796f6e69676874" alt="">
+        <img src="https://camo.githubusercontent.com/2f7acdab286378e9ff3e74df744514ea37a5bc76efac4f94b3a041d910de7fa6/68747470733a2f2f6769746875622d726561646d652d73746174732e76657263656c2e6170702f6170693f757365726e616d653d7361707461727368697361726b617231322673686f775f69636f6e733d74727565267468656d653d746f6b796f6e69676874" alt="photo">
+        <img src="https://camo.githubusercontent.com/d3db268ce53079d1d54d77e08e530839458b6d7600ee25c899f9037f617add1a/68747470733a2f2f6769746875622d726561646d652d73747265616b2d73746174732e6865726f6b756170702e636f6d2f3f757365723d7361707461727368697361726b61723132267468656d653d746f6b796f6e69676874" alt="photo">
     </div>
 </div>
 
-<button onclick="totop()" id="mybtn" title="Go to top"> <i class="fa fa-arrow-up"></i> </button>
+
+<!-- Scroll to top button -->
+<button onclick="totop()" id="mybtn" title="Go to top "> <i class="fa fa-arrow-up"></i> </button>
+
+
 <!-- footer -->
 <footer id="contact" class="footer">
     <div class="legal">
