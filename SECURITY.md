@@ -2,13 +2,13 @@
 
 ## Supported Versions
 
-Currently, the versions that will get secuirity updates or not are provided below -
+Currently, the versions that will get security updates or not are provided below -
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.3.x   | ✅                |
-| 1.2.2   | ✅                |
-| < 1.2.1 | ❌                |
+| Version | Supported |
+|---------|:---------:|
+| 1.3.x   |     ✅     |
+| 1.2.x   |     ❌     |
+| < 1.2.x |     ❌     |
 
 ## Reporting a Vulnerability❗
 
