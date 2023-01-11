@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>console</headerType>
   <jar>D:\Drifty\out\artifacts\Drifty_CLI_jar\Drifty.jar</jar>
-  <outfile>D:\Drifty\Drifty_CLI.exe</outfile>
+  <outfile>D:\Drifty\CLI.Drifty_CLI.exe</outfile>
   <errTitle>You have to download the latest JDK and JRE for this application.</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
