@@ -13,7 +13,7 @@ public class copyYt_dlp {
             Drifty_CLI.logger.log("INFO", "Skipping copying yt-dlp to " + tempDir + " folder as it is already present!");
             return;
         }
-        InputStream is = getClass().getResource("yt-dlp.exe").openStream();
+        InputStream is = copyYt_dlp.class.getResourceAsStream("yt-dlp.exe");
         // sets the output stream to a system folder
         OutputStream os = new FileOutputStream(System.getProperty("java.io.tmpdir") + "yt-dlp.exe");
         byte[] b = new byte[2048]; // length of the byte array doesn't matter in copying the file to the temp folder!
