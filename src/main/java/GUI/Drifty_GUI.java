@@ -48,31 +48,53 @@ public class Drifty_GUI extends Application {
         link.getChildren().addAll(linkText, linkInput);
 
         Button validateLink = new Button("Validate Link");
+        input.setAlignment(Pos.CENTER);
+        Text linkValidOrNot = new Text();
         EventHandler<ActionEvent> linkEnter = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 linkToFile = String.valueOf(linkInput.getCharacters());
-                Text linkValidOrNot = new Text();
-                linkValidOrNot.setFont(Font.font("Algerian", FontWeight.MEDIUM, 12));
+                linkValidOrNot.setFont(Font.font("Algerian", FontWeight.MEDIUM, 15));
                 if (CLI.utility.DriftyUtility.isURLValid(linkToFile)){
                     linkValidOrNot.setText("Link is Valid");
+                    linkValidOrNot.setFill(Color.GREEN);
                 } else {
-                    linkValidOrNot.setText("Invalid link! Please enter again!");
+                    linkValidOrNot.setText("Invalid link! Please enter with URL protocol!");
+                    linkValidOrNot.setFill(Color.RED);
                 }
-                input.getChildren().add(linkValidOrNot);
             }
         };
         validateLink.setOnAction(linkEnter);
 
         HBox directory = new HBox();
-        Text directoryText = new Text("Directory : ");
-        directoryText.setFont(Font.font("Arial", 20));
-        TextField directoryInput = new TextField();
-        directory.setAlignment(Pos.CENTER);
-        directoryInput.setPrefColumnCount(58);
-        directory.getChildren().addAll(directoryText, directoryInput);
 
-        input.getChildren().addAll(link, validateLink, directory);
+        Text customDirectory = new Text("Enter Custom Directory : ");
+        customDirectory.setFont(Font.font("Arial", 20));
+        TextField customDirectoryInput = new TextField();
+        directory.setAlignment(Pos.CENTER);
+        customDirectoryInput.setPrefColumnCount(58);
+
+        Text choseDirectory = new Text("Choose Directory : ");
+        choseDirectory.setFont(Font.font("Arial", 20));
+        ComboBox<String> directoryChoice = new ComboBox<>();
+        directoryChoice.getItems().addAll("Default Downloads Folder", "Custom Folder");
+        Text defaultDirectory = new Text();
+        EventHandler<ActionEvent> directoryChosen = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (directoryChoice.getSelectionModel().getSelectedItem().equals("Default Downloads Folder")){
+                    directory.getChildren().addAll(defaultDirectory);
+                    defaultDirectory.setText("Default Downloads Folder detected : " + CLI.DefaultDownloadFolderLocationFinder.findPath());
+                    defaultDirectory.setFill(Color.ALICEBLUE);
+                    defaultDirectory.setFont(Font.font("Verdana", FontWeight.MEDIUM, 20));
+                } else {
+                    directory.getChildren().addAll(customDirectory, customDirectoryInput);
+                }
+            }
+        };
+        directoryChoice.setOnAction(directoryChosen);
+        directory.getChildren().addAll(choseDirectory, directoryChoice);
+        input.getChildren().addAll(link, validateLink, linkValidOrNot, directory);
     }
 
     public static void main(String[] args) {
@@ -82,25 +104,36 @@ public class Drifty_GUI extends Application {
     private static void initializeScreen(){
         driftyInitialWindow.setTitle("Drifty GUI [Under Development]");
         driftyInitialWindow.setMaximized(true);
-        root.setSpacing(15);
+        root.setSpacing(30);
+        root.setMinHeight(497);
+        root.setMaxWidth(962);
 
         menuBar = new MenuBar();
         Menu menu = new Menu("Menu");
         MenuItem exit = new MenuItem("Exit");
         menu.getItems().addAll(exit);
 
-        Menu about = new Menu("About");
+        Menu help = new Menu("Help");
         MenuItem website = new MenuItem("Website");
-        MenuItem help = new MenuItem("Help");
-        about.getItems().addAll(website, help);
+        MenuItem about = new MenuItem("About");
+        help.getItems().addAll(website, about);
 
         StackPane.setAlignment(menuBar, Pos.TOP_CENTER);
-        menuBar.getMenus().addAll(menu, about);
+        menuBar.getMenus().addAll(menu, help);
+
+        EventHandler<ActionEvent> exitClicked = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.exit(0);
+            }
+        };
+        exit.setOnAction(exitClicked);
 
         drifty = new Text("Drifty");
-        drifty.setFont(Font.font("Times Roman", FontWeight.BOLD, 60));
+        drifty.setFont(Font.font("Times Roman", FontWeight.BOLD, 100));
         drifty.setFill(Color.ROYALBLUE);
         drifty.setStroke(Color.DEEPSKYBLUE);
+        drifty.setCache(true);
         root.setAlignment(Pos.TOP_CENTER);
     }
 }
