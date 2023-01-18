@@ -1,4 +1,4 @@
-package CLI.constants;
+package Utils;
 
 public final class DriftyConstants {
 
@@ -28,7 +28,7 @@ public final class DriftyConstants {
     public static final String NAME_FLAG_SHORT = "-n";
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
-    public static final String FILE_NAME_WITH_EXTENSION = "Enter the filename (with file extension) : ";
+    public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Enter the filename (with file extension) : ";
     public static final String FILE_LINK = "Enter the link to the file : ";
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
