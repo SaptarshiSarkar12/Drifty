@@ -141,12 +141,12 @@ public class ProgressBarThread extends Thread {
         System.out.println("\r" + generateProgressBar("/"));
         if (isThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadBytes);
-            System.out.println(DOWNLOADED + fileName + OFF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
-            Drifty_CLI.logger.log(LOGGER_INFO, DOWNLOADED + fileName + OFF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
+            System.out.println(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
+            Drifty_CLI.logger.log(LOGGER_INFO, DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
         } else if (downloadedBytes == totalDownloadBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            System.out.println(DOWNLOADED + fileName + OFF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
-            Drifty_CLI.logger.log(LOGGER_INFO, DOWNLOADED + fileName + OFF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
+            System.out.println(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
+            Drifty_CLI.logger.log(LOGGER_INFO, DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY);
         } else {
             System.out.println(DOWNLOAD_FAILED);
             Drifty_CLI.logger.log(LOGGER_ERROR, DOWNLOAD_FAILED);
