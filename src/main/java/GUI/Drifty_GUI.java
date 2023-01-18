@@ -16,6 +16,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import static Utils.DriftyUtility.isURLValid;
+
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
     static VBox root = new VBox();
@@ -56,17 +58,19 @@ public class Drifty_GUI extends Application {
             public void handle(ActionEvent actionEvent) {
                 linkToFile = String.valueOf(linkInput.getCharacters());
                 linkValidOrNot.setFont(Font.font("Algerian", FontWeight.MEDIUM, 15));
-//                try {
-//                    if (isURLValid(linkToFile)){
-//                        linkValidOrNot.setText("Link is Valid");
-//                        linkValidOrNot.setFill(Color.GREEN);
-//                    } else {
+                try {
+                    if (isURLValid(linkToFile)){
+                        linkValidOrNot.setText("Link is Valid");
+                        linkValidOrNot.setFill(Color.GREEN);
+                    }
+//                    else {
 //                        linkValidOrNot.setText("Invalid link! Please enter with URL protocol!");
 //                        linkValidOrNot.setFill(Color.RED);
 //                    }
-//                } catch (Exception ignored) { // TODO
-
-//                }
+                } catch (Exception e) {
+                    linkValidOrNot.setText(e.getMessage()); // TODO
+                    linkValidOrNot.setFill(Color.RED);
+                }
             }
         };
         validateLink.setOnAction(linkEnter);
