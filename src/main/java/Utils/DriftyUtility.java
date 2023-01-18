@@ -8,7 +8,6 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.Scanner;
 
-import static CLI.Drifty_CLI.logger;
 import static Utils.DriftyConstants.*;
 
 public final class DriftyUtility {
@@ -24,7 +23,7 @@ public final class DriftyUtility {
      * @return true if the url is of YouTube and false if it is not.
      */
     public static boolean isYoutubeLink(String url) {
-        String pattern = "^(http(s)?:)?((w){3}.)?youtu(be|.be)?(\\.com)?.+";
+        String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
         return url.matches(pattern);
     }
 
@@ -50,41 +49,42 @@ public final class DriftyUtility {
     /**
      * @return true if the filename is detected and false if the filename is not detected
      */
-    public static boolean containsFilename(String link) {
+    public static String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
         // Example : "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
-            return false;
+            return "";
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
-            return false;
+            return "";
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
         System.out.println(FILENAME_DETECTED + fileName);
         logger.log(LOGGER_INFO, FILENAME_DETECTED + fileName);
-        return true;
+        return fileName;
     }
 
-    public static void saveToDefault() {
+    public static String saveToDefault() {
         String downloadsFolder;
-        logger.log(LOGGER_ERROR, TRYING_TO_AUTO_DETECT_FILE);
+        logger.log(LOGGER_ERROR, TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
         if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
         } else {
             downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
         }
-        if (downloadsFolder.equals(System.getProperty("file.separator")) || downloadsFolder == null) {
+        if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             logger.log(LOGGER_ERROR, FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
         } else {
             logger.log(LOGGER_INFO, DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
         }
+        return downloadsFolder;
     }
 
     /**

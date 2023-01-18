@@ -46,8 +46,11 @@ public class Drifty_CLI {
                     System.exit(0);
                 }
             }
+            System.out.println("Validating the link...");
             try {
                 isURLValid(URL);
+                System.out.println("The link is valid!");
+                logger.log(LOGGER_INFO, "The link is valid!");
             } catch (Exception e){
                 System.out.println(e.getMessage());
                 logger.log(LOGGER_ERROR, e.getMessage());
@@ -56,7 +59,8 @@ public class Drifty_CLI {
             }
             isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
-            if ((fileName == null || !containsFilename(URL)) && (!isYoutubeURL)) {
+            fileName = findFilenameInLink(URL);
+            if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
             }
@@ -80,37 +84,40 @@ public class Drifty_CLI {
             fileName = null;
             String link;
             while (true) {
-                System.out.print(FILE_LINK);
+                System.out.print(ENTER_FILE_LINK);
                 link = SC.nextLine();
                 isYoutubeURL = isYoutubeLink(link);
                 if (isYoutubeURL) {
                     break;
                 }
+                System.out.println("Validating the link...");
                 try {
                     boolean isValid = isURLValid(link);
                     if (isValid){
+                        System.out.println("The link is valid!");
+                        logger.log(LOGGER_INFO, "The link is valid!");
                         break;
                     }
                 } catch (Exception e){
                     System.out.println(e.getMessage());
                     logger.log(LOGGER_ERROR, e.getMessage());
                 }
-                if (!containsFilename(link)) {
-                    System.out.println(AUTOMATIC_FILE_DETECTION);
-                    logger.log(LOGGER_ERROR, AUTOMATIC_FILE_DETECTION);
-                }
-                break;
             }
             System.out.print(DOWNLOAD_DEFAULT_LOCATION);
             String defaultFolder = SC.nextLine().toLowerCase();
             boolean yesOrNo = yesNoValidation(defaultFolder, DOWNLOAD_DEFAULT_LOCATION);
             if (yesOrNo) {
-                saveToDefault();
+                downloadsFolder = saveToDefault();
             } else {
                 enterDownloadsFolder();
             }
+            fileName = findFilenameInLink(link);
+            if (!isYoutubeURL && (fileName.length() == 0)) {
+                System.out.println(AUTO_FILE_DETECTION_FAILED);
+                logger.log(LOGGER_ERROR, AUTO_FILE_DETECTION_FAILED);
+            }
             if (!isYoutubeURL) {
-                if (fileName != null) {
+                if (fileName != null && (fileName.length() != 0)) {
                     System.out.print(RENAME_FILE);
                     String renameFile = SC.nextLine().toLowerCase();
                     yesOrNo = yesNoValidation(renameFile, RENAME_FILE);
@@ -148,9 +155,4 @@ public class Drifty_CLI {
         }
         logger.log(LOGGER_INFO, "Custom Directory Entered : " + downloadsFolder);
     }
-
-    /**
-     * This function tries to detect the default downloads folder and save the file in that folder
-     */
-
 }

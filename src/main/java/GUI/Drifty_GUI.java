@@ -16,8 +16,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-//import static Utils.Validations.isURLValid;
-
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
     static VBox root = new VBox();
