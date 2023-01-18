@@ -1,4 +1,4 @@
-package CLI.singleton;
+package Utils;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static CLI.constants.DriftyConstants.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This class deals with creating Log files for Drifty.

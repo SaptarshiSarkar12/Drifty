@@ -1,6 +1,7 @@
-package CLI;
-import CLI.utility.DriftyUtility;
-import CLI.validation.DriftyValidation;
+package Backend;
+
+import CLI.Drifty_CLI;
+import Utils.ScannerFactory;
 
 import java.io.*;
 import java.net.*;
@@ -8,13 +9,16 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-import static CLI.constants.DriftyConstants.*;
+import static Utils.DriftyUtility.isYoutubeLink;
+import static Utils.DriftyUtility.yesNoValidation;
+import static Utils.DriftyConstants.*;
 
 /**
  * This class deals with downloading the file.
  */
-class FileDownloader implements Runnable {
+public class FileDownloader implements Runnable {
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -25,6 +29,7 @@ class FileDownloader implements Runnable {
     private static long totalSize;
     private static URL url;
     private static boolean supportsMultithreading;
+    private static final Scanner SC = ScannerFactory.getInstance();
 
     /**
      * This is a constructor to initialise values of link, fileName and dir variables.
@@ -92,10 +97,8 @@ class FileDownloader implements Runnable {
                             Thread.sleep(1000);
                         } catch (InterruptedException ignored) {
                         }
-                    } catch (InterruptedException ignored) {
-                    }
+                    } catch (InterruptedException ignored) {}
                 } else {
-
                     InputStream urlStream = url.openStream();
                     System.out.println();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -109,8 +112,7 @@ class FileDownloader implements Runnable {
                     // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
                     try {
                         Thread.sleep(1500);
-                    } catch (InterruptedException ignored) {
-                    }
+                    } catch (InterruptedException ignored) {}
                 }
 
             } catch (SecurityException e) {
@@ -130,7 +132,6 @@ class FileDownloader implements Runnable {
         if (!(dir.endsWith("\\"))) {
             dir = dir + System.getProperty("file.separator");
         }
-
     }
 
     /**
@@ -153,11 +154,11 @@ class FileDownloader implements Runnable {
             return;
         }
         System.out.print(RENAME_FILE);
-        String renameFile = Drifty_CLI.SCANNER.nextLine().toLowerCase();
-        boolean yesOrNo = DriftyValidation.yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
+        String renameFile = SC.nextLine().toLowerCase();
+        boolean yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
         if (yesOrNo) {
-            System.out.print(FILE_NAME_WITH_EXTENSION);
-            fName = Drifty_CLI.SCANNER.nextLine();
+            System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+            fName = SC.nextLine();
         }
         System.out.println(TRYING_TO_DOWNLOAD_FILE);
         Drifty_CLI.logger.log(LOGGER_INFO, TRYING_TO_DOWNLOAD_FILE);
@@ -238,7 +239,7 @@ class FileDownloader implements Runnable {
         }
         try {
             // If link is of an YouTube video, then the following block of code will execute.
-            if (DriftyUtility.isYoutubeLink(link)) {
+            if (isYoutubeLink(link)) {
                 try {
                     downloadFromYouTube("");
                 } catch (IOException e) {
@@ -299,9 +300,6 @@ class FileDownloader implements Runnable {
         } catch (MalformedURLException e) {
             System.out.println(INVALID_LINK);
             Drifty_CLI.logger.log(LOGGER_ERROR, INVALID_LINK + e.getMessage());
-        } catch (SocketTimeoutException e) {
-            System.out.println(FAILED_TO_CONNECT_TO_URL + url + " !");
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CONNECT_TO_URL + url + " ! " + e.getMessage());
         } catch (IOException e) {
             System.out.println(FAILED_TO_CONNECT_TO_URL + url + " !");
             Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CONNECT_TO_URL + url + " ! " + e.getMessage());

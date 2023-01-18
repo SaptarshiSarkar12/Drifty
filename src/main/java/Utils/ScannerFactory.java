@@ -1,12 +1,11 @@
-package CLI.singleton;
+package Utils;
 
 import java.util.Scanner;
 
 public class ScannerFactory {
     private static Scanner scanner;
 
-    private ScannerFactory() {
-    }
+    private ScannerFactory() {}
 
     public static Scanner getInstance() {
         if (scanner != null) return scanner;

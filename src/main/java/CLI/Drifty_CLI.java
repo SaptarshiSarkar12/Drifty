@@ -1,15 +1,14 @@
 package CLI;
 
-import CLI.singleton.CreateLogs;
-import CLI.singleton.ScannerFactory;
-import CLI.utility.DriftyUtility;
-import CLI.validation.DriftyValidation;
-
+import Utils.CreateLogs;
+import Backend.FileDownloader;
+import Utils.ScannerFactory;
 import java.util.Objects;
 import java.util.Scanner;
+import Backend.Drifty;
 
-import static CLI.constants.DriftyConstants.*;
-
+import static Utils.DriftyUtility.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This is the main class for the CLI version of Drifty.
@@ -18,7 +17,7 @@ import static CLI.constants.DriftyConstants.*;
  */
 public class Drifty_CLI {
     public static final CreateLogs logger = CreateLogs.getInstance();
-    protected static final Scanner SCANNER = ScannerFactory.getInstance();
+    protected static final Scanner SC = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
     private static String downloadsFolder;
     private static String fileName = null;
@@ -29,14 +28,14 @@ public class Drifty_CLI {
      */
     public static void main(String[] args) {
         logger.log(LOGGER_INFO, APPLICATION_STARTED);
-        DriftyUtility.initialPrintBanner();
+        initialPrintBanner();
         if (args.length > 0) {
             String URL = args[0];
             String name = null;
             String location = null;
             for (int i = 0; i < args.length; i++) {
                 if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
-                    DriftyUtility.help();
+                    help();
                     System.exit(0);
                 } else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
                     name = args[i + 1];
@@ -47,29 +46,34 @@ public class Drifty_CLI {
                     System.exit(0);
                 }
             }
-            if (!DriftyUtility.isURLValid(URL)) {
-                System.out.println(INVALID_URL);
-                logger.log(LOGGER_ERROR, INVALID_URL);
+            try {
+                isURLValid(URL);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                logger.log(LOGGER_ERROR, e.getMessage());
+                logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
                 System.exit(0);
             }
-            isYoutubeURL = DriftyUtility.isYoutubeLink(URL);
+            isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
             if ((fileName == null || !containsFilename(URL)) && (!isYoutubeURL)) {
-                System.out.print(FILE_NAME_WITH_EXTENSION);
-                fileName = SCANNER.nextLine();
+                System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                fileName = SC.nextLine();
             }
             downloadsFolder = location;
             if (downloadsFolder == null) {
                 saveToDefault();
             } else {
                 if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-                    downloadsFolder = SCANNER.nextLine().replace('/', '\\');
+                    downloadsFolder = SC.nextLine().replace('/', '\\');
                     if (!(downloadsFolder.endsWith("\\"))) {
                         downloadsFolder = downloadsFolder + System.getProperty("file.separator");
                     }
                 }
             }
-            new FileDownloader(URL, fileName, downloadsFolder).run();
+            Drifty backend = new Drifty(URL, downloadsFolder, fileName);
+            backend.start();
+            logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
             System.exit(0);
         }
         while (true) {
@@ -77,24 +81,29 @@ public class Drifty_CLI {
             String link;
             while (true) {
                 System.out.print(FILE_LINK);
-                link = SCANNER.nextLine();
-                isYoutubeURL = DriftyUtility.isYoutubeLink(link);
+                link = SC.nextLine();
+                isYoutubeURL = isYoutubeLink(link);
                 if (isYoutubeURL) {
                     break;
                 }
-                if (!DriftyUtility.isURLValid(link)) {
-                    System.out.println(INVALID_URL_ENTER_AGAIN);
-                } else if (!containsFilename(link)) {
+                try {
+                    boolean isValid = isURLValid(link);
+                    if (isValid){
+                        break;
+                    }
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                    logger.log(LOGGER_ERROR, e.getMessage());
+                }
+                if (!containsFilename(link)) {
                     System.out.println(AUTOMATIC_FILE_DETECTION);
                     logger.log(LOGGER_ERROR, AUTOMATIC_FILE_DETECTION);
-                    break;
-                } else {
-                    break;
                 }
+                break;
             }
             System.out.print(DOWNLOAD_DEFAULT_LOCATION);
-            String defaultFolder = SCANNER.nextLine().toLowerCase();
-            boolean yesOrNo = DriftyValidation.yesNoValidation(defaultFolder, DOWNLOAD_DEFAULT_LOCATION);
+            String defaultFolder = SC.nextLine().toLowerCase();
+            boolean yesOrNo = yesNoValidation(defaultFolder, DOWNLOAD_DEFAULT_LOCATION);
             if (yesOrNo) {
                 saveToDefault();
             } else {
@@ -103,25 +112,25 @@ public class Drifty_CLI {
             if (!isYoutubeURL) {
                 if (fileName != null) {
                     System.out.print(RENAME_FILE);
-                    String renameFile = SCANNER.nextLine().toLowerCase();
-                    yesOrNo = DriftyValidation.yesNoValidation(renameFile, RENAME_FILE);
+                    String renameFile = SC.nextLine().toLowerCase();
+                    yesOrNo = yesNoValidation(renameFile, RENAME_FILE);
                     if (yesOrNo) {
-                        System.out.print(FILE_NAME_WITH_EXTENSION);
-                        fileName = SCANNER.nextLine();
+                        System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                        fileName = SC.nextLine();
                     }
                 } else {
-                    System.out.print(FILE_NAME_WITH_EXTENSION);
-                    fileName = SCANNER.nextLine();
+                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                    fileName = SC.nextLine();
                 }
             }
             new FileDownloader(link, fileName, downloadsFolder).run();
             System.out.println(QUIT_OR_CONTINUE);
-            String quit = SCANNER.nextLine().toLowerCase();
+            String quit = SC.nextLine().toLowerCase();
             if (quit.equals("q")) {
                 logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
                 break;
             }
-            DriftyUtility.printBanner();
+            printBanner();
         }
     }
 
@@ -130,9 +139,9 @@ public class Drifty_CLI {
      */
     private static void enterDownloadsFolder() {
         System.out.print(DIRECTORY_TO_DOWNLOAD_FILE);
-        downloadsFolder = SCANNER.nextLine();
+        downloadsFolder = SC.nextLine();
         if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-            downloadsFolder = SCANNER.nextLine().replace('/', '\\');
+            downloadsFolder = SC.nextLine().replace('/', '\\');
             if (!(downloadsFolder.endsWith("\\"))) {
                 downloadsFolder = downloadsFolder + System.getProperty("file.separator");
             }
@@ -143,49 +152,5 @@ public class Drifty_CLI {
     /**
      * This function tries to detect the default downloads folder and save the file in that folder
      */
-    private static void saveToDefault() {
-        System.out.println(TRYING_TO_AUTO_DETECT_FILE);
-        logger.log(LOGGER_ERROR, TRYING_TO_AUTO_DETECT_FILE);
-        if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-            String home = System.getProperty(USER_HOME_PROPERTY);
-            downloadsFolder = home + DOWNLOADS_FILE_PATH;
-        } else {
-            downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
-        }
-        if (downloadsFolder.equals(System.getProperty("file.separator")) || downloadsFolder == null) {
-            System.out.println(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
-            logger.log(LOGGER_ERROR, FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
-            enterDownloadsFolder();
-        } else {
-            System.out.println(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
-            logger.log(LOGGER_INFO, DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
-        }
-    }
-
-
-    /**
-     * @param link Link to the file that the user wants to download
-     * @return true if the filename is detected and false if the filename is not detected
-     */
-    private static boolean containsFilename(String link) {
-        // Check and inform user if the url contains filename.
-        // Example : "example.com/file.txt" prints "Filename detected: file.txt"
-        // example.com/file.json -> file.json
-        String file = link.substring(link.lastIndexOf("/") + 1);
-        int index = file.lastIndexOf(".");
-        if (index < 0) {
-            return false;
-        }
-        String extension = file.substring(index);
-        // edge case 1 : "example.com/."
-        if (extension.length() == 1) {
-            return false;
-        }
-        // file.png?width=200 -> file.png
-        fileName = file.split("([?])")[0];
-        System.out.println(FILENAME_DETECTED + fileName);
-        logger.log(LOGGER_INFO, FILENAME_DETECTED + fileName);
-        return true;
-    }
 
 }
