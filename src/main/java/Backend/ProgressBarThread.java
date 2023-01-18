@@ -1,11 +1,13 @@
-package CLI;
+package Backend;
+
+import CLI.Drifty_CLI;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static CLI.constants.DriftyConstants.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This is the class responsible for showing the progress bar in the console.

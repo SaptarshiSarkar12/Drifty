@@ -1,5 +1,6 @@
 package GUI;
 
+import Backend.DefaultDownloadFolderLocationFinder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+//import static Utils.Validations.isURLValid;
 
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
@@ -55,13 +58,17 @@ public class Drifty_GUI extends Application {
             public void handle(ActionEvent actionEvent) {
                 linkToFile = String.valueOf(linkInput.getCharacters());
                 linkValidOrNot.setFont(Font.font("Algerian", FontWeight.MEDIUM, 15));
-                if (CLI.utility.DriftyUtility.isURLValid(linkToFile)){
-                    linkValidOrNot.setText("Link is Valid");
-                    linkValidOrNot.setFill(Color.GREEN);
-                } else {
-                    linkValidOrNot.setText("Invalid link! Please enter with URL protocol!");
-                    linkValidOrNot.setFill(Color.RED);
-                }
+//                try {
+//                    if (isURLValid(linkToFile)){
+//                        linkValidOrNot.setText("Link is Valid");
+//                        linkValidOrNot.setFill(Color.GREEN);
+//                    } else {
+//                        linkValidOrNot.setText("Invalid link! Please enter with URL protocol!");
+//                        linkValidOrNot.setFill(Color.RED);
+//                    }
+//                } catch (Exception ignored) { // TODO
+
+//                }
             }
         };
         validateLink.setOnAction(linkEnter);
@@ -84,7 +91,7 @@ public class Drifty_GUI extends Application {
             public void handle(ActionEvent actionEvent) {
                 if (directoryChoice.getSelectionModel().getSelectedItem().equals("Default Downloads Folder")){
                     directory.getChildren().addAll(defaultDirectory);
-                    defaultDirectory.setText("Default Downloads Folder detected : " + CLI.DefaultDownloadFolderLocationFinder.findPath());
+                    defaultDirectory.setText("Default Downloads Folder detected : " + DefaultDownloadFolderLocationFinder.findPath());
                     defaultDirectory.setFill(Color.ALICEBLUE);
                     defaultDirectory.setFont(Font.font("Verdana", FontWeight.MEDIUM, 20));
                 } else {

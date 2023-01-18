@@ -1,11 +1,13 @@
-package CLI;
+package Backend;
+import CLI.Drifty_CLI;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static CLI.constants.DriftyConstants.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This class checks if a directory exists or not. if it doesn't, the directory is created.
