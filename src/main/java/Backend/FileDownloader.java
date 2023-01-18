@@ -143,7 +143,7 @@ public class FileDownloader implements Runnable {
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         String fName = "";
-        System.out.println(TRYING_TO_AUTO_DETECT_FILE);
+        System.out.println(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
         ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
         processBuilder.inheritIO();
         System.out.print("Filename : ");

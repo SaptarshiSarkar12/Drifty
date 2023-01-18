@@ -12,8 +12,11 @@ import static Utils.DriftyConstants.LOGGER_INFO;
 
 public class copyYt_dlp {
     static CreateLogs logger = CreateLogs.getInstance();
-    public static final String tempDir = System.getProperty("java.io.tmpdir");
+    public static String tempDir = System.getProperty("java.io.tmpdir");
     public void copyToTemp() throws IOException{
+        if (!tempDir.endsWith("/")){
+            tempDir += "/";
+        }
         File file = new File(tempDir + "yt-dlp.exe");
         if (file.exists()){
             logger.log(LOGGER_INFO, "Skipping copying yt-dlp to " + tempDir + " folder as it is already present!");

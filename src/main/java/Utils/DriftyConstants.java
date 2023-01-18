@@ -2,7 +2,7 @@ package Utils;
 
 public final class DriftyConstants {
 
-    public static final String VERSION_NUMBER = "v1.2.2";
+    public static final String VERSION_NUMBER = "v1.3.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_CLI_LOG = "Drift_CLI_LOG.log";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -17,8 +17,8 @@ public final class DriftyConstants {
     public static final String INVALID_LINK = "Invalid Link!";
     public static final String INVALID_URL_ENTER_AGAIN = "Invalid URL. Please enter again";
     public static final String INVALID_DIRECTORY = "Invalid Directory Entered !";
-    public static final String AUTOMATIC_FILE_DETECTION = "Automatic file name detection failed!";
-    public static final String TRYING_TO_AUTO_DETECT_FILE = "Trying to auto-detect default Downloads folder...";
+    public static final String AUTO_FILE_DETECTION_FAILED = "Automatic file name detection failed!";
+    public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
     public static final String NAME_FLAG = "-name";
@@ -29,7 +29,7 @@ public final class DriftyConstants {
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Enter the filename (with file extension) : ";
-    public static final String FILE_LINK = "Enter the link to the file : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file : ";
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
     public static final String USER_HOME_PROPERTY = "user.home";
@@ -51,7 +51,7 @@ public final class DriftyConstants {
     public static final String DOWNLOAD_FAILED = "Download failed!";
     public static final String SUCCESSFULLY = " successfully !";
     public static final String SUCCESSFULLY_DOWNLOADED_FILE = "Successfully downloaded the file!";
-    public static final String OFF_SIZE = " of size ";
+    public static final String OF_SIZE = " of size ";
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
 
@@ -68,8 +68,5 @@ public final class DriftyConstants {
 
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
 
-    private DriftyConstants() {
-    }
-
-
+    private DriftyConstants() {}
 }
