@@ -249,7 +249,11 @@ public class FileDownloader implements Runnable {
                         copyYt_dlp cy = new copyYt_dlp();
                         cy.copyToTemp();
                         try {
-                            downloadFromYouTube(copyYt_dlp.tempDir);
+                            String tempDir = copyYt_dlp.tempDir;
+                            if (!tempDir.endsWith("/")){
+                                tempDir += "/";
+                            }
+                            downloadFromYouTube(tempDir);
                         } catch (InterruptedException ie) {
                             System.out.println(USER_INTERRUPTION);
                             Drifty_CLI.logger.log(LOGGER_ERROR, USER_INTERRUPTION + ie.getMessage());

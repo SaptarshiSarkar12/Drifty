@@ -17,7 +17,7 @@ public class copyYt_dlp {
         if (!tempDir.endsWith("/")){
             tempDir += "/";
         }
-        File file = new File(tempDir + "yt-dlp.exe");
+        File file = new File("yt-dlp.exe");
         if (file.exists()){
             logger.log(LOGGER_INFO, "Skipping copying yt-dlp to " + tempDir + " folder as it is already present!");
             return;

@@ -111,7 +111,9 @@ public class Drifty_CLI {
             } else {
                 enterDownloadsFolder();
             }
-            fileName = findFilenameInLink(link);
+            if (!isYoutubeURL) {
+                fileName = findFilenameInLink(link);
+            }
             if (!isYoutubeURL && (fileName.length() == 0)) {
                 System.out.println(AUTO_FILE_DETECTION_FAILED);
                 logger.log(LOGGER_ERROR, AUTO_FILE_DETECTION_FAILED);
