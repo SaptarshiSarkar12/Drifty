@@ -48,7 +48,6 @@ public class ProgressBarThread extends Thread {
 
     /**
      * Progress Bar Constructor to initialise data members.
-     *
      * @param fos                Output stream for writing contents from the web to the local file.
      * @param totalDownloadBytes Total size of the file in bytes.
      * @param fileName           Filename of the downloaded file.

@@ -1,17 +1,64 @@
 package Backend;
 
-public class Drifty {
-    private static String downloadsFolder;
-    private static String link;
-    private static String fileName;
+import Utils.DriftyConstants;
+import Utils.DriftyUtility;
+import Utils.MessageBroker;
+import javafx.scene.text.Text;
 
-    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile) {
-        link = url;
+import java.io.IOException;
+import java.io.PrintStream;
+
+public class Drifty {
+    protected static MessageBroker messageBroker;
+    private static String downloadsFolder = null;
+    private static String url;
+    private static String fileName;
+    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, Text link, Text dir, Text download, Text renameFile) {
+        Drifty.url = url;
         downloadsFolder = downloadsDirectory;
         fileName = fileNameOfTheDownloadedFile;
+        messageBroker = new MessageBroker("GUI", link, dir, download, renameFile);
+    }
+    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, PrintStream outputStream) {
+        Drifty.url = url;
+        downloadsFolder = downloadsDirectory;
+        fileName = fileNameOfTheDownloadedFile;
+        messageBroker = new MessageBroker("CLI", outputStream);
     }
 
-    public void start() {
-        new FileDownloader(link, fileName, downloadsFolder).run();
+    public static void start() {
+        messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
+        if (!url.contains(" ")) {
+            try {
+                DriftyUtility.isURLValid(url);
+            } catch (Exception e) {
+                messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "link");
+            }
+        } else {
+            messageBroker.sendMessage("Link should not contain whitespace characters!", DriftyConstants.LOGGER_ERROR, "link");
+        }
+
+        if (downloadsFolder == null){
+            downloadsFolder = DriftyUtility.saveToDefault();
+        } else {
+            try {
+                new CheckDirectory(downloadsFolder);
+            } catch (IOException e) {
+                messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "directory");
+            }
+        }
+
+        if (fileName == null || fileName.length() == 0) {
+            fileName = DriftyUtility.findFilenameInLink(url);
+            if (fileName == null || fileName.length() == 0) {
+                messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "renameFile");
+            }
+        }
+
+        new FileDownloader(url, fileName, downloadsFolder).run();
+    }
+
+    public static void main(String[] args) {
+        start();
     }
 }

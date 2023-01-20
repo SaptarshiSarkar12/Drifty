@@ -26,7 +26,7 @@ public class Drifty_CLI {
      * This function is the main method of the whole application.
      * @param args Command Line Arguments as a String array.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         logger.log(LOGGER_INFO, APPLICATION_STARTED);
         initialPrintBanner();
         if (args.length > 0) {
@@ -46,17 +46,17 @@ public class Drifty_CLI {
                     System.exit(0);
                 }
             }
-            System.out.println("Validating the link...");
-            try {
-                isURLValid(URL);
-                System.out.println("The link is valid!");
-                logger.log(LOGGER_INFO, "The link is valid!");
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-                logger.log(LOGGER_ERROR, e.getMessage());
-                logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
-                System.exit(0);
-            }
+//            System.out.println("Validating the link..."); // TODO - Remove the code
+//            try {
+//                isURLValid(URL);
+//                System.out.println("The link is valid!");
+//                logger.log(LOGGER_INFO, "The link is valid!");
+//            } catch (Exception e){
+//                System.out.println(e.getMessage());
+//                logger.log(LOGGER_ERROR, e.getMessage());
+//                logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
+//                System.exit(0);
+//            }
             isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
             fileName = findFilenameInLink(URL);
@@ -75,7 +75,7 @@ public class Drifty_CLI {
                     }
                 }
             }
-            Drifty backend = new Drifty(URL, downloadsFolder, fileName);
+            Drifty backend = new Drifty(URL, downloadsFolder, fileName, System.out);
             backend.start();
             logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
             System.exit(0);

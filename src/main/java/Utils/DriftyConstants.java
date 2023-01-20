@@ -1,7 +1,6 @@
 package Utils;
 
 public final class DriftyConstants {
-
     public static final String VERSION_NUMBER = "v1.3.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_CLI_LOG = "Drift_CLI_LOG.log";
@@ -10,6 +9,8 @@ public final class DriftyConstants {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String DOWNLOADS_FILE_PATH = "/Downloads/";
     public static final String LOGGER_INFO = "INFO";
+    public static final String LOGGER_WARN = "WARN";
+
     public static final String LOGGER_ERROR = "ERROR";
     public static final String APPLICATION_STARTED = "Application Started !";
     public static final String APPLICATION_TERMINATED = "Application Terminated!";
