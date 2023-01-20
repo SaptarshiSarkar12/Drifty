@@ -40,7 +40,10 @@ public final class DriftyUtility {
             int responseCode = connection.getResponseCode();
             return responseCode == HttpURLConnection.HTTP_OK;
         } catch (ConnectException e){
-            throw new Exception(e.getMessage());
+            String errorMessage = e.getMessage();
+            int colonIndex = errorMessage.indexOf(":");
+            errorMessage = errorMessage.substring(0, colonIndex);
+            throw new Exception(errorMessage);
         } catch (SocketException e){
             throw new Exception("You are not connected to the Internet!");
         }
@@ -56,12 +59,12 @@ public final class DriftyUtility {
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
-            return "";
+            return null;
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
-            return "";
+            return null;
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];

@@ -14,6 +14,7 @@ public class copyYt_dlp {
     static CreateLogs logger = CreateLogs.getInstance();
     public static String tempDir = System.getProperty("java.io.tmpdir");
     public void copyToTemp() throws IOException{
+        // TODO - Try using File.createTempFile() method to create temp version of yt-dlp (might work)
         if (!tempDir.endsWith("/")){
             tempDir += "/";
         }

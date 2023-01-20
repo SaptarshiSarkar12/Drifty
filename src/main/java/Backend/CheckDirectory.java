@@ -1,5 +1,6 @@
 package Backend;
 import CLI.Drifty_CLI;
+import Utils.CreateLogs;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import static Utils.DriftyConstants.*;
  * This class checks if a directory exists or not. if it doesn't, the directory is created.
  */
 class CheckDirectory {
+    CreateLogs logger = CreateLogs.getInstance();
     /**
      * This constructor creates the directory if it does not exist.
      * @param dir Name of the folder where the user wants to download the file.
@@ -22,7 +24,7 @@ class CheckDirectory {
         if (!(checkIfFolderExists(dir))) {
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
-            Drifty_CLI.logger.log(LOGGER_INFO, DIRECTORY_CREATED);
+            logger.log(LOGGER_INFO, DIRECTORY_CREATED);
         }
     }
 

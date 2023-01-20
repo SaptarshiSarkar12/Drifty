@@ -1,6 +1,8 @@
 package Backend;
 
 import CLI.Drifty_CLI;
+import Utils.DriftyConstants;
+import Utils.MessageBroker;
 import Utils.ScannerFactory;
 
 import java.io.*;
@@ -19,6 +21,7 @@ import static Utils.DriftyConstants.*;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
+    private static MessageBroker messageBroker = Drifty.messageBroker;
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -47,7 +50,6 @@ public class FileDownloader implements Runnable {
 
     /**
      * This function is used to get the value of dir variable.
-     *
      * @return The directory in which the user wants to save the file.
      */
     public static String getDir() {
@@ -86,7 +88,7 @@ public class FileDownloader implements Runnable {
 
                     ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName);
                     progressBarThread.start();
-                    //check if all file are downloaded
+                    // check if all file are downloaded
                     try {
                         while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                             Thread.sleep(1000);
@@ -116,15 +118,12 @@ public class FileDownloader implements Runnable {
                 }
 
             } catch (SecurityException e) {
-                System.out.println("Write access to " + dir + fileName + " denied !");
-                Drifty_CLI.logger.log(LOGGER_ERROR, "Write access to " + dir + fileName + " denied ! " + e.getMessage());
+                messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", LOGGER_ERROR, "download");
             } catch (IOException e) {
-                System.out.println(FAILED_TO_DOWNLOAD_CONTENTS);
-                Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
+                messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, LOGGER_ERROR, "download");
             }
         } catch (NullPointerException e) {
-            System.out.println(FAILED_TO_READ_DATA_STREAM);
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_READ_DATA_STREAM + e.getMessage());
+            messageBroker.sendMessage(FAILED_TO_READ_DATA_STREAM, LOGGER_ERROR, "download");
         }
         if (dir.length() == 0) {
             dir = System.getProperty("user.dir");
@@ -141,7 +140,7 @@ public class FileDownloader implements Runnable {
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException          When an I/O problem appears while downloading the YouTube video.
      */
-    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
+    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException { // TODO - Use message broker here
         String fName = "";
         System.out.println(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
         ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
