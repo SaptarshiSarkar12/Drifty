@@ -75,7 +75,7 @@ public final class DriftyUtility {
 
     public static String saveToDefault() {
         String downloadsFolder;
-        logger.log(LOGGER_ERROR, TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
+        logger.log(LOGGER_INFO, TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
         if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
