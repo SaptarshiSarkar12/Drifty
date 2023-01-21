@@ -108,7 +108,7 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
                     ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
                     progressBarThread.start();
-                    Drifty_CLI.logger.log(LOGGER_INFO, "Downloading " + fileName + " ...");
+                    messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
                     // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
@@ -142,7 +142,7 @@ public class FileDownloader implements Runnable {
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException { // TODO - Use message broker here
         String fName = "";
-        System.out.println(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
+        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
         ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
         processBuilder.inheritIO();
         System.out.print("Filename : ");
