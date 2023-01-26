@@ -2,6 +2,7 @@ package Utils;
 
 import Backend.DefaultDownloadFolderLocationFinder;
 
+import java.io.File;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -129,8 +130,8 @@ public final class DriftyUtility {
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default     Description" + ANSI_RESET);
-        System.out.println("-location   -l            Downloads                   The location on your computer where content downloaded from Drifty are placed.");
-        System.out.println("-name       -n            Source                      Renames file.");
+        System.out.println("-location   -l            Downloads                   The location on your computer where content downloaded using Drifty are placed.");
+        System.out.println("-name       -n            Source                      Filename of the downloaded file.");
         System.out.println("-help       -h            N/A                         Provides concise information for Drifty CLI.\n");
         System.out.println("-version    -v            Current Version Number      Displays version number of Drifty.");
         System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
@@ -165,5 +166,4 @@ public final class DriftyUtility {
         System.out.println(" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  ");
         System.out.println(BANNER_BORDER);
     }
-
 }

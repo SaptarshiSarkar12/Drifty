@@ -1,34 +1,34 @@
 package CLI;
 
+import Backend.Drifty;
 import Utils.CreateLogs;
-import Backend.FileDownloader;
 import Utils.ScannerFactory;
+
 import java.util.Objects;
 import java.util.Scanner;
-import Backend.Drifty;
 
-import static Utils.DriftyUtility.*;
 import static Utils.DriftyConstants.*;
+import static Utils.DriftyUtility.*;
 
 /**
  * This is the main class for the CLI version of Drifty.
  * @author Saptarshi Sarkar, Akshat Jain, Anurag Bharati, Naachiket Pant, Fonta22
- * @version 1.2.2
+ * @version 1.4.0
  */
 public class Drifty_CLI {
     public static final CreateLogs logger = CreateLogs.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
-    private static String downloadsFolder;
     private static String fileName = null;
 
     /**
      * This function is the main method of the whole application.
      * @param args Command Line Arguments as a String array.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         logger.log(LOGGER_INFO, APPLICATION_STARTED);
         initialPrintBanner();
+        String downloadsFolder;
         if (args.length > 0) {
             String URL = args[0];
             String name = null;
@@ -55,10 +55,10 @@ public class Drifty_CLI {
             }
             downloadsFolder = location;
             if (downloadsFolder == null) {
-                saveToDefault();
+                downloadsFolder = saveToDefault();
             } else {
                 if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-                    downloadsFolder = SC.nextLine().replace('/', '\\');
+                    downloadsFolder = downloadsFolder.replace('/', '\\');
                     if (!(downloadsFolder.endsWith("\\"))) {
                         downloadsFolder = downloadsFolder + System.getProperty("file.separator");
                     }
@@ -70,58 +70,19 @@ public class Drifty_CLI {
             System.exit(0);
         }
         while (true) {
-            fileName = null;
-            String link;
-            while (true) {
-                System.out.print(ENTER_FILE_LINK);
-                link = SC.nextLine();
-                isYoutubeURL = isYoutubeLink(link);
-                if (isYoutubeURL) {
-                    break;
-                }
-                System.out.println("Validating the link...");
-                try {
-                    boolean isValid = isURLValid(link);
-                    if (isValid){
-                        System.out.println("The link is valid!");
-                        logger.log(LOGGER_INFO, "The link is valid!");
-                        break;
-                    }
-                } catch (Exception e){
-                    System.out.println(e.getMessage());
-                    logger.log(LOGGER_ERROR, e.getMessage());
-                }
+            System.out.print("Enter the link to the file : ");
+            String link = SC.next();
+            SC.nextLine();
+            System.out.print("Enter the download directory (Enter \"./\" for default downloads folder) : ");
+            downloadsFolder = SC.next();
+            isYoutubeURL = isYoutubeLink(link);
+            fileName = findFilenameInLink(link);
+            if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
+                System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                fileName = SC.nextLine();
             }
-            System.out.print(DOWNLOAD_DEFAULT_LOCATION);
-            String defaultFolder = SC.nextLine().toLowerCase();
-            boolean yesOrNo = yesNoValidation(defaultFolder, DOWNLOAD_DEFAULT_LOCATION);
-            if (yesOrNo) {
-                downloadsFolder = saveToDefault();
-            } else {
-                enterDownloadsFolder();
-            }
-            if (!isYoutubeURL) {
-                fileName = findFilenameInLink(link);
-            }
-            if (!isYoutubeURL && (fileName.length() == 0)) {
-                System.out.println(AUTO_FILE_DETECTION_FAILED);
-                logger.log(LOGGER_ERROR, AUTO_FILE_DETECTION_FAILED);
-            }
-            if (!isYoutubeURL) {
-                if (fileName != null && (fileName.length() != 0)) {
-                    System.out.print(RENAME_FILE);
-                    String renameFile = SC.nextLine().toLowerCase();
-                    yesOrNo = yesNoValidation(renameFile, RENAME_FILE);
-                    if (yesOrNo) {
-                        System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                        fileName = SC.nextLine();
-                    }
-                } else {
-                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.nextLine();
-                }
-            }
-            new FileDownloader(link, fileName, downloadsFolder).run();
+            Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
+            backend.start();
             System.out.println(QUIT_OR_CONTINUE);
             String quit = SC.nextLine().toLowerCase();
             if (quit.equals("q")) {
@@ -130,20 +91,5 @@ public class Drifty_CLI {
             }
             printBanner();
         }
-    }
-
-    /**
-     * This function takes a folder path as input from the user, where the file will be saved.
-     */
-    private static void enterDownloadsFolder() {
-        System.out.print(DIRECTORY_TO_DOWNLOAD_FILE);
-        downloadsFolder = SC.nextLine();
-        if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
-            downloadsFolder = SC.nextLine().replace('/', '\\');
-            if (!(downloadsFolder.endsWith("\\"))) {
-                downloadsFolder = downloadsFolder + System.getProperty("file.separator");
-            }
-        }
-        logger.log(LOGGER_INFO, "Custom Directory Entered : " + downloadsFolder);
     }
 }

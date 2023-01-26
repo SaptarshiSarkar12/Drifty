@@ -1,27 +1,27 @@
 package Backend;
 
-import CLI.Drifty_CLI;
-import Utils.DriftyConstants;
 import Utils.MessageBroker;
 import Utils.ScannerFactory;
 
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static Utils.DriftyUtility.isYoutubeLink;
-import static Utils.DriftyUtility.yesNoValidation;
 import static Utils.DriftyConstants.*;
+import static Utils.DriftyUtility.isYoutubeLink;
 
 /**
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
     private static final MessageBroker messageBroker = Drifty.messageBroker;
+    public static final File output = new File("output.txt");
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -54,6 +54,10 @@ public class FileDownloader implements Runnable {
      */
     public static String getDir() {
         return dir;
+    }
+
+    public static File getYt_dlpOutputFile() {
+        return output;
     }
 
     /**
@@ -140,44 +144,43 @@ public class FileDownloader implements Runnable {
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException          When an I/O problem appears while downloading the YouTube video.
      */
-    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException { // TODO - Use new command for download to avail support for linux devices
+    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         String fName = "";
-        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
-        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
-        processBuilder.redirectOutput(new File(messageBroker.getOutput().toString()));
+        link = "https://www.youtube.com/watch?v=apGV9Kg7ics";
+        ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.inheritIO();
-        System.out.print("Filename : ");
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
+        sendYt_dlpOutput thread = new sendYt_dlpOutput();
+        thread.setExit(false);
+        processBuilder.command(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
+        try (FileWriter writer = new FileWriter(output.getPath())) {
+            writer.write("Filename detected : ");
+        }
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
+        thread.start();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp != 0) {
+            thread.setExit(true);
             return;
         }
-        System.out.print(RENAME_FILE);
-        String renameFile = SC.nextLine().toLowerCase();
-        boolean yesOrNo = yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
-        if (yesOrNo) {
-            System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-            fName = SC.nextLine();
-        }
-        System.out.println(TRYING_TO_DOWNLOAD_FILE);
-        Drifty_CLI.logger.log(LOGGER_INFO, TRYING_TO_DOWNLOAD_FILE);
-        if (fName.equals("")) {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.mp4");
+        messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("./"))){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s");
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", fName);
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s");
         }
         processBuilder.inheritIO();
         yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
-            System.out.println(SUCCESSFULLY_DOWNLOADED_FILE);
-            Drifty_CLI.logger.log(LOGGER_INFO, SUCCESSFULLY_DOWNLOADED_FILE);
+            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED_FILE, LOGGER_INFO, "download");
         } else if (exitValueOfYt_Dlp == 1) {
-            System.out.println(FAILED_TO_DOWNLOAD_FILES);
-            Drifty_CLI.logger.log(LOGGER_INFO, FAILED_TO_DOWNLOAD_FILES);
+            messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
         }
+        thread.setExit(true);
+        output.delete();
     }
 
     /**
@@ -241,33 +244,25 @@ public class FileDownloader implements Runnable {
             // If link is of an YouTube video, then the following block of code will execute.
             if (isYoutubeLink(link)) {
                 try {
-                    downloadFromYouTube("");
+                    downloadFromYouTube("./resources/");
                 } catch (IOException e) {
                     try {
-                        System.out.println(GETTING_READY_TO_DOWNLOAD_FILE);
-                        Drifty_CLI.logger.log(LOGGER_INFO, GETTING_READY_TO_DOWNLOAD_FILE);
+                        messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                         copyYt_dlp cy = new copyYt_dlp();
                         cy.copyToTemp();
                         try {
-                            String tempDir = copyYt_dlp.tempDir;
-                            if (!tempDir.endsWith("/")){
-                                tempDir += "/";
-                            }
+                            String tempDir = copyYt_dlp.getTempDir();
                             downloadFromYouTube(tempDir);
                         } catch (InterruptedException ie) {
-                            System.out.println(USER_INTERRUPTION);
-                            Drifty_CLI.logger.log(LOGGER_ERROR, USER_INTERRUPTION + ie.getMessage());
+                            messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                         } catch (IOException io1) {
-                            System.out.println(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO);
-                            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO + io1.getMessage());
+                            messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
                         }
                     } catch (IOException io) {
-                        System.out.println(FAILED_TO_INITIALISE_YOUTUBE_VIDEO);
-                        Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_INITIALISE_YOUTUBE_VIDEO + io.getMessage());
+                        messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
                     }
                 } catch (InterruptedException e) {
-                    System.out.println(USER_INTERRUPTION);
-                    Drifty_CLI.logger.log(LOGGER_ERROR, USER_INTERRUPTION + e.getMessage());
+                    messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                 }
             } else {
                 url = new URL(link);
@@ -288,25 +283,20 @@ public class FileDownloader implements Runnable {
                         dir = "";
                     }
                 } else {
-                    System.out.println(INVALID_DIRECTORY);
-                    Drifty_CLI.logger.log(LOGGER_ERROR, INVALID_DIRECTORY);
+                    messageBroker.sendMessage(INVALID_DIRECTORY, LOGGER_ERROR, "directory");
                 }
                 try {
                     new CheckDirectory(dir);
                 } catch (IOException e) {
-                    System.out.println(FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage());
-                    Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage());
+                    messageBroker.sendMessage(FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage(), LOGGER_ERROR, "directory");
                 }
-                System.out.println(TRYING_TO_DOWNLOAD_FILE);
-                Drifty_CLI.logger.log(LOGGER_ERROR, TRYING_TO_DOWNLOAD_FILE);
+                messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                 downloadFile();
             }
         } catch (MalformedURLException e) {
-            System.out.println(INVALID_LINK);
-            Drifty_CLI.logger.log(LOGGER_ERROR, INVALID_LINK + e.getMessage());
+            messageBroker.sendMessage(INVALID_LINK, LOGGER_ERROR, "link");
         } catch (IOException e) {
-            System.out.println(FAILED_TO_CONNECT_TO_URL + url + " !");
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CONNECT_TO_URL + url + " ! " + e.getMessage());
+            messageBroker.sendMessage(FAILED_TO_CONNECT_TO_URL + url + " !", LOGGER_ERROR, "download");
         }
     }
 }
