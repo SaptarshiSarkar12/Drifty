@@ -5,6 +5,7 @@ import Utils.DriftyUtility;
 import Utils.MessageBroker;
 import javafx.scene.text.Text;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -49,7 +50,7 @@ public class Drifty {
             }
         }
 
-        if (fileName == null || fileName.length() == 0) {
+        if ((fileName == null || fileName.length() == 0) && (!DriftyUtility.isYoutubeLink(url))) {
             fileName = DriftyUtility.findFilenameInLink(url);
             if (fileName == null || fileName.length() == 0) {
                 messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "renameFile");
@@ -59,7 +60,8 @@ public class Drifty {
         new FileDownloader(url, fileName, downloadsFolder).run();
     }
 
-    public static void main(String[] args) {
-        new Drifty("https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md", null, "read.md", System.out).start();
+    public static void main(String[] args) throws IOException {
+//        new Drifty("https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md", null, "read.md", System.out).start();
+        System.out.println(File.createTempFile("yt-dlp", ".exe").getPath());
     }
 }
