@@ -46,17 +46,6 @@ public class Drifty_CLI {
                     System.exit(0);
                 }
             }
-//            System.out.println("Validating the link..."); // TODO - Remove the code
-//            try {
-//                isURLValid(URL);
-//                System.out.println("The link is valid!");
-//                logger.log(LOGGER_INFO, "The link is valid!");
-//            } catch (Exception e){
-//                System.out.println(e.getMessage());
-//                logger.log(LOGGER_ERROR, e.getMessage());
-//                logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
-//                System.exit(0);
-//            }
             isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
             fileName = findFilenameInLink(URL);
