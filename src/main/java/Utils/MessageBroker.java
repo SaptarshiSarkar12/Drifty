@@ -63,4 +63,8 @@ public class MessageBroker {
             logger.log(DriftyConstants.LOGGER_ERROR, "Invalid application type provided to message broker!");
         }
     }
+
+    public PrintStream getOutput() {
+        return output;
+    }
 }

@@ -26,11 +26,12 @@ public class Drifty {
         messageBroker = new MessageBroker("CLI", outputStream);
     }
 
-    public static void start() {
+    public void start() {
         messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
         if (!url.contains(" ")) {
             try {
                 DriftyUtility.isURLValid(url);
+                messageBroker.sendMessage("Link is valid!", DriftyConstants.LOGGER_INFO, "link");
             } catch (Exception e) {
                 messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "link");
             }
@@ -59,6 +60,6 @@ public class Drifty {
     }
 
     public static void main(String[] args) {
-        start();
+        new Drifty("https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md", null, "read.md", System.out).start();
     }
 }
