@@ -21,7 +21,7 @@ import static Utils.DriftyConstants.*;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
-    private static MessageBroker messageBroker = Drifty.messageBroker;
+    private static final MessageBroker messageBroker = Drifty.messageBroker;
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -144,6 +144,7 @@ public class FileDownloader implements Runnable {
         String fName = "";
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
         ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
+        processBuilder.redirectOutput(new File(messageBroker.getOutput().toString()));
         processBuilder.inheritIO();
         System.out.print("Filename : ");
         Process yt_dlp = processBuilder.start();
