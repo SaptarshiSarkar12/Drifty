@@ -140,7 +140,7 @@ public class FileDownloader implements Runnable {
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException          When an I/O problem appears while downloading the YouTube video.
      */
-    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException { // TODO - Use message broker here
+    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException { // TODO - Use new command for download to avail support for linux devices
         String fName = "";
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
         ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
