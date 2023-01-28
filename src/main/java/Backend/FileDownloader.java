@@ -146,27 +146,27 @@ public class FileDownloader implements Runnable {
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         String fName = "";
-        link = "https://www.youtube.com/watch?v=apGV9Kg7ics";
+//        link = "https://www.youtube.com/watch?v=apGV9Kg7ics";
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.inheritIO();
-        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
-        sendYt_dlpOutput thread = new sendYt_dlpOutput();
-        thread.setExit(false);
+//        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
+//        sendYt_dlpOutput thread = new sendYt_dlpOutput();
+//        thread.setExit(false);
         processBuilder.command(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
-        try (FileWriter writer = new FileWriter(output.getPath())) {
-            writer.write("Filename detected : ");
-        }
+//        try (FileWriter writer = new FileWriter(output.getPath())) {
+//            writer.write("Filename detected : ");
+//        }
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
-        thread.start();
+//        thread.start();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp != 0) {
-            thread.setExit(true);
+//            thread.setExit(true);
             return;
         }
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
-        if ((dir.length() == 0) || (dir.equalsIgnoreCase("./"))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s");
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "\\\"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\""); // TODO - use screen res and send it to yt-dlp
         } else {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s");
         }
@@ -179,8 +179,8 @@ public class FileDownloader implements Runnable {
         } else if (exitValueOfYt_Dlp == 1) {
             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
         }
-        thread.setExit(true);
-        output.delete();
+//        thread.setExit(true);
+//        output.delete();
     }
 
     /**
