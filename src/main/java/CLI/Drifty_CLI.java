@@ -73,7 +73,7 @@ public class Drifty_CLI {
             System.out.print("Enter the link to the file : ");
             String link = SC.next();
             SC.nextLine();
-            System.out.print("Enter the download directory (Enter \"./\" for default downloads folder) : ");
+            System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
             downloadsFolder = SC.next();
             isYoutubeURL = isYoutubeLink(link);
             fileName = findFilenameInLink(link);
