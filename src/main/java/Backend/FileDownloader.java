@@ -165,10 +165,19 @@ public class FileDownloader implements Runnable {
             return;
         }
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
-        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "\\\"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\""); // TODO - use screen res and send it to yt-dlp
+        String yt_dlpProgramName = "";
+        String osName = System.getProperty("os.name");
+        if (osName.contains("Linux")){
+            yt_dlpProgramName = "yt-dlp";
+        } else if (osName.contains("Windows")) {
+            yt_dlpProgramName = "yt-dlp.exe";
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s");
+            yt_dlpProgramName = "yt-dlp";
+        }
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "\\\"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\""); // TODO - use screen res and send it to yt-dlp
+        } else {
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s");
         }
         processBuilder.inheritIO();
         yt_dlp = processBuilder.start();
