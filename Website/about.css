@@ -4,22 +4,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 /* Global styles */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 html {
   font-family: "Rubik", sans-serif;
   color: var(--black);
   scroll-behavior: smooth;
 }
-
-li,
-a,
-button {
+li, a, button {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 1rem;
@@ -29,13 +24,10 @@ button {
 body {
   overflow-x: hidden !important;
 }
-
 .hidden {
   display: none !important;
 }
-
 /* Variables */
-
 :root {
   --background-color: #e8f9fd;
   --text-color: #0aa1dd;
@@ -70,24 +62,18 @@ body {
     rgba(2, 83, 185, 1) 100.2%
   );
 }
-
 /* Scrollbar */
-
 body::-webkit-scrollbar {
   width: 0.25rem;
 }
-
 body::-webkit-scrollbar-track {
   background: var(--background-color);
 }
-
 body::-webkit-scrollbar-thumb {
   background: var(--background-color1);
   border-radius: 10px;
 }
-
 /* Darkmode */
-
 .darkmode {
   --background-color: #041c32;
   --background-color1: #064663;
@@ -118,11 +104,9 @@ body::-webkit-scrollbar-thumb {
     var(--m-light-col)
   );
 }
-
 .temp-color {
   background-color: #1a2035 !important;
 }
-
 .text-gradient-ry {
   background: linear-gradient(
     78deg,
@@ -222,7 +206,6 @@ body::-webkit-scrollbar-thumb {
   font-size: 20px;
   margin: 0;
 }
-
 @keyframes blink {
   0% {
     filter: brightness(1.2);
@@ -234,7 +217,6 @@ body::-webkit-scrollbar-thumb {
     filter: brightness(1.2);
   }
 }
-
 /* about us */
 .about{
   text-align: center;
@@ -302,13 +284,6 @@ h4{
     padding: 20px;
     border-top:2px solid;
 }
-.contrib-graph img{
-  width: 100%;
-  height: 100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-}
 .stats{
   padding: 25px;
 }
@@ -317,7 +292,6 @@ h4{
   max-width: 100%;
   height: auto;
 }
-
 /* Footer */
 .footer {
   padding: 40px 0;
@@ -368,7 +342,6 @@ h4{
   flex: 3;
   border-bottom: tomato;
 }
-
 /*scroll to top*/
 #mybtn{
   display: none;
@@ -388,7 +361,6 @@ h4{
 #mybtn:hover{
   background-color: rgb(18, 29, 59);
 }
-
 .footer .social a {
   font-size: 20px;
   color: var(--black);
@@ -411,7 +383,6 @@ h4{
   border-radius: 50%;
   width: auto;
 }
-
 #twitter:hover {
   background-color: #00acee;
   color: #fff;
@@ -419,7 +390,6 @@ h4{
   border: none;
   transform: scale(1.2);
 }
-
 .footer .social :nth-child(2):hover {
   background-color: #0f0f0f;
   color: #fff;
@@ -445,7 +415,6 @@ h4{
   color: var(--black);
   font-size: 15px;
 }
-
 /* Media Queries */
 .copyright{
   color: var(--black);
