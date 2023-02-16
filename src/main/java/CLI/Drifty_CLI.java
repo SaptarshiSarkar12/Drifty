@@ -13,7 +13,7 @@ import static Utils.DriftyUtility.*;
 /**
  * This is the main class for the CLI version of Drifty.
  * @author Saptarshi Sarkar, Akshat Jain, Anurag Bharati, Naachiket Pant, Fonta22
- * @version 1.4.0
+ * @version 2.0.0
  */
 public class Drifty_CLI {
     public static final CreateLogs logger = CreateLogs.getInstance();
@@ -84,6 +84,7 @@ public class Drifty_CLI {
             Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
             backend.start();
             System.out.println(QUIT_OR_CONTINUE);
+            SC.nextLine();
             String quit = SC.nextLine().toLowerCase();
             if (quit.equals("q")) {
                 logger.log(LOGGER_INFO, APPLICATION_TERMINATED);

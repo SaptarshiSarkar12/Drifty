@@ -59,9 +59,4 @@ public class Drifty {
 
         new FileDownloader(url, fileName, downloadsFolder).run();
     }
-
-    public static void main(String[] args) throws IOException {
-//        new Drifty("https://github.com/SaptarshiSarkar12/Drifty/blob/master/README.md", null, "read.md", System.out).start();
-        System.out.println(File.createTempFile("yt-dlp", ".exe").getPath());
-    }
 }

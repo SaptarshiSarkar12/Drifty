@@ -14,7 +14,6 @@ public class copyYt_dlp {
     static CreateLogs logger = CreateLogs.getInstance();
     private static String tempDir = System.getProperty("java.io.tmpdir");
     public void copyToTemp() throws IOException{
-        // TODO - Try using File.createTempFile() method to create temp version of yt-dlp (might work)
         File yt_dlp_file;
         if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
             yt_dlp_file = File.createTempFile("yt-dlp", ".exe");
