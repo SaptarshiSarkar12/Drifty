@@ -4,6 +4,8 @@ import Utils.DriftyConstants;
 import Utils.MessageBroker;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -15,8 +17,12 @@ public class sendYt_dlpOutput extends Thread{
     public void run() {
         Scanner sc = null;
         try {
+            if (!yt_dlpOutputFile.exists()) {
+                Path yt_dlpFilePath = yt_dlpOutputFile.toPath();
+                Files.createFile(yt_dlpFilePath);
+            }
             sc = new Scanner(yt_dlpOutputFile);
-        } catch (FileNotFoundException ignored) {}
+        } catch (IOException ignored) {}
         while (!exit) {
             try {
                 String out = sc.nextLine();

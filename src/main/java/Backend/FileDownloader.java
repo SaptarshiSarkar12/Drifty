@@ -1,8 +1,8 @@
 package Backend;
 
 import Utils.MessageBroker;
-import Utils.ScannerFactory;
 
+import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,7 +11,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import static Utils.DriftyConstants.*;
 import static Utils.DriftyUtility.isYoutubeLink;
@@ -21,7 +20,7 @@ import static Utils.DriftyUtility.isYoutubeLink;
  */
 public class FileDownloader implements Runnable {
     private static final MessageBroker messageBroker = Drifty.messageBroker;
-    public static final File output = new File("output.txt");
+    public static final File output = new File("./output.txt");
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -32,7 +31,6 @@ public class FileDownloader implements Runnable {
     private static long totalSize;
     private static URL url;
     private static boolean supportsMultithreading;
-    private static final Scanner SC = ScannerFactory.getInstance();
 
     /**
      * This is a constructor to initialise values of link, fileName and dir variables.
@@ -115,7 +113,7 @@ public class FileDownloader implements Runnable {
                     messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
-                    // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
+                    // keep main thread from closing the IO for short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);
                     } catch (InterruptedException ignored) {}
@@ -142,30 +140,14 @@ public class FileDownloader implements Runnable {
      *
      * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to (the temporary files' folder).
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
-     * @throws IOException          When an I/O problem appears while downloading the YouTube video.
+     * @throws IOException When an I/O problem appears while downloading the YouTube video.
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
-        String fName = "";
-//        link = "https://www.youtube.com/watch?v=apGV9Kg7ics";
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.inheritIO();
-//        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
-//        sendYt_dlpOutput thread = new sendYt_dlpOutput();
-//        thread.setExit(false);
-        processBuilder.command(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
-//        try (FileWriter writer = new FileWriter(output.getPath())) {
-//            writer.write("Filename detected : ");
-//        }
-        Process yt_dlp = processBuilder.start();
-        yt_dlp.waitFor();
-//        thread.start();
-        int exitValueOfYt_Dlp = yt_dlp.exitValue();
-        if (exitValueOfYt_Dlp != 0) {
-//            thread.setExit(true);
-            return;
-        }
+        ProcessBuilder processBuilder;
+        sendYt_dlpOutput thread = new sendYt_dlpOutput();
+        thread.setExit(false);
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
-        String yt_dlpProgramName = "";
+        String yt_dlpProgramName;
         String osName = System.getProperty("os.name");
         if (osName.contains("Linux")){
             yt_dlpProgramName = "yt-dlp";
@@ -174,22 +156,27 @@ public class FileDownloader implements Runnable {
         } else {
             yt_dlpProgramName = "yt-dlp";
         }
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
+        int height = (int) screenSize.getHeight(); // E.g.: 768
+        int width = (int) screenSize.getWidth(); // E.g.: 1366
         if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "\\\"bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best\""); // TODO - use screen res and send it to yt-dlp
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]");
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]");
         }
-        processBuilder.inheritIO();
-        yt_dlp = processBuilder.start();
+        processBuilder.inheritIO(); // TODO - use --newline flag in yt-dlp and count new lines and estimate percentage of download
+        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
+        thread.start();
+        Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
-        exitValueOfYt_Dlp = yt_dlp.exitValue();
+        int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
             messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED_FILE, LOGGER_INFO, "download");
         } else if (exitValueOfYt_Dlp == 1) {
             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
         }
-//        thread.setExit(true);
-//        output.delete();
+        thread.setExit(true);
+        output.delete();
     }
 
     /**
