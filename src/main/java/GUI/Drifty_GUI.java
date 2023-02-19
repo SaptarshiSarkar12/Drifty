@@ -1,6 +1,6 @@
 package GUI;
 
-import Backend.DefaultDownloadFolderLocationFinder;
+import Utils.MessageBroker;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,7 +16,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static Utils.DriftyUtility.isURLValid;
+import static Utils.DriftyUtility.findFilenameInLink;
+import static Utils.DriftyUtility.isYoutubeLink;
+
 
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
@@ -25,10 +27,15 @@ public class Drifty_GUI extends Application {
     static MenuBar menuBar;
     static Text drifty;
     static VBox input;
+    static String directoryForDownloading;
     static String linkToFile;
+    static String fileName;
+    static Text linkValidOrNot;
+    static TextField directoryText;
     @Override
     public void start(Stage mainWindow) {
         driftyInitialWindow = mainWindow;
+        MessageBroker messageBroker = new MessageBroker("GUI", linkValidOrNot, directoryText, , );
         initializeScreen();
         takeInputs();
 
@@ -49,33 +56,9 @@ public class Drifty_GUI extends Application {
         link.setAlignment(Pos.CENTER);
         linkInput.setPrefColumnCount(60);
         link.getChildren().addAll(linkText, linkInput);
+        linkValidOrNot = new Text();
 
-        Button validateLink = new Button("Validate Link");
-        input.setAlignment(Pos.CENTER);
-        Text linkValidOrNot = new Text();
-        EventHandler<ActionEvent> linkEnter = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                linkToFile = String.valueOf(linkInput.getCharacters());
-                linkValidOrNot.setFont(Font.font("Algerian", FontWeight.MEDIUM, 15));
-                try {
-                    if (isURLValid(linkToFile)){
-                        linkValidOrNot.setText("Link is Valid");
-                        linkValidOrNot.setFill(Color.GREEN);
-                    }
-//                    else {
-//                        linkValidOrNot.setText("Invalid link! Please enter with URL protocol!");
-//                        linkValidOrNot.setFill(Color.RED);
-//                    }
-                } catch (Exception e) {
-                    linkValidOrNot.setText(e.getMessage()); // TODO
-                    linkValidOrNot.setFill(Color.RED);
-                }
-            }
-        };
-        validateLink.setOnAction(linkEnter);
-
-        HBox directory = new HBox();
+        VBox directory = new VBox();
 
         Text customDirectory = new Text("Enter Custom Directory : ");
         customDirectory.setFont(Font.font("Arial", 20));
@@ -87,23 +70,53 @@ public class Drifty_GUI extends Application {
         choseDirectory.setFont(Font.font("Arial", 20));
         ComboBox<String> directoryChoice = new ComboBox<>();
         directoryChoice.getItems().addAll("Default Downloads Folder", "Custom Folder");
-        Text defaultDirectory = new Text();
-        EventHandler<ActionEvent> directoryChosen = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (directoryChoice.getSelectionModel().getSelectedItem().equals("Default Downloads Folder")){
-                    directory.getChildren().addAll(defaultDirectory);
-                    defaultDirectory.setText("Default Downloads Folder detected : " + DefaultDownloadFolderLocationFinder.findPath());
-                    defaultDirectory.setFill(Color.ALICEBLUE);
-                    defaultDirectory.setFont(Font.font("Verdana", FontWeight.MEDIUM, 20));
-                } else {
-                    directory.getChildren().addAll(customDirectory, customDirectoryInput);
-                }
+        directoryText = new TextField();
+        EventHandler<ActionEvent> directoryChosen = actionEvent -> {
+            if (directoryChoice.getSelectionModel().getSelectedItem().equals("Custom Folder")){
+                directory.getChildren().addAll(customDirectory, customDirectoryInput);
+            } else {
+                directoryForDownloading = ".";
             }
         };
         directoryChoice.setOnAction(directoryChosen);
         directory.getChildren().addAll(choseDirectory, directoryChoice);
-        input.getChildren().addAll(link, validateLink, linkValidOrNot, directory);
+
+        VBox validateInputs = new VBox();
+        Button validateInput = new Button();
+
+        VBox fileNameLayout = new VBox();
+
+        HBox renameFileInput = new HBox();
+        Text renameFile = new Text("File Name (with extension) : ");
+        renameFile.setFont(Font.font("Arial", 20));
+        TextField fileNameText = new TextField();
+        renameFileInput.getChildren().addAll(renameFile, fileNameText);
+
+        Text renameFileOutputText = new Text();
+        fileNameLayout.getChildren().addAll(renameFileInput, renameFileOutputText);
+
+        boolean fileIsPreviouslyAskedToBeRenamed = false;
+        input.getChildren().addAll(link, linkValidOrNot, directory, validateInputs);
+        EventHandler<ActionEvent> clickedToValidateInputs = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (!fileIsPreviouslyAskedToBeRenamed) {
+                    linkToFile = String.valueOf(linkInput.getCharacters()); // Get Link
+                    boolean isYoutubeURL = isYoutubeLink(linkToFile);
+                    String fileNameFromLink = findFilenameInLink(linkToFile);
+                    if ((fileNameFromLink == null || (fileNameFromLink.length() == 0)) && (!isYoutubeURL)) {
+                        input.getChildren().addAll(fileNameLayout);
+                    }
+                } else {
+                    linkToFile = String.valueOf(linkInput.getCharacters());
+                    directoryForDownloading = String.valueOf(directoryText.getCharacters());
+                    fileName = String.valueOf(fileNameText.getCharacters());
+                }
+            }
+        };
+        validateInput.setOnAction(clickedToValidateInputs);
+        validateInputs.getChildren().addAll(validateInput);
+
     }
 
     public static void main(String[] args) {
