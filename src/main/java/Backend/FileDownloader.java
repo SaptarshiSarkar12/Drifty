@@ -144,8 +144,8 @@ public class FileDownloader implements Runnable {
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         ProcessBuilder processBuilder;
-        sendYt_dlpOutput thread = new sendYt_dlpOutput();
-        thread.setExit(false);
+//        sendYt_dlpOutput thread = new sendYt_dlpOutput();
+//        thread.setExit(false);
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
         String yt_dlpProgramName;
         String osName = System.getProperty("os.name");
@@ -160,13 +160,13 @@ public class FileDownloader implements Runnable {
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
         if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s \tETA : %(progress.eta)s seconds");
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s \tETA : %(progress.eta)s seconds");
         }
-        processBuilder.inheritIO(); // TODO - use --newline flag in yt-dlp and count new lines and estimate percentage of download
-        processBuilder.redirectOutput(ProcessBuilder.Redirect.to(output));
-        thread.start();
+        processBuilder.inheritIO();
+//        processBuilder.redirectOutput(); // TODO
+//        thread.start();
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
@@ -175,8 +175,8 @@ public class FileDownloader implements Runnable {
         } else if (exitValueOfYt_Dlp == 1) {
             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
         }
-        thread.setExit(true);
-        output.delete();
+//        thread.setExit(true);
+//        output.delete();
     }
 
     /**
