@@ -10,7 +10,7 @@ import Footer from '../components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Home({posts}) {
   return (
     <>
       <Head>
@@ -23,10 +23,20 @@ export default function Home() {
         <link rel="manifest" href="favicons/site.webmanifest" />
       </Head>
       <Header />
-      <Contribute/>
-      {/* <Download />
+      <Contribute props={posts}/>
+      <Download />
       <Demo />
-      <Footer /> */}
+      <Footer />
     </>
   )
+}
+export async function getStaticProps(){
+  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/contributors',{method:'GET'})
+  const posts = await res.json()
+  
+  return {
+    props:{
+      posts
+    }
+  }
 }
