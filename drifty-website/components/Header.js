@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useState } from "react"
 
 function NavLink({ to, children, cn }) {
@@ -10,7 +11,7 @@ function MobileNav({ open, setOpen }) {
     return (
         <div className={`absolute top-0 left-0 h-screen w-screen bg-white transform ${open ? "-translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md `}>
             <div className="flex items-center justify-center filter drop-shadow-md bg-blue-100 h-20"> {/*logo container*/}
-                <a className="text-xl font-semibold" href="/"><img src="favicons/favicon-32x32.png"></img></a>
+                <a className="text-xl font-semibold" href="/"> <Image src="/favicons/favicon-32x32.png" width={32} height={32} alt="DriftyLogo"/></a>
             </div>
             <div className="flex flex-col ml-4">
                 <NavLink to="/contact" cn="text-xl font-normal my-4">About</NavLink>
