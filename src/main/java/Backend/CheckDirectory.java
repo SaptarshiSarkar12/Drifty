@@ -25,6 +25,8 @@ class CheckDirectory {
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
             messageBroker.sendMessage(DIRECTORY_CREATED, LOGGER_INFO, "directory");
+        } else {
+            messageBroker.sendMessage("Directory is valid !", LOGGER_INFO, "directory");
         }
     }
 

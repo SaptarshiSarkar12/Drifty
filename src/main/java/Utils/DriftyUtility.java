@@ -41,10 +41,7 @@ public final class DriftyUtility {
             int responseCode = connection.getResponseCode();
             return responseCode == HttpURLConnection.HTTP_OK;
         } catch (ConnectException e){
-            String errorMessage = e.getMessage();
-            int colonIndex = errorMessage.indexOf(":");
-            errorMessage = errorMessage.substring(0, colonIndex);
-            throw new Exception(errorMessage);
+            throw new Exception(e);
         } catch (SocketException e){
             throw new Exception("You are not connected to the Internet!");
         }
