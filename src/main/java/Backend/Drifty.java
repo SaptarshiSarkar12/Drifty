@@ -14,11 +14,11 @@ public class Drifty {
     private static String downloadsFolder = null;
     private static String url;
     private static String fileName;
-    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, Text link, Text dir, Text download, Text renameFile) {
+    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, Text linkOutputTextArea, Text directoryOutputTextArea, Text downloadOutputTextArea, Text fileNameOutputTextArea) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
         fileName = fileNameOfTheDownloadedFile;
-        messageBroker = new MessageBroker("GUI", link, dir, download, renameFile);
+        messageBroker = new MessageBroker("GUI", linkOutputTextArea, directoryOutputTextArea, downloadOutputTextArea, fileNameOutputTextArea);
     }
     public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, PrintStream outputStream) {
         Drifty.url = url;
@@ -28,16 +28,22 @@ public class Drifty {
     }
 
     public void start() {
+        boolean errorFlag = false;
         messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
-        if (!url.contains(" ")) {
+        if (url.contains(" ")) {
+            messageBroker.sendMessage("Link should not contain whitespace characters!", DriftyConstants.LOGGER_ERROR, "link");
+            errorFlag = true;
+        } else if (url.length() == 0) {
+            messageBroker.sendMessage("Link cannot be empty!", DriftyConstants.LOGGER_ERROR, "link");
+            errorFlag = true;
+        } else {
             try {
                 DriftyUtility.isURLValid(url);
                 messageBroker.sendMessage("Link is valid!", DriftyConstants.LOGGER_INFO, "link");
             } catch (Exception e) {
                 messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "link");
+                errorFlag = true;
             }
-        } else {
-            messageBroker.sendMessage("Link should not contain whitespace characters!", DriftyConstants.LOGGER_ERROR, "link");
         }
 
         if (downloadsFolder == null){
@@ -47,16 +53,20 @@ public class Drifty {
                 new CheckDirectory(downloadsFolder);
             } catch (IOException e) {
                 messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "directory");
+                errorFlag = true;
             }
         }
 
-        if ((fileName == null || fileName.length() == 0) && (!DriftyUtility.isYoutubeLink(url))) {
+        if (((fileName == null) || (fileName.length() == 0)) && (!DriftyUtility.isYoutubeLink(url))) {
             fileName = DriftyUtility.findFilenameInLink(url);
             if (fileName == null || fileName.length() == 0) {
                 messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "renameFile");
+                errorFlag = true;
             }
         }
 
-        new FileDownloader(url, fileName, downloadsFolder).run();
+        if (!errorFlag) {
+            new FileDownloader(url, fileName, downloadsFolder).run();
+        }
     }
 }

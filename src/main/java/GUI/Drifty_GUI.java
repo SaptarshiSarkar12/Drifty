@@ -1,12 +1,13 @@
 package GUI;
 
-import Utils.MessageBroker;
+import Backend.Drifty;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -16,10 +17,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import static Utils.DriftyUtility.findFilenameInLink;
-import static Utils.DriftyUtility.isYoutubeLink;
-
-
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
     static VBox root = new VBox();
@@ -27,96 +24,109 @@ public class Drifty_GUI extends Application {
     static MenuBar menuBar;
     static Text drifty;
     static VBox input;
-    static String directoryForDownloading;
+    static TextField linkInputText;
+    static TextField directoryInputText;
     static String linkToFile;
+    static String directoryForDownloading;
     static String fileName;
-    static Text linkValidOrNot;
-    static TextField directoryText;
+    static Text linkOutputText;
+    static Text directoryOutputText;
+    static Text fileNameOutputText;
+    static Text downloadOutputText;
+    static boolean isDownloadButtonPressed;
     @Override
     public void start(Stage mainWindow) {
         driftyInitialWindow = mainWindow;
-        MessageBroker messageBroker = new MessageBroker("GUI", linkValidOrNot, directoryText, , );
         initializeScreen();
+        root.getChildren().addAll(menuBar, drifty);
         takeInputs();
 
-        root.getChildren().addAll(menuBar, drifty, input);
         mainWindow.setScene(mainScene);
         mainWindow.sizeToScene();
         mainWindow.show();
     }
 
     private static void takeInputs() {
-        input = new VBox();
-        input.setSpacing(20);
+        input = new VBox(); // main starting screen
+        input.setSpacing(30);
 
-        HBox link = new HBox();
+        VBox inputLayout = new VBox();
+        inputLayout.setSpacing(20);
+
+        VBox linkLayout = new VBox(); // Link layout
+        HBox linkInputLayout = new HBox(); // link input
         Text linkText = new Text("Link : ");
-        linkText.setFont(Font.font("Arial", 20));
-        TextField linkInput = new TextField();
-        link.setAlignment(Pos.CENTER);
-        linkInput.setPrefColumnCount(60);
-        link.getChildren().addAll(linkText, linkInput);
-        linkValidOrNot = new Text();
+        linkText.setFont(Font.font("Arial", 23));
+        linkInputText = new TextField(); // link input area
+        linkInputText.setAlignment(Pos.CENTER);
+        linkInputText.setPrefColumnCount(60);
+        linkInputLayout.getChildren().addAll(linkText, linkInputText);
+        linkInputLayout.setAlignment(Pos.CENTER);
+        linkOutputText = new Text(); // link output
+        new ValidateLinkThread().run();
+        linkLayout.getChildren().addAll(linkInputLayout, linkOutputText);
+        linkLayout.setAlignment(Pos.CENTER);
 
-        VBox directory = new VBox();
+        VBox directoryLayout = new VBox();
+        HBox directoryInputLayout = new HBox(); // directory choosing menu layout
+        Text directoryText = new Text("Directory : ");
+        directoryText.setFont(Font.font("Arial", 23));
+        directoryInputText = new TextField();
+        new SetDefaultDirectoryInput().run();
+        directoryInputText.setPrefColumnCount(50);
+        directoryInputText.setAlignment(Pos.CENTER);
+        directoryOutputText = new Text(); // directory output text
+        directoryInputLayout.getChildren().addAll(directoryText, directoryInputText);
+        directoryInputLayout.setAlignment(Pos.CENTER);
+        directoryLayout.getChildren().addAll(directoryInputLayout, directoryOutputText);
+        directoryLayout.setAlignment(Pos.CENTER);
 
-        Text customDirectory = new Text("Enter Custom Directory : ");
-        customDirectory.setFont(Font.font("Arial", 20));
-        TextField customDirectoryInput = new TextField();
-        directory.setAlignment(Pos.CENTER);
-        customDirectoryInput.setPrefColumnCount(58);
+        VBox fileNameLayout = new VBox(); // file name I/O layout
+        HBox fileNameInput = new HBox(); // file name input layout
+        Text fileNameText = new Text("File Name (with extension) : ");
+        fileNameText.setFont(Font.font("Arial", 23));
+        TextField fileNameInputText = new TextField(); // file name input area
+        fileNameInputText.setPrefColumnCount(30);
+        fileNameInputText.setAlignment(Pos.CENTER);
+        fileNameInput.getChildren().addAll(fileNameText, fileNameInputText);
+        fileNameInput.setAlignment(Pos.CENTER);
+        fileNameOutputText = new Text(); // file name output
+        fileNameLayout.getChildren().addAll(fileNameInput, fileNameOutputText);
+        fileNameLayout.setAlignment(Pos.CENTER);
 
-        Text choseDirectory = new Text("Choose Directory : ");
-        choseDirectory.setFont(Font.font("Arial", 20));
-        ComboBox<String> directoryChoice = new ComboBox<>();
-        directoryChoice.getItems().addAll("Default Downloads Folder", "Custom Folder");
-        directoryText = new TextField();
-        EventHandler<ActionEvent> directoryChosen = actionEvent -> {
-            if (directoryChoice.getSelectionModel().getSelectedItem().equals("Custom Folder")){
-                directory.getChildren().addAll(customDirectory, customDirectoryInput);
-            } else {
-                directoryForDownloading = ".";
+        VBox downloadLayout = new VBox();
+        Button downloadButton = new Button("Download");
+        downloadOutputText = new Text();
+        downloadLayout.getChildren().addAll(downloadButton, downloadOutputText);
+        downloadLayout.setAlignment(Pos.CENTER);
+
+        Button downloadCancelButton = new Button("Cancel Download");
+        downloadCancelButton.setAlignment(Pos.CENTER);
+
+        EventHandler<MouseEvent> download = MouseEvent -> {
+            isDownloadButtonPressed = true;
+            linkInputText.setEditable(false);
+            directoryInputText.setEditable(false);
+            fileNameInputText.setEditable(false);
+
+            linkToFile = String.valueOf(linkInputText.getCharacters());
+            if (directoryForDownloading == null){ // TODO
+                directoryForDownloading = String.valueOf(directoryInputText.getCharacters());
             }
+            fileName = String.valueOf(fileNameInputText.getCharacters());
+            Drifty backend = new Drifty(linkToFile, null, fileName, linkOutputText, directoryOutputText, downloadOutputText, fileNameOutputText);
+            backend.start();
+
+            linkInputText.setEditable(true);
+            directoryInputText.setEditable(true);
+            fileNameInputText.setEditable(true);
+            isDownloadButtonPressed = false;
         };
-        directoryChoice.setOnAction(directoryChosen);
-        directory.getChildren().addAll(choseDirectory, directoryChoice);
+        downloadButton.setOnMouseClicked(download);
+        inputLayout.getChildren().addAll(linkLayout, directoryLayout, fileNameLayout);
 
-        VBox validateInputs = new VBox();
-        Button validateInput = new Button();
-
-        VBox fileNameLayout = new VBox();
-
-        HBox renameFileInput = new HBox();
-        Text renameFile = new Text("File Name (with extension) : ");
-        renameFile.setFont(Font.font("Arial", 20));
-        TextField fileNameText = new TextField();
-        renameFileInput.getChildren().addAll(renameFile, fileNameText);
-
-        Text renameFileOutputText = new Text();
-        fileNameLayout.getChildren().addAll(renameFileInput, renameFileOutputText);
-
-        boolean fileIsPreviouslyAskedToBeRenamed = false;
-        input.getChildren().addAll(link, linkValidOrNot, directory, validateInputs);
-        EventHandler<ActionEvent> clickedToValidateInputs = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (!fileIsPreviouslyAskedToBeRenamed) {
-                    linkToFile = String.valueOf(linkInput.getCharacters()); // Get Link
-                    boolean isYoutubeURL = isYoutubeLink(linkToFile);
-                    String fileNameFromLink = findFilenameInLink(linkToFile);
-                    if ((fileNameFromLink == null || (fileNameFromLink.length() == 0)) && (!isYoutubeURL)) {
-                        input.getChildren().addAll(fileNameLayout);
-                    }
-                } else {
-                    linkToFile = String.valueOf(linkInput.getCharacters());
-                    directoryForDownloading = String.valueOf(directoryText.getCharacters());
-                    fileName = String.valueOf(fileNameText.getCharacters());
-                }
-            }
-        };
-        validateInput.setOnAction(clickedToValidateInputs);
-        validateInputs.getChildren().addAll(validateInput);
-
+        input.getChildren().addAll(inputLayout);
+        root.getChildren().addAll(input, downloadLayout);
     }
 
     public static void main(String[] args) {
@@ -124,8 +134,9 @@ public class Drifty_GUI extends Application {
     }
 
     private static void initializeScreen(){
-        driftyInitialWindow.setTitle("Drifty GUI [Under Development]");
+        driftyInitialWindow.setTitle("Drifty GUI");
         driftyInitialWindow.setMaximized(true);
+        driftyInitialWindow.setResizable(false);
         root.setSpacing(30);
         root.setMinHeight(497);
         root.setMaxWidth(962);
@@ -157,5 +168,18 @@ public class Drifty_GUI extends Application {
         drifty.setStroke(Color.DEEPSKYBLUE);
         drifty.setCache(true);
         root.setAlignment(Pos.TOP_CENTER);
+        root.setSpacing(90);
+    }
+
+    protected static TextField getDirectoryInputText() {
+        return directoryInputText;
+    }
+
+    protected static TextField getLinkInputText() {
+        return linkInputText;
+    }
+
+    protected static Text getLinkOutputText() {
+        return linkOutputText;
     }
 }
