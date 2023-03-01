@@ -108,7 +108,7 @@ public class FileDownloader implements Runnable {
                     readableByteChannel = Channels.newChannel(urlStream);
 
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName); // TODO
                     progressBarThread.start();
                     messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);

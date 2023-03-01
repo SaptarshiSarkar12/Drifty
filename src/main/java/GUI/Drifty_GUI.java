@@ -154,11 +154,9 @@ public class Drifty_GUI extends Application {
         StackPane.setAlignment(menuBar, Pos.TOP_CENTER);
         menuBar.getMenus().addAll(menu, help);
 
-        EventHandler<ActionEvent> exitClicked = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.exit(0);
-            }
+        EventHandler<ActionEvent> exitClicked = actionEvent -> {
+            ValidateLinkThread.setFlag(false);
+            System.exit(0);
         };
         exit.setOnAction(exitClicked);
 
@@ -182,4 +180,5 @@ public class Drifty_GUI extends Application {
     protected static Text getLinkOutputText() {
         return linkOutputText;
     }
+
 }
