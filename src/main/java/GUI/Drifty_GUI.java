@@ -39,10 +39,10 @@ public class Drifty_GUI extends Application {
         driftyInitialWindow = mainWindow;
         initializeScreen();
         root.getChildren().addAll(menuBar, drifty);
-        takeInputs();
+//        takeInputs();
 
         mainWindow.setScene(mainScene);
-        mainWindow.sizeToScene();
+//        mainWindow.sizeToScene();
         mainWindow.show();
     }
 
