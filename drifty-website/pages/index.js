@@ -7,10 +7,12 @@ import Contribute from '../components/Contribute'
 import Demo from '../components/Demo'
 import Download from '../components/Download'
 import Footer from '../components/Footer'
+import MainSection from '@/components/MainSection'
+import dynamic from 'next/dynamic'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home({posts}) {
+export default function Home(props) {
   return (
     <>
       <Head>
@@ -22,21 +24,33 @@ export default function Home({posts}) {
         <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png" />
         <link rel="manifest" href="favicons/site.webmanifest" />
       </Head>
-      <Header />
-      <Contribute props={posts}/>
-      <Download />
+      <Header props={"bg-top"} />
+      <MainSection />
+      <Contribute props={props.contribs}/>
+      <Download props={props.releases}/>
       <Demo />
       <Footer />
     </>
   )
 }
-export async function getStaticProps(){
+async function getContibs(username) {
   const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/contributors',{method:'GET'})
-  const posts = await res.json()
-  
+  return res.json();
+}
+
+async function getReleases(username) {
+  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases');
+  return res.json();
+}
+export async function getServerSideProps(){
+  const contribsdata=getContibs();
+  const releasesdata=getReleases();
+  const [contrib,release]= await Promise.all([contribsdata,releasesdata]);
   return {
     props:{
-      posts
+      revalidate:3600,
+      contribs:{contrib},
+      releases:{release}
     }
   }
 }
