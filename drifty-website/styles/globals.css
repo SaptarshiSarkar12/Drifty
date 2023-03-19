@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+    .img-layer div img {
+        width: 100%;
+        margin-left: 0rem;
+        padding-left:0;
+        align-items: center;
+        transform: rotateX(0deg) rotateY(335deg);
+        transform-style: preserve-3d;
+       }
+    /* ... */
+    
