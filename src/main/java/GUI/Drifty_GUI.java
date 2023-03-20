@@ -39,6 +39,7 @@ public class Drifty_GUI extends Application {
     static Text fileNameOutputText;
     static Text downloadOutputText;
     static boolean isDownloadButtonPressed;
+    static Button downloadButton;
     @Override
     public void start(Stage mainWindow) {
         driftyInitialWindow = mainWindow;
@@ -63,15 +64,19 @@ public class Drifty_GUI extends Application {
                         linkOutputText.setFill(Color.RED);
                         if (url.contains(" ")) {
                             linkOutputText.setText("Link should not contain whitespace characters!");
+                            downloadButton.setDisable(true);
                         } else if (url.length() == 0) {
                             linkOutputText.setText("Link cannot be empty!");
+                            downloadButton.setDisable(true);
                         } else {
                             try {
                                 DriftyUtility.isURLValid(url);
                                 linkOutputText.setFill(Color.GREEN);
                                 linkOutputText.setText("Link is valid!");
+                                downloadButton.setDisable(false);
                             } catch (Exception e) {
                                 linkOutputText.setText(e.getMessage());
+                                downloadButton.setDisable(true);
                             }
                         }
                         previous_url = url;
@@ -84,21 +89,33 @@ public class Drifty_GUI extends Application {
 
         Task<Void> validateDirectory = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 String previous_directory = "";
                 while (flag) {
                     String directory = String.valueOf(directoryInputText.getCharacters());
                     if (!directory.equals(previous_directory)){
-                        File file = new File(directory);
-                        if (file.exists() && file.isDirectory()) {
-                            // file found
-                            // TODO
+                        directoryOutputText.setFill(Color.RED);
+                        if (directory.length() == 0){
+                            directoryOutputText.setText("Directory cannot be empty!");
+                            downloadButton.setDisable(true);
+                        } else {
+                            File file = new File(directory);
+                            if (file.exists() && file.isDirectory()) {
+                                directoryOutputText.setFill(Color.GREEN);
+                                directoryOutputText.setText("Directory exists!");
+                                downloadButton.setDisable(false);
+                            } else {
+                                directoryOutputText.setText("Directory does not exist!");
+                                downloadButton.setDisable(true);
+                            }
                         }
                     }
+                    previous_directory = directory;
                 }
                 return null;
             }
         };
+        new Thread(validateDirectory).start();
     }
 
     private static void takeInputs() {
@@ -149,7 +166,7 @@ public class Drifty_GUI extends Application {
         fileNameLayout.setAlignment(Pos.CENTER);
 
         VBox downloadLayout = new VBox();
-        Button downloadButton = new Button("Download");
+        downloadButton = new Button("Download");
         downloadOutputText = new Text();
         downloadLayout.getChildren().addAll(downloadButton, downloadOutputText);
         downloadLayout.setAlignment(Pos.CENTER);
@@ -164,7 +181,7 @@ public class Drifty_GUI extends Application {
             fileNameInputText.setEditable(false);
 
             linkToFile = String.valueOf(linkInputText.getCharacters());
-            if (directoryForDownloading == null){ // TODO
+            if (directoryForDownloading == null){
                 directoryForDownloading = String.valueOf(directoryInputText.getCharacters());
             }
             fileName = String.valueOf(fileNameInputText.getCharacters());
