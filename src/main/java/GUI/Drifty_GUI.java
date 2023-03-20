@@ -1,7 +1,9 @@
 package GUI;
 
 import Backend.Drifty;
+import Utils.DriftyUtility;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -17,6 +19,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Drifty_GUI extends Application {
     static Stage driftyInitialWindow;
     static VBox root = new VBox();
@@ -29,6 +33,7 @@ public class Drifty_GUI extends Application {
     static String linkToFile;
     static String directoryForDownloading;
     static String fileName;
+    static boolean flag = true;
     static Text linkOutputText;
     static Text directoryOutputText;
     static Text fileNameOutputText;
@@ -39,11 +44,61 @@ public class Drifty_GUI extends Application {
         driftyInitialWindow = mainWindow;
         initializeScreen();
         root.getChildren().addAll(menuBar, drifty);
-//        takeInputs();
+        takeInputs();
+        instantInputValidate();
 
         mainWindow.setScene(mainScene);
-//        mainWindow.sizeToScene();
         mainWindow.show();
+    }
+
+    private void instantInputValidate() {
+        Task<Void> validateLink = new Task<>() {
+            @Override
+            protected Void call() {
+                String previous_url = "";
+                while (flag) {
+                    String url = String.valueOf(linkInputText.getCharacters());
+
+                    if (!url.equals(previous_url)) { // checks whether the link is edited or not (helps in optimising and increase performance)
+                        linkOutputText.setFill(Color.RED);
+                        if (url.contains(" ")) {
+                            linkOutputText.setText("Link should not contain whitespace characters!");
+                        } else if (url.length() == 0) {
+                            linkOutputText.setText("Link cannot be empty!");
+                        } else {
+                            try {
+                                DriftyUtility.isURLValid(url);
+                                linkOutputText.setFill(Color.GREEN);
+                                linkOutputText.setText("Link is valid!");
+                            } catch (Exception e) {
+                                linkOutputText.setText(e.getMessage());
+                            }
+                        }
+                        previous_url = url;
+                    }
+                }
+                return null;
+            }
+        };
+        new Thread(validateLink).start();
+
+        Task<Void> validateDirectory = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                String previous_directory = "";
+                while (flag) {
+                    String directory = String.valueOf(directoryInputText.getCharacters());
+                    if (!directory.equals(previous_directory)){
+                        File file = new File(directory);
+                        if (file.exists() && file.isDirectory()) {
+                            // file found
+                            // TODO
+                        }
+                    }
+                }
+                return null;
+            }
+        };
     }
 
     private static void takeInputs() {
@@ -63,7 +118,6 @@ public class Drifty_GUI extends Application {
         linkInputLayout.getChildren().addAll(linkText, linkInputText);
         linkInputLayout.setAlignment(Pos.CENTER);
         linkOutputText = new Text(); // link output
-        new ValidateLinkThread().run();
         linkLayout.getChildren().addAll(linkInputLayout, linkOutputText);
         linkLayout.setAlignment(Pos.CENTER);
 
@@ -155,7 +209,7 @@ public class Drifty_GUI extends Application {
         menuBar.getMenus().addAll(menu, help);
 
         EventHandler<ActionEvent> exitClicked = actionEvent -> {
-            ValidateLinkThread.setFlag(false);
+            stopInstantInputValidate();
             System.exit(0);
         };
         exit.setOnAction(exitClicked);
@@ -181,4 +235,7 @@ public class Drifty_GUI extends Application {
         return linkOutputText;
     }
 
+    private static void stopInstantInputValidate(){
+        flag = false;
+    }
 }
