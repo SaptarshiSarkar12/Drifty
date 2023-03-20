@@ -2,7 +2,7 @@
   <configuration default="false" name="Drifty_GUI" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="GUI.Drifty_GUI" />
     <module name="Drifty" />
-    <option name="VM_PARAMETERS" value="--module-path $PROJECT_DIR$/../Downloads/javafx-19.0.2.1/lib --add-modules javafx.controls" />
+    <option name="VM_PARAMETERS" value="--module-path $PROJECT_DIR$/resources/javafx/lib --add-modules javafx.controls" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="GUI.*" />
