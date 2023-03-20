@@ -1,7 +1,7 @@
-name: 💡 Feature Request
-description: Suggest a new feature for Drifty Application/Website
+name: 💡 Feature Request for Website
+description: Suggest a new feature for Drifty Website
 title: "[FEATURE] "
-labels: [enhancement]
+labels: [enhancement, Website]
 body:
   - type: textarea
     id: related-problem-for-feature-request
@@ -16,16 +16,6 @@ body:
     attributes:
       label: Describe the solution you'd like.
       description: A clear and concise description of what feature you want to include.
-    validations:
-      required: true
-  - type: dropdown
-    id: app-or-website
-    attributes:
-      label: Feature Request for Application or Website
-      description: Please select whether the feature is for the application or the website.
-      options:   
-        - Application
-        - Website
     validations:
       required: true
   - type: textarea
