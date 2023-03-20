@@ -1,5 +1,5 @@
 name: 💡 Feature Request
-description: Suggest a new feature for Drifty
+description: Suggest a new feature for Drifty Application/Website
 title: "[FEATURE] "
 labels: [enhancement]
 body:
@@ -19,17 +19,13 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: app-ver
+    id: app-or-website
     attributes:
-      label: Application Version
-      description: Please select the application version (Check it here - https://github.com/SaptarshiSarkar12/Drifty/releases/)
+      label: Feature Request for Application or Website
+      description: Please select whether the feature is for the application or the website.
       options:   
-        - v1.3.0   
-        - v1.2.2
-        - v1.2.1
-        - v1.2.0
-        - v1.1.0
-        - v1.0.0
+        - Application
+        - Website
     validations:
       required: true
   - type: textarea
