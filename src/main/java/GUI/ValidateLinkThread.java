@@ -31,7 +31,7 @@ public class ValidateLinkThread implements Runnable{
         }
     }
 
-    protected static void setFlag(boolean newFlag) {
-        flag = newFlag;
+    protected synchronized static void stop() {
+        flag = false;
     }
 }
