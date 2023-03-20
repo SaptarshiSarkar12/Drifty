@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Drifty_GUI" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="GUI.Drifty_GUI" />
+    <module name="Drifty" />
+    <option name="VM_PARAMETERS" value="--module-path $PROJECT_DIR$/../Downloads/javafx-19.0.2.1/lib --add-modules javafx.controls" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="GUI.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
