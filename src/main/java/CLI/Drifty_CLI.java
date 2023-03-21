@@ -11,8 +11,7 @@ import static Utils.DriftyConstants.*;
 import static Utils.DriftyUtility.*;
 
 /**
- * This is the main class for the CLI version of Drifty.
- * @author Saptarshi Sarkar, Akshat Jain, Anurag Bharati, Naachiket Pant, Fonta22
+ * This is the main class for the CLI (Command Line Interface) version of Drifty.
  * @version 2.0.0
  */
 public class Drifty_CLI {
@@ -26,7 +25,7 @@ public class Drifty_CLI {
      * @param args Command Line Arguments as a String array.
      */
     public static void main(String[] args) {
-        logger.log(LOGGER_INFO, APPLICATION_STARTED);
+        logger.log(LOGGER_INFO, CLI_APPLICATION_STARTED);
         initialPrintBanner();
         String downloadsFolder;
         if (args.length > 0) {
@@ -66,7 +65,7 @@ public class Drifty_CLI {
             }
             Drifty backend = new Drifty(URL, downloadsFolder, fileName, System.out);
             backend.start();
-            logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
+            logger.log(LOGGER_INFO, CLI_APPLICATION_TERMINATED);
             System.exit(0);
         }
         while (true) {
@@ -80,6 +79,8 @@ public class Drifty_CLI {
             if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
+            } else {
+                System.out.println(FILENAME_DETECTED + fileName);
             }
             Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
             backend.start();
@@ -87,7 +88,7 @@ public class Drifty_CLI {
             SC.nextLine();
             String quit = SC.nextLine().toLowerCase();
             if (quit.equals("q")) {
-                logger.log(LOGGER_INFO, APPLICATION_TERMINATED);
+                logger.log(LOGGER_INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }
             printBanner();
