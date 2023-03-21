@@ -1,5 +1,8 @@
 package Utils;
 
+/**
+ * This file contains some String constants which are repeatedly used in the whole project.
+ */
 public final class DriftyConstants {
     public static final String VERSION_NUMBER = "v1.4.0";
     public static final String APPLICATION_NAME = "Drifty";
@@ -12,11 +15,11 @@ public final class DriftyConstants {
     public static final String LOGGER_WARN = "WARN";
 
     public static final String LOGGER_ERROR = "ERROR";
-    public static final String APPLICATION_STARTED = "Application Started !";
-    public static final String APPLICATION_TERMINATED = "Application Terminated!";
-    public static final String INVALID_URL = "URL is invalid!";
+    public static final String CLI_APPLICATION_STARTED = "Drifty CLI (Command Line Interface) Application Started !";
+    public static final String GUI_APPLICATION_STARTED = "Drifty GUI (Graphical User Interface) Application Started !";
+    public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
+    public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
-    public static final String INVALID_URL_ENTER_AGAIN = "Invalid URL. Please enter again";
     public static final String INVALID_DIRECTORY = "Invalid Directory Entered !";
     public static final String AUTO_FILE_DETECTION_FAILED = "Automatic file name detection failed!";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
@@ -34,7 +37,6 @@ public final class DriftyConstants {
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
     public static final String USER_HOME_PROPERTY = "user.home";
-    public static final String DOWNLOAD_DEFAULT_LOCATION = "Do you want to download the file in your default downloads folder? (Enter Y for yes and N for no) : ";
     public static final String RENAME_FILE = "Would you like to rename this file? (Enter Y for yes and N for no) : ";
     public static final String QUIT_OR_CONTINUE = "Press Q to Quit Or Press any Key to Continue";
     public static final String DIRECTORY_TO_DOWNLOAD_FILE = "Enter the directory in which you want to download the file : ";
@@ -69,5 +71,8 @@ public final class DriftyConstants {
 
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
 
+    /**
+     * This is a private constructor of this class.
+     */
     private DriftyConstants() {}
 }

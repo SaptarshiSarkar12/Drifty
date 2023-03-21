@@ -20,7 +20,6 @@ import static Utils.DriftyUtility.isYoutubeLink;
  */
 public class FileDownloader implements Runnable {
     private static final MessageBroker messageBroker = Drifty.messageBroker;
-    public static final File output = new File("./output.txt");
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes  50MB
@@ -33,7 +32,7 @@ public class FileDownloader implements Runnable {
     private static boolean supportsMultithreading;
 
     /**
-     * This is a constructor to initialise values of link, fileName and dir variables.
+     * This is a constructor to initialise values of <b>link</b>, <b>fileName</b> and <b>dir</b> variables.
      *
      * @param link     Link to the file that the user wants to download
      * @param fileName Filename of the file that the user wants to save as after it is downloaded
@@ -52,10 +51,6 @@ public class FileDownloader implements Runnable {
      */
     public static String getDir() {
         return dir;
-    }
-
-    public static File getYt_dlpOutputFile() {
-        return output;
     }
 
     /**
@@ -137,7 +132,6 @@ public class FileDownloader implements Runnable {
 
     /**
      * This method deals with downloading videos from YouTube in mp4 format.
-     *
      * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to (the temporary files' folder).
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException When an I/O problem appears while downloading the YouTube video.
@@ -148,11 +142,13 @@ public class FileDownloader implements Runnable {
 //        thread.setExit(false);
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
         String yt_dlpProgramName;
-        String osName = System.getProperty("os.name");
-        if (osName.contains("Linux")){
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("nux") || osName.contains("nix")){
             yt_dlpProgramName = "yt-dlp";
-        } else if (osName.contains("Windows")) {
+        } else if (osName.contains("win")) {
             yt_dlpProgramName = "yt-dlp.exe";
+        } else if (osName.contains("mac")){
+            yt_dlpProgramName = "yt-dlp_macos";
         } else {
             yt_dlpProgramName = "yt-dlp";
         }
@@ -165,8 +161,6 @@ public class FileDownloader implements Runnable {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s \tETA : %(progress.eta)s seconds");
         }
         processBuilder.inheritIO();
-//        processBuilder.redirectOutput(); // TODO
-//        thread.start();
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
@@ -175,13 +169,10 @@ public class FileDownloader implements Runnable {
         } else if (exitValueOfYt_Dlp == 1) {
             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
         }
-//        thread.setExit(true);
-//        output.delete();
     }
 
     /**
      * This method check if all the downloader threads are completed correctly and merges the downloaded parts.
-     *
      * @param fileOutputStreams FileOutputStream of all the parts
      * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
