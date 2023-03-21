@@ -1,25 +1,22 @@
 package Utils;
 
 import Backend.DefaultDownloadFolderLocationFinder;
+import Backend.Drifty;
 
-import java.io.File;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.SocketException;
 import java.net.URL;
-import java.util.Scanner;
+import java.net.UnknownHostException;
 
 import static Utils.DriftyConstants.*;
 
 public final class DriftyUtility {
-    static Scanner SC = ScannerFactory.getInstance();
 
     private DriftyUtility() {}
 
     static CreateLogs logger = CreateLogs.getInstance();
     /**
      * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
-     *
      * @param url link to the file to be downloaded.
      * @return true if the url is of YouTube and false if it is not.
      */
@@ -30,25 +27,30 @@ public final class DriftyUtility {
 
     /**
      * @param link Link to the file that the user wants to download
-     * @return true if link is valid and false if link is invalid
+     * @throws Exception if URL is not valid or cannot be connected to, then this Exception is thrown with proper message
      */
-    public static boolean isURLValid(String link) throws Exception {
+    public static void isURLValid(String link) throws Exception {
         try {
             URL url = new URL(link);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
+            connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
-            int responseCode = connection.getResponseCode();
-            return responseCode == HttpURLConnection.HTTP_OK;
         } catch (ConnectException e){
             throw new Exception(e);
-        } catch (SocketException e){
-            throw new Exception("You are not connected to the Internet!");
+        } catch (UnknownHostException unknownHost){
+            try {
+                URL projectWebsite = new URL(Drifty.projectWebsite);
+                HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
+                connectProjectWebsite.connect();
+                throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not a valid one! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+            } catch (UnknownHostException e) {
+                throw new Exception("You are not connected to the Internet!");
+            }
         }
     }
 
     /**
-     * @return true if the filename is detected and false if the filename is not detected
+     * @return the filename if it is detected else null
      */
     public static String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
@@ -66,7 +68,6 @@ public final class DriftyUtility {
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
-        System.out.println(FILENAME_DETECTED + fileName);
         logger.log(LOGGER_INFO, FILENAME_DETECTED + fileName);
         return fileName;
     }
@@ -88,41 +89,9 @@ public final class DriftyUtility {
         return downloadsFolder;
     }
 
-    /**
-     * This method performs Yes-No validation and returns the boolean value accordingly.
-     *
-     * @param input        Input String to validate.
-     * @param printMessage The message to print to re-input the confirmation.
-     * @return true if the user enters Y [Yes] and false if not.
-     */
-    public static boolean yesNoValidation(String input, String printMessage) {
-        while (true) {
-            if (input.length() == 0) {
-                System.out.println(ENTER_Y_OR_N);
-                logger.log(LOGGER_ERROR, ENTER_Y_OR_N);
-            } else {
-                break;
-            }
-            System.out.print(printMessage);
-            input = SC.nextLine().toLowerCase();
-        }
-        char choice = input.charAt(0);
-        if (choice == 'y') {
-            return true;
-        } else if (choice == 'n') {
-            return false;
-        } else {
-            System.out.println("Invalid input!");
-            logger.log("ERROR", "Invalid input");
-            System.out.print(printMessage);
-            input = SC.nextLine().toLowerCase();
-            yesNoValidation(input, printMessage);
-        }
-        return false;
-    }
     public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m            v1.2.2" + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m            v2.0.0" + ANSI_RESET);
         System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
