@@ -137,8 +137,6 @@ public class FileDownloader implements Runnable {
      */
     private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         ProcessBuilder processBuilder;
-//        sendYt_dlpOutput thread = new sendYt_dlpOutput();
-//        thread.setExit(false);
         messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
         String yt_dlpProgramName;
         String osName = System.getProperty("os.name").toLowerCase();
