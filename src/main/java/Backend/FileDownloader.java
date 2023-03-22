@@ -33,7 +33,6 @@ public class FileDownloader implements Runnable {
 
     /**
      * This is a constructor to initialise values of <b>link</b>, <b>fileName</b> and <b>dir</b> variables.
-     *
      * @param link     Link to the file that the user wants to download
      * @param fileName Filename of the file that the user wants to save as after it is downloaded
      * @param dir      Directory in which the file needs to be saved.
