@@ -72,8 +72,8 @@ public class FileDownloader implements Runnable {
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                         file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
                         fileOut = new FileOutputStream(file);
-                        start = i == 0 ? 0 : (i * partSize) + 1;
-                        end = FileDownloader.numberOfThreads - 1 == i ? totalSize : ((i * partSize) + partSize);
+                        start = (i == 0) ? 0 : ((i * partSize) + 1);
+                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize);
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -153,9 +153,9 @@ public class FileDownloader implements Runnable {
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
         if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s \tETA : %(progress.eta)s seconds");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s");
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s \tETA : %(progress.eta)s seconds");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s");
         }
         processBuilder.inheritIO();
         Process yt_dlp = processBuilder.start();
@@ -178,33 +178,33 @@ public class FileDownloader implements Runnable {
      * @throws IOException if the threads exit without downloading the whole part or if there are any IO error thrown by  getChannel().size() method of FileOutputStream
      */
     public static boolean merge(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
-        //check if all file are downloaded
+        // check if all file are downloaded
         int completed = 0;
-        FileOutputStream fout;
+        FileOutputStream fileOutputStream;
         DownloaderThread downloaderThread;
         long partSize;
         for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
-            fout = fileOutputStreams.get(i);
+            fileOutputStream = fileOutputStreams.get(i);
             partSize = partSizes.get(i);
             downloaderThread = downloaderThreads.get(i);
 
-            if (fout.getChannel().size() < partSize) {
+            if (fileOutputStream.getChannel().size() < partSize) {
                 if (!downloaderThread.isAlive()) throw new IOException(THREAD_ERROR_ENCOUNTERED);
             } else if (!downloaderThread.isAlive()) completed++;
         }
 
         //check if it is merge-able
         if (completed == FileDownloader.numberOfThreads) {
-            fout = new FileOutputStream(dir + fileName);
+            fileOutputStream = new FileOutputStream(dir + fileName);
             long position = 0;
             for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                 File f = tempFiles.get(i);
                 FileInputStream fs = new FileInputStream(f);
                 ReadableByteChannel rbs = Channels.newChannel(fs);
-                fout.getChannel().transferFrom(rbs, position, f.length());
+                fileOutputStream.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
             }
-            fout.close();
+            fileOutputStream.close();
             return true;
         }
         return false;
