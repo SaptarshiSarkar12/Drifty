@@ -1,6 +1,8 @@
 package GUI;
 
 import Backend.Drifty;
+import Backend.FileDownloader;
+import Backend.ProgressBarThread;
 import Utils.CreateLogs;
 import Utils.DriftyConstants;
 import Utils.DriftyUtility;
@@ -10,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -39,12 +42,15 @@ import java.net.URISyntaxException;
  */
 public class Drifty_GUI extends Application {
     static CreateLogs logger = CreateLogs.getInstance();
+    static VBox downloadLayout;
     static Stage driftyInitialWindow;
+    static ProgressBar downloadProgressBar;
     static VBox root = new VBox();
     static Scene mainScene = new Scene(root);
     static MenuBar menuBar;
     static Text drifty;
     static VBox input;
+    static int downloadProgress;
     static TextField linkInputText;
     static TextField directoryInputText;
     static TextField fileNameInputText;
@@ -128,7 +134,7 @@ public class Drifty_GUI extends Application {
         fileNameLayout.getChildren().addAll(fileNameInput, fileNameOutputText);
         fileNameLayout.setAlignment(Pos.CENTER);
 
-        VBox downloadLayout = new VBox();
+        downloadLayout = new VBox();
         downloadButton = new Button("Download");
         downloadOutputText = new Text();
         downloadLayout.getChildren().addAll(downloadButton, downloadOutputText);
@@ -288,12 +294,37 @@ public class Drifty_GUI extends Application {
     }
 
     /**
-     * This method deals with calling the Backend to download the file.
+     * This method deals with <b>initializing and calling the Backend</b> to <i>download</i> the file.
      * @since 2.0.0
      */
     private void download() {
         Drifty backend = new Drifty(linkToFile, null, fileName, linkOutputText, directoryOutputText, downloadOutputText, fileNameOutputText);
-        backend.start();
+        downloadLayout.getChildren().removeAll(downloadButton);
+        downloadProgressBar = new ProgressBar();
+        downloadProgressBar.setScaleX(5);
+        downloadProgressBar.setScaleY(2);
+        downloadLayout.getChildren().addAll(downloadProgressBar);
+        setDownloadProgress();
+//        backend.start();
+    }
+
+    private void setDownloadProgress() {
+        Task<Void> getProgress = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                downloadProgress = ProgressBarThread.getTotalDownloadPercent();
+                return null;
+            }
+        };
+        new Thread(getProgress).start();
+        Task<Void> setProgress = new Task<>() {
+            @Override
+            protected Void call() {
+                downloadProgressBar.setProgress(downloadProgress);
+                return null;
+            }
+        };
+        new Thread(setProgress).start();
     }
 
     /**
