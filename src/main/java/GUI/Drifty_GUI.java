@@ -324,14 +324,15 @@ public class Drifty_GUI extends Application {
      */
     private void openWebsite(String websiteURL, String websiteType){
         String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("nux") || osName.contains("nix")){
+        if (osName.contains("nux") || osName.contains("nix")){ // for Linux / Unix systems
             try {
-                ProcessBuilder openWebsite = new ProcessBuilder("xdg-open " + websiteURL);
-                openWebsite.start();
+                String[] commandsToOpenWebsite = {"xdg-open", websiteURL};
+                Runtime openWebsite = Runtime.getRuntime();
+                openWebsite.exec(commandsToOpenWebsite);
             } catch (IOException e) {
                 logger.log(DriftyConstants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
-        } else if (osName.contains("win") || osName.contains("mac")) {
+        } else if (osName.contains("win") || osName.contains("mac")) { // For macOS and Windows systems
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.browse(new URI(websiteURL));
@@ -361,8 +362,9 @@ public class Drifty_GUI extends Application {
         MenuItem contactUs = new MenuItem("Contact Us");
         MenuItem contribute = new MenuItem("Contribute");
         MenuItem bug = new MenuItem("Report a Bug");
+        MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
-        help.getItems().addAll(contribute, bug, feature);
+        help.getItems().addAll(contactUs, contribute, bug, securityVulnerability, feature);
 
         StackPane.setAlignment(menuBar, Pos.TOP_CENTER);
         menuBar.getMenus().addAll(menu, help);
@@ -370,8 +372,9 @@ public class Drifty_GUI extends Application {
         EventHandler<ActionEvent> projectWebsiteClicked = actionEvent -> openWebsite(Drifty.projectWebsite, "project website");
         EventHandler<ActionEvent> contactUsWebsiteClicked = actionEvent -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html", "contact us webpage");
         EventHandler<ActionEvent> contributeWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty", "repository website for contribution");
-        EventHandler<ActionEvent> bugWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=Bug-for-application.yaml&title=%5BBUG%5D+", "issue webpage to file a Bug");
-        EventHandler<ActionEvent> featureWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=feature-request-application.yaml&title=%5BFEATURE%5D+", "issue webpage to suggest feature");
+        EventHandler<ActionEvent> bugWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+", "issue webpage to file a Bug");
+        EventHandler<ActionEvent> securityVulnerabilityWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new", "Security Vulnerability webpage");
+        EventHandler<ActionEvent> featureWebsiteClicked = actionEvent -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+", "issue webpage to suggest feature");
         EventHandler<ActionEvent> exitClicked = actionEvent -> {
             stopInstantInputValidating();
             driftyInitialWindow.close();
@@ -389,6 +392,7 @@ public class Drifty_GUI extends Application {
         contactUs.setOnAction(contactUsWebsiteClicked);
         contribute.setOnAction(contributeWebsiteClicked); // The GitHub repository where this project is hosted, will open.
         bug.setOnAction(bugWebsiteClicked); // The website to report a bug will open.
+        securityVulnerability.setOnAction(securityVulnerabilityWebsiteClicked); // The website to report a security vulnerability will open.
         feature.setOnAction(featureWebsiteClicked); // The website to suggest feature will open.
         exit.setOnAction(exitClicked); // When app window will be closed by clicking on exit from the menu, the app will exit completely.
         driftyInitialWindow.setOnCloseRequest(close); // When app window will be closed by clicking on system default cross button, the app will exit completely.
