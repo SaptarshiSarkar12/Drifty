@@ -62,14 +62,14 @@ public class MessageBroker {
             logger.log(messageType, message);
         } else if (appType.equals("GUI")){
             Color color = Color.BLACK;
-            if (messageType.equals(DriftyConstants.LOGGER_INFO)){
+            if (messageType.equals(Constants.LOGGER_INFO)){
                 color = Color.GREEN;
-            } else if (messageType.equals(DriftyConstants.LOGGER_ERROR)) {
+            } else if (messageType.equals(Constants.LOGGER_ERROR)) {
                 color = Color.RED;
-            } else if (messageType.equals(DriftyConstants.LOGGER_WARN)) {
+            } else if (messageType.equals(Constants.LOGGER_WARN)) {
                 color = Color.YELLOW;
             } else {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message type provided to message broker!");
+                logger.log(Constants.LOGGER_ERROR, "Invalid message type provided to message broker!");
             }
             if (messageCategory.equals("link")){
                 link.setText(message);
@@ -88,10 +88,10 @@ public class MessageBroker {
                 fileName.setFill(color);
                 logger.log(messageType, message);
             } else {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message category provided to message broker!");
+                logger.log(Constants.LOGGER_ERROR, "Invalid message category provided to message broker!");
             }
         } else {
-            logger.log(DriftyConstants.LOGGER_ERROR, "Invalid application type provided to message broker!");
+            logger.log(Constants.LOGGER_ERROR, "Invalid application type provided to message broker!");
         }
     }
 

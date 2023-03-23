@@ -1,8 +1,0 @@
-22-Mar-2023 23:30:08 INFO - Drifty CLI (Command Line Interface) Application Started !
-22-Mar-2023 23:30:08 INFO - Filename detected : 100MB.bin
-22-Mar-2023 23:30:08 INFO - Validating the link...
-22-Mar-2023 23:30:08 INFO - Link is valid!
-22-Mar-2023 23:30:08 INFO - Directory is valid !
-22-Mar-2023 23:30:08 INFO - Directory is valid !
-22-Mar-2023 23:30:08 INFO - Trying to download the file ...
-22-Mar-2023 23:30:08 ERROR - Failed to download the contents ! 

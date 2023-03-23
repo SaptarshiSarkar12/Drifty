@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static Utils.DriftyConstants.*;
+import static Utils.Constants.*;
 
 /**
  * This class deals with creating Log files for Drifty.

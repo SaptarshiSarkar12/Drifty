@@ -1,11 +1,10 @@
 package GUI;
 
 import Backend.Drifty;
-import Backend.FileDownloader;
 import Backend.ProgressBarThread;
 import Utils.CreateLogs;
-import Utils.DriftyConstants;
-import Utils.DriftyUtility;
+import Utils.Constants;
+import Utils.Utility;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -50,14 +49,14 @@ public class Drifty_GUI extends Application {
     static MenuBar menuBar;
     static Text drifty;
     static VBox input;
-    static int downloadProgress;
+    static float downloadProgress;
     static TextField linkInputText;
     static TextField directoryInputText;
     static TextField fileNameInputText;
     static String linkToFile;
     static String directoryForDownloading;
     static String fileName;
-    static boolean flag = true;
+    static boolean isFileBeingDownloaded = false;
     static Text linkOutputText;
     static Text directoryOutputText;
     static Text fileNameOutputText;
@@ -72,7 +71,7 @@ public class Drifty_GUI extends Application {
      */
     @Override
     public void start(Stage mainWindow) {
-        logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
+        logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         driftyInitialWindow = mainWindow;
         initializeScreen(); // Initializing the screen
         root.getChildren().addAll(menuBar, drifty);
@@ -137,16 +136,18 @@ public class Drifty_GUI extends Application {
         downloadLayout = new VBox();
         downloadButton = new Button("Download");
         downloadOutputText = new Text();
-        downloadLayout.getChildren().addAll(downloadButton, downloadOutputText);
+        downloadLayout.getChildren().addAll(downloadOutputText, downloadButton);
         downloadLayout.setAlignment(Pos.CENTER);
 
         inputLayout.getChildren().addAll(linkLayout, directoryLayout, fileNameLayout);
 
         EventHandler<MouseEvent> download = MouseEvent -> {
             disableInputs();
-            stopInstantInputValidating();
+            isFileBeingDownloaded = true;
             saveInputs();
+
             download();
+
             enableInputs();
             setDefaultInputs();
             startInstantInputValidating();
@@ -165,7 +166,7 @@ public class Drifty_GUI extends Application {
         Task<Void> setDefaultDirectory = new Task<>() {
             @Override
             protected Void call() {
-                String defaultDirectory = DriftyUtility.saveToDefault();
+                String defaultDirectory = Utility.saveToDefault();
                 directoryInputText.setText(defaultDirectory);
                 return null;
             }
@@ -176,11 +177,11 @@ public class Drifty_GUI extends Application {
             @Override
             protected Void call() {
                 String previous_url = "";
-                while (flag) {
+                while (!isFileBeingDownloaded) {
                     String url = String.valueOf(linkInputText.getCharacters());
                     if (!url.equals(previous_url)) {
-                        if (!DriftyUtility.isYoutubeLink(url)) {
-                            String fileName = DriftyUtility.findFilenameInLink(url);
+                        if (!Utility.isYoutubeLink(url)) {
+                            String fileName = Utility.findFilenameInLink(url);
                             if (fileName != null) {
                                 fileNameInputText.setText(fileName);
                             } else {
@@ -205,7 +206,7 @@ public class Drifty_GUI extends Application {
             @Override
             protected Void call() {
                 String previous_url = "";
-                while (flag) {
+                while (!isFileBeingDownloaded) {
                     String url = String.valueOf(linkInputText.getCharacters());
 
                     if (!url.equals(previous_url)) { // checks whether the link is edited or not (helps in optimising and improves performance)
@@ -221,7 +222,7 @@ public class Drifty_GUI extends Application {
                             downloadButton.setDisable(true);
                         } else {
                             try {
-                                DriftyUtility.isURLValid(url);
+                                Utility.isURLValid(url);
                                 linkOutputText.setFill(Color.GREEN);
                                 linkOutputText.setText("Link is valid!");
                                 downloadButton.setDisable(false);
@@ -243,7 +244,7 @@ public class Drifty_GUI extends Application {
             @Override
             protected Void call() {
                 String previous_directory = "";
-                while (flag) {
+                while (!isFileBeingDownloaded) {
                     String directory = String.valueOf(directoryInputText.getCharacters());
                     if (!directory.equals(previous_directory)){
                         directoryOutputText.setFill(Color.RED);
@@ -298,21 +299,55 @@ public class Drifty_GUI extends Application {
      * @since 2.0.0
      */
     private void download() {
-        Drifty backend = new Drifty(linkToFile, null, fileName, linkOutputText, directoryOutputText, downloadOutputText, fileNameOutputText);
-        downloadLayout.getChildren().removeAll(downloadButton);
+        Drifty backend = new Drifty(linkToFile, directoryForDownloading, fileName, linkOutputText, directoryOutputText, downloadOutputText, fileNameOutputText);
+        downloadButton.setVisible(false);
         downloadProgressBar = new ProgressBar();
-        downloadProgressBar.setScaleX(5);
-        downloadProgressBar.setScaleY(2);
+        downloadProgressBar.setScaleX(3);
+        downloadProgressBar.setScaleY(1);
         downloadLayout.getChildren().addAll(downloadProgressBar);
-        setDownloadProgress();
-//        backend.start();
+        Task<Void> setProgress = new Task<>() {
+            @Override
+            protected Void call() {
+                setDownloadProgress();
+                return null;
+            }
+        };
+        new Thread(setProgress).start();
+        Task<Void> startDownload = new Task<>() {
+            @Override
+            protected Void call() {
+                backend.start();
+                return null;
+            }
+        };
+        Thread download = new Thread(startDownload);
+        download.start();
+        Task<Void> recreateDownloadSetup = new Task<>() {
+            @Override
+            protected Void call() {
+                while (true){
+                    if (!download.isAlive()){
+                        downloadProgressBar.setVisible(false);
+                        downloadButton.setVisible(true);
+                        break;
+                    }
+                }
+                return null;
+            }
+        };
+        new Thread(recreateDownloadSetup).start();
     }
 
+    /**
+     * This method <b>sets the download progress</b> in the GUI Application.
+     */
     private void setDownloadProgress() {
         Task<Void> getProgress = new Task<>() {
             @Override
-            protected Void call() throws Exception {
-                downloadProgress = ProgressBarThread.getTotalDownloadPercent();
+            protected Void call() {
+                while (isFileBeingDownloaded) {
+                    downloadProgress = ProgressBarThread.getTotalDownloadPercent();
+                }
                 return null;
             }
         };
@@ -320,7 +355,9 @@ public class Drifty_GUI extends Application {
         Task<Void> setProgress = new Task<>() {
             @Override
             protected Void call() {
-                downloadProgressBar.setProgress(downloadProgress);
+                while (isFileBeingDownloaded) {
+                    downloadProgressBar.setProgress(downloadProgress/100);
+                }
                 return null;
             }
         };
@@ -361,14 +398,14 @@ public class Drifty_GUI extends Application {
                 Runtime openWebsite = Runtime.getRuntime();
                 openWebsite.exec(commandsToOpenWebsite);
             } catch (IOException e) {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(Constants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
         } else if (osName.contains("win") || osName.contains("mac")) { // For macOS and Windows systems
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.browse(new URI(websiteURL));
             } catch (IOException | URISyntaxException e) {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(Constants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
         }
     }
@@ -409,13 +446,13 @@ public class Drifty_GUI extends Application {
         EventHandler<ActionEvent> exitClicked = actionEvent -> {
             stopInstantInputValidating();
             driftyInitialWindow.close();
-            logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_TERMINATED);
+            logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         };
         EventHandler<WindowEvent> close = WindowEvent -> {
             stopInstantInputValidating();
             driftyInitialWindow.close();
-            logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_TERMINATED);
+            logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         };
 
@@ -441,6 +478,14 @@ public class Drifty_GUI extends Application {
      * This method <b>stops</b> the instant input validator task from validating the inputs as the user types them in the respective input fields.
      */
     private void stopInstantInputValidating(){
-        flag = false;
+        isFileBeingDownloaded = true;
+    }
+
+    /**
+     * This method sets the value of the boolean <b>IsFileBeingDownloaded</b>.
+     * @param value If the file is being downloaded, <code>true</code> should be passed else <code>false</code>.
+     */
+    public static void setIsFileBeingDownloaded(boolean value) {
+        isFileBeingDownloaded = value;
     }
 }

@@ -12,8 +12,8 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Utils.DriftyConstants.*;
-import static Utils.DriftyUtility.isYoutubeLink;
+import static Utils.Constants.*;
+import static Utils.Utility.isYoutubeLink;
 
 /**
  * This class deals with downloading the file.
@@ -22,8 +22,8 @@ public class FileDownloader implements Runnable {
     private static final MessageBroker messageBroker = Drifty.messageBroker;
     // default number of threads to download with
     private static final int numberOfThreads = 3;
-    // default threading threshold in bytes  50MB
-    private static final long threadingThreshold = 1024 * 1024 * 50;
+    // default threading threshold in bytes.
+    private static final long threadingThreshold = 1024 * 1024 * 50; // This value determines if multithreaded downloading will be used or not. If the size of the file to be downloaded exceeds this value, then multithreaded downloading will be in use, else not. Here, it has been taken as 50 MB.
     private static String dir;
     private static String fileName;
     private static String link;
@@ -72,8 +72,8 @@ public class FileDownloader implements Runnable {
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                         file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
                         fileOut = new FileOutputStream(file);
-                        start = (i == 0) ? 0 : ((i * partSize) + 1);
-                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize);
+                        start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
+                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -82,8 +82,9 @@ public class FileDownloader implements Runnable {
                         tempFiles.add(file);
                     }
 
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, totalSize);
                     progressBarThread.start();
+                    messageBroker.sendMessage(DOWNLOADING + fileName + " ...", LOGGER_INFO, "download");
                     // check if all file are downloaded
                     try {
                         while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
@@ -102,7 +103,7 @@ public class FileDownloader implements Runnable {
                     readableByteChannel = Channels.newChannel(urlStream);
 
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName); // TODO - Add support for GUI
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
                     progressBarThread.start();
                     messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
@@ -120,12 +121,6 @@ public class FileDownloader implements Runnable {
             }
         } catch (NullPointerException e) {
             messageBroker.sendMessage(FAILED_TO_READ_DATA_STREAM, LOGGER_ERROR, "download");
-        }
-        if (dir.length() == 0) {
-            dir = System.getProperty("user.dir");
-        }
-        if (!(dir.endsWith("\\"))) {
-            dir = dir + System.getProperty("file.separator");
         }
     }
 
@@ -193,7 +188,7 @@ public class FileDownloader implements Runnable {
             } else if (!downloaderThread.isAlive()) completed++;
         }
 
-        //check if it is merge-able
+        // check if it is merge-able
         if (completed == FileDownloader.numberOfThreads) {
             fileOutputStream = new FileOutputStream(dir + fileName);
             long position = 0;
@@ -211,7 +206,7 @@ public class FileDownloader implements Runnable {
     }
 
     /**
-     * This is the overridden run method of the Runnable interface and deals with the main part of opening connections and downloading the file.
+     * This is method which deals with the main part of opening and establishing connections and downloading the file.
      */
     @Override
     public void run() {
@@ -223,6 +218,12 @@ public class FileDownloader implements Runnable {
             if (!(link.endsWith("?raw=true"))) {
                 link = link + "?raw=true";
             }
+        }
+        if (dir.length() == 0) {
+            dir = System.getProperty("user.dir");
+        }
+        if (!(dir.endsWith("\\"))) {
+            dir = dir + System.getProperty("file.separator");
         }
         try {
             // If link is of an YouTube video, then the following block of code will execute.
@@ -255,24 +256,11 @@ public class FileDownloader implements Runnable {
                 totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
 
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                FileDownloader.supportsMultithreading = totalSize > threadingThreshold && acceptRange != null && acceptRange.equalsIgnoreCase("bytes");
+                FileDownloader.supportsMultithreading = (totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes"));
 
                 if (fileName.length() == 0) {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
-                }
-                dir = dir.replace('/', '\\');
-                if (dir.length() != 0) {
-                    if (dir.equals(".\\\\") || dir.equals(".\\")) {
-                        dir = "";
-                    }
-                } else {
-                    messageBroker.sendMessage(INVALID_DIRECTORY, LOGGER_ERROR, "directory");
-                }
-                try {
-                    new CheckDirectory(dir);
-                } catch (IOException e) {
-                    messageBroker.sendMessage(FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage(), LOGGER_ERROR, "directory");
                 }
                 messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                 downloadFile();
