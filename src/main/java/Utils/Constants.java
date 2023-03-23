@@ -3,8 +3,8 @@ package Utils;
 /**
  * This file contains some String constants which are repeatedly used in the whole project.
  */
-public final class DriftyConstants {
-    public static final String VERSION_NUMBER = "v1.4.0";
+public final class Constants {
+    public static final String VERSION_NUMBER = "v2.0.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_CLI_LOG = "Drift_CLI_LOG.log";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -20,8 +20,7 @@ public final class DriftyConstants {
     public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
-    public static final String INVALID_DIRECTORY = "Invalid Directory Entered !";
-    public static final String AUTO_FILE_DETECTION_FAILED = "Automatic file name detection failed!";
+    public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Automatic file name detection failed!";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
@@ -39,7 +38,6 @@ public final class DriftyConstants {
     public static final String USER_HOME_PROPERTY = "user.home";
     public static final String RENAME_FILE = "Would you like to rename this file? (Enter Y for yes and N for no) : ";
     public static final String QUIT_OR_CONTINUE = "Press Q to Quit Or Press any Key to Continue";
-    public static final String DIRECTORY_TO_DOWNLOAD_FILE = "Enter the directory in which you want to download the file : ";
     public static final String FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER = "Failed to retrieve default download folder!";
     public static final String FAILED_TO_CONNECT_TO_URL = "Failed to connect to ";
     public static final String DEFAULT_DOWNLOAD_FOLDER = "Default download folder detected : ";
@@ -47,8 +45,6 @@ public final class DriftyConstants {
     public static final String BANNER_BORDER = "====================================================================";
     public static final String FAILED_TO_CREATE_LOG = "Failed to create log : ";
     public static final String FAILED_TO_CLEAR_LOG = "Failed to clear Log contents !";
-    public static final String FAILED_TO_CREATE_DIRECTORY = "Failed to create the directory : ";
-
     public static final String DOWNLOADED = "Downloaded ";
     public static final String DOWNLOADING = "Downloading ";
     public static final String DOWNLOAD_FAILED = "Download failed!";
@@ -74,5 +70,5 @@ public final class DriftyConstants {
     /**
      * This is a private constructor of this class.
      */
-    private DriftyConstants() {}
+    private Constants() {}
 }
