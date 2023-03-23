@@ -16,14 +16,24 @@
 
 ## About 🔥
 
-+ [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-+ It is currently available in **Command Line Interface** (_CLI_) mode and the **Graphical User Interface** (_GUI_) version is under active development. 
+- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
+- It is currently available in **Command Line Interface** (_CLI_) mode and the **Graphical User Interface** (_GUI_) version is under active development. 
 
 ## Demo
-See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
+See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
 [Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
 
+
+## Tech Stack
+
+The _Application_ **Drifty** is built using the following technologies :
+- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independant applications.
+
+The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) - The most basic building block of the Website.
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) - Stylesheet documentation language used to describe the presentation of a HTML document.
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) - Scripting language for webpages.
 
 ## Getting Started 🚀🚀
 For **Users** :
@@ -89,6 +99,9 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 ## Stats 📊
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
+
+## Support 🙏
+Please leave a star ⭐ on this project to support us.
 
 ## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
