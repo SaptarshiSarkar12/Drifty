@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static Utils.DriftyConstants.*;
+import static Utils.Constants.*;
 
 public class copyYt_dlp {
     static CreateLogs logger = CreateLogs.getInstance();

@@ -7,8 +7,8 @@ import Utils.ScannerFactory;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static Utils.DriftyConstants.*;
-import static Utils.DriftyUtility.*;
+import static Utils.Constants.*;
+import static Utils.Utility.*;
 
 /**
  * This is the main class for the CLI (Command Line Interface) version of Drifty.
@@ -69,7 +69,7 @@ public class Drifty_CLI {
             System.exit(0);
         }
         while (true) {
-            System.out.print("Enter the link to the file : ");
+            System.out.print(ENTER_FILE_LINK);
             String link = SC.next();
             SC.nextLine();
             System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
@@ -81,6 +81,13 @@ public class Drifty_CLI {
                 fileName = SC.nextLine();
             } else {
                 System.out.println(FILENAME_DETECTED + fileName);
+                System.out.print(RENAME_FILE);
+                SC.nextLine(); // To remove 'whitespace' from input buffer.
+                String choiceString = SC.nextLine();
+                boolean choice = yesNoValidation(choiceString, RENAME_FILE);
+                if (choice){
+                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                }
             }
             Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
             backend.start();

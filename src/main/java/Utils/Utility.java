@@ -7,12 +7,13 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
-import static Utils.DriftyConstants.*;
+import static Utils.Constants.*;
 
-public final class DriftyUtility {
-
-    private DriftyUtility() {}
+public final class Utility {
+    private static final Scanner SC = ScannerFactory.getInstance();
+    private Utility() {}
 
     static CreateLogs logger = CreateLogs.getInstance();
     /**
@@ -50,7 +51,9 @@ public final class DriftyUtility {
     }
 
     /**
-     * @return the filename if it is detected else null
+     * This method finds <b>the name of the file from the link</b> provided.
+     * @param link The download link of the file to be downloaded.
+     * @return the filename if it is detected else null.
      */
     public static String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
@@ -59,11 +62,13 @@ public final class DriftyUtility {
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
+            logger.log(LOGGER_ERROR, AUTO_FILE_NAME_DETECTION_FAILED);
             return null;
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
+            logger.log(LOGGER_ERROR, AUTO_FILE_NAME_DETECTION_FAILED);
             return null;
         }
         // file.png?width=200 -> file.png
@@ -72,6 +77,10 @@ public final class DriftyUtility {
         return fileName;
     }
 
+    /**
+     * This method finds the default downloads folder and create log accordingly.
+     * @return The path of the default download folder.
+     */
     public static String saveToDefault() {
         String downloadsFolder;
         logger.log(LOGGER_INFO, TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
@@ -89,10 +98,43 @@ public final class DriftyUtility {
         return downloadsFolder;
     }
 
+    /**
+     * This method performs Yes-No validation and returns the boolean value accordingly.
+     * @param input        Input String to validate.
+     * @param printMessage The message to print to re-input the confirmation.
+     * @return true if the user enters Y [Yes] and false if not.
+     */
+    public static boolean yesNoValidation(String input, String printMessage) {
+        while (input.length() == 0) {
+            System.out.println(ENTER_Y_OR_N);
+            logger.log(LOGGER_ERROR, ENTER_Y_OR_N);
+            System.out.print(printMessage);
+            input = SC.nextLine().toLowerCase();
+        }
+        char choice = input.charAt(0);
+        if (choice == 'y') {
+            return true;
+        } else if (choice == 'n') {
+            return false;
+        } else {
+            System.out.println("Invalid input!");
+            logger.log(LOGGER_ERROR, "Invalid input");
+            System.out.print(printMessage);
+            input = SC.nextLine().toLowerCase();
+            yesNoValidation(input, printMessage);
+        }
+        return false;
+    }
+
+    /**
+     * This is the help method of Drifty that gets printed in the console when correct help flag has been passed as a parameter to Drifty CLI.
+     */
     public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m            v2.0.0" + ANSI_RESET);
-        System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
+        System.out.println("\033[38;31;48;40;0m            " + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("For more information visit: ");
+        System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
+        System.out.println("\tProject Website - " + Drifty.projectWebsite);
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default     Description" + ANSI_RESET);
