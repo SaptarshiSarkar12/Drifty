@@ -24,7 +24,7 @@ public class CreateLogs {
      */
     private CreateLogs() {
 
-        filePath = FileSystems.getDefault().getPath(DRIFTY_CLI_LOG);
+        filePath = FileSystems.getDefault().getPath(DRIFTY_LOG);
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }
 
