@@ -6,7 +6,7 @@ package Utils;
 public final class Constants {
     public static final String VERSION_NUMBER = "v2.0.0";
     public static final String APPLICATION_NAME = "Drifty";
-    public static final String DRIFTY_CLI_LOG = "Drift_CLI_LOG.log";
+    public static final String DRIFTY_LOG = "Drifty_LOG.log";
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_PURPLE = "\u001B[35m";
