@@ -87,14 +87,14 @@ public class Drifty_CLI {
                 boolean choice = yesNoValidation(choiceString, RENAME_FILE);
                 if (choice){
                     System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                    fileName = SC.nextLine();
                 }
             }
             Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
             backend.start();
             System.out.println(QUIT_OR_CONTINUE);
-            SC.nextLine();
-            String quit = SC.nextLine().toLowerCase();
-            if (quit.equals("q")) {
+            String choice = SC.nextLine().toLowerCase();
+            if (choice.equals("q")) {
                 logger.log(LOGGER_INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }

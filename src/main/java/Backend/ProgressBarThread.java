@@ -201,7 +201,7 @@ public class ProgressBarThread extends Thread {
     /**
      * Cleans up the resources.
      */
-    private void cleanup() { // TODO - add support for deleting temp files after download is completed
+    private void cleanup() {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
             messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");

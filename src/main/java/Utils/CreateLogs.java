@@ -23,6 +23,7 @@ public class CreateLogs {
      * This is the constructor used to initialise the variables in this class.
      */
     private CreateLogs() {
+
         filePath = FileSystems.getDefault().getPath(DRIFTY_CLI_LOG);
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }

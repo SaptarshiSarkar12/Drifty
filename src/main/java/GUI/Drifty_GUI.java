@@ -31,8 +31,12 @@ import javafx.stage.WindowEvent;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 /**
  * This class deals with the Graphical User Interface (GUI) version of Drifty.
@@ -63,6 +67,7 @@ public class Drifty_GUI extends Application {
     static Text downloadOutputText;
     static boolean isDownloadButtonPressed;
     static Button downloadButton;
+    static boolean isYouTubeURL;
 
     /**
      * This is the main method which starts the Graphical User Interface (GUI) Application.
@@ -143,7 +148,7 @@ public class Drifty_GUI extends Application {
 
         EventHandler<MouseEvent> download = MouseEvent -> {
             disableInputs();
-            isFileBeingDownloaded = true;
+            stopInstantInputValidating();
             saveInputs();
 
             download();
@@ -291,7 +296,6 @@ public class Drifty_GUI extends Application {
         linkInputText.setEditable(false);
         directoryInputText.setEditable(false);
         fileNameInputText.setEditable(false);
-
     }
 
     /**
@@ -305,14 +309,35 @@ public class Drifty_GUI extends Application {
         downloadProgressBar.setScaleX(3);
         downloadProgressBar.setScaleY(1);
         downloadLayout.getChildren().addAll(downloadProgressBar);
-        Task<Void> setProgress = new Task<>() {
-            @Override
-            protected Void call() {
-                setDownloadProgress();
-                return null;
-            }
-        };
-        new Thread(setProgress).start();
+        if (isYouTubeURL){
+            /*
+            Does not work !
+             */
+//            try {
+//                System.out.println("Creating file...");
+//                Files.createFile(Path.of("./output.txt"));
+//                System.setOut(new PrintStream("./output.txt"));
+//            } catch (IOException e) {
+//                System.out.println("Failed to create file!");
+//            }
+//            Task<Void> getYtDlpProgress = new Task<>() {
+//                @Override
+//                protected Void call() {
+//                    getYouTubeVideoDownloadProgress();
+//                    return null;
+//                }
+//            };
+//            new Thread(getYtDlpProgress).start();
+        } else {
+            Task<Void> setProgress = new Task<>() {
+                @Override
+                protected Void call() {
+                    setDownloadProgress();
+                    return null;
+                }
+            };
+            new Thread(setProgress).start();
+        }
         Task<Void> startDownload = new Task<>() {
             @Override
             protected Void call() {
@@ -336,6 +361,15 @@ public class Drifty_GUI extends Application {
             }
         };
         new Thread(recreateDownloadSetup).start();
+    }
+
+    public static synchronized void getYouTubeVideoDownloadProgress() {
+        Scanner sc = new Scanner("./output.txt");
+        while (isFileBeingDownloaded) {
+            while (sc.hasNextLine()) {
+                System.out.println(sc.nextLine());
+            }
+        }
     }
 
     /**
@@ -370,6 +404,9 @@ public class Drifty_GUI extends Application {
      */
     private void saveInputs() {
         linkToFile = String.valueOf(linkInputText.getCharacters());
+        if (Utility.isYoutubeLink(linkToFile)){
+            isYouTubeURL = true;
+        }
         if (directoryForDownloading == null){
             directoryForDownloading = String.valueOf(directoryInputText.getCharacters());
         }
