@@ -81,8 +81,8 @@ public class Drifty {
         if (downloadsFolder == null){
             downloadsFolder = Utility.saveToDefault();
         } else {
-            downloadsFolder = downloadsFolder.replace('/', '\\');
-            if (downloadsFolder.equals(".\\\\") || downloadsFolder.equals(".\\")) {
+            downloadsFolder = downloadsFolder.replace('\\', '/');
+            if (downloadsFolder.equals(".//") || downloadsFolder.equals("./")) {
                 downloadsFolder = "";
             } else {
                 try {

@@ -71,6 +71,7 @@ public class FileDownloader implements Runnable {
                     File file;
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                         file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
+                        file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
                         end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
@@ -130,9 +131,9 @@ public class FileDownloader implements Runnable {
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
      * @throws IOException When an I/O problem appears while downloading the YouTube video.
      */
-    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
+    public static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         ProcessBuilder processBuilder;
-        messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
+        messageBroker.sendMessage("Trying to download YouTube Video ...", LOGGER_INFO, "download");
         String yt_dlpProgramName;
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("nux") || osName.contains("nix")){
@@ -147,12 +148,21 @@ public class FileDownloader implements Runnable {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
-        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s");
+        String outputFileName;
+        if (fileName != null){
+            outputFileName = fileName;
         } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.%(ext)s", "-f", "[height<=" + height + "][width<=" + width + "]", "--progress-template", "Downloading : %(progress._percent_str)s");
+            outputFileName = "%(title)s.%(ext)s";
+        }
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            // , "--progress-template", "Downloading : %(progress._percent_str)s"
+        } else {
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            // , "--progress-template", "Downloading : %(progress._percent_str)s"
         }
         processBuilder.inheritIO();
+        messageBroker.sendMessage(DOWNLOADING + "YouTube Video ...", LOGGER_INFO, "download");
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
@@ -229,7 +239,7 @@ public class FileDownloader implements Runnable {
             // If link is of an YouTube video, then the following block of code will execute.
             if (isYoutubeLink(link)) {
                 try {
-                    downloadFromYouTube("./resources/");
+                    downloadFromYouTube("./src/main/resources/");
                 } catch (IOException e) {
                     try {
                         messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
