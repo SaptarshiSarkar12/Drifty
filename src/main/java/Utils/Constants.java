@@ -49,12 +49,12 @@ public final class Constants {
     public static final String DOWNLOADING = "Downloading ";
     public static final String DOWNLOAD_FAILED = "Download failed!";
     public static final String SUCCESSFULLY = " successfully !";
-    public static final String SUCCESSFULLY_DOWNLOADED_FILE = "Successfully downloaded the file!";
+    public static final String SUCCESSFULLY_DOWNLOADED = "Successfully downloaded ";
     public static final String OF_SIZE = " of size ";
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
 
-    public static final String FAILED_TO_DOWNLOAD_FILES = "Failed to download the file!";
+    public static final String FAILED_TO_DOWNLOAD = "Failed to download ";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
 
