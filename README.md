@@ -90,12 +90,12 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
 ## Contributing to the project
-+ Please feel free to contribute to this open-source project. 
-+ See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. 
-+ **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
-+ Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
-+ Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. 
-+ Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
+- Please feel free to contribute to this open-source project. 
+- See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [Projects](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
+- **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
+- Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
+- Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. 
+- Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
 
 ## Stats 📊
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
