@@ -10,20 +10,6 @@ body:
       description: A detailed description of the issue with links and screenshots.
     validations:
       required: true
-  - type: dropdown
-    id: app-ver
-    attributes:
-      label: Application Version
-      description: Please select the application version (Check it here - https://github.com/SaptarshiSarkar12/Drifty/releases/)
-      options:
-        - v1.3.0
-        - v1.2.2
-        - v1.2.1
-        - v1.2.0
-        - v1.1.0
-        - v1.0.0
-    validations:
-      required: true
   - type: textarea
     id: extrainfo
     attributes:
