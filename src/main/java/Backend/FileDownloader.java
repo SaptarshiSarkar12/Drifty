@@ -132,8 +132,20 @@ public class FileDownloader implements Runnable {
      * @throws IOException When an I/O problem appears while downloading the YouTube video.
      */
     public static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
+        String outputFileName;
+        if (fileName != null){
+            outputFileName = fileName;
+        } else {
+            outputFileName = "%(title)s.%(ext)s";
+        }
+        String fileDownloadMessagePart;
+        if (outputFileName.equals("%(title)s.%(ext)s")){
+            fileDownloadMessagePart = "the YouTube Video";
+        } else {
+            fileDownloadMessagePart = outputFileName;
+        }
         ProcessBuilder processBuilder;
-        messageBroker.sendMessage("Trying to download YouTube Video ...", LOGGER_INFO, "download");
+        messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
         String yt_dlpProgramName;
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("nux") || osName.contains("nix")){
@@ -148,12 +160,6 @@ public class FileDownloader implements Runnable {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
-        String outputFileName;
-        if (fileName != null){
-            outputFileName = fileName;
-        } else {
-            outputFileName = "%(title)s.%(ext)s";
-        }
         if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
             // , "--progress-template", "Downloading : %(progress._percent_str)s"
@@ -162,14 +168,14 @@ public class FileDownloader implements Runnable {
             // , "--progress-template", "Downloading : %(progress._percent_str)s"
         }
         processBuilder.inheritIO();
-        messageBroker.sendMessage(DOWNLOADING + "YouTube Video ...", LOGGER_INFO, "download");
+        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
-            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED_FILE, LOGGER_INFO, "download");
+            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessagePart + " !", LOGGER_INFO, "download");
         } else if (exitValueOfYt_Dlp == 1) {
-            messageBroker.sendMessage(FAILED_TO_DOWNLOAD_FILES, LOGGER_ERROR, "download");
+            messageBroker.sendMessage(FAILED_TO_DOWNLOAD + fileDownloadMessagePart + " !", LOGGER_ERROR, "download");
         }
     }
 
