@@ -1,7 +1,7 @@
-name: 🐞 Bug Report
-description: File a bug
+name: 🐞 Bug Report for Website 🌐
+description: File a bug for the website
 title: "[BUG] "
-labels: [bug]
+labels: [bug, Website]
 body:
   - type: textarea
     id: bug-description
@@ -44,15 +44,14 @@ body:
   - type: dropdown
     id: app-ver
     attributes:
-      label: Application Version
-      description: Please select the application version (Check it here - https://github.com/SaptarshiSarkar12/Drifty/releases/)
+      label: Browser
+      description: Please select the brower you are using
       options:
-        - v1.3.0
-        - v1.2.2
-        - v1.2.1
-        - v1.2.0
-        - v1.1.0
-        - v1.0.0
+        - Microsoft Edge
+        - Google Chrome
+        - Safari
+        - Brave
+        - Other
     validations:
       required: true
   - type: textarea
