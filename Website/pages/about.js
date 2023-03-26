@@ -17,8 +17,8 @@ export default function about(){
                 <div className="bg-var mx-auto mt-4 h-fit w-4/5 rounded-lg">
                 <p className="p-6 text-xl text-white text-center">I am a passionate Software Developer and an open-source enthusiast building this file downloading system called <a className="text-orange-400" href="https://saptarshisarkar12.github.io/Drifty/"><b>Drifty</b></a> using Java. I am open for collaboration on open-source projects. I love contributing to open-source projects and enjoy maintaining an open-source project.</p>
                 </div>
-                <div class="grid justify-center mt-5 pb-5">
-            <a className="bg-white rounded-lg p-2 border-2 border-black hover:bg-yellow-400" href="https://twitter.com/SSarkar2007"><button><i class="fab fa-twitter" aria-hidden="true"></i> Let`&apos;`s Connect</button></a>
+                <div className="grid justify-center mt-5 pb-5">
+            <a className="bg-white rounded-lg p-2 border-2 border-black hover:bg-yellow-400" href="https://twitter.com/SSarkar2007"><button><i className="fab fa-twitter" aria-hidden="true"></i> Let`&apos;`s Connect</button></a>
         </div>
         <div className="mt-5 mx-5 border-t-2 border-black">
         <h1 className="text-center font-bold text-3xl py-5">My Stats</h1>

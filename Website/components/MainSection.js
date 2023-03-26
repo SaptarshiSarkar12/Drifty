@@ -1,7 +1,8 @@
 import Image from "next/image"
+import Link from "next/link"
 export default function MainSection() {
     return (
-        <div className="flex flex-row-1 bg-top space-evenly lg:justify-center xs:justify-start">
+        <div className="flex flex-row-1 bg-top space-evenly lg:justify-start xs:justify-start">
             <div className="lg:flex lg:w-1/2">
                 <div className=" lg:flex lg:flex-col  text-gray-800 py-20 px-6 md:text" >
                     <h1 className="text-8xl lg:ml-20 font-extrabold text-blue-700 mt-0 mb-6">Drifty</h1>
@@ -10,8 +11,8 @@ export default function MainSection() {
                         needs to be saved and the filename of the downloaded file as input
                         and downloads it in the given directory with the given filename.</p>
                     <div className="flex space-x-2 justify-start lg:ml-20 lg:mt-3 lg:mb-16">
-                        <a className="inline-block px-6 py-3.5 w-30 h-14 bg-blue-700 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:bg-yellow-400 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out" href="#!" role="button">More Info</a>
-                        <a className="inline-block px-6 py-3.5 w-30 h-14 bg-blue-700 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:bg-yellow-400 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out" href="#!" role="button">Demo</a>
+                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-blue-700 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:bg-yellow-400 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out" href="/#contrib" role="button">More Info</Link>
+                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-blue-700 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:bg-yellow-400 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out" href="/#demo" role="button">Demo</Link>
                     </div>
                 </div>
             </div>
