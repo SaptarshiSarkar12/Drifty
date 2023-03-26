@@ -9,7 +9,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-import static Utils.Constants.*;
+import static Utils.DriftyConstants.*;
 
 public final class Utility {
     private static final Scanner SC = ScannerFactory.getInstance();

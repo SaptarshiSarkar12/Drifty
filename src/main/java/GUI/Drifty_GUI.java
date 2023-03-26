@@ -3,7 +3,7 @@ package GUI;
 import Backend.Drifty;
 import Backend.ProgressBarThread;
 import Utils.CreateLogs;
-import Utils.Constants;
+import Utils.DriftyConstants;
 import Utils.Utility;
 import javafx.application.Application;
 import javafx.concurrent.Task;
@@ -31,11 +31,8 @@ import javafx.stage.WindowEvent;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 /**
@@ -76,7 +73,7 @@ public class Drifty_GUI extends Application {
      */
     @Override
     public void start(Stage mainWindow) {
-        logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
+        logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         driftyInitialWindow = mainWindow;
         initializeScreen(); // Initializing the screen
         root.getChildren().addAll(menuBar, drifty);
@@ -435,14 +432,14 @@ public class Drifty_GUI extends Application {
                 Runtime openWebsite = Runtime.getRuntime();
                 openWebsite.exec(commandsToOpenWebsite);
             } catch (IOException e) {
-                logger.log(Constants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(DriftyConstants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
         } else if (osName.contains("win") || osName.contains("mac")) { // For macOS and Windows systems
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.browse(new URI(websiteURL));
             } catch (IOException | URISyntaxException e) {
-                logger.log(Constants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(DriftyConstants.LOGGER_ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
         }
     }
@@ -483,13 +480,13 @@ public class Drifty_GUI extends Application {
         EventHandler<ActionEvent> exitClicked = actionEvent -> {
             stopInstantInputValidating();
             driftyInitialWindow.close();
-            logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_TERMINATED);
+            logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         };
         EventHandler<WindowEvent> close = WindowEvent -> {
             stopInstantInputValidating();
             driftyInitialWindow.close();
-            logger.log(Constants.LOGGER_INFO, Constants.GUI_APPLICATION_TERMINATED);
+            logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         };
 

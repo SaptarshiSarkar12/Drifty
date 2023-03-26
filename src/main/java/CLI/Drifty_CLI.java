@@ -7,7 +7,7 @@ import Utils.ScannerFactory;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static Utils.Constants.*;
+import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
 
 /**
