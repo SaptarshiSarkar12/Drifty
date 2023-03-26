@@ -14,8 +14,8 @@ export default function Contribute( {props} ) {
     return (
         <div id="contrib" className="md:flex md:flex-row justify-evenly bg-var text-white pb-5">
             <div className="md:w-1/2 md:pr-8">
-                <h2 className="text-5xl sm:text-4xl font-bold md:mt-20 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >More Information About Drifty</h2>
-                <p className="text-2xl md:ml-20 font-sans mb-8 leading-normal xs:pl-4">
+                <h2 className="text-5xl sm:text-4xl font-bold lg:mt-20 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >More Information About Drifty</h2>
+                <p className="text-2xl lg:ml-20 md:ml-10 font-sans mb-8 leading-normal xs:pl-4">
                     It is currently available in CLI (Command Line Interface) mode and
                     the GUI (Graphical User Interface) version is under active
                     development. We believe in team work. Any contribution that brings
