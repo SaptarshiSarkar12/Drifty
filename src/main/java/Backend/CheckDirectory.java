@@ -8,7 +8,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static Utils.Constants.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This class checks if a directory exists or not. if it doesn't, the directory is created.

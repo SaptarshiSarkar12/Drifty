@@ -3,7 +3,7 @@ package Utils;
 /**
  * This file contains some String constants which are repeatedly used in the whole project.
  */
-public final class Constants {
+public final class DriftyConstants {
     public static final String VERSION_NUMBER = "v2.0.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_LOG = "Drifty_LOG.log";
@@ -70,5 +70,5 @@ public final class Constants {
     /**
      * This is a private constructor of this class.
      */
-    private Constants() {}
+    private DriftyConstants() {}
 }
