@@ -19,9 +19,12 @@
     "react-intersection-observer": "^9.4.3",
     "react-player": "^2.12.0",
     "remark": "^14.0.2",
-    "remark-html": "^15.0.2"
+    "remark-html": "^15.0.2",
+    "sharp": "^0.32.0"
   },
   "devDependencies": {
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.29",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7"

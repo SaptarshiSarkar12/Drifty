@@ -1,6 +1,6 @@
-import Releases from "@/components/Releases";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Releases from "/components/Releases";
+import Header from "/components/Header";
+import Footer from "/components/Footer";
 
 export default function download(props) {
     return(
@@ -11,10 +11,11 @@ export default function download(props) {
     </>
     )    
 }  
-export async function getServerSideProps(){
+export async function getStaticProps(){
     const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases');
     const release= await res.json();
     return {
-        props:{releases:{release}}
+        props:{releases:{release}},
+        revalidate:3600
     }
   }

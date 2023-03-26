@@ -4,8 +4,8 @@ import Header from '../components/Header'
 import Contribute from '../components/Contribute'
 import Demo from '../components/Demo'
 import Footer from '../components/Footer'
-import MainSection from '@/components/MainSection'
-import Releases from '@/components/Releases'
+import MainSection from '/components/MainSection'
+import Releases from '/components/Releases'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -32,23 +32,23 @@ export default function Home(props) {
   )
 }
 async function getContibs(username) {
-  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/contributors',{method:'GET'})
+  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/contributors',{method:'GET'},{next:{revalidate:3600}})
   return res.json();
 }
 
 async function getReleases(username) {
-  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases');
+  const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases',{next:{revalidate:3600}});
   return res.json();
 }
-export async function getServerSideProps(){
+export async function getStaticProps(){
   const contribsdata=getContibs();
   const releasesdata=getReleases();
   const [contrib,release]= await Promise.all([contribsdata,releasesdata]);
   return {
     props:{
-      revalidate:3600,
       contribs:{contrib},
       releases:{release}
-    }
+    },
+    revalidate:3600
   }
 }
