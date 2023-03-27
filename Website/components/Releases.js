@@ -27,7 +27,7 @@ export default function Releases({props}) {
         props.release.map((item, index) => {
             markertoHtml(item.body,index);
         });
-    }, [buttonStates]);
+    }, []);
     
     
     return (
