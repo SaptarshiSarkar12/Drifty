@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en" className='scroll-smooth' style={{scrollBehavior:'smooth'}}>
       <Head >
-      <script src="https://kit.fontawesome.com/5c11ffe082.js" crossorigin="anonymous" async></script>
+      <script src="https://kit.fontawesome.com/5c11ffe082.js" crossOrigin="anonymous" async></script>
       </Head>
       <body>
         <Main />

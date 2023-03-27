@@ -26,7 +26,7 @@ function MobileNav({ open, setOpen }) {
 
 export default function Header({props}) {
     const [open, setOpen] = useState(false);
-    const[hcolor,setHcolor]=useState(props+" pt-7")
+     const[hcolor,setHcolor]=useState(props+" pt-7")
     const onScroll = useCallback(event => {
         const { pageYOffset, scrollY } = window;
         // console.log(props);
