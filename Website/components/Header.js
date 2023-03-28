@@ -38,9 +38,6 @@ export default function Header({props}) {
       //add eventlistener to window
       window.addEventListener("scroll", onScroll, { passive: true });
       // remove event on unmount to prevent Linkmemory leak with the cleanup
-      return () => {
-         window.removeEventListener("scroll", onScroll, { passive: true });
-      }
     });
     return (
         <header className={`md:sticky top-0 ${hcolor} z-40` }>
