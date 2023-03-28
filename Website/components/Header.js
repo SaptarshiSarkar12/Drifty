@@ -10,7 +10,7 @@ function NavLink({ to, children, cn }) {
 
 function MobileNav({ open, setOpen }) {
     return (
-        <div className={`absolute top-0 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
+        <div className={`absolute z-10 top-0 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
             <div className="flex items-start justify-center filter bg-top h-20"> {/*logo container*/}
                 <Link className="text-xl font-semibold" href="/"> <Image src="/favicons/favicon-32x32.png" width={32} height={32} alt="DriftyLogo"/></Link>
             </div>

@@ -13,6 +13,14 @@
           filter: blur(0px) brightness(150%);
         }
       }
+      @keyframes pulse {
+        0%, 100% {
+          @apply text-slate-100
+        }
+        50% {
+          @apply text-slate-100/50
+        }
+      }
       .img-layer {
         width: 500px;
         pointer-events: none;
@@ -40,6 +48,11 @@
       .img-layer > img:nth-child(6) {
         animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 1.25s infinite alternate;
       }
-      
+      .animate-own{
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .animate-no{
+        animation: none;
+      }
 
 }    

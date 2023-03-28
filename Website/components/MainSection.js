@@ -6,7 +6,7 @@ export default function MainSection() {
             <div className="lg:flex lg:w-1/2">
                 <div className=" lg:flex lg:flex-col  text-gray-800 py-20 px-6 md:text" >
                     <h1 className="text-8xl lg:ml-20 font-extrabold text-blue-700 mt-0 mb-6">Drifty</h1>
-                    <p className="text-2xl lg:ml-20 font-sans mb-8 ">Drifty is an open-source interactive File Downloader system built
+                    <p className="text-2xl  lg:ml-20 font-sans mb-8 ">Drifty is an open-source interactive File Downloader system built
                         with Java. It takes the link to the file, the directory where it
                         needs to be saved and the filename of the downloaded file as input
                         and downloads it in the given directory with the given filename.</p>
@@ -16,7 +16,7 @@ export default function MainSection() {
                     </div>
                 </div>
             </div>
-            <div className="hidden flex-col-1 lg:block text-center text-gray-800 py-20 px-6 img-layer w-1/2" id="ImgLayer">
+            <div className="xs:hidden flex-col-1 lg:block text-center text-gray-800 py-20 px-6 img-layer w-1/2" id="ImgLayer">
                 <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/2.webp" alt="..." />
                 <Image width={500} height={0} className=" absolute animate-img hover:bg-black" src="/Resources/Layers/3.webp" alt="..." />
                 <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/4.webp" alt="..." />
