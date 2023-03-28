@@ -912,6 +912,13 @@ h4{
     width: 80vw;
     font-size: 20px !important;
   }
+  .github {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
 }
 
 @media screen and (max-width: 1345px) {
