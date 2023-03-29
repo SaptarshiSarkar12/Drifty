@@ -10,8 +10,7 @@ public final class DriftyUtility {
     }
 
     /**
-     * This method checks whether the link provided is of YouTube or not and returns
-     * the resultant boolean value accordingly.
+     * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
      *
      * @param url link to the file to be downloaded.
      * @return true if the url is of YouTube and false if it is not.
@@ -38,19 +37,14 @@ public final class DriftyUtility {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----" + ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m            v1.2.2" + ANSI_RESET);
         System.out.println("For more information visit: https://github.com/SaptarshiSarkar12/Drifty/");
-        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET
-                + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default     Description" + ANSI_RESET);
-        System.out.println(
-                "-location   -l            Downloads                   The location on your computer where content downloaded from Drifty are placed.");
+        System.out.println("-location   -l            Downloads                   The location on your computer where content downloaded from Drifty are placed.");
         System.out.println("-name       -n            Source                      Renames file.");
-        System.out.println(
-                "-help       -h            N/A                         Provides concise information for Drifty CLI.\n");
+        System.out.println("-help       -h            N/A                         Provides concise information for Drifty CLI.\n");
         System.out.println("-version    -v            Current Version Number      Displays version number of Drifty.");
-        System.out.println("\033[97;1mExample:" + ANSI_RESET
-                + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example"
-                + ANSI_RESET);
+        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
         System.out.println("\033[37;3m* Requires java 18 or higher. \n" + ANSI_RESET);
     }
 
