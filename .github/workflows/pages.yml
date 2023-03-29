@@ -5,6 +5,8 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
+    paths:
+      - "Website/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,4 +41,4 @@ jobs:
           path: './Website'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v2
