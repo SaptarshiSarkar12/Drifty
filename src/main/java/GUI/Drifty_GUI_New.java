@@ -12,6 +12,9 @@ import java.net.URISyntaxException;
 
 public class Drifty_GUI_New {
     static JFrame window;
+    static int windowWidth;
+    static JPanel input;
+    static int windowHeight;
     static JTextField linkInputText;
     static CreateLogs logger = CreateLogs.getInstance();
     public static void main(String[] args) {
@@ -24,18 +27,15 @@ public class Drifty_GUI_New {
     }
 
     private static void initializeIOFields() {
-        JPanel link = new JPanel();
-        FlowLayout linkLayout = new FlowLayout();
-        link.setLayout(linkLayout);
+        JPanel linkInput = new JPanel();
+        linkInput.setLayout(new FlowLayout());
         JLabel linkText = new JLabel("Link : ");
         linkText.setFont(new Font("Arial", Font.BOLD, 23));
         linkInputText = new JTextField(); // link input area
         linkInputText.setColumns(60);
-        linkLayout.addLayoutComponent("Link Text", linkText);
-        linkLayout.addLayoutComponent("Link TextField", linkInputText);
-
-        link.setVisible(true);
-        window.add(link);
+        linkInput.add(linkText);
+        linkInput.add(linkInputText);
+        input.add(linkInput);
     }
 
     /**
@@ -43,10 +43,11 @@ public class Drifty_GUI_New {
      */
     private static void initializeScreen() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
-        int height = (int) screenSize.getHeight(); // E.g.: 768
-        int width = (int) screenSize.getWidth(); // E.g.: 1366
+        windowHeight = (int) screenSize.getHeight(); // E.g.: 768
+        windowWidth = (int) screenSize.getWidth(); // E.g.: 1366
         window = new JFrame("Drifty (GUI)");
-        window.setSize(width, height);
+        window.setSize(windowWidth, windowHeight);
+        window.setPreferredSize(screenSize);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JMenuBar menuBar = new JMenuBar();
@@ -87,13 +88,16 @@ public class Drifty_GUI_New {
         securityVulnerability.addActionListener(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new", "Security Vulnerability webpage"));
         feature.addActionListener(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+", "issue webpage to suggest feature"));
 
+        input = new JPanel();
+//        input.setLayout(); // TODO
         ImageIcon driftyBanner = new ImageIcon("./Drifty Banner.png");
         JLabel drifty = new JLabel(driftyBanner);
         drifty.setHorizontalAlignment(SwingConstants.CENTER);
         drifty.setVerticalAlignment(SwingConstants.TOP);
         drifty.setVisible(true);
-
-        window.add(drifty);
+        input.add(drifty);
+        window.add(input);
+        window.setContentPane(input);
     }
 
     /**
