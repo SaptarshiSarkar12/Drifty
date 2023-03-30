@@ -5,25 +5,47 @@ import Utils.CreateLogs;
 import Utils.DriftyConstants;
 
 import javax.swing.*;
-import javax.swing.plaf.LabelUI;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Drifty_GUI_New {
+    static JFrame window;
+    static JTextField linkInputText;
     static CreateLogs logger = CreateLogs.getInstance();
     public static void main(String[] args) {
         logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         initializeScreen(); // Initializing the screen
+        initializeIOFields(); // Initializing the Input and Output fields
 
+        window.pack();
+        window.setVisible(true);
     }
 
+    private static void initializeIOFields() {
+        JPanel link = new JPanel();
+        FlowLayout linkLayout = new FlowLayout();
+        link.setLayout(linkLayout);
+        JLabel linkText = new JLabel("Link : ");
+        linkText.setFont(new Font("Arial", Font.BOLD, 23));
+        linkInputText = new JTextField(); // link input area
+        linkInputText.setColumns(60);
+        linkLayout.addLayoutComponent("Link Text", linkText);
+        linkLayout.addLayoutComponent("Link TextField", linkInputText);
+
+        link.setVisible(true);
+        window.add(link);
+    }
+
+    /**
+     * This method initializes the <b>main screen of the main Window</b> (default) with properties such as <b>window title</b>, <b>position on screen</b>, etc.
+     */
     private static void initializeScreen() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
-        JFrame window = new JFrame("Drifty (GUI)");
+        window = new JFrame("Drifty (GUI)");
         window.setSize(width, height);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -65,14 +87,13 @@ public class Drifty_GUI_New {
         securityVulnerability.addActionListener(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new", "Security Vulnerability webpage"));
         feature.addActionListener(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+", "issue webpage to suggest feature"));
 
-        JLabel drifty = new JLabel("Drifty");
-        drifty.setFont(new Font("Times Roman", Font.BOLD, 100));
+        ImageIcon driftyBanner = new ImageIcon("./Drifty Banner.png");
+        JLabel drifty = new JLabel(driftyBanner);
         drifty.setHorizontalAlignment(SwingConstants.CENTER);
         drifty.setVerticalAlignment(SwingConstants.TOP);
-        drifty.setBackground(Color.BLUE);
         drifty.setVisible(true);
+
         window.add(drifty);
-        window.setVisible(true);
     }
 
     /**
