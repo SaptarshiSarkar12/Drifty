@@ -1,24 +1,26 @@
 package Utils;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import GUI.Drifty_GUI;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.PrintStream;
 
 /**
  * This class allows the Backend to <b>send its outputs to the Command Line Interface (CLI) and Graphical User Interface (GUI) versions of Drifty</b>.
  * @since 2.0.0
  * @see Backend.Drifty
- * @see GUI.Drifty_GUI
+ * @see Drifty_GUI
  * @see CLI.Drifty_CLI
  * @version 2.0.0
  */
 public class MessageBroker {
     CreateLogs logger = CreateLogs.getInstance(); // logger instance created
     String appType;
-    Text link;
-    Text dir;
-    Text fileName;
-    Text download;
+    JLabel link;
+    JLabel dir;
+    JLabel fileName;
+    JLabel download;
     PrintStream output;
 
     /**
@@ -41,7 +43,7 @@ public class MessageBroker {
      * @param fileName The Text area of the GUI where the output regarding the <b>link</b> will be sent.
      * @since 2.0.0
      */
-    public MessageBroker(String applicationType, Text link, Text dir, Text download, Text fileName){
+    public MessageBroker(String applicationType, JLabel link, JLabel dir, JLabel download, JLabel fileName){
         appType = applicationType;
         this.link = link;
         this.dir = dir;
@@ -62,33 +64,35 @@ public class MessageBroker {
             logger.log(messageType, message);
         } else if (appType.equals("GUI")){
             Color color = Color.BLACK;
-            if (messageType.equals(DriftyConstants.LOGGER_INFO)){
-                color = Color.GREEN;
-            } else if (messageType.equals(DriftyConstants.LOGGER_ERROR)) {
-                color = Color.RED;
-            } else if (messageType.equals(DriftyConstants.LOGGER_WARN)) {
-                color = Color.YELLOW;
-            } else {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message type provided to message broker!");
+            switch (messageType) {
+                case DriftyConstants.LOGGER_INFO -> color = Color.GREEN;
+                case DriftyConstants.LOGGER_ERROR -> color = Color.RED;
+                case DriftyConstants.LOGGER_WARN -> color = Color.YELLOW;
+                default -> logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message type provided to message broker!");
             }
-            if (messageCategory.equals("link")){
-                link.setText(message);
-                link.setFill(color);
-                logger.log(messageType, message);
-            } else if (messageCategory.equals("directory")) {
-                dir.setText(message);
-                dir.setFill(color);
-                logger.log(messageType, message);
-            } else if (messageCategory.equals("download")) {
-                download.setText(message);
-                download.setFill(color);
-                logger.log(messageType, message);
-            } else if (messageCategory.equals("Filename")) {
-                fileName.setText(message);
-                fileName.setFill(color);
-                logger.log(messageType, message);
-            } else {
-                logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message category provided to message broker!");
+            switch (messageCategory) {
+                case "link" -> {
+                    link.setText(message);
+                    link.setForeground(color);
+                    logger.log(messageType, message);
+                }
+                case "directory" -> {
+                    dir.setText(message);
+                    dir.setForeground(color);
+                    logger.log(messageType, message);
+                }
+                case "download" -> {
+                    download.setText(message);
+                    download.setForeground(color);
+                    logger.log(messageType, message);
+                }
+                case "Filename" -> {
+                    fileName.setText(message);
+                    fileName.setForeground(color);
+                    logger.log(messageType, message);
+                }
+                default ->
+                        logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message category provided to message broker!");
             }
         } else {
             logger.log(DriftyConstants.LOGGER_ERROR, "Invalid application type provided to message broker!");
