@@ -500,6 +500,9 @@ h4 {
   flex-direction: row;
   justify-content: center;
 }
+.download_section:hover {
+  cursor: pointer;
+}
 
 .release_section {
   margin: 0rem auto 2rem;
