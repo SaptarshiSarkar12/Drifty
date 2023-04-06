@@ -16,85 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>19.0.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>19.0.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-web</artifactId>
-            <version>19.0.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
-            <version>19.0.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>11.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.dlsc.formsfx</groupId>
-            <artifactId>formsfx-core</artifactId>
-            <version>11.6.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.synedra</groupId>
-            <artifactId>validatorfx</artifactId>
-            <version>0.4.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.kordamp.ikonli</groupId>
-            <artifactId>ikonli-javafx</artifactId>
-            <version>12.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.kordamp.bootstrapfx</groupId>
-            <artifactId>bootstrapfx-core</artifactId>
-            <version>0.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.hansolo</groupId>
-            <artifactId>tilesfx</artifactId>
-            <version>17.1.17</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.almasb</groupId>
-            <artifactId>fxgl</artifactId>
-            <version>17.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
@@ -118,26 +39,6 @@
                     <source>18</source>
                     <target>18</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <executions>
-                    <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>com.drifty.drifty/com.drifty.drifty.HelloApplication</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>io.github.fvarrui</groupId>
