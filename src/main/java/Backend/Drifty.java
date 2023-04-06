@@ -4,8 +4,7 @@ import Utils.DriftyConstants;
 import Utils.Utility;
 import Utils.MessageBroker;
 
-import javafx.scene.text.Text;
-
+import javax.swing.*;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -33,7 +32,7 @@ public class Drifty {
      * @param fileNameOutputTextArea The Text area in the GUI, where the Backend will give its outputs regarding the file name entered.
      * @since 2.0.0
      */
-    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, Text linkOutputTextArea, Text directoryOutputTextArea, Text downloadOutputTextArea, Text fileNameOutputTextArea) {
+    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, JLabel linkOutputTextArea, JLabel directoryOutputTextArea, JLabel downloadOutputTextArea, JLabel fileNameOutputTextArea) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
         fileName = fileNameOfTheDownloadedFile;
