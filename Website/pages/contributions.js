@@ -5,7 +5,7 @@ import Footer from "/components/Footer";
 export default function contributions(props) {
     return(
         <>
-        <Header props={"bg-top"}/>
+        <Header props={"bg-var"}/>
         <Contribute props={props.contribs}/>
         <Footer />
     </>

@@ -10,7 +10,7 @@ function NavLink({ to, children, cn }) {
 
 function MobileNav({ open, setOpen }) {
     return (
-        <div className={`absolute z-10 top-0 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
+        <div className={`absolute z-10 top-0 -mt-7 pt-2 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
             <div className="flex items-start justify-center filter bg-top h-20"> {/*logo container*/}
                 <Link className="text-xl font-semibold" href="/"> <Image src="/favicons/favicon-32x32.png" width={32} height={32} alt="DriftyLogo"/></Link>
             </div>
@@ -28,9 +28,9 @@ export default function Header({props}) {
     const [open, setOpen] = useState(false);
      const[hcolor,setHcolor]=useState(props+" pt-7")
     const onScroll = useCallback(event => {
-        const { pageYOffset, scrollY } = window;
+        const { pageYOffset} = window;
         // console.log(props);
-        if(scrollY<10) setHcolor(props+" pt-7");
+        if(pageYOffset==0) setHcolor(props+" pt-7");
         else setHcolor("bg-var shadow-lg pt-4");
     },[]);
   
