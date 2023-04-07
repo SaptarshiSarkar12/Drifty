@@ -11,7 +11,8 @@ module.exports = {
         'btn-color':'#79dae8',
         'bottom':'#e8f9fd',
         'about':'#79dae8',
-        'input':'#2d2d2d'
+        'input':'#2d2d2d',
+        'dbtn':'#1c0099'
       },
       screens:{
         'xs':'350px'

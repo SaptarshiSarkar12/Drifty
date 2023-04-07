@@ -5,7 +5,7 @@ import Footer from "/components/Footer";
 export default function download(props) {
     return(
         <>
-        <Header props={"bg-top"}/>
+        <Header props={"bg-var"}/>
         <Releases className="bg-about" props={props.releases}/>
         <Footer />
     </>

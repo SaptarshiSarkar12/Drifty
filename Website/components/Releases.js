@@ -31,11 +31,11 @@ export default function Releases({props}) {
     
     
     return (
-        <div id="download" className="bg-bottom">
+        <div id="download" className="bg-bottom -mt-2">
             <h2 className="text-5xl sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Download Here</h2>
-            <div className="md:flex md:space-x- justify-center md:pl-0 xs:pl-6">
-                <a className="md:inline-block xs:block xs:pl-20 xs:animate-own  md:animate-no sm:m-auto sm:mb-4 xs:pt-4 xs:py-au xs:w-80 xs:mb-5 xs:h-14 md:pl-8 md:py-5  md:h-20 bg-blue-700 text-white xs:text-xl font-semibold md:text-3xl leading-tight rounded-full  hover:bg-yellow-400 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertfunction(true)} role="button" >Download Now <i className="fab fa-brands fa-windows"></i></a>
-                <a className="md:inline-block xs:block xs:pl-20 xs:animate-own md:animate-no sm:m-auto sm:mt-4 xs:pt-4 xs:w-80 xs:h-14 md:pl-8  md:py-5  md:h-20 bg-blue-700 text-white font-semibold xs:text-xl md:text-3xl leading-tight rounded-full  hover:bg-yellow-400 hover:drop-shadow-lg  focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertfunction(false)} role="button" >Download Now <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
+            <div className="md:flex md:justify-center lg:pl-10 md:pl-0 xs:pl-7">
+                <a className="md:inline-block lg:-mr-40 xs:block xs:pl-20 xs:animate-own  md:animate-no sm:m-auto sm:mb-4 xs:pt-4 xs:py-au xs:w-80 xs:mb-5 xs:h-14 md:pl-8 md:py-5   md:h-20 bg-dbtn text-white xs:text-xl font-semibold md:text-3xl leading-tight rounded-full  hover:bg-yellow-400 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertfunction(true)} role="button" >Download Now <i className="fab fa-brands fa-windows"></i></a>
+                <a className="md:inline-block xs:block xs:pl-20 xs:animate-own md:animate-no sm:m-auto sm:mt-4 xs:pt-4 xs:w-80 xs:h-14 md:pl-8  md:py-5 md:mt-0  md:h-20 bg-dbtn text-white font-semibold xs:text-xl md:text-3xl leading-tight rounded-full  hover:bg-yellow-400 hover:drop-shadow-lg  focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertfunction(false)} role="button" >Download Now <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
             </div>
             <p className=" text-center font-bold pt-10 pl-9">All Releases</p>
             {props.release.map((item, index) => {
@@ -46,8 +46,8 @@ export default function Releases({props}) {
                     <button onClick={() => handleButtonClick(index)} className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
                     {buttonStates[index] && <div className=" md:p-5 overflow-hidden"  dangerouslySetInnerHTML={{ __html:content[index]}}></div>}
                     <div className="grid grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
-                        <a className="md:w-28 md:h-8 xs: w-36 bg-blue-900 rounded-full p-1 shadow-none hover:drop-shadow-2xl" href={item.assets[1].browser_download_url}>Download <i className="fab fa-brands fa-windows"></i></a>
-                        <a className="md:w-32 md:h-8 xs: w-36 bg-blue-900 rounded-full p-1 shadow-none hover:drop-shadow-2xl" href={item.assets[0].browser_download_url}>Download <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
+                        <a className="md:w-28 md:h-8 xs: w-36 bg-dbtn rounded-full p-1 shadow-none hover:drop-shadow-2xl" href={item.assets[1].browser_download_url}>Download <i className="fab fa-brands fa-windows"></i></a>
+                        <a className="md:w-32 md:h-8 xs: w-36 bg-dbtn rounded-full p-1 shadow-none hover:drop-shadow-2xl" href={item.assets[0].browser_download_url}>Download <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
                     </div>
                 </div>
             })}
