@@ -24,6 +24,9 @@ public class Drifty_GUI {
     static JFrame window;
     static int windowWidth;
     static boolean isDownloadButtonPressed;
+    /**
+     * Boolean value to know if a file is being downloaded or not.
+     */
     static boolean isFileBeingDownloaded = false;
     static JPanel input;
     static JPanel downloadLayout;
@@ -176,26 +179,26 @@ public class Drifty_GUI {
      * This method <b>sets the download progress</b> in the GUI Application.
      */
     private static void setDownloadProgress() {
-        Task<Void> getProgress = new Task<>() {
+        SwingWorker<Void, Void> getProgress = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 while (isFileBeingDownloaded) {
                     downloadProgress = ProgressBarThread.getTotalDownloadPercent();
                 }
                 return null;
             }
         };
-        new Thread(getProgress).start();
-        Task<Void> setProgress = new Task<>() {
+        getProgress.execute();
+        SwingWorker<Void, Void> setProgress = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 while (isFileBeingDownloaded) {
                     downloadProgressBar.setValue((int) (downloadProgress));
                 }
                 return null;
             }
         };
-        new Thread(setProgress).start();
+        setProgress.execute();
     }
 
     /**
@@ -225,29 +228,28 @@ public class Drifty_GUI {
 //            };
 //            new Thread(getYtDlpProgress).start();
         } else {
-            Task<Void> setProgress = new Task<>() {
+            SwingWorker<Void, Void> setProgress = new SwingWorker<>() {
                 @Override
-                protected Void call() {
+                protected Void doInBackground() {
                     setDownloadProgress();
                     return null;
                 }
             };
-            new Thread(setProgress).start();
+            setProgress.execute();
         }
-        Task<Void> startDownload = new Task<>() {
+        SwingWorker<Void, Void> startDownload = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 backend.start();
                 return null;
             }
         };
-        Thread download = new Thread(startDownload);
-        download.start();
-        Task<Void> recreateDownloadSetup = new Task<>() {
+        startDownload.execute();
+        SwingWorker<Void, Void> recreateDownloadSetup = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 while (true){
-                    if (!download.isAlive()){
+                    if (!isFileBeingDownloaded){
                         downloadProgressBar.setVisible(false);
                         downloadButton.setVisible(true);
                         break;
@@ -256,7 +258,7 @@ public class Drifty_GUI {
                 return null;
             }
         };
-        new Thread(recreateDownloadSetup).start();
+        recreateDownloadSetup.execute();
     }
 
     /**
@@ -308,19 +310,18 @@ public class Drifty_GUI {
      * @since 2.0.0
      */
     private static void setDefaultInputs() {
-        Task<Void> setDefaultDirectory = new Task<>() {
+        SwingWorker<Void, Void> setDefaultDirectory = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 String defaultDirectory = Utility.saveToDefault();
                 directoryInputText.setText(defaultDirectory);
                 return null;
             }
         };
-        setDefaultDirectory.run();
-
-        Task<Void> setDefaultFilename = new Task<>() {
+        setDefaultDirectory.execute();
+        SwingWorker<Void, Void> setDefaultFilename = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 String previous_url = "";
                 while (!isFileBeingDownloaded) {
                     String url = linkInputText.getText();
@@ -339,7 +340,7 @@ public class Drifty_GUI {
                 return null;
             }
         };
-        new Thread(setDefaultFilename).start();
+        setDefaultFilename.execute();
     }
 
     /**
@@ -424,9 +425,9 @@ public class Drifty_GUI {
      * @since 2.0.0
      */
     private static void startInstantInputValidating() {
-        Task<Void> validateLink = new Task<>() {
+        SwingWorker<Void, Void> validateLink = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 String previous_url = "";
                 while (!isFileBeingDownloaded) {
                     String url = linkInputText.getText();
@@ -460,11 +461,10 @@ public class Drifty_GUI {
                 return null;
             }
         };
-        new Thread(validateLink).start();
-
-        Task<Void> validateDirectory = new Task<>() {
+        validateLink.execute();
+        SwingWorker<Void, Void> validateDirectory = new SwingWorker<>() {
             @Override
-            protected Void call() {
+            protected Void doInBackground() {
                 String previous_directory = "";
                 while (!isFileBeingDownloaded) {
                     String directory = directoryInputText.getText();
@@ -490,7 +490,7 @@ public class Drifty_GUI {
                 return null;
             }
         };
-        new Thread(validateDirectory).start();
+        validateDirectory.execute();
     }
 
     /**
