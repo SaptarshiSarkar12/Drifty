@@ -1070,6 +1070,30 @@ h4 {
   cursor: pointer;
 }
 
+.fb .mode-tooltip{
+  
+  position: absolute;
+  background-color: rgb(9 219 244);
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  color: #100f0f;
+  bottom: 5px;
+  right: 95px;
+  border-radius: 8px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  font-family: sans-serif;
+  pointer-events: none;
+}
+
+.fb:hover .mode-tooltip{
+  opacity: 1;
+  transition: opacity 0.35s;
+}
+
 .Txt {
   font-size: small;
 }
