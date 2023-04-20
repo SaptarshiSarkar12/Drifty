@@ -44,25 +44,94 @@
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
                 <version>1.7.0</version>
+                <configuration>
+                    <bundleJre>true</bundleJre>
+                    <mainClass>GUI.Drifty_GUI</mainClass>
+                    <generateInstaller>false</generateInstaller>
+                    <additionalResources>Drifty Banner.png</additionalResources>
+                    <licenseFile>LICENSE</licenseFile>
+                    <url>https://saptarshisarkar12.github.io/Drifty/</url>
+                    <assetsDir>./assets</assetsDir>
+                    <linuxConfig>
+                        <generateAppImage>true</generateAppImage>
+                        <generateDeb>true</generateDeb>
+                        <generateRpm>true</generateRpm>
+                    </linuxConfig>
+                    <winConfig>
+                        <!-- general properties -->
+                        <icoFile>./assets.windows.Drifty.ico</icoFile>
+                        <generateSetup>false</generateSetup>
+                        <generateMsi>true</generateMsi>
+                        <!-- exe creation properties -->
+                        <headerType>gui</headerType>
+                        <wrapJar>true</wrapJar>
+                        <companyName>Drifty</companyName>
+                        <fileVersion>${project.version}.0</fileVersion>
+                        <txtFileVersion>${project.version}</txtFileVersion>
+                        <productVersion>${project.version}.0</productVersion>
+                        <txtProductVersion>${project.version}</txtProductVersion>
+                        <fileDescription>${description}</fileDescription>
+                        <copyright>Drifty</copyright>
+                        <productName>${project.name}</productName>
+                        <internalName>${project.name}</internalName>
+                        <originalFilename>${project.name}.exe</originalFilename>
+                        <!-- choose EXE creation tool -->
+                        <exeCreationTool>launch4j</exeCreationTool>
+                    </winConfig>
+                    <macConfig>
+                        <!-- general properties -->
+                        <appId>${project.name}</appId>
+                        <icnsFile>./assets.mac.Drifty.icns</icnsFile>
+                        <generateDmg>true</generateDmg>
+                        <generatePkg>true</generatePkg>
+                        <relocateJar>false</relocateJar>
+                        <macStartup>UNIVERSAL</macStartup>
+                        <!-- properties used for DMG disk image generation -->
+                        <volumeName>${project.name}</volumeName>
+                        <!-- properties used for Info.plist file generation -->
+                        <infoPlist>
+                            <bundlePackageType>APPL</bundlePackageType>
+                        </infoPlist>
+                    </macConfig>
+                </configuration>
                 <executions>
                     <execution>
+                        <id>bundling-for-windows</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
                         </goals>
                         <configuration>
-                            <!-- mandatory -->
-                            <mainClass>src/main/java/GUI/Drifty_GUI.java</mainClass>
-                            <!-- optional -->
-                            <bundleJre>true</bundleJre>
-                            <generateInstaller>false</generateInstaller>
-                            <administratorRequired>false</administratorRequired>
-                            <platform>auto</platform>
-                            <additionalResources>
-                                <additionalResource>src/main/resources/yt-dlp</additionalResource>
-                                <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
-                                <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
-                            </additionalResources>
+                            <platform>windows</platform>
+                            <outputDirectory>./target/windows</outputDirectory>
+                            <createZipball>true</createZipball>
+                            <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>linux</platform>
+                            <outputDirectory>./target/linux</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>src/main/resources/yt-dlp</additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>mac</platform>
+                            <outputDirectory>./target/mac</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
                         </configuration>
                     </execution>
                 </executions>

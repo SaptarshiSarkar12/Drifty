@@ -404,10 +404,10 @@ public class Drifty_GUI {
 
         input = new JPanel();
         input.setBackground(Color.white);
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-                 UnsupportedLookAndFeelException ignored) {}
+        // try {
+           // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        // } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+           //      UnsupportedLookAndFeelException ignored) {}
         GridLayout layout = new GridLayout(2, 1);
         input.setLayout(layout);
         ImageIcon driftyBanner = new ImageIcon("./Drifty Banner.png");
