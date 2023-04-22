@@ -1,4 +1,4 @@
-package singleton;
+package Utils;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -7,7 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static constants.DriftyConstants.*;
+import static Utils.DriftyConstants.*;
 
 /**
  * This class deals with creating Log files for Drifty.
@@ -23,7 +23,8 @@ public class CreateLogs {
      * This is the constructor used to initialise the variables in this class.
      */
     private CreateLogs() {
-        filePath = FileSystems.getDefault().getPath(DRIFTY_CLI_LOG);
+
+        filePath = FileSystems.getDefault().getPath(DRIFTY_LOG);
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }
 

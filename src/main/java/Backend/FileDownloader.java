@@ -1,23 +1,29 @@
-import utility.DriftyUtility;
-import validation.DriftyValidation;
+package Backend;
 
+import Utils.MessageBroker;
+
+import java.awt.*;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static constants.DriftyConstants.*;
+import static Utils.DriftyConstants.*;
+import static Utils.Utility.isYoutubeLink;
 
 /**
  * This class deals with downloading the file.
  */
-class FileDownloader implements Runnable {
+public class FileDownloader implements Runnable {
+    private static final MessageBroker messageBroker = Drifty.messageBroker;
     // default number of threads to download with
     private static final int numberOfThreads = 3;
-    // default threading threshold in bytes  50MB
-    private static final long threadingThreshold = 1024 * 1024 * 50;
+    // default threading threshold in bytes.
+    private static final long threadingThreshold = 1024 * 1024 * 50; // This value determines if multithreaded downloading will be used or not. If the size of the file to be downloaded exceeds this value, then multithreaded downloading will be in use, else not. Here, it has been taken as 50 MB.
     private static String dir;
     private static String fileName;
     private static String link;
@@ -26,8 +32,7 @@ class FileDownloader implements Runnable {
     private static boolean supportsMultithreading;
 
     /**
-     * This is a constructor to initialise values of link, fileName and dir variables.
-     *
+     * This is a constructor to initialise values of <b>link</b>, <b>fileName</b> and <b>dir</b> variables.
      * @param link     Link to the file that the user wants to download
      * @param fileName Filename of the file that the user wants to save as after it is downloaded
      * @param dir      Directory in which the file needs to be saved.
@@ -41,7 +46,6 @@ class FileDownloader implements Runnable {
 
     /**
      * This function is used to get the value of dir variable.
-     *
      * @return The directory in which the user wants to save the file.
      */
     public static String getDir() {
@@ -67,9 +71,10 @@ class FileDownloader implements Runnable {
                     File file;
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                         file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
+                        file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
-                        start = i == 0 ? 0 : (i * partSize) + 1;
-                        end = FileDownloader.numberOfThreads - 1 == i ? totalSize : ((i * partSize) + partSize);
+                        start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
+                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -78,9 +83,10 @@ class FileDownloader implements Runnable {
                         tempFiles.add(file);
                     }
 
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, totalSize);
                     progressBarThread.start();
-                    //check if all file are downloaded
+                    messageBroker.sendMessage(DOWNLOADING + fileName + " ...", LOGGER_INFO, "download");
+                    // check if all file are downloaded
                     try {
                         while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                             Thread.sleep(1000);
@@ -91,10 +97,8 @@ class FileDownloader implements Runnable {
                             Thread.sleep(1000);
                         } catch (InterruptedException ignored) {
                         }
-                    } catch (InterruptedException ignored) {
-                    }
+                    } catch (InterruptedException ignored) {}
                 } else {
-
                     InputStream urlStream = url.openStream();
                     System.out.println();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -102,85 +106,81 @@ class FileDownloader implements Runnable {
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
                     ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
                     progressBarThread.start();
-                    Drifty_CLI.logger.log(LOGGER_INFO, "Downloading " + fileName + " ...");
+                    messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
-                    // keep main thread from closing the IO for short amt. of time so UI thread can finish and output
+                    // keep main thread from closing the IO for short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);
-                    } catch (InterruptedException ignored) {
-                    }
+                    } catch (InterruptedException ignored) {}
                 }
 
             } catch (SecurityException e) {
-                System.out.println("Write access to " + dir + fileName + " denied !");
-                Drifty_CLI.logger.log(LOGGER_ERROR, "Write access to " + dir + fileName + " denied ! " + e.getMessage());
+                messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", LOGGER_ERROR, "download");
             } catch (IOException e) {
-                System.out.println(FAILED_TO_DOWNLOAD_CONTENTS);
-                Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
+                messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, LOGGER_ERROR, "download");
             }
         } catch (NullPointerException e) {
-            System.out.println(FAILED_TO_READ_DATA_STREAM);
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_READ_DATA_STREAM + e.getMessage());
+            messageBroker.sendMessage(FAILED_TO_READ_DATA_STREAM, LOGGER_ERROR, "download");
         }
-        if (dir.length() == 0) {
-            dir = System.getProperty("user.dir");
-        }
-        if (!(dir.endsWith("\\"))) {
-            dir = dir + System.getProperty("file.separator");
-        }
-
     }
 
     /**
      * This method deals with downloading videos from YouTube in mp4 format.
-     *
      * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to (the temporary files' folder).
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
-     * @throws IOException          When an I/O problem appears while downloading the YouTube video.
+     * @throws IOException When an I/O problem appears while downloading the YouTube video.
      */
-    private static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
-        String fName = "";
-        System.out.println(TRYING_TO_AUTO_DETECT_FILE);
-        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", link, "--print", "title");
+    public static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
+        String outputFileName;
+        if (fileName != null){
+            outputFileName = fileName;
+        } else {
+            outputFileName = "%(title)s.%(ext)s";
+        }
+        String fileDownloadMessagePart;
+        if (outputFileName.equals("%(title)s.%(ext)s")){
+            fileDownloadMessagePart = "the YouTube Video";
+        } else {
+            fileDownloadMessagePart = outputFileName;
+        }
+        ProcessBuilder processBuilder;
+        messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        String yt_dlpProgramName;
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("nux") || osName.contains("nix")){
+            yt_dlpProgramName = "yt-dlp";
+        } else if (osName.contains("win")) {
+            yt_dlpProgramName = "yt-dlp.exe";
+        } else if (osName.contains("mac")){
+            yt_dlpProgramName = "yt-dlp_macos";
+        } else {
+            yt_dlpProgramName = "yt-dlp";
+        }
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
+        int height = (int) screenSize.getHeight(); // E.g.: 768
+        int width = (int) screenSize.getWidth(); // E.g.: 1366
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            // , "--progress-template", "Downloading : %(progress._percent_str)s"
+        } else {
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            // , "--progress-template", "Downloading : %(progress._percent_str)s"
+        }
         processBuilder.inheritIO();
-        System.out.print("Filename : ");
+        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
-        if (exitValueOfYt_Dlp != 0) {
-            return;
-        }
-        System.out.print(RENAME_FILE);
-        String renameFile = Drifty_CLI.SCANNER.nextLine().toLowerCase();
-        boolean yesOrNo = DriftyValidation.yesNoValidation(renameFile, "Would you like to rename this file? (Enter Y for yes and N for no) : ");
-        if (yesOrNo) {
-            System.out.print(FILE_NAME_WITH_EXTENSION);
-            fName = Drifty_CLI.SCANNER.nextLine();
-        }
-        System.out.println(TRYING_TO_DOWNLOAD_FILE);
-        Drifty_CLI.logger.log(LOGGER_INFO, TRYING_TO_DOWNLOAD_FILE);
-        if (fName.equals("")) {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", "%(title)s.mp4");
-        } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + "yt-dlp", "--quiet", "--progress", "-P", dir, link, "-o", fName);
-        }
-        processBuilder.inheritIO();
-        yt_dlp = processBuilder.start();
-        yt_dlp.waitFor();
-        exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
-            System.out.println(SUCCESSFULLY_DOWNLOADED_FILE);
-            Drifty_CLI.logger.log(LOGGER_INFO, SUCCESSFULLY_DOWNLOADED_FILE);
+            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessagePart + " !", LOGGER_INFO, "download");
         } else if (exitValueOfYt_Dlp == 1) {
-            System.out.println(FAILED_TO_DOWNLOAD_FILES);
-            Drifty_CLI.logger.log(LOGGER_INFO, FAILED_TO_DOWNLOAD_FILES);
+            messageBroker.sendMessage(FAILED_TO_DOWNLOAD + fileDownloadMessagePart + " !", LOGGER_ERROR, "download");
         }
     }
 
     /**
      * This method check if all the downloader threads are completed correctly and merges the downloaded parts.
-     *
      * @param fileOutputStreams FileOutputStream of all the parts
      * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
@@ -189,40 +189,40 @@ class FileDownloader implements Runnable {
      * @throws IOException if the threads exit without downloading the whole part or if there are any IO error thrown by  getChannel().size() method of FileOutputStream
      */
     public static boolean merge(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
-        //check if all file are downloaded
+        // check if all file are downloaded
         int completed = 0;
-        FileOutputStream fout;
+        FileOutputStream fileOutputStream;
         DownloaderThread downloaderThread;
         long partSize;
         for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
-            fout = fileOutputStreams.get(i);
+            fileOutputStream = fileOutputStreams.get(i);
             partSize = partSizes.get(i);
             downloaderThread = downloaderThreads.get(i);
 
-            if (fout.getChannel().size() < partSize) {
+            if (fileOutputStream.getChannel().size() < partSize) {
                 if (!downloaderThread.isAlive()) throw new IOException(THREAD_ERROR_ENCOUNTERED);
             } else if (!downloaderThread.isAlive()) completed++;
         }
 
-        //check if it is merge-able
+        // check if it is merge-able
         if (completed == FileDownloader.numberOfThreads) {
-            fout = new FileOutputStream(dir + fileName);
+            fileOutputStream = new FileOutputStream(dir + fileName);
             long position = 0;
             for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
                 File f = tempFiles.get(i);
                 FileInputStream fs = new FileInputStream(f);
                 ReadableByteChannel rbs = Channels.newChannel(fs);
-                fout.getChannel().transferFrom(rbs, position, f.length());
+                fileOutputStream.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
             }
-            fout.close();
+            fileOutputStream.close();
             return true;
         }
         return false;
     }
 
     /**
-     * This is the overridden run method of the Runnable interface and deals with the main part of opening connections and downloading the file.
+     * This is method which deals with the main part of opening and establishing connections and downloading the file.
      */
     @Override
     public void run() {
@@ -235,33 +235,35 @@ class FileDownloader implements Runnable {
                 link = link + "?raw=true";
             }
         }
+        if (dir.length() == 0) {
+            dir = System.getProperty("user.dir");
+        }
+        if (!(dir.endsWith("\\"))) {
+            dir = dir + System.getProperty("file.separator");
+        }
         try {
             // If link is of an YouTube video, then the following block of code will execute.
-            if (DriftyUtility.isYoutubeLink(link)) {
+            if (isYoutubeLink(link)) {
                 try {
-                    downloadFromYouTube("");
+                    downloadFromYouTube("./src/main/resources/");
                 } catch (IOException e) {
                     try {
-                        System.out.println(GETTING_READY_TO_DOWNLOAD_FILE);
-                        Drifty_CLI.logger.log(LOGGER_INFO, GETTING_READY_TO_DOWNLOAD_FILE);
+                        messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                         copyYt_dlp cy = new copyYt_dlp();
                         cy.copyToTemp();
                         try {
-                            downloadFromYouTube(copyYt_dlp.tempDir);
+                            String tempDir = copyYt_dlp.getTempDir();
+                            downloadFromYouTube(tempDir);
                         } catch (InterruptedException ie) {
-                            System.out.println(USER_INTERRUPTION);
-                            Drifty_CLI.logger.log(LOGGER_ERROR, USER_INTERRUPTION + ie.getMessage());
+                            messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                         } catch (IOException io1) {
-                            System.out.println(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO);
-                            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO + io1.getMessage());
+                            messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
                         }
                     } catch (IOException io) {
-                        System.out.println(FAILED_TO_INITIALISE_YOUTUBE_VIDEO);
-                        Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_INITIALISE_YOUTUBE_VIDEO + io.getMessage());
+                        messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
                     }
                 } catch (InterruptedException e) {
-                    System.out.println(USER_INTERRUPTION);
-                    Drifty_CLI.logger.log(LOGGER_ERROR, USER_INTERRUPTION + e.getMessage());
+                    messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                 }
             } else {
                 url = new URL(link);
@@ -270,40 +272,19 @@ class FileDownloader implements Runnable {
                 totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
 
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                FileDownloader.supportsMultithreading = totalSize > threadingThreshold && acceptRange != null && acceptRange.equalsIgnoreCase("bytes");
+                FileDownloader.supportsMultithreading = (totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes"));
 
                 if (fileName.length() == 0) {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
                 }
-                dir = dir.replace('/', '\\');
-                if (dir.length() != 0) {
-                    if (dir.equals(".\\\\") || dir.equals(".\\")) {
-                        dir = "";
-                    }
-                } else {
-                    System.out.println(INVALID_DIRECTORY);
-                    Drifty_CLI.logger.log(LOGGER_ERROR, INVALID_DIRECTORY);
-                }
-                try {
-                    new CheckDirectory(dir);
-                } catch (IOException e) {
-                    System.out.println(FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage());
-                    Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CREATE_DIRECTORY + dir + " ! " + e.getMessage());
-                }
-                System.out.println(TRYING_TO_DOWNLOAD_FILE);
-                Drifty_CLI.logger.log(LOGGER_ERROR, TRYING_TO_DOWNLOAD_FILE);
+                messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                 downloadFile();
             }
         } catch (MalformedURLException e) {
-            System.out.println(INVALID_LINK);
-            Drifty_CLI.logger.log(LOGGER_ERROR, INVALID_LINK + e.getMessage());
-        } catch (SocketTimeoutException e) {
-            System.out.println(FAILED_TO_CONNECT_TO_URL + url + " !");
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CONNECT_TO_URL + url + " ! " + e.getMessage());
+            messageBroker.sendMessage(INVALID_LINK, LOGGER_ERROR, "link");
         } catch (IOException e) {
-            System.out.println(FAILED_TO_CONNECT_TO_URL + url + " !");
-            Drifty_CLI.logger.log(LOGGER_ERROR, FAILED_TO_CONNECT_TO_URL + url + " ! " + e.getMessage());
+            messageBroker.sendMessage(FAILED_TO_CONNECT_TO_URL + url + " !", LOGGER_ERROR, "download");
         }
     }
 }

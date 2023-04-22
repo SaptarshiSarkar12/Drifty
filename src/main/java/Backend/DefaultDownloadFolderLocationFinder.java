@@ -1,9 +1,11 @@
+package Backend;
+
 import java.io.*;
 
 /**
  * This class deals with finding the path of the default downloads folder.
  */
-class DefaultDownloadFolderLocationFinder {
+public class DefaultDownloadFolderLocationFinder {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
     /**
