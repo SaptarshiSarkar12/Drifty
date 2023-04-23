@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.Drifty</groupId>
+    <artifactId>Drifty</artifactId>
+    <version>2.0.0</version>
+    <name>Drifty</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.9.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>18</source>
+                    <target>18</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.7.0</version>
+                <configuration>
+                    <bundleJre>true</bundleJre>
+                    <mainClass>GUI.Drifty_GUI</mainClass>
+                    <generateInstaller>false</generateInstaller>
+                    <additionalResources>Drifty Banner.png</additionalResources>
+                    <licenseFile>LICENSE</licenseFile>
+                    <url>https://saptarshisarkar12.github.io/Drifty/</url>
+                    <assetsDir>./assets</assetsDir>
+                    <linuxConfig>
+                        <generateAppImage>true</generateAppImage>
+                        <generateDeb>true</generateDeb>
+                        <generateRpm>true</generateRpm>
+                    </linuxConfig>
+                    <winConfig>
+                        <!-- general properties -->
+                        <icoFile>./assets.windows.Drifty.ico</icoFile>
+                        <generateSetup>false</generateSetup>
+                        <generateMsi>true</generateMsi>
+                        <!-- exe creation properties -->
+                        <headerType>gui</headerType>
+                        <wrapJar>true</wrapJar>
+                        <companyName>Drifty</companyName>
+                        <fileVersion>${project.version}.0</fileVersion>
+                        <txtFileVersion>${project.version}</txtFileVersion>
+                        <productVersion>${project.version}.0</productVersion>
+                        <txtProductVersion>${project.version}</txtProductVersion>
+                        <fileDescription>${description}</fileDescription>
+                        <copyright>Drifty</copyright>
+                        <productName>${project.name}</productName>
+                        <internalName>${project.name}</internalName>
+                        <originalFilename>${project.name}.exe</originalFilename>
+                        <!-- choose EXE creation tool -->
+                        <exeCreationTool>launch4j</exeCreationTool>
+                    </winConfig>
+                    <macConfig>
+                        <!-- general properties -->
+                        <appId>${project.name}</appId>
+                        <icnsFile>./assets.mac.Drifty.icns</icnsFile>
+                        <generateDmg>true</generateDmg>
+                        <generatePkg>true</generatePkg>
+                        <relocateJar>false</relocateJar>
+                        <macStartup>UNIVERSAL</macStartup>
+                        <!-- properties used for DMG disk image generation -->
+                        <volumeName>${project.name}</volumeName>
+                        <!-- properties used for Info.plist file generation -->
+                        <infoPlist>
+                            <bundlePackageType>APPL</bundlePackageType>
+                        </infoPlist>
+                    </macConfig>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>bundling-for-windows</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>windows</platform>
+                            <outputDirectory>./target/windows</outputDirectory>
+                            <createZipball>true</createZipball>
+                            <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>linux</platform>
+                            <outputDirectory>./target/linux</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>src/main/resources/yt-dlp</additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-for-mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <platform>mac</platform>
+                            <outputDirectory>./target/mac</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,19 @@
+name: Other
+description: Want to raise a different issue?
+title: "[OTHER] "
+labels: [Other issue]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A detailed description of the issue with links and screenshots.
+    validations:
+      required: true
+  - type: textarea
+    id: extrainfo
+    attributes:
+      label: Additional information
+      description: Add any other context about the issue here.
+    validations:
+      required: false

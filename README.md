@@ -1,23 +1,39 @@
-<h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
-<p align="center" float="center">
+
+<p align="center">
     <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty.ico" width="98" height="105">
     <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty%20Banner.png" height="80">
+    <h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
+    </a> <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a> <a href="https://github.com/SaptarshiSarkar12/Drifty/deployments"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a> 
+    </br>
+    <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar" alt="No. Of Downloads of Drifty for MacOS and Linux"></a>
+    <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe" alt="No. Of Downloads of Drifty for windows"></a>
+    </br>
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
+    <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow"></a> 
+    <a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord"></a>
 </p>
 
----
+## About 🔥
 
-[![Release Version](https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&label=Drifty)](https://github.com/SaptarshiSarkar12/Drifty/releases/latest/)
-[![Size](https://img.shields.io/github/size/SaptarshiSarkar12/Drifty/Drifty_CLI.exe?label=Drifty%20CLI)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty_CLI.exe) [![License](https://img.shields.io/github/license/SaptarshiSarkar12/Drifty)](https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE) [![GitHub Pages Deployment](https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Deployment)](https://github.com/SaptarshiSarkar12/Drifty/deployments)
+- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
+- It is currently available in **Command Line Interface** (_CLI_) mode and the **Graphical User Interface** (_GUI_) version is under active development. 
 
-[![No. Of Downloads of Drifty jar](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar)
-[![No. Of Downloads of Drifty exe](https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe)](http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe)
+## Demo
+See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
-[![GitHub Stargazers for Drifty](https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?label=Leave%20a%20star&style=social)](https://github.com/SaptarshiSarkar12/Drifty/stargazers) 
-[![Follow](https://img.shields.io/twitter/follow/SSarkar2007?style=social)](https://twitter.com/SSarkar2007) 
-[![Discord](https://img.shields.io/discord/1034035416300519454?label=Discord&logo=discord)](https://discord.gg/DeT4jXPfkG)
+[Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
 
-[Drifty](https://github.com/SaptarshiSarkar12/Drifty/) is an open-source interactive File Downloader system built using Java. It takes the link to the file, the directory where it needs to be saved and the filename of the downloaded file as input and downloads it. It is currently available in CLI mode and the GUI version is under active development. 
 
+## Tech Stack
+
+The _Application_ **Drifty** is built using the following technologies :
+- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independant applications.
+
+The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML) - The most basic building block of the Website.
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) - Stylesheet documentation language used to describe the presentation of a HTML document.
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/javascript) - Scripting language for webpages.
 
 ## Getting Started 🚀🚀
 For **Users** :
@@ -43,7 +59,7 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make. </p>
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request. </p>
 4. The Pull Request will be reviewed and merged if approved. ✔ </p>
-5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project. </br>
+5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) ⭐ on GitHub if you liked the project. </br>
 6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
 ## Safety warning ⚠ while Downloading ⬇
@@ -51,13 +67,13 @@ git clone git@github.com:SaptarshiSarkar12/Drifty.git
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
 It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed by following steps:
-- Tap on the three dots. 
-- Tap on keep.
+- Click on the three dots. 
+- Click on keep.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
 
-- Tap **`Show More`**.
-- Tap **`Keep anyway`**.
+- Click **`Show More`**.
+- Click **`Keep anyway`**.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
 
@@ -66,25 +82,26 @@ It is because Microsoft Defender could not verify it is safe as it is not common
 ### Report the file as safe
 
 You can also provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
-- Tap on three dots.
-- Tap on **`Report this file as safe`** instead of tapping on **`Keep`**.
+- Click on three dots.
+- Click on **`Report this file as safe`** instead of clicking on **`Keep`**.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
 
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
-## Demo
-See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/). </p>
-
-[Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
-
 ## Contributing to the project
-Please feel to contribute to this project. See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) for ways to contribute. 
-**Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
-Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. Join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
+- Please feel free to contribute to this open-source project. 
+- See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [Projects](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
+- **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
+- Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
+- Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. 
+- Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
 
 ## Stats 📊
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
+
+## Support 🙏
+Please leave a star ⭐ on this project to support us.
 
 ## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
