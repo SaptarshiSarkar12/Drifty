@@ -15,10 +15,10 @@ function MobileNav({ open, setOpen }) {
                 <Link className="text-xl font-semibold" href="/"> <Image src="/favicons/favicon-32x32.png" width={32} height={32} alt="DriftyLogo"/></Link>
             </div>
             <div className="grid grid-rows-4 justify-items-center bg-top">
-                <NavLink to="/about" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:bg-blue-700  hover:shadow-lg">About</button></NavLink>
-                <NavLink to="/contributions" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:bg-blue-700  hover:shadow-lg">Contribute</button></NavLink>
-                <NavLink to="/download" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:bg-blue-700  hover:shadow-lg">Download</button></NavLink>
-                <NavLink to="/contact" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:bg-blue-700  hover:shadow-lg">Contact</button></NavLink>
+                <NavLink to="/about" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">About</button></NavLink>
+                <NavLink to="/contributions" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Contribute</button></NavLink>
+                <NavLink to="/download" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Download</button></NavLink>
+                <NavLink to="/contact" cn="text-xl font-normal my-4"><button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Contact</button></NavLink>
             </div>
         </div>
     )
@@ -54,12 +54,12 @@ export default function Header({props}) {
                         <span className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${open ? "-rotate-45 -translate-y-3.5" : ""}`} />
                     </div>
                     <div className="hidden md:flex mr-20">
-                    <NavLink to="/" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:bg-blue-700">HOME</button></NavLink>
-                        <NavLink to="/about" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:bg-blue-700">ABOUT</button></NavLink>
+                    <NavLink to="/" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">HOME</button></NavLink>
+                        <NavLink to="/about" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">ABOUT</button></NavLink>
                         
-                        <NavLink to="/contributions" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:bg-blue-700">CONTRIBUTE</button></NavLink>
-                        <NavLink to="/download" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:bg-blue-700">DOWNLOAD</button></NavLink>
-                        <NavLink to="/contact" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:bg-blue-700">CONTACT</button></NavLink>
+                        <NavLink to="/contributions" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">CONTRIBUTE</button></NavLink>
+                        <NavLink to="/download" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">DOWNLOAD</button></NavLink>
+                        <NavLink to="/contact" cn="mx-4"><button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">CONTACT</button></NavLink>
                     </div>
                 </div>
             </nav>
