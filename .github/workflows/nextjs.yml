@@ -3,6 +3,9 @@
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
 name: Deploy Next.js site to Pages
+defaults:
+    run:
+        working-directory: "./Website"
 
 on:
   # Runs on pushes targeting the default branch
