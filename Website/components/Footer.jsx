@@ -7,7 +7,7 @@ export default function Footer() {
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">
                         <a href="https://saptarshisarkar12.github.io/Drifty/" className="flex items-center">
-                            <Image width={32} height={32} src="/favicons/favicon-32x32.png" className="h-8 mr-3" alt="FlowBite Logo" />
+                            <Image width={32} height={32} src="favicons/favicon-32x32.png" className="h-8 mr-3" alt="FlowBite Logo" />
                             <span className="self-center text-2xl font-semibold whitespace-nowrap">Drifty</span>
                         </a>
                     </div>
