@@ -5,6 +5,7 @@ module.exports = {
   basePath: '/Drifty',
   images: {
     domains: ['avatars.githubusercontent.com','camo.githubusercontent.com','cdn.jsdelivr.net'],
-    dangerouslyAllowSVG: true,    
+    dangerouslyAllowSVG: true,
+    unoptimized: true,
   },
 }
