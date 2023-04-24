@@ -44,7 +44,7 @@ export default function Header({props}) {
             <nav className="flex filter drop-shadow-md  px-4 py-4 h-20 items-center">
                 <MobileNav open={open} setOpen={setOpen} />
                 <div className="w-4/12 flex items-center lg:pl-20">
-                    <Link className="font-semibold" href="/"><Image className=" w-12" src="/favicons/favicon-32x32.png" alt="Logo" width={32} height={32}/></Link>
+                    <Link className="font-semibold" href="/"><Image className=" w-12" src="favicons/favicon-32x32.png" alt="Logo" width={32} height={32}/></Link>
                 </div>
                 <div className="w-9/12 flex justify-end items-center">
                     <div className="z-40 flex relative w-8 h-8 flex-col justify-between items-center md:hidden" onClick={() => { setOpen(!open) }}>
