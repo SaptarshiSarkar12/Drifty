@@ -17,12 +17,12 @@ export default function MainSection() {
                 </div>
             </div>
             <div className="xs:hidden flex-col-1 lg:block text-center text-gray-800 py-20 px-6 img-layer w-1/2" id="ImgLayer">
-                <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/2.webp" alt="..." />
-                <Image width={500} height={0} className=" absolute animate-img hover:bg-black" src="/Resources/Layers/3.webp" alt="..." />
-                <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/4.webp" alt="..." />
-                <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/5.webp" alt="..." />
-                <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/6.webp" alt="..." />
-                <Image width={500} height={0} className=" absolute  animate-img" src="/Resources/Layers/7.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute  animate-img" src="Resources/Layers/2.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute animate-img hover:bg-black" src="Resources/Layers/3.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute  animate-img" src="Resources/Layers/4.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute  animate-img" src="Resources/Layers/5.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute  animate-img" src="Resources/Layers/6.webp" alt="..." />
+                <Image width={500} height={0} className=" absolute  animate-img" src="Resources/Layers/7.webp" alt="..." />
             </div>
         </div>
 
