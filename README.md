@@ -1,6 +1,6 @@
 
 <p align="center">
-    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty.ico" width="98" height="105">
+    <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/assets/windows/Drifty.ico" width="98" height="105">
     <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty%20Banner.png" height="80">
     <h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
