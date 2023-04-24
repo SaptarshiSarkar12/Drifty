@@ -3,8 +3,8 @@ import { remark } from 'remark';
 import html from 'remark-html';
 
 function alertfunction(b){
-    if(confirm("Do You want to Download Drifty?")){
-        alert("Thanks for Downloading");
+    if(confirm("Do you want to download Drifty?")){
+        alert("Thanks for Downloading!");
         window.open(b? "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
         :"https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar")
     }
