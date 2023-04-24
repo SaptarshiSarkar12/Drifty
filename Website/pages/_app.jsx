@@ -1,4 +1,5 @@
 import '/styles/globals.css'
+import Head from 'next/head'
 
 <Head>
 <link rel="shortcut icon" href="/favicons/favicon.ico" />
