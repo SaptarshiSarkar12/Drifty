@@ -13,10 +13,14 @@ on:
     branches: [ "master" ]
     paths-ignore:
       - "Website/**"
+      - "*.md"
+      - "*.txt"
   pull_request:
     branches: [ "master" ]
     paths-ignore:
-      - "Website/**"
+      - "Website/**"      
+      - "*.md"
+      - "*.txt"
 
 jobs:
   build-and-package:
