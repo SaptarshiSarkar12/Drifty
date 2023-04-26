@@ -7,7 +7,7 @@
 </a> <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a> <a href="https://github.com/SaptarshiSarkar12/Drifty/deployments">
 </br>
 
-[![Build and Package Drifty](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/maven.yml/badge.svg)](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/maven.yml) <a><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
+[![Build and Package Drifty](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg)](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml) <a><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
 </br>
 <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar" alt="No. Of Downloads of Drifty for MacOS and Linux"></a>
 <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe" alt="No. Of Downloads of Drifty for windows"></a>
