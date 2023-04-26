@@ -8,7 +8,7 @@
 	<fileSets>
 		<fileSet>
 			<outputDirectory>Drifty.app</outputDirectory>
-			<directory>/home/saptarshi/Drifty/target/mac/Drifty/Drifty.app</directory>
+			<directory>/home/runner/work/Drifty/Drifty/target/mac/Drifty/Drifty.app</directory>
 			<excludes>
 				<exclude>Contents/MacOS/universalJavaApplicationStub</exclude>
 				<exclude>Contents/MacOS/universalJavaApplicationStub</exclude>
@@ -16,7 +16,7 @@
 		</fileSet>
 		<fileSet>
 			<outputDirectory>Drifty.app</outputDirectory>
-			<directory>/home/saptarshi/Drifty/target/mac/Drifty/Drifty.app</directory>
+			<directory>/home/runner/work/Drifty/Drifty/target/mac/Drifty/Drifty.app</directory>
 			<includes>
 				<include>Contents/MacOS/universalJavaApplicationStub</include>
 				<include>Contents/MacOS/universalJavaApplicationStub</include>

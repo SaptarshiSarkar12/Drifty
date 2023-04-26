@@ -1,8 +1,8 @@
 Backend/CheckDirectory.class
 CLI/Drifty_CLI.class
 Backend/FileDownloader.class
-Backend/copyYt_dlp.class
 GUI/Drifty_GUI$9.class
+Backend/copyYt_dlp.class
 GUI/Drifty_GUI$4.class
 Utils/MessageBroker.class
 Backend/DownloaderThread.class
@@ -16,8 +16,8 @@ Utils/CreateLogs.class
 Backend/ProgressBarThread.class
 GUI/Drifty_GUI.class
 GUI/Drifty_GUI$8.class
-Backend/Drifty.class
 GUI/Drifty_GUI$3.class
+Backend/Drifty.class
 GUI/Drifty_GUI$1.class
 GUI/Drifty_GUI$6.class
 Utils/ScannerFactory.class
