@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Build and Package Drifty
 
 on:
   push:
@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 18
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '18'
+        java-version: '17'
         distribution: 'oracle'
         cache: maven
     - name: Build with Maven
