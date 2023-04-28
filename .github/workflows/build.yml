@@ -38,9 +38,9 @@ jobs:
     - name: Push generated artifacts
       run: |
           git config user.name "GitHub Actions Bot"
-          git config user.email "githubactionsbot@github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "build(App): Added build files"
+          git commit -m "build(App): Built And Packaged Drifty"
           git push
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
