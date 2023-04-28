@@ -102,6 +102,7 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <bundleJre>true</bundleJre>
                             <platform>windows</platform>
                             <outputDirectory>./target/windows</outputDirectory>
                             <createZipball>true</createZipball>
@@ -115,6 +116,7 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <bundleJre>true</bundleJre>
                             <platform>linux</platform>
                             <outputDirectory>./target/linux</outputDirectory>
                             <createTarball>true</createTarball>
@@ -128,6 +130,7 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <bundleJre>true</bundleJre>
                             <platform>mac</platform>
                             <outputDirectory>./target/mac</outputDirectory>
                             <createTarball>true</createTarball>
