@@ -49,7 +49,6 @@
                     <customizedJre>false</customizedJre>
                     <mainClass>GUI.Drifty_GUI</mainClass>
                     <generateInstaller>false</generateInstaller>
-                    <additionalResources>Drifty Banner.png</additionalResources>
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
@@ -58,6 +57,14 @@
                         <generateAppImage>true</generateAppImage>
                         <generateDeb>true</generateDeb>
                         <generateRpm>true</generateRpm>
+                        <bundleJre>true</bundleJre>
+                        <copyDependencies>true</copyDependencies>
+                        <customizedJre>false</customizedJre>
+                        <platform>linux</platform>
+                        <outputDirectory>./target/linux</outputDirectory>
+                        <createTarball>true</createTarball>
+                        <additionalResources>src/main/resources/yt-dlp</additionalResources>
+                        <additionalResources>Drifty Banner.png</additionalResources>
                     </linuxConfig>
                     <winConfig>
                         <!-- general properties -->
@@ -72,13 +79,21 @@
                         <txtFileVersion>${project.version}</txtFileVersion>
                         <productVersion>${project.version}.0</productVersion>
                         <txtProductVersion>${project.version}</txtProductVersion>
-                        <fileDescription>${description}</fileDescription>
+                        <fileDescription>An open-source interactive File Downloader System</fileDescription>
                         <copyright>Drifty</copyright>
                         <productName>${project.name}</productName>
                         <internalName>${project.name}</internalName>
                         <originalFilename>${project.name}.exe</originalFilename>
                         <!-- choose EXE creation tool -->
                         <exeCreationTool>launch4j</exeCreationTool>
+                        <copyDependencies>true</copyDependencies>
+                        <bundleJre>true</bundleJre>
+                        <customizedJre>false</customizedJre>
+                        <platform>windows</platform>
+                        <outputDirectory>./target/windows</outputDirectory>
+                        <createZipball>true</createZipball>
+                        <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
+                        <additionalResources>Drifty Banner.png</additionalResources>
                     </winConfig>
                     <macConfig>
                         <!-- general properties -->
@@ -94,55 +109,27 @@
                         <infoPlist>
                             <bundlePackageType>APPL</bundlePackageType>
                         </infoPlist>
+                        <bundleJre>true</bundleJre>
+                        <copyDependencies>true</copyDependencies>
+                        <customizedJre>false</customizedJre>
+                        <platform>mac</platform>
+                        <outputDirectory>./target/mac</outputDirectory>
+                        <createTarball>true</createTarball>
+                        <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
+                        <additionalResources>Drifty Banner.png</additionalResources>
                     </macConfig>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>bundling-for-windows</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
                         </goals>
                         <configuration>
-                            <copyDependencies>true</copyDependencies>
+                            <platform>auto</platform>
+                            <mainClass>GUI.Drifty_GUI</mainClass>
                             <bundleJre>true</bundleJre>
                             <customizedJre>false</customizedJre>
-                            <platform>windows</platform>
-                            <outputDirectory>./target/windows</outputDirectory>
-                            <createZipball>true</createZipball>
-                            <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-for-linux</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <copyDependencies>true</copyDependencies>
-                            <customizedJre>false</customizedJre>
-                            <platform>linux</platform>
-                            <outputDirectory>./target/linux</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>src/main/resources/yt-dlp</additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-for-mac</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <copyDependencies>true</copyDependencies>
-                            <customizedJre>false</customizedJre>
-                            <platform>mac</platform>
-                            <outputDirectory>./target/mac</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
                         </configuration>
                     </execution>
                 </executions>
