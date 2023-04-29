@@ -46,12 +46,14 @@
                 <version>1.7.0</version>
                 <configuration>
                     <bundleJre>true</bundleJre>
+                    <customizedJre>false</customizedJre>
                     <mainClass>GUI.Drifty_GUI</mainClass>
                     <generateInstaller>false</generateInstaller>
                     <additionalResources>Drifty Banner.png</additionalResources>
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
+                    <copyDependencies>true</copyDependencies>
                     <linuxConfig>
                         <generateAppImage>true</generateAppImage>
                         <generateDeb>true</generateDeb>
@@ -102,7 +104,9 @@
                             <goal>package</goal>
                         </goals>
                         <configuration>
+                            <copyDependencies>true</copyDependencies>
                             <bundleJre>true</bundleJre>
+                            <customizedJre>false</customizedJre>
                             <platform>windows</platform>
                             <outputDirectory>./target/windows</outputDirectory>
                             <createZipball>true</createZipball>
@@ -117,6 +121,8 @@
                         </goals>
                         <configuration>
                             <bundleJre>true</bundleJre>
+                            <copyDependencies>true</copyDependencies>
+                            <customizedJre>false</customizedJre>
                             <platform>linux</platform>
                             <outputDirectory>./target/linux</outputDirectory>
                             <createTarball>true</createTarball>
@@ -131,6 +137,8 @@
                         </goals>
                         <configuration>
                             <bundleJre>true</bundleJre>
+                            <copyDependencies>true</copyDependencies>
+                            <customizedJre>false</customizedJre>
                             <platform>mac</platform>
                             <outputDirectory>./target/mac</outputDirectory>
                             <createTarball>true</createTarball>
