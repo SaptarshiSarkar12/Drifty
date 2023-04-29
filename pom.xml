@@ -44,79 +44,6 @@
                 <groupId>io.github.fvarrui</groupId>
                 <artifactId>javapackager</artifactId>
                 <version>1.7.0</version>
-                <configuration>
-                    <bundleJre>true</bundleJre>
-                    <customizedJre>false</customizedJre>
-                    <mainClass>GUI.Drifty_GUI</mainClass>
-                    <generateInstaller>false</generateInstaller>
-                    <licenseFile>LICENSE</licenseFile>
-                    <url>https://saptarshisarkar12.github.io/Drifty/</url>
-                    <assetsDir>./assets</assetsDir>
-                    <copyDependencies>true</copyDependencies>
-                    <linuxConfig>
-                        <generateAppImage>true</generateAppImage>
-                        <generateDeb>true</generateDeb>
-                        <generateRpm>true</generateRpm>
-                        <customizedJre>false</customizedJre>
-                        <platform>linux</platform>
-                        <outputDirectory>./target/linux</outputDirectory>
-                        <createTarball>true</createTarball>
-                        <additionalResources>src/main/resources/yt-dlp</additionalResources>
-                        <additionalResources>Drifty Banner.png</additionalResources>
-                    </linuxConfig>
-                    <winConfig>
-                        <!-- general properties -->
-                        <icoFile>./assets.windows.Drifty.ico</icoFile>
-                        <generateSetup>false</generateSetup>
-                        <generateMsi>true</generateMsi>
-                        <!-- exe creation properties -->
-                        <headerType>gui</headerType>
-                        <wrapJar>true</wrapJar>
-                        <companyName>Drifty</companyName>
-                        <fileVersion>${project.version}.0</fileVersion>
-                        <txtFileVersion>${project.version}</txtFileVersion>
-                        <productVersion>${project.version}.0</productVersion>
-                        <txtProductVersion>${project.version}</txtProductVersion>
-                        <fileDescription>An open-source interactive File Downloader System</fileDescription>
-                        <copyright>Drifty</copyright>
-                        <productName>${project.name}</productName>
-                        <internalName>${project.name}</internalName>
-                        <originalFilename>${project.name}.exe</originalFilename>
-                        <!-- choose EXE creation tool -->
-                        <exeCreationTool>launch4j</exeCreationTool>
-                        <copyDependencies>true</copyDependencies>
-                        <bundleJre>true</bundleJre>
-                        <customizedJre>false</customizedJre>
-                        <platform>windows</platform>
-                        <outputDirectory>./target/windows</outputDirectory>
-                        <createZipball>true</createZipball>
-                        <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
-                        <additionalResources>Drifty Banner.png</additionalResources>
-                    </winConfig>
-                    <macConfig>
-                        <!-- general properties -->
-                        <appId>${project.name}</appId>
-                        <icnsFile>./assets.mac.Drifty.icns</icnsFile>
-                        <generateDmg>true</generateDmg>
-                        <generatePkg>true</generatePkg>
-                        <relocateJar>false</relocateJar>
-                        <macStartup>UNIVERSAL</macStartup>
-                        <!-- properties used for DMG disk image generation -->
-                        <volumeName>${project.name}</volumeName>
-                        <!-- properties used for Info.plist file generation -->
-                        <infoPlist>
-                            <bundlePackageType>APPL</bundlePackageType>
-                        </infoPlist>
-                        <bundleJre>true</bundleJre>
-                        <copyDependencies>true</copyDependencies>
-                        <customizedJre>false</customizedJre>
-                        <platform>mac</platform>
-                        <outputDirectory>./target/mac</outputDirectory>
-                        <createTarball>true</createTarball>
-                        <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
-                        <additionalResources>Drifty Banner.png</additionalResources>
-                    </macConfig>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -125,9 +52,79 @@
                         </goals>
                         <configuration>
                             <platform>auto</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
                             <bundleJre>true</bundleJre>
                             <customizedJre>false</customizedJre>
+                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <generateInstaller>false</generateInstaller>
+                            <licenseFile>LICENSE</licenseFile>
+                            <url>https://saptarshisarkar12.github.io/Drifty/</url>
+                            <assetsDir>./assets</assetsDir>
+                            <copyDependencies>true</copyDependencies>
+                            <linuxConfig>
+                                <generateAppImage>true</generateAppImage>
+                                <generateDeb>true</generateDeb>
+                                <generateRpm>true</generateRpm>
+                                <bundleJre>true</bundleJre>
+                                <copyDependencies>true</copyDependencies>
+                                <customizedJre>false</customizedJre>
+                                <platform>linux</platform>
+                                <outputDirectory>./target/linux</outputDirectory>
+                                <createTarball>true</createTarball>
+                                <additionalResources>src/main/resources/yt-dlp</additionalResources>
+                                <additionalResources>Drifty Banner.png</additionalResources>
+                            </linuxConfig>
+                            <winConfig>
+                                <!-- general properties -->
+                                <icoFile>./assets.windows.Drifty.ico</icoFile>
+                                <generateSetup>false</generateSetup>
+                                <generateMsi>true</generateMsi>
+                                <!-- exe creation properties -->
+                                <headerType>gui</headerType>
+                                <wrapJar>true</wrapJar>
+                                <companyName>Drifty</companyName>
+                                <fileVersion>${project.version}.0</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <productVersion>${project.version}.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <fileDescription>An open-source interactive File Downloader System</fileDescription>
+                                <copyright>Drifty</copyright>
+                                <productName>${project.name}</productName>
+                                <internalName>${project.name}</internalName>
+                                <originalFilename>${project.name}.exe</originalFilename>
+                                <!-- choose EXE creation tool -->
+                                <exeCreationTool>launch4j</exeCreationTool>
+                                <copyDependencies>true</copyDependencies>
+                                <bundleJre>true</bundleJre>
+                                <customizedJre>false</customizedJre>
+                                <platform>windows</platform>
+                                <outputDirectory>./target/windows</outputDirectory>
+                                <createZipball>true</createZipball>
+                                <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
+                                <additionalResources>Drifty Banner.png</additionalResources>
+                            </winConfig>
+                            <macConfig>
+                                <!-- general properties -->
+                                <appId>${project.name}</appId>
+                                <icnsFile>./assets.mac.Drifty.icns</icnsFile>
+                                <generateDmg>true</generateDmg>
+                                <generatePkg>true</generatePkg>
+                                <relocateJar>false</relocateJar>
+                                <macStartup>UNIVERSAL</macStartup>
+                                <!-- properties used for DMG disk image generation -->
+                                <volumeName>${project.name}</volumeName>
+                                <!-- properties used for Info.plist file generation -->
+                                <infoPlist>
+                                    <bundlePackageType>APPL</bundlePackageType>
+                                </infoPlist>
+                                <bundleJre>true</bundleJre>
+                                <copyDependencies>true</copyDependencies>
+                                <customizedJre>false</customizedJre>
+                                <platform>mac</platform>
+                                <outputDirectory>./target/mac</outputDirectory>
+                                <createTarball>true</createTarball>
+                                <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
+                                <additionalResources>Drifty Banner.png</additionalResources>
+                            </macConfig>
                         </configuration>
                     </execution>
                 </executions>
