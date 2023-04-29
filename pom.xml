@@ -57,7 +57,6 @@
                         <generateAppImage>true</generateAppImage>
                         <generateDeb>true</generateDeb>
                         <generateRpm>true</generateRpm>
-                        <copyDependencies>true</copyDependencies>
                         <customizedJre>false</customizedJre>
                         <platform>linux</platform>
                         <outputDirectory>./target/linux</outputDirectory>
