@@ -23,11 +23,8 @@ on:
       - "*.txt"
 
 jobs:
-  build-and-package:
-    strategy:
-        matrix:
-            os: ["ubuntu-latest"]
-    runs-on: ${{ matrix.os }}
+  package-Drifty-for-Windows:
+    runs-on: "windows-latest"
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 18
@@ -37,14 +34,59 @@ jobs:
         distribution: 'oracle'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn compile
+    - name: Package with JavaPackager Maven plugin
+      run: mvn javapackager:package@bundling-for-windows
     - name: Push generated artifacts
       run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "build(App): Built And Packaged Drifty"
+          git commit -m "build(App): Built And Packaged Drifty for Windows"
           git push
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+          
+  package-Drifty-for-MacOS:
+    needs: package-Drifty-for-Windows
+    runs-on: "macos-latest"
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 18
+        uses: actions/setup-java@v3
+        with:
+          java-version: '18.0.1'
+          distribution: 'oracle'
+          cache: maven
+      - name: Build with Maven
+        run: mvn compile
+      - name: Package with JavaPackager Maven plugin
+        run: mvn javapackager:package@bundling-for-mac
+      - name: Push generated artifacts
+        run: |
+            git config user.name "GitHub Actions Bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .
+            git commit -m "build(App): Built And Packaged Drifty for MacOS"
+            git push
+        
+  package-Drifty-for-linux:
+      needs: [package-Drifty-for-Windows, package-Drifty-for-MacOS]
+      runs-on: "ubuntu-latest"
+      steps:
+        - uses: actions/checkout@v3
+        - name: Set up JDK 18
+          uses: actions/setup-java@v3
+          with:
+            java-version: '18.0.1'
+            distribution: 'oracle'
+            cache: maven
+        - name: Build with Maven
+          run: mvn compile
+        - name: Package with JavaPackager Maven plugin
+          run: mvn javapackager:package@bundling-for-linux
+        - name: Push generated artifacts
+          run: |
+              git config user.name "GitHub Actions Bot"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add .
+              git commit -m "build(App): Built And Packaged Drifty for Linux"
+              git push
