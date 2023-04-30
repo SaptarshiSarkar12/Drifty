@@ -50,7 +50,10 @@
             <false/>
         </dict>
         <key>LSEnvironment</key>
-        <dict/>
+        <dict>
+            <key>JAVA_HOME</key>
+            <string>Contents/PlugIns/jre/Contents/Home</string>
+        </dict>
         <key>NSAppleEventsUsageDescription</key>
         <string>There was an error while launching the application. Please
 			click OK to display a dialog with more information or cancel and view
