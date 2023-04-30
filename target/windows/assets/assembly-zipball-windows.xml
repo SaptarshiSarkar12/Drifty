@@ -8,7 +8,7 @@
 	<fileSets>
 		<fileSet>
 			<outputDirectory>Drifty</outputDirectory>
-			<directory>/home/runner/work/Drifty/Drifty/target/windows/Drifty</directory>
+			<directory>D:\a\Drifty\Drifty\target\windows/Drifty</directory>
 		</fileSet>
 	</fileSets>
 </assembly>
