@@ -86,7 +86,7 @@
                         <generatePkg>true</generatePkg>
                         <relocateJar>false</relocateJar>
                         <macStartup>UNIVERSAL</macStartup>
-                        <codesignapp>false<codesignapp>  
+                        <codesignapp>false</codesignapp>  
                         <!-- properties used for DMG disk image generation -->
                         <volumeName>${project.name}</volumeName>
                         <!-- properties used for Info.plist file generation -->
