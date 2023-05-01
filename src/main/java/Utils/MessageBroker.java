@@ -15,7 +15,7 @@ import java.io.PrintStream;
  * @version 2.0.0
  */
 public class MessageBroker {
-    CreateLogs logger = CreateLogs.getInstance(); // logger instance created
+    Logger logger;
     String appType;
     JLabel link;
     JLabel dir;
@@ -32,6 +32,7 @@ public class MessageBroker {
     public MessageBroker(String applicationType, PrintStream consoleOutput){
         appType = applicationType;
         output = consoleOutput;
+        logger = Logger.getInstance("CLI");
     }
 
     /**
@@ -49,6 +50,7 @@ public class MessageBroker {
         this.dir = dir;
         this.download = download;
         this.fileName = fileName;
+        logger = Logger.getInstance("GUI");
     }
 
     /**
@@ -91,6 +93,7 @@ public class MessageBroker {
                     fileName.setForeground(color);
                     logger.log(messageType, message);
                 }
+                case "only log" -> logger.log(messageType, message);
                 default ->
                         logger.log(DriftyConstants.LOGGER_ERROR, "Invalid message category provided to message broker!");
             }

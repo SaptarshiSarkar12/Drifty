@@ -15,7 +15,7 @@ public final class Utility {
     private static final Scanner SC = ScannerFactory.getInstance();
     private Utility() {}
 
-    static CreateLogs logger = CreateLogs.getInstance();
+    static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     /**
      * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
      * @param url link to the file to be downloaded.
@@ -62,18 +62,18 @@ public final class Utility {
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
-            logger.log(LOGGER_ERROR, AUTO_FILE_NAME_DETECTION_FAILED);
+            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
             return null;
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
-            logger.log(LOGGER_ERROR, AUTO_FILE_NAME_DETECTION_FAILED);
+            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
             return null;
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
-        logger.log(LOGGER_INFO, FILENAME_DETECTED + fileName);
+        messageBroker.sendMessage(FILENAME_DETECTED + fileName, LOGGER_INFO, "Filename");
         return fileName;
     }
 
@@ -83,7 +83,7 @@ public final class Utility {
      */
     public static String saveToDefault() {
         String downloadsFolder;
-        logger.log(LOGGER_INFO, TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
+        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
         if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
@@ -91,9 +91,9 @@ public final class Utility {
             downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
         }
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
-            logger.log(LOGGER_ERROR, FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
+            messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, LOGGER_ERROR, "directory");
         } else {
-            logger.log(LOGGER_INFO, DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
+            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, LOGGER_INFO, "directory");
         }
         return downloadsFolder;
     }
@@ -107,7 +107,7 @@ public final class Utility {
     public static boolean yesNoValidation(String input, String printMessage) {
         while (input.length() == 0) {
             System.out.println(ENTER_Y_OR_N);
-            logger.log(LOGGER_ERROR, ENTER_Y_OR_N);
+            messageBroker.sendMessage(ENTER_Y_OR_N, LOGGER_ERROR, "only log");
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
         }
@@ -118,7 +118,7 @@ public final class Utility {
             return false;
         } else {
             System.out.println("Invalid input!");
-            logger.log(LOGGER_ERROR, "Invalid input");
+            messageBroker.sendMessage("Invalid input!", LOGGER_ERROR, "only log");
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
             yesNoValidation(input, printMessage);
