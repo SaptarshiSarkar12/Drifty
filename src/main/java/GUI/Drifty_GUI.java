@@ -410,7 +410,7 @@ public class Drifty_GUI {
            //      UnsupportedLookAndFeelException ignored) {}
         GridLayout layout = new GridLayout(2, 1);
         input.setLayout(layout);
-        ImageIcon driftyBanner = new ImageIcon("./Drifty Banner.png");
+        ImageIcon driftyBanner = new ImageIcon("./DriftyBanner.png");
         JLabel drifty = new JLabel(driftyBanner);
         drifty.setHorizontalAlignment(SwingConstants.CENTER);
         drifty.setVerticalAlignment(SwingConstants.TOP);

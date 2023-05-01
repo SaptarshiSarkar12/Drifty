@@ -107,7 +107,7 @@
                             <platform>windows</platform>
                             <outputDirectory>./target/windows</outputDirectory>
                             <createZipball>true</createZipball>
-                            <additionalResources>./Drifty Banner.png</additionalResources>
+                            <additionalResources>./DriftyBanner.png</additionalResources>
                             <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
                         </configuration>
                     </execution>
@@ -122,7 +122,7 @@
                             <platform>linux</platform>
                             <outputDirectory>./target/linux</outputDirectory>
                             <createTarball>true</createTarball>
-                            <additionalResources>./Drifty Banner.png</additionalResources>
+                            <additionalResources>./DriftyBanner.png</additionalResources>
                             <additionalResources>src/main/resources/yt-dlp</additionalResources>
                         </configuration>
                     </execution>
@@ -137,7 +137,7 @@
                             <platform>mac</platform>
                             <outputDirectory>./target/mac</outputDirectory>
                             <createTarball>true</createTarball>
-                            <additionalResources>./Drifty Banner.png</additionalResources>
+                            <additionalResources>./DriftyBanner.png</additionalResources>
                             <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
                         </configuration>
                     </execution>
