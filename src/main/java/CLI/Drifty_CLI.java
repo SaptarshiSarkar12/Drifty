@@ -1,7 +1,7 @@
 package CLI;
 
 import Backend.Drifty;
-import Utils.CreateLogs;
+import Utils.Logger;
 import Utils.ScannerFactory;
 
 import java.util.Objects;
@@ -15,7 +15,7 @@ import static Utils.Utility.*;
  * @version 2.0.0
  */
 public class Drifty_CLI {
-    public static final CreateLogs logger = CreateLogs.getInstance();
+    public static final Logger logger = Logger.getInstance("CLI");
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
     private static String fileName = null;

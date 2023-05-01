@@ -19,7 +19,7 @@ import static Utils.Utility.isYoutubeLink;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
-    private static final MessageBroker messageBroker = Drifty.messageBroker;
+    private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     // default number of threads to download with
     private static final int numberOfThreads = 3;
     // default threading threshold in bytes.
