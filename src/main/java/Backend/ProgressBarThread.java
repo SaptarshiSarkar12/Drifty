@@ -14,7 +14,7 @@ import static Utils.DriftyConstants.*;
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
-    private final static MessageBroker messageBroker = Drifty.messageBroker;
+    private final static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     private final float charPercent; // This stores the total size of the file to be downloaded in bytes.
     private final List<Long> partSizes; // This is a list containing the size of each part of the total file to be downloaded, using multiple threads.
     private final String fileName; // Name of the file to be downloaded

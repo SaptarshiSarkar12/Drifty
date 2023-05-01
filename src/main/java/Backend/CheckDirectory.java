@@ -14,7 +14,7 @@ import static Utils.DriftyConstants.*;
  * This class checks if a directory exists or not. if it doesn't, the directory is created.
  */
 class CheckDirectory {
-    private static final MessageBroker messageBroker = Drifty.messageBroker;
+    private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     /**
      * This constructor creates the directory if it does not exist.
      * @param dir Name of the folder where the user wants to download the file.

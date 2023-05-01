@@ -46,9 +46,7 @@
                 <version>1.7.0</version>
                 <configuration>
                     <bundleJre>true</bundleJre>
-                    <mainClass>GUI.Drifty_GUI</mainClass>
                     <generateInstaller>false</generateInstaller>
-                    <additionalResources>Drifty Banner.png</additionalResources>
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
@@ -97,7 +95,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>bundling-for-windows</id>
+                        <id>bundling-Drifty-GUI-for-windows</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -105,14 +103,17 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>windows</platform>
-                            <outputDirectory>./target/windows</outputDirectory>
+                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <outputDirectory>./target/GUI/windows</outputDirectory>
                             <createZipball>true</createZipball>
-                            <additionalResources>./DriftyBanner.png</additionalResources>
-                            <additionalResources>src/main/resources/yt-dlp.exe</additionalResources>
+                            <additionalResources>
+                              <additionalResource>Drifty Banner.png</additionalResource>
+                              <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
+                            </additionalResources>                            
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-for-linux</id>
+                        <id>bundling-Drifty-GUI-for-linux</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -120,14 +121,17 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>linux</platform>
-                            <outputDirectory>./target/linux</outputDirectory>
+                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
-                            <additionalResources>./DriftyBanner.png</additionalResources>
-                            <additionalResources>src/main/resources/yt-dlp</additionalResources>
+                            <additionalResources>
+                              <additionalResource>Drifty Banner.png</additionalResource>
+                              <additionalResource>src/main/resources/yt-dlp</additionalResource>
+                            </additionalResources>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-for-mac</id>
+                        <id>bundling-Drifty-GUI-for-mac</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -135,10 +139,64 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>mac</platform>
-                            <outputDirectory>./target/mac</outputDirectory>
+                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
-                            <additionalResources>./DriftyBanner.png</additionalResources>
-                            <additionalResources>src/main/resources/yt-dlp_macos</additionalResources>
+                            <additionalResources>
+                              <additionalResource>Drifty Banner.png</additionalResource>
+                              <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
+                            </additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-Drifty-CLI-for-windows</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <bundleJre>true</bundleJre>
+                            <platform>windows</platform>
+                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <outputDirectory>./target/CLI/windows</outputDirectory>
+                            <createZipball>true</createZipball>
+                            <additionalResources>
+                                <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
+                            </additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-Drifty-CLI-for-linux</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <bundleJre>true</bundleJre>
+                            <platform>linux</platform>
+                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <outputDirectory>./target/CLI/linux</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>
+                                <additionalResource>src/main/resources/yt-dlp</additionalResource>
+                            </additionalResources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundling-Drifty-CLI-for-mac</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <bundleJre>true</bundleJre>
+                            <platform>mac</platform>
+                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <outputDirectory>./target/CLI/mac</outputDirectory>
+                            <createTarball>true</createTarball>
+                            <additionalResources>
+                                <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
+                            </additionalResources>
                         </configuration>
                     </execution>
                 </executions>

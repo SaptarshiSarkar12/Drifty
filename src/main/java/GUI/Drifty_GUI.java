@@ -2,7 +2,7 @@ package GUI;
 
 import Backend.Drifty;
 import Backend.ProgressBarThread;
-import Utils.CreateLogs;
+import Utils.Logger;
 import Utils.DriftyConstants;
 import Utils.Utility;
 
@@ -45,7 +45,7 @@ public class Drifty_GUI {
     static float downloadProgress;
     static JProgressBar downloadProgressBar;
     static boolean isYouTubeURL;
-    static CreateLogs logger = CreateLogs.getInstance();
+    static Logger logger = Logger.getInstance("GUI");
     public static void main(String[] args) {
         logger.log(DriftyConstants.LOGGER_INFO, DriftyConstants.GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         initializeScreen(); // Initializing the screen
@@ -410,7 +410,7 @@ public class Drifty_GUI {
            //      UnsupportedLookAndFeelException ignored) {}
         GridLayout layout = new GridLayout(2, 1);
         input.setLayout(layout);
-        ImageIcon driftyBanner = new ImageIcon("./DriftyBanner.png");
+        ImageIcon driftyBanner = new ImageIcon("./Drifty Banner.png");
         JLabel drifty = new JLabel(driftyBanner);
         drifty.setHorizontalAlignment(SwingConstants.CENTER);
         drifty.setVerticalAlignment(SwingConstants.TOP);

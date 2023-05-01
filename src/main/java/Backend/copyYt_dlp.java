@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import static Utils.DriftyConstants.*;
 
 public class copyYt_dlp {
-    static MessageBroker messageBroker = Drifty.messageBroker;
+    static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     private static String tempDir = System.getProperty("java.io.tmpdir");
     public void copyToTemp() throws IOException{
         String yt_dlpFileName;

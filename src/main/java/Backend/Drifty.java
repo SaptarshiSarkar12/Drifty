@@ -15,7 +15,7 @@ import java.io.PrintStream;
  */
 public class Drifty {
     public static String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
-    public static MessageBroker messageBroker;
+    private static MessageBroker messageBroker;
     private static String downloadsFolder = null;
     private static String url;
     private static String fileName;
@@ -106,7 +106,19 @@ public class Drifty {
         }
     }
 
+    /**
+     * This method returns the Application Type.
+     * @return The application type. Possible return values are <b>CLI</b> and <b>GUI</b>.
+     */
     protected static String getAppType() {
         return applicationType;
+    }
+
+    /**
+     * This method returns the message broker instance.
+     * @return the message broker instance.
+     */
+    public static MessageBroker getMessageBrokerInstance() {
+        return messageBroker;
     }
 }
