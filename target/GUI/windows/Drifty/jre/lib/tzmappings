@@ -366,13 +366,14 @@ South Africa Standard Time:LS:Africa/Maseru:
 South Africa Standard Time:MW:Africa/Blantyre:
 South Africa Standard Time:MZ:Africa/Maputo:
 South Africa Standard Time:RW:Africa/Kigali:
-South Africa Standard Time:SS:Africa/Juba:
 South Africa Standard Time:SZ:Africa/Mbabane:
 South Africa Standard Time:ZA:Africa/Johannesburg:
 South Africa Standard Time:ZM:Africa/Lusaka:
 South Africa Standard Time:ZW:Africa/Harare:
 South Africa Standard Time:ZZ:Etc/GMT-2:
 South Africa Standard Time:001:Africa/Johannesburg:
+South Sudan Standard Time:SS:Africa/Juba:
+South Sudan Standard Time:001:Africa/Juba:
 Sri Lanka Standard Time:LK:Asia/Colombo:
 Sri Lanka Standard Time:001:Asia/Colombo:
 Sudan Standard Time:SD:Africa/Khartoum:
