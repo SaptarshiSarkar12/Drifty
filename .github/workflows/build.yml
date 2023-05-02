@@ -26,10 +26,10 @@ jobs:
     runs-on: "windows-latest"
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 18
+    - name: Set up JDK 20
       uses: actions/setup-java@v3
       with:
-        java-version: '18.0.1'
+        java-version: '20.0.1'
         distribution: 'oracle'
         cache: maven
     - name: Pull latest changes in code-base
@@ -53,10 +53,10 @@ jobs:
     runs-on: "macos-latest"
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 18
+      - name: Set up JDK 20
         uses: actions/setup-java@v3
         with:
-          java-version: '18.0.1'
+          java-version: '20.0.1'
           distribution: 'oracle'
           cache: maven
       - name: Pull latest changes in codebase
@@ -79,10 +79,10 @@ jobs:
    runs-on: "ubuntu-latest"
    steps:
      - uses: actions/checkout@v3
-     - name: Set up JDK 18
+     - name: Set up JDK 20
        uses: actions/setup-java@v3
        with:
-          java-version: '18.0.1'
+          java-version: '20.0.1'
           distribution: 'oracle'
           cache: maven
      - name: Pull latest changes in codebase
