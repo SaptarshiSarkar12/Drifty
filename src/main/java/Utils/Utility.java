@@ -3,10 +3,7 @@ package Utils;
 import Backend.DefaultDownloadFolderLocationFinder;
 import Backend.Drifty;
 
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.Scanner;
 
 import static Utils.DriftyConstants.*;
@@ -32,7 +29,7 @@ public final class Utility {
      */
     public static void isURLValid(String link) throws Exception {
         try {
-            URL url = new URL(link);
+            URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
@@ -40,7 +37,7 @@ public final class Utility {
             throw new Exception(e);
         } catch (UnknownHostException unknownHost){
             try {
-                URL projectWebsite = new URL(Drifty.projectWebsite);
+                URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
                 throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not a valid one! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
