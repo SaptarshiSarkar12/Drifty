@@ -1,5 +1,7 @@
 *.log
 !.mvn/wrapper/maven-wrapper.jar
+Website/.next
+Website/node_modules
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
