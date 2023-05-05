@@ -105,8 +105,7 @@
                             <platform>windows</platform>
                             <mainClass>GUI.Drifty_GUI</mainClass>
                             <outputDirectory>./target/GUI/windows</outputDirectory>
-                            <createZipball>true</createZipball>
-                            <modules>jdk.crypto.cryptoki</modules>
+                            <createZipball>true</createZipball>                            
                             <additionalResources>
                               <additionalResource>Drifty Banner.png</additionalResource>
                               <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
@@ -125,7 +124,6 @@
                             <mainClass>GUI.Drifty_GUI</mainClass>
                             <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
-                            <modules>jdk.crypto.cryptoki</modules>
                             <additionalResources>
                               <additionalResource>Drifty Banner.png</additionalResource>
                               <additionalResource>src/main/resources/yt-dlp</additionalResource>
@@ -144,7 +142,6 @@
                             <mainClass>GUI.Drifty_GUI</mainClass>
                             <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
-                            <modules>jdk.crypto.cryptoki</modules>
                             <additionalResources>
                               <additionalResource>Drifty Banner.png</additionalResource>
                               <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
