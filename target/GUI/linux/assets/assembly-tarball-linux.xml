@@ -8,7 +8,7 @@
 	<fileSets>
 		<fileSet>
 			<outputDirectory>Drifty</outputDirectory>
-			<directory>/home/saptarshi/Drifty/target/GUI/linux/Drifty</directory>
+			<directory>/home/runner/work/Drifty/Drifty/target/GUI/linux/Drifty</directory>
 			<excludes>
 				<exclude>Drifty</exclude>
 				<exclude>jre/bin/*</exclude>
@@ -18,7 +18,7 @@
 		</fileSet>
 		<fileSet>
 			<outputDirectory>Drifty</outputDirectory>
-			<directory>/home/saptarshi/Drifty/target/GUI/linux/Drifty</directory>
+			<directory>/home/runner/work/Drifty/Drifty/target/GUI/linux/Drifty</directory>
 			<includes>
 				<include>Drifty</include>
 				<include>jre/bin/*</include>
