@@ -2,7 +2,9 @@ package CLI;
 
 import Backend.Drifty;
 import Utils.Logger;
+import Utils.MessageBroker;
 import Utils.ScannerFactory;
+import Utils.Utility;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -26,6 +28,8 @@ public class Drifty_CLI {
      */
     public static void main(String[] args) {
         logger.log(LOGGER_INFO, CLI_APPLICATION_STARTED);
+        MessageBroker messageBroker = new MessageBroker("CLI", System.out);
+        Utility utility = new Utility(messageBroker);
         initialPrintBanner();
         String downloadsFolder;
         if (args.length > 0) {
@@ -47,14 +51,14 @@ public class Drifty_CLI {
             }
             isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
-            fileName = findFilenameInLink(URL);
+            fileName = utility.findFilenameInLink(URL);
             if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
             }
             downloadsFolder = location;
             if (downloadsFolder == null) {
-                downloadsFolder = saveToDefault();
+                downloadsFolder = utility.saveToDefault();
             } else {
                 if (System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
                     downloadsFolder = downloadsFolder.replace('/', '\\');
@@ -75,7 +79,7 @@ public class Drifty_CLI {
             System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
             downloadsFolder = SC.next();
             isYoutubeURL = isYoutubeLink(link);
-            fileName = findFilenameInLink(link);
+            fileName = utility.findFilenameInLink(link);
             if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
@@ -84,7 +88,7 @@ public class Drifty_CLI {
                 System.out.print(RENAME_FILE);
                 SC.nextLine(); // To remove 'whitespace' from input buffer.
                 String choiceString = SC.nextLine();
-                boolean choice = yesNoValidation(choiceString, RENAME_FILE);
+                boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);
                 if (choice){
                     System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                     fileName = SC.nextLine();

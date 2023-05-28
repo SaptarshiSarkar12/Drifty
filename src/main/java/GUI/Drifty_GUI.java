@@ -21,6 +21,7 @@ import java.util.Scanner;
  * @version 2.0.0
  */
 public class Drifty_GUI {
+    static Utility utility = new Utility();
     static JFrame window;
     static int windowWidth;
     static boolean isDownloadButtonPressed;
@@ -313,7 +314,7 @@ public class Drifty_GUI {
         SwingWorker<Void, Void> setDefaultDirectory = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
-                String defaultDirectory = Utility.saveToDefault();
+                String defaultDirectory = utility.saveToDefault();
                 directoryInputText.setText(defaultDirectory);
                 return null;
             }
@@ -327,7 +328,7 @@ public class Drifty_GUI {
                     String url = linkInputText.getText();
                     if (!url.equals(previous_url)) {
                         if (!Utility.isYoutubeLink(url)) {
-                            String fileName = Utility.findFilenameInLink(url);
+                            String fileName = utility.findFilenameInLink(url);
                             if (fileName != null) {
                                 fileNameInputText.setText(fileName);
                             } else {

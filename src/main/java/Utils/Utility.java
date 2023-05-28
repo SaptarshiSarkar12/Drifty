@@ -10,9 +10,13 @@ import static Utils.DriftyConstants.*;
 
 public final class Utility {
     private static final Scanner SC = ScannerFactory.getInstance();
-    private Utility() {}
+    MessageBroker messageBroker;
 
-    static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    public Utility() {}
+
+    public Utility(MessageBroker messageBroker) {
+        this.messageBroker = messageBroker;
+    }
     /**
      * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
      * @param url link to the file to be downloaded.
@@ -52,25 +56,25 @@ public final class Utility {
      * @param link The download link of the file to be downloaded.
      * @return the filename if it is detected else null.
      */
-    public static String findFilenameInLink(String link) {
+    public String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
         // Example : "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
-            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
+            this.messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
             return null;
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
-            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
+            this.messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
             return null;
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
-        messageBroker.sendMessage(FILENAME_DETECTED + fileName, LOGGER_INFO, "Filename");
+        this.messageBroker.sendMessage(FILENAME_DETECTED + fileName, LOGGER_INFO, "Filename");
         return fileName;
     }
 
@@ -78,7 +82,7 @@ public final class Utility {
      * This method finds the default downloads folder and create log accordingly.
      * @return The path of the default download folder.
      */
-    public static String saveToDefault() {
+    public String saveToDefault() {
         String downloadsFolder;
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
         if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
@@ -101,7 +105,7 @@ public final class Utility {
      * @param printMessage The message to print to re-input the confirmation.
      * @return true if the user enters Y [Yes] and false if not.
      */
-    public static boolean yesNoValidation(String input, String printMessage) {
+    public boolean yesNoValidation(String input, String printMessage) {
         while (input.length() == 0) {
             System.out.println(ENTER_Y_OR_N);
             messageBroker.sendMessage(ENTER_Y_OR_N, LOGGER_ERROR, "only log");
