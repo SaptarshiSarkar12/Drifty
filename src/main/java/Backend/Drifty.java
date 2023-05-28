@@ -60,6 +60,7 @@ public class Drifty {
      * This is the main method where the Drifty Backend starts the backend process of Validating the inputs followed by downloading the file in the required folder.
      */
     public void start() {
+        Utility utility = new Utility(messageBroker);
         boolean errorFlag = false;
         messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
         if (url.contains(" ")) {
@@ -78,7 +79,7 @@ public class Drifty {
             }
         }
         if (downloadsFolder == null){
-            downloadsFolder = Utility.saveToDefault();
+            downloadsFolder = utility.saveToDefault();
         } else {
             downloadsFolder = downloadsFolder.replace('\\', '/');
             if (downloadsFolder.equals(".//") || downloadsFolder.equals("./")) {
@@ -94,7 +95,7 @@ public class Drifty {
         }
 
         if (((fileName == null) || (fileName.length() == 0)) && (!Utility.isYoutubeLink(url))) {
-            fileName = Utility.findFilenameInLink(url);
+            fileName = utility.findFilenameInLink(url);
             if (fileName == null || fileName.length() == 0) {
                 messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "Filename");
                 errorFlag = true;
