@@ -8,9 +8,21 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
 public class DownloaderThread extends Thread {
+    /**
+     * This variable stores the link to the file to be downloaded.
+     */
     private final URL url;
+    /**
+     * This is the value which determines from which section of the file is to be sent by the server.
+     */
     private final long start;
+    /**
+     * This is the value which determines upto which section of the file is to be sent by the server.
+     */
     private final long end;
+    /**
+     * This is the output stream of the local file where the data received from the server is added. This is how a file is downloaded.
+     */
     private final FileOutputStream file;
 
     /**
