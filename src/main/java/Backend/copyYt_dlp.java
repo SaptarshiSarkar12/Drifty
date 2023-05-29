@@ -10,8 +10,19 @@ import java.nio.file.Path;
 import static Utils.DriftyConstants.*;
 
 public class copyYt_dlp {
+    /**
+     * This is the message broker service instance which sends messages to the CLI or GUI.
+     */
     static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    /**
+     * This is the path to the temporary directory specific to each Operating Systems.
+     */
     private static String tempDir = System.getProperty("java.io.tmpdir");
+
+    /**
+     * This method copies the yt-dlp (the program used for downloading YouTube videos) to the temporary folder of the Operating System.
+     * @throws IOException when the file has not been successfully copied.
+     */
     public void copyToTemp() throws IOException{
         String yt_dlpFileName;
         String osName = System.getProperty("os.name").toLowerCase();
@@ -31,6 +42,10 @@ public class copyYt_dlp {
         }
     }
 
+    /**
+     * This method is used to get the path to the temporary directory where the yt-dlp program is stored.
+     * @return the temporary directory where the yt-dlp program is stored.
+     */
     public static String getTempDir(){
         if (!tempDir.endsWith(System.getProperty("file.separator"))){
             tempDir += System.getProperty("file.separator");

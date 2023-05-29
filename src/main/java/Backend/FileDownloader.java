@@ -19,16 +19,42 @@ import static Utils.Utility.isYoutubeLink;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
+    /**
+     * This is the message broker service instance which sends messages to the CLI or GUI.
+     */
     private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
-    // default number of threads to download with
+    /**
+     * This is the number of parallel file downloading threads to download the file faster.
+     */
     private static final int numberOfThreads = 3;
-    // default threading threshold in bytes.
-    private static final long threadingThreshold = 1024 * 1024 * 50; // This value determines if multithreaded downloading will be used or not. If the size of the file to be downloaded exceeds this value, then multithreaded downloading will be in use, else not. Here, it has been taken as 50 MB.
+    /**
+     * This is threshold (in bytes) to determine whether parallel downloading is to performed or not.
+     * This value determines if multithreaded downloading will be used or not. If the size of the file to be downloaded exceeds this value, then multithreaded downloading will be in use, else not. Here, it has been taken as 50 MB.
+     */
+    private static final long threadingThreshold = 1024 * 1024 * 50;
+    /**
+     * The directory where the file is to be downloaded.
+     */
     private static String dir;
+    /**
+     * The filename of the downloaded file.
+     */
     private static String fileName;
+    /**
+     * The link to the file to be downloaded.
+     */
     private static String link;
+    /**
+     * This is the total size of the file to be downloaded, determined during execution.
+     */
     private static long totalSize;
+    /**
+     * The link of the file to be downloaded in URL format.
+     */
     private static URL url;
+    /**
+     * This is a boolean value to determine if Multithreading is required or not.
+     */
     private static boolean supportsMultithreading;
 
     /**
