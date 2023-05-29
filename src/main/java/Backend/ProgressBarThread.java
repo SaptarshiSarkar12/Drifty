@@ -14,23 +14,74 @@ import static Utils.DriftyConstants.*;
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
+    /**
+     * This is the message broker service instance which sends messages to the CLI or GUI.
+     */
     private final static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
-    private final float charPercent; // This stores the total size of the file to be downloaded in bytes.
-    private final List<Long> partSizes; // This is a list containing the size of each part of the total file to be downloaded, using multiple threads.
-    private final String fileName; // Name of the file to be downloaded
-    private final FileOutputStream fos; // This is the output stream of the file (In this case, to the file that will be saved locally after downloading it.)
-    private final int charAmt; // This is the value to determine length of terminal progressbar
-    private final List<Integer> charPercents; // This has the size of data to be downloaded by each thread. This is used in multithreaded downloading process. [NOTE: (No. of threads) * (this variable) = Total size of the file in bytes]
-    private final List<FileOutputStream> fileOutputStreams; // This is the output stream of the temporary files which are a part of the total file and will be merged later.
-    private final boolean isMultiThreadedDownloading; // This is a boolean which states whether multithreaded downloading is used or not (depends on file size) for the specific file to be downloaded.
-    private long downloadedBytes; // This stores the total bytes of data downloaded
-    private List<Long> downloadedBytesPerPart; // This is a List which contains the bytes of data downloaded by each thread.
-    private long totalSizeOfTheFile; // This is the total size of the file to be downloaded.
-    private boolean downloading; // This is a boolean which states whether the file is currently being downloaded or not.
-    private long downloadSpeed; // This is a variable which contains the download speed (This variable is used if multithreaded downloading is not used)
-    private List<Long> downloadSpeeds; // This is a variable which contains the download speeds for all the threads running (This variable is used if multithreaded downloading is used)
-    private static float totalDownloadPercent; // This is the total download percent
-    private long totalDownloadedBytes; // This is the total size of the file. This is also used in multiple threads to store the size of file downloaded by each threads
+    /**
+     * This stores the total size of the file to be downloaded in bytes.
+     */
+    private final float charPercent;
+    /**
+     * This is a list containing the size of each part of the total file to be downloaded, using multiple threads.
+     */
+    private final List<Long> partSizes;
+    /**
+     * Name of the file to be downloaded
+     */
+    private final String fileName;
+    /**
+     * This is the output stream of the file (In this case, to the file that will be saved locally after downloading it.)
+     */
+    private final FileOutputStream fos;
+    /**
+     * This is the value to determine length of terminal progressbar.
+     */
+    private final int charAmt;
+    /**
+     * This has the size of data to be downloaded by each thread. This is used in multithreaded downloading process. [NOTE: (No. of threads) * (this variable) = Total size of the file in bytes]
+     */
+    private final List<Integer> charPercents;
+    /**
+     * This is the output stream of the temporary files which are a part of the total file and will be merged later.
+     */
+    private final List<FileOutputStream> fileOutputStreams;
+    /**
+     * This is a boolean which states whether multithreaded downloading is used or not (depends on file size) for the specific file to be downloaded.
+     */
+    private final boolean isMultiThreadedDownloading;
+    /**
+     * This stores the total bytes of data downloaded.
+     */
+    private long downloadedBytes;
+    /**
+     * This is a List which contains the bytes of data downloaded by each thread.
+     */
+    private List<Long> downloadedBytesPerPart;
+    /**
+     * This is the total size of the file to be downloaded.
+     */
+    private long totalSizeOfTheFile;
+    /**
+     * This is a boolean which states whether the file is currently being downloaded or not.
+     */
+    private boolean downloading;
+    /**
+     * This is a variable which contains the download speed (This variable is used if multithreaded downloading is not used)
+     */
+    private long downloadSpeed;
+    /**
+     * This is a variable which contains the download speeds for all the threads running (This variable is used if multithreaded downloading is used)
+     */
+    private List<Long> downloadSpeeds;
+    /**
+     * This is the total downloaded percentage.
+     */
+    private static float totalDownloadPercent;
+    /**
+     * This is the total size of the file. This is also used in multiple threads to store the size of file downloaded by each thread.
+     */
+    private long totalDownloadedBytes;
 
     /**
      * This is a constructor to create Progress Bars for each file downloading threads.
@@ -199,7 +250,7 @@ public class ProgressBarThread extends Thread {
     }
 
     /**
-     * Cleans up the resources.
+     * This method cleans up the resources used while the file was being downloaded.
      */
     private void cleanup() {
         if (isMultiThreadedDownloading) {

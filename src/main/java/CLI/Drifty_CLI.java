@@ -51,7 +51,9 @@ public class Drifty_CLI {
             }
             isYoutubeURL = isYoutubeLink(URL);
             fileName = (name == null) ? fileName : name;
-            fileName = utility.findFilenameInLink(URL);
+            if (!isYoutubeURL) {
+                fileName = utility.findFilenameInLink(URL);
+            }
             if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
@@ -79,13 +81,18 @@ public class Drifty_CLI {
             System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
             downloadsFolder = SC.next();
             isYoutubeURL = isYoutubeLink(link);
-            fileName = utility.findFilenameInLink(link);
+            if (!isYoutubeURL){
+                fileName = utility.findFilenameInLink(link);
+            }
             if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                 System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                 fileName = SC.nextLine();
             } else {
-                System.out.println(FILENAME_DETECTED + fileName);
-                System.out.print(RENAME_FILE);
+                if (isYoutubeURL){
+                    System.out.println("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
+                } else {
+                    System.out.print(RENAME_FILE);
+                }
                 SC.nextLine(); // To remove 'whitespace' from input buffer.
                 String choiceString = SC.nextLine();
                 boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);

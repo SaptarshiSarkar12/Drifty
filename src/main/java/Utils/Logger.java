@@ -63,8 +63,7 @@ public class Logger {
     }
 
     /**
-     * This function actually writes the entries to the log file.
-     *
+     * This function actually writes the output messages to the log file.
      * @param type Type of the Log (acceptable values - INFO, WARN, ERROR).
      * @param msg  Log message.
      */
