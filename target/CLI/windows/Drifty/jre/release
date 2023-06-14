@@ -1,2 +1,0 @@
-JAVA_VERSION="20.0.1"
-MODULES="java.base java.datatransfer java.xml java.prefs java.desktop"
