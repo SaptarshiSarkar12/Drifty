@@ -94,8 +94,6 @@ jobs:
        run: mvn javapackager:package@bundling-Drifty-CLI-for-linux
      - name: Package Drifty GUI with JavaPackager Maven plugin
        run: mvn javapackager:package@bundling-Drifty-GUI-for-linux
-     - name: Fix SSL_Handshake Error for Drifty GUI
-       run: echo "" | cat > ./target/GUI/linux/Drifty/jre/lib/security/blocked.certs
      - name: Push generated artifacts
        run: |
            git config user.name "GitHub Actions Bot"
