@@ -46,7 +46,7 @@
                 <version>1.7.0</version>
                 <configuration>
                     <bundleJre>true</bundleJre>
-                    <generateInstaller>false</generateInstaller>
+                    <generateInstaller>true</generateInstaller>
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
