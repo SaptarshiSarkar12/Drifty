@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Drifty
+GenericName=Drifty
+Comment=Drifty
+Exec=Drifty %U
+Icon=Drifty
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility
