@@ -1,0 +1,20 @@
+Format: 1.8
+Date: Thu, 15 Jun 2023 19:48:16 +0000
+Source: Drifty
+Binary: Drifty
+Architecture: amd64
+Version: 2.0.0
+Distribution: development
+Urgency: low
+Maintainer: ACME <>
+Changed-By: ACME <>
+Description:
+ Drifty - Drifty
+Changes:
+ Drifty (2.0.0) development; urgency=low
+Checksums-Sha1:
+ f8c4b709d9653f8b93178e2c5b0af0e4e9f43cb9 64321600 Drifty_2.0.0.deb
+Checksums-Sha256:
+ 97e341a90e401917f20c2aeb692a6a711d93fa0319c8339de58ff122c1948c56 64321600 Drifty_2.0.0.deb
+Files:
+ 86f3b697ef1c32de28a82a8aaf372d10 64321600 misc optional Drifty_2.0.0.deb
