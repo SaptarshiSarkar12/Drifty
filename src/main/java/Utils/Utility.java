@@ -131,20 +131,21 @@ public final class Utility {
      * This is the help method of Drifty that gets printed in the console when correct help flag has been passed as a parameter to Drifty CLI.
      */
     public static void help() {
-        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m----==| DRIFTY CLI HELP |==----" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m            " + VERSION_NUMBER + ANSI_RESET);
+        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
+        System.out.println("\033[33;1mOptional parameters:");
+        System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
+        System.out.println("-batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
+        System.out.println("-location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
+        System.out.println("-name       -n            Source                   Filename of the downloaded file.");
+        System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLI.");
+        System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
+        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
+        System.out.println("\033[37;3m* Requires java 18 or higher. \n" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
         System.out.println("\tProject Website - " + Drifty.projectWebsite);
-        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing)" + ANSI_RESET);
-        System.out.println("\033[33;1mOptional parameters:");
-        System.out.println("\033[97;1mName        ShortForm     Default     Description" + ANSI_RESET);
-        System.out.println("-location   -l            Downloads                   The location on your computer where content downloaded using Drifty are placed.");
-        System.out.println("-name       -n            Source                      Filename of the downloaded file.");
-        System.out.println("-help       -h            N/A                         Provides concise information for Drifty CLI.\n");
-        System.out.println("-version    -v            Current Version Number      Displays version number of Drifty.");
-        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
-        System.out.println("\033[37;3m* Requires java 18 or higher. \n" + ANSI_RESET);
     }
 
     /**
