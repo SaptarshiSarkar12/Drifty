@@ -78,6 +78,7 @@ public class Drifty {
                 errorFlag = true;
             }
         }
+
         if (downloadsFolder == null){
             downloadsFolder = utility.saveToDefault();
         } else {

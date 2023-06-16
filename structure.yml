@@ -1,4 +1,4 @@
-links: [""]
+links: ["", ""]
 # Optional
 fileNames: [""]
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder
