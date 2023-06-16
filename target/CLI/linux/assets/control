@@ -1,0 +1,9 @@
+Package: Drifty
+Version: 2.0.0
+Section: misc
+Priority: optional
+Architecture: amd64
+Maintainer: ACME <>
+Description: Drifty
+Distribution: development
+Homepage: https://saptarshisarkar12.github.io/Drifty/
