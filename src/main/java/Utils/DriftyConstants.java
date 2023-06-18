@@ -19,7 +19,7 @@ public final class DriftyConstants {
     public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
-    public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Automatic file name detection failed!";
+    public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Either file name or the extension was missing in the url. The url must be of the form https://www.example.com/fileName.extension";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
@@ -32,8 +32,8 @@ public final class DriftyConstants {
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
-    public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Enter the filename (with file extension) : ";
-    public static final String ENTER_FILE_LINK = "Enter the link to the file : ";
+    public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (fileName.extension) you would like to download : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file (of the form https://www.example.com/fileName.extension): ";
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
     public static final String USER_HOME_PROPERTY = "user.home";
