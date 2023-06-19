@@ -56,7 +56,7 @@ public final class DriftyConstants {
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
 
-    public static final String FILENOTFOUND = "An error occurred! Requested file does not exist, please check the file name and the extension.";
+    public static final String FILENOTFOUND = "An error occurred! Requested file does not exist, please check the url.";
     public static final String FAILED_TO_DOWNLOAD = "Failed to download ";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
