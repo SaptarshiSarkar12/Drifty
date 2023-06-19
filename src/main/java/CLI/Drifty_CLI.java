@@ -146,7 +146,7 @@ public class Drifty_CLI {
                     fileName = SC.next();
                 } else {
                     if (isYoutubeURL) {
-                        System.out.print("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
+                        System.out.print(RENAME_VIDEO_TITLE);
                     } else {
                         System.out.print(RENAME_FILE);
                     }

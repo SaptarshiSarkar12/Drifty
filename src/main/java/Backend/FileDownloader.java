@@ -143,6 +143,8 @@ public class FileDownloader implements Runnable {
 
             } catch (SecurityException e) {
                 messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", LOGGER_ERROR, "download");
+            } catch (FileNotFoundException fileNotFoundException) {
+                messageBroker.sendMessage(FILENOTFOUND, LOGGER_ERROR, "download");
             } catch (IOException e) {
                 messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, LOGGER_ERROR, "download");
             }
@@ -284,6 +286,14 @@ public class FileDownloader implements Runnable {
                             messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                         } catch (IOException io1) {
                             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
+                            String message = e.getMessage();
+                            String[] messageArray = message.split(",");
+                            if(messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) {
+                                messageBroker.sendMessage(PERMISSIONDENIED_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
+                            }
+                            else {
+                                System.out.println(e.getMessage());
+                            }
                         }
                     } catch (IOException io) {
                         messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
