@@ -21,6 +21,9 @@ on:
       - "Website/**"      
       - "*.md"
       - "*.txt"
+permissions:
+  pull-requests: write
+
 jobs:
   package-Drifty-for-Windows:
     runs-on: "windows-latest"
