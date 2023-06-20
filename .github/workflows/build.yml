@@ -33,9 +33,7 @@ jobs:
         distribution: 'oracle'
         cache: maven
     - name: Pull latest changes in code-base
-      run: |
-           git branch --set-upstream-to=origin/master master
-           git pull
+      uses: actions/checkout@v3
     - name: Build with Maven
       run: mvn compile
     - name: Package Drifty CLI with JavaPackager Maven plugin
@@ -62,9 +60,7 @@ jobs:
           distribution: 'oracle'
           cache: maven
       - name: Pull latest changes in codebase
-        run: |
-             git branch --set-upstream-to=origin/master master
-             git pull
+        uses: actions/checkout@v3
       - name: Build with Maven
         run: mvn compile
       - name: Package Drifty CLI with JavaPackager Maven plugin
@@ -91,9 +87,7 @@ jobs:
           distribution: 'oracle'
           cache: maven
      - name: Pull latest changes in codebase
-       run: |
-            git branch --set-upstream-to=origin/master master
-            git pull
+       uses: actions/checkout@v3
      - name: Build with Maven
        run: mvn compile
      - name: Package Drifty CLI with JavaPackager Maven plugin
