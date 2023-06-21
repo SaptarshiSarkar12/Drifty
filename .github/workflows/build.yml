@@ -32,8 +32,10 @@ jobs:
         java-version: '20.0.1'
         distribution: 'oracle'
         cache: maven
-    - name: Pull latest changes in code-base
-      run: git pull
+    - name: Fetch latest changes
+      run: git fetch
+    - name: Checkout master branch
+      run: git checkout master
     - name: Build with Maven
       run: mvn compile
     - name: Package Drifty CLI with JavaPackager Maven plugin
@@ -58,8 +60,10 @@ jobs:
           java-version: '20.0.1'
           distribution: 'oracle'
           cache: maven
-      - name: Pull latest changes in codebase
-        run: git pull
+      - name: Fetch latest changes
+        run: git fetch
+      - name: Checkout master branch
+        run: git checkout master
       - name: Build with Maven
         run: mvn compile
       - name: Package Drifty CLI with JavaPackager Maven plugin
@@ -85,8 +89,10 @@ jobs:
           java-version: '20.0.1'
           distribution: 'oracle'
           cache: maven
-     - name: Pull latest changes in codebase
-       run: git pull
+     - name: Fetch latest changes
+       run: git fetch
+     - name: Checkout master branch
+       run: git checkout master
      - name: Build with Maven
        run: mvn compile
      - name: Package Drifty CLI with JavaPackager Maven plugin
