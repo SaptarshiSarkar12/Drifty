@@ -1,337 +1,337 @@
 <?xml version="1.0" encoding="UTF-8"?><Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Module Codepage="1252" Id="Drifty_Module" Language="1033" Version="2.0.0.0">
-        <Package Description="Drifty" Id="722b7e13-c866-4770-a36f-f511f046d05a" InstallerVersion="200" Languages="1033" Manufacturer="ACME" Platform="x64" SummaryCodepage="1252"/>
+        <Package Description="Drifty" Id="d9e5be97-4186-4264-b183-06a7a5dbfa30" InstallerVersion="200" Languages="1033" Manufacturer="ACME" Platform="x64" SummaryCodepage="1252"/>
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="_1" Name="Drifty">
-                <Component Guid="2e976a80-1d64-4685-af11-4fd11c2ca455" Id="_2" Win64="yes">
+                <Component Guid="063e7806-91ac-4154-ad96-41aa95e86108" Id="_2" Win64="yes">
                     <File Id="_2f" KeyPath="yes" Name="Drifty Banner.png" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\Drifty Banner.png"/>
                 </Component>
-                <Component Guid="3d17c0e4-b5f6-4e10-96c0-2bdac0981b85" Id="_3" Win64="yes">
+                <Component Guid="167031ff-88cd-4fc7-92e2-1cae051a9ec4" Id="_3" Win64="yes">
                     <File Id="exeFile" KeyPath="yes" Name="Drifty.exe" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\Drifty.exe">
                         <Shortcut Description="Drifty" Directory="ProgramMenuFolder" Id="ApplicationStartMenuShortcut" Name="Drifty"/>
                     </File>
                     <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
                     <RegistryValue Key="Software\ACME\Drifty" Name="installed" Root="HKLM" Type="integer" Value="1"/>
                 </Component>
-                <Component Guid="1616fc33-1acc-49fb-b17f-8bbc75e12450" Id="_4" Win64="yes">
+                <Component Guid="5f80f7cb-1679-4e96-8599-26eb120ee6cb" Id="_4" Win64="yes">
                     <File Id="_4f" KeyPath="yes" Name="Drifty.ico" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\Drifty.ico"/>
                 </Component>
                 <Directory Id="_5" Name="jre">
                     <Directory Id="_6" Name="bin">
-                        <Component Guid="891c582d-91e7-4894-9c77-2eee378f2e3a" Id="_7" Win64="yes">
+                        <Component Guid="bfd1e190-f998-408e-8e99-6eadd4dbe602" Id="_7" Win64="yes">
                             <File Id="_7f" KeyPath="yes" Name="api-ms-win-core-console-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-console-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="8599875e-e45c-44a9-9c96-3f70a8088679" Id="_8" Win64="yes">
+                        <Component Guid="73cf3b91-6603-4bd5-b26f-704d0d782282" Id="_8" Win64="yes">
                             <File Id="_8f" KeyPath="yes" Name="api-ms-win-core-console-l1-2-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-console-l1-2-0.dll"/>
                         </Component>
-                        <Component Guid="83ba317d-ca90-4ed7-b7e9-c60ebdb817b8" Id="_9" Win64="yes">
+                        <Component Guid="055e743b-2586-4bc4-a10e-397e47992b65" Id="_9" Win64="yes">
                             <File Id="_9f" KeyPath="yes" Name="api-ms-win-core-datetime-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-datetime-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="b1e0de86-a8d6-4f08-8f53-0248d401c1f1" Id="_10" Win64="yes">
+                        <Component Guid="d9aaa42b-64ad-4076-b8d9-9ef0a1aa3ba0" Id="_10" Win64="yes">
                             <File Id="_10f" KeyPath="yes" Name="api-ms-win-core-debug-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-debug-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="343334ca-709b-4971-b81a-6d837f636a4c" Id="_11" Win64="yes">
+                        <Component Guid="e3756fda-9b4b-4b35-ab4f-88cb992a9be3" Id="_11" Win64="yes">
                             <File Id="_11f" KeyPath="yes" Name="api-ms-win-core-errorhandling-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-errorhandling-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="c0e6f21a-a5e1-4058-ba14-2c46a94c5dbb" Id="_12" Win64="yes">
+                        <Component Guid="d667c5b9-7666-4748-bc33-c277bfe2219e" Id="_12" Win64="yes">
                             <File Id="_12f" KeyPath="yes" Name="api-ms-win-core-file-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-file-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="29eb6c79-861a-4b41-8c1c-27388c4d15cc" Id="_13" Win64="yes">
+                        <Component Guid="3885f924-ec88-4459-af10-cd04ce9fa1b1" Id="_13" Win64="yes">
                             <File Id="_13f" KeyPath="yes" Name="api-ms-win-core-file-l1-2-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-file-l1-2-0.dll"/>
                         </Component>
-                        <Component Guid="e47c8173-b20a-4426-87cf-5799b233096d" Id="_14" Win64="yes">
+                        <Component Guid="321bab2e-4c57-47a3-89a5-99793756612e" Id="_14" Win64="yes">
                             <File Id="_14f" KeyPath="yes" Name="api-ms-win-core-file-l2-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-file-l2-1-0.dll"/>
                         </Component>
-                        <Component Guid="8b8bf35b-85bd-4373-a87f-bc3b745d8502" Id="_15" Win64="yes">
+                        <Component Guid="6d9931d2-32dd-4ff3-92d5-7bda18296194" Id="_15" Win64="yes">
                             <File Id="_15f" KeyPath="yes" Name="api-ms-win-core-handle-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-handle-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="7f685875-27cf-4419-9b50-02a47aacab86" Id="_16" Win64="yes">
+                        <Component Guid="62c511a0-0016-4c4e-8369-cea61264ec1e" Id="_16" Win64="yes">
                             <File Id="_16f" KeyPath="yes" Name="api-ms-win-core-heap-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-heap-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="89616095-0a89-46c3-9186-685705fa2f0f" Id="_17" Win64="yes">
+                        <Component Guid="a796ec21-c22c-42de-a9ac-0cfde4e91b5a" Id="_17" Win64="yes">
                             <File Id="_17f" KeyPath="yes" Name="api-ms-win-core-interlocked-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-interlocked-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="b7fe9f43-771e-416f-8b89-fcd8e0060b58" Id="_18" Win64="yes">
+                        <Component Guid="f74454b7-b6a5-4608-8227-36af276e15c2" Id="_18" Win64="yes">
                             <File Id="_18f" KeyPath="yes" Name="api-ms-win-core-libraryloader-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-libraryloader-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="9aaf12fd-5365-43b7-a759-d0ca49845675" Id="_19" Win64="yes">
+                        <Component Guid="eec1921f-718d-4be2-bfc0-3ba4c4659dc1" Id="_19" Win64="yes">
                             <File Id="_19f" KeyPath="yes" Name="api-ms-win-core-localization-l1-2-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-localization-l1-2-0.dll"/>
                         </Component>
-                        <Component Guid="8d1e9313-93a3-43eb-8aa7-67c5ea127437" Id="_20" Win64="yes">
+                        <Component Guid="e5909ac4-1092-48f4-b86e-bef87785a6c9" Id="_20" Win64="yes">
                             <File Id="_20f" KeyPath="yes" Name="api-ms-win-core-memory-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-memory-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="9452d49c-05c0-4a97-a382-6833ca4bf199" Id="_21" Win64="yes">
+                        <Component Guid="e4e2ba00-4894-4855-8842-9bf446de2700" Id="_21" Win64="yes">
                             <File Id="_21f" KeyPath="yes" Name="api-ms-win-core-namedpipe-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-namedpipe-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="b605210a-27ad-466e-aad1-f937db1ade37" Id="_22" Win64="yes">
+                        <Component Guid="0e39d8e2-719e-47e9-b4f5-3e5d5d462552" Id="_22" Win64="yes">
                             <File Id="_22f" KeyPath="yes" Name="api-ms-win-core-processenvironment-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-processenvironment-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="25b3a551-2ed4-452c-a309-3465382297f7" Id="_23" Win64="yes">
+                        <Component Guid="12b233e0-188d-4f33-b417-938a6d2e9922" Id="_23" Win64="yes">
                             <File Id="_23f" KeyPath="yes" Name="api-ms-win-core-processthreads-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-processthreads-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="0a115325-fdf1-49a9-b67f-c3ca925e8856" Id="_24" Win64="yes">
+                        <Component Guid="53964100-7237-4766-8c78-5a86704d3d8b" Id="_24" Win64="yes">
                             <File Id="_24f" KeyPath="yes" Name="api-ms-win-core-processthreads-l1-1-1.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-processthreads-l1-1-1.dll"/>
                         </Component>
-                        <Component Guid="95ef0619-e828-485a-9438-edbf09fb5db1" Id="_25" Win64="yes">
+                        <Component Guid="015867aa-2171-4a99-bdfd-c4d50601358b" Id="_25" Win64="yes">
                             <File Id="_25f" KeyPath="yes" Name="api-ms-win-core-profile-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-profile-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="540cf73b-8c2d-4521-9034-60c89ff01813" Id="_26" Win64="yes">
+                        <Component Guid="b4331936-6905-43e8-9607-c6fefa80a93f" Id="_26" Win64="yes">
                             <File Id="_26f" KeyPath="yes" Name="api-ms-win-core-rtlsupport-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-rtlsupport-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="8b6bda4c-634f-43cf-a527-72c823add772" Id="_27" Win64="yes">
+                        <Component Guid="775f20fc-d39f-45c8-a627-76786b2a2873" Id="_27" Win64="yes">
                             <File Id="_27f" KeyPath="yes" Name="api-ms-win-core-string-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-string-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="f303a7b7-26f6-436d-9c68-819f7725fd4f" Id="_28" Win64="yes">
+                        <Component Guid="55c401b0-7088-4446-9d8f-6d69ec44ff83" Id="_28" Win64="yes">
                             <File Id="_28f" KeyPath="yes" Name="api-ms-win-core-synch-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-synch-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="ca5e8233-a898-4df2-9d0e-04d7a503076f" Id="_29" Win64="yes">
+                        <Component Guid="14203d47-0d0f-4d40-8de7-069c23b015ee" Id="_29" Win64="yes">
                             <File Id="_29f" KeyPath="yes" Name="api-ms-win-core-synch-l1-2-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-synch-l1-2-0.dll"/>
                         </Component>
-                        <Component Guid="bda54e42-235a-441d-8873-e4253a135b1a" Id="_30" Win64="yes">
+                        <Component Guid="618f52f2-c87c-4378-83ff-b7a9d1ade18e" Id="_30" Win64="yes">
                             <File Id="_30f" KeyPath="yes" Name="api-ms-win-core-sysinfo-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-sysinfo-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="05733d95-8874-4ad9-a165-4719feaf5b77" Id="_31" Win64="yes">
+                        <Component Guid="dbe34c8e-ca0d-4a62-ae4c-253252844816" Id="_31" Win64="yes">
                             <File Id="_31f" KeyPath="yes" Name="api-ms-win-core-timezone-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-timezone-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="12d5a211-5dcb-434a-9bec-3599712439f6" Id="_32" Win64="yes">
+                        <Component Guid="0429a290-932b-4dda-866e-838016e6cac2" Id="_32" Win64="yes">
                             <File Id="_32f" KeyPath="yes" Name="api-ms-win-core-util-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-core-util-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="db671b64-1890-4783-b96a-8d39623e8afc" Id="_33" Win64="yes">
+                        <Component Guid="eecca4a1-8881-4ac6-b4a3-ff7db0aa28c1" Id="_33" Win64="yes">
                             <File Id="_33f" KeyPath="yes" Name="api-ms-win-crt-conio-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-conio-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="81ab2fc0-309d-44ef-abcc-244f3f4f3031" Id="_34" Win64="yes">
+                        <Component Guid="bd05aee5-7bcf-4352-af44-948ed11f844c" Id="_34" Win64="yes">
                             <File Id="_34f" KeyPath="yes" Name="api-ms-win-crt-convert-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-convert-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="9cd07de8-ca23-4105-b7cf-6ebd87e35bd8" Id="_35" Win64="yes">
+                        <Component Guid="00f61b78-a472-4e78-8f4a-5ab0bb963b5d" Id="_35" Win64="yes">
                             <File Id="_35f" KeyPath="yes" Name="api-ms-win-crt-environment-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-environment-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="e778f9d1-7d92-4f2a-83ab-2f87353149ba" Id="_36" Win64="yes">
+                        <Component Guid="7af86c8a-7397-467e-876a-9d7c520acb58" Id="_36" Win64="yes">
                             <File Id="_36f" KeyPath="yes" Name="api-ms-win-crt-filesystem-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-filesystem-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="891ea2b7-de8f-482d-8d57-f053500e9509" Id="_37" Win64="yes">
+                        <Component Guid="b56f2e4c-8c70-4585-a070-5e2af49e0e9b" Id="_37" Win64="yes">
                             <File Id="_37f" KeyPath="yes" Name="api-ms-win-crt-heap-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-heap-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="cdf16cd7-f434-4e33-965e-462295fc8c1f" Id="_38" Win64="yes">
+                        <Component Guid="4e70e7bc-16fa-45ba-a262-54142138f993" Id="_38" Win64="yes">
                             <File Id="_38f" KeyPath="yes" Name="api-ms-win-crt-locale-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-locale-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="5247ddc5-4f4d-4aa7-b0b1-7a80ecd35cee" Id="_39" Win64="yes">
+                        <Component Guid="513d2ce9-1e3b-4f8d-b5bf-7f220a91be0b" Id="_39" Win64="yes">
                             <File Id="_39f" KeyPath="yes" Name="api-ms-win-crt-math-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-math-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="6574815d-f124-415f-b360-e4b0e84283e8" Id="_40" Win64="yes">
+                        <Component Guid="e0c75d0a-a3b9-47b4-ba37-b7ac54cab69d" Id="_40" Win64="yes">
                             <File Id="_40f" KeyPath="yes" Name="api-ms-win-crt-multibyte-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-multibyte-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="ee3e5b37-1c85-4fe7-9e11-e2d0e1096918" Id="_41" Win64="yes">
+                        <Component Guid="6bf0ca8f-b85a-48ce-8ebb-95c38c24948f" Id="_41" Win64="yes">
                             <File Id="_41f" KeyPath="yes" Name="api-ms-win-crt-private-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-private-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="2dc188ee-e2c8-48a6-9ab3-3d5033f3143b" Id="_42" Win64="yes">
+                        <Component Guid="39cf2085-88a9-46fc-bef2-a14645a2fac9" Id="_42" Win64="yes">
                             <File Id="_42f" KeyPath="yes" Name="api-ms-win-crt-process-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-process-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="cc891a76-a4fe-4597-adb0-d57ef90d3961" Id="_43" Win64="yes">
+                        <Component Guid="21e1f181-6384-4996-9432-03663dbb8b11" Id="_43" Win64="yes">
                             <File Id="_43f" KeyPath="yes" Name="api-ms-win-crt-runtime-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-runtime-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="f6bed566-7e98-434d-8521-dc5fbad7a142" Id="_44" Win64="yes">
+                        <Component Guid="42e5c766-beda-4586-802a-e56b68c9d423" Id="_44" Win64="yes">
                             <File Id="_44f" KeyPath="yes" Name="api-ms-win-crt-stdio-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-stdio-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="1f7992e0-a970-463f-8e86-169868a7cca4" Id="_45" Win64="yes">
+                        <Component Guid="c954ebcf-1741-463e-b6a1-d9c56022b370" Id="_45" Win64="yes">
                             <File Id="_45f" KeyPath="yes" Name="api-ms-win-crt-string-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-string-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="7f97f1e4-f450-4ef2-913c-6b8e8c0614a1" Id="_46" Win64="yes">
+                        <Component Guid="65772667-1811-489e-ac6b-94b5e1807fc7" Id="_46" Win64="yes">
                             <File Id="_46f" KeyPath="yes" Name="api-ms-win-crt-time-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-time-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="cf74dd57-f05c-4f53-804e-238abcff132a" Id="_47" Win64="yes">
+                        <Component Guid="be3bf316-cff0-4cc8-8929-d0d96d23faa7" Id="_47" Win64="yes">
                             <File Id="_47f" KeyPath="yes" Name="api-ms-win-crt-utility-l1-1-0.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\api-ms-win-crt-utility-l1-1-0.dll"/>
                         </Component>
-                        <Component Guid="42b6b92b-1b8d-4498-b7a8-06203ec61b7a" Id="_48" Win64="yes">
+                        <Component Guid="42e06219-88d2-40dc-9f38-1d7f05353d51" Id="_48" Win64="yes">
                             <File Id="_48f" KeyPath="yes" Name="awt.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\awt.dll"/>
                         </Component>
-                        <Component Guid="3dc1fa10-d82d-4963-a264-a8c75785e646" Id="_49" Win64="yes">
+                        <Component Guid="b40a3c84-3700-42ab-8f07-80e47ad18045" Id="_49" Win64="yes">
                             <File Id="_49f" KeyPath="yes" Name="fontmanager.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\fontmanager.dll"/>
                         </Component>
-                        <Component Guid="cc4ebedb-aefa-4d58-b5b2-3fcbd89fa890" Id="_50" Win64="yes">
+                        <Component Guid="217c9a2d-9611-4dfd-803f-46e91fcce89b" Id="_50" Win64="yes">
                             <File Id="_50f" KeyPath="yes" Name="freetype.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\freetype.dll"/>
                         </Component>
-                        <Component Guid="0352519b-42e9-4ca1-864e-c2a308f9a962" Id="_51" Win64="yes">
+                        <Component Guid="216d7617-5c36-4d01-8012-55d77a45c999" Id="_51" Win64="yes">
                             <File Id="_51f" KeyPath="yes" Name="java.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\java.dll"/>
                         </Component>
-                        <Component Guid="e7fb81bd-6883-479a-b840-b88585e50df9" Id="_52" Win64="yes">
+                        <Component Guid="d5e9baee-73fb-4e0f-b24a-45bf7547d6a3" Id="_52" Win64="yes">
                             <File Id="_52f" KeyPath="yes" Name="java.exe" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\java.exe"/>
                         </Component>
-                        <Component Guid="9f008df8-b271-4a19-9905-9d8f5841819f" Id="_53" Win64="yes">
+                        <Component Guid="729d47ef-63cd-433d-94b4-2d66c42feff3" Id="_53" Win64="yes">
                             <File Id="_53f" KeyPath="yes" Name="javajpeg.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\javajpeg.dll"/>
                         </Component>
-                        <Component Guid="781ae64e-f8f8-4a5f-b0f8-c8d540dd6e09" Id="_54" Win64="yes">
+                        <Component Guid="6517847c-0ce5-4abf-938f-07a6b86cb63b" Id="_54" Win64="yes">
                             <File Id="_54f" KeyPath="yes" Name="javaw.exe" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\javaw.exe"/>
                         </Component>
-                        <Component Guid="8de44400-2d0d-4358-a125-5b24307e06b3" Id="_55" Win64="yes">
+                        <Component Guid="bd173bc3-9075-4757-9076-b3735704c645" Id="_55" Win64="yes">
                             <File Id="_55f" KeyPath="yes" Name="jawt.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\jawt.dll"/>
                         </Component>
-                        <Component Guid="e866a8fe-279e-424f-b20b-3c676f617a43" Id="_56" Win64="yes">
+                        <Component Guid="6eec4367-4b0c-4dc5-a64e-d7be58d2259e" Id="_56" Win64="yes">
                             <File Id="_56f" KeyPath="yes" Name="jimage.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\jimage.dll"/>
                         </Component>
-                        <Component Guid="8475a559-974c-4576-926a-d7c93806cea9" Id="_57" Win64="yes">
+                        <Component Guid="fabbda8f-f609-415a-b04a-ed264209fcee" Id="_57" Win64="yes">
                             <File Id="_57f" KeyPath="yes" Name="jli.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\jli.dll"/>
                         </Component>
-                        <Component Guid="e5d55ba4-1155-40c2-9e80-fb03f4da41ac" Id="_58" Win64="yes">
+                        <Component Guid="3710fa87-cc0f-4978-a9c5-d78577b390d6" Id="_58" Win64="yes">
                             <File Id="_58f" KeyPath="yes" Name="jsound.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\jsound.dll"/>
                         </Component>
-                        <Component Guid="8e3f400d-699c-4cff-9196-e51e4093adb3" Id="_59" Win64="yes">
+                        <Component Guid="68ebd313-dcb3-4b07-b9e8-99487dc2a8f3" Id="_59" Win64="yes">
                             <File Id="_59f" KeyPath="yes" Name="keytool.exe" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\keytool.exe"/>
                         </Component>
-                        <Component Guid="01251c86-84a2-4012-a0b8-8f9fb159235e" Id="_60" Win64="yes">
+                        <Component Guid="2b77ccc2-8b7b-4971-933a-d4912854da9e" Id="_60" Win64="yes">
                             <File Id="_60f" KeyPath="yes" Name="lcms.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\lcms.dll"/>
                         </Component>
-                        <Component Guid="2159d79f-6e9f-4974-8da0-ca15a6206d57" Id="_61" Win64="yes">
+                        <Component Guid="48eb796f-2646-4efd-97fa-695c6ef7cba7" Id="_61" Win64="yes">
                             <File Id="_61f" KeyPath="yes" Name="mlib_image.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\mlib_image.dll"/>
                         </Component>
-                        <Component Guid="5d0146dc-de8e-48e0-bc08-e2df6e5208cb" Id="_62" Win64="yes">
+                        <Component Guid="9a27ad73-30aa-41cf-8c3b-41270ed55856" Id="_62" Win64="yes">
                             <File Id="_62f" KeyPath="yes" Name="msvcp140.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\msvcp140.dll"/>
                         </Component>
-                        <Component Guid="4f4b5a03-3d76-4cc2-a8ff-fb1dea964b50" Id="_63" Win64="yes">
+                        <Component Guid="e27b887a-86ce-4952-a392-e23b01debe61" Id="_63" Win64="yes">
                             <File Id="_63f" KeyPath="yes" Name="net.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\net.dll"/>
                         </Component>
-                        <Component Guid="dd2151dc-c9ec-4cb0-9d7e-05190c2afec7" Id="_64" Win64="yes">
+                        <Component Guid="a2cbec0e-4284-42b9-a5d6-647b9dcb6783" Id="_64" Win64="yes">
                             <File Id="_64f" KeyPath="yes" Name="nio.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\nio.dll"/>
                         </Component>
-                        <Component Guid="5e6271e1-2bb0-4b95-ba7d-07c9640e6546" Id="_65" Win64="yes">
+                        <Component Guid="c4e2fbea-b421-4ba9-a47e-68506c5a0f2a" Id="_65" Win64="yes">
                             <File Id="_65f" KeyPath="yes" Name="prefs.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\prefs.dll"/>
                         </Component>
                         <Directory Id="_66" Name="server">
-                            <Component Guid="967132e9-b9bd-44d0-af41-9dd2f057d653" Id="_67" Win64="yes">
+                            <Component Guid="cea725f2-a4c3-4926-bb6f-52d480c84461" Id="_67" Win64="yes">
                                 <File Id="_67f" KeyPath="yes" Name="jvm.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\server\jvm.dll"/>
                             </Component>
                         </Directory>
-                        <Component Guid="f9544116-c039-47f9-8e8b-b2cb37dc61fa" Id="_68" Win64="yes">
+                        <Component Guid="04efbf17-7156-4ebd-ab3c-cdce59452ea2" Id="_68" Win64="yes">
                             <File Id="_68f" KeyPath="yes" Name="splashscreen.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\splashscreen.dll"/>
                         </Component>
-                        <Component Guid="8075109d-d002-47ac-89d3-fda8bfe74a6b" Id="_69" Win64="yes">
+                        <Component Guid="f0cb8be4-1e2f-4dd1-9ad5-b4bc65da16f1" Id="_69" Win64="yes">
                             <File Id="_69f" KeyPath="yes" Name="syslookup.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\syslookup.dll"/>
                         </Component>
-                        <Component Guid="6485fd85-2648-4f98-970f-4aa8295b422b" Id="_70" Win64="yes">
+                        <Component Guid="ca04fcd9-210e-4b88-bbd7-4b5bceb8e05b" Id="_70" Win64="yes">
                             <File Id="_70f" KeyPath="yes" Name="ucrtbase.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\ucrtbase.dll"/>
                         </Component>
-                        <Component Guid="26edbfa7-a9d9-4733-a155-62de2d2a6d1c" Id="_71" Win64="yes">
+                        <Component Guid="ae293754-b274-488c-9de1-6332532c8fea" Id="_71" Win64="yes">
                             <File Id="_71f" KeyPath="yes" Name="vcruntime140.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\vcruntime140.dll"/>
                         </Component>
-                        <Component Guid="6d5e7180-3c1b-4012-b11d-adcf01074d45" Id="_72" Win64="yes">
+                        <Component Guid="4c7b183e-8cd1-4871-9bf4-4f8c8836a80c" Id="_72" Win64="yes">
                             <File Id="_72f" KeyPath="yes" Name="vcruntime140_1.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\vcruntime140_1.dll"/>
                         </Component>
-                        <Component Guid="b14c7a2f-23cc-483b-a440-483ba252e51a" Id="_73" Win64="yes">
+                        <Component Guid="37e43ce5-ccda-425a-85ea-17682b9e6eb4" Id="_73" Win64="yes">
                             <File Id="_73f" KeyPath="yes" Name="verify.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\verify.dll"/>
                         </Component>
-                        <Component Guid="d352a35f-dfea-4cba-b9a7-dc53b4803c81" Id="_74" Win64="yes">
+                        <Component Guid="a401bdd9-a911-4ef8-9ab4-6cfc8aa47fe8" Id="_74" Win64="yes">
                             <File Id="_74f" KeyPath="yes" Name="zip.dll" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\bin\zip.dll"/>
                         </Component>
                     </Directory>
                     <Directory Id="_75" Name="conf">
-                        <Component Guid="8f332ba5-7ed5-4231-b014-44bbdf0d82a4" Id="_76" Win64="yes">
+                        <Component Guid="c1153bba-a56c-4f30-823d-7f1ec60d09fa" Id="_76" Win64="yes">
                             <File Id="_76f" KeyPath="yes" Name="net.properties" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\net.properties"/>
                         </Component>
                         <Directory Id="_77" Name="security">
-                            <Component Guid="9c13b2af-b4f2-4bb4-8574-519d0fe348cc" Id="_78" Win64="yes">
+                            <Component Guid="36eb37cc-84d2-4e61-9589-56b10835d514" Id="_78" Win64="yes">
                                 <File Id="_78f" KeyPath="yes" Name="java.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\java.policy"/>
                             </Component>
-                            <Component Guid="2d523c41-06e3-439e-a688-794830b11d92" Id="_79" Win64="yes">
+                            <Component Guid="1143320b-0794-4ee6-9384-3fa57ef8850e" Id="_79" Win64="yes">
                                 <File Id="_79f" KeyPath="yes" Name="java.security" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\java.security"/>
                             </Component>
                             <Directory Id="_80" Name="policy">
                                 <Directory Id="_81" Name="limited">
-                                    <Component Guid="65e64f22-b877-47f3-85e6-df12afe2b0bf" Id="_82" Win64="yes">
+                                    <Component Guid="a0044cd8-4dd1-4fbb-9001-c91d02e8bdfd" Id="_82" Win64="yes">
                                         <File Id="_82f" KeyPath="yes" Name="default_local.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\limited\default_local.policy"/>
                                     </Component>
-                                    <Component Guid="6eb46b11-f675-4482-a412-98805c6be934" Id="_83" Win64="yes">
+                                    <Component Guid="14a862ca-0a3f-4be8-a483-bac688f66f5d" Id="_83" Win64="yes">
                                         <File Id="_83f" KeyPath="yes" Name="default_US_export.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\limited\default_US_export.policy"/>
                                     </Component>
-                                    <Component Guid="01da612b-6d99-41c8-a15b-14e518f5c283" Id="_84" Win64="yes">
+                                    <Component Guid="a037be16-3753-4368-8b06-91454d673c41" Id="_84" Win64="yes">
                                         <File Id="_84f" KeyPath="yes" Name="exempt_local.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\limited\exempt_local.policy"/>
                                     </Component>
                                 </Directory>
-                                <Component Guid="9963ef1f-c62f-4508-bcee-3a77eea68513" Id="_85" Win64="yes">
+                                <Component Guid="179e3368-875e-4ff6-a6df-9256c90c69bd" Id="_85" Win64="yes">
                                     <File Id="_85f" KeyPath="yes" Name="README.txt" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\README.txt"/>
                                 </Component>
                                 <Directory Id="_86" Name="unlimited">
-                                    <Component Guid="a75de6b7-59bf-40e4-9098-d6ddaeee9e04" Id="_87" Win64="yes">
+                                    <Component Guid="9c36d9f1-a639-4605-bdd1-b696283f8319" Id="_87" Win64="yes">
                                         <File Id="_87f" KeyPath="yes" Name="default_local.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\unlimited\default_local.policy"/>
                                     </Component>
-                                    <Component Guid="04feac63-971d-435a-9528-da0d7a3defcc" Id="_88" Win64="yes">
+                                    <Component Guid="17d53dcd-40fb-4c59-bbba-1da193d550d0" Id="_88" Win64="yes">
                                         <File Id="_88f" KeyPath="yes" Name="default_US_export.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\security\policy\unlimited\default_US_export.policy"/>
                                     </Component>
                                 </Directory>
                             </Directory>
                         </Directory>
-                        <Component Guid="0c5b61aa-9ebc-43a0-b120-9a79956de2d4" Id="_89" Win64="yes">
+                        <Component Guid="95c85f8e-06e7-4efb-8b05-642dec8be3d9" Id="_89" Win64="yes">
                             <File Id="_89f" KeyPath="yes" Name="sound.properties" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\conf\sound.properties"/>
                         </Component>
                     </Directory>
                     <Directory Id="_90" Name="lib">
-                        <Component Guid="4401a86a-31b6-4774-8bb4-2e01aa2f7c26" Id="_91" Win64="yes">
+                        <Component Guid="e7441842-9af2-4139-8c12-971d5a0fdcd2" Id="_91" Win64="yes">
                             <File Id="_91f" KeyPath="yes" Name="classlist" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\classlist"/>
                         </Component>
-                        <Component Guid="bfdfa12c-9f88-45fb-884d-d7e9241082bb" Id="_92" Win64="yes">
+                        <Component Guid="d391329e-9409-4431-a444-1646fa990649" Id="_92" Win64="yes">
                             <File Id="_92f" KeyPath="yes" Name="fontconfig.bfc" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\fontconfig.bfc"/>
                         </Component>
-                        <Component Guid="fd219173-e5e8-4d61-a36a-0c8e087b7e70" Id="_93" Win64="yes">
+                        <Component Guid="5fcecbe4-f1be-4dcd-a89f-39cb1f26898a" Id="_93" Win64="yes">
                             <File Id="_93f" KeyPath="yes" Name="fontconfig.properties.src" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\fontconfig.properties.src"/>
                         </Component>
-                        <Component Guid="d716da60-8a96-4fb2-a981-22829a16991b" Id="_94" Win64="yes">
+                        <Component Guid="d62a537d-bd34-4855-bcc3-4c1b6ff88a36" Id="_94" Win64="yes">
                             <File Id="_94f" KeyPath="yes" Name="jawt.lib" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\jawt.lib"/>
                         </Component>
-                        <Component Guid="68b9bcd6-c894-4372-b429-83c90e11dcac" Id="_95" Win64="yes">
+                        <Component Guid="c4452688-e35e-42a5-b4f6-19abe522ce09" Id="_95" Win64="yes">
                             <File Id="_95f" KeyPath="yes" Name="jrt-fs.jar" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\jrt-fs.jar"/>
                         </Component>
-                        <Component Guid="ccf9dd2b-f50a-41bd-8f74-cd97f624d0de" Id="_96" Win64="yes">
+                        <Component Guid="b34171ce-389a-482d-bc6e-aea4af665a60" Id="_96" Win64="yes">
                             <File Id="_96f" KeyPath="yes" Name="jvm.cfg" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\jvm.cfg"/>
                         </Component>
-                        <Component Guid="9bb9d3a2-8f73-4920-bf96-87686162748d" Id="_97" Win64="yes">
+                        <Component Guid="1cdc2a56-a3d8-4b6d-9a8e-130aa5e37d48" Id="_97" Win64="yes">
                             <File Id="_97f" KeyPath="yes" Name="jvm.lib" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\jvm.lib"/>
                         </Component>
-                        <Component Guid="80714b8d-958e-42b9-9678-d8477a7ae053" Id="_98" Win64="yes">
+                        <Component Guid="6e704bc6-8747-466d-8d7a-a80fd9d5a96c" Id="_98" Win64="yes">
                             <File Id="_98f" KeyPath="yes" Name="modules" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\modules"/>
                         </Component>
-                        <Component Guid="ebfca4d1-6567-4ab1-a9ec-9bf3424b4087" Id="_99" Win64="yes">
+                        <Component Guid="b9629448-075c-403c-846e-8155e7330ed1" Id="_99" Win64="yes">
                             <File Id="_99f" KeyPath="yes" Name="psfont.properties.ja" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\psfont.properties.ja"/>
                         </Component>
-                        <Component Guid="c2ae47d5-42bc-47bf-ac09-97ea3aeae6a1" Id="_100" Win64="yes">
+                        <Component Guid="17c50bc9-cecf-4b1a-b2dd-5ca2a3536008" Id="_100" Win64="yes">
                             <File Id="_100f" KeyPath="yes" Name="psfontj2d.properties" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\psfontj2d.properties"/>
                         </Component>
                         <Directory Id="_101" Name="security">
-                            <Component Guid="81a06739-5a06-4f85-b237-54cf8ec642dc" Id="_102" Win64="yes">
+                            <Component Guid="54c74052-3f1d-4dd9-ad57-21cd9f654d1d" Id="_102" Win64="yes">
                                 <File Id="_102f" KeyPath="yes" Name="blocked.certs" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\security\blocked.certs"/>
                             </Component>
-                            <Component Guid="0c241b95-6998-4dcc-b0e6-f4c1e76ef09c" Id="_103" Win64="yes">
+                            <Component Guid="75b57dd9-9aa2-40f9-856b-9bd989eee697" Id="_103" Win64="yes">
                                 <File Id="_103f" KeyPath="yes" Name="cacerts" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\security\cacerts"/>
                             </Component>
-                            <Component Guid="9ec4a73c-6981-4cfa-af24-f1bcc76ab06e" Id="_104" Win64="yes">
+                            <Component Guid="4f9bee9b-b8ab-4bb0-8b47-932deef4b6b2" Id="_104" Win64="yes">
                                 <File Id="_104f" KeyPath="yes" Name="default.policy" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\security\default.policy"/>
                             </Component>
-                            <Component Guid="78c1c575-1261-414c-8c8d-57e0ff3f4979" Id="_105" Win64="yes">
+                            <Component Guid="d74f760d-c89c-454d-b2bd-1b7064c40ab0" Id="_105" Win64="yes">
                                 <File Id="_105f" KeyPath="yes" Name="public_suffix_list.dat" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\security\public_suffix_list.dat"/>
                             </Component>
                         </Directory>
-                        <Component Guid="90798552-8057-4753-81b6-3ad6fff63290" Id="_106" Win64="yes">
+                        <Component Guid="ca677389-dd50-49a3-b622-615299c7c492" Id="_106" Win64="yes">
                             <File Id="_106f" KeyPath="yes" Name="tzdb.dat" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\tzdb.dat"/>
                         </Component>
-                        <Component Guid="883c2a36-cdc6-4386-aec0-cce7a1c5e430" Id="_107" Win64="yes">
+                        <Component Guid="11426199-061c-4273-996a-e878c36edf2d" Id="_107" Win64="yes">
                             <File Id="_107f" KeyPath="yes" Name="tzmappings" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\lib\tzmappings"/>
                         </Component>
                     </Directory>
-                    <Component Guid="70b88430-39f8-4ecb-883a-0bfe885c72e7" Id="_108" Win64="yes">
+                    <Component Guid="8ff20d08-0359-4957-a0cd-900a3a905dca" Id="_108" Win64="yes">
                         <File Id="_108f" KeyPath="yes" Name="release" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\jre\release"/>
                     </Component>
                 </Directory>
                 <Directory Id="_109" Name="libs">
-                    <Component Guid="0c193d06-b4d4-4938-947d-364bc7a5d07d" Id="_110" Win64="yes">
+                    <Component Guid="f9a353e3-a6b0-4830-a9f4-6158637727a0" Id="_110" Win64="yes">
                         <File Id="_110f" KeyPath="yes" Name="snakeyaml-2.0.jar" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\libs\snakeyaml-2.0.jar"/>
                     </Component>
                 </Directory>
-                <Component Guid="ab982009-6d4e-4bab-a2b5-9deb8c8f5893" Id="_111" Win64="yes">
+                <Component Guid="890755dd-5eb3-4095-b388-2914093784a3" Id="_111" Win64="yes">
                     <File Id="_111f" KeyPath="yes" Name="LICENSE" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\LICENSE"/>
                 </Component>
-                <Component Guid="6a24ff7c-9302-4932-ba37-3c2abc8fc653" Id="_112" Win64="yes">
+                <Component Guid="f849233b-5d9c-4e27-8b10-fbb4e66be91d" Id="_112" Win64="yes">
                     <File Id="_112f" KeyPath="yes" Name="yt-dlp.exe" Source="D:\a\Drifty\Drifty\target\GUI\windows\Drifty\yt-dlp.exe"/>
                 </Component>
             </Directory>
             <Directory Id="ProgramMenuFolder"/>
-            <Component Guid="8dc3d426-38a3-4c98-b346-3521b844aa62" Id="RegistryEntries"/>
+            <Component Guid="84e6159b-e32e-45e0-bb21-86de92627bc6" Id="RegistryEntries"/>
         </Directory>
     </Module>
 </Wix>
