@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Tue, 20 Jun 2023 04:21:43 +0000
+Date: Thu, 22 Jun 2023 07:45:09 +0000
 Source: Drifty
 Binary: Drifty
 Architecture: amd64
@@ -13,8 +13,8 @@ Description:
 Changes:
  Drifty (2.0.0) development; urgency=low
 Checksums-Sha1:
- 3cbc5f230604a1fbc0b26826015e00195b8c2d06 65993634 Drifty_2.0.0.deb
+ 2d929ea8abf30c9c9d856430e2391b9d03aa78ac 65993548 Drifty_2.0.0.deb
 Checksums-Sha256:
- 335dc34d580703774ae37c736bf90b85127f8e1d3c160b6470eed27ea0901cd1 65993634 Drifty_2.0.0.deb
+ 72eaebfb8436b0e2ab10d8fa68d1d36404eae0e6d843945146476b407c5349cb 65993548 Drifty_2.0.0.deb
 Files:
- c2fcc688a5217130330b13cba648b58f 65993634 misc optional Drifty_2.0.0.deb
+ d3d133d45e9a13af8316a15b463f2954 65993548 misc optional Drifty_2.0.0.deb
