@@ -40,18 +40,13 @@ jobs:
     - name: Package Drifty CLI with JavaPackager Maven plugin
       run: mvn javapackager:package@bundling-Drifty-CLI-for-windows
     - name: Package Drifty GUI with JavaPackager Maven plugin
-      run: mvn javapackager:package@bundling-Drifty-GUI-for-windows
-    - name: Delete unnecessary build files
-      run: |
-          rmdir target/classes
-          rmdir target/maven-archiver
-          rmdir target/maven-status
-          rmdir target/launch4j
+      run: mvn javapakager:package@bundling-Drifty-GUI-for-windows
     - name: Push generated artifacts
       uses: actions/upload-artifact@v3
       with:
         name: Windows-Build-Files
         path: target
+        
   package-Drifty-for-MacOS:
     needs: package-Drifty-for-Windows
     runs-on: "macos-latest"
@@ -71,12 +66,6 @@ jobs:
         run: mvn javapackager:package@bundling-Drifty-CLI-for-mac
       - name: Package Drifty GUI with JavaPackager Maven plugin
         run: mvn javapackager:package@bundling-Drifty-GUI-for-mac
-      - name: Delete unnecessary build files
-        run: |
-          rmdir target/classes
-          rmdir target/maven-archiver
-          rmdir target/maven-status
-          rmdir target/launch4j
       - name: Push generated artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -102,8 +91,6 @@ jobs:
        run: mvn javapackager:package@bundling-Drifty-CLI-for-linux
      - name: Package Drifty GUI with JavaPackager Maven plugin
        run: mvn javapackager:package@bundling-Drifty-GUI-for-linux
-     - name: Delete unnecessary build files
-       run: rm -r target/classes target/maven-archiver target/maven-status target/launch4j
      - name: Push generated artifacts
        uses: actions/upload-artifact@v3
        with:
