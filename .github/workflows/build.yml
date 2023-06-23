@@ -22,6 +22,11 @@ on:
       - "*.md"
       - "*.txt"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   package-Drifty-for-Windows:
     runs-on: "windows-latest"
