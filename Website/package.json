@@ -9,22 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/font": "13.1.6",
-    "eslint": "8.34.0",
-    "eslint-config-next": "13.1.6",
-    "marked": "^4.2.12",
-    "next": "13.1.6",
+    "@next/font": "13.4.7",
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
+    "marked": "^5.1.0",
+    "next": "13.4.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "remark": "^14.0.2",
+    "remark": "^14.0.3",
     "remark-html": "^15.0.2",
-    "sharp": "^0.32.0"
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
-    "@types/node": "18.15.10",
-    "@types/react": "18.0.29",
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.7"
+    "@types/node": "20.3.1",
+    "@types/react": "18.2.13",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
   }
 }
