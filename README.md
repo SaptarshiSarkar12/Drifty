@@ -90,7 +90,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 ## Contributing to the project
 - Please feel free to contribute to this open-source project. 
-- See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [Projects](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
+- See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [**`Projects`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
 - **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
 - Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
 - Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. 
