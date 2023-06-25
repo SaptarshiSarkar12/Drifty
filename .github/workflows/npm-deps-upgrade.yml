@@ -1,7 +1,7 @@
 name: Upgrade npm packages
 defaults:
-    run:
-        working-directory: "./Website"
+   run:
+      working-directory: "./Website"
 on:
    workflow_dispatch:
    
@@ -33,5 +33,5 @@ jobs:
               git config user.name "dependabot"
               git config user.email "27856297+dependabot-preview[bot]@users.noreply.github.com"
               git add .
-              git commit -m "build(deps): Upgraded npm packages"
+              git diff-index --quiet HEAD || git commit -m "build(deps): Upgraded npm packages"
               git push
