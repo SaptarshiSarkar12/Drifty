@@ -9,8 +9,7 @@
 
 [![Build and Package Drifty](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg)](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml) <a><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
 </br>
-<a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty.jar" alt="No. Of Downloads of Drifty for MacOS and Linux"></a>
-<a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/latest/Drifty_CLI.exe" alt="No. Of Downloads of Drifty for windows"></a>
+<a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>
 </br>
 <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
 <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow"></a> 
