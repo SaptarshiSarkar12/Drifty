@@ -143,17 +143,17 @@ public class Drifty_CLI {
                 }
                 if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
                     System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.nextLine();
+                    fileName = SC.next();
                 } else {
                     if (isYoutubeURL) {
-                        System.out.print("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
+                        System.out.print(RENAME_VIDEO_TITLE);
                     } else {
                         System.out.print(RENAME_FILE);
                     }
                     SC.nextLine(); // To remove 'whitespace' from input buffer.
                     String choiceString = SC.nextLine();
                     boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);
-                    if (!choice) {
+                    if (choice) {
                         System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                         fileName = SC.nextLine();
                     }
