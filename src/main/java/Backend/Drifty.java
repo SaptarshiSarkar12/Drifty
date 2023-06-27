@@ -61,21 +61,20 @@ public class Drifty {
      */
     public void start() {
         Utility utility = new Utility(messageBroker);
-        boolean errorFlag = false;
         messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
         if (url.contains(" ")) {
             messageBroker.sendMessage("Link should not contain whitespace characters!", DriftyConstants.LOGGER_ERROR, "link");
-            errorFlag = true;
+            return;
         } else if (url.length() == 0) {
             messageBroker.sendMessage("Link cannot be empty!", DriftyConstants.LOGGER_ERROR, "link");
-            errorFlag = true;
+            return;
         } else {
             try {
                 Utility.isURLValid(url);
                 messageBroker.sendMessage("Link is valid!", DriftyConstants.LOGGER_INFO, "link");
             } catch (Exception e) {
                 messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "link");
-                errorFlag = true;
+                return;
             }
         }
 
@@ -90,7 +89,7 @@ public class Drifty {
                     new CheckDirectory(downloadsFolder);
                 } catch (IOException e) {
                     messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "directory");
-                    errorFlag = true;
+                    return;
                 }
             }
         }
@@ -99,13 +98,11 @@ public class Drifty {
             fileName = utility.findFilenameInLink(url);
             if (fileName == null || fileName.length() == 0) {
                 messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "Filename");
-                errorFlag = true;
+                return;
             }
         }
 
-        if (!errorFlag) {
-            new FileDownloader(url, fileName, downloadsFolder).run();
-        }
+        new FileDownloader(url, fileName, downloadsFolder).run();
     }
 
     /**

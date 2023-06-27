@@ -19,7 +19,7 @@ public final class DriftyConstants {
     public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
-    public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Automatic file name detection failed!";
+    public static final String AUTO_FILE_NAME_DETECTION_FAILED = "An error occurred! Either the file name or the extension was missing in the url. The url must be of the form of https://www.example.com/fileName.extension";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
@@ -32,12 +32,13 @@ public final class DriftyConstants {
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
-    public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Enter the filename (with file extension) : ";
-    public static final String ENTER_FILE_LINK = "Enter the link to the file : ";
+    public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (fileName.extension) you would like to download : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/fileName.extension) : ";
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
     public static final String USER_HOME_PROPERTY = "user.home";
     public static final String RENAME_FILE = "Would you like to rename this file? (Enter Y for yes and N for no) : ";
+    public static final String RENAME_VIDEO_TITLE = "Would you like to rename the video title? (Enter Y for yes and N for no) : ";
     public static final String QUIT_OR_CONTINUE = "Press Q to Quit Or Press any Key to Continue";
     public static final String FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER = "Failed to retrieve default download folder!";
     public static final String FAILED_TO_CONNECT_TO_URL = "Failed to connect to ";
@@ -55,11 +56,13 @@ public final class DriftyConstants {
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
 
+    public static final String FILENOTFOUND = "An error occurred! Requested file does not exist, please check the url.";
     public static final String FAILED_TO_DOWNLOAD = "Failed to download ";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
 
     public static final String FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO = "Failed to download YouTube video!";
+    public static final String PERMISSIONDENIED_YOUTUBE_VIDEO = "You do not have access to download the video, permission is denied.";
     public static final String FAILED_TO_INITIALISE_YOUTUBE_VIDEO = "Failed to initialise YouTube video downloader!";
     public static final String THREAD_ERROR_ENCOUNTERED = "Error: thread encountered an error";
 
