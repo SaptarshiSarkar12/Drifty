@@ -1,0 +1,19 @@
+Website:
+- Website/**
+
+App:
+- src/**
+
+"Workflows Updated":
+- .github/workflows/**
+
+"Dependencies Updated":
+- Website/package.json
+- Website/package-lock.json
+- pom.xml
+
+documentation:
+- *.md
+
+"Assets Updated":
+- assets/**
