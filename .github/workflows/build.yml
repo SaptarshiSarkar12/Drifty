@@ -53,7 +53,6 @@ jobs:
         path: target
         
   package-Drifty-for-MacOS:
-    needs: package-Drifty-for-Windows
     runs-on: "macos-latest"
     steps:
       - uses: actions/checkout@v3
@@ -78,7 +77,6 @@ jobs:
            path: target
             
   package-Drifty-for-linux:
-   needs: [package-Drifty-for-Windows, package-Drifty-for-MacOS]
    runs-on: "ubuntu-latest"
    steps:
      - uses: actions/checkout@v3
