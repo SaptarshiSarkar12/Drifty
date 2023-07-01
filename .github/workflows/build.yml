@@ -59,6 +59,7 @@ jobs:
   release-Drifty:
     if: github.event_name == 'workflow_call'
     runs-on: ubuntu-latest
+    needs: package-Drifty
     steps:
     - uses: actions/checkout@v3
     - name: Get Drifty version from .version file
