@@ -73,7 +73,7 @@
                         <txtFileVersion>${project.version}</txtFileVersion>
                         <productVersion>${project.version}.0</productVersion>
                         <txtProductVersion>${project.version}</txtProductVersion>
-                        <fileDescription>${description}</fileDescription>
+                        <fileDescription>Drifty is an open-source interactive file downloader system</fileDescription>
                         <copyright>Drifty</copyright>
                         <productName>${project.name}</productName>
                         <internalName>${project.name}</internalName>
@@ -100,7 +100,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>bundling-Drifty-GUI-for-windows</id>
+                        <id>bundling-Drifty-GUI-for-windows-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -118,7 +118,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-Drifty-GUI-for-linux</id>
+                        <id>bundling-Drifty-GUI-for-ubuntu-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -136,7 +136,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-Drifty-GUI-for-mac</id>
+                        <id>bundling-Drifty-GUI-for-macos-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -154,7 +154,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-Drifty-CLI-for-windows</id>
+                        <id>bundling-Drifty-CLI-for-windows-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -171,7 +171,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-Drifty-CLI-for-linux</id>
+                        <id>bundling-Drifty-CLI-for-ubuntu-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
@@ -188,7 +188,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>bundling-Drifty-CLI-for-mac</id>
+                        <id>bundling-Drifty-CLI-for-macos-latest</id>
                         <phase>package</phase>
                         <goals>
                             <goal>package</goal>
