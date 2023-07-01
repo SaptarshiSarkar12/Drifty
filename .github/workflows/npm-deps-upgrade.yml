@@ -31,7 +31,7 @@ jobs:
         - name: Commit and push changes to the repository
           run: |
               git config user.name "dependabot"
-              git config user.email "27856297+dependabot-preview[bot]@users.noreply.github.com"
+              git config user.email "49699333+dependabot[bot]@users.noreply.github.com"
               git add .
               git diff-index --quiet HEAD || git commit -m "build(deps): Upgraded npm packages"
               git push
