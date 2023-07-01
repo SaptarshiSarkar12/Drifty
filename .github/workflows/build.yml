@@ -54,5 +54,3 @@ jobs:
       with:
         name: ${{ matrix.os }}-Build-Files
         path: target
-    - name: Submit Dependency Snapshot
-      uses: advanced-security/maven-dependency-submission-action@v3    
