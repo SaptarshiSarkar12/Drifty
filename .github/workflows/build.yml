@@ -28,8 +28,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  package-Drifty-for-Windows:
-    runs-on: "windows-latest"
+  package-Drifty:
+    strategy:
+      matrix:
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -40,62 +43,14 @@ jobs:
         java-version: '20.0.1'
         distribution: 'oracle'
         cache: maven
-    - name: Build with Maven
+    - name: Build with Maven for ${{ matrix.os }}
       run: mvn compile
-    - name: Package Drifty CLI with JavaPackager Maven plugin
-      run: mvn javapackager:package@bundling-Drifty-CLI-for-windows
-    - name: Package Drifty GUI with JavaPackager Maven plugin
-      run: mvn javapackager:package@bundling-Drifty-GUI-for-windows
-    - name: Push generated artifacts
+    - name: Package Drifty CLI for ${{ matrix.os }} with JavaPackager Maven plugin
+      run: mvn javapackager:package@bundling-Drifty-CLI-for-${{ matrix.os }}
+    - name: Package Drifty GUI for ${{ matrix.os }} with JavaPackager Maven plugin
+      run: mvn javapackager:package@bundling-Drifty-GUI-for-${{ matrix.os }}
+    - name: Push generated artifacts for ${{ matrix.os }}
       uses: actions/upload-artifact@v3
       with:
-        name: Windows-Build-Files
+        name: ${{ matrix.os }}-Build-Files
         path: target
-        
-  package-Drifty-for-MacOS:
-    runs-on: "macos-latest"
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up JDK 20
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20.0.1'
-          distribution: 'oracle'
-          cache: maven
-      - name: Build with Maven
-        run: mvn compile
-      - name: Package Drifty CLI with JavaPackager Maven plugin
-        run: mvn javapackager:package@bundling-Drifty-CLI-for-mac
-      - name: Package Drifty GUI with JavaPackager Maven plugin
-        run: mvn javapackager:package@bundling-Drifty-GUI-for-mac
-      - name: Push generated artifacts
-        uses: actions/upload-artifact@v3
-        with:
-           name: MacOS-Build-Files
-           path: target
-            
-  package-Drifty-for-linux:
-   runs-on: "ubuntu-latest"
-   steps:
-     - uses: actions/checkout@v3
-       with:
-        ref: ${{ github.event.pull_request.head.sha }}
-     - name: Set up JDK 20
-       uses: actions/setup-java@v3
-       with:
-          java-version: '20.0.1'
-          distribution: 'oracle'
-          cache: maven
-     - name: Build with Maven
-       run: mvn compile
-     - name: Package Drifty CLI with JavaPackager Maven plugin
-       run: mvn javapackager:package@bundling-Drifty-CLI-for-linux
-     - name: Package Drifty GUI with JavaPackager Maven plugin
-       run: mvn javapackager:package@bundling-Drifty-GUI-for-linux
-     - name: Push generated artifacts
-       uses: actions/upload-artifact@v3
-       with:
-          name: Linux-Build-Files
-          path: target
