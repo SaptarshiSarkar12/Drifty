@@ -22,6 +22,7 @@ on:
       - "*.md"
       - "*.txt"
   workflow_dispatch:
+  workflow_call:
 
 concurrency:
   group: ${{ github.ref }}
@@ -54,3 +55,18 @@ jobs:
       with:
         name: ${{ matrix.os }}-Build-Files
         path: target
+        
+  release-Drifty:
+    if: github.event_name == 'workflow_call'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Drifty version from .version file
+      run: echo "VERSION=$(cat .version)" >> $GITHUB_ENV
+    - name: Set Drifty version in pom.xml
+      run: mvn versions:set -DnewVersion=$VERSION
+    - name: Download Build artifacts
+      uses: actions/download-artifact@v3
+    - name: Create Release ($VERSION) with automated release notes
+      run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-Name' # Assets path to be added later
+      
