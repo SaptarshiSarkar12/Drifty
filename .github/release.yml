@@ -1,0 +1,33 @@
+changelog:
+  categories:
+    - title: New Features in Application 🎉
+      labels:
+        - enhancement
+      exclude:
+        labels:
+          - Website
+          - documentation
+    - title: Bug 🪲 Fixes in Application
+      labels:
+        - bug
+      exclude:
+        labels:
+          - Website
+          - documentation
+    - title: New Features in Website 🎉
+      labels:
+        - enhancement
+      exclude:
+        labels:
+          - App
+          - documentation
+    - title: Bug 🪲 Fixes in Website
+      labels:
+        - bug
+      exclude:
+        labels:
+          - App
+          - documentation
+    - title: Documentation Changes
+      labels:
+        - documentation
