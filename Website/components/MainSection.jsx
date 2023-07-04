@@ -4,8 +4,8 @@ export default function MainSection() {
     return (
         <div className="flex flex-row-1 bg-top space-evenly lg:justify-start xs:justify-start">
             <div className="lg:flex lg:w-1/2">
-                <div className=" lg:flex lg:flex-col  text-gray-800 py-20 px-6 md:text" >
-                    <h1 className="text-8xl lg:ml-20 font-extrabold text-blue-700 mt-0 mb-6">Drifty</h1>
+                <div className=" lg:flex lg:flex-col  text-white py-20 px-6 md:text" >
+                    <h1 className="text-8xl lg:ml-20 font-extrabold text-white  mt-0 mb-6">Drifty</h1>
                     <p className="text-2xl  lg:ml-20 font-sans mb-8 ">Drifty is an open-source interactive File Downloader system built
                         with Java. It takes the link to the file, the directory where it
                         needs to be saved and the filename of the downloaded file as input
