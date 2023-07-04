@@ -13,7 +13,7 @@ App:
 - pom.xml
 
 documentation:
-- *.md
+- '**/*.md'
 
 "Assets Updated":
 - assets/**
