@@ -162,7 +162,7 @@ public class Drifty_CLI {
                 backend.start();
             }
             System.out.println(QUIT_OR_CONTINUE);
-            String choice = SC.nextLine().toLowerCase();
+            String choice = SC.nextLine().trim().toLowerCase();
             if (choice.equals("q")) {
                 logger.log(LOGGER_INFO, CLI_APPLICATION_TERMINATED);
                 break;
