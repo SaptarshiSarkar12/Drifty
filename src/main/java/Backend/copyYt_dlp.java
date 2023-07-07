@@ -24,17 +24,7 @@ public class copyYt_dlp {
      * @throws IOException when the file has not been successfully copied.
      */
     public void copyToTemp() throws IOException{
-        String yt_dlpFileName;
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("nux") || osName.contains("nix")){
-            yt_dlpFileName = "yt-dlp";
-        } else if (osName.contains("win")) {
-            yt_dlpFileName = "yt-dlp.exe";
-        } else if (osName.contains("mac")){
-            yt_dlpFileName = "yt-dlp_macos";
-        } else {
-            yt_dlpFileName = "yt-dlp";
-        }
+        String yt_dlpFileName = FileDownloader.getYt_dlpProgramName();
         try {
             Files.copy(Path.of("./src/main/resources/" + yt_dlpFileName), Path.of(getTempDir() + yt_dlpFileName));
         } catch (FileAlreadyExistsException e){

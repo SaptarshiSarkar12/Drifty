@@ -60,7 +60,7 @@ public class Drifty_CLI {
         logger.log(LOGGER_INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker("CLI", System.out);
         utility = new Utility(messageBroker);
-        initialPrintBanner();
+        printBanner();
         String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
@@ -109,9 +109,9 @@ public class Drifty_CLI {
         }
         while (true) {
             while (true) {
-                System.out.println("Select download options :");
+                System.out.println("Select download option :");
                 System.out.println("\t1. Batch Download (Download Multiple files)");
-                System.out.println("\t2. Individual Download (Download One file at a time)");
+                System.out.println("\t2. Single File Download (Download One file at a time)");
                 int choice = SC.nextInt();
                 if (choice == 1) {
                     batchDownloading = true;
@@ -151,7 +151,7 @@ public class Drifty_CLI {
                         System.out.print(RENAME_FILE);
                     }
                     SC.nextLine(); // To remove 'whitespace' from input buffer.
-                    String choiceString = SC.nextLine();
+                    String choiceString = SC.nextLine().toLowerCase();
                     boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);
                     if (choice) {
                         System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
