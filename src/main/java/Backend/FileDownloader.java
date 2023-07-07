@@ -4,13 +4,12 @@ import Utils.MessageBroker;
 
 import java.awt.*;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.isYoutubeLink;
@@ -53,6 +52,16 @@ public class FileDownloader implements Runnable {
      */
     private static URL url;
     /**
+     * The yt-dlp program name specific to the Operating System
+     * <ul>
+     *     <li><b>yt-dlp</b> for <b><i>Linux or Unix Systems</i></b></li>
+     *     <li><b>yt-dlp.exe</b> for <b><i>Windows</i></b></li>
+     *     <li><b>yt-dlp_macos</b> for <b><i>MacOS</i></b></li>
+     *     <li><b>yt-dlp</b> for <b><i>Other Operating Systems</i></b></li>
+     * </ul>
+     */
+    private static String yt_dlpProgramName;
+    /**
      * This is a boolean value to determine if Multithreading is required or not.
      */
     private static boolean supportsMultithreading;
@@ -68,6 +77,7 @@ public class FileDownloader implements Runnable {
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
+        setYt_dlpProgramName(getYt_dlpProgramName());
     }
 
     /**
@@ -86,7 +96,6 @@ public class FileDownloader implements Runnable {
             ReadableByteChannel readableByteChannel;
             try {
                 if (FileDownloader.supportsMultithreading) {
-
                     List<FileOutputStream> fileOutputStreams = new ArrayList<>(FileDownloader.numberOfThreads);
                     List<Long> partSizes = new ArrayList<>(FileDownloader.numberOfThreads);
                     List<File> tempFiles = new ArrayList<>(FileDownloader.numberOfThreads);
@@ -96,7 +105,7 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fileOut;
                     File file;
                     for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
-                        file = File.createTempFile(fileName.hashCode() + "" + i, ".tmp");
+                        file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
@@ -144,7 +153,7 @@ public class FileDownloader implements Runnable {
             } catch (SecurityException e) {
                 messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", LOGGER_ERROR, "download");
             } catch (FileNotFoundException fileNotFoundException) {
-                messageBroker.sendMessage(FILENOTFOUND, LOGGER_ERROR, "download");
+                messageBroker.sendMessage(FILE_NOT_FOUND, LOGGER_ERROR, "download");
             } catch (IOException e) {
                 messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, LOGGER_ERROR, "download");
             }
@@ -161,11 +170,7 @@ public class FileDownloader implements Runnable {
      */
     public static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
         String outputFileName;
-        if (fileName != null){
-            outputFileName = fileName;
-        } else {
-            outputFileName = "%(title)s.%(ext)s";
-        }
+        outputFileName = Objects.requireNonNullElse(fileName, "%(title)s.%(ext)s");
         String fileDownloadMessagePart;
         if (outputFileName.equals("%(title)s.%(ext)s")){
             fileDownloadMessagePart = "the YouTube Video";
@@ -174,17 +179,6 @@ public class FileDownloader implements Runnable {
         }
         ProcessBuilder processBuilder;
         messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
-        String yt_dlpProgramName;
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("nux") || osName.contains("nix")){
-            yt_dlpProgramName = "yt-dlp";
-        } else if (osName.contains("win")) {
-            yt_dlpProgramName = "yt-dlp.exe";
-        } else if (osName.contains("mac")){
-            yt_dlpProgramName = "yt-dlp_macos";
-        } else {
-            yt_dlpProgramName = "yt-dlp";
-        }
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
@@ -208,13 +202,13 @@ public class FileDownloader implements Runnable {
     }
 
     /**
-     * This method check if all the downloader threads are completed correctly and merges the downloaded parts.
+     * This method checks if all the downloader threads are completed correctly and merges the downloaded parts.
      * @param fileOutputStreams FileOutputStream of all the parts
      * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
      * @param tempFiles         Temporary files containing the parts
-     * @return true if merge is successful and false if the file is still being downloaded
-     * @throws IOException if the threads exit without downloading the whole part or if there are any IO error thrown by  getChannel().size() method of FileOutputStream
+     * @return <b>true</b> if <i>merge is successful</i> and <b>false</b> if the file is <i>still being downloaded</i>
+     * @throws IOException if the threads exit without downloading the whole part or if there are any IO error thrown by <b>getChannel().size() method of FileOutputStream</b>
      */
     public static boolean merge(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
         // check if all file are downloaded
@@ -229,7 +223,9 @@ public class FileDownloader implements Runnable {
 
             if (fileOutputStream.getChannel().size() < partSize) {
                 if (!downloaderThread.isAlive()) throw new IOException(THREAD_ERROR_ENCOUNTERED);
-            } else if (!downloaderThread.isAlive()) completed++;
+            } else if (!downloaderThread.isAlive()) {
+                completed++;
+            }
         }
 
         // check if it is merge-able
@@ -247,6 +243,39 @@ public class FileDownloader implements Runnable {
             return true;
         }
         return false;
+    }
+
+    /**
+     * This method finds the yt-dlp program name and returns it as String expression
+     * @return The yt-dlp program name specific to the Operating System.
+     * <ul>
+     *     <li><b>yt-dlp</b> for <b><i>Linux or Unix Systems</i></b></li>
+     *     <li><b>yt-dlp.exe</b> for <b><i>Windows</i></b></li>
+     *     <li><b>yt-dlp_macos</b> for <b><i>MacOS</i></b></li>
+     *     <li><b>yt-dlp</b> for <b><i>Other Operating Systems</i></b></li>
+     * </ul>
+     */
+    protected static String getYt_dlpProgramName() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        String yt_dlpProgramName;
+        if (osName.contains("nux") || osName.contains("nix")){
+            yt_dlpProgramName = "yt-dlp";
+        } else if (osName.contains("win")) {
+            yt_dlpProgramName = "yt-dlp.exe";
+        } else if (osName.contains("mac")){
+            yt_dlpProgramName = "yt-dlp_macos";
+        } else {
+            yt_dlpProgramName = "yt-dlp";
+        }
+        return yt_dlpProgramName;
+    }
+
+    /**
+     * This method is used to set yt-dlp Program Name
+     * @param yt_dlpProgramName The yt-dlp program name specific to the OS
+     */
+    private static void setYt_dlpProgramName(String yt_dlpProgramName) {
+        FileDownloader.yt_dlpProgramName = yt_dlpProgramName;
     }
 
     /**
@@ -273,7 +302,13 @@ public class FileDownloader implements Runnable {
             // If link is of an YouTube video, then the following block of code will execute.
             if (isYoutubeLink(link)) {
                 try {
-                    downloadFromYouTube("./src/main/resources/");
+                    String directoryOfYt_dlp = "./src/main/resources/";
+                    messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");
+                    ProcessBuilder yt_dlp_update = new ProcessBuilder(directoryOfYt_dlp + yt_dlpProgramName, "-U");
+                    yt_dlp_update.inheritIO();
+                    Process yt_dlp = yt_dlp_update.start();
+                    yt_dlp.waitFor();
+                    downloadFromYouTube(directoryOfYt_dlp);
                 } catch (IOException e) {
                     try {
                         messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
@@ -281,28 +316,36 @@ public class FileDownloader implements Runnable {
                         cy.copyToTemp();
                         try {
                             String tempDir = copyYt_dlp.getTempDir();
+                            messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");
+                            ProcessBuilder yt_dlp_update = new ProcessBuilder(tempDir + yt_dlpProgramName, "-U");
+                            yt_dlp_update.inheritIO();
+                            Process yt_dlp = yt_dlp_update.start();
+                            yt_dlp.waitFor();
                             downloadFromYouTube(tempDir);
                         } catch (InterruptedException ie) {
                             messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
-                        } catch (IOException io1) {
+                        } catch (Exception e1) {
                             messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
-                            String message = e.getMessage();
+                            String message = e1.getMessage();
                             String[] messageArray = message.split(",");
-                            if(messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) {
-                                messageBroker.sendMessage(PERMISSIONDENIED_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
-                            }
-                            else {
-                                System.out.println(e.getMessage());
+                            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                                messageBroker.sendMessage(DRIFTY_COMPONENT_NOT_EXECUTABLE, LOGGER_ERROR, "download");
+                            } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
+                                messageBroker.sendMessage(PERMISSION_DENIED_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
+                            } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
+                                messageBroker.sendMessage(YOUTUBE_VIDEO_UNAVAILABLE, LOGGER_ERROR, "download");
+                            } else {
+                                messageBroker.sendMessage(e.getMessage(), LOGGER_ERROR, "download");
                             }
                         }
                     } catch (IOException io) {
-                        messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
+                        messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO_DOWNLOADER, LOGGER_ERROR, "download");
                     }
                 } catch (InterruptedException e) {
                     messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                 }
             } else {
-                url = new URL(link);
+                url = new URI(link).toURL();
                 URLConnection openConnection = url.openConnection();
                 openConnection.connect();
                 totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
@@ -317,7 +360,7 @@ public class FileDownloader implements Runnable {
                 messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
                 downloadFile();
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             messageBroker.sendMessage(INVALID_LINK, LOGGER_ERROR, "link");
         } catch (IOException e) {
             messageBroker.sendMessage(FAILED_TO_CONNECT_TO_URL + url + " !", LOGGER_ERROR, "download");

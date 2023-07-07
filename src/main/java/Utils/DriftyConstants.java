@@ -33,7 +33,7 @@ public final class DriftyConstants {
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
     public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (fileName.extension) you would like to download : ";
-    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/fileName.extension) : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/fileName.extension) or a YouTube Video link : ";
     public static final String OS_NAME = "os.name";
     public static final String WINDOWS_OS_NAME = "Windows";
     public static final String USER_HOME_PROPERTY = "user.home";
@@ -56,14 +56,16 @@ public final class DriftyConstants {
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
 
-    public static final String FILENOTFOUND = "An error occurred! Requested file does not exist, please check the url.";
+    public static final String FILE_NOT_FOUND = "An error occurred! Requested file does not exist, please check the url.";
     public static final String FAILED_TO_DOWNLOAD = "Failed to download ";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
 
     public static final String FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO = "Failed to download YouTube video!";
-    public static final String PERMISSIONDENIED_YOUTUBE_VIDEO = "You do not have access to download the video, permission is denied.";
-    public static final String FAILED_TO_INITIALISE_YOUTUBE_VIDEO = "Failed to initialise YouTube video downloader!";
+    public static final String YOUTUBE_VIDEO_UNAVAILABLE = "The requested YouTube video is unavailable, it has been deleted from YouTube.";
+    public static final String PERMISSION_DENIED_YOUTUBE_VIDEO = "You do not have access to download the video, permission is denied.";
+    public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
+    public static final String FAILED_TO_INITIALISE_YOUTUBE_VIDEO_DOWNLOADER = "Failed to initialise YouTube video downloader!";
     public static final String THREAD_ERROR_ENCOUNTERED = "Error: thread encountered an error";
 
     public static final String GETTING_READY_TO_DOWNLOAD_FILE = "Getting ready to download the file...";
