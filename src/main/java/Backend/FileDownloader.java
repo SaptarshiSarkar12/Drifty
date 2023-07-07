@@ -257,6 +257,7 @@ public class FileDownloader implements Runnable {
      */
     protected static String getYt_dlpProgramName() {
         String osName = System.getProperty("os.name").toLowerCase();
+        messageBroker.sendMessage("User OS is : " + osName, LOGGER_INFO, "only log");
         String yt_dlpProgramName;
         if (osName.contains("nux") || osName.contains("nix")){
             yt_dlpProgramName = "yt-dlp";
@@ -267,6 +268,7 @@ public class FileDownloader implements Runnable {
         } else {
             yt_dlpProgramName = "yt-dlp";
         }
+        messageBroker.sendMessage("yt-dlp program name detected is : " + yt_dlpProgramName, LOGGER_INFO, "only log");
         return yt_dlpProgramName;
     }
 
