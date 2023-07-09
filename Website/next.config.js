@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    assetPrefix: '/Drifty/',
     output: 'export',
     images: {
         remotePatterns: [
