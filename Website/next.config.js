@@ -12,7 +12,8 @@ const nextConfig = {
                 hostname: 'camo.githubusercontent.com',
             }
         ],
-        dangerouslyAllowSVG: true
+        dangerouslyAllowSVG: true,
+        unoptimized: true
     },
 }
 
