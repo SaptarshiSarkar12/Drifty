@@ -2,6 +2,18 @@ import Releases from "../Releases";
 import Header from "../Header";
 import Footer from "../Footer";
 
+export const metadata = {
+    title: "Download",
+    description: 'Download Drifty',
+    themeColor: [      
+      { media: '(prefers-color-scheme: dark)', color: 'Medium Blue' },
+    ],
+    viewport: {
+      width: 'device-width',
+      initialScale: 1,
+    },
+}
+
 export default async function download() {
     const data = await getData()
     return(

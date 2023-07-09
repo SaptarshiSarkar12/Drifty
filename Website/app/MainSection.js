@@ -18,12 +18,12 @@ export default function MainSection() {
                 </div>
             </div>
             <div className="xs:hidden flex-col-1 lg:block text-center text-gray-800 py-20 px-6 img-layer w-1/2" id="ImgLayer">
-                <Image width={500} height={0} className="absolute animate-img" src="/Layers/2.webp" alt="..." />
-                <Image width={500} height={0} className="absolute animate-img hover:bg-black" src="/Layers/3.webp" alt="..." />
-                <Image width={500} height={0} className="absolute animate-img" src="/Layers/4.webp" alt="..." />
-                <Image width={500} height={0} className="absolute animate-img" src="/Layers/5.webp" alt="..." />
-                <Image width={500} height={0} className="absolute animate-img" src="/Layers/6.webp" alt="..." />
-                <Image width={500} height={0} className="absolute animate-img" src="/Layers/7.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/2.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img hover:bg-black" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/3.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/4.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/5.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/6.webp" alt="..." />
+                <Image width={500} height={0} className="absolute animate-img" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/7.webp" alt="..." />
             </div>
         </div>
 

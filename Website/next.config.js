@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    assetPrefix: '/Drifty',
-    basePath: '/Drifty',    
     output: 'export',
     images: {
+        minimumCacheTTL: 60 * 60 * 24,
         remotePatterns: [
             {
                 protocol: 'https',
@@ -12,6 +11,10 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'camo.githubusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'cdn.jsdelivr.net',
             }
         ],
         dangerouslyAllowSVG: true,
