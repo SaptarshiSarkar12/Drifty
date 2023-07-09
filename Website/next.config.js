@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    basePath: "/Drifty",
     output: 'export',
     images: {
         minimumCacheTTL: 60 * 60 * 24,
