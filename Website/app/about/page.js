@@ -2,6 +2,18 @@ import Footer from "../Footer"
 import Header from "../Header"
 import Image from "next/image"
 
+export const metadata = {
+    title: "About",
+    description: 'About Saptarshi Sarkar, the developer of Drifty',
+    themeColor: [      
+      { media: '(prefers-color-scheme: dark)', color: 'Medium Blue' },
+    ],
+    viewport: {
+      width: 'device-width',
+      initialScale: 1,
+    },
+}
+
 export default function about(){
     return(
         <div>
