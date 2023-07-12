@@ -368,4 +368,49 @@ public class FileDownloader implements Runnable {
             messageBroker.sendMessage(FAILED_TO_CONNECT_TO_URL + url + " !", LOGGER_ERROR, "download");
         }
     }
+
+    /**
+     * This method downloads a video or photo from Instagram.
+     *
+     * @param link The link to the Instagram video or photo.
+     * @param dir The directory to save the file to.
+     * @throws InterruptedException If the download is interrupted.
+     * @throws IOException If there is an error reading or writing the file.
+     */
+    public static void downloadFromInstagram(String link, String dir) throws InterruptedException, IOException {
+        String outputFileName;
+        outputFileName = Objects.requireNonNullElse(fileName, "%(title)s.%(ext)s");
+        String fileDownloadMessagePart;
+        if (outputFileName.equals("%(title)s.%(ext)s")) {
+            fileDownloadMessagePart = "the Instagram Video";
+        } else {
+            fileDownloadMessagePart = outputFileName;
+        }
+
+        ProcessBuilder processBuilder;
+
+        /*
+         * Create a new ProcessBuilder object.
+         *
+         * The command line arguments tell `yt-dlp` to download the video or photo in MP4 format and to save it to the specified directory.
+         */
+        messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g. java.awt.Dimension[width=1366,height=768]
+        int height = (int) screenSize.getHeight();  // E.g.: 768
+        int width = (int) screenSize.getWidth();    // E.g.: 1366
+        String query = link.substring(link.indexOf("https://instagram.com/p/") + 17);
+        query = query.substring(0, query.indexOf("/"));
+        if (dir.length() == 0 || (dir.equalsIgnoreCase("."))) {
+            processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "https://instagram.com/p/" + query + "/mp4", "-o",
+                    outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+        } else {
+            processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, "https://instagram.com/p/" + query + "/mp4",
+                    "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+        }
+
+        /*
+         * Start the download process.
+         */
+        processBuilder.start();
+    }
 }
