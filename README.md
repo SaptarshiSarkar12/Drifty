@@ -38,11 +38,11 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 ## Quickstart 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-    ![image](https://user-images.githubusercontent.com/105960032/194826380-64ba7add-b49a-4772-b8ad-6c8312693d66.png)
+    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/4036db4c-6ac9-4f09-8754-5037b68ff245)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-    ![image](https://user-images.githubusercontent.com/105960032/194829345-b814089b-8b55-421e-9df7-d837c8b13226.png)
+    ![Download button of Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/4e55ab0c-b723-4077-a0dd-bb6d62f29d1e)
 3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
-    ![image](https://user-images.githubusercontent.com/105960032/194130486-8fd2d44b-4086-460d-bb06-ecb6755864f7.png)
+    ![Download page of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/798f7737-ddcc-45b1-ad7c-a04cd61b1ecf)
 4. Go to your Downloads folder and run the file.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
