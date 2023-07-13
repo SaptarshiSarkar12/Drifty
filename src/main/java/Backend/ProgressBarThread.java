@@ -255,12 +255,12 @@ public class ProgressBarThread extends Thread {
     private void cleanup() {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
         } else {
-            messageBroker.sendMessage(DOWNLOAD_FAILED, LOGGER_ERROR, "download");
+            messageBroker.sendMessage("\n" + DOWNLOAD_FAILED, LOGGER_ERROR, "download");
         }
         Drifty_GUI.setIsFileBeingDownloaded(false);
     }
