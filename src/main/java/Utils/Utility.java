@@ -2,6 +2,7 @@ package Utils;
 
 import Backend.DefaultDownloadFolderLocationFinder;
 import Backend.Drifty;
+import CLI.Drifty_CLI;
 
 import java.net.*;
 import java.util.Scanner;
@@ -17,13 +18,24 @@ public final class Utility {
     public Utility(MessageBroker messageBroker) {
         this.messageBroker = messageBroker;
     }
+
     /**
      * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
-     * @param url link to the file to be downloaded.
+     * @param url link to the file to be downloaded
      * @return true if the url is of YouTube and false if it is not.
      */
     public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+        return url.matches(pattern);
+    }
+
+    /**
+     * This method checks whether the link provided is of Instagram or not and returns the resultant boolean value accordingly.
+     * @param url link to the file to be downloaded
+     * @return true if the url is of Instagram and false if it is not.
+     */
+    public static boolean isInstagramLink(String url) {
+        String pattern = "(https?:\\/\\/(?:www\\.)?instagr(am|.am)?(\\.com)?\\/p\\/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 

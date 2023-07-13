@@ -94,7 +94,7 @@ public class Drifty {
             }
         }
 
-        if (((fileName == null) || (fileName.length() == 0)) && (!Utility.isYoutubeLink(url))) {
+        if (((fileName == null) || (fileName.length() == 0)) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
             fileName = utility.findFilenameInLink(url);
             if (fileName == null || fileName.length() == 0) {
                 messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "Filename");

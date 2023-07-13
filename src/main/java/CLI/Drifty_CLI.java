@@ -36,6 +36,14 @@ public class Drifty_CLI {
      */
     protected static boolean isYoutubeURL;
     /**
+     * Boolean value which determines if the given link is an Instagram media URL or not
+     */
+    protected static boolean isInstagramLink;
+    /**
+     * Boolean value which determines if the given link is an Instagram image URL or not
+     */
+    protected static boolean isInstagramImage;
+    /**
      * Message broker instance which helps to send messages to the output stream
      */
     private static MessageBroker messageBroker;
@@ -85,8 +93,9 @@ public class Drifty_CLI {
             }
             if (!batchDownloading) {
                 isYoutubeURL = isYoutubeLink(link);
+                isInstagramLink = isInstagramLink(link);
                 fileName = (name == null) ? fileName : name;
-                if (!isYoutubeURL) {
+                if (!isYoutubeURL && !isInstagramLink) {
                     fileName = utility.findFilenameInLink(link);
                 }
                 takeFileNameInputIfNull();
@@ -138,31 +147,16 @@ public class Drifty_CLI {
                 System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
                 downloadsFolder = SC.next();
                 isYoutubeURL = isYoutubeLink(link);
-                if (!isYoutubeURL) {
+                isInstagramLink = isInstagramLink(link);
+                if (!isYoutubeURL && !isInstagramLink) {
                     fileName = utility.findFilenameInLink(link);
                 }
-                if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
-                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.next();
-                } else {
-                    if (isYoutubeURL) {
-                        System.out.print(RENAME_VIDEO_TITLE);
-                    } else {
-                        System.out.print(RENAME_FILE);
-                    }
-                    SC.nextLine(); // To remove 'whitespace' from input buffer.
-                    String choiceString = SC.nextLine().toLowerCase();
-                    boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);
-                    if (choice) {
-                        System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                        fileName = SC.nextLine();
-                    }
-                }
+                takeFileNameInputIfNull();
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
                 backend.start();
             }
             System.out.println(QUIT_OR_CONTINUE);
-            String choice = SC.nextLine().trim().toLowerCase();
+            String choice = SC.next().toLowerCase();
             if (choice.equals("q")) {
                 logger.log(LOGGER_INFO, CLI_APPLICATION_TERMINATED);
                 break;
@@ -242,22 +236,43 @@ public class Drifty_CLI {
      * Takes the filename as input from the user interactively if the system cannot find the filename i.e. if it is null
      */
     private static void takeFileNameInputIfNull() {
-        if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL)) {
+        if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             fileName = SC.nextLine();
         } else {
             if (isYoutubeURL) {
                 System.out.print("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
+                SC.nextLine(); // To remove 'whitespace' from input buffer.
+                String choiceString = SC.nextLine().toLowerCase();
+                boolean choice = utility.yesNoValidation(choiceString, "Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
+                if (!choice) {
+                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                    fileName = SC.nextLine();
+                }
+            } else if (isInstagramLink) {
+                System.out.print("Is the instagram link of a video? (Enter Y for video and N for image) : ");
+                SC.nextLine(); // To remove 'whitespace' from input buffer.
+                String choiceString = SC.nextLine().toLowerCase();
+                boolean choice = utility.yesNoValidation(choiceString, "Is the instagram link of a video? (Enter Y for video and N for image) : ");
+                if (!choice) {
+                    System.out.print("Please enter the filename for the Instagram image with the file extension (filename.extension [usually png]) : ");
+                    fileName = SC.nextLine();
+                    isInstagramImage = true;
+                } else {
+                    isInstagramImage = false;
+                }
             } else {
                 System.out.print(RENAME_FILE);
             }
-            SC.nextLine(); // To remove 'whitespace' from input buffer.
-            String choiceString = SC.nextLine();
-            boolean choice = utility.yesNoValidation(choiceString, RENAME_FILE);
-            if (!choice) {
-                System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                fileName = SC.nextLine();
-            }
         }
+    }
+
+    /**
+     * This method returns true if the given Instagram link is of an image
+     * @return True if the Instagram link is of an image else false (for video) [Image/Video is decided by user]
+     * @since v2.0.0
+     */
+    public static boolean getIsInstagramImage() {
+        return isInstagramImage;
     }
 }

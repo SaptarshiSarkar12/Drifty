@@ -62,7 +62,9 @@ public class MessageBroker {
      */
     public void sendMessage(String message, String messageType, String messageCategory){
         if (appType.equals("CLI")){
-            output.println(message);
+            if (!messageCategory.equalsIgnoreCase("only log")) {
+                output.println(message);
+            }
             logger.log(messageType, message);
         } else if (appType.equals("GUI")){
             Color color = Color.BLACK;
