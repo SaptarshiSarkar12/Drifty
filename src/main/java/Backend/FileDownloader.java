@@ -1,5 +1,6 @@
 package Backend;
 
+import CLI.Drifty_CLI;
 import Utils.MessageBroker;
 
 import java.awt.*;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static Utils.DriftyConstants.*;
+import static Utils.Utility.isInstagramLink;
 import static Utils.Utility.isYoutubeLink;
 
 /**
@@ -77,7 +79,9 @@ public class FileDownloader implements Runnable {
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
-        setYt_dlpProgramName(getYt_dlpProgramName());
+        if (isYoutubeLink(link) || !Drifty_CLI.getIsInstagramImage()) {
+            setYt_dlpProgramName(getYt_dlpProgramName());
+        }
     }
 
     /**
@@ -301,8 +305,12 @@ public class FileDownloader implements Runnable {
             dir = dir + System.getProperty("file.separator");
         }
         try {
-            // If link is of an YouTube video, then the following block of code will execute.
-            if (isYoutubeLink(link)) {
+            boolean isInstagramImage = false;
+            if (isInstagramLink(link)) {
+                isInstagramImage = Drifty_CLI.getIsInstagramImage();
+            }
+            // If link is of an YouTube or Instagram video, then the following block of code will execute.
+            if (isYoutubeLink(link) || !isInstagramImage) {
                 try {
                     String directoryOfYt_dlp = "./src/main/resources/";
                     messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");
@@ -310,7 +318,11 @@ public class FileDownloader implements Runnable {
                     yt_dlp_update.inheritIO();
                     Process yt_dlp = yt_dlp_update.start();
                     yt_dlp.waitFor();
-                    downloadFromYouTube(directoryOfYt_dlp);
+                    if (isYoutubeLink(link)) {
+                        downloadFromYouTube(directoryOfYt_dlp);
+                    } else if (!isInstagramImage) {
+                        downloadFromInstagram(directoryOfYt_dlp);
+                    }
                 } catch (IOException e) {
                     try {
                         messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
@@ -323,7 +335,11 @@ public class FileDownloader implements Runnable {
                             yt_dlp_update.inheritIO();
                             Process yt_dlp = yt_dlp_update.start();
                             yt_dlp.waitFor();
-                            downloadFromYouTube(tempDir);
+                            if (isYoutubeLink(link)) {
+                                downloadFromYouTube(tempDir);
+                            } else if (!isInstagramImage) {
+                                downloadFromInstagram(tempDir);
+                            }
                         } catch (InterruptedException ie) {
                             messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                         } catch (Exception e1) {
@@ -347,6 +363,13 @@ public class FileDownloader implements Runnable {
                     messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
                 }
             } else {
+                if (isInstagramImage){
+                    if (link.endsWith("/") || link.endsWith("\\")){
+                        link += "media";
+                    } else {
+                        link += "/media";
+                    }
+                }
                 url = new URI(link).toURL();
                 URLConnection openConnection = url.openConnection();
                 openConnection.connect();
@@ -370,14 +393,13 @@ public class FileDownloader implements Runnable {
     }
 
     /**
-     * This method downloads a video or photo from Instagram.
+     * This method downloads a video from Instagram.
      *
-     * @param link The link to the Instagram video or photo.
-     * @param dir The directory to save the file to.
+     * @param dirOfYt_dlp The directory to save the file to.
      * @throws InterruptedException If the download is interrupted.
      * @throws IOException If there is an error reading or writing the file.
      */
-    public static void downloadFromInstagram(String link, String dir) throws InterruptedException, IOException {
+    public static void downloadFromInstagram(String dirOfYt_dlp) throws InterruptedException, IOException {
         String outputFileName;
         outputFileName = Objects.requireNonNullElse(fileName, "%(title)s.%(ext)s");
         String fileDownloadMessagePart;
@@ -386,31 +408,27 @@ public class FileDownloader implements Runnable {
         } else {
             fileDownloadMessagePart = outputFileName;
         }
-
-        ProcessBuilder processBuilder;
-
-        /*
-         * Create a new ProcessBuilder object.
-         *
-         * The command line arguments tell `yt-dlp` to download the video or photo in MP4 format and to save it to the specified directory.
-         */
+        ProcessBuilder processBuilder; // Creates a new ProcessBuilder object
         messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g. java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight();  // E.g.: 768
         int width = (int) screenSize.getWidth();    // E.g.: 1366
-        String query = link.substring(link.indexOf("https://instagram.com/p/") + 17);
-        query = query.substring(0, query.indexOf("/"));
         if (dir.length() == 0 || (dir.equalsIgnoreCase("."))) {
-            processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "https://instagram.com/p/" + query + "/mp4", "-o",
-                    outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o",
+                    outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]"); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory
         } else {
-            processBuilder = new ProcessBuilder("yt-dlp", "--quiet", "--progress", "-P", dir, "https://instagram.com/p/" + query + "/mp4",
-                    "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
+            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link,
+                    "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]"); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         }
-
-        /*
-         * Start the download process.
-         */
-        processBuilder.start();
+        processBuilder.inheritIO();
+        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        Process yt_dlp = processBuilder.start(); // Starts the download process
+        yt_dlp.waitFor();
+        int exitValueOfYt_Dlp = yt_dlp.exitValue();
+        if (exitValueOfYt_Dlp == 0) {
+            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessagePart + " !", LOGGER_INFO, "download");
+        } else if (exitValueOfYt_Dlp == 1) {
+            messageBroker.sendMessage(FAILED_TO_DOWNLOAD + fileDownloadMessagePart + " !", LOGGER_ERROR, "download");
+        }
     }
 }
