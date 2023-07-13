@@ -68,7 +68,7 @@ jobs:
     - name: Download Build artifacts
       uses: actions/download-artifact@v3
     - name: List all present files
-      run: tree -a
+      run: ls
     # - name: Create Release ($VERSION) with automated release notes
       # run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-Name' # Assets path to be added later
       
