@@ -50,6 +50,8 @@
                 <artifactId>javapackager</artifactId>
                 <version>1.7.2</version>
                 <configuration>
+                    <displayName>Drifty</displayName>
+                    <description>Drifty is an open-source interactive file downloader system</description>
                     <bundleJre>true</bundleJre>
                     <generateInstaller>true</generateInstaller>
                     <licenseFile>LICENSE</licenseFile>
@@ -73,7 +75,7 @@
                         <txtFileVersion>${project.version}</txtFileVersion>
                         <productVersion>${project.version}.0</productVersion>
                         <txtProductVersion>${project.version}</txtProductVersion>
-                        <fileDescription>Drifty is an open-source interactive file downloader system</fileDescription>
+                        <fileDescription>Drifty windows executable</fileDescription>
                         <copyright>Drifty</copyright>
                         <productName>${project.name}</productName>
                         <internalName>${project.name}</internalName>
