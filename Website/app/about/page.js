@@ -36,9 +36,9 @@ export default function about(){
                 <div className="mt-5 mx-5 border-t-2 border-black">
                     <h1 className="text-center font-bold text-3xl py-5">My Stats</h1>
                     <div className="grid grid-cols-3  lg:-space-x-25 justify-items-center py-5 pb-20">
-                        <Image width={360} height={25} src="https://camo.githubusercontent.com/2f7acdab286378e9ff3e74df744514ea37a5bc76efac4f94b3a041d910de7fa6/68747470733a2f2f6769746875622d726561646d652d73746174732e76657263656c2e6170702f6170693f757365726e616d653d7361707461727368697361726b617231322673686f775f69636f6e733d74727565267468656d653d746f6b796f6e69676874" alt=""/>
-                        <Image width={360} height={25} src="https://camo.githubusercontent.com/d9e7d29cb70a8d3044f58042b4595764d4f4d00fb0a386700bd9d71c14baa5c9/68747470733a2f2f6769746875622d726561646d652d61637469766974792d67726170682e76657263656c2e6170702f67726170683f757365726e616d653d5361707461727368695361726b617231322662675f636f6c6f723d30663264336426636f6c6f723d316361646662266c696e653d31636164666226706f696e743d31636164666226617265613d7472756526686964655f626f726465723d74727565" alt="GitHub Contribution graph of Saptarshi Sarkar" />
-                        <Image width={360} height={25} src="https://camo.githubusercontent.com/d3db268ce53079d1d54d77e08e530839458b6d7600ee25c899f9037f617add1a/68747470733a2f2f6769746875622d726561646d652d73747265616b2d73746174732e6865726f6b756170702e636f6d2f3f757365723d7361707461727368697361726b61723132267468656d653d746f6b796f6e69676874" alt="" />                        
+                        <Image width={360} height={25} src="https://github-readme-stats.vercel.app/api?username=saptarshisarkar12&show_icons=true&theme=tokyonight&show=reviews" alt=""/>
+                        <Image width={360} height={25} src="https://github-readme-activity-graph.vercel.app/graph?username=SaptarshiSarkar12&bg_color=0f2d3d&color=1cadfb&line=1cadfb&point=1cadfb&area=true&hide_border=true" alt="GitHub Contribution graph of Saptarshi Sarkar" />
+                        <Image width={360} height={25} src="https://github-readme-streak-stats.herokuapp.com/?user=saptarshisarkar12&theme=tokyonight" alt="" />                        
                     </div>
                 </div>
             </div>
