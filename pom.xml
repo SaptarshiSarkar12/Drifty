@@ -50,6 +50,7 @@
                 <artifactId>javapackager</artifactId>
                 <version>1.7.2</version>
                 <configuration>
+                    <name>Drifty</name>
                     <displayName>Drifty</displayName>
                     <description>Drifty is an open-source interactive file downloader system</description>
                     <bundleJre>true</bundleJre>
@@ -57,6 +58,10 @@
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
+                    <organizationName>Drifty</organizationName>
+                    <organizationUrl>https://saptarshisarkar12.github.io/Drifty/</organizationUrl>
+                    <version>${project.version}</version>
+                    <additionalModules>jdk.crypto.cryptoki</additionalModules> <!-- To prevent SSL Handshake Error -->
                     <linuxConfig>
                         <generateAppImage>true</generateAppImage>
                         <generateDeb>true</generateDeb>
