@@ -1,8 +1,9 @@
-<h1 align=center><a href="https://github.com/SaptarshiSarkar12/Drifty">Drifty</a></h1>
-<p align="center">
-<img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/assets/windows/Drifty.ico" width="98" height="105">
-<img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty Banner.png" height="80">
-</p>
+<a href="https://saptarshisarkar12.github.io/Drifty/">
+    <p align="center">
+        <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/assets/windows/Drifty.ico" width="98" height="105">
+        <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty Banner.png" height="110">
+    </p>
+</a>
 <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
 </a> <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a> <a href="https://github.com/SaptarshiSarkar12/Drifty/deployments">
 </br>
