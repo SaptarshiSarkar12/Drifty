@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    basePath: "/Drifty",
-    assetprifex: "/Drifty/",
+    basePath: process.env.BASE_PATH,
     output: 'export',
     images: {
         minimumCacheTTL: 60 * 60 * 24,
