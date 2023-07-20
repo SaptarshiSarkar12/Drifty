@@ -1,20 +1,26 @@
 <a href="https://saptarshisarkar12.github.io/Drifty/">
     <p align="center">
-        <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/assets/windows/Drifty.ico" width="98" height="105">
-        <img src="https://github.com/SaptarshiSarkar12/Drifty/blob/master/Drifty Banner.png" height="110">
+        <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332">
     </p>
 </a>
-<a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
-</a> <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a> <a href="https://github.com/SaptarshiSarkar12/Drifty/deployments">
-</br>
 
-[![Build and Package Drifty](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg)](https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml) <a><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
-</br>
-<a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img   src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>
-</br>
-<a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
-<a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow"></a> 
-<a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord"></a>
+
+<p align="center">
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
+    <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
+</p>
+
+<p align="center">
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" /></a> 
+    <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
+</p>
+
+<p align="center">
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
+    <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow us on Twitter"></a> 
+    <a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord Server"></a>
+</p>
 
 ## About 🔥
 
@@ -50,7 +56,7 @@ For **Users** :
 7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
 
 For **Contributors** : 
-1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in bash.
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in your terminal.
     ```bash
     git clone git@github.com:SaptarshiSarkar12/Drifty.git
     ```
@@ -100,7 +106,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
 
 ## Support 🙏
-Please leave a star ⭐ on this project to support us.
+Please **leave a star ⭐** on this project to _support us_.
 
 ## Thanks to all the contributors ❤️
 <a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
