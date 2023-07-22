@@ -5,14 +5,42 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'npm' # See documentation for possible values
+    directory: '/Website' # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: 'daily'
     commit-message:
-      prefix: "Dependencies"
-      include: "scope"
+      prefix: '[npm]'
+      include: 'scope'
     labels:
-      - "Dependencies Updated"
+      - 'dependencies'
+      - 'npm'
+    reviewers:
+      - SaptarshiSarkar12
+      
+  - package-ecosystem: 'maven' # See documentation for possible values
+    directory: '/' # Location of package manifests
+    schedule:
+      interval: 'daily'
+    commit-message:
+      prefix: '[maven]'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'maven'
+    reviewers:
+      - SaptarshiSarkar12
+      
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      # Check for updates to GitHub Actions every weekday
+      interval: 'daily'
+    commit-message:
+      prefix: '[ci]'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'Workflows'
     reviewers:
       - SaptarshiSarkar12
