@@ -4,10 +4,10 @@ Website:
 App:
 - src/**
 
-"Workflows Updated":
+Workflows:
 - .github/workflows/**
 
-"Dependencies Updated":
+dependencies:
 - Website/package.json
 - Website/package-lock.json
 - pom.xml
@@ -15,5 +15,12 @@ App:
 documentation:
 - '**/*.md'
 
-"Assets Updated":
+assets:
 - assets/**
+
+maven:
+- pom.xml
+
+npm:
+- Website/package.json
+- Website/package-lock.json
