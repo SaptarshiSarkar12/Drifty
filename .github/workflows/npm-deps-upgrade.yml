@@ -4,9 +4,6 @@ defaults:
       working-directory: "./Website"
 on:
    workflow_dispatch:
-   
-   schedule:
-   - cron: "0 0 * * *"
 
 jobs:
    upgrade-packages:
