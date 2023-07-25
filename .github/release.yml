@@ -1,6 +1,6 @@
 changelog:
   categories:
-    - title: New Features in Application 🎉
+    - title: New Features ✨ in Application
       labels:
         - enhancement
       exclude:
@@ -14,7 +14,7 @@ changelog:
         labels:
           - Website
           - documentation
-    - title: New Features in Website 🎉
+    - title: New Features ✨ in Website
       labels:
         - enhancement
       exclude:
@@ -28,6 +28,9 @@ changelog:
         labels:
           - App
           - documentation
-    - title: Documentation Changes
+    - title: Documentation 📝 Changes
       labels:
         - documentation
+    - title: Dependency ⬆️ Changes
+      labels:
+        - dependencies
