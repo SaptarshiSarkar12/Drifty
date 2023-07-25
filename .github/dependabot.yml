@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: 'daily'
     commit-message:
-      prefix: '[npm]'
+      prefix: '[npm] '
       include: 'scope'
     labels:
       - 'dependencies'
@@ -23,7 +23,7 @@ updates:
     schedule:
       interval: 'daily'
     commit-message:
-      prefix: '[maven]'
+      prefix: '[maven] '
       include: 'scope'
     labels:
       - 'dependencies'
@@ -37,7 +37,7 @@ updates:
       # Check for updates to GitHub Actions every weekday
       interval: 'daily'
     commit-message:
-      prefix: '[ci]'
+      prefix: '[ci] '
       include: 'scope'
     labels:
       - 'dependencies'
