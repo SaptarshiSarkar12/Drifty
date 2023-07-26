@@ -305,12 +305,13 @@ public class FileDownloader implements Runnable {
             dir = dir + System.getProperty("file.separator");
         }
         try {
+            boolean isInstagramLink = Drifty_CLI.getIsInstagramLink();
             boolean isInstagramImage = false;
-            if (isInstagramLink(link)) {
+            if (isInstagramLink) {
                 isInstagramImage = Drifty_CLI.getIsInstagramImage();
             }
             // If link is of an YouTube or Instagram video, then the following block of code will execute.
-            if (isYoutubeLink(link) || !isInstagramImage) {
+            if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
                 try {
                     String directoryOfYt_dlp = "./src/main/resources/";
                     messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");

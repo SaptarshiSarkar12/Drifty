@@ -263,6 +263,13 @@ public class Drifty_CLI {
                 }
             } else {
                 System.out.print(RENAME_FILE);
+                SC.nextLine(); // To remove whitespace from the input buffer
+                String choiceString = SC.nextLine().toLowerCase();
+                boolean choice = utility.yesNoValidation(choiceString, ENTER_FILE_NAME_WITH_EXTENSION);
+                if (choice) {
+                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                    fileName = SC.nextLine();
+                }
             }
         }
     }
@@ -274,5 +281,14 @@ public class Drifty_CLI {
      */
     public static boolean getIsInstagramImage() {
         return isInstagramImage;
+    }
+
+    /**
+     * This method returns true if the given link is of Instagram
+     * @return True if the given link is of Instagram else false
+     * @since v2.0.0
+     */
+    public static boolean getIsInstagramLink() {
+        return isInstagramLink;
     }
 }
