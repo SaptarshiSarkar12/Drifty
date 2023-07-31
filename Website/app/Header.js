@@ -59,7 +59,7 @@ export default function Header({props}) {
                         <span className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${open ? "-rotate-45 -translate-y-3.5" : ""}`} />
                     </div>
                     <div className="hidden md:flex mr-20">
-                    	<NavLink to="/" cn="mx-4">
+                    	<NavLink to="/#" cn="mx-4">
                     		<button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">HOME</button>
             		</NavLink>
                     	<NavLink to="/about" cn="mx-4">
