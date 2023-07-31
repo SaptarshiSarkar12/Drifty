@@ -46,8 +46,8 @@ jobs:
         cache: maven
     - name: Build with Maven for ${{ matrix.os }}
       run: mvn compile
-    - name: Package Drifty CLI for ${{ matrix.os }} with JavaPackager Maven plugin
-      run: mvn javapackager:package@bundling-Drifty-CLI-for-${{ matrix.os }}
+    - name: Package Drifty CLIString for ${{ matrix.os }} with JavaPackager Maven plugin
+      run: mvn javapackager:package@bundling-Drifty-CLIString-for-${{ matrix.os }}
     - name: Package Drifty GUI for ${{ matrix.os }} with JavaPackager Maven plugin
       run: mvn javapackager:package@bundling-Drifty-GUI-for-${{ matrix.os }}
     - name: Push generated artifacts for ${{ matrix.os }}
@@ -70,5 +70,4 @@ jobs:
     - name: List all present files
       run: ls
     # - name: Create Release ($VERSION) with automated release notes
-      # run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-Name' # Assets path to be added later
-      
+      # run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-string' # Assets path to be added later

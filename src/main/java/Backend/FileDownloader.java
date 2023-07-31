@@ -1,7 +1,13 @@
 package Backend;
 
 import CLI.Drifty_CLI;
+import Enums.*;
+import GUIFX.MainGUI;
+import Preferences.Init;
 import Utils.MessageBroker;
+import Utils.StringIsNull;
+import Utils.Utility;
+import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.*;
@@ -10,10 +16,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static Utils.DriftyConstants.*;
-import static Utils.Utility.isInstagramLink;
 import static Utils.Utility.isYoutubeLink;
 
 /**
@@ -21,9 +25,9 @@ import static Utils.Utility.isYoutubeLink;
  */
 public class FileDownloader implements Runnable {
     /**
-     * This is the message broker service instance which sends messages to the CLI or GUI.
+     * This is the message broker service instance which sends messages to the CLIString or GUI.
      */
-    private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    private static final MessageBroker message = Drifty.getMessageBrokerInstance();
     /**
      * This is the number of parallel file downloading threads to download the file faster.
      */
@@ -67,9 +71,14 @@ public class FileDownloader implements Runnable {
      * This is a boolean value to determine if Multithreading is required or not.
      */
     private static boolean supportsMultithreading;
+    /**
+     * This boolean value is used to trigger an update of the yt-dlp program itself
+     */
+    private static boolean updated = true;
 
     /**
      * This is a constructor to initialise values of <b>link</b>, <b>fileName</b> and <b>dir</b> variables.
+     *
      * @param link     Link to the file that the user wants to download
      * @param fileName Filename of the file that the user wants to save as after it is downloaded
      * @param dir      Directory in which the file needs to be saved.
@@ -79,13 +88,17 @@ public class FileDownloader implements Runnable {
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
+        if (Mode.GUI()) {
+            setYt_dlpProgramName(Program.get(Program.NAME));
+        }
         if (isYoutubeLink(link) || !Drifty_CLI.getIsInstagramImage()) {
-            setYt_dlpProgramName(getYt_dlpProgramName());
+            setYt_dlpProgramName(Program.get(Program.NAME));
         }
     }
 
     /**
      * This function is used to get the value of dir variable.
+     *
      * @return The directory in which the user wants to save the file.
      */
     public static String getDir() {
@@ -112,8 +125,12 @@ public class FileDownloader implements Runnable {
                         file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
-                        start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
-                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
+                        start = (i == 0) ?
+                                0 :
+                                ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
+                        end = ((FileDownloader.numberOfThreads - 1) == i) ?
+                                totalSize :
+                                ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -124,7 +141,7 @@ public class FileDownloader implements Runnable {
 
                     ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, totalSize);
                     progressBarThread.start();
-                    messageBroker.sendMessage(DOWNLOADING + fileName + " ...", LOGGER_INFO, "download");
+                    message.send(DOWNLOADING + fileName + " ...", Type.INFORMATION, Category.DOWNLOAD);
                     // check if all file are downloaded
                     try {
                         while (!merge(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
@@ -136,8 +153,10 @@ public class FileDownloader implements Runnable {
                             Thread.sleep(1000);
                         } catch (InterruptedException ignored) {
                         }
-                    } catch (InterruptedException ignored) {}
-                } else {
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+                else {
                     InputStream urlStream = url.openStream();
                     System.out.println();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -145,68 +164,115 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
                     ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
                     progressBarThread.start();
-                    messageBroker.sendMessage("Downloading " + fileName + " ...", LOGGER_INFO, "download");
+                    message.send("Downloading " + fileName + " ...", Type.INFORMATION, Category.DOWNLOAD);
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
                     // keep main thread from closing the IO for short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);
-                    } catch (InterruptedException ignored) {}
+                    } catch (InterruptedException ignored) {
+                    }
                 }
 
             } catch (SecurityException e) {
-                messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", LOGGER_ERROR, "download");
+                message.send("Write access to " + dir + fileName + " denied !", Type.ERROR, Category.DOWNLOAD);
             } catch (FileNotFoundException fileNotFoundException) {
-                messageBroker.sendMessage(FILE_NOT_FOUND, LOGGER_ERROR, "download");
+                message.send(FILE_NOT_FOUND, Type.ERROR, Category.DOWNLOAD);
             } catch (IOException e) {
-                messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, LOGGER_ERROR, "download");
+                message.send(FAILED_TO_DOWNLOAD_CONTENTS, Type.ERROR, Category.DOWNLOAD);
             }
         } catch (NullPointerException e) {
-            messageBroker.sendMessage(FAILED_TO_READ_DATA_STREAM, LOGGER_ERROR, "download");
+            message.send(FAILED_TO_READ_DATA_STREAM, Type.ERROR, Category.DOWNLOAD);
         }
     }
 
     /**
      * This method deals with downloading videos from YouTube in mp4 format.
+     *
      * @param dirOfYt_dlp The directory of yt-dlp file. Default - "". If Drifty is run from its jar file, this argument will have the directory where yt-dlp has been extracted to (the temporary files' folder).
      * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
-     * @throws IOException When an I/O problem appears while downloading the YouTube video.
+     * @throws IOException          When an I/O problem appears while downloading the YouTube video.
      */
     public static void downloadFromYouTube(String dirOfYt_dlp) throws InterruptedException, IOException {
-        String outputFileName;
-        outputFileName = Objects.requireNonNullElse(fileName, "%(title)s.%(ext)s");
-        String fileDownloadMessagePart;
-        if (outputFileName.equals("%(title)s.%(ext)s")){
-            fileDownloadMessagePart = "the YouTube Video";
-        } else {
-            fileDownloadMessagePart = outputFileName;
+        String outputFileName = StringIsNull.replace(fileName, DEFAULT_FILENAME);
+        String fileDownloadMessage;
+        if (outputFileName.equals(DEFAULT_FILENAME)) {
+            fileDownloadMessage = "the YouTube Video";
+        }
+        else {
+            fileDownloadMessage = outputFileName;
         }
         ProcessBuilder processBuilder;
-        messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        message.send("Trying to download " + fileDownloadMessage + " ...", Type.INFORMATION, Category.DOWNLOAD);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight(); // E.g.: 768
         int width = (int) screenSize.getWidth(); // E.g.: 1366
-        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))){
+        if ((dir.length() == 0) || (dir.equalsIgnoreCase("."))) {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
             // , "--progress-template", "Downloading : %(progress._percent_str)s"
-        } else {
+        }
+        else {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]");
             // , "--progress-template", "Downloading : %(progress._percent_str)s"
         }
         processBuilder.inheritIO();
-        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        message.send(DOWNLOADING + fileDownloadMessage + " ...", Type.INFORMATION, Category.DOWNLOAD);
         Process yt_dlp = processBuilder.start();
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
-            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessagePart + " !", LOGGER_INFO, "download");
-        } else if (exitValueOfYt_Dlp == 1) {
-            messageBroker.sendMessage(FAILED_TO_DOWNLOAD + fileDownloadMessagePart + " !", LOGGER_ERROR, "download");
+            message.send(SUCCESSFULLY_DOWNLOADED + fileDownloadMessage + " !", Type.INFORMATION, Category.DOWNLOAD);
         }
+        else if (exitValueOfYt_Dlp == 1) {
+            message.send(FAILED_TO_DOWNLOAD + fileDownloadMessage + " !", Type.ERROR, Category.DOWNLOAD);
+        }
+    }
+
+    private static Process process;
+
+    /**
+     * This method deals with downloading videos from YouTube in mp4 format.
+     *
+     * @throws InterruptedException When the I/O operation is interrupted using keyboard or such type of inputs.
+     * @throws IOException          When an I/O problem appears while downloading the YouTube video.
+     */
+    public static void downloadGUI() throws InterruptedException, IOException {
+        String outputFileName = StringIsNull.replace(fileName, DEFAULT_FILENAME);
+        String command = Program.get(Program.COMMAND);
+        outputFileName = Utility.cleanFilename(outputFileName);
+        message.send("Trying to download " + outputFileName + " ...", Type.INFORMATION, Category.DOWNLOAD);
+        String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
+        String[] fullCommand = (Format.isValid(ext)) ?
+                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
+                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+        ProcessBuilder pb = new ProcessBuilder(fullCommand);
+        StringBuilder sb = new StringBuilder();
+        for (String arg : pb.command()) sb.append(arg).append(" ");
+        String msg = RUNNING_COMMAND + Program.get(Program.NAME) + " " + sb;
+        System.out.println(message);
+        message.send(DOWNLOADING + outputFileName + " ...", Type.INFORMATION, Category.DOWNLOAD);
+        message.send(msg, Type.INFORMATION, Category.DOWNLOAD);
+        pb.redirectErrorStream(true);
+        process = pb.start();
+        try {
+            try (InputStream inputStream = process.getInputStream();
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        int result = process.waitFor();
+        String errorMessage = ((result == 0) ? SUCCESSFULLY_DOWNLOADED : FAILED_TO_DOWNLOAD) + outputFileName;
+        MainGUI.setJobError(errorMessage, result);
     }
 
     /**
      * This method checks if all the downloader threads are completed correctly and merges the downloaded parts.
+     *
      * @param fileOutputStreams FileOutputStream of all the parts
      * @param partSizes         Size each of the parts
      * @param downloaderThreads DownloaderThreads of all the parts
@@ -227,7 +293,8 @@ public class FileDownloader implements Runnable {
 
             if (fileOutputStream.getChannel().size() < partSize) {
                 if (!downloaderThread.isAlive()) throw new IOException(THREAD_ERROR_ENCOUNTERED);
-            } else if (!downloaderThread.isAlive()) {
+            }
+            else if (!downloaderThread.isAlive()) {
                 completed++;
             }
         }
@@ -250,34 +317,8 @@ public class FileDownloader implements Runnable {
     }
 
     /**
-     * This method finds the yt-dlp program name and returns it as String expression
-     * @return The yt-dlp program name specific to the Operating System.
-     * <ul>
-     *     <li><b>yt-dlp</b> for <b><i>Linux or Unix Systems</i></b></li>
-     *     <li><b>yt-dlp.exe</b> for <b><i>Windows</i></b></li>
-     *     <li><b>yt-dlp_macos</b> for <b><i>MacOS</i></b></li>
-     *     <li><b>yt-dlp</b> for <b><i>Other Operating Systems</i></b></li>
-     * </ul>
-     */
-    protected static String getYt_dlpProgramName() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        messageBroker.sendMessage("User OS is : " + osName, LOGGER_INFO, "only log");
-        String yt_dlpProgramName;
-        if (osName.contains("nux") || osName.contains("nix")){
-            yt_dlpProgramName = "yt-dlp";
-        } else if (osName.contains("win")) {
-            yt_dlpProgramName = "yt-dlp.exe";
-        } else if (osName.contains("mac")){
-            yt_dlpProgramName = "yt-dlp_macos";
-        } else {
-            yt_dlpProgramName = "yt-dlp";
-        }
-        messageBroker.sendMessage("yt-dlp program name detected is : " + yt_dlpProgramName, LOGGER_INFO, "only log");
-        return yt_dlpProgramName;
-    }
-
-    /**
-     * This method is used to set yt-dlp Program Name
+     * This method is used to set yt-dlp Program string
+     *
      * @param yt_dlpProgramName The yt-dlp program name specific to the OS
      */
     private static void setYt_dlpProgramName(String yt_dlpProgramName) {
@@ -299,76 +340,76 @@ public class FileDownloader implements Runnable {
             }
         }
         if (dir.length() == 0) {
-            dir = System.getProperty("user.dir");
+            dir = System.getProperty("user.home");
         }
         if (!(dir.endsWith("\\"))) {
             dir = dir + System.getProperty("file.separator");
         }
         try {
+            boolean isInstagramLink = Drifty_CLI.getIsInstagramLink();
             boolean isInstagramImage = false;
-            if (isInstagramLink(link)) {
+            if (isInstagramLink) {
                 isInstagramImage = Drifty_CLI.getIsInstagramImage();
             }
             // If link is of an YouTube or Instagram video, then the following block of code will execute.
-            if (isYoutubeLink(link) || !isInstagramImage) {
+            if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
                 try {
-                    String directoryOfYt_dlp = "./src/main/resources/";
-                    messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");
-                    ProcessBuilder yt_dlp_update = new ProcessBuilder(directoryOfYt_dlp + yt_dlpProgramName, "-U");
-                    yt_dlp_update.inheritIO();
-                    Process yt_dlp = yt_dlp_update.start();
-                    yt_dlp.waitFor();
+                    updated = Init.isUpdated();
+                    String directoryOfYt_dlp = Program.get(Program.PATH);
+                    if (!updated) {
+                        Init.updateProgram();
+                    }
+                    if (Mode.GUI()) {
+                        downloadGUI();
+                    }
                     if (isYoutubeLink(link)) {
                         downloadFromYouTube(directoryOfYt_dlp);
-                    } else if (!isInstagramImage) {
+                    }
+                    else if (!isInstagramImage) {
                         downloadFromInstagram(directoryOfYt_dlp);
                     }
                 } catch (IOException e) {
+                    message.send(GETTING_READY_TO_DOWNLOAD_FILE, Type.INFORMATION, Category.DOWNLOAD);
                     try {
-                        messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
-                        copyYt_dlp cy = new copyYt_dlp();
-                        cy.copyToTemp();
-                        try {
-                            String tempDir = copyYt_dlp.getTempDir();
-                            messageBroker.sendMessage("Checking for component (yt-dlp) update ...", LOGGER_INFO, "download");
-                            ProcessBuilder yt_dlp_update = new ProcessBuilder(tempDir + yt_dlpProgramName, "-U");
-                            yt_dlp_update.inheritIO();
-                            Process yt_dlp = yt_dlp_update.start();
-                            yt_dlp.waitFor();
-                            if (isYoutubeLink(link)) {
-                                downloadFromYouTube(tempDir);
-                            } else if (!isInstagramImage) {
-                                downloadFromInstagram(tempDir);
-                            }
-                        } catch (InterruptedException ie) {
-                            messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
-                        } catch (Exception e1) {
-                            messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
-                            String message = e1.getMessage();
-                            String[] messageArray = message.split(",");
-                            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                                messageBroker.sendMessage(DRIFTY_COMPONENT_NOT_EXECUTABLE, LOGGER_ERROR, "download");
-                            } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
-                                messageBroker.sendMessage(PERMISSION_DENIED_YOUTUBE_VIDEO, LOGGER_ERROR, "download");
-                            } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
-                                messageBroker.sendMessage(YOUTUBE_VIDEO_UNAVAILABLE, LOGGER_ERROR, "download");
-                            } else {
-                                messageBroker.sendMessage(e.getMessage(), LOGGER_ERROR, "download");
-                            }
+                        String tempDir = Program.get(Program.PATH);
+                        if (!updated) {
+                            Init.updateProgram();
                         }
-                    } catch (IOException io) {
-                        messageBroker.sendMessage(FAILED_TO_INITIALISE_YOUTUBE_VIDEO_DOWNLOADER, LOGGER_ERROR, "download");
+                        if (isYoutubeLink(link)) {
+                            downloadFromYouTube(tempDir);
+                        }
+                        else if (!isInstagramImage) {
+                            downloadFromInstagram(tempDir);
+                        }
+                    } catch (InterruptedException ie) {
+                        message.send(USER_INTERRUPTION, Type.ERROR, Category.DOWNLOAD);
+                    } catch (Exception e1) {
+                        message.send(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, Type.ERROR, Category.DOWNLOAD);
+                        String msg = e1.getMessage();
+                        String[] messageArray = msg.split(",");
+                        if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                            message.send(DRIFTY_COMPONENT_NOT_EXECUTABLE, Type.ERROR, Category.DOWNLOAD);
+                        }
+                        else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
+                            message.send(PERMISSION_DENIED_YOUTUBE_VIDEO, Type.ERROR, Category.DOWNLOAD);
+                        }
+                        else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
+                            message.send(YOUTUBE_VIDEO_UNAVAILABLE, Type.ERROR, Category.DOWNLOAD);
+                        }
+                        else {
+                            message.send(e.getMessage(), Type.ERROR, Category.DOWNLOAD);
+                        }
                     }
                 } catch (InterruptedException e) {
-                    messageBroker.sendMessage(USER_INTERRUPTION, LOGGER_ERROR, "download");
+                    message.send(USER_INTERRUPTION, Type.ERROR, Category.DOWNLOAD);
                 }
-            } else {
-                if (isInstagramImage){
-                    if (link.endsWith("/") || link.endsWith("\\")){
-                        link += "media";
-                    } else {
-                        link += "/media";
-                    }
+            }
+            else {
+                if (link.endsWith("/") || link.endsWith("\\")) {
+                    link += "media";
+                }
+                else {
+                    link += "/media";
                 }
                 url = new URI(link).toURL();
                 URLConnection openConnection = url.openConnection();
@@ -382,13 +423,20 @@ public class FileDownloader implements Runnable {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
                 }
-                messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, LOGGER_INFO, "download");
+                message.send(TRYING_TO_DOWNLOAD_FILE, Type.INFORMATION, Category.DOWNLOAD);
+                if (Mode.GUI()) {
+                    try {
+                        downloadGUI();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 downloadFile();
             }
         } catch (MalformedURLException | URISyntaxException e) {
-            messageBroker.sendMessage(INVALID_LINK, LOGGER_ERROR, "link");
+            message.send(INVALID_LINK, Type.ERROR, Category.LINK);
         } catch (IOException e) {
-            messageBroker.sendMessage(FAILED_TO_CONNECT_TO_URL + url + " !", LOGGER_ERROR, "download");
+            message.send(FAILED_TO_CONNECT_TO_URL + url + " !", Type.ERROR, Category.DOWNLOAD);
         }
     }
 
@@ -397,38 +445,40 @@ public class FileDownloader implements Runnable {
      *
      * @param dirOfYt_dlp The directory to save the file to.
      * @throws InterruptedException If the download is interrupted.
-     * @throws IOException If there is an error reading or writing the file.
+     * @throws IOException          If there is an error reading or writing the file.
      */
     public static void downloadFromInstagram(String dirOfYt_dlp) throws InterruptedException, IOException {
-        String outputFileName;
-        outputFileName = Objects.requireNonNullElse(fileName, "%(title)s.%(ext)s");
-        String fileDownloadMessagePart;
-        if (outputFileName.equals("%(title)s.%(ext)s")) {
-            fileDownloadMessagePart = "the Instagram Video";
-        } else {
-            fileDownloadMessagePart = outputFileName;
+        String outputFileName = StringIsNull.replace(fileName, DEFAULT_FILENAME);
+        String fileDownloadMessage;
+        if (outputFileName.equals(DEFAULT_FILENAME)) {
+            fileDownloadMessage = "the Instagram Video";
+        }
+        else {
+            fileDownloadMessage = outputFileName;
         }
         ProcessBuilder processBuilder; // Creates a new ProcessBuilder object
-        messageBroker.sendMessage("Trying to download " + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        message.send("Trying to download " + fileDownloadMessage + " ...", Type.INFORMATION, Category.DOWNLOAD);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g. java.awt.Dimension[width=1366,height=768]
         int height = (int) screenSize.getHeight();  // E.g.: 768
         int width = (int) screenSize.getWidth();    // E.g.: 1366
         if (dir.length() == 0 || (dir.equalsIgnoreCase("."))) {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o",
                     outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]"); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory
-        } else {
+        }
+        else {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link,
                     "-o", outputFileName, "-f", "[height<=" + height + "][width<=" + width + "]"); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         }
         processBuilder.inheritIO();
-        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessagePart + " ...", LOGGER_INFO, "download");
+        message.send(DOWNLOADING + fileDownloadMessage + " ...", Type.INFORMATION, Category.DOWNLOAD);
         Process yt_dlp = processBuilder.start(); // Starts the download process
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
-            messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessagePart + " !", LOGGER_INFO, "download");
-        } else if (exitValueOfYt_Dlp == 1) {
-            messageBroker.sendMessage(FAILED_TO_DOWNLOAD + fileDownloadMessagePart + " !", LOGGER_ERROR, "download");
+            message.send(SUCCESSFULLY_DOWNLOADED + fileDownloadMessage + " !", Type.INFORMATION, Category.DOWNLOAD);
+        }
+        else if (exitValueOfYt_Dlp == 1) {
+            message.send(FAILED_TO_DOWNLOAD + fileDownloadMessage + " !", Type.ERROR, Category.DOWNLOAD);
         }
     }
 }

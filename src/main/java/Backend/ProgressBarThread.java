@@ -1,6 +1,9 @@
 package Backend;
 
-import GUI.Drifty_GUI;
+import Enums.Category;
+import Enums.Mode;
+import Enums.Type;
+import GUIFX.MainGUI;
 import Utils.MessageBroker;
 
 import java.io.FileOutputStream;
@@ -11,11 +14,11 @@ import java.util.List;
 import static Utils.DriftyConstants.*;
 
 /**
- * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
+ * This is the class responsible for showing the progress bar in the CLIString (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
     /**
-     * This is the message broker service instance which sends messages to the CLI or GUI.
+     * This is the message broker service instance which sends messages to the CLIString or GUI.
      */
     private final static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     /**
@@ -27,7 +30,7 @@ public class ProgressBarThread extends Thread {
      */
     private final List<Long> partSizes;
     /**
-     * Name of the file to be downloaded
+     * string of the file to be downloaded
      */
     private final String fileName;
     /**
@@ -140,7 +143,7 @@ public class ProgressBarThread extends Thread {
     }
 
     /**
-     * This method generates a progress bar for the CLI (Command Line Interface) version of Drifty.
+     * This method generates a progress bar for the CLIString (Command Line Interface) version of Drifty.
      * @param spinner icon of the spin in the progress bar.
      * @return String object containing the progress bar.
      */
@@ -255,14 +258,16 @@ public class ProgressBarThread extends Thread {
     private void cleanup() {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
-            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
+            messageBroker.send("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, Type.INFORMATION, Category.DOWNLOAD);
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, LOGGER_INFO, "download");
+            messageBroker.send("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, Type.INFORMATION, Category.DOWNLOAD);
         } else {
-            messageBroker.sendMessage("\n" + DOWNLOAD_FAILED, LOGGER_ERROR, "download");
+            messageBroker.send("\n" + DOWNLOAD_FAILED, Type.ERROR, Category.DOWNLOAD);
         }
-        Drifty_GUI.setIsFileBeingDownloaded(false);
+        if (Mode.GUI()) {
+            MainGUI.setDownloadInProgress(false);
+        }
     }
 
     /**
@@ -270,8 +275,7 @@ public class ProgressBarThread extends Thread {
      */
     @Override
     public void run() {
-        String appType = Drifty.getAppType();
-        long initialMeasurement;
+       long initialMeasurement;
         String[] spinner = new String[]{"/", "-", "\\", "|"};
         List<Long> initialMeasurements = isMultiThreadedDownloading ? new ArrayList<>(fileOutputStreams.size()) : null;
         while (downloading) {
@@ -282,7 +286,7 @@ public class ProgressBarThread extends Thread {
                         Thread.sleep(250);
                         downloadedBytes = fos.getChannel().size();
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
-                        if (appType.equals("CLI")) {
+                        if (Mode.CLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
                         } else {
                             generateProgressBar(spinner[i]);
@@ -300,7 +304,7 @@ public class ProgressBarThread extends Thread {
                             downloadedBytesPerPart.add(j, downloadedPartBytes);
                             downloadSpeeds.add(j, (downloadedPartBytes - initialMeasurements.get(j)) * 4);
                         }
-                        if (appType.equals("CLI")) {
+                        if (Mode.CLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
                         } else {
                             generateProgressBar(spinner[i]);
