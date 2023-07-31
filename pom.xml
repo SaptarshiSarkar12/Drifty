@@ -6,15 +6,21 @@
 
     <groupId>com.Drifty</groupId>
     <artifactId>Drifty</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <name>Drifty</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.9.2</junit.version>
+        <junit.version>5.10.0</junit.version>
+        <javafx.version>20</javafx.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -32,14 +38,38 @@
             <artifactId>snakeyaml</artifactId>
             <version>2.0</version>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.buildobjects</groupId>
+            <artifactId>jproc</artifactId>
+            <version>2.8.2</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>18</source>
                     <target>18</target>
@@ -50,6 +80,7 @@
                 <artifactId>javapackager</artifactId>
                 <version>1.7.2</version>
                 <configuration>
+                    <name>Drifty</name>
                     <displayName>Drifty</displayName>
                     <description>Drifty is an open-source interactive file downloader system</description>
                     <bundleJre>true</bundleJre>
@@ -57,6 +88,10 @@
                     <licenseFile>LICENSE</licenseFile>
                     <url>https://saptarshisarkar12.github.io/Drifty/</url>
                     <assetsDir>./assets</assetsDir>
+                    <organizationName>Drifty</organizationName>
+                    <organizationUrl>https://saptarshisarkar12.github.io/Drifty/</organizationUrl>
+                    <version>${project.version}</version>
+                    <additionalModules>jdk.crypto.cryptoki</additionalModules> <!-- To prevent SSL Handshake Error -->
                     <linuxConfig>
                         <generateAppImage>true</generateAppImage>
                         <generateDeb>true</generateDeb>
@@ -101,6 +136,7 @@
                     </macConfig>
                 </configuration>
                 <executions>
+<!--                    &lt;!&ndash;Windows GUI&ndash;&gt;
                     <execution>
                         <id>bundling-Drifty-GUI-for-windows-latest</id>
                         <phase>package</phase>
@@ -110,7 +146,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>windows</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUIFX.Launcher</mainClass>
                             <outputDirectory>./target/GUI/windows</outputDirectory>
                             <createZipball>true</createZipball>                            
                             <additionalResources>
@@ -119,6 +155,7 @@
                             </additionalResources>                            
                         </configuration>
                     </execution>
+                    &lt;!&ndash;Ubuntu GUI&ndash;&gt;
                     <execution>
                         <id>bundling-Drifty-GUI-for-ubuntu-latest</id>
                         <phase>package</phase>
@@ -128,7 +165,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>linux</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUIFX.Launcher</mainClass>
                             <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -137,6 +174,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
+ -->                   <!--MacOS GUI-->
                     <execution>
                         <id>bundling-Drifty-GUI-for-macos-latest</id>
                         <phase>package</phase>
@@ -146,7 +184,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>mac</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUIFX.Launcher</mainClass>
                             <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -155,6 +193,8 @@
                             </additionalResources>
                         </configuration>
                     </execution>
+<!--
+                    &lt;!&ndash;Windows CLIString&ndash;&gt;
                     <execution>
                         <id>bundling-Drifty-CLI-for-windows-latest</id>
                         <phase>package</phase>
@@ -172,6 +212,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
+                    &lt;!&ndash;Ubuntu CLIString&ndash;&gt;
                     <execution>
                         <id>bundling-Drifty-CLI-for-ubuntu-latest</id>
                         <phase>package</phase>
@@ -189,6 +230,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
+                    &lt;!&ndash;MacOS CLIString&ndash;&gt;
                     <execution>
                         <id>bundling-Drifty-CLI-for-macos-latest</id>
                         <phase>package</phase>
@@ -206,6 +248,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
+-->
                 </executions>
             </plugin>
         </plugins>

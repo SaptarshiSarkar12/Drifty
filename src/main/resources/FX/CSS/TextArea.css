@@ -1,0 +1,17 @@
+/* Custom CSS for TextArea */
+.text-area-style .content {
+    -fx-control-inner-background: transparent;
+    -fx-background-color: linear-gradient(to bottom, #666a6a, #b3b6b6);
+    /*-fx-background-color: black;*/
+}
+
+.text-area-style .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-max-height: 0;
+}
+
+/* Hide the vertical scrollbar (side slider) */
+.text-area-style .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+}
