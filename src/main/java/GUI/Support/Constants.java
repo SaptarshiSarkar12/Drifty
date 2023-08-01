@@ -1,4 +1,4 @@
-package GUIFX;
+package GUI.Support;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -6,11 +6,11 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 
 /**
- * These are constants shared between MainGUI and BatchGUI and is a package private class.
+ * These are constants shared between Main and Batch and is a package private class.
  * It contains hooks into the resources folder for relevant files.
  */
 
-class Constants {
+public class Constants {
     public static final URL guiBackground  = Constants.class.getResource("/FX/Backgrounds/DriftyMainFX.png");
     public static final URL backPath       = Constants.class.getResource("/FX/Backgrounds/DriftyBatchFX.png");
 
@@ -24,6 +24,8 @@ class Constants {
     public static final URL closeDown      = Constants.class.getResource("/FX/Buttons/Close/CloseDown.png");
     public static final URL saveUp         = Constants.class.getResource("/FX/Buttons/Save/SaveUp.png");
     public static final URL saveDown       = Constants.class.getResource("/FX/Buttons/Save/SaveDown.png");
+    public static final URL copyUp         = Constants.class.getResource("/FX/Buttons/Copy/CopyUp.png");
+    public static final URL copyDown       = Constants.class.getResource("/FX/Buttons/Copy/CopyDown.png");
     public static final URL upUP           = Constants.class.getResource("/FX/Buttons/UpDown/UpUp.png");
     public static final URL upDown         = Constants.class.getResource("/FX/Buttons/UpDown/UpDown.png");
     public static final URL downUp         = Constants.class.getResource("/FX/Buttons/UpDown/DownUp.png");
@@ -34,6 +36,7 @@ class Constants {
     public static final URL lblFilename    = Constants.class.getResource("/FX/Labels/Filename.png");
     public static final URL lblLink        = Constants.class.getResource("/FX/Labels/Link.png");
 
+    public static final URL tabsCSS        = Constants.class.getResource("/FX/CSS/Tabs.css");
     public static final URL listViewCSS    = Constants.class.getResource("/FX/CSS/ListView.css");
     public static final URL textFieldCSS   = Constants.class.getResource("/FX/CSS/TextField.css");
     public static final URL contextMenuCSS = Constants.class.getResource("/FX/CSS/ContextMenu.css");
@@ -48,8 +51,15 @@ class Constants {
     public static final Image imgUpDown    = new Image(upDown.toExternalForm());
     public static final Image imgDownUp    = new Image(downUp.toExternalForm());
     public static final Image imgDownDown  = new Image(downDown.toExternalForm());
-    public static final Color green        = Color.rgb(0, 255, 0);
-    public static final Color teal         = Color.rgb(0, 255, 255);
-    public static final Color red          = Color.rgb(157, 0  , 0);
-    public static final Color orange       = Color.rgb(180, 80 , 0);
+    public static final Image imgCopyUp    = new Image(copyUp.toExternalForm());
+    public static final Image imgCopyDown  = new Image(copyDown.toExternalForm());
+    public static final Color GREEN  = Color.rgb(0  , 255, 0);
+    public static final Color TEAL   = Color.rgb(0  , 255, 255);
+    public static final Color RED    = Color.rgb(157, 0  , 0);
+    public static final Color ORANGE = Color.rgb(180, 80 , 0);
+    public static final Color BLACK  = Color.rgb(0  , 0  , 0);
+
+    public static final long SECOND = 1000;
+    public static final long MINUTE = SECOND * 60;
+    public static final long HOUR   = MINUTE * 60;
 }

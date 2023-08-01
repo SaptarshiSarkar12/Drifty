@@ -85,6 +85,21 @@ public final class Utility {
         }
     }
 
+    public static boolean urlIsValid(String link) {
+        try {
+            URL url = URI.create(link).toURL();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
+            connection.connect();
+            URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
+            HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
+            connectProjectWebsite.connect();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * This method finds <b>the name of the file from the link</b> provided.
      *

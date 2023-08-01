@@ -2,6 +2,10 @@ package Enums;
 
 import java.util.List;
 
+/**
+ * This class holds all of the valid video packages known by yt-dlp
+ */
+
 public enum Format {
     GP3,
     AAC,

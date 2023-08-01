@@ -1,4 +1,4 @@
-package GUIFX.Support;
+package GUI.Support;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;

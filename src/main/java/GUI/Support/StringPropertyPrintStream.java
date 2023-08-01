@@ -1,6 +1,7 @@
-package GUIFX.Support;
+package GUI.Support;
 
-import GUIFX.ConsoleOut;
+import Enums.Out;
+import GUI.Forms.ConsoleOut;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 
@@ -18,6 +19,14 @@ import java.util.TimerTask;
  * bar, and it allows us to bind the StringProperty with a TextArea that
  * comprises the console pop down form so the user can see the output of
  * yt-dlp as it does its thing.
+ *</P>
+ * newText is a global String. When text streams in from the standard
+ * output stream (System.out), it gets written to two places ...
+ * the stringProperty which is used to farm for download progress,
+ * and also to newText, which gets read from the TimerTask method: updateTask()
+ * which fires periodically and it uses the newText variable to engage the
+ * TextArea's .appendText() method via a public static method in the
+ * ConsoleOut GUI called appendStandard()
  */
 
 public class StringPropertyPrintStream extends PrintStream {
@@ -25,11 +34,13 @@ public class StringPropertyPrintStream extends PrintStream {
     private final StringProperty stringProperty;
     private final LinkedList<String> newText = new LinkedList<>();
     private final Timer timer = new Timer();
+    private final Out type;
 
-    public StringPropertyPrintStream(OutputStream out, StringProperty stringProperty) {
+    public StringPropertyPrintStream(OutputStream out, StringProperty stringProperty, Out type) {
         super(out);
         this.stringProperty = stringProperty;
         timer.scheduleAtFixedRate(updateTask(), 500, 500);
+        this.type = type;
     }
 
     @Override
@@ -48,10 +59,13 @@ public class StringPropertyPrintStream extends PrintStream {
             @Override
             public void run() {
                 StringBuilder sb = new StringBuilder();
-                for (int x = 0; x < newText.size() - 1; x++) {
-                    sb.append(newText.removeFirst());
+                for (int x = 0; x < newText.size(); x++) {
+                    String add = newText.removeFirst();
+                    if (add != null && !add.isEmpty()) {
+                        sb.append(add);
+                    }
                 }
-                Platform.runLater(() -> ConsoleOut.append(sb.toString()));
+                Platform.runLater(() -> ConsoleOut.appendText(sb.toString(), type));
             }
         };
     }

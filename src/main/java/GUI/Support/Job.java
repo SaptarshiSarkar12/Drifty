@@ -1,4 +1,4 @@
-package GUIFX.Support;
+package GUI.Support;
 
 /**
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job

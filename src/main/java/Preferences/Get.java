@@ -1,10 +1,15 @@
 package Preferences;
 
-import GUIFX.Support.Folders;
-import GUIFX.Support.Jobs;
+import Enums.Program;
+import GUI.Support.Folders;
+import GUI.Support.Jobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
@@ -58,10 +63,14 @@ public class Get {
     public Jobs jobs() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Jobs jobs = new Jobs();
-        String json = prefs.get(JOBS.Name(), "").replaceAll("null,", "");
-        if (!json.isEmpty()) {
-            jobs = gson.fromJson(json, Jobs.class);
-        }
-        return jobs;
+        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.Name());
+        try {
+            String json = FileUtils.readFileToString(batchPath.toFile(), Charset.defaultCharset());
+            if (!json.isEmpty()) {
+                jobs = gson.fromJson(json, Jobs.class);
+            }
+            return jobs;
+        } catch (IOException ignored) {}
+        return null;
     }
 }

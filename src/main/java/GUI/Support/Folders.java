@@ -1,4 +1,4 @@
-package GUIFX.Support;
+package GUI.Support;
 
 import Preferences.AppSettings;
 import javafx.collections.FXCollections;

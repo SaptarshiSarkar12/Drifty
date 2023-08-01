@@ -1,5 +1,11 @@
 package Enums;
 
+/**
+ * Whenever any of the 'is' methods is called, 'thisOS'
+ * gets set to the right OS if it is null. It remains
+ * unchanged through the life of the program.
+ */
+
 public enum OS {
 
     WIN, MAC, LINUX, SOLARIS, FREEBSD;

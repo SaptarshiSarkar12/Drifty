@@ -3,7 +3,7 @@ package Backend;
 import Enums.Category;
 import Enums.Mode;
 import Enums.Type;
-import GUIFX.MainGUI;
+import GUI.Forms.Main;
 import Utils.MessageBroker;
 
 import java.io.FileOutputStream;
@@ -266,7 +266,7 @@ public class ProgressBarThread extends Thread {
             messageBroker.send("\n" + DOWNLOAD_FAILED, Type.ERROR, Category.DOWNLOAD);
         }
         if (Mode.GUI()) {
-            MainGUI.setDownloadInProgress(false);
+            Main.setDownloadInProgress(false);
         }
     }
 

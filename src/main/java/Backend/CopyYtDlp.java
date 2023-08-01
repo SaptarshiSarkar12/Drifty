@@ -15,7 +15,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CopyYt_dlp {
+public class CopyYtDlp {
     /**
      * This is the message broker service instance which sends messages to the CLIString or GUI.
      */
@@ -27,10 +27,9 @@ public class CopyYt_dlp {
      * @throws IOException when the file has not been successfully copied.
      */
     public boolean copyToTemp() throws IOException {
-        Path filePath = Paths.get(Program.get(Program.PATH));
-        boolean exists = filePath.toFile().exists();
-        if (!exists) {
-            try (InputStream inputStream = CopyYt_dlp.class.getClassLoader().getResourceAsStream(Program.get(Program.NAME));
+        Path filePath = Paths.get(Program.get(Program.COMMAND));
+        if (!filePath.toFile().exists()) {
+            try (InputStream inputStream = CopyYtDlp.class.getClassLoader().getResourceAsStream(Program.get(Program.NAME));
                  OutputStream outputStream = Files.newOutputStream(filePath)) {
                 System.out.println("Copying file to: " + filePath);
                 if (inputStream != null) {
@@ -60,6 +59,6 @@ public class CopyYt_dlp {
                 }
             }
         }
-        return exists;
+        return !filePath.toFile().exists();
     }
 }

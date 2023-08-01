@@ -1,11 +1,12 @@
-package GUIFX;
+package GUI.Forms;
 
 import Backend.Drifty;
 import Enums.*;
-import GUIFX.Support.AskYesNo;
-import GUIFX.Support.Folders;
-import GUIFX.Support.Job;
-import GUIFX.Support.ManageFolders;
+import GUI.Support.Constants;
+import GUI.Support.AskYesNo;
+import GUI.Support.Folders;
+import GUI.Support.Job;
+import GUI.Support.ManageFolders;
 import Preferences.AppSettings;
 import Utils.*;
 import com.google.gson.Gson;
@@ -54,10 +55,10 @@ import static Utils.DriftyConstants.GUI_APPLICATION_STARTED;
 import static javafx.scene.layout.AnchorPane.*;
 
 
-public class MainGUI extends Application {
+public class Main extends Application {
 
     private final Stage stage                               = new Stage();
-    private final double scale                              = .6;
+    private final double scale                              = .55;
     private final Utility utility                           = new Utility(new MessageBroker(System.out));
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch    = new SimpleBooleanProperty(false);
@@ -83,8 +84,8 @@ public class MainGUI extends Application {
     private boolean waitingForErrorCode                     = true;
     private final URL monaco                                = getClass().getResource("/FX/Fonts/Monaco.ttf");
     private String errorMessage;
-    private BatchGUI batchGUI;
-    private static MainGUI INSTANCE;
+    private Batch batch;
+    private static Main INSTANCE;
     private double width;
     private double height;
     private boolean isYouTubeURL;
@@ -135,7 +136,7 @@ public class MainGUI extends Application {
         setControlProperties();
         setControlActions();
         INSTANCE = this;
-        batchGUI = new BatchGUI(consoleOut);
+        batch = new Batch(consoleOut);
     }
 
     /**
@@ -160,7 +161,8 @@ public class MainGUI extends Application {
         downloadInProgress.setValue(value);
     }
 
-    public static void runBatch() {
+    public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
+        INSTANCE.jobList = jobList;
         INSTANCE.doBatch();
     }
 
@@ -171,10 +173,10 @@ public class MainGUI extends Application {
             case WARNING -> INSTANCE.orange;
         };
         switch (category) {
-            case LINK -> Platform.runLater(() -> INSTANCE.setLinkOut(color,message));
-            case DIRECTORY -> Platform.runLater(() -> INSTANCE.setDirOut(color,message));
-            case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOut(color, message));
-            case FILENAME -> Platform.runLater(() -> INSTANCE.setFilenameOut(color,message));
+            case LINK -> Platform.runLater(() -> INSTANCE.setLinkOutput(color,message));
+            case DIRECTORY -> Platform.runLater(() -> INSTANCE.setDirOutput(color,message));
+            case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOutput(color, message));
+            case FILENAME -> Platform.runLater(() -> INSTANCE.setFilenameOutput(color,message));
         }
     }
 
@@ -196,7 +198,7 @@ public class MainGUI extends Application {
         progressBar = progressBar(200 * scale, 165 * scale, top + 30);
         top += 183 * scale;
         lblLink = imageView(imgLink,left,top-25, (scale + scale/4));
-        lblAutoPaste = imageView(imgAutoPaste,left + 715,top-32, (scale + scale/4));
+        lblAutoPaste = imageView(imgAutoPaste,left + (width - left) * scale * 1.345,top-28, (scale + scale/4));
         tfLink = textField(left, right, top);
         lblLinkOutput = label("", left, right, top + vOffset);
         top += delta;
@@ -237,7 +239,7 @@ public class MainGUI extends Application {
                 if (value == 0)
                     lblDownloadOutput.setTextFill(green);
                 else
-                    setDownloadOut(red,errorMessage);
+                    setDownloadOutput(red,errorMessage);
             });
             jobError.setValue(-5);
             waitingForErrorCode = false;
@@ -271,7 +273,7 @@ public class MainGUI extends Application {
                 doBatch();
             }
         }).start());
-        btnBatch.setOnMouseClicked(e -> batchGUI.show());
+        btnBatch.setOnMouseClicked(e -> batch.show());
         stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
             if (firstRun) {
                 firstRun = false;
@@ -288,17 +290,17 @@ public class MainGUI extends Application {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
                 if (newValue.length() == 0) {
-                    setDirOut(red,"Directory cannot be empty!");
+                    setDirOutput(red,"Directory cannot be empty!");
                 }
                 else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
-                        setDirOut(green,"Directory exists!");
+                        setDirOutput(green,"Directory exists!");
                         directoryExists.setValue(true);
                     }
                     else {
-                        setDirOut(red,"Directory does not exist or is not a directory!");
+                        setDirOutput(red,"Directory does not exist or is not a directory!");
                     }
                 }
             }
@@ -529,23 +531,23 @@ public class MainGUI extends Application {
     private void verifyLink(String oldValue, String newValue) {
         if (!oldValue.equals(newValue)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false)) {
-                setLinkOut(green,"Validating link ...");
+                setLinkOutput(green,"Validating link ...");
                 linkValid.setValue(false);
                 if (newValue.contains(" ")) {
-                    Platform.runLater(() -> setLinkOut(red,"Link should not contain whitespace characters!"));
+                    Platform.runLater(() -> setLinkOutput(red,"Link should not contain whitespace characters!"));
                 }
                 else if (!isURL(newValue)) {
-                    Platform.runLater(() -> setLinkOut(red,"String is not a URL"));
+                    Platform.runLater(() -> setLinkOutput(red,"String is not a URL"));
                 }
                 else {
                     try {
                         Utility.isURLValid(newValue);
-                        Platform.runLater(()-> setLinkOut(green,"Valid URL"));
+                        Platform.runLater(()-> setLinkOutput(green,"Valid URL"));
                         linkValid.setValue(true);
                     }
                     catch (Exception e) {
                         String errorMessage = e.getMessage();
-                        Platform.runLater(()-> setLinkOut(red,errorMessage));
+                        Platform.runLater(()-> setLinkOutput(red,errorMessage));
                     }
                 }
                 if (linkValid.getValue().equals(true)) {
@@ -567,9 +569,9 @@ public class MainGUI extends Application {
                 JsonElement element = JsonParser.parseString(jsonMetaData.getFirst());
                 String json = gson.toJson(element);
                 if (jsonMetaData.size() > 1) {
-                    batchGUI.setLink(link);
+                    batch.setLink(link);
                     tfLink.clear();
-                    setLinkOut(green,"");
+                    setLinkOutput(green,"");
                     return;
                 }
                 else if ((jsonMetaData.size() == 1)) {
@@ -583,7 +585,7 @@ public class MainGUI extends Application {
             gettingFilename = false;
             Platform.runLater(() -> {
                 tfFilename.setText(finalFilename);
-                setFilenameOut(green,"");
+                setFilenameOutput(green,"");
             });
         }).start();
     }
@@ -595,46 +597,46 @@ public class MainGUI extends Application {
         return m.matches();
     }
 
-    private void setFilenameOut(Color color, String message) {
+    private void setFilenameOutput(Color color, String message) {
         lblFilenameOutput.setTextFill(color);
         lblFilenameOutput.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
-                Platform.runLater(() -> setFilenameOut(green,""));
+                Platform.runLater(() -> setFilenameOutput(green,""));
             }).start();
         }
     }
 
-    private void setLinkOut(Color color, String message) {
+    private void setLinkOutput(Color color, String message) {
         lblLinkOutput.setTextFill(color);
         lblLinkOutput.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
-                Platform.runLater(() -> setLinkOut(green,""));
+                Platform.runLater(() -> setLinkOutput(green,""));
             }).start();
         }
     }
 
-    private void setDirOut(Color color, String message) {
+    private void setDirOutput(Color color, String message) {
         lblDirectoryOutput.setTextFill(color);
         lblDirectoryOutput.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
-                Platform.runLater(() -> setDirOut(green,""));
+                Platform.runLater(() -> setDirOutput(green,""));
             }).start();
         }
     }
 
-    private void setDownloadOut(Color color, String message) {
+    private void setDownloadOutput(Color color, String message) {
         lblDownloadOutput.setTextFill(color);
         lblDownloadOutput.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
-                Platform.runLater(() -> setDownloadOut(green,""));
+                Platform.runLater(() -> setDownloadOutput(green,""));
             }).start();
         }
     }
@@ -720,7 +722,6 @@ public class MainGUI extends Application {
     private void doBatch() {
         processingBatch.setValue(true);
         new Thread(() -> {
-            jobList = batchGUI.getJobList();
             failedJobList.clear();
             if (!jobList.isEmpty()) {
                 checkFiles();
@@ -731,7 +732,7 @@ public class MainGUI extends Application {
                     count++;
                     String jobCount = "Processing job " + count + " of " + max + ": " + job;
                     System.out.println("jobCount: "+jobCount);
-                    Platform.runLater(() -> setFilenameOut(green,jobCount));
+                    Platform.runLater(() -> setFilenameOutput(green,jobCount));
                     linkToFile = job.getLink();
                     directoryForDownloading = job.getDir();
                     fileName = job.getFilename();
@@ -771,15 +772,17 @@ public class MainGUI extends Application {
                 int errors = failedJobList.size();
                 String outMessage = (errors == 0) ? "Done - All downloads were successful!" : "Done - There were " + errors + " failed downloads, click on the Batch button to try those files again.";
                 Platform.runLater(() -> {
-                    setDownloadOut(green,outMessage);
-                    setLinkOut(green,"");
-                    setDirOut(green,"");
-                    setFilenameOut(green,"");
+                    setDownloadOutput(green,outMessage);
+                    setLinkOutput(green,"");
+                    setDirOutput(green,"");
+                    setFilenameOutput(green,"");
                     tfLink.clear();
                 });
-                AppSettings.get.jobs().setJobList(failedJobList);
-                if (!failedJobList.isEmpty()) {
-                    batchGUI.setFailedList(failedJobList);
+                if (AppSettings.get.jobs() != null) {
+                    AppSettings.get.jobs().setJobList(failedJobList);
+                    if (!failedJobList.isEmpty()) {
+                        batch.setFailedList(failedJobList);
+                    }
                 }
             }
             processingBatch.setValue(false);
@@ -802,7 +805,7 @@ public class MainGUI extends Application {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
                 int count = 1;
-                Platform.runLater(() -> setFilenameOut(green,"Retrieving Filename"));
+                Platform.runLater(() -> setFilenameOutput(green,"Retrieving Filename"));
                 while (gettingFilename) {
                     sleep(900);
                     if (count < 0) {
@@ -810,7 +813,7 @@ public class MainGUI extends Application {
                         countUp = true;
                     }
                     final String out = "Retrieving Filename" + ".".repeat(count);
-                    Platform.runLater(() -> setFilenameOut(green,out));
+                    Platform.runLater(() -> setFilenameOutput(green,out));
                     if (countUp) {
                         count++;
                     }
@@ -824,7 +827,7 @@ public class MainGUI extends Application {
                         countUp = true;
                     }
                 }
-                Platform.runLater(() -> setFilenameOut(green,""));
+                Platform.runLater(() -> setFilenameOutput(green,""));
             }).start();
         }
     }
@@ -838,12 +841,12 @@ public class MainGUI extends Application {
         boolean valid = false;
         try {
             Utility.isURLValid(tfLink.getText());
-            Platform.runLater(()-> setLinkOut(green,"Valid URL"));
+            Platform.runLater(()-> setLinkOutput(green,"Valid URL"));
             valid = true;
         }
         catch (Exception e) {
             String errorMessage = e.getMessage();
-            Platform.runLater(()-> setLinkOut(red,errorMessage));
+            Platform.runLater(()-> setLinkOutput(red,errorMessage));
         }
         if (!valid) {
             new AskYesNo("The link provided is not a valid URL", true).isYes();

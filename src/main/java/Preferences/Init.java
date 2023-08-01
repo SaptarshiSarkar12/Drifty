@@ -1,14 +1,16 @@
 package Preferences;
 
 import Backend.Drifty;
-import Backend.CopyYt_dlp;
+import Backend.CopyYtDlp;
 import Enums.Category;
 import Enums.OS;
 import Enums.Program;
 import Enums.Type;
 import Utils.MessageBroker;
+import org.apache.commons.io.FileUtils;
 import org.buildobjects.process.ProcBuilder;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -35,20 +37,20 @@ public class Init {
 
     public static void environment() {
         messageBroker.send("User OS is : " + OS.osName(), Type.INFORMATION, Category.LOG);
-        String yt_dlpProgramName;
+        String programName;
         if (OS.isWindows()) {
-            yt_dlpProgramName = "yt-dlp.exe";
+            programName = "yt-dlp.exe";
         }
         else if (OS.isMac()) {
-            yt_dlpProgramName = "yt-dlp_macos";
+            programName = "yt-dlp_macos";
         }
         else {
-            yt_dlpProgramName = "yt-dlp";
+            programName = "yt-dlp";
         }
-        Program.setName(yt_dlpProgramName);
+        Program.setName(programName);
         Program.setPath(Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
-        messageBroker.send("yt-dlp program name detected is : " + yt_dlpProgramName, Type.INFORMATION, Category.LOG);
-        CopyYt_dlp cy = new CopyYt_dlp();
+        messageBroker.send("yt-dlp program name detected is : " + programName, Type.INFORMATION, Category.LOG);
+        CopyYtDlp cy = new CopyYtDlp();
         try {
             if(!cy.copyToTemp()) {
                 AppSettings.set.updateTimestamp(System.currentTimeMillis());
@@ -57,6 +59,22 @@ public class Init {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+        String batchPath;
+        if (OS.isWindows()) {
+            batchPath = Paths.get(System.getenv("APPDATA"), ".drifty").toAbsolutePath().toString();
+        }
+        else {
+            batchPath = Paths.get(System.getProperty("user.home"),".config", ".drifty").toAbsolutePath().toString();
+        }
+        File folder = new File(batchPath);
+        if (!folder.exists()) {
+            try {
+                FileUtils.forceMkdir(folder);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        Program.setBatchPath(batchPath);
     }
 
     public static void updateProgram() {

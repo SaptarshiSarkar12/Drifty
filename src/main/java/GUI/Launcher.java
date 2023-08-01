@@ -1,7 +1,8 @@
-package GUIFX;
+package GUI;
 
 import Enums.Mode;
 import Enums.OS;
+import GUI.Forms.Main;
 import Preferences.Init;
 
 import javax.imageio.ImageIO;
@@ -34,7 +35,7 @@ public class Launcher {
         System.setProperty("apple.awt.UIElement", "false");
         Toolkit.getDefaultToolkit();
         setTaskbarDockIcon();
-        MainGUI.main(args);
+        Main.main(args);
     }
 
     private static void setTaskbarDockIcon() {

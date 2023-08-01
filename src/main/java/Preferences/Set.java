@@ -1,10 +1,16 @@
 package Preferences;
 
-import GUIFX.Support.Folders;
-import GUIFX.Support.Jobs;
+import Enums.Program;
+import GUI.Support.Folders;
+import GUI.Support.Jobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 import static Preferences.LABEL.*;
@@ -58,7 +64,12 @@ public class Set {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
-        prefs.put(JOBS.Name(), value);
+        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.Name());
+        try {
+            FileUtils.writeStringToFile(batchPath.toFile(), value, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
