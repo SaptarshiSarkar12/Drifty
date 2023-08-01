@@ -61,7 +61,7 @@ public class Init {
         }
         String batchPath;
         if (OS.isWindows()) {
-            batchPath = Paths.get(System.getenv("APPDATA"), ".drifty").toAbsolutePath().toString();
+            batchPath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
         }
         else {
             batchPath = Paths.get(System.getProperty("user.home"),".config", ".drifty").toAbsolutePath().toString();
