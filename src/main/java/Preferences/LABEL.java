@@ -20,7 +20,7 @@ public enum LABEL {
             case BATCH_AUTO_PASTE -> "BATCH_AUTO_PASTE";
             case UPDATE_TIMESTAMP -> "UPDATE_TIMESTAMP";
             case LAST_FOLDER -> "LAST_FOLDER";
-            case JOBS -> "JOBS";
+            case JOBS -> "JOBS.json";
         };
 
     }

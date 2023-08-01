@@ -4,7 +4,7 @@ import Backend.Drifty;
 import Enums.Category;
 import Enums.OS;
 import Enums.Type;
-import GUIFX.Launcher;
+import GUI.Launcher;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 

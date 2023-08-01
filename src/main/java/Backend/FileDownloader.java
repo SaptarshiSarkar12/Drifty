@@ -2,7 +2,7 @@ package Backend;
 
 import CLI.Drifty_CLI;
 import Enums.*;
-import GUIFX.MainGUI;
+import GUI.Forms.Main;
 import Preferences.Init;
 import Utils.MessageBroker;
 import Utils.StringIsNull;
@@ -267,7 +267,7 @@ public class FileDownloader implements Runnable {
         }
         int result = process.waitFor();
         String errorMessage = ((result == 0) ? SUCCESSFULLY_DOWNLOADED : FAILED_TO_DOWNLOAD) + outputFileName;
-        MainGUI.setJobError(errorMessage, result);
+        Main.setJobError(errorMessage, result);
     }
 
     /**

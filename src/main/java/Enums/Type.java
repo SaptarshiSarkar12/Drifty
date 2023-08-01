@@ -1,5 +1,9 @@
 package Enums;
 
+/**
+ * Used by MessageBroker
+ */
+
 public enum Type {
     INFORMATION, WARNING, ERROR;
 

@@ -7,7 +7,7 @@ First, I created a JavaFX GUI using the Swift GUI as a framework. All of the bac
 I added three packages:
 
 * Enums
-* GUIFX
+* GUI
 * Preferences
 
 ### Enums
@@ -28,7 +28,7 @@ This package has classes that leverage Javas `Preferences` class, and is used to
 Using the Preferences class is preferrable to having an .ini file stored somewhere on the users file system as Preferences handles all of that back end stuff automatically and keeps the information in relevant OS file structure and out of the users way.
 * <b>Update Timestamp</b> - Stores the timestamp of the last time `yt-dlp` was updated. See <b>Feature Changes</b> below
 
-### GUIFX
+### GUI
 This package has the classes that are relevant to the different JavaFX screens along with other classes such as data structure classes. Those are in the Support package.
 
 * MainGUI - The main user screen. I maintained the same Menu as was in the Swift code. I added a right click ContextMenu for adding and managing download folders

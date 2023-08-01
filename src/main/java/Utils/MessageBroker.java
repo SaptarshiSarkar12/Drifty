@@ -3,7 +3,7 @@ package Utils;
 import Enums.Category;
 import Enums.Mode;
 import Enums.Type;
-import GUIFX.MainGUI;
+import GUI.Forms.Main;
 
 import java.io.PrintStream;
 
@@ -12,7 +12,7 @@ import java.io.PrintStream;
  *
  * @version 2.0.0
  * @see Backend.Drifty
- * @see GUIFX.MainGUI
+ * @see Main
  * @see CLI.Drifty_CLI
  * @since 2.0.0
  */
@@ -57,7 +57,7 @@ public class MessageBroker {
         }
         else if (Mode.GUILoaded()) {
             logger.log(messageType, message);
-            MainGUI.setMessage(message, messageType, category);
+            Main.setMessage(message, messageType, category);
         }
     }
 

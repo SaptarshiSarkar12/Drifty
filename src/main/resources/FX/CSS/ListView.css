@@ -16,9 +16,10 @@
     -fx-text-fill: ghostwhite;
 }
 
-.list-view .scroll-bar:horizontal  {
+.list-view .scroll-bar:horizontal,
+.list-view .scroll-bar:vertical {
     -fx-background-color: transparent;
-    -fx-border-color:transparent;
+    -fx-border-color: transparent;
 }
 
 .list-view .scroll-bar:horizontal .thumb,

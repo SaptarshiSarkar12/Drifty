@@ -12,9 +12,15 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
+        <javafx.version>20</javafx.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -31,6 +37,26 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.buildobjects</groupId>
+            <artifactId>jproc</artifactId>
+            <version>2.8.2</version>
         </dependency>
     </dependencies>
 
@@ -96,7 +122,7 @@
                         <generatePkg>true</generatePkg>
                         <relocateJar>false</relocateJar>
                         <macStartup>UNIVERSAL</macStartup>
-                        <codesignApp>false</codesignApp>  
+                        <codesignApp>false</codesignApp>
                         <!-- properties used for DMG disk image generation -->
                         <volumeName>${project.name}</volumeName>
                         <!-- properties used for Info.plist file generation -->
@@ -117,11 +143,11 @@
                             <platform>windows</platform>
                             <mainClass>GUI.Drifty_GUI</mainClass>
                             <outputDirectory>./target/GUI/windows</outputDirectory>
-                            <createZipball>true</createZipball>                            
+                            <createZipball>true</createZipball>
                             <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
-                            </additionalResources>                            
+                                <additionalResource>Drifty Banner.png</additionalResource>
+                                <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
+                            </additionalResources>
                         </configuration>
                     </execution>
                     <execution>
@@ -137,8 +163,8 @@
                             <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp</additionalResource>
+                                <additionalResource>Drifty Banner.png</additionalResource>
+                                <additionalResource>src/main/resources/yt-dlp</additionalResource>
                             </additionalResources>
                         </configuration>
                     </execution>
@@ -155,8 +181,8 @@
                             <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
+                                <additionalResource>Drifty Banner.png</additionalResource>
+                                <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
                             </additionalResources>
                         </configuration>
                     </execution>

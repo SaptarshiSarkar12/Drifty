@@ -1,5 +1,9 @@
 package Enums;
 
+/**
+ * Used primarily for the MessageBroker class
+ */
+
 public enum Mode {
     CLI_MODE, GUI_MODE;
 
