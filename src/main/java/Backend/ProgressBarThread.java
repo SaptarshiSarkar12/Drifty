@@ -14,11 +14,11 @@ import java.util.List;
 import static Utils.DriftyConstants.*;
 
 /**
- * This is the class responsible for showing the progress bar in the CLIString (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
+ * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
     /**
-     * This is the message broker service instance which sends messages to the CLIString or GUI.
+     * This is the message broker service instance which sends messages to the CLI or GUI.
      */
     private final static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     /**
@@ -143,7 +143,7 @@ public class ProgressBarThread extends Thread {
     }
 
     /**
-     * This method generates a progress bar for the CLIString (Command Line Interface) version of Drifty.
+     * This method generates a progress bar for the CLI (Command Line Interface) version of Drifty.
      * @param spinner icon of the spin in the progress bar.
      * @return String object containing the progress bar.
      */
