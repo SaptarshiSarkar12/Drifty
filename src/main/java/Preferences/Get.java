@@ -28,10 +28,6 @@ public class Get {
 
     private final Preferences prefs = LABEL.prefs;
 
-    public boolean devMode() {
-        return prefs.getBoolean(DEVMODE.Name(), false);
-    }
-
     public Folders folders() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Folders folders = new Folders();

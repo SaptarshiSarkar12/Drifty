@@ -28,11 +28,6 @@ public class Set {
 
     private final Preferences prefs = LABEL.prefs;
 
-    public void devMode(boolean value) {
-        AppSettings.clear.devMode();
-        prefs.putBoolean(DEVMODE.Name(), value);
-    }
-
     public void folders(Folders folders) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(folders);
