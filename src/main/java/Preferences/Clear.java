@@ -18,10 +18,6 @@ public class Clear {
 
     private final Preferences prefs = LABEL.prefs;
 
-    public void devMode() {
-        prefs.remove(DEVMODE.Name());
-    }
-
     public void folders() {
         prefs.remove(FOLDERS.Name());
     }
