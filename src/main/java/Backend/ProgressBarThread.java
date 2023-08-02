@@ -1,8 +1,8 @@
 package Backend;
 
-import Enums.Category;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Enums.Mode;
-import Enums.Type;
 import GUI.Forms.Main;
 import Utils.MessageBroker;
 
@@ -258,14 +258,14 @@ public class ProgressBarThread extends Thread {
     private void cleanup() {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
-            messageBroker.send("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, Type.INFORMATION, Category.DOWNLOAD);
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            messageBroker.send("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, Type.INFORMATION, Category.DOWNLOAD);
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
         } else {
-            messageBroker.send("\n" + DOWNLOAD_FAILED, Type.ERROR, Category.DOWNLOAD);
+            messageBroker.sendMessage("\n" + DOWNLOAD_FAILED, MessageType.ERROR, MessageCategory.DOWNLOAD);
         }
-        if (Mode.GUI()) {
+        if (Mode.isGUI()) {
             Main.setDownloadInProgress(false);
         }
     }
@@ -286,7 +286,7 @@ public class ProgressBarThread extends Thread {
                         Thread.sleep(250);
                         downloadedBytes = fos.getChannel().size();
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
-                        if (Mode.CLI()) {
+                        if (Mode.isCLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
                         } else {
                             generateProgressBar(spinner[i]);
@@ -304,7 +304,7 @@ public class ProgressBarThread extends Thread {
                             downloadedBytesPerPart.add(j, downloadedPartBytes);
                             downloadSpeeds.add(j, (downloadedPartBytes - initialMeasurements.get(j)) * 4);
                         }
-                        if (Mode.CLI()) {
+                        if (Mode.isCLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
                         } else {
                             generateProgressBar(spinner[i]);

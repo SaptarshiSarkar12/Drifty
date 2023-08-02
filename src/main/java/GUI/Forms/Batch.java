@@ -1,10 +1,10 @@
 package GUI.Forms;
 
+import Enums.DriftyConfig;
 import Enums.Format;
-import Enums.Program;
 import GUI.Support.Constants;
 import GUI.Support.*;
-import Preferences.AppSettings;
+import Preferences.Settings;
 import Utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -111,9 +111,9 @@ public class Batch {
         double[] newDim = Utility.fraction(width, height, scale);
         width = newDim[0];
         height = newDim[1];
-        folders = AppSettings.get.folders();
-        if (AppSettings.get.jobs() != null) {
-            jobList = AppSettings.get.jobs().jobList();
+        folders = Settings.GET_PREFERENCES.getFolders();
+        if (Settings.GET_PREFERENCES.getJobs() != null) {
+            jobList = Settings.GET_PREFERENCES.getJobs().jobList();
         }
         else {
             jobList = new ConcurrentLinkedDeque<>();
@@ -175,7 +175,7 @@ public class Batch {
     }
 
     private void setControlProperties() {
-        cbAutoPaste.setSelected(AppSettings.get.batchAutoPaste());
+        cbAutoPaste.setSelected(Settings.GET_PREFERENCES.getIsBatchAutoPasteEnabled());
         tfDir.setText(folders.getDownloadFolder());
         tfLink.textProperty().addListener(((observable, oldLink, newLink) -> {
             if (!oldLink.equals(newLink)) {
@@ -185,8 +185,8 @@ public class Batch {
         tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
-                if (newValue.length() == 0) {
-                    String folderPath = AppSettings.get.lastFolder();
+                if (newValue.isEmpty()) {
+                    String folderPath = Settings.GET_PREFERENCES.getLastDownloadFolder();
                     if (folderPath.isEmpty()) {
                         setDirOut(Constants.RED, "Directory cannot be empty!");
                     }
@@ -256,7 +256,7 @@ public class Batch {
         btnRunBatch.setOnMouseClicked(e -> runBatch());
         cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != oldValue) {
-                AppSettings.set.batchAutoPaste(newValue);
+                Settings.SET_PREFERENCES.setIsBatchAutoPasteEnabled(newValue);
             }
         }));
         btnConsole.setOnMouseClicked(e -> toggleConsole());
@@ -368,7 +368,7 @@ public class Batch {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = AppSettings.get.folders();
+            folders = Settings.GET_PREFERENCES.getFolders();
         });
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miAdd, miDir, separator, miInfo);
@@ -445,7 +445,7 @@ public class Batch {
     private Label label(String text, double left, double right, double top, boolean forShow) {
         Label label = new Label(text);
         anchorPane.getChildren().add(label);
-        label.setFont(new Font(Constants.monaco.toExternalForm(), 18));
+        label.setFont(new Font(Constants.monacoFont.toExternalForm(), 18));
         placeControl(label, left, right, top, -1);
         if (forShow) {
             label.getStyleClass().add("normalLabel");
@@ -606,7 +606,7 @@ public class Batch {
                     clockTimer = null;
                     setFileOut(Constants.GREEN, "");
                 }
-                File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
+                File tempFolder = Paths.get(DriftyConfig.getConfig(DriftyConfig.PATH), "Drifty").toFile();
                 if (tempFolder.exists()) {
                     List<File> fileList = new ArrayList<>();
                     File[] files = tempFolder.listFiles();
@@ -701,7 +701,7 @@ public class Batch {
                 bounceTimer.scheduleAtFixedRate(bounceTask(),100,2700);
             }
             checkForList();
-            LinkedList<String> jsonMetadataList = Utility.getJsonLinkMetadata(link);
+            LinkedList<String> jsonMetadataList = Utility.getLinkMetadata(link);
             if (!listFound) {
                 gettingFilenames.setValue(false);
                 createBatch(jsonMetadataList, link);
@@ -824,10 +824,14 @@ public class Batch {
         });
     }
 
+    /**
+     * This method is used to get the last copied clipboard text
+     * @return the last copied text from the clipboard in string format
+     */
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
-            return (String) clipboard.getData(DataFlavor.stringFlavor);
+            return (String)(clipboard.getData(DataFlavor.stringFlavor));
         } catch (UnsupportedFlavorException | IOException e) {
             e.printStackTrace();
         }
@@ -859,7 +863,7 @@ public class Batch {
     private void commitJobListToListView() {
         Platform.runLater(() -> {
             if (jobList != null) {
-                if (jobList.size() < 1) {
+                if (jobList.isEmpty()) {
                     listView.getItems().clear();
                 }
                 else {
@@ -871,8 +875,8 @@ public class Batch {
                     listView.getItems().setAll(jobList);
                 }
             }
-            if (AppSettings.get.jobs() != null) {
-                AppSettings.get.jobs().setJobList(jobList);
+            if (Settings.GET_PREFERENCES.getJobs() != null) {
+                Settings.GET_PREFERENCES.getJobs().setJobList(jobList);
             }
             else {
                 new Jobs().setJobList(jobList);
@@ -884,7 +888,6 @@ public class Batch {
         Main.runBatch(jobList);
         close();
     }
-
 
     /**
      * Class Utilities
@@ -956,7 +959,7 @@ public class Batch {
 
     private Text text(String string, boolean bold, Color color, double size) {
         Text text = new Text(string);
-        text.setFont(new Font(Constants.monaco.toExternalForm(),size));
+        text.setFont(new Font(Constants.monacoFont.toExternalForm(),size));
         text.setFill(color);
         if (bold) text.setStyle("-fx-font-weight: bold");
         text.setWrappingWidth(710);
