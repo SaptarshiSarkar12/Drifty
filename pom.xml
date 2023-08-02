@@ -141,7 +141,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>windows</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUI.Launcher</mainClass>
                             <outputDirectory>./target/GUI/windows</outputDirectory>
                             <createZipball>true</createZipball>
                             <additionalResources>
@@ -159,7 +159,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>linux</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUI.Launcher</mainClass>
                             <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -177,7 +177,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>mac</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
+                            <mainClass>GUI.Launcher</mainClass>
                             <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
