@@ -13,6 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
         <javafx.version>20</javafx.version>
+        <guiMain>GUI.Launcher</guiMain>
+        <cliMain>CLI.Drifty_CLI</cliMain>
     </properties>
 
     <dependencies>
@@ -141,7 +143,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>windows</platform>
-                            <mainClass>GUI.Launcher</mainClass>
+                            <mainClass>${guiMain}</mainClass>
                             <outputDirectory>./target/GUI/windows</outputDirectory>
                             <createZipball>true</createZipball>
                             <additionalResources>
@@ -159,7 +161,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>linux</platform>
-                            <mainClass>GUI.Launcher</mainClass>
+                            <mainClass>${guiMain}</mainClass>
                             <outputDirectory>./target/GUI/linux</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -177,7 +179,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>mac</platform>
-                            <mainClass>GUI.Launcher</mainClass>
+                            <mainClass>${guiMain}</mainClass>
                             <outputDirectory>./target/GUI/mac</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -195,7 +197,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>windows</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <mainClass>${cliMain}</mainClass>
                             <outputDirectory>./target/CLI/windows</outputDirectory>
                             <createZipball>true</createZipball>
                             <additionalResources>
@@ -212,7 +214,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>linux</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <mainClass>${cliMain}</mainClass>
                             <outputDirectory>./target/CLI/linux</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
@@ -229,7 +231,7 @@
                         <configuration>
                             <bundleJre>true</bundleJre>
                             <platform>mac</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
+                            <mainClass>${cliMain}</mainClass>
                             <outputDirectory>./target/CLI/mac</outputDirectory>
                             <createTarball>true</createTarball>
                             <additionalResources>
