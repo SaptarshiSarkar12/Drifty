@@ -2,10 +2,11 @@ package Utils;
 
 import Backend.DefaultDownloadFolderLocationFinder;
 import Backend.Drifty;
-import Enums.Category;
+import Enums.DriftyConfig;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Enums.OS;
-import Enums.Program;
-import Enums.Type;
+import GUI.Forms.Main;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -17,26 +18,23 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.*;
 
+/**
+ * This is the class for the utility methods used by Drifty CLI as well as Drifty GUI
+ */
 public final class Utility {
-
-    MessageBroker message;
+    static MessageBroker messageBroker;
     private static final Scanner SC = ScannerFactory.getInstance();
-    private static final Random random = new Random(System.currentTimeMillis());
-    private static Process linkProcess;
     private static Thread linkThread;
     private static boolean interrupted;
 
-
     public Utility(MessageBroker messageBroker) {
-        message = messageBroker;
+        Utility.messageBroker = messageBroker;
     }
 
     /**
@@ -63,7 +61,7 @@ public final class Utility {
 
     /**
      * @param link Link to the file that the user wants to download
-     * @throws Exception if URL is not valid or cannot be connected to, then this Exception is thrown with proper message
+     * @throws Exception if the URL is not valid or cannot be connected to, then this Exception is thrown with proper message
      */
     public static void isURLValid(String link) throws Exception {
         try {
@@ -78,7 +76,7 @@ public final class Utility {
                 URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
-                throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not a valid one! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+                throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
                 throw new Exception("You are not connected to the Internet!");
             }
@@ -108,34 +106,34 @@ public final class Utility {
      */
     public String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
-        // Example : "example.com/file.txt" prints "Filename detected: file.txt"
+        // Example: "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
         String file = link.substring(link.lastIndexOf("/") + 1);
         int index = file.lastIndexOf(".");
         if (index < 0) {
-            message.send(AUTO_FILE_NAME_DETECTION_FAILED, Type.ERROR, Category.FILENAME);
+            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
             return null;
         }
         String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
-            message.send(AUTO_FILE_NAME_DETECTION_FAILED, Type.ERROR, Category.FILENAME);
+            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
             return null;
         }
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
-        message.send(FILENAME_DETECTED + fileName, Type.INFORMATION, Category.FILENAME);
+        messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFORMATION, MessageCategory.FILENAME);
         return fileName;
     }
 
     /**
-     * This method finds the default downloads folder and create log accordingly.
+     * This method finds the default downloads folder and creates log accordingly.
      *
      * @return The path of the default download folder.
      */
     public String saveToDefault() {
         String downloadsFolder;
-        message.send(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, Type.INFORMATION, Category.DIRECTORY);
+        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFORMATION, MessageCategory.DIRECTORY);
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
@@ -144,10 +142,10 @@ public final class Utility {
             downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
         }
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
-            message.send(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, Type.ERROR, Category.DIRECTORY);
+            messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, MessageType.ERROR, MessageCategory.DIRECTORY);
         }
         else {
-            message.send(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, Type.INFORMATION, Category.DIRECTORY);
+            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFORMATION, MessageCategory.DIRECTORY);
         }
         return downloadsFolder;
     }
@@ -160,9 +158,9 @@ public final class Utility {
      * @return true if the user enters Y [Yes] and false if not.
      */
     public boolean yesNoValidation(String input, String printMessage) {
-        while (input.length() == 0) {
+        while (input.isEmpty()) {
             System.out.println(ENTER_Y_OR_N);
-            message.send(ENTER_Y_OR_N, Type.ERROR, Category.LOG);
+            messageBroker.sendMessage(ENTER_Y_OR_N, MessageType.ERROR, MessageCategory.LOG);
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
         }
@@ -175,7 +173,7 @@ public final class Utility {
         }
         else {
             System.out.println("Invalid input!");
-            message.send("Invalid input!", Type.ERROR, Category.LOG);
+            messageBroker.sendMessage("Invalid input!", MessageType.ERROR, MessageCategory.LOG);
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
             yesNoValidation(input, printMessage);
@@ -184,10 +182,10 @@ public final class Utility {
     }
 
     /**
-     * This is the help method of Drifty that gets printed in the console when correct help flag has been passed as a parameter to Drifty CLIString.
+     * This is the help method of Drifty that gets printed in the console when the correct help flag has been passed as a parameter to Drifty CLI.
      */
     public static void help() {
-        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLIString HELP |==------------" + ANSI_RESET);
+        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
@@ -195,7 +193,7 @@ public final class Utility {
         System.out.println("-batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
         System.out.println("-location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
         System.out.println("-name       -n            Source                   Filename of the downloaded file.");
-        System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLIString.");
+        System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLI.");
         System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
@@ -221,27 +219,7 @@ public final class Utility {
     }
 
     /**
-     * This method prints the banner without any colour of text except white.
-     */
-    public static void initialPrintBanner() {
-        System.out.println(BANNER_BORDER);
-        System.out.println("  _____   _____   _____  ______  _______ __     __");
-        System.out.println(" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /");
-        System.out.println(" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /");
-        System.out.println(" | |  | ||  _  /   | |  |  __|     | |     \\   / ");
-        System.out.println(" | |__| || | \\ \\  _| |_ | |        | |      | |  ");
-        System.out.println(" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  ");
-        System.out.println(BANNER_BORDER);
-    }
-
-
-    /*
-    These classes are used by the JavaFX classes
-     */
-
-    /**
      * <p><u>Returns calculated multiple</u></p> from current X, Y using supplied multiplier
-     *
      * @param currentX   - current X value
      * @param currentY   - current Y value
      * @param multiplier - Use a fraction to reduce and larger than one to increase
@@ -254,38 +232,44 @@ public final class Utility {
         return result;
     }
 
-    public static LinkedList<String> getJsonLinkMetadata(String link) {
+    /**
+     * This method is used to get the metadata in LinkedList String format from a json file generated by {@link #getYT_IGLinkMetadata(String, String)}
+     * @param link link to the YouTube or Instagram video
+     * @return a LinkedList of type String
+     */
+    public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
-            File folder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
-            if (folder.exists() && folder.isDirectory()) {
-                FileUtils.forceDelete(folder);
+            File tempFolder = Paths.get(DriftyConfig.getConfig(DriftyConfig.PATH), "Drifty").toFile();
+            if (tempFolder.exists() && tempFolder.isDirectory()) {
+                FileUtils.forceDelete(tempFolder); // Deletes the previously generated temporary directory for Drifty
             }
-            folder.mkdir();
-            linkThread = new Thread(linkScan(folder.getAbsolutePath(), link));
+            tempFolder.mkdir();
+            linkThread = new Thread(getYT_IGLinkMetadata(tempFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
-                sleep(100);
+                Main.sleep(100);
                 interrupted = linkThread.isInterrupted();
             }
             if (interrupted) {
-                FileUtils.forceDelete(folder);
+                FileUtils.forceDelete(tempFolder);
                 return null;
             }
-            File[] files = folder.listFiles();
+            File[] files = tempFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
                     if (ext.toLowerCase().contains("json")) {
-                        String json = FileUtils.readFileToString(file, Charset.defaultCharset());
-                        list.addLast(json);
+                        String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
+                        list.addLast(linkMetadata);
                     }
                 }
-                FileUtils.forceDelete(folder);
+                FileUtils.forceDelete(tempFolder); // delete the metadata files of Drifty from the temp directory
             }
             return list;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            messageBroker.sendMessage("Failed to perform I/O operations on link metadata! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            return null;
         }
     }
 
@@ -314,14 +298,26 @@ public final class Utility {
         return cleanFilename(filename);
     }
 
+    /**
+     * This method filters the filename and removes any illegal characters not supported by the operating system
+     * @param filename filename as detected or as provided by the user
+     * @return the formatted and filtered string
+     */
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
         return fn.replaceAll("[^a-zA-Z0-9-._ ]+", "");
     }
 
-    private static Runnable linkScan(String folderPath, String link) {
+    /**
+     * This method provides a Runnable object to get the metadata of a YouTube or Instagram Link,
+     * containing information about Video Title, etc.
+     * @param folderPath Path to the temporary folder based on Operating System
+     * @param link the link to the YouTube or Instagram video
+     * @return a Runnable object with the metadata of the YouTube or Instagram link
+     */
+    private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
         return () -> {
-            String command = Program.get(Program.COMMAND);
+            String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
             new ProcBuilder(command).withArgs(args)
                     .withOutputStream(System.out)
@@ -330,28 +326,4 @@ public final class Utility {
                     .run();
         };
     }
-
-    private static void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static void cleanTemps() {
-        File user = new File(System.getProperty("user.home"));
-        File[] files = user.listFiles();
-        for (File file : files) {
-            String name = FilenameUtils.getName(file.getAbsolutePath());
-            if (name.matches("\\.Drifty_\\w{3,}") && file.isDirectory()) {
-                try {
-                    FileUtils.forceDelete(file);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
 }

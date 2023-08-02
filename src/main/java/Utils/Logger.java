@@ -1,7 +1,7 @@
 package Utils;
 
 import Enums.Mode;
-import Enums.Type;
+import Enums.MessageType;
 
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -26,21 +26,25 @@ public class Logger {
     String logFilename;
 
     /**
-     * This is the constructor used to initialise the variables in this class.
+     * This is the constructor which is used to initialise the log filename, path to the log file and the date-time formats
      */
     private Logger() {
-        if (Mode.CLI()) {
-            logFilename = "DriftyCLI.log";
+        if (Mode.isCLI()) {
+            logFilename = "Drifty CLI.log";
         }
         else {
-            logFilename = "DriftyGUI.log";
+            logFilename = "Drifty GUI.log";
         }
         filePath = FileSystems.getDefault().getPath(logFilename);
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }
 
+    /**
+     * This method provides a logger instance of presently running Drifty app
+     * @return Logger instance
+     */
     public static Logger getInstance() {
-        if (Mode.CLI()) {
+        if (Mode.isCLI()) {
             if (CLILoggerInstance != null) {
                 return CLILoggerInstance;
             }
@@ -57,7 +61,7 @@ public class Logger {
     }
 
     /**
-     * This function clears the contents of the previous log file.
+     * This function clears the contents of the previous log file
      */
     private void clearLog() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
@@ -69,21 +73,20 @@ public class Logger {
     }
 
     /**
-     * This function actually writes the output messages to the log file.
-     *
-     * @param type Type of the Log (acceptable values - INFO, WARN, ERROR).
-     * @param msg  Log message.
+     * This function writes the output messages to the log file.
+     * @param messageType Type of the Log (acceptable values - INFO, WARN, ERROR).
+     * @param logMessage  Log message.
      */
-    public void log(Type type, String msg) {
+    public void log(MessageType messageType, String logMessage) {
         String dateAndTime = dateFormat.format(calendarObject.getTime());
         if (!isLogEmpty) {
             clearLog();
         }
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
             isLogEmpty = true;
-            out.println(dateAndTime + " " + type.string() + " - " + msg);
+            out.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
-            System.out.println(FAILED_TO_CREATE_LOG + msg);
+            System.out.println(FAILED_TO_CREATE_LOG + logMessage);
         }
     }
 }

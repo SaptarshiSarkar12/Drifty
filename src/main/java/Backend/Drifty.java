@@ -1,7 +1,7 @@
 package Backend;
 
-import Enums.Category;
-import Enums.Type;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Utils.MessageBroker;
 import Utils.Utility;
 
@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 /**
- * This method is the Backend of Drifty which does the main part of Downloading the file from the website URL.
- *
+ * This method is the Backend of Drifty that does the main part of Downloading the file from the website URL.
  * @version 2.0.0
  * @since 2.0.0
  */
@@ -24,8 +23,8 @@ public class Drifty {
     /**
      * This is the <b>constructor of Backend of Drifty</b> that configures it to be able to work with <b>Graphical User Interface (GUI) Functionalities</b>.
      *
-     * @param url                         Link to the website collected from the user through inputs.
-     * @param downloadsDirectory          The directory where the file will be downloaded ("./" for Default Downloads Folder).
+     * @param url Link to the website collected from the user through inputs.
+     * @param downloadsDirectory The directory where the file will be downloaded ("./" for Default Downloads Folder).
      * @param fileNameOfTheDownloadedFile File string to keep for the file to be downloaded.
      * @since 2.0.0
      */
@@ -37,12 +36,12 @@ public class Drifty {
     }
 
     /**
-     * This is the <b>constructor of Backend of Drifty</b> that configures it to be able to work with <b>Command Line Interface (CLIString) Functionalities</b>.
+     * This is the <b>constructor of Backend of Drifty</b> that configures it to be able to work with <b>Command Line Interface (CLI) Functionalities</b>.
      *
-     * @param url                         Link to the website collected from the user through inputs.
-     * @param downloadsDirectory          The directory where the file will be downloaded ("./" for Default Downloads Folder).
+     * @param url Link to the website collected from the user through inputs.
+     * @param downloadsDirectory The directory where the file will be downloaded ("./" for Default Downloads Folder).
      * @param fileNameOfTheDownloadedFile File string to keep for the file to be downloaded.
-     * @param outputStream                The Output Stream where the Backend will give its outputs (Usually, in this case - 'System.out' [Standard Output Stream])
+     * @param outputStream The Output Stream where the Backend will give its outputs (Usually, in this case - 'System.out' [Standard Output Stream])
      * @since 2.0.0
      */
     public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, PrintStream outputStream) {
@@ -57,21 +56,21 @@ public class Drifty {
      */
     public void start() {
         Utility utility = new Utility(message);
-        message.send("Validating the link...", Type.INFORMATION, Category.LINK);
+        message.sendMessage("Validating the link...", MessageType.INFORMATION, MessageCategory.LINK);
         if (url.contains(" ")) {
-            message.send("Link should not contain whitespace characters!", Type.ERROR, Category.LINK);
+            message.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
             return;
         }
-        else if (url.length() == 0) {
-            message.send("Link cannot be empty!", Type.ERROR, Category.LINK);
+        else if (url.isEmpty()) {
+            message.sendMessage("Link cannot be empty!", MessageType.ERROR, MessageCategory.LINK);
             return;
         }
         else {
             try {
                 Utility.isURLValid(url);
-                message.send("Link is valid!", Type.INFORMATION, Category.LINK);
+                message.sendMessage("Link is valid!", MessageType.INFORMATION, MessageCategory.LINK);
             } catch (Exception e) {
-                message.send(e.getMessage(), Type.ERROR, Category.LINK);
+                message.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
                 return;
             }
         }
@@ -88,16 +87,16 @@ public class Drifty {
                 try {
                     new CheckDirectory(downloadsFolder);
                 } catch (IOException e) {
-                    message.send(e.getMessage(), Type.ERROR, Category.DIRECTORY);
+                    message.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
                     return;
                 }
             }
         }
 
-        if (((fileName == null) || (fileName.length() == 0)) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
+        if (((fileName == null) || (fileName.isEmpty())) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
             fileName = utility.findFilenameInLink(url);
-            if (fileName == null || fileName.length() == 0) {
-                message.send("Filename cannot be empty!", Type.ERROR, Category.FILENAME);
+            if (fileName == null || fileName.isEmpty()) {
+                message.sendMessage("Filename cannot be empty!", MessageType.ERROR, MessageCategory.FILENAME);
                 return;
             }
         }

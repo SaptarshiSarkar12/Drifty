@@ -1,10 +1,9 @@
 package Enums;
 
 /**
- * Used by MessageBroker
+ * This class provides the possible types of messages that will be sent to the Message Broker
  */
-
-public enum Type {
+public enum MessageType {
     INFORMATION, WARNING, ERROR;
 
     public String string() {

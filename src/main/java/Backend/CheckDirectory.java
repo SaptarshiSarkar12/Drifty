@@ -1,7 +1,7 @@
 package Backend;
 
-import Enums.Category;
-import Enums.Type;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Utils.MessageBroker;
 
 import java.io.File;
@@ -26,9 +26,9 @@ class CheckDirectory {
         if (!(checkIfFolderExists(dir))) {
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
-            message.send(DIRECTORY_CREATED, Type.INFORMATION, Category.DIRECTORY);
+            message.sendMessage(DIRECTORY_CREATED, MessageType.INFORMATION, MessageCategory.DIRECTORY);
         } else {
-            message.send("Directory is valid !", Type.INFORMATION, Category.DIRECTORY);
+            message.sendMessage("Directory is valid !", MessageType.INFORMATION, MessageCategory.DIRECTORY);
         }
     }
 
@@ -45,7 +45,7 @@ class CheckDirectory {
                 found = true;
             }
         } catch (Exception e) {
-            message.send(ERROR_WHILE_CHECKING_FOR_DIRECTORY, Type.ERROR, Category.DIRECTORY);
+            message.sendMessage(ERROR_WHILE_CHECKING_FOR_DIRECTORY, MessageType.ERROR, MessageCategory.DIRECTORY);
         }
         return found;
     }
