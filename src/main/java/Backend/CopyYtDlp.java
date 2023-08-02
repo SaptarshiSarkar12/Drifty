@@ -17,9 +17,10 @@ import java.util.Set;
 
 public class CopyYtDlp {
     /**
-     * This is the message broker service instance which sends messages to the CLIString or GUI.
+     * This is the message broker service instance that sends messages to the CLI or GUI.
      */
     static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+
     /**
      * This method copies the yt-dlp (the program used for downloading YouTube videos) to the temporary folder of the Operating System
      * and sets it as executable.

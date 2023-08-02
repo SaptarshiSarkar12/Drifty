@@ -46,8 +46,8 @@ jobs:
         cache: maven
     - name: Build with Maven for ${{ matrix.os }}
       run: mvn compile
-    - name: Package Drifty CLIString for ${{ matrix.os }} with JavaPackager Maven plugin
-      run: mvn javapackager:package@bundling-Drifty-CLIString-for-${{ matrix.os }}
+    - name: Package Drifty CLI for ${{ matrix.os }} with JavaPackager Maven plugin
+      run: mvn javapackager:package@bundling-Drifty-CLI-for-${{ matrix.os }}
     - name: Package Drifty GUI for ${{ matrix.os }} with JavaPackager Maven plugin
       run: mvn javapackager:package@bundling-Drifty-GUI-for-${{ matrix.os }}
     - name: Tar build files # To prevent file permission loss
@@ -63,7 +63,7 @@ jobs:
     needs: package-Drifty
     steps:
     - uses: actions/checkout@v3
-    - name: Get Drifty version from .version file
+    - name: Get Drifty version from version.json file
       run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
     - name: Set Drifty version in pom.xml
       run: mvn versions:set -DnewVersion=$VERSION
