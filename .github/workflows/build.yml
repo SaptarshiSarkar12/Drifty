@@ -46,7 +46,7 @@ jobs:
         cache: maven
     - name: Build with Maven for ${{ matrix.os }}
       run: mvn compile
-    - name: Package Drifty CLIString for ${{ matrix.os }} with JavaPackager Maven plugin
+    - name: Package Drifty CLI for ${{ matrix.os }} with JavaPackager Maven plugin
       run: mvn javapackager:package@bundling-Drifty-CLIString-for-${{ matrix.os }}
     - name: Package Drifty GUI for ${{ matrix.os }} with JavaPackager Maven plugin
       run: mvn javapackager:package@bundling-Drifty-GUI-for-${{ matrix.os }}
