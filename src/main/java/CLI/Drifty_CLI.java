@@ -1,10 +1,10 @@
 package CLI;
 
 import Backend.Drifty;
-import Enums.Category;
+import Enums.MessageCategory;
 import Enums.OS;
-import Enums.Type;
-import GUI.Launcher;
+import Enums.MessageType;
+import GUI.Drifty_GUI;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -13,23 +13,24 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
 
 /**
- * This is the main class for the CLIString (Command Line Interface) version of Drifty.
+ * This is the main class for the CLI (Command Line Interface) version of Drifty.
  *
  * @version 2.0.0
  */
 public class Drifty_CLI {
     /**
-     * Logger instance for the CLIString version of Drifty
+     * Logger instance for the CLI version of Drifty
      */
     public static final Logger logger = Logger.getInstance();
     /**
-     * Scanner instance for the CLIString of Drifty
+     * Scanner instance for the CLI of Drifty
      */
     protected static final Scanner SC = ScannerFactory.getInstance();
     /**
@@ -53,7 +54,7 @@ public class Drifty_CLI {
     private static String directory;
     private static String fileName = null;
     /**
-     * Boolean value which determines if batch downloading is triggered by the user
+     * Boolean value which determines if the user triggers batch downloading
      */
     private static boolean batchDownloading;
     /**
@@ -62,12 +63,12 @@ public class Drifty_CLI {
     private static String batchDownloadingFile;
 
     /**
-     * This function is the main method of the whole application.
+     * This function is the main method of Drifty CLI
      *
-     * @param args Command Line Arguments as a String array.
+     * @param args Command Line Arguments passed to Drifty CLI as a String array.
      */
     public static void main(String[] args) {
-        logger.log(Type.INFORMATION, CLI_APPLICATION_STARTED);
+        logger.log(MessageType.INFORMATION, CLI_APPLICATION_STARTED);
         message = new MessageBroker(System.out);
         utility = new Utility(message);
         printBanner();
@@ -77,25 +78,25 @@ public class Drifty_CLI {
             String name = null;
             String location = null;
             for (int i = 0; i < args.length; i++) {
-                if (TheseStrings.areEqual(args[i], HELP_FLAG) || TheseStrings.areEqual(args[i], HELP_FLAG_SHORT)) {
+                if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
                     help();
                     System.exit(0);
                 }
-                else if (TheseStrings.areEqual(args[i], GUI_FLAG) || (TheseStrings.areEqual(args[i], GUI_FLAG_SHORT))) {
-                    Launcher.main(args);
+                else if (Objects.equals(args[i], GUI_FLAG) || (Objects.equals(args[i], GUI_FLAG_SHORT))) {
+                    Drifty_GUI.main(args);
                     return;
                 }
-                else if (TheseStrings.areEqual(args[i], NAME_FLAG) || (TheseStrings.areEqual(args[i], NAME_FLAG_SHORT))) {
+                else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
                     name = args[i + 1];
                 }
-                else if (TheseStrings.areEqual(args[i], LOCATION_FLAG) || (TheseStrings.areEqual(args[i], LOCATION_FLAG_SHORT))) {
+                else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
                     location = args[i + 1];
                 }
-                else if (TheseStrings.areEqual(args[i], VERSION_FLAG) || (TheseStrings.areEqual(args[i], VERSION_FLAG_SHORT))) {
+                else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
                     System.out.println(APPLICATION_NAME + " " + VERSION_NUMBER);
                     System.exit(0);
                 }
-                else if ((TheseStrings.areEqual(args[i], BATCH_FLAG)) || (TheseStrings.areEqual(args[i], BATCH_FLAG_SHORT))) {
+                else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
                     batchDownloading = true;
                     batchDownloadingFile = args[i + 1];
                     batchDownloader();
@@ -124,7 +125,7 @@ public class Drifty_CLI {
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
                 backend.start();
             }
-            logger.log(Type.INFORMATION, CLI_APPLICATION_TERMINATED);
+            logger.log(MessageType.INFORMATION, CLI_APPLICATION_TERMINATED);
             System.exit(0);
         }
         while (true) {
@@ -139,7 +140,7 @@ public class Drifty_CLI {
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
-                        message.send("The given file should be a YAML file!", Type.ERROR, Category.LOG);
+                        message.sendMessage("The given file should be a YAML file!", MessageType.ERROR, MessageCategory.LOG);
                     }
                     else {
                         batchDownloader();
@@ -172,7 +173,7 @@ public class Drifty_CLI {
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
             if (choice.equals("q")) {
-                logger.log(Type.INFORMATION, CLI_APPLICATION_TERMINATED);
+                logger.log(MessageType.INFORMATION, CLI_APPLICATION_TERMINATED);
                 break;
             }
             printBanner();
@@ -185,16 +186,16 @@ public class Drifty_CLI {
     private static void batchDownloader() {
         Yaml yamlInstance = new Yaml();
         try {
-            message.send("Trying to load YAML data file (" + batchDownloadingFile + ") ...", Type.INFORMATION, Category.LOG);
+            message.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFORMATION, MessageCategory.LOG);
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
             Map<String, List<String>> data = yamlInstance.load(yamlDataFile);
-            message.send("YAML data file (" + batchDownloadingFile + ") loaded successfully", Type.INFORMATION, Category.LOG);
+            message.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFORMATION, MessageCategory.LOG);
             int numberOfLinks = data.get("links").size();
             int numberOfFileNames = data.get("fileNames").size();
             int numberOfDirectories = 0;
             if (data.containsKey("directory")) {
                 numberOfDirectories = 1;
-                if (data.get("directory").get(0).length() == 0) {
+                if (data.get("directory").get(0).isEmpty()) {
                     directory = ".";
                 }
                 else {
@@ -225,7 +226,7 @@ public class Drifty_CLI {
             else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            message.send("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, Type.INFORMATION, Category.LOG);
+            message.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFORMATION, MessageCategory.LOG);
             for (int i = 0; i < numberOfLinks; i++) {
                 link = data.get("links").get(i);
                 try {
@@ -237,7 +238,7 @@ public class Drifty_CLI {
                 if (directory.equals(".")) {
                     directory = utility.saveToDefault();
                 }
-                else if (directory.equals("")) {
+                else if (directory.isEmpty()) {
                     try {
                         directory = data.get("directories").get(i);
                     } catch (Exception e) {
@@ -248,7 +249,7 @@ public class Drifty_CLI {
                 backend.start();
             }
         } catch (FileNotFoundException e) {
-            message.send("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage(), Type.ERROR, Category.DOWNLOAD);
+            message.sendMessage("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
         }
     }
 
@@ -256,7 +257,7 @@ public class Drifty_CLI {
      * Takes the filename as input from the user interactively if the system cannot find the filename i.e. if it is null
      */
     private static void takeFileNameInputIfNull() {
-        if ((fileName == null || (fileName.length() == 0)) && (!isYoutubeURL && !isInstagramLink)) {
+        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             fileName = SC.nextLine();
         }

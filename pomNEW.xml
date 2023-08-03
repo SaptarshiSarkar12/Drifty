@@ -193,7 +193,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
-                    <!--Windows CLIString-->
+                    <!--Windows CLI-->
                     <execution>
                         <id>bundling-Drifty-CLI-for-windows-latest</id>
                         <phase>package</phase>
@@ -211,7 +211,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
-                    <!--Ubuntu CLIString-->
+                    <!--Ubuntu CLI-->
                     <execution>
                         <id>bundling-Drifty-CLI-for-ubuntu-latest</id>
                         <phase>package</phase>
@@ -229,7 +229,7 @@
                             </additionalResources>
                         </configuration>
                     </execution>
-                    <!--MacOS CLIString-->
+                    <!--MacOS CLI-->
                     <execution>
                         <id>bundling-Drifty-CLI-for-macos-latest</id>
                         <phase>package</phase>

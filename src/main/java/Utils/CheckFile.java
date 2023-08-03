@@ -10,34 +10,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class is used to walk the directories that the user added as download
+ * This class is used to walk through the directories that the user added as download
  * folders and will provide a list of files found in the directory and its
- * sub directories which is used to look for duplicate files.
+ * subdirectories, which is used to look for duplicate files.
  */
-
-
-public class FileWalker implements Runnable {
-
-    public FileWalker(String rootPath, List<String> searchList) {
-        this.rootPath = Paths.get(rootPath);
-        this.searchList = searchList;
-    }
-
-    public FileWalker(String rootPath, String searchFile) {
-        this.rootPath = Paths.get(rootPath);
-        this.searchList = new ArrayList<>();
-        this.searchList.add(searchFile);
-    }
-
+public class CheckFile implements Runnable {
     private final List<String> searchList;
     private final Path rootPath;
     public static boolean stopWalk = false;
     private FolderWalker folderWalker;
-
+    public CheckFile(String rootPath, List<String> searchList) {
+        this.rootPath = Paths.get(rootPath);
+        this.searchList = searchList;
+    }
+    public CheckFile(String rootPath, String searchFile) {
+        this.rootPath = Paths.get(rootPath);
+        this.searchList = new ArrayList<>();
+        this.searchList.add(searchFile);
+    }
     public static void setStopWalk() {
         stopWalk = true;
     }
-
     public LinkedList<String> getFileList() {
         return folderWalker.fileList;
     }

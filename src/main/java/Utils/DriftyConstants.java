@@ -13,9 +13,9 @@ public final class DriftyConstants {
     public static final String LOGGER_INFO = "INFO";
     public static final String LOGGER_WARN = "WARN";
 
-    public static final String CLI_APPLICATION_STARTED = "Drifty CLIString (Command Line Interface) Application Started !";
+    public static final String CLI_APPLICATION_STARTED = "Drifty CLI (Command Line Interface) Application Started !";
     public static final String GUI_APPLICATION_STARTED = "Drifty GUI (Graphical User Interface) Application Started !";
-    public static final String CLI_APPLICATION_TERMINATED = "Drifty CLIString (Command Line Interface) Application Terminated!";
+    public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
     public static final String AUTO_FILE_NAME_DETECTION_FAILED = "An error occurred! Either the file name or the extension was missing in the url.\nThe url must be of the form of https://www.example.com/fileName.extension or an YouTube/Instagram link";
@@ -69,7 +69,7 @@ public final class DriftyConstants {
     public static final String THREAD_ERROR_ENCOUNTERED = "Error: thread encountered an error";
 
     public static final String GETTING_READY_TO_DOWNLOAD_FILE = "Getting ready to download the file...";
-    public static final String USER_INTERRUPTION = "User interrupted while downloading the file!";
+    public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube Video!";
 
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
     public static final String DEFAULT_FILENAME = "%(title)s.%(ext)s";

@@ -3,7 +3,7 @@ package GUI;
 import Enums.Mode;
 import Enums.OS;
 import GUI.Forms.Main;
-import Preferences.Init;
+import Utils.Environment;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,17 +21,15 @@ import java.net.URL;
  * the code to check which mode the code is running in.
  */
 
-public class Launcher {
-
-    private static final Taskbar taskbar   = Taskbar.getTaskbar();
-    private final URL icon1024             = getClass().getResource("/FX/Icons/Icon1024.png");
-    private final URL icon512              = getClass().getResource("/FX/Icons/Icon512.png");
-    private static final JFrame jFrame     = new JFrame();
-    private static final Launcher INSTANCE = new Launcher();
+public class Drifty_GUI {
+    private final URL icon1024 = getClass().getResource("/GUI/Icons/Icon1024.png");
+    private final URL icon512 = getClass().getResource("/GUI/Icons/Icon512.png");
+    private static final JFrame jFrame = new JFrame();
+    private static final Drifty_GUI GUI_DRIFTY_GUI = new Drifty_GUI();
 
     public static void main(String[] args) {
         Mode.setGUIMode();
-        Init.environment();
+        Environment.initializeEnvironment();
         System.setProperty("apple.awt.UIElement", "false");
         Toolkit.getDefaultToolkit();
         setTaskbarDockIcon();
@@ -40,12 +38,12 @@ public class Launcher {
 
     private static void setTaskbarDockIcon() {
         try {
-            Image image = ImageIO.read(INSTANCE.icon512);
+            Image image = ImageIO.read(GUI_DRIFTY_GUI.icon512);
             if (OS.isMac()) {
-                image = ImageIO.read(INSTANCE.icon1024);
+                final Taskbar taskbar = Taskbar.getTaskbar();
+                image = ImageIO.read(GUI_DRIFTY_GUI.icon1024);
                 taskbar.setIconImage(image);
-            }
-            else {
+            } else {
                 jFrame.setUndecorated(true);
                 jFrame.setIconImage(image);
                 jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
@@ -53,18 +51,13 @@ public class Launcher {
                 jFrame.setVisible(true);
                 jFrame.setSize(new Dimension(26, 26));
             }
-        }
-        catch (UnsupportedOperationException ignored) {
-            System.out.println("This os does not support taskbar.setIconImage()");
-        }
-        catch (final SecurityException e) {
+        } catch (UnsupportedOperationException ignored) {
+            System.out.println("This operating system does not support taskbar icon API");
+        } catch (SecurityException e) {
             System.out.println("There was a security exception for: 'taskbar.setIconImage()'");
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
-
-
 }
