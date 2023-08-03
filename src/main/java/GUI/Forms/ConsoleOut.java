@@ -59,7 +59,7 @@ public class ConsoleOut {
     private double progress;
     private static String lastStandardTA;
     private static String lastErrorTA;
-    private final URL textAreaCSS = getClass().getResource("/FX/CSS/TextArea.css");
+    private final URL textAreaCSS = getClass().getResource("/GUI/CSS/TextArea.css");
     private final String regex = "(\\[download]\\s+)(\\d+\\.\\d+)(%)";
     private final Pattern pattern = Pattern.compile(regex);
     private TextArea taStandard;

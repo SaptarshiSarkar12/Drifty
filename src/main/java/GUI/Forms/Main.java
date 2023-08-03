@@ -7,7 +7,7 @@ import GUI.Support.AskYesNo;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.ManageFolders;
-import Preferences.AppSettings;
+import Preferences.Settings;
 import Utils.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,33 +56,32 @@ import static javafx.scene.layout.AnchorPane.*;
 
 
 public class Main extends Application {
-
-    private final Stage stage                               = new Stage();
-    private final double scale                              = .55;
-    private final Utility utility                           = new Utility(new MessageBroker(System.out));
+    private final Stage stage = new Stage();
+    private final double scale = .55;
+    private final Utility utility = new Utility(new MessageBroker(System.out));
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
-    private static final BooleanProperty processingBatch    = new SimpleBooleanProperty(false);
-    private static final BooleanProperty linkValid          = new SimpleBooleanProperty(false);
-    private static final BooleanProperty directoryExists    = new SimpleBooleanProperty(false);
-    private static final DoubleProperty progressProperty    = new SimpleDoubleProperty(0.0);
-    private static final IntegerProperty jobError           = new SimpleIntegerProperty(-5);
-    private final ConcurrentLinkedDeque<Job> failedJobList  = new ConcurrentLinkedDeque<>();
-    private ConcurrentLinkedDeque<Job> jobList              = new ConcurrentLinkedDeque<>();
-    private final Logger logger                             = Logger.getInstance();
-    private final Color green                               = Color.rgb(0, 255, 0);
-    private final Color red                                 = Color.rgb(177, 20 , 0);
-    private final Color orange                              = Color.rgb(180, 80 , 0);
-    private final String lf                                 = System.lineSeparator();
-    private final Image imgAutoPaste                        = new Image(Constants.lblAutoPaste.toExternalForm());
-    private final Image imgDirectory                        = new Image(Constants.lblDirectory.toExternalForm());
-    private final Image imgFilename                         = new Image(Constants.lblFilename.toExternalForm());
-    private final Image imgLink                             = new Image(Constants.lblLink.toExternalForm());
-    private boolean firstRun                                = true;
-    private boolean gettingFilename                         = false;
-    private boolean countUp                                 = true;
-    private boolean consoleOpen                             = false;
-    private boolean waitingForErrorCode                     = true;
-    private final URL monaco                                = getClass().getResource("/FX/Fonts/Monaco.ttf");
+    private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
+    private static final BooleanProperty linkValid = new SimpleBooleanProperty(false);
+    private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
+    private static final DoubleProperty progressProperty = new SimpleDoubleProperty(0.0);
+    private static final IntegerProperty jobError = new SimpleIntegerProperty(-5);
+    private final ConcurrentLinkedDeque<Job> failedJobList = new ConcurrentLinkedDeque<>();
+    private ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
+    private final Logger logger = Logger.getInstance();
+    private final Color green = Color.rgb(0, 255, 0);
+    private final Color red = Color.rgb(177, 20 , 0);
+    private final Color orange = Color.rgb(180, 80 , 0);
+    private final String systemDefaultLineSeparator = System.lineSeparator();
+    private final Image imgAutoPaste = new Image(Constants.autoPasteLabelImage.toExternalForm());
+    private final Image imgDirectory = new Image(Constants.directoryLabelImage.toExternalForm());
+    private final Image imgFilename = new Image(Constants.filenameLabelImage.toExternalForm());
+    private final Image imgLink = new Image(Constants.linkLabelImage.toExternalForm());
+    private boolean firstRun = true;
+    private boolean gettingFilename = false;
+    private boolean countUp = true;
+    private boolean consoleOpen = false;
+    private boolean waitingForErrorCode = true;
+    private final URL monacoFont = getClass().getResource("/GUI/Fonts/Monaco.ttf");
     private String errorMessage;
     private Batch batch;
     private static Main INSTANCE;
@@ -98,22 +97,22 @@ public class Main extends Application {
     private String directoryForDownloading;
     private String fileName;
     private AnchorPane anchorPane;
-    private TextField tfLink;
-    private TextField tfDir;
-    private TextField tfFilename;
+    private TextField linkTextField;
+    private TextField directoryTextField;
+    private TextField filenameTextField;
     private ImageView ivBack;
-    private ImageView btnDownload;
-    private ImageView btnBatch;
-    private ImageView lblAutoPaste;
-    private ImageView lblLink;
-    private ImageView lblDirectory;
-    private ImageView lblFilename;
-    private CheckBox cbPaste;
-    private Label lblLinkOutput;
-    private Label lblDirectoryOutput;
-    private Label lblDownloadOutput;
-    private Label lblFilenameOutput;
-    private ImageView btnConsole;
+    private ImageView downloadButton;
+    private ImageView batchButton;
+    private ImageView autoPasteLabel;
+    private ImageView linkLabel;
+    private ImageView directoryLabel;
+    private ImageView filenameLabel;
+    private CheckBox checkBoxForAutoPaste;
+    private Label linkOutputLabel;
+    private Label directoryOutputLabel;
+    private Label downloadOutputLabel;
+    private Label filenameOutputLabel;
+    private ImageView consoleButton;
 
     public static void main(String[] args) {
         launch(args);
@@ -121,14 +120,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        folders = AppSettings.get.folders();
-        logger.log(Type.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
+        folders = Settings.GET_PREFERENCES.getFolders();
+        logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
         height = (int) screenSize.getHeight(); // E.g.: 768
         width = (int) screenSize.getWidth(); // E.g.: 1366
-        double[] newDim = Utility.fraction(width, height, scale);
-        width = newDim[0];
-        height = newDim[1];
         backPath = Constants.guiBackground.toString();
         createControls();
         createScene();
@@ -148,6 +144,10 @@ public class Main extends Application {
         jobError.setValue(errorLevel);
     }
 
+    /**
+     * This method updates the progress bar in Drifty GUI screen
+     * @param progress an integer value denoting the progress
+     */
     public static void updateProgress(double progress) {
         if (progress > 0.0 && progress < 0.99) {
             progressProperty.setValue(progress);
@@ -157,22 +157,36 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * This method sets the {@link #downloadInProgress} with the boolean value provided to it as a parameter
+     * @param value true if the file download process is in progress
+     */
     public static void setDownloadInProgress(boolean value) {
         downloadInProgress.setValue(value);
     }
 
+    /**
+     * This method starts the batch downloader
+     * @param jobList linked deque list of the jobs to perform in the batch downloading system of Drifty
+     */
     public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
         INSTANCE.jobList = jobList;
-        INSTANCE.doBatch();
+        INSTANCE.batchDownloader();
     }
 
-    public static void setMessage(String message, Type messageType, Category category) {
+    /**
+     * This method sets the output message with the color in the respective sections, for the GUI
+     * @param message output message to be shown in the Drifty GUI screen
+     * @param messageType type of the output message
+     * @param messageCategory category of the output message
+     */
+    public static void setMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         Color color = switch (messageType) {
             case INFORMATION -> INSTANCE.green;
             case ERROR -> INSTANCE.red;
             case WARNING -> INSTANCE.orange;
         };
-        switch (category) {
+        switch (messageCategory) {
             case LINK -> Platform.runLater(() -> INSTANCE.setLinkOutput(color,message));
             case DIRECTORY -> Platform.runLater(() -> INSTANCE.setDirOutput(color,message));
             case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOutput(color, message));
@@ -183,7 +197,6 @@ public class Main extends Application {
     /**
      * Form initialization And Control
      */
-
     private void createControls() {
         anchorPane = new AnchorPane();
         ivBack = new ImageView(new Image(backPath));
@@ -197,19 +210,19 @@ public class Main extends Application {
         double vOffset = 85 * scale;
         progressBar = progressBar(200 * scale, 165 * scale, top + 30);
         top += 183 * scale;
-        lblLink = imageView(imgLink,left,top-25, (scale + scale/4));
-        lblAutoPaste = imageView(imgAutoPaste,left + (width - left) * scale * 1.345,top-28, (scale + scale/4));
-        tfLink = textField(left, right, top);
-        lblLinkOutput = label("", left, right, top + vOffset);
+        linkLabel = imageView(imgLink,left,top-25, (scale + scale/4));
+        autoPasteLabel = imageView(imgAutoPaste,left + (width - left) * scale * 1.345,top-28, (scale + scale/4));
+        linkTextField = addTextFieldWithProperties(left, right, top);
+        linkOutputLabel = addLabelWithProperties("", left, right, top + vOffset);
         top += delta;
-        lblDirectory = imageView(imgDirectory,left,top-25, (scale + scale/6));
-        tfDir = textField(left, right, top);
-        lblDirectoryOutput = label("", left, right, top + vOffset);
-        top += delta; //170
-        lblFilename = imageView(imgFilename,left,top-25, (scale + scale/8));
-        tfFilename = textField(left, right, top);
-        lblFilenameOutput = label("", left, right, top + vOffset);
-        lblDownloadOutput = label("", left, right, top + (vOffset * 1.45));
+        directoryLabel = imageView(imgDirectory,left,top-25, (scale + scale/6));
+        directoryTextField = addTextFieldWithProperties(left, right, top);
+        directoryOutputLabel = addLabelWithProperties("", left, right, top + vOffset);
+        top += delta; // 170
+        filenameLabel = imageView(imgFilename,left,top-25, (scale + scale/8));
+        filenameTextField = addTextFieldWithProperties(left, right, top);
+        filenameOutputLabel = addLabelWithProperties("", left, right, top + vOffset);
+        downloadOutputLabel = addLabelWithProperties("", left, right, top + (vOffset * 1.45));
         Image btnDownloadUp = new Image(Constants.downloadUp.toExternalForm());
         Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
         Image btnBatchUp = new Image(Constants.batchUp.toExternalForm());
@@ -218,78 +231,82 @@ public class Main extends Application {
         double buttonOffset = buttonWidth / 2;
         double btnPlace = width / 4;
         double placement = btnPlace - buttonOffset;
-        btnDownload = imageViewButton(btnDownloadUp, btnDownloadDown, placement, 0, buttonWidth);
+        downloadButton = imageViewButton(btnDownloadUp, btnDownloadDown, placement, 0, buttonWidth);
         placement = (btnPlace * 3) - buttonOffset;
-        btnBatch = imageViewButton(btnBatchUp, btnBatchDown, placement, 0, buttonWidth);
-        cbPaste = checkbox(width * .089, height * .34);
-        btnConsole = imageViewToggle(width/2 - 15, 6.5);
-        menuBar(getMenuMenuItems(), getHelpMenuItems());
+        batchButton = imageViewButton(btnBatchUp, btnBatchDown, placement, 0, buttonWidth);
+        checkBoxForAutoPaste = checkbox(width * .089, height * .34);
+        consoleButton = imageToggle(width/2 - 15, 6.5);
+        menuBar(getMenuItemsOfMenu(), getHelpMenuItems());
     }
 
+    /**
+     * This method sets the control properties to the text fields and buttons in the Drifty GUI screen
+     */
     private void setControlProperties() {
-        tfDir.setText(folders.getDownloadFolder());
-        directoryExists.setValue(new File(tfDir.getText()).exists());
+        directoryTextField.setText(folders.getDownloadFolder());
+        directoryExists.setValue(new File(directoryTextField.getText()).exists());
         jobError.addListener(((observable, oldValue, newValue) -> {
-            System.out.println("jobError: " + newValue);
+            System.out.println("jobError : " + newValue);
             if (newValue.equals(-5)) {
                 return;
             }
             int value = (int) newValue;
             Platform.runLater(() -> {
-                if (value == 0)
-                    lblDownloadOutput.setTextFill(green);
-                else
-                    setDownloadOutput(red,errorMessage);
+                if (value == 0) {
+                    downloadOutputLabel.setTextFill(green);
+                } else {
+                    setDownloadOutput(red, errorMessage);
+                }
             });
             jobError.setValue(-5);
             waitingForErrorCode = false;
         }));
-        BooleanBinding checkState = cbPaste.selectedProperty().not().not();
+        BooleanBinding checkState = checkBoxForAutoPaste.selectedProperty().not().not();
         BooleanBinding disableDownloadButton = downloadInProgress.or(directoryExists.not());
         BooleanBinding disableInputs = downloadInProgress.not();
-        BooleanBinding hasText = tfLink.textProperty().isEmpty().not().and(tfDir.textProperty().isEmpty().not().and(tfFilename.textProperty().isEmpty().not()));
-        btnDownload.visibleProperty().bind(hasText);
-        tfLink.setAlignment(Pos.CENTER_LEFT);
-        tfLink.editableProperty().bind(disableInputs);
-        lblLinkOutput.setAlignment(Pos.CENTER_LEFT);
-        tfDir.setAlignment(Pos.CENTER_LEFT);
-        tfDir.editableProperty().bind(disableInputs);
-        tfFilename.setAlignment(Pos.CENTER_LEFT);
-        tfFilename.editableProperty().bind(disableInputs);
-        lblDirectoryOutput.setAlignment(Pos.CENTER_LEFT);
-        lblFilenameOutput.setAlignment(Pos.CENTER_LEFT);
-        lblDownloadOutput.setAlignment(Pos.CENTER_LEFT);
-        btnDownload.disableProperty().bind(disableDownloadButton);
-        Tooltip.install(cbPaste, new Tooltip("When checked, will paste contents of clipboard into" + lf + "Link field when switching back to this screen."));
+        BooleanBinding hasText = linkTextField.textProperty().isEmpty().not().and(directoryTextField.textProperty().isEmpty().not().and(filenameTextField.textProperty().isEmpty().not()));
+        downloadButton.visibleProperty().bind(hasText);
+        linkTextField.setAlignment(Pos.CENTER_LEFT);
+        linkTextField.editableProperty().bind(disableInputs);
+        linkOutputLabel.setAlignment(Pos.CENTER_LEFT);
+        directoryTextField.setAlignment(Pos.CENTER_LEFT);
+        directoryTextField.editableProperty().bind(disableInputs);
+        filenameTextField.setAlignment(Pos.CENTER_LEFT);
+        filenameTextField.editableProperty().bind(disableInputs);
+        directoryOutputLabel.setAlignment(Pos.CENTER_LEFT);
+        filenameOutputLabel.setAlignment(Pos.CENTER_LEFT);
+        downloadOutputLabel.setAlignment(Pos.CENTER_LEFT);
+        downloadButton.disableProperty().bind(disableDownloadButton);
+        Tooltip.install(checkBoxForAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + systemDefaultLineSeparator + "Link field when switching back to this screen."));
     }
 
     private void setControlActions() {
-        cbPaste.setSelected(AppSettings.get.mainAutoPaste());
-        cbPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
-        btnDownload.setOnMouseClicked(e -> new Thread(() -> {
+        checkBoxForAutoPaste.setSelected(Settings.GET_PREFERENCES.getIsMainAutoPasteEnabled());
+        checkBoxForAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> Settings.SET_PREFERENCES.setIsMainAutoPasteEnabled(newValue)));
+        downloadButton.setOnMouseClicked(e -> new Thread(() -> {
             if (confirmDownload()) {
                 jobList.clear();
-                jobList.add(new Job(tfLink.getText(), tfDir.getText(), tfFilename.getText()));
-                doBatch();
+                jobList.add(new Job(linkTextField.getText(), directoryTextField.getText(), filenameTextField.getText()));
+                batchDownloader();
             }
         }).start());
-        btnBatch.setOnMouseClicked(e -> batch.show());
+        batchButton.setOnMouseClicked(e -> batch.show());
         stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
             if (firstRun) {
                 firstRun = false;
                 return;
             }
-            if (isFocused && cbPaste.isSelected()) {
-                tfLink.setText(getClipboardText());
+            if (isFocused && checkBoxForAutoPaste.isSelected()) {
+                linkTextField.setText(getClipboardText());
             }
             if (isFocused && !wasFocused) {
                 consoleOut.rePosition(width, height, stage.getX(), stage.getY());
             }
         }));
-        tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
+        directoryTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
-                if (newValue.length() == 0) {
+                if (newValue.isEmpty()) {
                     setDirOutput(red,"Directory cannot be empty!");
                 }
                 else {
@@ -305,8 +322,8 @@ public class Main extends Application {
                 }
             }
         }));
-        tfLink.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
-        btnConsole.setOnMouseClicked(e-> toggleConsole());
+        linkTextField.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
+        consoleButton.setOnMouseClicked(e-> toggleConsole());
     }
 
     private void createScene() {
@@ -319,6 +336,9 @@ public class Main extends Application {
         stage.setScene(scene);
     }
 
+    /**
+     * This method sets the properties of the scene and makes it visible
+     */
     private void showScene() {
         stage.setMaxWidth(width);
         stage.setMinWidth(width);
@@ -330,26 +350,32 @@ public class Main extends Application {
         if (consoleOut == null) {
             consoleOut = new ConsoleOut(width, height, stage.getX(), stage.getY());
         }
-        Mode.setGUILoaded();
+        Mode.setIsGUILoaded(true);
     }
 
+    /**
+     * This method opens the console when the console button is toggled in Drifty GUI
+     */
     private void toggleConsole() {
         if (!consoleOpen) {
-            btnConsole.setImage(Constants.imgDownUp);
-            btnConsole.setOnMousePressed(e -> btnConsole.setImage(Constants.imgDownDown));
-            btnConsole.setOnMouseReleased(e -> btnConsole.setImage(Constants.imgDownUp));
+            consoleButton.setImage(Constants.imgDownUp);
+            consoleButton.setOnMousePressed(e -> consoleButton.setImage(Constants.imgDownDown));
+            consoleButton.setOnMouseReleased(e -> consoleButton.setImage(Constants.imgDownUp));
             consoleOut.show();
             consoleOpen = true;
         }
         else {
-            btnConsole.setImage(Constants.imgUpUp);
-            btnConsole.setOnMousePressed(e -> btnConsole.setImage(Constants.imgUpDown));
-            btnConsole.setOnMouseReleased(e -> btnConsole.setImage(Constants.imgUpUp));
+            consoleButton.setImage(Constants.imgUpUp);
+            consoleButton.setOnMousePressed(e -> consoleButton.setImage(Constants.imgUpDown));
+            consoleButton.setOnMouseReleased(e -> consoleButton.setImage(Constants.imgUpUp));
             consoleOut.hide();
             consoleOpen = false;
         }
     }
 
+    /**
+     * This method fetches the last download directory entered by the user. If it is empty, then, the default download directory is set in the directory placeholder
+     */
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = folders.getDownloadFolder();
@@ -358,10 +384,15 @@ public class Main extends Application {
         File directory = directoryChooser.showDialog(stage.getOwner());
         firstRun = true;
         if (directory != null) {
-            tfDir.setText(directory.getAbsolutePath());
+            directoryTextField.setText(directory.getAbsolutePath());
         }
     }
 
+    /**
+     * This method is used to open the requested website in the user's machine's default web browser
+     * @param websiteURL link to the website to open
+     * @param websiteType category of the website open (like project website, feature request website, contact us webpage, etc.)
+     */
     private void openWebsite(String websiteURL, String websiteType) {
         if (OS.isNix()) { // for Linux / Unix systems
             try {
@@ -369,24 +400,28 @@ public class Main extends Application {
                 Runtime openWebsite = Runtime.getRuntime();
                 openWebsite.exec(commandsToOpenWebsite);
             } catch (IOException e) {
-                logger.log(Type.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(MessageType.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
-        }
-        else if (OS.isWinMac()) { // For macOS and Windows systems
+        } else if (OS.isWinMac()) { // For macOS and Windows systems
             try {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.browse(new URI(websiteURL));
             } catch (IOException | URISyntaxException e) {
-                logger.log(Type.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
+                logger.log(MessageType.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
+        } else {
+            logger.log(MessageType.ERROR, "Cannot open requested website " + websiteType + "! System Unsupported!");
         }
     }
 
     /**
-     * Control Creation Methods
+     * This method creates a text field object with the size parameters provided
+     * @param left the space from the left size of the scene
+     * @param right the space from the right of the scene
+     * @param top the space from the top of the scene
+     * @return the TextField object with the fonts and styles added
      */
-
-    private TextField textField(double left, double right, double top) {
+    private TextField addTextFieldWithProperties(double left, double right, double top) {
         TextField textField = new TextField();
         double h = 50;
         textField.setMinHeight(h);
@@ -399,23 +434,28 @@ public class Main extends Application {
         return textField;
     }
 
-    private Label label(String text, double left, double right, double top) {
+    /**
+     * This method creates a Label object with the size parameters provided
+     * @param left the space from the left size of the scene
+     * @param right the space from the right of the scene
+     * @param top the space from the top of the scene
+     * @return the Label object with the fonts and styles added
+     */
+    private Label addLabelWithProperties(String text, double left, double right, double top) {
         Label label = new Label(text);
-        label.setFont(new Font(monaco.toExternalForm(), 18));
+        label.setFont(new Font(monacoFont.toExternalForm(), 18));
         anchorPane.getChildren().add(label);
         placeControl(label, left, right, top, -1);
         return label;
     }
 
-    private Label labelAnchor(String text, double left, double right, double top) {
-        Label label = new Label(text);
-        label.setFont(new Font(monaco.toExternalForm(), 18));
-        anchorPane.getChildren().add(label);
-        placeControl(label, left, right, top, -1);
-        return label;
-    }
-
-    private ImageView imageViewToggle(double right, double bottom) {
+    /**
+     * This method changes the Console Up/Down image on certain actions
+     * @param right the space from the right side of the screen
+     * @param bottom the space from the bottom side of the screen
+     * @return ImageView object containing the appropriate properties
+     */
+    private ImageView imageToggle(double right, double bottom) {
         ImageView imageView = new ImageView(Constants.imgUpUp);
         imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
         imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
@@ -427,6 +467,15 @@ public class Main extends Application {
         return imageView;
     }
 
+    /**
+     * This method changes the image on certain actions
+     * @param bottom  the space from the bottom of the screen
+     * @param imageDown the image of the down arrow icon
+     * @param imageUp the image of the up arrow icon
+     * @param left  the space from the left side of the screen
+     * @param scale the fractional ratio to which the new image will be transformed
+     * @return ImageView object containing the appropriate properties
+     */
     private ImageView imageViewButton(Image imageUp, Image imageDown, double left, double bottom, double scale) {
         ImageView imageView = new ImageView(imageUp);
         anchorPane.getChildren().add(imageView);
@@ -448,15 +497,27 @@ public class Main extends Application {
         return imageView;
     }
 
+    /**
+     * This method adds the checkbox [used by Auto-Paste] to the GUI screen
+     * @param right the space from the right side of the screen
+     * @param top the space from the top of the screen
+     * @return a Checkbox object with the required properties
+     */
     private CheckBox checkbox(double right, double top) {
         CheckBox checkbox = new CheckBox();
-        //checkbox.setStyle("-fx-background-color: transparent;");
         checkbox.getStylesheets().add(Constants.checkBoxCSS.toExternalForm());
         anchorPane.getChildren().add(checkbox);
         placeControl(checkbox, -1, right, top, -1);
         return checkbox;
     }
 
+    /**
+     * This method creates a Progress Bar at the required position
+     * @param left the space from the left side of the screen
+     * @param right the space from the right side of the screen
+     * @param top the space from the top of the screen
+     * @return a Progress Bar object with the required position
+     */
     private ProgressBar progressBar(double left, double right, double top) {
         ProgressBar progressBar = new ProgressBar(0.0);
         anchorPane.getChildren().add(progressBar);
@@ -467,33 +528,61 @@ public class Main extends Application {
         return progressBar;
     }
 
+    /**
+     * This method places the GUI elements in the appropriate position which is determined using the parameters passed to it
+     * @param node the element which is to be placed in the GUI scene
+     * @param left the space from the left side of the screen
+     * @param right the space from the right side of the screen
+     * @param top the space from the top of the screen
+     * @param bottom the space from the bottom of the screen
+     */
     private void placeControl(Node node, double left, double right, double top, double bottom) {
-        if (top != -1) setTopAnchor(node, top);
-        if (bottom != -1) setBottomAnchor(node, bottom);
-        if (left != -1) setLeftAnchor(node, left);
-        if (right != -1) setRightAnchor(node, right);
+        if (top != -1) {
+            setTopAnchor(node, top);
+        }
+        if (bottom != -1) {
+            setBottomAnchor(node, bottom);
+        }
+        if (left != -1) {
+            setLeftAnchor(node, left);
+        }
+        if (right != -1) {
+            setRightAnchor(node, right);
+        }
     }
 
+    /**
+     * The menu bar of Drifty GUI screen
+     * @param menus the menu items to be placed in the menu bar
+     */
     private void menuBar(Menu... menus) {
         MenuBar menuBar = new MenuBar(menus);
         anchorPane.getChildren().add(menuBar);
         placeControl(menuBar, 0, 0, 0, -1);
     }
 
-    private Menu getMenuMenuItems() {
+    /**
+     * This method is used to get the menu items to be present in the <b>Menu section</b> of the GUI screen
+     * @return a Menu object with the menu items for Menu section
+     */
+    private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
         website.setOnAction(e -> openWebsite(Drifty.projectWebsite, "project website"));
         MenuItem about = new MenuItem("About");
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
-            logger.log(Type.INFORMATION, DriftyConstants.GUI_APPLICATION_TERMINATED);
+            logger.log(MessageType.INFORMATION, DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         menu.getItems().setAll(website, about, exit);
         return menu;
     }
 
+    /**
+     * This method is used to get the menu items to be present in the <b>Help section</b> of the GUI screen
+     * @return a Menu object with the menu items for Help section
+     */
     private Menu getHelpMenuItems() {
         Menu menu = new Menu("Help");
         MenuItem contactUs = new MenuItem("Contact Us");
@@ -510,6 +599,10 @@ public class Main extends Application {
         return menu;
     }
 
+    /**
+     * This method is used to get a context menu on click, specific for Directory
+     * @return a ContextMenu object for the directory related options
+     */
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -517,7 +610,7 @@ public class Main extends Application {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = AppSettings.get.folders();
+            folders = Settings.GET_PREFERENCES.getFolders();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -525,23 +618,24 @@ public class Main extends Application {
     }
 
     /**
-     * YT-DLP Actions And Form Logic
+     * This method is used to verify the link entered by the user
+     * @param PreviousLink The link that was entered previously since the start of the Drifty GUI program
+     * @param presentLink The link that has been entered just now
      */
-
-    private void verifyLink(String oldValue, String newValue) {
-        if (!oldValue.equals(newValue)) {
+    private void verifyLink(String PreviousLink, String presentLink) {
+        if (!PreviousLink.equals(presentLink)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false)) {
                 setLinkOutput(green,"Validating link ...");
                 linkValid.setValue(false);
-                if (newValue.contains(" ")) {
+                if (presentLink.contains(" ")) {
                     Platform.runLater(() -> setLinkOutput(red,"Link should not contain whitespace characters!"));
                 }
-                else if (!isURL(newValue)) {
+                else if (!isURL(presentLink)) {
                     Platform.runLater(() -> setLinkOutput(red,"String is not a URL"));
                 }
                 else {
                     try {
-                        Utility.isURLValid(newValue);
+                        Utility.isURLValid(presentLink);
                         Platform.runLater(()-> setLinkOutput(green,"Valid URL"));
                         linkValid.setValue(true);
                     }
@@ -551,26 +645,30 @@ public class Main extends Application {
                     }
                 }
                 if (linkValid.getValue().equals(true)) {
-                    getFilename(newValue);
+                    getFilename(presentLink);
                 }
             }
         }
     }
 
+    /**
+     * This method is used to get the filename of a YouTube or Instagram video [By default, the filename is the video title]
+     * @param link the link to the YouTube or Instagram video
+     */
     private void getFilename(String link) {
         new Thread(() -> {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String filename = utility.findFilenameInLink(link);
             if (filename == null || filename.isEmpty()) {
-                Platform.runLater(() -> lblFilenameOutput.setTextFill(green));
+                Platform.runLater(() -> filenameOutputLabel.setTextFill(green));
                 gettingFilename = true;
                 bounceFilename();
-                LinkedList<String> jsonMetaData = Utility.getJsonLinkMetadata(link);
+                LinkedList<String> jsonMetaData = Utility.getLinkMetadata(link);
                 JsonElement element = JsonParser.parseString(jsonMetaData.getFirst());
                 String json = gson.toJson(element);
                 if (jsonMetaData.size() > 1) {
                     batch.setLink(link);
-                    tfLink.clear();
+                    linkTextField.clear();
                     setLinkOutput(green,"");
                     return;
                 }
@@ -584,12 +682,17 @@ public class Main extends Application {
             String finalFilename = filename;
             gettingFilename = false;
             Platform.runLater(() -> {
-                tfFilename.setText(finalFilename);
+                filenameTextField.setText(finalFilename);
                 setFilenameOutput(green,"");
             });
         }).start();
     }
 
+    /**
+     * This method checks if the entered link is a URL or not
+     * @param text the link (in String format) entered by the user
+     * @return true if it is an url else false
+     */
     private boolean isURL(String text) {
         String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
@@ -597,9 +700,14 @@ public class Main extends Application {
         return m.matches();
     }
 
+    /**
+     * This method sets the output message [regarding Filename process] color according to the color provided as input
+     * @param color color of the message
+     * @param message the output message to be shown in the Filename output section
+     */
     private void setFilenameOutput(Color color, String message) {
-        lblFilenameOutput.setTextFill(color);
-        lblFilenameOutput.setText(message);
+        filenameOutputLabel.setTextFill(color);
+        filenameOutputLabel.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
@@ -608,9 +716,14 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * This method sets the output message [regarding Link process] color according to the color provided as input
+     * @param color color of the message
+     * @param message the output message to be shown in the link output section
+     */
     private void setLinkOutput(Color color, String message) {
-        lblLinkOutput.setTextFill(color);
-        lblLinkOutput.setText(message);
+        linkOutputLabel.setTextFill(color);
+        linkOutputLabel.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
@@ -619,9 +732,14 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * This method sets the output message [regarding Directory process] color according to the color provided as input
+     * @param color color of the message
+     * @param message the output message to be shown in the directory output section
+     */
     private void setDirOutput(Color color, String message) {
-        lblDirectoryOutput.setTextFill(color);
-        lblDirectoryOutput.setText(message);
+        directoryOutputLabel.setTextFill(color);
+        directoryOutputLabel.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
@@ -630,9 +748,14 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * This method sets the output message [regarding Download process] color according to the color provided as input
+     * @param color color of the message
+     * @param message the output message to be shown in the download output section
+     */
     private void setDownloadOutput(Color color, String message) {
-        lblDownloadOutput.setTextFill(color);
-        lblDownloadOutput.setText(message);
+        downloadOutputLabel.setTextFill(color);
+        downloadOutputLabel.setText(message);
         if (color.equals(red)) {
             new Thread(() -> {
                 sleep(3000);
@@ -641,26 +764,31 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * This method is used to get the last copied text from the clipboard
+     * @return the last copied text from the clipboard, in String format
+     */
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
             return (String) clipboard.getData(DataFlavor.stringFlavor);
         } catch (UnsupportedFlavorException | IOException e) {
-            e.printStackTrace();
+            setMessage("Failed to get the last copied Text from the clipboard! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
         return null;
     }
 
-    private boolean notReady() {
-        return downloadInProgress.getValue().equals(true);
-    }
-
+    /**
+     * This method is used to check if a file has already been downloaded,
+     * and asks for confirmation from the user, if it needs to be downloaded again
+     * @return true if the file needs to be downloaded again, else false
+     */
     private boolean confirmDownload() {
-        String filename = tfFilename.getText();
+        String filename = filenameTextField.getText();
         for (String folder : folders.getFolders()) {
             boolean fileExists = false;
             String filePath = "";
-            FileWalker walker = new FileWalker(folder, filename);
+            CheckFile walker = new CheckFile(folder, filename);
             Thread thread = new Thread(walker);
             thread.start();
             while (thread.getState().equals(Thread.State.RUNNABLE)) {
@@ -674,7 +802,7 @@ public class Main extends Application {
                 }
             }
             if (fileExists) {
-                String msg = "The file: " + lf + lf + filePath + lf + lf + " Already exists, Do you wish to download it again?";
+                String msg = "The file: " + systemDefaultLineSeparator + systemDefaultLineSeparator + filePath + systemDefaultLineSeparator + systemDefaultLineSeparator + " Already exists, Do you wish to download it again?";
                 AskYesNo ask = new AskYesNo(msg);
                 return ask.isYes();
             }
@@ -682,6 +810,10 @@ public class Main extends Application {
         return true;
     }
 
+    /**
+     * This method is used to check if the files have already been downloaded,
+     * and asks for confirmation from the user, if they need to be downloaded again
+     */
     private void checkFiles() {
         Map<String, Job> pathJobMap = new HashMap<>();
         List<String> files = new ArrayList<>();
@@ -689,7 +821,7 @@ public class Main extends Application {
             files.add(job.getFilename());
         }
         for (String folder : folders.getFolders()) {
-            FileWalker walker = new FileWalker(folder, files);
+            CheckFile walker = new CheckFile(folder, files);
             Thread thread = new Thread(walker);
             thread.start();
             while (thread.getState().equals(Thread.State.RUNNABLE)) {
@@ -705,11 +837,11 @@ public class Main extends Application {
             }
         }
         if (!pathJobMap.isEmpty()) {
-            StringBuilder sb = new StringBuilder("The following files already exist:" + lf + lf);
+            StringBuilder sb = new StringBuilder("The following files already exist:" + systemDefaultLineSeparator + systemDefaultLineSeparator);
             for (String path : pathJobMap.keySet()) {
-                sb.append(path).append(lf);
+                sb.append(path).append(systemDefaultLineSeparator);
             }
-            sb.append(lf).append("Do you want to download them again?");
+            sb.append(systemDefaultLineSeparator).append("Do you want to download them again?");
             AskYesNo ask = new AskYesNo(sb.toString());
             if (!ask.isYes()) {
                 for (Job job : pathJobMap.values()) {
@@ -719,35 +851,38 @@ public class Main extends Application {
         }
     }
 
-    private void doBatch() {
+    /**
+     * This method performs Batch Downloading for Drifty GUI
+     */
+    private void batchDownloader() {
         processingBatch.setValue(true);
         new Thread(() -> {
             failedJobList.clear();
             if (!jobList.isEmpty()) {
                 checkFiles();
-                final int max = jobList.size();
-                System.out.println("jobList size: " + max);
-                int count = 0;
+                final int totalNumberOfFiles = jobList.size();
+                System.out.println("Number of files to download : " + totalNumberOfFiles);
+                int fileCount = 0;
                 for (Job job : jobList) {
-                    count++;
-                    String jobCount = "Processing job " + count + " of " + max + ": " + job;
-                    System.out.println("jobCount: "+jobCount);
-                    Platform.runLater(() -> setFilenameOutput(green,jobCount));
+                    fileCount++;
+                    String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
+                    System.out.println(processingFileText);
+                    Platform.runLater(() -> setFilenameOutput(green, processingFileText));
                     linkToFile = job.getLink();
                     directoryForDownloading = job.getDir();
                     fileName = job.getFilename();
                     Platform.runLater(() -> {
-                        tfLink.setText(linkToFile);
-                        tfDir.setText(directoryForDownloading);
-                        tfFilename.setText(fileName);
+                        linkTextField.setText(linkToFile);
+                        directoryTextField.setText(directoryForDownloading);
+                        filenameTextField.setText(fileName);
                     });
                     if (Utility.isYoutubeLink(linkToFile)) {
                         isYouTubeURL = true;
                     }
                     Platform.runLater(() -> {
-                        tfLink.setText(linkToFile);
-                        tfDir.setText(directoryForDownloading);
-                        tfFilename.setText(fileName);
+                        linkTextField.setText(linkToFile);
+                        directoryTextField.setText(directoryForDownloading);
+                        filenameTextField.setText(fileName);
                     });
                     sleep(1000);
                     download();
@@ -755,13 +890,13 @@ public class Main extends Application {
                         sleep(100);
                     }
                     Platform.runLater(() -> {
-                        tfFilename.clear();
-                        tfLink.clear();
+                        filenameTextField.clear();
+                        linkTextField.clear();
                     });
                     if (jobError.getValue() != 0 && jobError.getValue() != -5) {
                         System.out.println("JOB ERROR VALUE: " + jobError.getValue());
                         failedJobList.add(job);
-                        job.setError(lblDownloadOutput.getText());
+                        job.setError(downloadOutputLabel.getText());
                     }
                     else {
                         jobList.remove(job);
@@ -776,10 +911,10 @@ public class Main extends Application {
                     setLinkOutput(green,"");
                     setDirOutput(green,"");
                     setFilenameOutput(green,"");
-                    tfLink.clear();
+                    linkTextField.clear();
                 });
-                if (AppSettings.get.jobs() != null) {
-                    AppSettings.get.jobs().setJobList(failedJobList);
+                if (Settings.GET_PREFERENCES.getJobs() != null) {
+                    Settings.GET_PREFERENCES.getJobs().setJobList(failedJobList);
                     if (!failedJobList.isEmpty()) {
                         batch.setFailedList(failedJobList);
                     }
@@ -789,18 +924,26 @@ public class Main extends Application {
         }).start();
     }
 
+    /**
+     * This method is used to save the directory entered by the user after a gap of 5 seconds
+     * @param folderString the directory in String format
+     * @param folder a File object pointing to the folder in which the user wants to save the downloaded file
+     */
     private void delayFolderSave(String folderString, File folder) {
         // If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 5 seconds
-        // and if the String is still the same value then we commit the folder to the list.
+        // and if the String is still the same value, then we commit the folder to the list.
         new Thread(() -> {
             sleep(3000);
-            if (tfDir.getText().equals(folderString)) {
+            if (directoryTextField.getText().equals(folderString)) {
                 folders.addFolder(folder.getAbsolutePath());
                 System.out.println("Folder Added: " + folder.getAbsolutePath());
             }
         }).start();
     }
 
+    /**
+     * This method sets the filename in the appropriate text field area, after the filename gets retrieved
+     */
     private void bounceFilename() {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
@@ -832,21 +975,20 @@ public class Main extends Application {
         }
     }
 
-
     /**
-     * Download Methods
+     * This method is used to verify the link
+     * @return true if the link is valid, else false
      */
-
     private boolean verifyLink() {
         boolean valid = false;
         try {
-            Utility.isURLValid(tfLink.getText());
+            Utility.isURLValid(linkTextField.getText());
             Platform.runLater(()-> setLinkOutput(green,"Valid URL"));
             valid = true;
         }
         catch (Exception e) {
             String errorMessage = e.getMessage();
-            Platform.runLater(()-> setLinkOutput(red,errorMessage));
+            Platform.runLater(()-> setLinkOutput(red, errorMessage));
         }
         if (!valid) {
             new AskYesNo("The link provided is not a valid URL", true).isYes();
@@ -854,8 +996,12 @@ public class Main extends Application {
          return valid;
     }
 
+    /**
+     * This method is used to verify the Directory
+     * @return true if the directory is valid, else false
+     */
     private boolean verifyDirectory() {
-        File file = new File(tfDir.getText());
+        File file = new File(directoryTextField.getText());
         boolean valid = file.exists();
         if (!valid) {
             new AskYesNo("The Download folder does not exist", true).isYes();
@@ -863,9 +1009,13 @@ public class Main extends Application {
         return file.exists();
     }
 
+    /**
+     * This method is used to verify the Filename
+     * @return true if the filename is valid, else false
+     */
     private boolean verifyFilename() {
         String pattern = "^[a-zA-Z0-9_.-]+$";
-        String filename = tfFilename.getText();
+        String filename = filenameTextField.getText();
         File file = new File(filename);
         boolean valid;
         try {
@@ -879,6 +1029,9 @@ public class Main extends Application {
         return valid;
     }
 
+    /**
+     * The main download method for executing file downloads in Drifty GUI
+     */
     private void download() {
         boolean proceed = verifyLink() && verifyDirectory() && verifyFilename();
         if (proceed) {
@@ -891,15 +1044,14 @@ public class Main extends Application {
     }
 
     /**
-     * Class Utilities
+     * This method is used to make the calling method to wait for the time in millisecond passed
+     * @param time the time to make the calling thread to keep waiting
      */
-
-    private void sleep(long time) {
+    public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            setMessage("Link Metadata extracting thread failed to wait for " + time + ". It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
     }
-
 }

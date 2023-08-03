@@ -1,6 +1,6 @@
 package GUI.Support;
 
-import Preferences.AppSettings;
+import Preferences.Settings;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -24,6 +24,6 @@ public class Jobs {
 
     public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = new ConcurrentLinkedDeque<>(jobList);
-        AppSettings.set.jobs(this);
+        Settings.SET_PREFERENCES.setBatchDownloadJobs(this);
     }
 }

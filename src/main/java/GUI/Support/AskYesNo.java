@@ -16,11 +16,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class is meant to be used as a quick and dirty means of interacting with the
  * user when a yes / no question is needed or if we just need to notify the user of
- * something in which case there is only an OK button offered.
+ * something, in which case there is only an OK button offered.
  */
-
 public class AskYesNo {
-
     private double width = 200;
     private double height = 150;
     private Stage stage;
