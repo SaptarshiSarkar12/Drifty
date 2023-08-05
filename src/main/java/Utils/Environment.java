@@ -6,6 +6,7 @@ import Enums.DriftyConfig;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
+import GUI.Launcher;
 import Preferences.Settings;
 import org.buildobjects.process.ProcBuilder;
 import java.io.File;
@@ -14,8 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * This class is used by the {@link GUI.Drifty_GUI} and the {@link Backend.FileDownloader} classes.
- * {@link GUI.Drifty_GUI} calls the {@link #initializeEnvironment()} method to initialize the environment which
+ * This class is used by the {@link Launcher} and the {@link Backend.FileDownloader} classes.
+ * {@link Launcher} calls the {@link #initializeEnvironment()} method to initialize the environment which
  * includes figuring out which operating system it is running on, and
  * the name of the yt-dlp program to use based on the operating system.
  * It then copies the yt-dlp program from its resources to the system's default temporary folder.

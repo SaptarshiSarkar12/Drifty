@@ -21,11 +21,11 @@ import java.net.URL;
  * the code to check which mode the code is running in.
  */
 
-public class Drifty_GUI {
+public class Launcher {
     private final URL icon1024 = getClass().getResource("/GUI/Icons/Icon1024.png");
     private final URL icon512 = getClass().getResource("/GUI/Icons/Icon512.png");
     private static final JFrame jFrame = new JFrame();
-    private static final Drifty_GUI GUI_DRIFTY_GUI = new Drifty_GUI();
+    private static final Launcher GUI_LAUNCHER = new Launcher();
 
     public static void main(String[] args) {
         Mode.setGUIMode();
@@ -38,10 +38,10 @@ public class Drifty_GUI {
 
     private static void setTaskbarDockIcon() {
         try {
-            Image image = ImageIO.read(GUI_DRIFTY_GUI.icon512);
+            Image image = ImageIO.read(GUI_LAUNCHER.icon512);
             if (OS.isMac()) {
                 final Taskbar taskbar = Taskbar.getTaskbar();
-                image = ImageIO.read(GUI_DRIFTY_GUI.icon1024);
+                image = ImageIO.read(GUI_LAUNCHER.icon1024);
                 taskbar.setIconImage(image);
             } else {
                 jFrame.setUndecorated(true);

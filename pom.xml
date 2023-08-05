@@ -14,7 +14,7 @@
         <junit.version>5.10.0</junit.version>
         <javafx.version>20</javafx.version>
         <guiMain>GUI.Launcher</guiMain>
-        <cliMain>CLI.Drifty_CLI</cliMain>
+        <cliMain>CLI.DriftyCLI</cliMain>
     </properties>
 
     <dependencies>

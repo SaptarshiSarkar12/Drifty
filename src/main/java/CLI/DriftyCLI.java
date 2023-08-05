@@ -23,7 +23,7 @@ import static Utils.Utility.*;
  *
  * @version 2.0.0
  */
-public class Drifty_CLI {
+public class DriftyCLI {
     /**
      * Logger instance for the CLI version of Drifty
      */

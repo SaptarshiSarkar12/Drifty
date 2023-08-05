@@ -1,6 +1,6 @@
 package Backend;
 
-import CLI.Drifty_CLI;
+import CLI.DriftyCLI;
 import Enums.*;
 import GUI.Forms.Main;
 import Utils.Environment;
@@ -96,7 +96,7 @@ public class FileDownloader implements Runnable {
         if (Mode.isGUI()) {
             setYt_dlpProgramName(DriftyConfig.getConfig(DriftyConfig.NAME));
         }
-        if (isYoutubeLink(link) || !Drifty_CLI.getIsInstagramImage()) {
+        if (isYoutubeLink(link) || !DriftyCLI.getIsInstagramImage()) {
             setYt_dlpProgramName(DriftyConfig.getConfig(DriftyConfig.NAME));
         }
     }
@@ -342,10 +342,10 @@ public class FileDownloader implements Runnable {
             dir = dir + System.getProperty("file.separator");
         }
         try {
-            boolean isInstagramLink = Drifty_CLI.getIsInstagramLink();
+            boolean isInstagramLink = DriftyCLI.getIsInstagramLink();
             boolean isInstagramImage = false;
             if (isInstagramLink) {
-                isInstagramImage = Drifty_CLI.getIsInstagramImage();
+                isInstagramImage = DriftyCLI.getIsInstagramImage();
             }
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
