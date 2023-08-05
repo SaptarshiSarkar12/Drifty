@@ -206,12 +206,12 @@ public class Main extends Application {
         anchorPane.setPrefWidth(width);
         anchorPane.setPrefHeight(height);
         Image imgBanner = new Image(Constants.mainGUIBanner.toExternalForm());
-        ImageView ivBanner = ivew(imgBanner, .5);
+        ImageView ivBanner = imageView(imgBanner, .5);
         VBox boxBanner = new VBox(30, ivBanner, getSpacer(), getSpacer());
         boxBanner.setAlignment(Pos.CENTER);
         pBar = new ProgressBar();
-        ivLinkLabel = ivew(imgLink, .8);
-        ivAutoLabel = ivew(imgAutoPaste, .8);
+        ivLinkLabel = imageView(imgLink, .8);
+        ivAutoLabel = imageView(imgAutoPaste, .8);
         cbAutoPaste = new CheckBox();
         HBox boxLinkLabel = new HBox(10, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
         tfLink = newTextField();
@@ -219,7 +219,7 @@ public class Main extends Application {
         HBox boxLinkOut = new HBox(lblLinkOut);
         boxLinkOut.setAlignment(Pos.CENTER_LEFT);
 
-        ivDirLabel = ivew(imgDirectory, .8);
+        ivDirLabel = imageView(imgDirectory, .8);
         HBox boxDirLabel = new HBox(ivDirLabel);
         boxDirLabel.setAlignment(Pos.CENTER_LEFT);
 
@@ -228,7 +228,7 @@ public class Main extends Application {
         HBox boxLblDirOut = new HBox(lblDirOut);
         boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
 
-        ivFilenameLabel = ivew(imgFilename, .8);
+        ivFilenameLabel = imageView(imgFilename, .8);
         HBox boxFilenameLabel = new HBox(ivFilenameLabel);
         boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
         tfFilename = newTextField();
@@ -266,6 +266,46 @@ public class Main extends Application {
         HBox box = new HBox(100, ivBtnDownload, ivBtbConsole, ivBtnBatch);
         box.setAlignment(Pos.CENTER);
         return box;
+    }
+
+    private Label getSpacer() {
+        Label label = new Label();
+        label.setPrefWidth(screenSize.getWidth());
+        return label;
+    }
+
+    private Label label() {
+        Label label = new Label();
+        label.setFont(new Font(monacoFont.toExternalForm(), 20));
+        return label;
+    }
+
+    private ImageView imageToggle(double scale) {
+        ImageView imageView = new ImageView(Constants.imgUpUp);
+        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
+        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
+        double width = Constants.imgUpUp.getWidth();
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageViewButton(Image imageUp, Image imageDown, double scale) {
+        ImageView imageView = new ImageView(imageUp);
+        double width = imageUp.getWidth();
+        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
+        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageView(Image image, double ratio) {
+        ImageView iv = new ImageView(image);
+        double width = image.getWidth();
+        iv.setPreserveRatio(true);
+        iv.setFitWidth(width * ratio);
+        return iv;
     }
 
     /**
@@ -471,126 +511,6 @@ public class Main extends Application {
         else {
             logger.log(MessageType.ERROR, "Cannot open requested website " + websiteType + "! System Unsupported!");
         }
-    }
-
-    /**
-     * This method creates a text field object with the size parameters provided
-     *
-     * @param left  the space from the left size of the scene
-     * @param right the space from the right of the scene
-     * @param top   the space from the top of the scene
-     * @return the TextField object with the fonts and styles added
-     */
-    private TextField textField(double left, double right, double top) {
-        TextField textField = new TextField();
-        double h = 50;
-        textField.setMinHeight(h);
-        textField.setMaxHeight(h);
-        textField.setPrefHeight(h);
-        anchorPane.getChildren().add(textField);
-        placeControl(textField, left, right, top, -1);
-        textField.setFont(new Font("Arial", 18));
-        textField.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
-        return textField;
-    }
-
-    private Label getSpacer() {
-        Label label = new Label();
-        label.setPrefWidth(screenSize.getWidth());
-        return label;
-    }
-
-    /**
-     * This method creates a Label object with the size parameters provided
-     *
-     * @param left  the space from the left size of the scene
-     * @param right the space from the right of the scene
-     * @param top   the space from the top of the scene
-     * @return the Label object with the fonts and styles added
-     */
-    private Label label(String text, double left, double right, double top) {
-        Label label = new Label(text);
-        label.setFont(new Font(monacoFont.toExternalForm(), 18));
-        anchorPane.getChildren().add(label);
-        placeControl(label, left, right, top, -1);
-        return label;
-    }
-
-    private Label label() {
-        Label label = new Label();
-        label.setFont(new Font(monacoFont.toExternalForm(), 20));
-        return label;
-    }
-
-    private ImageView imageToggle(double scale) {
-        ImageView imageView = new ImageView(Constants.imgUpUp);
-        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
-        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
-        double width = Constants.imgUpUp.getWidth();
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(width * scale);
-        return imageView;
-    }
-
-    private ImageView imageViewButton(Image imageUp, Image imageDown, double scale) {
-        ImageView imageView = new ImageView(imageUp);
-        double width = imageUp.getWidth();
-        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
-        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(width * scale);
-        return imageView;
-    }
-
-    private ImageView ivew(Image image, double ratio) {
-        ImageView iv = new ImageView(image);
-        double width = image.getWidth();
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(width * ratio);
-        return iv;
-    }
-
-    private ImageView imageView(Image image, double left, double top, double right, double scale) {
-        ImageView imageView = new ImageView(image);
-        anchorPane.getChildren().add(imageView);
-        placeControl(imageView, left, right, top, -1);
-        imageView.setPreserveRatio(true);
-        double width = imageView.getImage().getWidth();
-        imageView.setFitWidth(width * scale);
-        return imageView;
-    }
-
-    /**
-     * This method adds the checkbox [used by Auto-Paste] to the GUI screen
-     *
-     * @param right the space from the right side of the screen
-     * @param top   the space from the top of the screen
-     * @return a Checkbox object with the required properties
-     */
-    private CheckBox checkbox(double right, double top) {
-        CheckBox checkbox = new CheckBox();
-        checkbox.getStylesheets().add(Constants.checkBoxCSS.toExternalForm());
-        anchorPane.getChildren().add(checkbox);
-        placeControl(checkbox, -1, right, top, -1);
-        return checkbox;
-    }
-
-    /**
-     * This method creates a Progress Bar at the required position
-     *
-     * @param left  the space from the left side of the screen
-     * @param right the space from the right side of the screen
-     * @param top   the space from the top of the screen
-     * @return a Progress Bar object with the required position
-     */
-    private ProgressBar progressBar(double left, double right, double top) {
-        ProgressBar progressBar = new ProgressBar(0.0);
-        anchorPane.getChildren().add(progressBar);
-        placeControl(progressBar, left, right, top, -1);
-        progressBar.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
-        progressBar.getStyleClass().add("transparent-progress-bar");
-        progressBar.progressProperty().bind(progressProperty);
-        return progressBar;
     }
 
     /**
