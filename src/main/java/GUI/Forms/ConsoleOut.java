@@ -53,8 +53,8 @@ public class ConsoleOut {
     private final double width;
     private final double height = 250;
     private final double mainHeight;
-    private final double mainX;
-    private final double mainY;
+    private double mainX;
+    private double mainY;
     private double progress;
     private static String lastStandardTA;
     private static String lastErrorTA;
@@ -66,13 +66,12 @@ public class ConsoleOut {
     private TabPane tabPane;
     private Tab tabStandard;
     private Tab tabError;
+    private Scene scene;
 
     private void makeControls() {
         ap.setStyle("-fx-background-color: transparent;");
         ap.getStyleClass().add("anchor-pane-transparent"); // Add the custom CSS class
         ap.setPrefHeight(height);
-        ap.setMinHeight(height);
-        ap.setMaxHeight(height);
         tabStandard = tab("Standard");
         tabError = tab("Errors");
         taStandard = textArea("text-area-standard");
@@ -94,16 +93,26 @@ public class ConsoleOut {
         }));
     }
 
-
     private void makeScene() {
-        stage = new Stage();
+        stage = Constants.getStage();
         stage.initStyle(StageStyle.TRANSPARENT);
-        Scene scene = new Scene(ap);
+        scene = new Scene(ap);
         scene.getStylesheets().add(textAreaCSS.toExternalForm());
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.setX(mainX);
         stage.setY(mainY + mainHeight);
+    }
+
+    public void rePosition(double posX, double posY) {
+        mainX = posX;
+        mainY = posY;
+        stage.setX(mainX);
+        stage.setY(mainY + mainHeight);
+    }
+
+    public void setWidth(double width) {
+        scene.getWindow().setWidth(width);
     }
 
     private void captureOutputs() {
@@ -151,8 +160,6 @@ public class ConsoleOut {
         textArea.setMinHeight(height);
         textArea.setMaxHeight(height);
         textArea.setPrefHeight(height);
-        textArea.setMinWidth(width);
-        textArea.setMaxWidth(width);
         textArea.setPrefWidth(width);
         textArea.getStyleClass().add(style); // Add the custom CSS class
         textArea.setEditable(false);
@@ -220,11 +227,7 @@ public class ConsoleOut {
     }
 
     public void rePosition(double width, double height, double posX, double posY) {
-        ap.setMinWidth(width);
-        ap.setMaxWidth(width);
         ap.setPrefWidth(width);
-        taStandard.setMinWidth(width);
-        taStandard.setMaxWidth(width);
         taStandard.setPrefWidth(width);
         stage.setX(posX);
         stage.setY(posY + height);

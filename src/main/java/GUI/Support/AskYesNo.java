@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * something, in which case there is only an OK button offered.
  */
 public class AskYesNo {
+    private final String lf = System.lineSeparator();
     private double width = 200;
     private double height = 150;
     private Stage stage;
@@ -30,7 +31,6 @@ public class AskYesNo {
     private boolean answerYes = false;
     private boolean waiting = true;
     private String msg = "";
-    private final String lf = System.lineSeparator();
     private boolean okOnly = false;
 
     public AskYesNo() {
@@ -79,7 +79,7 @@ public class AskYesNo {
         btnOk = new Button("OK");
         HBox hbox;
         if (okOnly) {
-             hbox = new HBox(20, btnOk);
+            hbox = new HBox(20, btnOk);
         }
         else {
             hbox = new HBox(20, btnYes, btnNo);
@@ -89,21 +89,21 @@ public class AskYesNo {
         vbox = new VBox(15, message, hbox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
-        btnYes.setOnAction(e->{
+        btnYes.setOnAction(e -> {
             answerYes = true;
             waiting = false;
             stage.close();
         });
-        btnNo.setOnAction(e->{
+        btnNo.setOnAction(e -> {
             answerYes = false;
             waiting = false;
             stage.close();
         });
-        btnOk.setOnAction(e->stage.close());
+        btnOk.setOnAction(e -> stage.close());
     }
 
     public boolean isYes() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             stage = new Stage();
             stage.setWidth(width);
             stage.setHeight(height);
@@ -112,7 +112,7 @@ public class AskYesNo {
             stage.setAlwaysOnTop(true);
             stage.showAndWait();
         });
-        while(waiting) {
+        while (waiting) {
             sleep(100);
         }
         return answerYes;
@@ -121,8 +121,7 @@ public class AskYesNo {
     private void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

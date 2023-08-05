@@ -1,14 +1,11 @@
 package GUI;
 
 import Enums.Mode;
-import Enums.OS;
 import GUI.Forms.Main;
 import Utils.Environment;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -32,32 +29,6 @@ public class Launcher {
         Environment.initializeEnvironment();
         System.setProperty("apple.awt.UIElement", "false");
         Toolkit.getDefaultToolkit();
-        setTaskbarDockIcon();
         Main.main(args);
-    }
-
-    private static void setTaskbarDockIcon() {
-        try {
-            Image image = ImageIO.read(GUI_LAUNCHER.icon512);
-            if (OS.isMac()) {
-                final Taskbar taskbar = Taskbar.getTaskbar();
-                image = ImageIO.read(GUI_LAUNCHER.icon1024);
-                taskbar.setIconImage(image);
-            } else {
-                jFrame.setUndecorated(true);
-                jFrame.setIconImage(image);
-                jFrame.setDefaultCloseOperation(jFrame.EXIT_ON_CLOSE);
-                jFrame.pack();
-                jFrame.setVisible(true);
-                jFrame.setSize(new Dimension(26, 26));
-            }
-        } catch (UnsupportedOperationException ignored) {
-            System.out.println("This operating system does not support taskbar icon API");
-        } catch (SecurityException e) {
-            System.out.println("There was a security exception for: 'taskbar.setIconImage()'");
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
     }
 }

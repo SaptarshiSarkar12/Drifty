@@ -132,7 +132,7 @@ public class Batch {
 
     private void createControls() {
         anchorPane = new AnchorPane();
-        ivBack = imageViewToggle(new Image(Constants.backPath.toExternalForm()), 0, 0, 0, 0);
+        ivBack = imageViewToggle(new Image(Constants.batchGUIBanner.toExternalForm()), 0, 0, 0, 0);
         ivBack.setPreserveRatio(true);
         ivBack.setFitWidth(width);
         double left = 655 * scale;
@@ -149,7 +149,7 @@ public class Batch {
         double buttonWidth = saveUp.getWidth() * scale * .9;
         double buttonOffset = buttonWidth / 2;
         double btnPlace = width / 4;
-        ivBack = new ImageView(new Image(Constants.backPath.toExternalForm()));
+        ivBack = new ImageView(new Image(Constants.batchGUIBanner.toExternalForm()));
         listView = listView(50, 100, 300, 450);
         label("Link:", left, right, top - vOffset * scale, true);
         cbAutoPaste = checkBox("Auto Paste:", right, top - vOffset * scale-8);
@@ -284,7 +284,7 @@ public class Batch {
     }
 
     public void makeScene() {
-        stage = new Stage();
+        stage = Constants.getStage();
         stage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (firstRun) {
                 firstRun = false;
@@ -931,7 +931,7 @@ public class Batch {
         double height = 700;
 
         Button btnOK = new Button("OK");
-        Stage stage = new Stage();
+        Stage stage = Constants.getStage();
         stage.setWidth(width);
         stage.setHeight(height);
         stage.initStyle(StageStyle.TRANSPARENT);
