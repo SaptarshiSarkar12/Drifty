@@ -207,44 +207,44 @@ public class Main extends Application {
         Image imgBanner = new Image(Constants.mainGUIBanner.toExternalForm());
         ImageView ivBanner = imageView(imgBanner, .5);
         pBar = pbar();
-        VBox boxBanner = new VBox(15, ivBanner, pBar, getSpacer());
+        VBox boxBanner = new VBox(10, ivBanner, pBar, getSpacer());
+        boxBanner.setPadding(new Insets(0));
         boxBanner.setAlignment(Pos.CENTER);
         ivLinkLabel = imageView(imgLink, scale);
         ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
-        HBox boxLinkLabel = new HBox(10, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
+        HBox boxLinkLabel = newHBox(Pos.CENTER_LEFT, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
         tfLink = newTextField();
-        lblLinkOut = label();
-        HBox boxLinkOut = new HBox(lblLinkOut);
-        boxLinkOut.setAlignment(Pos.CENTER_LEFT);
+        lblLinkOut = label("lblLinkOut");
+        HBox boxLinkOut = newHBox(Pos.CENTER_LEFT, lblLinkOut);
 
         ivDirLabel = imageView(imgDirectory, scale);
-        HBox boxDirLabel = new HBox(ivDirLabel);
-        boxDirLabel.setAlignment(Pos.CENTER_LEFT);
+        HBox boxDirLabel = newHBox(Pos.CENTER_LEFT, ivDirLabel);
 
         tfDir = newTextField();
-        lblDirOut = label();
-        HBox boxLblDirOut = new HBox(lblDirOut);
-        boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
+        lblDirOut = label("lblDirOut");
+        HBox boxLblDirOut = newHBox(Pos.CENTER_LEFT, lblDirOut);
 
         ivFilenameLabel = imageView(imgFilename, scale);
-        HBox boxFilenameLabel = new HBox(ivFilenameLabel);
-        boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
+        HBox boxFilenameLabel = newHBox(Pos.CENTER_LEFT, ivFilenameLabel);
         tfFilename = newTextField();
-
-        lblFilenameOut = label();
-        HBox boxLblFilenameOut = new HBox(lblFilenameOut);
-        boxLblFilenameOut.setAlignment(Pos.CENTER_LEFT);
-        lblDownloadInfo = label();
-        HBox boxLblDownloadInfo = new HBox(lblDownloadInfo);
-        boxLblDownloadInfo.setAlignment(Pos.CENTER_LEFT);
+        lblFilenameOut = label("lblFilenameOut");
+        HBox boxLblFilenameOut = newHBox(Pos.CENTER_LEFT, lblFilenameOut);
+        lblDownloadInfo = label("lblDownloadInfo");
+        HBox boxLblDownloadInfo = newHBox(Pos.CENTER_LEFT, lblDownloadInfo);
         vbox = new VBox(0, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo, makeButtonBox());
-        vbox.setPadding(new Insets(50, 50, 0, 50));
+        vbox.setPadding(new Insets(-200, 30, 0, 30));
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPrefWidth(width);
-        vbox.setPrefHeight(height);
         anchorPane.getChildren().add(vbox);
+        placeControl(vbox,0,0,0,0);
         menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
+    }
+
+    private HBox newHBox(Pos align, Node... nodes) {
+        HBox box = new HBox(nodes);
+        box.setPadding(new Insets(0,0,0,0));
+        box.setAlignment(align);
+        return box;
     }
 
     private ProgressBar pbar() {
@@ -254,8 +254,8 @@ public class Main extends Application {
     }
     private TextField newTextField() {
         TextField tf = new TextField();
-        tf.setFont(new Font(monacoFont.toExternalForm(), 19));
-        tf.setPrefHeight(45);
+        tf.setFont(new Font(monacoFont.toExternalForm(), 19 * scale));
+        tf.setPrefHeight(45 * scale);
         return tf;
     }
 
@@ -278,9 +278,9 @@ public class Main extends Application {
         return label;
     }
 
-    private Label label() {
-        Label label = new Label();
-        label.setFont(new Font(monacoFont.toExternalForm(), 20));
+    private Label label(String text) {
+        Label label = new Label(text);
+        label.setFont(new Font(monacoFont.toExternalForm(), 20 *  scale));
         return label;
     }
 
@@ -419,6 +419,7 @@ public class Main extends Application {
         scene.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
         scene.getStylesheets().add(Constants.vBoxCSS.toExternalForm());
         scene.getStylesheets().add(Constants.sceneCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
         stage.xProperty().addListener(((observable, oldValue, newValue) -> {
             if (consoleOut != null) {
                 consoleOut.rePosition((double) newValue, stage.getY());
