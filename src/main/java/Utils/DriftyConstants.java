@@ -22,13 +22,11 @@ public final class DriftyConstants {
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "-help";
-    public static final String GUI_FLAG = "-gui";
     public static final String NAME_FLAG = "-name";
     public static final String VERSION_FLAG = "-version";
     public static final String LOCATION_FLAG = "-location";
     public static final String BATCH_FLAG = "-batch";
     public static final String HELP_FLAG_SHORT = "-h";
-    public static final String GUI_FLAG_SHORT = "-g";
     public static final String NAME_FLAG_SHORT = "-n";
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
