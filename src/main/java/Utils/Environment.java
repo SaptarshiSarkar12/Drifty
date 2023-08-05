@@ -60,9 +60,8 @@ public class Environment {
             if(!copyYtDlp.copyToTemp()) {
                 Settings.SET_PREFERENCES.setLastYt_DlpUpdateTime(System.currentTimeMillis());
             }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
         }
         String batchPath;
         if (OS.isWindows()) {
