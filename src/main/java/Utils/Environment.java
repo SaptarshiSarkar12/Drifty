@@ -1,7 +1,7 @@
 package Utils;
 
-import Backend.Drifty;
 import Backend.CopyYtDlp;
+import Backend.Drifty;
 import Enums.DriftyConfig;
 import Enums.MessageCategory;
 import Enums.MessageType;
@@ -9,6 +9,7 @@ import Enums.OS;
 import GUI.Launcher;
 import Preferences.Settings;
 import org.buildobjects.process.ProcBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,9 +61,8 @@ public class Environment {
             if(!copyYtDlp.copyToTemp()) {
                 Settings.SET_PREFERENCES.setLastYt_DlpUpdateTime(System.currentTimeMillis());
             }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
         }
         String batchPath;
         if (OS.isWindows()) {
