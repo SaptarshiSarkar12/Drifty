@@ -1,7 +1,7 @@
 package Utils;
 
-import Backend.Drifty;
 import Backend.CopyYtDlp;
+import Backend.Drifty;
 import Enums.DriftyConfig;
 import Enums.MessageCategory;
 import Enums.MessageType;
@@ -9,6 +9,7 @@ import Enums.OS;
 import GUI.Launcher;
 import Preferences.Settings;
 import org.buildobjects.process.ProcBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,7 +1,10 @@
 package GUI.Forms;
 
 import Backend.Drifty;
-import Enums.*;
+import Enums.MessageCategory;
+import Enums.MessageType;
+import Enums.Mode;
+import Enums.OS;
 import GUI.Support.AskYesNo;
 import GUI.Support.Folders;
 import GUI.Support.Job;
@@ -46,11 +49,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.GUI_APPLICATION_STARTED;
+import static Utils.Utility.sleep;
 import static javafx.scene.layout.AnchorPane.*;
 
 
@@ -1039,18 +1042,6 @@ public class Main extends Application {
             Drifty backend = new Drifty(linkToFile, directoryForDownloading, fileName);
             Thread thread = new Thread(backend::startGUIDownload);
             thread.start();
-        }
-    }
-
-    /**
-     * This method is used to make the calling method to wait for the time in millisecond passed
-     * @param time the time to make the calling thread to keep waiting
-     */
-    public static void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            setMessage("Link Metadata extracting thread failed to wait for " + time + ". It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
     }
 }
