@@ -60,8 +60,7 @@ public class MessageBroker {
             if (!messageCategory.equals(MessageCategory.LOG))
                 output.println(message);
             logger.log(messageType, message);
-        }
-        else if (Mode.getIsGUILoaded()) {
+        } else if (Mode.getIsGUILoaded()) {
             logger.log(messageType, message);
             Main.setMessage(message, messageType, messageCategory);
         }

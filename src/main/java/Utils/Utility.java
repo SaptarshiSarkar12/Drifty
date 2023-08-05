@@ -6,7 +6,6 @@ import Enums.DriftyConfig;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
-import GUI.Forms.Main;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -19,6 +18,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -250,7 +250,7 @@ public final class Utility {
             linkThread = new Thread(getYT_IGLinkMetadata(tempFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
-                Main.sleep(100);
+                sleep(100);
                 interrupted = linkThread.isInterrupted();
             }
             if (interrupted) {
@@ -293,8 +293,7 @@ public final class Utility {
         Matcher m = p.matcher(json);
         if (m.find()) {
             filename = m.group(2);
-        }
-        else {
+        } else {
             filename = "Unknown Filename";
         }
         return cleanFilename(filename);
@@ -329,5 +328,17 @@ public final class Utility {
                     .withNoTimeout()
                     .run();
         };
+    }
+
+    /**
+     * This method is used to make the calling method to wait for the time in millisecond passed
+     * @param time the time to make the calling thread to keep waiting
+     */
+    public static void sleep(long time) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(time);
+        } catch (InterruptedException e) {
+            messageBroker.sendMessage("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+        }
     }
 }
