@@ -16,6 +16,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -56,6 +57,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
 import static GUI.Forms.Constants.*;
+import static javafx.scene.layout.AnchorPane.*;
+import static javafx.scene.layout.AnchorPane.setRightAnchor;
 
 /**
  * This is the second main GUI form, and it manages batch jobs for the user.
@@ -66,8 +69,8 @@ import static GUI.Forms.Constants.*;
 public class Batch {
 
     private final double scale = .6;
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
     private Stage stage;
     private Folders folders;
     private ConcurrentLinkedDeque<Job> jobList;
@@ -116,9 +119,7 @@ public class Batch {
         this.consoleOut = consoleOut;
         height = (int) screenSize.getHeight() * scale;
         width = (int) screenSize.getWidth() * scale;
-        System.out.println("Batch W: " + screenSize.getWidth());
-        System.out.println("Batch H: " + screenSize.getHeight());
-         folders = AppSettings.get.getFolders();
+        folders = AppSettings.get.getFolders();
         if (AppSettings.get.getJobs() != null) {
             jobList = AppSettings.get.getJobs().jobList();
         }
@@ -127,8 +128,8 @@ public class Batch {
         }
         Platform.runLater(() -> {
             createControls();
-            //setControlProperties();
-            //setControlActions();
+            setControlProperties();
+            setControlActions();
             makeScene();
             tfDir.setText(folders.getDownloadFolder());
         });
@@ -177,6 +178,8 @@ public class Batch {
         double width = Constants.imgUpUp.getWidth();
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(width * scale);
+        anchorPane.getChildren().add(imageView);
+        placeControl(imageView,-1,20,-1,20);
         return imageView;
     }
 
@@ -198,6 +201,13 @@ public class Batch {
         iv.setPreserveRatio(true);
         iv.setFitWidth(width * ratio);
         return iv;
+    }
+
+    private void placeControl(Node node, double left, double right, double top, double bottom) {
+        if (top != -1) setTopAnchor(node, top);
+        if (bottom != -1) setBottomAnchor(node, bottom);
+        if (left != -1) setLeftAnchor(node, left);
+        if (right != -1) setRightAnchor(node, right);
     }
 
     private void createControls() {
@@ -245,6 +255,7 @@ public class Batch {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPrefWidth(width);
         vbox.setPrefHeight(height);
+        ivBtnConsole = imageToggle(.5);
         anchorPane.getChildren().add(vbox);
     }
 
@@ -333,7 +344,7 @@ public class Batch {
                 AppSettings.set.setIsBatchAutoPasteEnabled(newValue);
             }
         }));
-        ivBtnConsole.setOnMouseClicked(e -> toggleConsole());
+        ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
     }
 
     private void triageInbound(String newLink) {
@@ -397,17 +408,17 @@ public class Batch {
                 consoleOut.rePosition(stage.getX(), (double) newValue);
             }
         }));
-        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
+        //stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
         stage.setScene(scene);
         stage.setWidth(width);
         stage.setMinHeight(height);
     }
 
     public void show() {
-        System.out.println("Batch Show Scene");
         stage.show();
         commitJobListToListView();
         consoleOut.rePosition(width, height, stage.getX(), stage.getY());
+        ivBtnConsole.toFront();
     }
 
     private void close() {
@@ -495,20 +506,20 @@ public class Batch {
         }
     }
 
-    private void toggleConsole() {
-        if (!consoleOpen) {
-            ivBtnConsole.setImage(Constants.imgDownUp);
-            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
-            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
-            consoleOut.show();
-            consoleOpen = true;
-        }
-        else {
+    private void toggleConsole(boolean close) {
+        if (consoleOpen || close) {
             ivBtnConsole.setImage(Constants.imgUpUp);
             ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgUpDown));
             ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgUpUp));
             consoleOut.hide();
             consoleOpen = false;
+        }
+        else {
+            ivBtnConsole.setImage(Constants.imgDownUp);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
+            consoleOut.show();
+            consoleOpen = true;
         }
     }
 

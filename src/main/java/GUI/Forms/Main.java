@@ -206,39 +206,39 @@ public class Main extends Application {
         anchorPane.setPrefHeight(height);
         Image imgBanner = new Image(Constants.mainGUIBanner.toExternalForm());
         ImageView ivBanner = imageView(imgBanner, .5);
-        VBox boxBanner = new VBox(30, ivBanner, getSpacer(), getSpacer());
+        pBar = pbar();
+        VBox boxBanner = new VBox(15, ivBanner, pBar, getSpacer());
         boxBanner.setAlignment(Pos.CENTER);
-        pBar = new ProgressBar();
-        ivLinkLabel = imageView(imgLink, .8);
-        ivAutoLabel = imageView(imgAutoPaste, .8);
+        ivLinkLabel = imageView(imgLink, scale);
+        ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
         HBox boxLinkLabel = new HBox(10, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
         tfLink = newTextField();
-        lblLinkOut = label();
+        lblLinkOut = label("lblLinkOut");
         HBox boxLinkOut = new HBox(lblLinkOut);
         boxLinkOut.setAlignment(Pos.CENTER_LEFT);
 
-        ivDirLabel = imageView(imgDirectory, .8);
+        ivDirLabel = imageView(imgDirectory, scale);
         HBox boxDirLabel = new HBox(ivDirLabel);
         boxDirLabel.setAlignment(Pos.CENTER_LEFT);
 
         tfDir = newTextField();
-        lblDirOut = label();
+        lblDirOut = label("lblDirOut");
         HBox boxLblDirOut = new HBox(lblDirOut);
         boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
 
-        ivFilenameLabel = imageView(imgFilename, .8);
+        ivFilenameLabel = imageView(imgFilename, scale);
         HBox boxFilenameLabel = new HBox(ivFilenameLabel);
         boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
         tfFilename = newTextField();
 
-        lblFilenameOut = label();
+        lblFilenameOut = label("lblFilenameOut");
         HBox boxLblFilenameOut = new HBox(lblFilenameOut);
         boxLblFilenameOut.setAlignment(Pos.CENTER_LEFT);
-        lblDownloadInfo = label();
+        lblDownloadInfo = label("lblDownloadInfo");
         HBox boxLblDownloadInfo = new HBox(lblDownloadInfo);
         boxLblDownloadInfo.setAlignment(Pos.CENTER_LEFT);
-        vbox = new VBox(10, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo, makeButtonBox());
+        vbox = new VBox(0, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo, makeButtonBox());
         vbox.setPadding(new Insets(50, 50, 0, 50));
         vbox.setAlignment(Pos.CENTER);
         vbox.setPrefWidth(width);
@@ -247,6 +247,11 @@ public class Main extends Application {
         menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
     }
 
+    private ProgressBar pbar() {
+        ProgressBar pbar = new ProgressBar();
+        pbar.setPrefWidth(screenSize.getWidth());
+        return pbar;
+    }
     private TextField newTextField() {
         TextField tf = new TextField();
         tf.setFont(new Font(monacoFont.toExternalForm(), 19));
@@ -273,8 +278,8 @@ public class Main extends Application {
         return label;
     }
 
-    private Label label() {
-        Label label = new Label();
+    private Label label(String text) {
+        Label label = new Label(text);
         label.setFont(new Font(monacoFont.toExternalForm(), 20));
         return label;
     }
