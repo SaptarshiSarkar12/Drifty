@@ -2,7 +2,6 @@ package GUI.Forms;
 
 import Enums.DriftyConfig;
 import Enums.Format;
-import GUI.Support.Constants;
 import GUI.Support.*;
 import Preferences.Settings;
 import Utils.Utility;

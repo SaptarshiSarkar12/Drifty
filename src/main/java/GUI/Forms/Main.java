@@ -2,7 +2,6 @@ package GUI.Forms;
 
 import Backend.Drifty;
 import Enums.*;
-import GUI.Support.Constants;
 import GUI.Support.AskYesNo;
 import GUI.Support.Folders;
 import GUI.Support.Job;
@@ -68,9 +67,9 @@ public class Main extends Application {
     private final ConcurrentLinkedDeque<Job> failedJobList = new ConcurrentLinkedDeque<>();
     private ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
     private final Logger logger = Logger.getInstance();
-    private final Color green = Color.rgb(0, 255, 0);
-    private final Color red = Color.rgb(177, 20 , 0);
-    private final Color orange = Color.rgb(180, 80 , 0);
+    private final Color green = Constants.GREEN;
+    private final Color red = Constants.RED;
+    private final Color orange = Constants.ORANGE;
     private final String systemDefaultLineSeparator = System.lineSeparator();
     private final Image imgAutoPaste = new Image(Constants.autoPasteLabelImage.toExternalForm());
     private final Image imgDirectory = new Image(Constants.directoryLabelImage.toExternalForm());

@@ -1,7 +1,6 @@
 package GUI.Forms;
 
 import Enums.Out;
-import GUI.Support.Constants;
 import GUI.Support.StringPropertyPrintStream;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

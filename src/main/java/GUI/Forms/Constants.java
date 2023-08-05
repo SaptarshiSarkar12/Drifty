@@ -1,4 +1,4 @@
-package GUI.Support;
+package GUI.Forms;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -9,7 +9,7 @@ import java.net.URL;
  * These are constants used by Drifty GUI.
  * It contains hooks into the resources folder for relevant files.
  */
-public class Constants {
+class Constants {
     public static final URL guiBackground = Constants.class.getResource("/GUI/Backgrounds/DriftyMainBackground.png");
     public static final URL backPath = Constants.class.getResource("/GUI/Backgrounds/DriftyBatchBackground.png");
 
