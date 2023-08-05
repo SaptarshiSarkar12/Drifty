@@ -42,7 +42,7 @@ public class SetPreferences {
     }
 
     public void devMode(boolean value) {
-        Settings.CLEAR_PREFERENCES.devMode();
+        AppSettings.clear.devMode();
         prefs.putBoolean(DEVMODE.toString(), value);
     }
 
@@ -53,7 +53,7 @@ public class SetPreferences {
     public void setFolders(Folders folders) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(folders);
-        Settings.CLEAR_PREFERENCES.folders();
+        AppSettings.clear.folders();
         prefs.put(FOLDERS.toString(), value);
     }
 
@@ -62,7 +62,7 @@ public class SetPreferences {
      * @param isMainAutoPasteEnabled boolean value regarding the auto-paste option
      */
     public void setIsMainAutoPasteEnabled(boolean isMainAutoPasteEnabled) {
-        Settings.CLEAR_PREFERENCES.mainAutoPaste();
+        AppSettings.clear.mainAutoPaste();
         prefs.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
 
@@ -71,7 +71,7 @@ public class SetPreferences {
      * @param isBatchAutoPasteEnabled boolean value regarding the auto-paste option
      */
     public void setIsBatchAutoPasteEnabled(boolean isBatchAutoPasteEnabled) {
-        Settings.CLEAR_PREFERENCES.batchAutoPaste();
+        AppSettings.clear.batchAutoPaste();
         prefs.putBoolean(BATCH_AUTO_PASTE.toString(), isBatchAutoPasteEnabled);
     }
 
@@ -80,8 +80,8 @@ public class SetPreferences {
      * @param lastYt_DlpUpdateTime The last time in milliseconds, when yt-dlp was checked for any update
      */
     public void setLastYt_DlpUpdateTime(long lastYt_DlpUpdateTime) {
-        Settings.CLEAR_PREFERENCES.updateTimestamp();
-        prefs.putLong(YT_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
+        AppSettings.clear.updateTimestamp();
+        prefs.putLong(LAST_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
     }
 
     /**
@@ -89,7 +89,7 @@ public class SetPreferences {
      * @param lastFolderPath The path of the last folder provided to Drifty, in string format
      */
     public void setLastFolder(String lastFolderPath) {
-        Settings.CLEAR_PREFERENCES.lastFolder();
+        AppSettings.clear.lastFolder();
         prefs.put(LAST_FOLDER.toString(), lastFolderPath);
     }
 
@@ -100,12 +100,17 @@ public class SetPreferences {
     public void setBatchDownloadJobs(Jobs jobs) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(jobs);
-        Settings.CLEAR_PREFERENCES.jobs();
+        AppSettings.clear.jobs();
         Path batchPath = Paths.get(DriftyConfig.getConfig(DriftyConfig.BATCH_PATH), JOBS.toString());
         try {
             FileUtils.writeStringToFile(batchPath.toFile(), value, Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void startMax(boolean value) {
+        AppSettings.clear.startMax();
+        prefs.putBoolean(START_MAX.toString(), value);
     }
 }

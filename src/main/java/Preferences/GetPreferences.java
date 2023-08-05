@@ -81,7 +81,7 @@ public class GetPreferences {
      * @return the time of last yt-dlp update check in millisecond
      */
     public long getLastYt_DlpUpdateTime() {
-        return prefs.getLong(YT_DLP_UPDATE_TIME.toString(), 1000L);
+        return prefs.getLong(LAST_UPDATE_TIME.toString(), 1000L);
     }
 
     /**
@@ -109,5 +109,9 @@ public class GetPreferences {
             return jobs;
         } catch (IOException ignored) {}
         return null;
+    }
+
+    public boolean startMax() {
+        return prefs.getBoolean(START_MAX.toString(), false);
     }
 }

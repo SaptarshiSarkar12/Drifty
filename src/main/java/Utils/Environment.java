@@ -7,7 +7,7 @@ import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
 import GUI.Launcher;
-import Preferences.Settings;
+import Preferences.AppSettings;
 import org.buildobjects.process.ProcBuilder;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class Environment {
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
             if(!copyYtDlp.copyToTemp()) {
-                Settings.SET_PREFERENCES.setLastYt_DlpUpdateTime(System.currentTimeMillis());
+                AppSettings.set.setLastYt_DlpUpdateTime(System.currentTimeMillis());
             }
         } catch (IOException e) {
             messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
@@ -93,7 +93,7 @@ public class Environment {
                 .withOutputStream(System.out)
                 .withErrorStream(System.err);
         yt_dlpUpdateProcess.run();
-        Settings.SET_PREFERENCES.setLastYt_DlpUpdateTime(System.currentTimeMillis());
+        AppSettings.set.setLastYt_DlpUpdateTime(System.currentTimeMillis());
     }
 
     /**
@@ -102,6 +102,6 @@ public class Environment {
      */
     public static boolean isUpdateForYt_dlpChecked() {
         final long oneDayInMilliSeconds = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        return (System.currentTimeMillis() - Settings.GET_PREFERENCES.getLastYt_DlpUpdateTime()) < oneDayInMilliSeconds;
+        return (System.currentTimeMillis() - AppSettings.get.getLastYt_DlpUpdateTime()) < oneDayInMilliSeconds;
     }
 }

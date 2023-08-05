@@ -2,6 +2,7 @@ package GUI;
 
 import Enums.Mode;
 import GUI.Forms.Main;
+import Preferences.AppSettings;
 import Utils.Environment;
 
 import javax.swing.*;
@@ -29,6 +30,14 @@ public class Launcher {
         Environment.initializeEnvironment();
         System.setProperty("apple.awt.UIElement", "false");
         Toolkit.getDefaultToolkit();
+        for (String arg : args) {
+            if (arg.toLowerCase().contains("enablemaxstart")) {
+                AppSettings.set.startMax(true);
+            }
+            if (arg.toLowerCase().contains("disablemaxstart")) {
+                AppSettings.set.startMax(false);
+            }
+        }
         Main.main(args);
     }
 }
