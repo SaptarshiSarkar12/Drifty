@@ -31,10 +31,10 @@ public class Launcher {
         System.setProperty("apple.awt.UIElement", "false");
         Toolkit.getDefaultToolkit();
         for (String arg : args) {
-            if (arg.toLowerCase().contains("enablemaxstart")) {
+            if (arg.toLowerCase().contains("--enablemaxstart")) {
                 AppSettings.set.startMax(true);
             }
-            if (arg.toLowerCase().contains("disablemaxstart")) {
+            if (arg.toLowerCase().contains("--disablemaxstart")) {
                 AppSettings.set.startMax(false);
             }
         }
