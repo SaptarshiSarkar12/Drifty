@@ -1,5 +1,6 @@
 package Utils;
 
+import CLI.DriftyCLI;
 import Enums.MessageCategory;
 import Enums.Mode;
 import Enums.MessageType;
@@ -13,7 +14,7 @@ import java.io.PrintStream;
  * @version 2.0.0
  * @see Backend.Drifty
  * @see Main
- * @see CLI.Drifty_CLI
+ * @see DriftyCLI
  * @since 2.0.0
  */
 public class MessageBroker {

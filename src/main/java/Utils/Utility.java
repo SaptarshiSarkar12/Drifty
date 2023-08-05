@@ -196,7 +196,7 @@ public final class Utility {
         System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLI.");
         System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
-        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
+        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava DriftyCLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
         System.out.println("\033[37;3m* Requires java 20 or higher. \n" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
