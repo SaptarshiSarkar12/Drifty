@@ -4,7 +4,6 @@ import Backend.Drifty;
 import Enums.MessageCategory;
 import Enums.OS;
 import Enums.MessageType;
-import GUI.Drifty_GUI;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -81,10 +80,6 @@ public class Drifty_CLI {
                 if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
                     help();
                     System.exit(0);
-                }
-                else if (Objects.equals(args[i], GUI_FLAG) || (Objects.equals(args[i], GUI_FLAG_SHORT))) {
-                    Drifty_GUI.main(args);
-                    return;
                 }
                 else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
                     name = args[i + 1];
