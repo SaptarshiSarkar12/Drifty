@@ -45,7 +45,7 @@ public class ClearPreferences {
     }
 
     public void updateTimestamp() {
-        prefs.remove(YT_DLP_UPDATE_TIME.toString());
+        prefs.remove(LAST_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {
@@ -54,6 +54,10 @@ public class ClearPreferences {
 
     public void jobs() {
         prefs.remove(JOBS.toString());
+    }
+
+    public void startMax() {
+        prefs.remove(START_MAX.toString());
     }
 
     public void clearAll() {

@@ -1,6 +1,6 @@
 package GUI.Support;
 
-import Preferences.Settings;
+import Preferences.AppSettings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,7 +32,7 @@ public class ManageFolders {
     private javafx.scene.control.Button btnClose;
 
     public ManageFolders() {
-        this.folders = Settings.GET_PREFERENCES.getFolders();
+        this.folders = AppSettings.get.getFolders();
         createControls();
         setControls();
     }

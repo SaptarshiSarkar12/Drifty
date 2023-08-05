@@ -3,7 +3,7 @@ package GUI.Forms;
 import Enums.DriftyConfig;
 import Enums.Format;
 import GUI.Support.*;
-import Preferences.Settings;
+import Preferences.AppSettings;
 import Utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +16,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -48,6 +47,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.*;
@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
-import static javafx.scene.layout.AnchorPane.*;
+import static GUI.Forms.Constants.*;
 
 /**
  * This is the second main GUI form, and it manages batch jobs for the user.
@@ -65,7 +65,7 @@ import static javafx.scene.layout.AnchorPane.*;
 
 public class Batch {
 
-    private final double scale = .55;
+    private final double scale = .6;
     private double width;
     private double height;
     private Stage stage;
@@ -79,6 +79,10 @@ public class Batch {
     private boolean jobPaste                              = false;
     private boolean firstRun                              = true;
     private boolean consoleOpen                           = false;
+    private final Image imgAutoPaste = new Image(Constants.autoPasteLabelImage.toExternalForm());
+    private final Image imgDirectory = new Image(Constants.directoryLabelImage.toExternalForm());
+    private final Image imgFilename = new Image(Constants.filenameLabelImage.toExternalForm());
+    private final Image imgLink = new Image(Constants.linkLabelImage.toExternalForm());
     private final ConsoleOut consoleOut;
     private String postMessage;
     private Process linkProcess;
@@ -88,39 +92,43 @@ public class Batch {
     private ListView listView;
     private TextField tfLink;
     private TextField tfDir;
+    private ImageView ivAutoLabel;
     private TextField tfFilename;
-    private Label lblLink;
-    private Label lblDir;
-    private Label lblFilename;
-    private ImageView btnSave;
-    private ImageView btnRunBatch;
-    private ImageView btnClose;
+    private ImageView ivLinkLabel;
+    private ImageView ivDirLabel;
+    private ImageView ivFilenameLabel;
+    private ImageView ivBtnSave;
+    private ImageView ivBtnRunBatch;
+    private ImageView ivBtnClose;
     private CheckBox cbAutoPaste;
     private static TextArea taOutput;
-    private ImageView btnConsole;
+    private ImageView ivBtnConsole;
     private final Color black = Constants.BLACK;
+    private Label lblLinkOut;
+    private Label lblDirOut;
+    private Label lblDownloadInfo;
+    private Label lblFilenameOut;
     private Timer bounceTimer;
     private Timer clockTimer;
+    private VBox vbox;
 
     public Batch(ConsoleOut consoleOut) {
         this.consoleOut = consoleOut;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
-        height = (int) screenSize.getHeight(); // E.g.: 768
-        width = (int) screenSize.getWidth(); // E.g.: 1366
-        double[] newDim = Utility.fraction(width, height, scale);
-        width = newDim[0];
-        height = newDim[1];
-        folders = Settings.GET_PREFERENCES.getFolders();
-        if (Settings.GET_PREFERENCES.getJobs() != null) {
-            jobList = Settings.GET_PREFERENCES.getJobs().jobList();
+        height = (int) screenSize.getHeight() * scale;
+        width = (int) screenSize.getWidth() * scale;
+        System.out.println("Batch W: " + screenSize.getWidth());
+        System.out.println("Batch H: " + screenSize.getHeight());
+         folders = AppSettings.get.getFolders();
+        if (AppSettings.get.getJobs() != null) {
+            jobList = AppSettings.get.getJobs().jobList();
         }
         else {
             jobList = new ConcurrentLinkedDeque<>();
         }
         Platform.runLater(() -> {
             createControls();
-            setControlProperties();
-            setControlActions();
+            //setControlProperties();
+            //setControlActions();
             makeScene();
             tfDir.setText(folders.getDownloadFolder());
         });
@@ -130,51 +138,118 @@ public class Batch {
      * Form initialization And Control
      */
 
+    private TextField newTextField() {
+        TextField tf = new TextField();
+        tf.setFont(new Font(monacoFont.toExternalForm(), 19));
+        tf.setPrefHeight(45);
+        return tf;
+    }
+
+    private HBox makeButtonBox() {
+        Image btnDownloadUp   = new Image(Constants.downloadUp.toExternalForm());
+        Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
+        Image btnBatchUp      = new Image(Constants.batchUp.toExternalForm());
+        Image btnBatchDown    = new Image(Constants.batchDown.toExternalForm());
+        ivBtnSave             = imageViewButton(saveUp, saveDown, .5);
+        ivBtnRunBatch         = imageViewButton(runBatchUp, runBatchDown, .5);
+        ivBtnClose            = imageViewButton(closeUp, closeDown, .5);
+        HBox box              = new HBox(100, ivBtnSave, ivBtnRunBatch, ivBtnClose);
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
+
+    private Label getSpacer() {
+        Label label = new Label();
+        label.setPrefWidth(screenSize.getWidth());
+        return label;
+    }
+
+    private Label label() {
+        Label label = new Label();
+        label.setFont(new Font(monacoFont.toExternalForm(), 20));
+        return label;
+    }
+
+    private ImageView imageToggle(double scale) {
+        ImageView imageView = new ImageView(Constants.imgUpUp);
+        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
+        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
+        double width = Constants.imgUpUp.getWidth();
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageViewButton(URL imageUp, URL imageDown, double scale) {
+        Image iu = new Image(imageUp.toExternalForm());
+        Image id = new Image(imageDown.toExternalForm());
+        ImageView imageView = new ImageView(iu);
+        double width = iu.getWidth();
+        imageView.setOnMouseReleased(e -> imageView.setImage(iu));
+        imageView.setOnMousePressed(e -> imageView.setImage(id));
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageView(Image image, double ratio) {
+        ImageView iv = new ImageView(image);
+        double width = image.getWidth();
+        iv.setPreserveRatio(true);
+        iv.setFitWidth(width * ratio);
+        return iv;
+    }
+
     private void createControls() {
         anchorPane = new AnchorPane();
-        ivBack = imageViewToggle(new Image(Constants.batchGUIBanner.toExternalForm()), 0, 0, 0, 0);
-        ivBack.setPreserveRatio(true);
-        ivBack.setFitWidth(width);
-        double left = 655 * scale;
-        double right = 160 * scale;
-        double delta = 195 * scale;
-        double top = 285 * scale;
-        double vOffset = 75 * scale;
-        Image saveUp = new Image(Constants.saveUp.toExternalForm());
-        Image saveDown = new Image(Constants.saveDown.toExternalForm());
-        Image runBatchUp = new Image(Constants.runBatchUp.toExternalForm());
-        Image runBatchDown = new Image(Constants.runBatchDown.toExternalForm());
-        Image closeUp = new Image(Constants.closeUp.toExternalForm());
-        Image closeDown = new Image(Constants.closeDown.toExternalForm());
-        double buttonWidth = saveUp.getWidth() * scale * .9;
-        double buttonOffset = buttonWidth / 2;
-        double btnPlace = width / 4;
-        ivBack = new ImageView(new Image(Constants.batchGUIBanner.toExternalForm()));
-        listView = listView(50, 100, 300, 450);
-        label("Link:", left, right, top - vOffset * scale, true);
-        cbAutoPaste = checkBox("Auto Paste:", right, top - vOffset * scale-8);
-        tfLink = textField(left, right, top);
-        lblLink = label("", left, right, top + vOffset, false);
-        top += delta;
-        label("Directory:", left, right, top - vOffset * scale, true);
-        tfDir = textField(left, right, top);
-        lblDir = label("", left, right, top + vOffset, false);
-        top += delta;
-        label("Filename:", left, right, top - vOffset * scale, true);
-        tfFilename = textField(left, right, top);
-        lblFilename = label("", left, right, top + vOffset, false);
-        double placement = btnPlace - buttonOffset;
-        btnSave = imageViewButton(saveUp, saveDown, placement, 10, buttonWidth);
-        placement = (btnPlace * 2) - buttonOffset;
-        btnRunBatch = imageViewButton(runBatchUp, runBatchDown, placement, 10, buttonWidth);
-        placement = (btnPlace * 3) - buttonOffset;
-        btnClose = imageViewButton(closeUp, closeDown, placement, 10, buttonWidth);
-        // taOutput = textArea(10,10,35);
-        btnConsole = imageViewToggle(35, 13.5);
+        anchorPane.setPrefWidth(width);
+        anchorPane.setPrefHeight(height);
+        Image imgBanner = new Image(Constants.batchGUIBanner.toExternalForm());
+        ImageView ivBanner = imageView(imgBanner, .8);
+        VBox boxBanner = new VBox(30, ivBanner, getSpacer(), getSpacer());
+        boxBanner.setAlignment(Pos.CENTER);
+        ivLinkLabel = imageView(imgLink, .8);
+        ivAutoLabel = imageView(imgAutoPaste, .8);
+        cbAutoPaste = new CheckBox();
+        HBox boxLinkLabel = new HBox(10, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
+        tfLink = newTextField();
+        lblLinkOut = label();
+        HBox boxLinkOut = new HBox(lblLinkOut);
+        boxLinkOut.setAlignment(Pos.CENTER_LEFT);
+
+        ivDirLabel = imageView(imgDirectory, .8);
+        HBox boxDirLabel = new HBox(ivDirLabel);
+        boxDirLabel.setAlignment(Pos.CENTER_LEFT);
+
+        tfDir = newTextField();
+        lblDirOut = label();
+        HBox boxLblDirOut = new HBox(lblDirOut);
+        boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
+
+        ivFilenameLabel = imageView(imgFilename, .8);
+        HBox boxFilenameLabel = new HBox(ivFilenameLabel);
+        boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
+        tfFilename = newTextField();
+
+        lblFilenameOut = label();
+        HBox boxLblFilenameOut = new HBox(lblFilenameOut);
+        boxLblFilenameOut.setAlignment(Pos.CENTER_LEFT);
+        lblDownloadInfo = label();
+        HBox boxLblDownloadInfo = new HBox(lblDownloadInfo);
+        boxLblDownloadInfo.setAlignment(Pos.CENTER_LEFT);
+        VBox vboxMain = new VBox(10,boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo);
+        listView = listView();
+        HBox boxListView = new HBox(40,listView, vboxMain);
+        vbox = new VBox(10, boxBanner, boxListView, makeButtonBox());
+        vbox.setPadding(new Insets(50, 50, 0, 50));
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPrefWidth(width);
+        vbox.setPrefHeight(height);
+        anchorPane.getChildren().add(vbox);
     }
 
     private void setControlProperties() {
-        cbAutoPaste.setSelected(Settings.GET_PREFERENCES.getIsBatchAutoPasteEnabled());
+        cbAutoPaste.setSelected(AppSettings.get.getIsBatchAutoPasteEnabled());
         tfDir.setText(folders.getDownloadFolder());
         tfLink.textProperty().addListener(((observable, oldLink, newLink) -> {
             if (!oldLink.equals(newLink)) {
@@ -185,7 +260,7 @@ public class Batch {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
-                    String folderPath = Settings.GET_PREFERENCES.getLastDownloadFolder();
+                    String folderPath = AppSettings.get.getLastDownloadFolder();
                     if (folderPath.isEmpty()) {
                         setDirOut(Constants.RED, "Directory cannot be empty!");
                     }
@@ -242,23 +317,23 @@ public class Batch {
         BooleanBinding listPopulated = listView.itemsProperty().isNotNull().and(listView.itemsProperty().asString().isEmpty().not());
         BooleanBinding hasText = tfLink.textProperty().isEmpty().not().and(tfDir.textProperty().isEmpty().not().and(tfFilename.textProperty().isEmpty().not()));
         BooleanBinding isListEmpty = Bindings.isEmpty(listView.getItems()).not();
-        btnRunBatch.visibleProperty().bind(isListEmpty);
-        btnSave.visibleProperty().bind(hasText);
+        ivBtnRunBatch.visibleProperty().bind(isListEmpty);
+        ivBtnSave.visibleProperty().bind(hasText);
         Tooltip.install(tfLink, new Tooltip("Paste in a link and it will be added to the batch once name resolution has been attempted.\nSelect Auto Paste to have the contents of your clipboard automatically pasted here when\nyou switch back to this window."));
         Tooltip.install(tfDir, new Tooltip("Right click anywhere to add or manage directories\nLast directory added becomes download folder."));
         Tooltip.install(tfFilename, new Tooltip("This will be the name of the file that gets written to the Directory above."));
     }
 
     private void setControlActions() {
-        btnClose.setOnMouseClicked(e -> close());
-        btnSave.setOnMouseClicked(e -> saveBatch());
-        btnRunBatch.setOnMouseClicked(e -> runBatch());
+        ivBtnClose.setOnMouseClicked(e -> close());
+        ivBtnSave.setOnMouseClicked(e -> saveBatch());
+        ivBtnRunBatch.setOnMouseClicked(e -> runBatch());
         cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != oldValue) {
-                Settings.SET_PREFERENCES.setIsBatchAutoPasteEnabled(newValue);
+                AppSettings.set.setIsBatchAutoPasteEnabled(newValue);
             }
         }));
-        btnConsole.setOnMouseClicked(e -> toggleConsole());
+        ivBtnConsole.setOnMouseClicked(e -> toggleConsole());
     }
 
     private void triageInbound(String newLink) {
@@ -295,21 +370,41 @@ public class Batch {
                 triageInbound(newLink);
             }
         }));
-        stage.initStyle(StageStyle.TRANSPARENT);
         Scene scene = new Scene(anchorPane);
+        scene.widthProperty().addListener(((observable, oldValue, newValue) -> {
+            vbox.setPrefWidth((double) newValue);
+            if (consoleOut != null) {
+                consoleOut.setWidth((double) newValue);
+            }
+        }));
+        scene.heightProperty().addListener(((observable, oldValue, newValue) -> vbox.setPrefHeight((double) newValue)));
         scene.setOnContextMenuRequested(e -> getContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
-        scene.getStylesheets().add(Constants.contextMenuCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.labelCSS.toExternalForm());
+        scene.getStylesheets().add(contextMenuCSS.toExternalForm());
+        scene.getStylesheets().add(labelCSS.toExternalForm());
+        scene.getStylesheets().add(menuCSS.toExternalForm());
+        scene.getStylesheets().add(checkBoxCSS.toExternalForm());
+        scene.getStylesheets().add(textFieldCSS.toExternalForm());
+        scene.getStylesheets().add(vBoxCSS.toExternalForm());
+        scene.getStylesheets().add(sceneCSS.toExternalForm());
+        scene.getStylesheets().add(listViewCSS.toExternalForm());
+        stage.xProperty().addListener(((observable, oldValue, newValue) -> {
+            if (consoleOut != null) {
+                consoleOut.rePosition((double) newValue, stage.getY());
+            }
+        }));
+        stage.yProperty().addListener(((observable, oldValue, newValue) -> {
+            if (consoleOut != null) {
+                consoleOut.rePosition(stage.getX(), (double) newValue);
+            }
+        }));
+        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
         stage.setScene(scene);
-        stage.setMaxWidth(width);
-        stage.setMinWidth(width);
         stage.setWidth(width);
-        stage.setMaxHeight(height);
         stage.setMinHeight(height);
-        stage.setHeight(height);
     }
 
     public void show() {
+        System.out.println("Batch Show Scene");
         stage.show();
         commitJobListToListView();
         consoleOut.rePosition(width, height, stage.getX(), stage.getY());
@@ -367,123 +462,16 @@ public class Batch {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = Settings.GET_PREFERENCES.getFolders();
+            folders = AppSettings.get.getFolders();
         });
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miAdd, miDir, separator, miInfo);
     }
 
-    private ListView listView(double left, double top, double width, double height) {
+    private ListView listView() {
         ListView<Job> listView = new ListView<>();
-        listView.setMinWidth(width);
-        listView.setMaxWidth(width);
-        listView.setPrefWidth(width);
-        listView.setMinHeight(height);
-        listView.setMaxHeight(height);
-        listView.setPrefHeight(height);
-        anchorPane.getChildren().add(listView);
-        placeControl(listView, left, -1, top, -1);
-        listView.getStylesheets().add(Constants.listViewCSS.toExternalForm());
+        listView.setMinWidth(300);
         return listView;
-    }
-
-    private CheckBox checkBox(String text, double right, double top) {
-        CheckBox checkBox = new CheckBox();
-        Label label = new Label(text);
-        label.getStyleClass().add("normalLabel");
-        HBox box = new HBox(10, label, checkBox);
-        box.setAlignment(Pos.CENTER_LEFT);
-        anchorPane.getChildren().add(box);
-        placeControl(box, -1, right, top, -1);
-        checkBox.getStylesheets().add(Constants.checkBoxCSS.toExternalForm());
-        return checkBox;
-    }
-
-    private TextField textField(double left, double right, double top) {
-        TextField textField = new TextField();
-        double h = 65 * scale;
-        textField.setMinHeight(h);
-        textField.setMaxHeight(h);
-        textField.setPrefHeight(h);
-        anchorPane.getChildren().add(textField);
-        placeControl(textField, left, right, top, -1);
-        textField.setFont(new Font("Arial", 18));
-        textField.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
-        return textField;
-    }
-
-    private ImageView imageViewToggle(double right, double bottom) {
-        ImageView imageView = new ImageView(Constants.imgUpUp);
-        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
-        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
-        double w = 100 * scale;
-        imageView.setFitWidth(w);
-        imageView.setPreserveRatio(true);
-        anchorPane.getChildren().add(imageView);
-        placeControl(imageView, -1, right, -1, bottom);
-        return imageView;
-    }
-
-    private TextArea textArea(double left, double right, double bottom) {
-        TextArea textArea = new TextArea();
-        double h = 250 * scale;
-        double w = 450 * scale;
-        textArea.setMinHeight(h);
-        textArea.setMaxHeight(h);
-        textArea.setPrefHeight(h);
-        textArea.setMinWidth(w);
-        textArea.setMaxWidth(w);
-        textArea.setPrefWidth(w);
-        anchorPane.getChildren().add(textArea);
-        placeControl(textArea, left, right, -1, bottom);
-        textArea.setFont(new Font("Arial", 18));
-        textArea.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
-        return textArea;
-    }
-
-    private Label label(String text, double left, double right, double top, boolean forShow) {
-        Label label = new Label(text);
-        anchorPane.getChildren().add(label);
-        label.setFont(new Font(Constants.monacoFont.toExternalForm(), 18));
-        placeControl(label, left, right, top, -1);
-        if (forShow) {
-            label.getStyleClass().add("normalLabel");
-        }
-        return label;
-    }
-
-    private ImageView imageViewToggle(Image image, double right, double top) {
-        ImageView imageView = new ImageView(image);
-        anchorPane.getChildren().add(imageView);
-        placeControl(imageView, -1, right, top, -1);
-        imageView.setPreserveRatio(true);
-        return imageView;
-    }
-
-    private ImageView imageViewToggle(Image image, double left, double right, double top, double bottom) {
-        ImageView imageView = new ImageView(image);
-        anchorPane.getChildren().add(imageView);
-        placeControl(imageView, left, right, top, bottom);
-        imageView.setPreserveRatio(true);
-        return imageView;
-    }
-
-    private ImageView imageViewButton(Image imageUp, Image imageDown, double left, double bottom, double scale) {
-        ImageView imageView = new ImageView(imageUp);
-        anchorPane.getChildren().add(imageView);
-        placeControl(imageView, left, -1, -1, bottom);
-        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
-        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(scale);
-        return imageView;
-    }
-
-    private void placeControl(Node node, double left, double right, double top, double bottom) {
-        if (top != -1) setTopAnchor(node, top);
-        if (bottom != -1) setBottomAnchor(node, bottom);
-        if (left != -1) setLeftAnchor(node, left);
-        if (right != -1) setRightAnchor(node, right);
     }
 
     private void clearControls() {
@@ -509,16 +497,16 @@ public class Batch {
 
     private void toggleConsole() {
         if (!consoleOpen) {
-            btnConsole.setImage(Constants.imgDownUp);
-            btnConsole.setOnMousePressed(e -> btnConsole.setImage(Constants.imgDownDown));
-            btnConsole.setOnMouseReleased(e -> btnConsole.setImage(Constants.imgDownUp));
+            ivBtnConsole.setImage(Constants.imgDownUp);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
             consoleOut.show();
             consoleOpen = true;
         }
         else {
-            btnConsole.setImage(Constants.imgUpUp);
-            btnConsole.setOnMousePressed(e -> btnConsole.setImage(Constants.imgUpDown));
-            btnConsole.setOnMouseReleased(e -> btnConsole.setImage(Constants.imgUpUp));
+            ivBtnConsole.setImage(Constants.imgUpUp);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgUpDown));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgUpUp));
             consoleOut.hide();
             consoleOpen = false;
         }
@@ -542,15 +530,15 @@ public class Batch {
 
     private void setFileOut(Color color, String message) {
         Platform.runLater(() -> {
-            lblFilename.setTextFill(color);
-            lblFilename.setText(message);
+            lblFilenameOut.setTextFill(color);
+            lblFilenameOut.setText(message);
         });
     }
 
     private void setDirOut(Color color, String message) {
         Platform.runLater(() -> {
-            lblDir.setTextFill(color);
-            lblDir.setText(message);
+            lblDirOut.setTextFill(color);
+            lblDirOut.setText(message);
         });
     }
 
@@ -560,8 +548,8 @@ public class Batch {
 
     private void setLinkOut(Color color, String message) {
         Platform.runLater(() -> {
-            lblLink.setTextFill(color);
-            lblLink.setText(message);
+            lblLinkOut.setTextFill(color);
+            lblLinkOut.setText(message);
         });
     }
 
@@ -874,8 +862,8 @@ public class Batch {
                     listView.getItems().setAll(jobList);
                 }
             }
-            if (Settings.GET_PREFERENCES.getJobs() != null) {
-                Settings.GET_PREFERENCES.getJobs().setJobList(jobList);
+            if (AppSettings.get.getJobs() != null) {
+                AppSettings.get.getJobs().setJobList(jobList);
             }
             else {
                 new Jobs().setJobList(jobList);
@@ -933,7 +921,7 @@ public class Batch {
         Button btnOK = new Button("OK");
         Stage stage = Constants.getStage();
         stage.setWidth(width);
-        stage.setHeight(height);
+        stage.setHeight(height+100);
         stage.initStyle(StageStyle.TRANSPARENT);
         VBox vox = new VBox(tf);
         vox.setPrefWidth(width-35);
@@ -958,7 +946,7 @@ public class Batch {
 
     private Text text(String string, boolean bold, Color color, double size) {
         Text text = new Text(string);
-        text.setFont(new Font(Constants.monacoFont.toExternalForm(),size));
+        text.setFont(new Font(monacoFont.toExternalForm(),size));
         text.setFill(color);
         if (bold) text.setStyle("-fx-font-weight: bold");
         text.setWrappingWidth(710);

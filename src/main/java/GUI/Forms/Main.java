@@ -9,7 +9,7 @@ import GUI.Support.AskYesNo;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.ManageFolders;
-import Preferences.Settings;
+import Preferences.AppSettings;
 import Utils.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,7 +47,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -55,6 +54,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static GUI.Forms.Constants.monacoFont;
+import static GUI.Forms.Constants.screenSize;
 import static Utils.DriftyConstants.GUI_APPLICATION_STARTED;
 import static javafx.scene.layout.AnchorPane.*;
 
@@ -63,7 +64,6 @@ public class Main extends Application {
     private Stage stage;
     private final double scale = .65;
     private final Utility utility = new Utility(new MessageBroker(System.out));
-    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty linkValid = new SimpleBooleanProperty(false);
@@ -86,7 +86,6 @@ public class Main extends Application {
     private boolean countUp = true;
     private boolean consoleOpen = false;
     private boolean waitingForErrorCode = true;
-    private final URL monacoFont = getClass().getResource("/GUI/Fonts/Monaco.ttf");
     private String errorMessage;
     private Batch batch;
     private static Main INSTANCE;
@@ -104,18 +103,18 @@ public class Main extends Application {
     private TextField tfLink;
     private TextField tfDir;
     private TextField tfFilename;
-    private ImageView ivBtnDownload;
-    private ImageView ivBtnBatch;
-    private ImageView ivAutoLabel;
     private ImageView ivLinkLabel;
     private ImageView ivDirLabel;
     private ImageView ivFilenameLabel;
+    private ImageView ivBtnDownload;
+    private ImageView ivBtnBatch;
+    private ImageView ivAutoLabel;
     private CheckBox cbAutoPaste;
     private Label lblLinkOut;
     private Label lblDirOut;
     private Label lblDownloadInfo;
     private Label lblFilenameOut;
-    private ImageView ivBtbConsole;
+    private ImageView ivBtnConsole;
     private VBox vbox;
 
     public static void main(String[] args) {
@@ -125,7 +124,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         stage = Constants.getStage(primaryStage);
-        folders = Settings.GET_PREFERENCES.getFolders();
+        folders = AppSettings.get.getFolders();
         logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         height = (int) screenSize.getHeight() * scale; // E.g.: 768
         width = (int) screenSize.getWidth() * scale; // E.g.: 1366
@@ -250,7 +249,7 @@ public class Main extends Application {
 
     private TextField newTextField() {
         TextField tf = new TextField();
-        tf.setFont(new Font(Constants.monacoFont.toExternalForm(), 19));
+        tf.setFont(new Font(monacoFont.toExternalForm(), 19));
         tf.setPrefHeight(45);
         return tf;
     }
@@ -262,8 +261,8 @@ public class Main extends Application {
         Image btnBatchDown = new Image(Constants.batchDown.toExternalForm());
         ivBtnDownload = imageViewButton(btnDownloadUp, btnDownloadDown, .5);
         ivBtnBatch = imageViewButton(btnBatchUp, btnBatchDown, .5);
-        ivBtbConsole = imageToggle(.5);
-        HBox box = new HBox(100, ivBtnDownload, ivBtbConsole, ivBtnBatch);
+        ivBtnConsole = imageToggle(.5);
+        HBox box = new HBox(100, ivBtnDownload, ivBtnConsole, ivBtnBatch);
         box.setAlignment(Pos.CENTER);
         return box;
     }
@@ -351,8 +350,8 @@ public class Main extends Application {
     }
 
     private void setControlActions() {
-        cbAutoPaste.setSelected(Settings.GET_PREFERENCES.getIsMainAutoPasteEnabled());
-        cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> Settings.SET_PREFERENCES.setIsMainAutoPasteEnabled(newValue)));
+        cbAutoPaste.setSelected(AppSettings.get.getIsMainAutoPasteEnabled());
+        cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.setIsMainAutoPasteEnabled(newValue)));
         ivBtnDownload.setOnMouseClicked(e -> new Thread(() -> {
             if (confirmDownload()) {
                 jobList.clear();
@@ -395,7 +394,7 @@ public class Main extends Application {
             }
         }));
         tfLink.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
-        ivBtbConsole.setOnMouseClicked(e -> toggleConsole(false));
+        ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
     }
 
     private void createScene() {
@@ -425,7 +424,7 @@ public class Main extends Application {
                 consoleOut.rePosition(stage.getX(), (double) newValue);
             }
         }));
-        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtbConsole.setVisible(!newValue)));
+        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
         stage.setScene(scene);
     }
 
@@ -440,6 +439,9 @@ public class Main extends Application {
             consoleOut = new ConsoleOut(width, height, stage.getX(), stage.getY());
         }
         Mode.setIsGUILoaded(true);
+        if (AppSettings.get.startMax()) {
+            toggleFullScreen();
+        }
     }
 
     /**
@@ -447,16 +449,16 @@ public class Main extends Application {
      */
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
-            ivBtbConsole.setImage(Constants.imgUpUp);
-            ivBtbConsole.setOnMousePressed(e -> ivBtbConsole.setImage(Constants.imgUpDown));
-            ivBtbConsole.setOnMouseReleased(e -> ivBtbConsole.setImage(Constants.imgUpUp));
+            ivBtnConsole.setImage(Constants.imgUpUp);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgUpDown));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgUpUp));
             consoleOut.hide();
             consoleOpen = false;
         }
         else {
-            ivBtbConsole.setImage(Constants.imgDownUp);
-            ivBtbConsole.setOnMousePressed(e -> ivBtbConsole.setImage(Constants.imgDownDown));
-            ivBtbConsole.setOnMouseReleased(e -> ivBtbConsole.setImage(Constants.imgDownUp));
+            ivBtnConsole.setImage(Constants.imgDownUp);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
             consoleOut.show();
             consoleOpen = true;
         }
@@ -608,7 +610,7 @@ public class Main extends Application {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = Settings.GET_PREFERENCES.getFolders();
+            folders = AppSettings.get.getFolders();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -919,8 +921,8 @@ public class Main extends Application {
                     setFilenameOutput(green, "");
                     tfLink.clear();
                 });
-                if (Settings.GET_PREFERENCES.getJobs() != null) {
-                    Settings.GET_PREFERENCES.getJobs().setJobList(failedJobList);
+                if (AppSettings.get.getJobs() != null) {
+                    AppSettings.get.getJobs().setJobList(failedJobList);
                     if (!failedJobList.isEmpty()) {
                         batch.setFailedList(failedJobList);
                     }

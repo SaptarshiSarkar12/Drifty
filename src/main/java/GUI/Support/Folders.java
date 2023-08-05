@@ -1,6 +1,6 @@
 package GUI.Support;
 
-import Preferences.Settings;
+import Preferences.AppSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * This class manages the folders that the user adds as locations to
  * download files to. it stores itself in JSON format via the
- * Preferences class through the '{@link Settings#SET_PREFERENCES}' class.
+ * Preferences class through the '{@link AppSettings#set}' class.
  */
 
 public class Folders {
@@ -23,17 +23,17 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        Settings.SET_PREFERENCES.setFolders(this);
-        Settings.SET_PREFERENCES.setLastFolder(folder);
+        AppSettings.set.setFolders(this);
+        AppSettings.set.setLastFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        Settings.SET_PREFERENCES.setFolders(this);
+        AppSettings.set.setFolders(this);
     }
 
     public String getDownloadFolder() {
-        return Settings.GET_PREFERENCES.getLastDownloadFolder();
+        return AppSettings.get.getLastDownloadFolder();
     }
 
     public void checkFolders() {
@@ -51,7 +51,7 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        Settings.SET_PREFERENCES.setFolders(this);
+        AppSettings.set.setFolders(this);
     }
 
     public ObservableList<String> getFolders() {
