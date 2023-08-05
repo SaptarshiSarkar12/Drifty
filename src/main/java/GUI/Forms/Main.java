@@ -214,7 +214,7 @@ public class Main extends Application {
         cbAutoPaste = new CheckBox();
         HBox boxLinkLabel = new HBox(10, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
         tfLink = newTextField();
-        lblLinkOut = label("lblLinkOut");
+        lblLinkOut = label();
         HBox boxLinkOut = new HBox(lblLinkOut);
         boxLinkOut.setAlignment(Pos.CENTER_LEFT);
 
@@ -223,7 +223,7 @@ public class Main extends Application {
         boxDirLabel.setAlignment(Pos.CENTER_LEFT);
 
         tfDir = newTextField();
-        lblDirOut = label("lblDirOut");
+        lblDirOut = label();
         HBox boxLblDirOut = new HBox(lblDirOut);
         boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
 
@@ -232,10 +232,10 @@ public class Main extends Application {
         boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
         tfFilename = newTextField();
 
-        lblFilenameOut = label("lblFilenameOut");
+        lblFilenameOut = label();
         HBox boxLblFilenameOut = new HBox(lblFilenameOut);
         boxLblFilenameOut.setAlignment(Pos.CENTER_LEFT);
-        lblDownloadInfo = label("lblDownloadInfo");
+        lblDownloadInfo = label();
         HBox boxLblDownloadInfo = new HBox(lblDownloadInfo);
         boxLblDownloadInfo.setAlignment(Pos.CENTER_LEFT);
         vbox = new VBox(0, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo, makeButtonBox());
@@ -278,8 +278,8 @@ public class Main extends Application {
         return label;
     }
 
-    private Label label(String text) {
-        Label label = new Label(text);
+    private Label label() {
+        Label label = new Label();
         label.setFont(new Font(monacoFont.toExternalForm(), 20));
         return label;
     }
