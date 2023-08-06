@@ -32,6 +32,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -61,8 +62,9 @@ import static javafx.scene.layout.AnchorPane.*;
 
 
 public class Main extends Application {
+
     private Stage stage;
-    private final double scale = .65;
+    private double scale;
     private final Utility utility = new Utility(new MessageBroker(System.out));
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
@@ -100,6 +102,7 @@ public class Main extends Application {
     private String directoryForDownloading;
     private String fileName;
     private AnchorPane anchorPane;
+    private BorderPane bp;
     private TextField tfLink;
     private TextField tfDir;
     private TextField tfFilename;
@@ -126,8 +129,9 @@ public class Main extends Application {
         stage = Constants.getStage(primaryStage);
         folders = AppSettings.get.getFolders();
         logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
-        height = (int) screenSize.getHeight() * scale; // E.g.: 768
-        width = (int) screenSize.getWidth() * scale; // E.g.: 1366
+        scale = screenSize.getHeight() / screenSize.getWidth();
+        height = (int) screenSize.getHeight() * scale - 100; // E.g.: 768
+        width = (int) screenSize.getWidth() * scale * .9; // E.g.: 1366
         createControls();
         createScene();
         showScene();
@@ -204,40 +208,45 @@ public class Main extends Application {
         anchorPane = new AnchorPane();
         anchorPane.setPrefWidth(width);
         anchorPane.setPrefHeight(height);
+        bp = new BorderPane();
+        bp.setPrefWidth(width);
+        bp.setPrefHeight(height);
         Image imgBanner = new Image(Constants.mainGUIBanner.toExternalForm());
         ImageView ivBanner = imageView(imgBanner, .5);
         pBar = pbar();
-        VBox boxBanner = new VBox(10, ivBanner, pBar, getSpacer());
+        VBox boxBanner = new VBox(10, menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems()), ivBanner, pBar);
         boxBanner.setPadding(new Insets(0));
         boxBanner.setAlignment(Pos.CENTER);
+        bp.setTop(boxBanner);
         ivLinkLabel = imageView(imgLink, scale);
         ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
         HBox boxLinkLabel = newHBox(Pos.CENTER_LEFT, ivLinkLabel, getSpacer(), ivAutoLabel, cbAutoPaste);
         tfLink = newTextField();
-        lblLinkOut = label("lblLinkOut");
+        lblLinkOut = label("");
         HBox boxLinkOut = newHBox(Pos.CENTER_LEFT, lblLinkOut);
 
         ivDirLabel = imageView(imgDirectory, scale);
         HBox boxDirLabel = newHBox(Pos.CENTER_LEFT, ivDirLabel);
 
         tfDir = newTextField();
-        lblDirOut = label("lblDirOut");
+        lblDirOut = label("");
         HBox boxLblDirOut = newHBox(Pos.CENTER_LEFT, lblDirOut);
 
         ivFilenameLabel = imageView(imgFilename, scale);
         HBox boxFilenameLabel = newHBox(Pos.CENTER_LEFT, ivFilenameLabel);
         tfFilename = newTextField();
-        lblFilenameOut = label("lblFilenameOut");
+        lblFilenameOut = label("");
         HBox boxLblFilenameOut = newHBox(Pos.CENTER_LEFT, lblFilenameOut);
-        lblDownloadInfo = label("lblDownloadInfo");
+        lblDownloadInfo = label("");
         HBox boxLblDownloadInfo = newHBox(Pos.CENTER_LEFT, lblDownloadInfo);
-        vbox = new VBox(0, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo, makeButtonBox());
-        vbox.setPadding(new Insets(-200, 30, 0, 30));
+        vbox = new VBox(5, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo);
+        vbox.setPadding(new Insets(-125 * scale, 30, 0, 30));
         vbox.setAlignment(Pos.CENTER);
-        anchorPane.getChildren().add(vbox);
-        placeControl(vbox,0,0,0,0);
-        menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
+        bp.setCenter(vbox);
+        bp.setBottom(makeButtonBox());
+        //anchorPane.getChildren().add(vbox);
+        //placeControl(vbox,0,0,0,0);
     }
 
     private HBox newHBox(Pos align, Node... nodes) {
@@ -250,8 +259,10 @@ public class Main extends Application {
     private ProgressBar pbar() {
         ProgressBar pbar = new ProgressBar();
         pbar.setPrefWidth(screenSize.getWidth());
+        pbar.progressProperty().bind(progressProperty);
         return pbar;
     }
+
     private TextField newTextField() {
         TextField tf = new TextField();
         tf.setFont(new Font(monacoFont.toExternalForm(), 19 * scale));
@@ -264,8 +275,8 @@ public class Main extends Application {
         Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
         Image btnBatchUp = new Image(Constants.batchUp.toExternalForm());
         Image btnBatchDown = new Image(Constants.batchDown.toExternalForm());
-        ivBtnDownload = imageViewButton(btnDownloadUp, btnDownloadDown, .5);
-        ivBtnBatch = imageViewButton(btnBatchUp, btnBatchDown, .5);
+        ivBtnDownload = imageViewButton(btnDownloadUp, btnDownloadDown);
+        ivBtnBatch = imageViewButton(btnBatchUp, btnBatchDown);
         ivBtnConsole = imageToggle(.5);
         HBox box = new HBox(100, ivBtnDownload, ivBtnConsole, ivBtnBatch);
         box.setAlignment(Pos.CENTER);
@@ -294,7 +305,7 @@ public class Main extends Application {
         return imageView;
     }
 
-    private ImageView imageViewButton(Image imageUp, Image imageDown, double scale) {
+    private ImageView imageViewButton(Image imageUp, Image imageDown) {
         ImageView imageView = new ImageView(imageUp);
         double width = imageUp.getWidth();
         imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
@@ -403,7 +414,7 @@ public class Main extends Application {
     }
 
     private void createScene() {
-        Scene scene = new Scene(anchorPane);
+        Scene scene = new Scene(bp);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         scene.widthProperty().addListener(((observable, oldValue, newValue) -> {
             vbox.setPrefWidth((double) newValue);
@@ -434,9 +445,6 @@ public class Main extends Application {
         stage.setScene(scene);
     }
 
-    /**
-     * This method sets the properties of the scene and makes it visible
-     */
     private void showScene() {
         stage.setWidth(width);
         stage.setHeight(height);
@@ -550,11 +558,8 @@ public class Main extends Application {
      *
      * @param menus the menu items to be placed in the menu bar
      */
-    private void menuBar(Menu... menus) {
-        MenuBar menuBar = new MenuBar(menus);
-        anchorPane.getChildren().add(menuBar);
-        placeControl(menuBar, 0, 0, 0, -1);
-    }
+    private MenuBar menuBar(Menu... menus) {
+        return new MenuBar(menus);}
 
     /**
      * This method is used to get the menu items to be present in the <b>Menu section</b> of the GUI screen
