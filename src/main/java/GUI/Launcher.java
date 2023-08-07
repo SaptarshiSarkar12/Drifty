@@ -1,7 +1,7 @@
 package GUI;
 
 import Enums.Mode;
-import GUI.Forms.Main;
+import GUI.Forms.Splash;
 import Preferences.AppSettings;
 import Utils.Environment;
 
@@ -26,6 +26,7 @@ public class Launcher {
     private static final Launcher GUI_LAUNCHER = new Launcher();
 
     public static void main(String[] args) {
+        AppSettings.set.startTime();
         Mode.setGUIMode();
         Environment.initializeEnvironment();
         System.setProperty("apple.awt.UIElement", "false");
@@ -38,6 +39,6 @@ public class Launcher {
                 AppSettings.set.startMax(false);
             }
         }
-        Main.main(args);
+        Splash.main(args);
     }
 }

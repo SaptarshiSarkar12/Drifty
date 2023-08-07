@@ -24,6 +24,6 @@ public class Jobs {
 
     public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = new ConcurrentLinkedDeque<>(jobList);
-        AppSettings.set.setBatchDownloadJobs(this);
+        AppSettings.set.jobs(this);
     }
 }
