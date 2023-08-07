@@ -67,10 +67,12 @@ public class Splash extends Application {
         pane.setStyle("-fx-background-color: transparent");
         pane.getChildren().addAll(ivSplash, pb);
         double top = 285;
+        double bottom = 200;
         if (height != 1120) {
-            top = Utility.reMap(285, 0,1120, 0, height);
+            top = Utility.reMap(top, 0,1120, 0, height);
+            bottom = Utility.reMap(bottom, 0,1120, 0, height);
         }
-        placeControl(pb, 250, 145, top, 200);
+        placeControl(pb, 250, 145, top, bottom);
         pb.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
