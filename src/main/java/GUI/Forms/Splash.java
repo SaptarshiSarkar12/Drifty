@@ -30,7 +30,7 @@ public class Splash extends Application {
         stage = Constants.getStage();
         Image image = new Image(Constants.SPLASH.toExternalForm());
         double width = image.getWidth();
-        double fitWidth = Constants.screenSize.getWidth() * .65;
+        double fitWidth = Constants.screenSize.getWidth() * .45;
         ImageView ivSplash = new ImageView(image);
         ivSplash.setPreserveRatio(true);
         ivSplash.setFitWidth(fitWidth);
