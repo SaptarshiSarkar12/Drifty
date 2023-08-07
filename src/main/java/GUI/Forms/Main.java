@@ -199,20 +199,20 @@ public class Main {
 
     private void showScene() {
         new Thread(() -> {
-            while (Utility.timeSinceStart() < 4500) {
+            while (Utility.timeSinceStart() < 4500 && !Mode.devMode()) {
                 sleep(50);
             }
 
             Splash.almostDone();
-            while (Splash.animationNotDone()) {
+            while (Splash.animationNotDone() && !Mode.devMode()) {
                 sleep(10);
             }
 
             Platform.runLater(() -> {
                 stage.setScene(scene);
                 stage.setWidth(width);
-                stage.setHeight(height);
-                Mode.setIsGUILoaded(true);
+                stage.setHeight(height * 1.2);
+                Mode.setGuiLoaded(true);
                 stage.show();
                 if (AppSettings.get.startMax()) {
                     toggleFullScreen();
@@ -273,8 +273,8 @@ public class Main {
         borderPane.setBottom(makeButtonBox());
         anchorPane.getChildren().addAll(borderPane, vbox);
         placeControl(borderPane, 0, 0, 0, 0);
-        top = Utility.reMap(500, 0, 1120, 0, absHeight) * .85;
-        double bottom = Utility.reMap(150, 1120, 0, 0, absHeight) * .85;
+        top = Utility.reMap(350, 0, 1120, 0, absHeight) * .85;
+        double bottom = Utility.reMap(300, 1120, 0, 0, absHeight) * .85;
         placeControl(vbox, 0, 0, top, 150);
     }
 

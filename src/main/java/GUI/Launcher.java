@@ -32,6 +32,9 @@ public class Launcher {
             if (arg.toLowerCase().contains("--disablemaxstart")) {
                 AppSettings.set.startMax(false);
             }
+            if (arg.toLowerCase().contains("--devmode")) {
+                Mode.setDev();
+            }
         }
         Toolkit.getDefaultToolkit();
         Environment.initializeEnvironment();
