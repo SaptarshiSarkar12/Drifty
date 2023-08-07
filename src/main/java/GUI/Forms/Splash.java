@@ -23,6 +23,9 @@ import static javafx.scene.layout.AnchorPane.*;
 public class Splash extends Application {
 
 
+    private double width;
+    private double height;
+
     private static Splash INSTANCE;
 
     public static void main(String[] args) {
@@ -50,7 +53,8 @@ public class Splash extends Application {
         INSTANCE = this;
         stage = Constants.getStage();
         Image image = new Image(Constants.SPLASH.toExternalForm());
-        double width = image.getWidth();
+        width = image.getWidth();
+        height = image.getHeight();
         double fitWidth = Constants.screenSize.getWidth() * .45;
         ImageView ivSplash = new ImageView(image);
         ivSplash.setPreserveRatio(true);
@@ -112,6 +116,10 @@ public class Splash extends Application {
                         timeline.getKeyFrames().setAll(getKeyframes(thisKeyframe));
                         timeline.playFromStart();
                         switchedKeys = true;
+                        new Thread(() -> {
+                            sleep(2500);
+                            animationDone = true;
+                        }).start();
                     }
                     if (pb.getProgress() >= .95) {
                         timeline.stop();

@@ -136,7 +136,7 @@ public class Main {
     }
 
     private void createScene() {
-        scene = new Scene(bp);
+        scene = new Scene(anchorPane);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         scene.getStylesheets().add(Constants.contextMenuCSS.toExternalForm());
         scene.getStylesheets().add(Constants.labelCSS.toExternalForm());
@@ -183,7 +183,7 @@ public class Main {
     private Scene scene;
     private void showScene() {
         new Thread(() -> {
-            while ((System.currentTimeMillis() - AppSettings.get.startTime()) < 4500) {
+            while (Utility.timeSinceStart() < 4500) {
                 sleep(50);
             }
             Splash.almostDone();
@@ -214,10 +214,17 @@ public class Main {
         Image imgBanner = new Image(Constants.mainGUIBanner.toExternalForm());
         ImageView ivBanner = imageView(imgBanner, .5);
         pBar = pbar();
-        VBox boxBanner = new VBox(10, menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems()), ivBanner, pBar);
-        boxBanner.setPadding(new Insets(0));
-        boxBanner.setAlignment(Pos.CENTER);
-        bp.setTop(boxBanner);
+        HBox bb = new HBox(ivBanner);
+        bb.setAlignment(Pos.CENTER);
+        bb.setPadding(new Insets(10));
+        HBox pb = new HBox(pBar);
+        pb.setAlignment(Pos.CENTER);
+        pb.setPadding(new Insets(10));
+        MenuBar mb = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
+        anchorPane.getChildren().addAll(mb, bb, pb);
+        placeControl(mb,0,0,0,-1);
+        placeControl(bb,0,0,30,-1);
+        placeControl(pb,30,30,125,-1);
         ivLinkLabel = imageView(imgLink, scale);
         ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
@@ -240,13 +247,13 @@ public class Main {
         HBox boxLblFilenameOut = newHBox(Pos.CENTER_LEFT, lblFilenameOut);
         lblDownloadInfo = label("");
         HBox boxLblDownloadInfo = newHBox(Pos.CENTER_LEFT, lblDownloadInfo);
-        vbox = new VBox(5, boxBanner, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo);
+        vbox = new VBox(5, boxLinkLabel, tfLink, boxLinkOut, boxDirLabel, tfDir, boxLblDirOut, boxFilenameLabel, tfFilename, boxLblFilenameOut, boxLblDownloadInfo);
         vbox.setPadding(new Insets(-125 * scale, 30, 0, 30));
         vbox.setAlignment(Pos.CENTER);
-        bp.setCenter(vbox);
         bp.setBottom(makeButtonBox());
-        //anchorPane.getChildren().add(vbox);
-        //placeControl(vbox,0,0,0,0);
+        anchorPane.getChildren().addAll(bp, vbox);
+        placeControl(bp,0,0,0,0);
+        placeControl(vbox,0,0,350,150);
     }
 
     private void setControlProperties() {
@@ -369,7 +376,7 @@ public class Main {
     private ProgressBar pbar() {
         ProgressBar pbar = new ProgressBar();
         pbar.setPrefWidth(screenSize.getWidth());
-        pbar.progressProperty().bind(progressProperty);
+        //pbar.progressProperty().bind(progressProperty);
         return pbar;
     }
 
@@ -508,7 +515,10 @@ public class Main {
     }
 
     private MenuBar menuBar(Menu... menus) {
-        return new MenuBar(menus);
+        MenuBar menuBar = new MenuBar(menus);
+        menuBar.setPrefWidth(screenSize.getWidth());
+        menuBar.setUseSystemMenuBar(true);
+        return menuBar;
     }
 
     private Menu getMenuItemsOfMenu() {

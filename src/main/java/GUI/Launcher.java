@@ -4,6 +4,7 @@ import Enums.Mode;
 import GUI.Forms.Splash;
 import Preferences.AppSettings;
 import Utils.Environment;
+import Utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class Launcher {
     private static final Launcher GUI_LAUNCHER = new Launcher();
 
     public static void main(String[] args) {
-        AppSettings.set.startTime();
+        Utility.setStartTime();
         Mode.setGUIMode();
         Environment.initializeEnvironment();
         System.setProperty("apple.awt.UIElement", "false");
