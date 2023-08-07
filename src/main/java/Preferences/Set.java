@@ -52,7 +52,7 @@ public class Set {
         prefs.put(LAST_FOLDER.toString(), lastFolderPath);
     }
 
-    public void jobs(Jobs jobs) {
+    public void batchDownloadJobs(Jobs jobs) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
