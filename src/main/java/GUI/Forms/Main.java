@@ -1,4 +1,5 @@
 package GUI.Forms;
+
 import Backend.Drifty;
 import Enums.MessageCategory;
 import Enums.MessageType;
@@ -37,6 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -51,6 +53,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static GUI.Forms.Constants.monacoFont;
 import static GUI.Forms.Constants.screenSize;
 import static Utils.DriftyConstants.GUI_APPLICATION_STARTED;
@@ -114,6 +117,9 @@ public class Main {
     private Label lblFilenameOut;
     private ImageView ivBtnConsole;
     private VBox vbox;
+    private Scene scene;
+
+
     public void start() {
         Platform.runLater(() -> stage = Constants.getStage());
         folders = AppSettings.get.folders();
@@ -129,6 +135,7 @@ public class Main {
         createScene();
         showScene();
     }
+
     private void createScene() {
         scene = new Scene(anchorPane);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
@@ -145,17 +152,20 @@ public class Main {
             if (consoleOut != null) {
                 consoleOut.setWidth((double) newValue);
             }
+
         }));
         scene.heightProperty().addListener(((observable, oldValue, newValue) -> vbox.setPrefHeight((double) newValue)));
         stage.xProperty().addListener(((observable, oldValue, newValue) -> {
             if (consoleOut != null) {
                 consoleOut.rePosition((double) newValue, stage.getY());
             }
+
         }));
         stage.yProperty().addListener(((observable, oldValue, newValue) -> {
             if (consoleOut != null) {
                 consoleOut.rePosition(stage.getX(), (double) newValue);
             }
+
         }));
         stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
         stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
@@ -163,26 +173,32 @@ public class Main {
                 firstRun = false;
                 return;
             }
+
             if (isFocused && cbAutoPaste.isSelected()) {
                 tfLink.setText(getClipboardText());
             }
+
             if (isFocused && !wasFocused) {
                 if (consoleOut != null) {
                     consoleOut.rePosition(width, height, stage.getX(), stage.getY());
                 }
+
             }
+
         }));
     }
-    private Scene scene;
+
     private void showScene() {
         new Thread(() -> {
             while (Utility.timeSinceStart() < 4500) {
                 sleep(50);
             }
+
             Splash.almostDone();
-            while(Splash.animationNotDone()) {
+            while (Splash.animationNotDone()) {
                 sleep(10);
             }
+
             Platform.runLater(() -> {
                 stage.setScene(scene);
                 stage.setWidth(width);
@@ -192,11 +208,13 @@ public class Main {
                 if (AppSettings.get.startMax()) {
                     toggleFullScreen();
                 }
+
                 Splash.close();
                 menuBar.toFront();
             });
         }).start();
     }
+
     private void createControls() {
         anchorPane = new AnchorPane();
         anchorPane.setPrefWidth(width);
@@ -215,9 +233,9 @@ public class Main {
         pb.setPadding(new Insets(10));
         menuBar = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
         anchorPane.getChildren().addAll(menuBar, bb, pb);
-        placeControl(menuBar,0,0,0,-1);
-        placeControl(bb,0,0,30,-1);
-        placeControl(pb,30,30,125,-1);
+        placeControl(menuBar, 0, 0, 0, -1);
+        placeControl(bb, 0, 0, 30, -1);
+        placeControl(pb, 30, 30, 125, -1);
         ivLinkLabel = imageView(imgLink, scale);
         ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
@@ -242,9 +260,10 @@ public class Main {
         vbox.setAlignment(Pos.CENTER);
         bp.setBottom(makeButtonBox());
         anchorPane.getChildren().addAll(bp, vbox);
-        placeControl(bp,0,0,0,0);
-        placeControl(vbox,0,0,275,150);
+        placeControl(bp, 0, 0, 0, 0);
+        placeControl(vbox, 0, 0, 275, 150);
     }
+
     private void setControlProperties() {
         tfDir.setText(folders.getDownloadFolder());
         directoryExists.setValue(new File(tfDir.getText()).exists());
@@ -253,14 +272,17 @@ public class Main {
             if (newValue.equals(-5)) {
                 return;
             }
+
             int value = (int) newValue;
             Platform.runLater(() -> {
                 if (value == 0) {
                     lblDownloadInfo.setTextFill(green);
                 }
+
                 else {
                     setDownloadOutput(red, errorMessage);
                 }
+
             });
             jobError.setValue(-5);
             waitingForErrorCode = false;
@@ -283,6 +305,7 @@ public class Main {
         ivBtnDownload.disableProperty().bind(disableDownloadButton);
         Tooltip.install(cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + systemDefaultLineSeparator + "Link field when switching back to this screen."));
     }
+
     private void setControlActions() {
         cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
@@ -292,6 +315,7 @@ public class Main {
                 jobList.add(new Job(tfLink.getText(), tfDir.getText(), tfFilename.getText()));
                 batchDownloader();
             }
+
         }).start());
         ivBtnBatch.setOnMouseClicked(e -> batch.show());
         tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
@@ -300,6 +324,7 @@ public class Main {
                 if (newValue.isEmpty()) {
                     setDirOutput(red, "Directory cannot be empty!");
                 }
+
                 else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
@@ -307,34 +332,45 @@ public class Main {
                         setDirOutput(green, "Directory exists!");
                         directoryExists.setValue(true);
                     }
+
                     else {
                         setDirOutput(red, "Directory does not exist or is not a directory!");
                     }
+
                 }
+
             }
+
         }));
         tfLink.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
         ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
     }
+
     public static void setJobError(String message, int errorLevel) {
         INSTANCE.errorMessage = message;
         jobError.setValue(errorLevel);
     }
+
     public static void updateProgress(double progress) {
         if (progress > 0.0 && progress < 0.99) {
             progressProperty.setValue(progress);
         }
+
         else {
             progressProperty.setValue(0.0);
         }
+
     }
+
     public static void setDownloadInProgress(boolean value) {
         downloadInProgress.setValue(value);
     }
+
     public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
         INSTANCE.jobList = jobList;
         INSTANCE.batchDownloader();
     }
+
     public static void setMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         Color color = switch (messageType) {
             case INFORMATION -> INSTANCE.green;
@@ -347,13 +383,16 @@ public class Main {
             case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOutput(color, message));
             case FILENAME -> Platform.runLater(() -> INSTANCE.setFilenameOutput(color, message));
         }
+
     }
+
     private HBox newHBox(Pos align, Node... nodes) {
         HBox box = new HBox(nodes);
         box.setPadding(new Insets(0, 0, 0, 0));
         box.setAlignment(align);
         return box;
     }
+
     private ProgressBar pbar() {
         ProgressBar pbar = new ProgressBar();
         pbar.setPrefWidth(screenSize.getWidth());
@@ -361,12 +400,14 @@ public class Main {
         progressProperty.setValue(1);
         return pbar;
     }
+
     private TextField newTextField() {
         TextField tf = new TextField();
         tf.setFont(new Font(monacoFont.toExternalForm(), 19 * scale));
         tf.setPrefHeight(45 * scale);
         return tf;
     }
+
     private HBox makeButtonBox() {
         Image btnDownloadUp = new Image(Constants.downloadUp.toExternalForm());
         Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
@@ -379,16 +420,19 @@ public class Main {
         box.setAlignment(Pos.CENTER);
         return box;
     }
+
     private Label getSpacer() {
         Label label = new Label();
         label.setPrefWidth(screenSize.getWidth());
         return label;
     }
+
     private Label label(String text) {
         Label label = new Label(text);
         label.setFont(new Font(monacoFont.toExternalForm(), 20 * scale));
         return label;
     }
+
     private ImageView imageToggle(double scale) {
         ImageView imageView = new ImageView(Constants.imgUpUp);
         imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
@@ -398,6 +442,7 @@ public class Main {
         imageView.setFitWidth(width * scale);
         return imageView;
     }
+
     private ImageView imageViewButton(Image imageUp, Image imageDown) {
         ImageView imageView = new ImageView(imageUp);
         double width = imageUp.getWidth();
@@ -407,6 +452,7 @@ public class Main {
         imageView.setFitWidth(width * scale);
         return imageView;
     }
+
     private ImageView imageView(Image image, double ratio) {
         ImageView iv = new ImageView(image);
         double width = image.getWidth();
@@ -414,6 +460,7 @@ public class Main {
         iv.setFitWidth(width * ratio);
         return iv;
     }
+
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
             ivBtnConsole.setImage(Constants.imgUpUp);
@@ -422,6 +469,7 @@ public class Main {
             consoleOut.hide();
             consoleOpen = false;
         }
+
         else {
             ivBtnConsole.setImage(Constants.imgDownUp);
             ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
@@ -429,13 +477,17 @@ public class Main {
             consoleOut.show();
             consoleOpen = true;
         }
+
     }
+
     private void toggleFullScreen() {
         if (!stage.isFullScreen()) {
             toggleConsole(true);
         }
+
         stage.setFullScreen(!stage.isFullScreen());
     }
+
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = folders.getDownloadFolder();
@@ -446,7 +498,9 @@ public class Main {
         if (directory != null) {
             tfDir.setText(directory.getAbsolutePath());
         }
+
     }
+
     private void openWebsite(String websiteURL, String websiteType) {
         if (OS.isNix()) { // for Linux / Unix systems
             try {
@@ -456,7 +510,9 @@ public class Main {
             } catch (IOException e) {
                 logger.log(MessageType.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
+
         }
+
         else if (OS.isWinMac()) { // For macOS and Windows systems
             try {
                 Desktop desktop = Desktop.getDesktop();
@@ -464,31 +520,41 @@ public class Main {
             } catch (IOException | URISyntaxException e) {
                 logger.log(MessageType.ERROR, "Cannot open " + websiteType + " - " + e.getMessage());
             }
+
         }
+
         else {
             logger.log(MessageType.ERROR, "Cannot open requested website " + websiteType + "! System Unsupported!");
         }
+
     }
+
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) {
             setTopAnchor(node, top);
         }
+
         if (bottom != -1) {
             setBottomAnchor(node, bottom);
         }
+
         if (left != -1) {
             setLeftAnchor(node, left);
         }
+
         if (right != -1) {
             setRightAnchor(node, right);
         }
+
     }
+
     private MenuBar menuBar(Menu... menus) {
         MenuBar menuBar = new MenuBar(menus);
         menuBar.setPrefWidth(screenSize.getWidth());
         menuBar.setUseSystemMenuBar(true);
         return menuBar;
     }
+
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
@@ -502,6 +568,7 @@ public class Main {
         menu.getItems().setAll(website, about, exit);
         return menu;
     }
+
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
@@ -509,6 +576,7 @@ public class Main {
         menu.getItems().setAll(fullScreen);
         return menu;
     }
+
     private Menu getHelpMenuItems() {
         Menu menu = new Menu("Help");
         MenuItem contactUs = new MenuItem("Contact Us");
@@ -524,6 +592,7 @@ public class Main {
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature);
         return menu;
     }
+
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -537,6 +606,7 @@ public class Main {
         contextMenu.getStyleClass().add("rightClick");
         return contextMenu;
     }
+
     private void verifyLink(String PreviousLink, String presentLink) {
         if (!PreviousLink.equals(presentLink)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false)) {
@@ -545,9 +615,11 @@ public class Main {
                 if (presentLink.contains(" ")) {
                     Platform.runLater(() -> setLinkOutput(red, "Link should not contain whitespace characters!"));
                 }
+
                 else if (!isURL(presentLink)) {
                     Platform.runLater(() -> setLinkOutput(red, "String is not a URL"));
                 }
+
                 else {
                     try {
                         Utility.isURLValid(presentLink);
@@ -557,13 +629,19 @@ public class Main {
                         String errorMessage = e.getMessage();
                         Platform.runLater(() -> setLinkOutput(red, errorMessage));
                     }
+
                 }
+
                 if (linkValid.getValue().equals(true)) {
                     getFilename(presentLink);
                 }
+
             }
+
         }
+
     }
+
     private void getFilename(String link) {
         new Thread(() -> {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -581,13 +659,17 @@ public class Main {
                     setLinkOutput(green, "");
                     return;
                 }
+
                 else if ((jsonMetaData.size() == 1)) {
                     filename = Utility.getFilenameFromJson(json) + ".mp4";
                 }
+
                 else {
                     filename = "Unknown_Filename.mp4";
                 }
+
             }
+
             String finalFilename = filename;
             gettingFilename = false;
             Platform.runLater(() -> {
@@ -596,12 +678,14 @@ public class Main {
             });
         }).start();
     }
+
     private boolean isURL(String text) {
         String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
         return m.matches();
     }
+
     private void setFilenameOutput(Color color, String message) {
         lblFilenameOut.setTextFill(color);
         lblFilenameOut.setText(message);
@@ -611,7 +695,9 @@ public class Main {
                 Platform.runLater(() -> setFilenameOutput(green, ""));
             }).start();
         }
+
     }
+
     private void setLinkOutput(Color color, String message) {
         lblLinkOut.setTextFill(color);
         lblLinkOut.setText(message);
@@ -621,7 +707,9 @@ public class Main {
                 Platform.runLater(() -> setLinkOutput(green, ""));
             }).start();
         }
+
     }
+
     private void setDirOutput(Color color, String message) {
         lblDirOut.setTextFill(color);
         lblDirOut.setText(message);
@@ -631,7 +719,9 @@ public class Main {
                 Platform.runLater(() -> setDirOutput(green, ""));
             }).start();
         }
+
     }
+
     private void setDownloadOutput(Color color, String message) {
         lblDownloadInfo.setTextFill(color);
         lblDownloadInfo.setText(message);
@@ -641,7 +731,9 @@ public class Main {
                 Platform.runLater(() -> setDownloadOutput(green, ""));
             }).start();
         }
+
     }
+
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
@@ -649,8 +741,10 @@ public class Main {
         } catch (UnsupportedFlavorException | IOException e) {
             setMessage("Failed to get the last copied Text from the clipboard! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
+
         return null;
     }
+
     private boolean confirmDownload() {
         String filename = tfFilename.getText();
         for (String folder : folders.getFolders()) {
@@ -662,27 +756,34 @@ public class Main {
             while (thread.getState().equals(Thread.State.RUNNABLE)) {
                 sleep(100);
             }
+
             for (String path : walker.getFileList()) {
                 if (path.contains(filename)) {
                     fileExists = true;
                     filePath = path;
                     break;
                 }
+
             }
+
             if (fileExists) {
                 String msg = "The file: " + systemDefaultLineSeparator + systemDefaultLineSeparator + filePath + systemDefaultLineSeparator + systemDefaultLineSeparator + " Already exists, Do you wish to download it again?";
                 AskYesNo ask = new AskYesNo(msg);
                 return ask.isYes();
             }
+
         }
+
         return true;
     }
+
     private void checkFiles() {
         Map<String, Job> pathJobMap = new HashMap<>();
         List<String> files = new ArrayList<>();
         for (Job job : jobList) {
             files.add(job.getFilename());
         }
+
         for (String folder : folders.getFolders()) {
             CheckFile walker = new CheckFile(folder, files);
             Thread thread = new Thread(walker);
@@ -690,29 +791,39 @@ public class Main {
             while (thread.getState().equals(Thread.State.RUNNABLE)) {
                 sleep(100);
             }
+
             LinkedList<String> list = walker.getFileList();
             for (Job job : jobList) {
                 for (String path : list) {
                     if (path.contains(job.getFilename())) {
                         pathJobMap.put(path, job);
                     }
+
                 }
+
             }
+
         }
+
         if (!pathJobMap.isEmpty()) {
             StringBuilder sb = new StringBuilder("The following files already exist:" + systemDefaultLineSeparator + systemDefaultLineSeparator);
             for (String path : pathJobMap.keySet()) {
                 sb.append(path).append(systemDefaultLineSeparator);
             }
+
             sb.append(systemDefaultLineSeparator).append("Do you want to download them again?");
             AskYesNo ask = new AskYesNo(sb.toString());
             if (!ask.isYes()) {
                 for (Job job : pathJobMap.values()) {
                     jobList.remove(job);
                 }
+
             }
+
         }
+
     }
+
     private void batchDownloader() {
         processingBatch.setValue(true);
         new Thread(() -> {
@@ -738,6 +849,7 @@ public class Main {
                     if (Utility.isYoutubeLink(linkToFile)) {
                         isYouTubeURL = true;
                     }
+
                     Platform.runLater(() -> {
                         tfLink.setText(linkToFile);
                         tfDir.setText(directoryForDownloading);
@@ -748,6 +860,7 @@ public class Main {
                     while (waitingForErrorCode) {
                         sleep(100);
                     }
+
                     Platform.runLater(() -> {
                         tfFilename.clear();
                         tfLink.clear();
@@ -757,12 +870,15 @@ public class Main {
                         failedJobList.add(job);
                         job.setError(lblDownloadInfo.getText());
                     }
+
                     else {
                         jobList.remove(job);
                     }
+
                     downloadInProgress.setValue(false);
                     sleep(3000);
                 }
+
                 int errors = failedJobList.size();
                 String outMessage = (errors == 0) ? "Done - All downloads were successful!" : "Done - There were " + errors + " failed downloads, click on the Batch button to try those files again.";
                 Platform.runLater(() -> {
@@ -777,11 +893,15 @@ public class Main {
                     if (!failedJobList.isEmpty()) {
                         batch.setFailedList(failedJobList);
                     }
+
                 }
+
             }
+
             processingBatch.setValue(false);
         }).start();
     }
+
     private void delayFolderSave(String folderString, File folder) {
         // If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 5 seconds
         // and if the String is still the same value, then we commit the folder to the list.
@@ -791,8 +911,10 @@ public class Main {
                 folders.addFolder(folder.getAbsolutePath());
                 System.out.println("Folder Added: " + folder.getAbsolutePath());
             }
+
         }).start();
     }
+
     private void bounceFilename() {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
@@ -804,25 +926,33 @@ public class Main {
                         count = 1;
                         countUp = true;
                     }
+
                     final String out = "Retrieving Filename" + ".".repeat(count); //This is what we print in the label, adding the number of dots according to the counter
                     Platform.runLater(() -> setFilenameOutput(green, out));
                     if (countUp) { //If we are in up mode, then add one to the counter, otherwise, take one away.
                         count++;
                     }
+
                     else {
                         count--;
                     }
+
                     if (count == 4) { // When the counter is equal to 4 (we have 4 dots showing) then reverse the counter which starts taking dots away
                         countUp = false;
                     }
+
                     if (count == 1) {
                         countUp = true;
                     }
+
                 }
+
                 Platform.runLater(() -> setFilenameOutput(green, ""));
             }).start();
         }
+
     }
+
     private boolean verifyLink() {
         boolean valid = false;
         try {
@@ -833,19 +963,24 @@ public class Main {
             String errorMessage = e.getMessage();
             Platform.runLater(() -> setLinkOutput(red, errorMessage));
         }
+
         if (!valid) {
             new AskYesNo("The link provided is not a valid URL", true).isYes();
         }
+
         return valid;
     }
+
     private boolean verifyDirectory() {
         File file = new File(tfDir.getText());
         boolean valid = file.exists();
         if (!valid) {
             new AskYesNo("The Download folder does not exist", true).isYes();
         }
+
         return file.exists();
     }
+
     private boolean verifyFilename() {
         String pattern = "^[a-zA-Z0-9_.-]+$";
         String filename = tfFilename.getText();
@@ -856,11 +991,14 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         if (!valid) {
             new AskYesNo("The Filename provided is not a valid filename", true).isYes();
         }
+
         return valid;
     }
+
     private void download() {
         boolean proceed = verifyLink() && verifyDirectory() && verifyFilename();
         if (proceed) {
@@ -870,12 +1008,15 @@ public class Main {
             Thread thread = new Thread(backend::startGUIDownload);
             thread.start();
         }
+
     }
+
     public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
         } catch (InterruptedException e) {
             setMessage("Link Metadata extracting thread failed to wait for " + time + ". It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
+
     }
 }

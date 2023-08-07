@@ -1,6 +1,9 @@
 package GUI.Support;
+
 import Preferences.AppSettings;
+
 import java.util.concurrent.ConcurrentLinkedDeque;
+
 /**
  * This class stores a list of jobs and is technically "the batch" itself. Anytime an update
  * is posted to this class, it saves itself locally in JSON format using the Preferences
@@ -9,15 +12,16 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class Jobs {
     private ConcurrentLinkedDeque<Job> jobList;
+
     public ConcurrentLinkedDeque<Job> jobList() {
         if (jobList == null) {
             return new ConcurrentLinkedDeque<>();
         }
 
-         return new ConcurrentLinkedDeque<>(jobList);
+        return new ConcurrentLinkedDeque<>(jobList);
     }
 
-     public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
+    public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = new ConcurrentLinkedDeque<>(jobList);
         AppSettings.set.batchDownloadJobs(this);
     }
