@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Utils.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -65,7 +66,11 @@ public class Splash extends Application {
         AnchorPane pane = new AnchorPane();
         pane.setStyle("-fx-background-color: transparent");
         pane.getChildren().addAll(ivSplash, pb);
-        placeControl(pb, 250, 145, 285, 200);
+        double top = 285;
+        if (height != 1120) {
+            top = Utility.reMap(285, 0,1120, 0, height);
+        }
+        placeControl(pb, 250, 145, top, 200);
         pb.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);

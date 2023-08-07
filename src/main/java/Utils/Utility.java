@@ -24,9 +24,7 @@ import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.*;
 
-/**
- * This is the class for the utility methods used by Drifty CLI as well as Drifty GUI
- */
+
 public final class Utility {
     static MessageBroker messageBroker;
     private static final Scanner SC = ScannerFactory.getInstance();
@@ -46,32 +44,19 @@ public final class Utility {
         Utility.messageBroker = messageBroker;
     }
 
-    /**
-     * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
-     *
-     * @param url link to the file to be downloaded
-     * @return true if the url is of YouTube and false if it is not.
-     */
+    
     public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
         return url.matches(pattern);
     }
 
-    /**
-     * This method checks whether the link provided is of Instagram or not and returns the resultant boolean value accordingly.
-     *
-     * @param url link to the file to be downloaded
-     * @return true if the url is of Instagram and false if it is not.
-     */
+    
     public static boolean isInstagramLink(String url) {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/p/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
-    /**
-     * @param link Link to the file that the user wants to download
-     * @throws Exception if the URL is not valid or cannot be connected to, then this Exception is thrown with proper message
-     */
+    
     public static void isURLValid(String link) throws Exception {
         try {
             URL url = URI.create(link).toURL();
@@ -107,12 +92,7 @@ public final class Utility {
         return true;
     }
 
-    /**
-     * This method finds <b>the name of the file from the link</b> provided.
-     *
-     * @param link The download link of the file to be downloaded.
-     * @return the filename if it is detected else null.
-     */
+    
     public String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
         // Example: "example.com/file.txt" prints "Filename detected: file.txt"
@@ -135,11 +115,7 @@ public final class Utility {
         return fileName;
     }
 
-    /**
-     * This method finds the default downloads folder and creates log accordingly.
-     *
-     * @return The path of the default download folder.
-     */
+    
     public String saveToDefault() {
         String downloadsFolder;
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFORMATION, MessageCategory.DIRECTORY);
@@ -159,13 +135,7 @@ public final class Utility {
         return downloadsFolder;
     }
 
-    /**
-     * This method performs Yes-No validation and returns the boolean value accordingly.
-     *
-     * @param input        Input String to validate.
-     * @param printMessage The message to print to re-input the confirmation.
-     * @return true if the user enters Y [Yes] and false if not.
-     */
+    
     public boolean yesNoValidation(String input, String printMessage) {
         while (input.isEmpty()) {
             System.out.println(ENTER_Y_OR_N);
@@ -190,9 +160,7 @@ public final class Utility {
         return false;
     }
 
-    /**
-     * This is the help method of Drifty that gets printed in the console when the correct help flag has been passed as a parameter to Drifty CLI.
-     */
+    
     public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
@@ -212,9 +180,7 @@ public final class Utility {
         System.out.println("\tProject Website - " + Drifty.projectWebsite);
     }
 
-    /**
-     * This function prints the banner of the application in the console.
-     */
+    
     public static void printBanner() {
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
@@ -227,14 +193,7 @@ public final class Utility {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    /**
-     * <p><u>Returns calculated multiple</u></p> from current X, Y using supplied multiplier
-     *
-     * @param currentX   - current X value
-     * @param currentY   - current Y value
-     * @param multiplier - Use a fraction to reduce and larger than one to increase
-     * @return double array with X, Y [0, 1]
-     */
+    
     public static double[] fraction(double currentX, double currentY, double multiplier) {
         double[] result = new double[2];
         result[0] = currentX * multiplier;
@@ -242,12 +201,7 @@ public final class Utility {
         return result;
     }
 
-    /**
-     * This method is used to get the metadata in LinkedList String format from a json file generated by {@link #getYT_IGLinkMetadata(String, String)}
-     *
-     * @param link link to the YouTube or Instagram video
-     * @return a LinkedList of type String
-     */
+    
     public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
@@ -308,25 +262,13 @@ public final class Utility {
         return cleanFilename(filename);
     }
 
-    /**
-     * This method filters the filename and removes any illegal characters not supported by the operating system
-     *
-     * @param filename filename as detected or as provided by the user
-     * @return the formatted and filtered string
-     */
+    
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
         return fn.replaceAll("[^a-zA-Z0-9-._ ]+", "");
     }
 
-    /**
-     * This method provides a Runnable object to get the metadata of a YouTube or Instagram Link,
-     * containing information about Video Title, etc.
-     *
-     * @param folderPath Path to the temporary folder based on Operating System
-     * @param link       the link to the YouTube or Instagram video
-     * @return a Runnable object with the metadata of the YouTube or Instagram link
-     */
+    
     private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
         return () -> {
             String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
@@ -339,10 +281,26 @@ public final class Utility {
         };
     }
 
-    /**
-     * This method is used to make the calling method to wait for the time in millisecond passed
-     * @param time the time to make the calling thread to keep waiting
-     */
+    public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision ) {
+        // Both reMap methods will map a number in a range to a different range. So lets say you have a number, such as 25, and it came from a range of
+        // values that go from 0 to 500. And you want to find the equivelant number in the range of 5,000 to 100,000, these classes do exactly that.
+        // They also follow the strict algebraic way of accomplishing such a remap so they from any range to any other range where the numbers can
+        // be positive or negative in any order in any way, it doesn't matter. The mapping will be accurate every time.
+        double deltaA = fromRangeEnd - fromRangeStart;
+        double deltaB = toRangeEnd - toRangeStart;
+        double scale  = deltaB / deltaA;
+        double negA   = -1 * fromRangeStart;
+        double offset = (negA * scale) + toRangeStart;
+        double finalNumber = (sourceNumber * scale) + offset;
+        int calcScale = (int) Math.pow(10, decimalPrecision);
+        return (double) Math.round(finalNumber * calcScale) / calcScale;
+    }
+
+
+    public static int reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd) {
+        return (int) reMap(sourceNumber,fromRangeStart,fromRangeEnd,toRangeStart,toRangeEnd,0);
+    }
+    
     public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
