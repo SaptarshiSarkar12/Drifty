@@ -61,7 +61,7 @@ import static javafx.scene.layout.AnchorPane.*;
 
 public class Main {
     private Stage stage;
-    private double scale;
+    private double scale = .45;
     private final Utility utility = new Utility(new MessageBroker(System.out));
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
@@ -88,8 +88,8 @@ public class Main {
     private String errorMessage;
     private Batch batch;
     private static Main INSTANCE;
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
     private boolean isYouTubeURL;
     private float downloadProgress;
     private static ProgressBar pBar;
@@ -119,14 +119,23 @@ public class Main {
     private VBox vbox;
     private Scene scene;
 
+    private final double absWidth;
+    private final double absHeight;
+
+    public Main() {
+        absWidth = screenSize.getWidth();
+        absHeight = screenSize.getHeight();
+        width = absWidth * scale; // E.g.: 768
+        height = absHeight * scale; // E.g.: 1366
+        System.out.println("CurSize: " + absWidth + " x " + absHeight );
+        System.out.println("NewSize: " + width + " x " + height );
+    }
 
     public void start() {
         Platform.runLater(() -> stage = Constants.getStage());
         folders = AppSettings.get.folders();
         logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         scale = screenSize.getHeight() / screenSize.getWidth();
-        height = (int) screenSize.getHeight() * scale - 100; // E.g.: 768
-        width = (int) screenSize.getWidth() * scale * .9; // E.g.: 1366
         createControls();
         setControlProperties();
         setControlActions();
@@ -234,8 +243,13 @@ public class Main {
         menuBar = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
         anchorPane.getChildren().addAll(menuBar, bb, pb);
         placeControl(menuBar, 0, 0, 0, -1);
-        placeControl(bb, 0, 0, 30, -1);
-        placeControl(pb, 30, 30, 125, -1);
+        double top = 45;
+        double bottom = 200;
+        top = Utility.reMap(top, 0, 1120, 0, absHeight) * .85;
+        placeControl(bb, 0, 0, top, -1);
+        top = 155;
+        top = Utility.reMap(top, 0, 1120, 0, absHeight) * .85;
+        placeControl(pb, 30, 30, top, -1);
         ivLinkLabel = imageView(imgLink, scale);
         ivAutoLabel = imageView(imgAutoPaste, scale);
         cbAutoPaste = new CheckBox();
