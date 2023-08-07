@@ -1,13 +1,24 @@
 package GUI.Forms;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+
+import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
+
+import static javafx.scene.layout.AnchorPane.*;
 
 public class Splash extends Application {
 
@@ -18,11 +29,20 @@ public class Splash extends Application {
         launch(args);
     }
 
-    public static void close() {
-        INSTANCE.stage.close();
+    public static void almostDone() {
+        INSTANCE.loading = false;
     }
 
+    public static void close() {
+        INSTANCE.stage.close();
+        INSTANCE.timeline.stop();
+        INSTANCE.runProgress = false;
+    }
+
+    private boolean animationDone = false;
     private Stage stage;
+
+    private final ProgressBar pb = new ProgressBar();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -35,16 +55,110 @@ public class Splash extends Application {
         ImageView ivSplash = new ImageView(image);
         ivSplash.setPreserveRatio(true);
         ivSplash.setFitWidth(fitWidth);
-        Pane pane = new Pane();
+        AnchorPane pane = new AnchorPane();
         pane.setStyle("-fx-background-color: transparent");
-        pane.getChildren().add(ivSplash);
+        pane.getChildren().addAll(ivSplash, pb);
+        placeControl(pb, 250, 125, 285, 200);
+        pb.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setAlwaysOnTop(true);
         stage.show();
         new Thread(() -> new Main().start()).start();
+        doProgress();
+    }
+
+    private boolean loading = true;
+    private boolean runProgress = true;
+
+    public static boolean animationNotDone() {
+        return !INSTANCE.animationDone;
+    }
+
+    private KeyFrame[] getKeyframes(long startingKeyframe) {
+        long totalTime = 10000;
+        long timeAdd = totalTime / 100;
+        long time = 0;
+        if (startingKeyframe > 1) {
+            double m = 100 - startingKeyframe;
+            timeAdd = (long) (2000 / m);
+        }
+        double progress = .01 * startingKeyframe;
+        LinkedList<KeyFrame> list = new LinkedList<>();
+        int start = (int) startingKeyframe;
+        while (progress < 1) {
+            progress += .01;
+            double finprog = progress;
+            list.addLast(new KeyFrame(Duration.millis(time), e -> pb.setProgress(finprog)));
+            time += timeAdd;
+        }
+        return list.toArray(new KeyFrame[]{});
+    }
+
+    boolean switchedKeys = false;
+    long start = System.currentTimeMillis();
+
+    private void doProgress() {
+        new Thread(() -> {
+            while (runProgress) {
+                timeline = new Timeline(getKeyframes(1));
+                timeline.setCycleCount(1);
+                timeline.play();
+                while (runProgress || timeline.getStatus().equals(Animation.Status.RUNNING)) {
+                    if (!loading && !switchedKeys) {
+                        long thisKeyframe = getKeyFrame();
+                        timeline.stop();
+                        timeline.getKeyFrames().setAll(getKeyframes(thisKeyframe));
+                        timeline.playFromStart();
+                        switchedKeys = true;
+                    }
+                    if (pb.getProgress() >= .95) {
+                        timeline.stop();
+                        runProgress = loading;
+                        animationDone = switchedKeys;
+                    }
+                    else {
+                        if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
+                            runProgress = loading;
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private Timeline timeline;
+
+    private long getKeyFrame() {
+        double tTime = timeline.getCycleDuration().toMillis();
+        double cTime = timeline.getCurrentTime().toMillis();
+        double tKeyFrames = timeline.getKeyFrames().size();
+        double cKeyFrame = (cTime / tTime) * tKeyFrames;
+        return (long) cKeyFrame;
+    }
+
+    private void sleep(long time) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(time);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void placeControl(Node node, double left, double right, double top, double bottom) {
+        if (top != -1) {
+            setTopAnchor(node, top);
+        }
+        if (bottom != -1) {
+            setBottomAnchor(node, bottom);
+        }
+        if (left != -1) {
+            setLeftAnchor(node, left);
+        }
+        if (right != -1) {
+            setRightAnchor(node, right);
+        }
     }
 
 }
