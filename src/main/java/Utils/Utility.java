@@ -32,6 +32,15 @@ public final class Utility {
     private static final Scanner SC = ScannerFactory.getInstance();
     private static Thread linkThread;
     private static boolean interrupted;
+    private static long startTime;
+
+    public static void setStartTime() {
+        startTime = System.currentTimeMillis();
+    }
+
+    public static long timeSinceStart() {
+        return System.currentTimeMillis() - startTime;
+    }
 
     public Utility(MessageBroker messageBroker) {
         Utility.messageBroker = messageBroker;
