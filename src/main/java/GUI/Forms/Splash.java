@@ -25,6 +25,14 @@ public class Splash extends Application {
     private double width;
     private double height;
     private static Splash INSTANCE;
+    private Stage stage;
+    private final ProgressBar pb = new ProgressBar();
+    private boolean animationDone = false;
+    private boolean loading = true;
+    private boolean runProgress = true;
+    boolean switchedKeys = false;
+    long start = System.currentTimeMillis();
+
 
     public static void main(String[] args) {
         launch(args);
@@ -39,10 +47,6 @@ public class Splash extends Application {
         INSTANCE.timeline.stop();
         INSTANCE.runProgress = false;
     }
-
-    private boolean animationDone = false;
-    private Stage stage;
-    private final ProgressBar pb = new ProgressBar();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -82,9 +86,6 @@ public class Splash extends Application {
         doProgress();
     }
 
-    private boolean loading = true;
-    private boolean runProgress = true;
-
     public static boolean animationNotDone() {
         return !INSTANCE.animationDone;
     }
@@ -110,9 +111,6 @@ public class Splash extends Application {
 
         return list.toArray(new KeyFrame[]{});
     }
-
-    boolean switchedKeys = false;
-    long start = System.currentTimeMillis();
 
     private void doProgress() {
         new Thread(() -> {
