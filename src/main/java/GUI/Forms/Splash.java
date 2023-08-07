@@ -1,5 +1,4 @@
 package GUI.Forms;
-
 import Utils.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,41 +13,31 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
-
 import static javafx.scene.layout.AnchorPane.*;
-
 public class Splash extends Application {
-
 
     private double width;
     private double height;
-
     private static Splash INSTANCE;
-
     public static void main(String[] args) {
         launch(args);
     }
-
     public static void almostDone() {
         INSTANCE.loading = false;
     }
-
     public static void close() {
         INSTANCE.stage.close();
         INSTANCE.timeline.stop();
         INSTANCE.runProgress = false;
     }
-
     private boolean animationDone = false;
     private Stage stage;
-
     private final ProgressBar pb = new ProgressBar();
-
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //This is a test
         stage = Constants.getStage(primaryStage);
         INSTANCE = this;
         stage = Constants.getStage();
@@ -69,8 +58,8 @@ public class Splash extends Application {
         double top = 285;
         double bottom = 200;
         if (height != 1120) {
-            top = Utility.reMap(top, 0,1120, 0, height);
-            bottom = Utility.reMap(bottom, 0,1120, 0, height);
+            top = Utility.reMap(top, 1120,0, 0, height) * .85;
+            bottom = Utility.reMap(bottom, 1120,0, 0, height) * .9;
         }
         placeControl(pb, 250, 145, top, bottom);
         pb.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
@@ -82,14 +71,11 @@ public class Splash extends Application {
         new Thread(() -> new Main().start()).start();
         doProgress();
     }
-
     private boolean loading = true;
     private boolean runProgress = true;
-
     public static boolean animationNotDone() {
         return !INSTANCE.animationDone;
     }
-
     private KeyFrame[] getKeyframes(long startingKeyframe) {
         long totalTime = 10000;
         long timeAdd = totalTime / 100;
@@ -109,10 +95,8 @@ public class Splash extends Application {
         }
         return list.toArray(new KeyFrame[]{});
     }
-
     boolean switchedKeys = false;
     long start = System.currentTimeMillis();
-
     private void doProgress() {
         new Thread(() -> {
             while (runProgress) {
@@ -139,9 +123,7 @@ public class Splash extends Application {
             }
         }).start();
     }
-
     private Timeline timeline;
-
     private long getKeyFrame() {
         double tTime = timeline.getCycleDuration().toMillis();
         double cTime = timeline.getCurrentTime().toMillis();
@@ -149,7 +131,6 @@ public class Splash extends Application {
         double cKeyFrame = (cTime / tTime) * tKeyFrames;
         return (long) cKeyFrame;
     }
-
     private void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
@@ -157,7 +138,6 @@ public class Splash extends Application {
             throw new RuntimeException(e);
         }
     }
-
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) {
             setTopAnchor(node, top);
@@ -172,5 +152,4 @@ public class Splash extends Application {
             setRightAnchor(node, right);
         }
     }
-
 }
