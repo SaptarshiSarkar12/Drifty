@@ -57,10 +57,6 @@ public class Splash extends Application {
         Image image = new Image(Constants.SPLASH.toExternalForm());
         width = image.getWidth();
         height = image.getHeight();
-        System.out.println("width: " + width);
-        System.out.println("height: " + height);
-        // 1087 x 438
-        //1087 * .45 = 489 x 176
         double fitWidth = Constants.screenSize.getWidth() * .45;
         ImageView ivSplash = new ImageView(image);
         ivSplash.setPreserveRatio(true);
@@ -124,12 +120,10 @@ public class Splash extends Application {
 
                 timeline.stop();
                 double progress = pb.getProgress();
-                System.out.println("progress: " + progress);
                 double remaining = 1 - progress;
-                System.out.println("remaining: " + remaining);
                 long steps = (long) (remaining * 100);
                 double inc = remaining / steps;
-                long delay = 2000 / steps;
+                long delay = 1500 / steps;
                 for (int i = 0; i < steps; i++) {
                     pb.setProgress(progress);
                     progress += inc;
