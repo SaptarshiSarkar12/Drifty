@@ -4,27 +4,36 @@ package Enums;
  * This enum class specifies whether Drifty is opened in <b>GUI</b> or <b>CLI</b> mode
  */
 public enum Mode {
-    CLI_MODE, GUI_MODE;
-    private static Mode mode = Mode.CLI_MODE;
-    private static boolean isGUILoaded = false;
+    CLI, GUI;
+    private static Mode mode = Mode.CLI;
+    private static boolean guiLoaded = false;
+    private static boolean developer = false;
+
+    public static void setDev() {
+        developer = true;
+    }
+
+    public static boolean devMode() {
+        return developer;
+    }
 
     public static void setGUIMode() {
-        Mode.mode = Mode.GUI_MODE;
+        Mode.mode = Mode.GUI;
     }
 
-    public static void setIsGUILoaded(boolean isGUILoadingCompleted) {
-        isGUILoaded = isGUILoadingCompleted;
+    public static void setGuiLoaded(boolean isGUILoadingCompleted) {
+        guiLoaded = isGUILoadingCompleted;
     }
 
-    public static boolean getIsGUILoaded() {
-        return isGUILoaded;
+    public static boolean getGuiLoaded() {
+        return guiLoaded;
     }
 
     public static boolean isGUI() {
-        return mode.equals(Mode.GUI_MODE);
+        return mode.equals(Mode.GUI);
     }
 
     public static boolean isCLI() {
-        return mode.equals(Mode.CLI_MODE);
+        return mode.equals(Mode.CLI);
     }
 }

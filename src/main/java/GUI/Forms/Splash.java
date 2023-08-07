@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Enums.Mode;
 import Utils.Utility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,20 +40,27 @@ public class Splash extends Application {
     }
 
     public static void almostDone() {
-        INSTANCE.loading = false;
+        if(INSTANCE != null) {
+            INSTANCE.loading = false;
+        }
     }
 
     public static void close() {
-        INSTANCE.stage.close();
-        INSTANCE.timeline.stop();
-        INSTANCE.runProgress = false;
+        if(INSTANCE != null) {
+            INSTANCE.stage.close();
+            INSTANCE.timeline.stop();
+            INSTANCE.runProgress = false;
+        }
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //This is a test
-        stage = Constants.getStage(primaryStage);
+        if(Mode.devMode()){
+            startMain();
+            return;
+        }
         INSTANCE = this;
+        stage = Constants.getStage(primaryStage);
         stage = Constants.getStage();
         Image image = new Image(Constants.SPLASH.toExternalForm());
         width = image.getWidth();
@@ -78,12 +86,19 @@ public class Splash extends Application {
         stage.setScene(scene);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.show();
-        new Thread(() -> new Main().start()).start();
+        startMain();
         doProgress();
     }
 
+    private void startMain() {
+        new Thread(() -> new Main().start()).start();
+    }
+
     public static boolean animationNotDone() {
-        return !INSTANCE.animationDone;
+        if(INSTANCE != null) {
+            return !INSTANCE.animationDone;
+        }
+        return true;
     }
 
     private KeyFrame[] getKeyframes(long startingKeyframe) {

@@ -28,7 +28,7 @@ public class MessageBroker {
                 output.println(message);
             logger.log(messageType, message);
         }
-        else if (Mode.getIsGUILoaded()) {
+        else if (Mode.getGuiLoaded()) {
             logger.log(messageType, message);
             Main.setMessage(message, messageType, messageCategory);
         }
