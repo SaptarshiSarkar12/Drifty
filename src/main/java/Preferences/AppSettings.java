@@ -7,7 +7,7 @@ public class AppSettings {
 
     // THESE ARE NOT CONSTANTS AND SHOULD NOT BE UPPER_SNAKE_CASE. THEY ARE INSTANCE REFERENCES THEREFORE camelCaseOnly
 
-    public static final GetPreferences get = GetPreferences.getInstance();
-    public static final SetPreferences set = SetPreferences.getInstance();
-    public static final ClearPreferences clear = ClearPreferences.INSTANCE;
+    public static final Get get = Get.getInstance();
+    public static final Set set = Set.getInstance();
+    public static final Clear clear = Clear.INSTANCE;
 }

@@ -119,9 +119,9 @@ public class Batch {
         this.consoleOut = consoleOut;
         height = (int) screenSize.getHeight() * scale;
         width = (int) screenSize.getWidth() * scale;
-        folders = AppSettings.get.getFolders();
-        if (AppSettings.get.getJobs() != null) {
-            jobList = AppSettings.get.getJobs().jobList();
+        folders = AppSettings.get.folders();
+        if (AppSettings.get.jobs() != null) {
+            jobList = AppSettings.get.jobs().jobList();
         }
         else {
             jobList = new ConcurrentLinkedDeque<>();
@@ -260,7 +260,7 @@ public class Batch {
     }
 
     private void setControlProperties() {
-        cbAutoPaste.setSelected(AppSettings.get.getIsBatchAutoPasteEnabled());
+        cbAutoPaste.setSelected(AppSettings.get.batchAutoPaste());
         tfDir.setText(folders.getDownloadFolder());
         tfLink.textProperty().addListener(((observable, oldLink, newLink) -> {
             if (!oldLink.equals(newLink)) {
@@ -271,7 +271,7 @@ public class Batch {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
-                    String folderPath = AppSettings.get.getLastDownloadFolder();
+                    String folderPath = AppSettings.get.lastDownloadFolder();
                     if (folderPath.isEmpty()) {
                         setDirOut(Constants.RED, "Directory cannot be empty!");
                     }
@@ -341,7 +341,7 @@ public class Batch {
         ivBtnRunBatch.setOnMouseClicked(e -> runBatch());
         cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> {
             if (newValue != oldValue) {
-                AppSettings.set.setIsBatchAutoPasteEnabled(newValue);
+                AppSettings.set.batchAutoPaste(newValue);
             }
         }));
         ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
@@ -473,7 +473,7 @@ public class Batch {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = AppSettings.get.getFolders();
+            folders = AppSettings.get.folders();
         });
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miAdd, miDir, separator, miInfo);
@@ -873,8 +873,8 @@ public class Batch {
                     listView.getItems().setAll(jobList);
                 }
             }
-            if (AppSettings.get.getJobs() != null) {
-                AppSettings.get.getJobs().setJobList(jobList);
+            if (AppSettings.get.jobs() != null) {
+                AppSettings.get.jobs().setJobList(jobList);
             }
             else {
                 new Jobs().setJobList(jobList);

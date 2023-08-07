@@ -16,6 +16,7 @@ class Constants {
     public static final URL mainGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
     public static final URL batchGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyBatch.png");
 
+    public static final URL SPLASH = Splash.class.getResource("/GUI/Splash.png");
     public static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
     public static final URL runBatchUp = Constants.class.getResource("/GUI/Buttons/RunBatch/RunBatchUp.png");
     public static final URL runBatchDown = Constants.class.getResource("/GUI/Buttons/RunBatch/RunBatchDown.png");

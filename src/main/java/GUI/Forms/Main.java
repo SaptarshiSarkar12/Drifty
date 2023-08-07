@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
@@ -61,7 +60,7 @@ import static Utils.DriftyConstants.GUI_APPLICATION_STARTED;
 import static javafx.scene.layout.AnchorPane.*;
 
 
-public class Main extends Application {
+public class Main {
 
     private Stage stage;
     private double scale;
@@ -120,25 +119,22 @@ public class Main extends Application {
     private ImageView ivBtnConsole;
     private VBox vbox;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-        stage = Constants.getStage(primaryStage);
-        folders = AppSettings.get.getFolders();
+    public void start() {
+        folders = AppSettings.get.folders();
         logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         scale = screenSize.getHeight() / screenSize.getWidth();
         height = (int) screenSize.getHeight() * scale - 100; // E.g.: 768
         width = (int) screenSize.getWidth() * scale * .9; // E.g.: 1366
         createControls();
-        createScene();
-        showScene();
         setControlProperties();
         setControlActions();
         INSTANCE = this;
         batch = new Batch(consoleOut);
+        Platform.runLater(() -> {
+            createScene();
+            showScene();
+            Splash.close();
+        });
     }
 
     /**
@@ -366,8 +362,8 @@ public class Main extends Application {
     }
 
     private void setControlActions() {
-        cbAutoPaste.setSelected(AppSettings.get.getIsMainAutoPasteEnabled());
-        cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.setIsMainAutoPasteEnabled(newValue)));
+        cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
+        cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
         ivBtnDownload.setOnMouseClicked(e -> new Thread(() -> {
             if (confirmDownload()) {
                 jobList.clear();
@@ -376,20 +372,6 @@ public class Main extends Application {
             }
         }).start());
         ivBtnBatch.setOnMouseClicked(e -> batch.show());
-        stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
-            if (firstRun) {
-                firstRun = false;
-                return;
-            }
-            if (isFocused && cbAutoPaste.isSelected()) {
-                tfLink.setText(getClipboardText());
-            }
-            if (isFocused && !wasFocused) {
-                if (consoleOut != null) {
-                    consoleOut.rePosition(width, height, stage.getX(), stage.getY());
-                }
-            }
-        }));
         tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
@@ -414,6 +396,21 @@ public class Main extends Application {
     }
 
     private void createScene() {
+        stage = Constants.getStage();
+        stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
+            if (firstRun) {
+                firstRun = false;
+                return;
+            }
+            if (isFocused && cbAutoPaste.isSelected()) {
+                tfLink.setText(getClipboardText());
+            }
+            if (isFocused && !wasFocused) {
+                if (consoleOut != null) {
+                    consoleOut.rePosition(width, height, stage.getX(), stage.getY());
+                }
+            }
+        }));
         Scene scene = new Scene(bp);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         scene.widthProperty().addListener(((observable, oldValue, newValue) -> {
@@ -448,7 +445,6 @@ public class Main extends Application {
     private void showScene() {
         stage.setWidth(width);
         stage.setHeight(height);
-        stage.show();
         if (consoleOut == null) {
             consoleOut = new ConsoleOut(width, height, stage.getX(), stage.getY());
         }
@@ -456,6 +452,10 @@ public class Main extends Application {
         if (AppSettings.get.startMax()) {
             toggleFullScreen();
         }
+        while((System.currentTimeMillis() - AppSettings.get.startTime()) < 4500) {
+            sleep(50);
+        }
+        stage.show();
     }
 
     /**
@@ -621,7 +621,7 @@ public class Main extends Application {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            folders = AppSettings.get.getFolders();
+            folders = AppSettings.get.folders();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -932,8 +932,8 @@ public class Main extends Application {
                     setFilenameOutput(green, "");
                     tfLink.clear();
                 });
-                if (AppSettings.get.getJobs() != null) {
-                    AppSettings.get.getJobs().setJobList(failedJobList);
+                if (AppSettings.get.jobs() != null) {
+                    AppSettings.get.jobs().setJobList(failedJobList);
                     if (!failedJobList.isEmpty()) {
                         batch.setFailedList(failedJobList);
                     }

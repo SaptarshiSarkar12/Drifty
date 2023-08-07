@@ -5,31 +5,14 @@ import java.util.prefs.Preferences;
 
 import static Preferences.Labels.*;
 
-/**
- * This class is used to clear the user preferences for Drifty
- */
-public class ClearPreferences {
-    /**
-     * The instance / object of this class through which the preferences are cleared
-     */
-    public static final ClearPreferences INSTANCE = new ClearPreferences();
+public class Clear {
+    private Clear() {}
+
+    public static final Clear INSTANCE = new Clear();
     private final Preferences prefs = Labels.prefs;
 
-    /**
-     * The default constructor has been made private so that no object of this class can be created, by external classes
-     */
-    private ClearPreferences() {}
-
-    /**
-     * This method is used to return the object of this class
-     * @return the object of this class
-     */
-    protected static ClearPreferences getInstance() {
+    protected static Clear getInstance() {
         return INSTANCE;
-    }
-
-    public void devMode() {
-        prefs.remove(DEVMODE.toString());
     }
 
     public void folders() {
@@ -44,8 +27,8 @@ public class ClearPreferences {
         prefs.remove(BATCH_AUTO_PASTE.toString());
     }
 
-    public void updateTimestamp() {
-        prefs.remove(LAST_UPDATE_TIME.toString());
+    public void lastDLPUpdateTime() {
+        prefs.remove(LAST_DLP_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {
@@ -58,6 +41,10 @@ public class ClearPreferences {
 
     public void startMax() {
         prefs.remove(START_MAX.toString());
+    }
+
+    public void startTime() {
+        prefs.remove(START_TIME.toString());
     }
 
     public void clearAll() {

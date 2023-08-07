@@ -23,17 +23,17 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        AppSettings.set.setFolders(this);
-        AppSettings.set.setLastFolder(folder);
+        AppSettings.set.folders(this);
+        AppSettings.set.lastFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        AppSettings.set.setFolders(this);
+        AppSettings.set.folders(this);
     }
 
     public String getDownloadFolder() {
-        return AppSettings.get.getLastDownloadFolder();
+        return AppSettings.get.lastDownloadFolder();
     }
 
     public void checkFolders() {
@@ -51,7 +51,7 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        AppSettings.set.setFolders(this);
+        AppSettings.set.folders(this);
     }
 
     public ObservableList<String> getFolders() {
