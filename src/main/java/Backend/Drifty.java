@@ -1,8 +1,10 @@
 package Backend;
+
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Utils.MessageBroker;
 import Utils.Utility;
+
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -100,7 +102,8 @@ public class Drifty {
         new FileDownloader(url, fileName, downloadsFolder).run();
     }
 
-    /**/public static MessageBroker getMessageBrokerInstance() {
+    /**/
+    public static MessageBroker getMessageBrokerInstance() {
         return message;
     }
 }

@@ -1,10 +1,15 @@
 package CLI;
+
 import Backend.Drifty;
 import Enums.MessageCategory;
-import Enums.OS;
 import Enums.MessageType;
-import Utils.*;
+import Enums.OS;
+import Utils.Logger;
+import Utils.MessageBroker;
+import Utils.ScannerFactory;
+import Utils.Utility;
 import org.yaml.snakeyaml.Yaml;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -12,8 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
+
 /**
  * This is the main class for the CLI (Command Line Interface) version of Drifty.
  *
