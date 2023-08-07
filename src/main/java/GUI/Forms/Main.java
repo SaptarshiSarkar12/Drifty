@@ -273,8 +273,8 @@ public class Main {
         borderPane.setBottom(makeButtonBox());
         anchorPane.getChildren().addAll(borderPane, vbox);
         placeControl(borderPane, 0, 0, 0, 0);
-        top = Utility.reMap(400, 0, 1120, 0, absHeight) * .85;
-        double bottom = Utility.reMap(150, 0, 1120, 0, absHeight) * .85;
+        top = Utility.reMap(500, 0, 1120, 0, absHeight) * .85;
+        double bottom = Utility.reMap(150, 1120, 0, 0, absHeight) * .85;
         placeControl(vbox, 0, 0, top, 150);
     }
 
