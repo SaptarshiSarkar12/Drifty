@@ -6,8 +6,6 @@
     -fx-padding: 0px;
     -fx-font-size: 20;
 }
-
 .check-box:determinate .box, .check-box:determinate {
     -fx-background-color: transparent;
-
 }

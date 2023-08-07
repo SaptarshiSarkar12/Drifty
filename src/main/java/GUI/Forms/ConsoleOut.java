@@ -1,5 +1,4 @@
 package GUI.Forms;
-
 import Enums.Out;
 import GUI.Support.StringPropertyPrintStream;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,22 +16,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import static javafx.scene.layout.AnchorPane.*;
-
 /**
  * This class is the pop down console form that receives the 'System.out' capture
  * from the 'StringPropertyPrintStream' class. It only has one TextArea as its only control.
  */
-
 public class ConsoleOut {
-
     public ConsoleOut(double width, double height, double posX, double posY) {
         this.width = width;
         this.mainX = posX;
@@ -44,7 +38,6 @@ public class ConsoleOut {
         captureOutputs();
         ConsoleOut.INSTANCE = this;
     }
-
     private static ConsoleOut INSTANCE;
     private Stage stage;
     private final StringProperty standardOut = new SimpleStringProperty();
@@ -67,7 +60,6 @@ public class ConsoleOut {
     private Tab tabStandard;
     private Tab tabError;
     private Scene scene;
-
     private void makeControls() {
         ap.setStyle("-fx-background-color: transparent;");
         ap.getStyleClass().add("anchor-pane-transparent"); // Add the custom CSS class
@@ -82,7 +74,6 @@ public class ConsoleOut {
         tabPane.getTabs().setAll(tabStandard,tabError);
         button(10,10);
     }
-
     private void setProperties(){
         standardOut.addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
@@ -92,7 +83,6 @@ public class ConsoleOut {
             }
         }));
     }
-
     private void makeScene() {
         stage = Constants.getStage();
         stage.initStyle(StageStyle.TRANSPARENT);
@@ -103,29 +93,23 @@ public class ConsoleOut {
         stage.setX(mainX);
         stage.setY(mainY + mainHeight);
     }
-
     public void rePosition(double posX, double posY) {
         mainX = posX;
         mainY = posY;
         stage.setX(mainX);
         stage.setY(mainY + mainHeight);
     }
-
     public void setWidth(double width) {
         scene.getWindow().setWidth(width);
     }
-
     private void captureOutputs() {
         ByteArrayOutputStream baosStandard = new ByteArrayOutputStream();
         PrintStream printOutStandard = new StringPropertyPrintStream(baosStandard, standardOut, Out.STANDARD);
-
         ByteArrayOutputStream baosError = new ByteArrayOutputStream();
         PrintStream printOutError = new StringPropertyPrintStream(baosError, errorOut, Out.ERROR);
-
         System.setOut(printOutStandard);
         System.setErr(printOutError);
     }
-
     public static void appendText(String text, Out type) {
         String taString;
         switch(type) {
@@ -145,16 +129,13 @@ public class ConsoleOut {
             }
         }
     }
-
     public static void clear() {
         INSTANCE.taStandard.clear();
         INSTANCE.taError.clear();
     }
-
     public static String getStandardOut() {
         return INSTANCE.taStandard.getText();
     }
-
     private TextArea textArea(String style) {
         TextArea textArea = new TextArea();
         textArea.setMinHeight(height);
@@ -166,13 +147,11 @@ public class ConsoleOut {
         textArea.setFont(new Font("Arial", 13));
         return textArea;
     }
-
     private Tab tab(String title) {
         Tab tab = new Tab(title);
         tab.getStyleClass().add("tab-normal");
         return tab;
     }
-
     private TabPane tabPane() {
         TabPane tabPane = new TabPane();
         ap.getChildren().add(tabPane);
@@ -180,7 +159,6 @@ public class ConsoleOut {
         tabPane.getStylesheets().add(Constants.tabsCSS.toExternalForm());
         return tabPane;
     }
-
     private void button(double right, double bottom) {
         ImageView button = new ImageView(Constants.imgCopyUp);
         button.getStyleClass().add("text-area-style"); // Add the custom CSS class
@@ -203,7 +181,6 @@ public class ConsoleOut {
             clipboard.setContent(content);
         });
     }
-
     private void setProgress(String line) {
         if (!line.isEmpty()) {
             String[] lines = line.split(System.lineSeparator());
@@ -218,28 +195,24 @@ public class ConsoleOut {
             }
         }
     }
-
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) setTopAnchor(node, top);
         if (bottom != -1) setBottomAnchor(node, bottom);
         if (left != -1) setLeftAnchor(node, left);
         if (right != -1) setRightAnchor(node, right);
     }
-
     public void rePosition(double width, double height, double posX, double posY) {
         ap.setPrefWidth(width);
         taStandard.setPrefWidth(width);
         stage.setX(posX);
         stage.setY(posY + height);
     }
-
     public void show() {
         if (stage == null) {
             makeScene();
         }
         stage.show();
     }
-
     public void hide() {
         if (stage != null) {
             stage.close();

@@ -1,5 +1,4 @@
 package Utils;
-
 /**
  * This file contains some String constants which are repeatedly used in the whole project.
  */
@@ -12,7 +11,6 @@ public final class DriftyConstants {
     public static final String DOWNLOADS_FILE_PATH = "/Downloads/";
     public static final String LOGGER_INFO = "INFO";
     public static final String LOGGER_WARN = "WARN";
-
     public static final String CLI_APPLICATION_STARTED = "Drifty CLI (Command Line Interface) Application Started !";
     public static final String GUI_APPLICATION_STARTED = "Drifty GUI (Graphical User Interface) Application Started !";
     public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
@@ -53,25 +51,20 @@ public final class DriftyConstants {
     public static final String DIRECTORY_CREATED = "Directory Created";
     public static final String ERROR_WHILE_CHECKING_FOR_DIRECTORY = "Error while checking for directory !";
     public static final String RUNNING_COMMAND = "Running Command: ";
-
     public static final String FILE_NOT_FOUND = "An error occurred! Requested file does not exist, please check the url.";
     public static final String FAILED_TO_DOWNLOAD = "Failed to download ";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
-
     public static final String FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO = "Failed to download YouTube video!";
     public static final String YOUTUBE_VIDEO_UNAVAILABLE = "The requested YouTube video is unavailable, it has been deleted from YouTube.";
     public static final String PERMISSION_DENIED_YOUTUBE_VIDEO = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
     public static final String FAILED_TO_INITIALISE_YOUTUBE_VIDEO_DOWNLOADER = "Failed to initialise YouTube video downloader!";
     public static final String THREAD_ERROR_ENCOUNTERED = "Error: thread encountered an error";
-
     public static final String GETTING_READY_TO_DOWNLOAD_FILE = "Getting ready to download the file...";
     public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube Video!";
-
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
     public static final String DEFAULT_FILENAME = "%(title)s.%(ext)s";
-
     /**
      * This is a private constructor of this class.
      */

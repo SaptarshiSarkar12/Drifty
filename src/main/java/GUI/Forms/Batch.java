@@ -1,5 +1,4 @@
 package GUI.Forms;
-
 import Enums.DriftyConfig;
 import Enums.Format;
 import GUI.Support.*;
@@ -41,7 +40,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -55,19 +53,11 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
-
 import static GUI.Forms.Constants.*;
 import static javafx.scene.layout.AnchorPane.*;
 import static javafx.scene.layout.AnchorPane.setRightAnchor;
 
-/**
- * This is the second main GUI form, and it manages batch jobs for the user.
- * The info method can be viewed by right-clicking on the form and choosing
- * Info, which explains how to use the form in detail.
- */
-
 public class Batch {
-
     private final double scale = .6;
     private final double width;
     private final double height;
@@ -114,7 +104,6 @@ public class Batch {
     private Timer bounceTimer;
     private Timer clockTimer;
     private VBox vbox;
-
     public Batch(ConsoleOut consoleOut) {
         this.consoleOut = consoleOut;
         height = (int) screenSize.getHeight() * scale;
@@ -134,18 +123,13 @@ public class Batch {
             tfDir.setText(folders.getDownloadFolder());
         });
     }
-
-    /**
-     * Form initialization And Control
-     */
-
+    
     private TextField newTextField() {
         TextField tf = new TextField();
         tf.setFont(new Font(monacoFont.toExternalForm(), 19));
         tf.setPrefHeight(45);
         return tf;
     }
-
     private HBox makeButtonBox() {
         Image btnDownloadUp   = new Image(Constants.downloadUp.toExternalForm());
         Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
@@ -158,19 +142,16 @@ public class Batch {
         box.setAlignment(Pos.CENTER);
         return box;
     }
-
     private Label getSpacer() {
         Label label = new Label();
         label.setPrefWidth(screenSize.getWidth());
         return label;
     }
-
     private Label label() {
         Label label = new Label();
         label.setFont(new Font(monacoFont.toExternalForm(), 20));
         return label;
     }
-
     private ImageView imageToggle(double scale) {
         ImageView imageView = new ImageView(Constants.imgUpUp);
         imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
@@ -182,7 +163,6 @@ public class Batch {
         placeControl(imageView,-1,20,-1,20);
         return imageView;
     }
-
     private ImageView imageViewButton(URL imageUp, URL imageDown, double scale) {
         Image iu = new Image(imageUp.toExternalForm());
         Image id = new Image(imageDown.toExternalForm());
@@ -194,7 +174,6 @@ public class Batch {
         imageView.setFitWidth(width * scale);
         return imageView;
     }
-
     private ImageView imageView(Image image, double ratio) {
         ImageView iv = new ImageView(image);
         double width = image.getWidth();
@@ -202,14 +181,12 @@ public class Batch {
         iv.setFitWidth(width * ratio);
         return iv;
     }
-
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) setTopAnchor(node, top);
         if (bottom != -1) setBottomAnchor(node, bottom);
         if (left != -1) setLeftAnchor(node, left);
         if (right != -1) setRightAnchor(node, right);
     }
-
     private void createControls() {
         anchorPane = new AnchorPane();
         anchorPane.setPrefWidth(width);
@@ -226,21 +203,17 @@ public class Batch {
         lblLinkOut = label();
         HBox boxLinkOut = new HBox(lblLinkOut);
         boxLinkOut.setAlignment(Pos.CENTER_LEFT);
-
         ivDirLabel = imageView(imgDirectory, .8);
         HBox boxDirLabel = new HBox(ivDirLabel);
         boxDirLabel.setAlignment(Pos.CENTER_LEFT);
-
         tfDir = newTextField();
         lblDirOut = label();
         HBox boxLblDirOut = new HBox(lblDirOut);
         boxLblDirOut.setAlignment(Pos.CENTER_LEFT);
-
         ivFilenameLabel = imageView(imgFilename, .8);
         HBox boxFilenameLabel = new HBox(ivFilenameLabel);
         boxFilenameLabel.setAlignment(Pos.CENTER_LEFT);
         tfFilename = newTextField();
-
         lblFilenameOut = label();
         HBox boxLblFilenameOut = new HBox(lblFilenameOut);
         boxLblFilenameOut.setAlignment(Pos.CENTER_LEFT);
@@ -258,7 +231,6 @@ public class Batch {
         ivBtnConsole = imageToggle(.5);
         anchorPane.getChildren().add(vbox);
     }
-
     private void setControlProperties() {
         cbAutoPaste.setSelected(AppSettings.get.batchAutoPaste());
         tfDir.setText(folders.getDownloadFolder());
@@ -334,7 +306,6 @@ public class Batch {
         Tooltip.install(tfDir, new Tooltip("Right click anywhere to add or manage directories\nLast directory added becomes download folder."));
         Tooltip.install(tfFilename, new Tooltip("This will be the name of the file that gets written to the Directory above."));
     }
-
     private void setControlActions() {
         ivBtnClose.setOnMouseClicked(e -> close());
         ivBtnSave.setOnMouseClicked(e -> saveBatch());
@@ -346,7 +317,6 @@ public class Batch {
         }));
         ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
     }
-
     private void triageInbound(String newLink) {
         try {
             boolean valid = false;
@@ -368,7 +338,6 @@ public class Batch {
         catch (Exception ignored) {
         }
     }
-
     public void makeScene() {
         stage = Constants.getStage();
         stage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
@@ -413,14 +382,12 @@ public class Batch {
         stage.setWidth(width);
         stage.setMinHeight(height);
     }
-
     public void show() {
         stage.show();
         commitJobListToListView();
         consoleOut.rePosition(width, height, stage.getX(), stage.getY());
         ivBtnConsole.toFront();
     }
-
     private void close() {
         consoleOut.hide();
         if (linkThread != null && (linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING))) {
@@ -437,7 +404,6 @@ public class Batch {
         }
         stage.close();
     }
-
     private ContextMenu getListMenu() {
         MenuItem miDel = new MenuItem("Delete");
         MenuItem miClear = new MenuItem("Clear");
@@ -463,7 +429,6 @@ public class Batch {
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miDel, miClear, separator, miInfo);
     }
-
     private ContextMenu getContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -478,13 +443,11 @@ public class Batch {
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miAdd, miDir, separator, miInfo);
     }
-
     private ListView listView() {
         ListView<Job> listView = new ListView<>();
         listView.setMinWidth(300);
         return listView;
     }
-
     private void clearControls() {
         Platform.runLater(() -> {
             tfLink.clear();
@@ -492,7 +455,6 @@ public class Batch {
             tfFilename.clear();
         });
     }
-
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = folders.getDownloadFolder();
@@ -505,7 +467,6 @@ public class Batch {
             folders.addFolder(directory.getAbsolutePath());
         }
     }
-
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
             ivBtnConsole.setImage(Constants.imgUpUp);
@@ -522,11 +483,7 @@ public class Batch {
             consoleOpen = true;
         }
     }
-
-    /**
-     * Private Setters
-     */
-
+    
     public void setFailedList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = jobList;
         Platform.runLater(() -> {
@@ -538,32 +495,27 @@ public class Batch {
             setFileOut(Constants.GREEN, "");
         });
     }
-
     private void setFileOut(Color color, String message) {
         Platform.runLater(() -> {
             lblFilenameOut.setTextFill(color);
             lblFilenameOut.setText(message);
         });
     }
-
     private void setDirOut(Color color, String message) {
         Platform.runLater(() -> {
             lblDirOut.setTextFill(color);
             lblDirOut.setText(message);
         });
     }
-
     public void setLink(String link) {
         Platform.runLater(() -> tfLink.setText(link));
     }
-
     private void setLinkOut(Color color, String message) {
         Platform.runLater(() -> {
             lblLinkOut.setTextFill(color);
             lblLinkOut.setText(message);
         });
     }
-
     int bounceCount = 1;
     private TimerTask bounceTask() {
         return new TimerTask() {
@@ -576,9 +528,7 @@ public class Batch {
             }
         };
     }
-
     private long startTime = 0;
-
     private boolean listFound = false;
     private TimerTask clockTask() {
         long HOUR = Constants.HOUR;
@@ -641,15 +591,10 @@ public class Batch {
             }
         };
     }
-
     public ConcurrentLinkedDeque<Job> getJobList() {
         return jobList;
     }
-
-    /**
-     * Form Logic, Actions and TY-DLP Related
-     */
-
+    
     private void checkForList() {
         new Thread(() -> {
             boolean run = true;
@@ -681,7 +626,6 @@ public class Batch {
             }
         }).start();
     }
-
     private void findName(String link) {
         gettingFilenames.setValue(true);
         new Thread(() -> {
@@ -710,10 +654,8 @@ public class Batch {
                 listFound = false;
             }
             sleep(1000);
-
         }).start();
     }
-
     private void checkLink(String link) {
         if (link.contains(" ")) {
             setLink("");
@@ -763,7 +705,6 @@ public class Batch {
             }).start();
         }
     }
-
     private void processLinks(String links) {
         new Thread(() -> {
             String[] parts = links.split("[\n]");
@@ -779,7 +720,6 @@ public class Batch {
             }
         }).start();
     }
-
     private Job jobExists(String link) {
         if (jobList != null) {
             for (Job job : jobList) {
@@ -790,7 +730,6 @@ public class Batch {
         }
         return null;
     }
-
     private void createBatch(LinkedList<String> jsonMetadataList, String link) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String filename;
@@ -821,11 +760,7 @@ public class Batch {
             tfFilename.clear();
         });
     }
-
-    /**
-     * This method is used to get the last copied clipboard text
-     * @return the last copied text from the clipboard in string format
-     */
+    
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
@@ -835,7 +770,6 @@ public class Batch {
         }
         return null;
     }
-
     private void saveBatch() {
         String link = tfLink.getText();
         String dir = tfDir.getText();
@@ -857,7 +791,6 @@ public class Batch {
             commitJobListToListView();
         }
     }
-
     private void commitJobListToListView() {
         Platform.runLater(() -> {
             if (jobList != null) {
@@ -881,16 +814,11 @@ public class Batch {
             }
         });
     }
-
     private void runBatch() {
         Main.runBatch(jobList);
         close();
     }
-
-    /**
-     * Class Utilities
-     */
-
+    
     private void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
@@ -898,7 +826,6 @@ public class Batch {
             throw new RuntimeException(e);
         }
     }
-
     private void info() {
         double h = 20;
         double n = 16;
@@ -928,7 +855,6 @@ public class Batch {
         //tf.getChildren().add(text("\n\n",false,black,13));
         double width = 500;
         double height = 700;
-
         Button btnOK = new Button("OK");
         Stage stage = Constants.getStage();
         stage.setWidth(width);
@@ -950,11 +876,9 @@ public class Batch {
         vBox.getStylesheets().add(Constants.upDown.toString());
         vBox.setPadding(new Insets(10));
         stage.setAlwaysOnTop(true);
-
         btnOK.setOnAction(e -> stage.close());
         stage.showAndWait();
     }
-
     private Text text(String string, boolean bold, Color color, double size) {
         Text text = new Text(string);
         text.setFont(new Font(monacoFont.toExternalForm(),size));
@@ -964,5 +888,4 @@ public class Batch {
         text.setLineSpacing(.5);
         return text;
     }
-
 }

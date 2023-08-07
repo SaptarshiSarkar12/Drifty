@@ -1,18 +1,14 @@
 package Utils;
-
 import Enums.Mode;
 import Enums.MessageType;
-
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import static Utils.DriftyConstants.FAILED_TO_CLEAR_LOG;
 import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
-
 /**
  * This class deals with creating Log files for Drifty.
  */
@@ -25,9 +21,6 @@ public class Logger {
     Calendar calendarObject = Calendar.getInstance();
     String logFilename;
 
-    /**
-     * This is the constructor which is used to initialise the log filename, path to the log file and the date-time formats
-     */
     private Logger() {
         if (Mode.isCLI()) {
             logFilename = "Drifty CLI.log";
@@ -39,10 +32,6 @@ public class Logger {
         dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
     }
 
-    /**
-     * This method provides a logger instance of presently running Drifty app
-     * @return Logger instance
-     */
     public static Logger getInstance() {
         if (Mode.isCLI()) {
             if (CLILoggerInstance != null) {
@@ -60,9 +49,6 @@ public class Logger {
         }
     }
 
-    /**
-     * This function clears the contents of the previous log file
-     */
     private void clearLog() {
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
             isLogEmpty = true;
@@ -72,11 +58,6 @@ public class Logger {
         }
     }
 
-    /**
-     * This function writes the output messages to the log file.
-     * @param messageType Type of the Log (acceptable values - INFO, WARN, ERROR).
-     * @param logMessage  Log message.
-     */
     public void log(MessageType messageType, String logMessage) {
         String dateAndTime = dateFormat.format(calendarObject.getTime());
         if (!isLogEmpty) {

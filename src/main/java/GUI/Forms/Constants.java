@@ -1,13 +1,10 @@
 package GUI.Forms;
-
 import Enums.OS;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import java.awt.*;
 import java.net.URL;
-
 /**
  * These are constants used by Drifty GUI.
  * It contains hooks into the resources folder for relevant files.
@@ -15,7 +12,6 @@ import java.net.URL;
 class Constants {
     public static final URL mainGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
     public static final URL batchGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyBatch.png");
-
     public static final URL SPLASH = Splash.class.getResource("/GUI/Splash.png");
     public static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
     public static final URL runBatchUp = Constants.class.getResource("/GUI/Buttons/RunBatch/RunBatchUp.png");
@@ -34,12 +30,10 @@ class Constants {
     public static final URL upDown = Constants.class.getResource("/GUI/Buttons/UpDown/UpDown.png");
     public static final URL downUp = Constants.class.getResource("/GUI/Buttons/UpDown/DownUp.png");
     public static final URL downDown = Constants.class.getResource("/GUI/Buttons/UpDown/DownDown.png");
-
     public static final URL autoPasteLabelImage = Constants.class.getResource("/GUI/Labels/AutoPaste.png");
     public static final URL directoryLabelImage = Constants.class.getResource("/GUI/Labels/Directory.png");
     public static final URL filenameLabelImage = Constants.class.getResource("/GUI/Labels/Filename.png");
     public static final URL linkLabelImage = Constants.class.getResource("/GUI/Labels/Link.png");
-
     public static final URL sceneCSS = Constants.class.getResource("/GUI/CSS/Scene.css");
     public static final URL tabsCSS = Constants.class.getResource("/GUI/CSS/Tabs.css");
     public static final URL listViewCSS = Constants.class.getResource("/GUI/CSS/ListView.css");
@@ -52,7 +46,6 @@ class Constants {
     public static final URL progressBarCSS = Constants.class.getResource("/GUI/CSS/ProgressBar.css");
     public static final URL icon1024 = Constants.class.getResource("/GUI/Icons/Icon1024.png");
     public static final URL icon512 = Constants.class.getResource("/GUI/Icons/Icon512.png");
-
     public static final URL monacoFont = Constants.class.getResource("/GUI/Fonts/Monaco.ttf");
     public static final Image imgUpUp = new Image(upUP.toExternalForm());
     public static final Image imgUpDown = new Image(upDown.toExternalForm());
@@ -68,7 +61,6 @@ class Constants {
     public static final long SECOND = 1000;
     public static final long MINUTE = SECOND * 60;
     public static final long HOUR = MINUTE * 60;
-
     public static Stage getStage() {
         Stage stage = new Stage();
         Image icon;
@@ -82,7 +74,6 @@ class Constants {
         stage.setOnCloseRequest(e -> System.exit(0));
         return stage;
     }
-
     public static Stage getStage(Stage stage) {
         Image icon;
         if (OS.isMac()) {

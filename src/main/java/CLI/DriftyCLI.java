@@ -1,12 +1,10 @@
 package CLI;
-
 import Backend.Drifty;
 import Enums.MessageCategory;
 import Enums.OS;
 import Enums.MessageType;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -14,58 +12,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
-
 /**
  * This is the main class for the CLI (Command Line Interface) version of Drifty.
  *
  * @version 2.0.0
  */
 public class DriftyCLI {
-    /**
-     * Logger instance for the CLI version of Drifty
-     */
     public static final Logger logger = Logger.getInstance();
-    /**
-     * Scanner instance for the CLI of Drifty
-     */
     protected static final Scanner SC = ScannerFactory.getInstance();
-    /**
-     * Boolean value which determines if the given link is an YouTube video URL or not
-     */
     protected static boolean isYoutubeURL;
-    /**
-     * Boolean value which determines if the given link is an Instagram media URL or not
-     */
     protected static boolean isInstagramLink;
-    /**
-     * Boolean value which determines if the given link is an Instagram image URL or not
-     */
     protected static boolean isInstagramImage;
-    /**
-     * Message broker instance which helps to send messages to the output stream
-     */
     private static MessageBroker message;
     private static String link;
     private static Utility utility;
     private static String directory;
     private static String fileName = null;
-    /**
-     * Boolean value which determines if the user triggers batch downloading
-     */
     private static boolean batchDownloading;
-    /**
-     * The path of the YAML/YML data file which contains the required data, in String format
-     */
     private static String batchDownloadingFile;
 
-    /**
-     * This function is the main method of Drifty CLI
-     *
-     * @param args Command Line Arguments passed to Drifty CLI as a String array.
-     */
     public static void main(String[] args) {
         logger.log(MessageType.INFORMATION, CLI_APPLICATION_STARTED);
         message = new MessageBroker(System.out);
@@ -175,9 +142,6 @@ public class DriftyCLI {
         }
     }
 
-    /**
-     * This method deals with downloading multiple files with a single click using a YAML/YML file, the path of which is provided by the user.
-     */
     private static void batchDownloader() {
         Yaml yamlInstance = new Yaml();
         try {
@@ -248,9 +212,6 @@ public class DriftyCLI {
         }
     }
 
-    /**
-     * Takes the filename as input from the user interactively if the system cannot find the filename i.e. if it is null
-     */
     private static void takeFileNameInputIfNull() {
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
@@ -294,21 +255,10 @@ public class DriftyCLI {
         }
     }
 
-    /**
-     * This method returns true if the given Instagram link is of an image
-     *
-     * @return True if the Instagram link is of an image else false (for video) [Image/Video is decided by user]
-     * @since v2.0.0
-     */
     public static boolean getIsInstagramImage() {
         return isInstagramImage;
     }
 
-    /**
-     * This method returns true if the given link is of Instagram
-     * @return True if the given link is of Instagram else false
-     * @since v2.0.0
-     */
     public static boolean getIsInstagramLink() {
         return isInstagramLink;
     }

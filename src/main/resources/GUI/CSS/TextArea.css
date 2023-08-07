@@ -1,38 +1,30 @@
 /* Custom CSS for TextArea */
-
 .text-area-standard {
     -fx-text-fill: darkblue
 }
-
 .text-area-standard .content {
     -fx-control-inner-background: transparent;
     -fx-background-color: linear-gradient(to bottom, #666a6a, #b3b6b6);
 }
-
 .text-area-standard .scroll-bar:horizontal {
     -fx-opacity: 0;
     -fx-max-height: 0;
 }
-
 .text-area-standard .scroll-bar:vertical {
     -fx-opacity: 0;
     -fx-max-width: 0;
 }
-
 .text-area-error {
     -fx-text-fill: darkred;
 }
-
 .text-area-error .content {
     -fx-control-inner-background: transparent;
     -fx-background-color: linear-gradient(to bottom, #666a6a, #b3b6b6);
 }
-
 .text-area-error .scroll-bar:horizontal {
     -fx-opacity: 0;
     -fx-max-height: 0;
 }
-
 .text-area-error .scroll-bar:vertical {
     -fx-opacity: 0;
     -fx-max-width: 0;

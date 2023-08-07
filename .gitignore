@@ -4,7 +4,6 @@ target/
 Website/.next
 Website/node_modules
 pomNEW.xml
-
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
@@ -13,7 +12,6 @@ pomNEW.xml
 *.iws
 *.iml
 *.ipr
-
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -22,7 +20,6 @@ pomNEW.xml
 .settings
 .springBeans
 .sts4-cache
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -32,9 +29,7 @@ pomNEW.xml
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
 ### VS Code ###
 .vscode/
-
 ### Mac OS ###
 .DS_Store

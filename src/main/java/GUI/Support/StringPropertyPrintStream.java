@@ -1,16 +1,13 @@
 package GUI.Support;
-
 import Enums.Out;
 import GUI.Forms.ConsoleOut;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
-
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-
 /**
  * This is a special class that allows redirection of 'System.out' to be
  * sent to a StringProperty which is assigned to the pop down console form.
@@ -28,21 +25,17 @@ import java.util.TimerTask;
  * TextArea's .appendText() method via a public static method in the
  * ConsoleOut GUI called appendStandard()
  */
-
 public class StringPropertyPrintStream extends PrintStream {
-
     private final StringProperty stringProperty;
     private final LinkedList<String> newText = new LinkedList<>();
     private final Timer timer = new Timer();
     private final Out type;
-
     public StringPropertyPrintStream(OutputStream out, StringProperty stringProperty, Out type) {
         super(out);
         this.stringProperty = stringProperty;
         timer.scheduleAtFixedRate(updateTask(), 500, 500);
         this.type = type;
     }
-
     @Override
     public void write(byte[] buf, int off, int len) {
         if (buf != null) {
@@ -53,7 +46,6 @@ public class StringPropertyPrintStream extends PrintStream {
             newText.addLast(output);
         }
     }
-
     private TimerTask updateTask() {
         return new TimerTask() {
             @Override
