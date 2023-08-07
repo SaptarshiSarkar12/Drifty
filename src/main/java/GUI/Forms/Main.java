@@ -963,27 +963,29 @@ public class Main {
 
     /**
      * This method sets the filename in the appropriate text field area, after the filename gets retrieved
+     * No, it doesn't, this method creates the animation of the moving dots while the filename is being
+     * pulled down from the Internet so that the user knows something is happening.
      */
     private void bounceFilename() {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
                 int count = 1;
                 Platform.runLater(() -> setFilenameOutput(green, "Retrieving Filename"));
-                while (gettingFilename) {
+                while (gettingFilename) { //As long as the launching thread is still getting the filename, we will run this loop
                     sleep(900);
-                    if (count < 0) {
+                    if (count < 0) { //This changes the direction of the counter from down to up
                         count = 1;
                         countUp = true;
                     }
-                    final String out = "Retrieving Filename" + ".".repeat(count);
+                    final String out = "Retrieving Filename" + ".".repeat(count); //This is what we print in the label, adding the number of dots according to the counter
                     Platform.runLater(() -> setFilenameOutput(green, out));
-                    if (countUp) {
+                    if (countUp) { //If we are in up mode, then add one to the counter, otherwise, take one away.
                         count++;
                     }
                     else {
                         count--;
                     }
-                    if (count == 4) {
+                    if (count == 4) { // When the counter is equal to 4 (we have 4 dots showing) then reverse the counter which starts taking dots away
                         countUp = false;
                     }
                     if (count == 1) {
@@ -997,6 +999,8 @@ public class Main {
 
     /**
      * This method is used to verify the link
+     * What's the point of saying that the method does exactly what its name implies? This is why we use names like this
+     * so that it's not necessary to create code cluttering javadoc comments.
      *
      * @return true if the link is valid, else false
      */
@@ -1016,11 +1020,6 @@ public class Main {
         return valid;
     }
 
-    /**
-     * This method is used to verify the Directory
-     *
-     * @return true if the directory is valid, else false
-     */
     private boolean verifyDirectory() {
         File file = new File(tfDir.getText());
         boolean valid = file.exists();
@@ -1029,7 +1028,6 @@ public class Main {
         }
         return file.exists();
     }
-
     /**
      * This method is used to verify the Filename
      *
