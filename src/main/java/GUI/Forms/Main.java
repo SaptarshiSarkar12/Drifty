@@ -137,20 +137,14 @@ public class Main {
         });
     }
 
-    /**
-     * Methods for external communication inbound
-     */
+    
 
     public static void setJobError(String message, int errorLevel) {
         INSTANCE.errorMessage = message;
         jobError.setValue(errorLevel);
     }
 
-    /**
-     * This method updates the progress bar in Drifty GUI screen
-     *
-     * @param progress an integer value denoting the progress
-     */
+    
     public static void updateProgress(double progress) {
         if (progress > 0.0 && progress < 0.99) {
             progressProperty.setValue(progress);
@@ -160,32 +154,18 @@ public class Main {
         }
     }
 
-    /**
-     * This method sets the {@link #downloadInProgress} with the boolean value provided to it as a parameter
-     *
-     * @param value true if the file download process is in progress
-     */
+    
     public static void setDownloadInProgress(boolean value) {
         downloadInProgress.setValue(value);
     }
 
-    /**
-     * This method starts the batch downloader
-     *
-     * @param jobList linked deque list of the jobs to perform in the batch downloading system of Drifty
-     */
+    
     public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
         INSTANCE.jobList = jobList;
         INSTANCE.batchDownloader();
     }
 
-    /**
-     * This method sets the output message with the color in the respective sections, for the GUI
-     *
-     * @param message         output message to be shown in the Drifty GUI screen
-     * @param messageType     type of the output message
-     * @param messageCategory category of the output message
-     */
+    
     public static void setMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         Color color = switch (messageType) {
             case INFORMATION -> INSTANCE.green;
@@ -319,9 +299,7 @@ public class Main {
         return iv;
     }
 
-    /**
-     * This method sets the control properties to the text fields and buttons in the Drifty GUI screen
-     */
+    
     private void setControlProperties() {
         tfDir.setText(folders.getDownloadFolder());
         directoryExists.setValue(new File(tfDir.getText()).exists());
@@ -458,9 +436,7 @@ public class Main {
         stage.show();
     }
 
-    /**
-     * This method opens the console when the console button is toggled in Drifty GUI
-     */
+    
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
             ivBtnConsole.setImage(Constants.imgUpUp);
@@ -485,9 +461,7 @@ public class Main {
         stage.setFullScreen(!stage.isFullScreen());
     }
 
-    /**
-     * This method fetches the last download directory entered by the user. If it is empty, then, the default download directory is set in the directory placeholder
-     */
+    
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = folders.getDownloadFolder();
@@ -500,12 +474,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method is used to open the requested website in the user's machine's default web browser
-     *
-     * @param websiteURL  link to the website to open
-     * @param websiteType category of the website open (like project website, feature request website, contact us webpage, etc.)
-     */
+    
     private void openWebsite(String websiteURL, String websiteType) {
         if (OS.isNix()) { // for Linux / Unix systems
             try {
@@ -529,15 +498,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method places the GUI elements in the appropriate position which is determined using the parameters passed to it
-     *
-     * @param node   the element which is to be placed in the GUI scene
-     * @param left   the space from the left side of the screen
-     * @param right  the space from the right side of the screen
-     * @param top    the space from the top of the screen
-     * @param bottom the space from the bottom of the screen
-     */
+    
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) {
             setTopAnchor(node, top);
@@ -553,19 +514,11 @@ public class Main {
         }
     }
 
-    /**
-     * The menu bar of Drifty GUI screen
-     *
-     * @param menus the menu items to be placed in the menu bar
-     */
+    
     private MenuBar menuBar(Menu... menus) {
         return new MenuBar(menus);}
 
-    /**
-     * This method is used to get the menu items to be present in the <b>Menu section</b> of the GUI screen
-     *
-     * @return a Menu object with the menu items for Menu section
-     */
+    
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
@@ -588,11 +541,7 @@ public class Main {
         return menu;
     }
 
-    /**
-     * This method is used to get the menu items to be present in the <b>Help section</b> of the GUI screen
-     *
-     * @return a Menu object with the menu items for Help section
-     */
+    
     private Menu getHelpMenuItems() {
         Menu menu = new Menu("Help");
         MenuItem contactUs = new MenuItem("Contact Us");
@@ -609,11 +558,7 @@ public class Main {
         return menu;
     }
 
-    /**
-     * This method is used to get a context menu on click, specific for Directory
-     *
-     * @return a ContextMenu object for the directory related options
-     */
+    
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -628,12 +573,7 @@ public class Main {
         return contextMenu;
     }
 
-    /**
-     * This method is used to verify the link entered by the user
-     *
-     * @param PreviousLink The link that was entered previously since the start of the Drifty GUI program
-     * @param presentLink  The link that has been entered just now
-     */
+    
     private void verifyLink(String PreviousLink, String presentLink) {
         if (!PreviousLink.equals(presentLink)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false)) {
@@ -662,11 +602,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method is used to get the filename of a YouTube or Instagram video [By default, the filename is the video title]
-     *
-     * @param link the link to the YouTube or Instagram video
-     */
+    
     private void getFilename(String link) {
         new Thread(() -> {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -700,12 +636,7 @@ public class Main {
         }).start();
     }
 
-    /**
-     * This method checks if the entered link is a URL or not
-     *
-     * @param text the link (in String format) entered by the user
-     * @return true if it is an url else false
-     */
+    
     private boolean isURL(String text) {
         String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
@@ -713,12 +644,7 @@ public class Main {
         return m.matches();
     }
 
-    /**
-     * This method sets the output message [regarding Filename process] color according to the color provided as input
-     *
-     * @param color   color of the message
-     * @param message the output message to be shown in the Filename output section
-     */
+    
     private void setFilenameOutput(Color color, String message) {
         lblFilenameOut.setTextFill(color);
         lblFilenameOut.setText(message);
@@ -730,12 +656,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method sets the output message [regarding Link process] color according to the color provided as input
-     *
-     * @param color   color of the message
-     * @param message the output message to be shown in the link output section
-     */
+    
     private void setLinkOutput(Color color, String message) {
         lblLinkOut.setTextFill(color);
         lblLinkOut.setText(message);
@@ -747,12 +668,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method sets the output message [regarding Directory process] color according to the color provided as input
-     *
-     * @param color   color of the message
-     * @param message the output message to be shown in the directory output section
-     */
+    
     private void setDirOutput(Color color, String message) {
         lblDirOut.setTextFill(color);
         lblDirOut.setText(message);
@@ -764,12 +680,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method sets the output message [regarding Download process] color according to the color provided as input
-     *
-     * @param color   color of the message
-     * @param message the output message to be shown in the download output section
-     */
+    
     private void setDownloadOutput(Color color, String message) {
         lblDownloadInfo.setTextFill(color);
         lblDownloadInfo.setText(message);
@@ -781,11 +692,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method is used to get the last copied text from the clipboard
-     *
-     * @return the last copied text from the clipboard, in String format
-     */
+    
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
@@ -796,12 +703,7 @@ public class Main {
         return null;
     }
 
-    /**
-     * This method is used to check if a file has already been downloaded,
-     * and asks for confirmation from the user, if it needs to be downloaded again
-     *
-     * @return true if the file needs to be downloaded again, else false
-     */
+    
     private boolean confirmDownload() {
         String filename = tfFilename.getText();
         for (String folder : folders.getFolders()) {
@@ -829,10 +731,7 @@ public class Main {
         return true;
     }
 
-    /**
-     * This method is used to check if the files have already been downloaded,
-     * and asks for confirmation from the user, if they need to be downloaded again
-     */
+    
     private void checkFiles() {
         Map<String, Job> pathJobMap = new HashMap<>();
         List<String> files = new ArrayList<>();
@@ -870,9 +769,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method performs Batch Downloading for Drifty GUI
-     */
+    
     private void batchDownloader() {
         processingBatch.setValue(true);
         new Thread(() -> {
@@ -943,12 +840,7 @@ public class Main {
         }).start();
     }
 
-    /**
-     * This method is used to save the directory entered by the user after a gap of 5 seconds
-     *
-     * @param folderString the directory in String format
-     * @param folder       a File object pointing to the folder in which the user wants to save the downloaded file
-     */
+    
     private void delayFolderSave(String folderString, File folder) {
         // If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 5 seconds
         // and if the String is still the same value, then we commit the folder to the list.
@@ -961,11 +853,7 @@ public class Main {
         }).start();
     }
 
-    /**
-     * This method sets the filename in the appropriate text field area, after the filename gets retrieved
-     * No, it doesn't, this method creates the animation of the moving dots while the filename is being
-     * pulled down from the Internet so that the user knows something is happening.
-     */
+    
     private void bounceFilename() {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
@@ -997,13 +885,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method is used to verify the link
-     * What's the point of saying that the method does exactly what its name implies? This is why we use names like this
-     * so that it's not necessary to create code cluttering javadoc comments.
-     *
-     * @return true if the link is valid, else false
-     */
+    
     private boolean verifyLink() {
         boolean valid = false;
         try {
@@ -1028,11 +910,7 @@ public class Main {
         }
         return file.exists();
     }
-    /**
-     * This method is used to verify the Filename
-     *
-     * @return true if the filename is valid, else false
-     */
+    
     private boolean verifyFilename() {
         String pattern = "^[a-zA-Z0-9_.-]+$";
         String filename = tfFilename.getText();
@@ -1049,9 +927,7 @@ public class Main {
         return valid;
     }
 
-    /**
-     * The main download method for executing file downloads in Drifty GUI
-     */
+    
     private void download() {
         boolean proceed = verifyLink() && verifyDirectory() && verifyFilename();
         if (proceed) {
@@ -1063,11 +939,7 @@ public class Main {
         }
     }
 
-    /**
-     * This method is used to make the calling method to wait for the time in millisecond passed
-     *
-     * @param time the time to make the calling thread to keep waiting
-     */
+    
     public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
