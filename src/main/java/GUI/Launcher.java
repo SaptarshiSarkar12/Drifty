@@ -27,11 +27,9 @@ public class Launcher {
     private static final Launcher GUI_LAUNCHER = new Launcher();
 
     public static void main(String[] args) {
-        Utility.setStartTime();
         Mode.setGUIMode();
-        Environment.initializeEnvironment();
+        Utility.setStartTime();
         System.setProperty("apple.awt.UIElement", "false");
-        Toolkit.getDefaultToolkit();
         for (String arg : args) {
             if (arg.toLowerCase().contains("--enablemaxstart")) {
                 AppSettings.set.startMax(true);
@@ -40,6 +38,8 @@ public class Launcher {
                 AppSettings.set.startMax(false);
             }
         }
+        Toolkit.getDefaultToolkit();
+        Environment.initializeEnvironment();
         Splash.main(args);
     }
 }

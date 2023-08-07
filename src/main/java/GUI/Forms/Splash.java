@@ -1,6 +1,5 @@
 package GUI.Forms;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -55,6 +54,10 @@ public class Splash extends Application {
         Image image = new Image(Constants.SPLASH.toExternalForm());
         width = image.getWidth();
         height = image.getHeight();
+        System.out.println("width: " + width);
+        System.out.println("height: " + height);
+        // 1087 x 438
+        //1087 * .45 = 489 x 176
         double fitWidth = Constants.screenSize.getWidth() * .45;
         ImageView ivSplash = new ImageView(image);
         ivSplash.setPreserveRatio(true);
@@ -62,7 +65,7 @@ public class Splash extends Application {
         AnchorPane pane = new AnchorPane();
         pane.setStyle("-fx-background-color: transparent");
         pane.getChildren().addAll(ivSplash, pb);
-        placeControl(pb, 250, 125, 285, 200);
+        placeControl(pb, 250, 145, 285, 200);
         pb.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
@@ -109,29 +112,23 @@ public class Splash extends Application {
                 timeline = new Timeline(getKeyframes(1));
                 timeline.setCycleCount(1);
                 timeline.play();
-                while (runProgress || timeline.getStatus().equals(Animation.Status.RUNNING)) {
-                    if (!loading && !switchedKeys) {
-                        long thisKeyframe = getKeyFrame();
-                        timeline.stop();
-                        timeline.getKeyFrames().setAll(getKeyframes(thisKeyframe));
-                        timeline.playFromStart();
-                        switchedKeys = true;
-                        new Thread(() -> {
-                            sleep(2500);
-                            animationDone = true;
-                        }).start();
-                    }
-                    if (pb.getProgress() >= .95) {
-                        timeline.stop();
-                        runProgress = loading;
-                        animationDone = switchedKeys;
-                    }
-                    else {
-                        if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
-                            runProgress = loading;
-                        }
-                    }
+                while (loading) {
+                    sleep(100);
                 }
+                timeline.stop();
+                double progress = pb.getProgress();
+                System.out.println("progress: " + progress);
+                double remaining = 1 - progress;
+                System.out.println("remaining: " + remaining);
+                long steps = (long) (remaining * 100);
+                double inc = remaining / steps;
+                long delay = 2000 / steps;
+                for (int i = 0; i < steps; i++) {
+                    pb.setProgress(progress);
+                    progress += inc;
+                    sleep(delay);
+                }
+                animationDone = true;
             }
         }).start();
     }
