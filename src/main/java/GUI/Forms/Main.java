@@ -95,6 +95,7 @@ public class Main {
     private boolean isYouTubeURL;
     private float downloadProgress;
     private static ProgressBar pBar;
+    private MenuBar menuBar;
     private ConsoleOut consoleOut;
     private Folders folders;
     private String linkToFile;
@@ -200,6 +201,7 @@ public class Main {
                     toggleFullScreen();
                 }
                 Splash.close();
+                menuBar.toFront();
             });
         }).start();
     }
@@ -220,9 +222,9 @@ public class Main {
         HBox pb = new HBox(pBar);
         pb.setAlignment(Pos.CENTER);
         pb.setPadding(new Insets(10));
-        MenuBar mb = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
-        anchorPane.getChildren().addAll(mb, bb, pb);
-        placeControl(mb,0,0,0,-1);
+        menuBar = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
+        anchorPane.getChildren().addAll(menuBar, bb, pb);
+        placeControl(menuBar,0,0,0,-1);
         placeControl(bb,0,0,30,-1);
         placeControl(pb,30,30,125,-1);
         ivLinkLabel = imageView(imgLink, scale);
@@ -253,7 +255,7 @@ public class Main {
         bp.setBottom(makeButtonBox());
         anchorPane.getChildren().addAll(bp, vbox);
         placeControl(bp,0,0,0,0);
-        placeControl(vbox,0,0,350,150);
+        placeControl(vbox,0,0,275,150);
     }
 
     private void setControlProperties() {
@@ -376,7 +378,8 @@ public class Main {
     private ProgressBar pbar() {
         ProgressBar pbar = new ProgressBar();
         pbar.setPrefWidth(screenSize.getWidth());
-        //pbar.progressProperty().bind(progressProperty);
+        pbar.progressProperty().bind(progressProperty);
+        progressProperty.setValue(1);
         return pbar;
     }
 
