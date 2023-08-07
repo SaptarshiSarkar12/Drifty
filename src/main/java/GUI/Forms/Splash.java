@@ -46,4 +46,5 @@ public class Splash extends Application {
         stage.show();
         new Thread(() -> new Main().start()).start();
     }
+
 }
