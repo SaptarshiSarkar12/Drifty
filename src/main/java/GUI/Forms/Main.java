@@ -120,6 +120,7 @@ public class Main {
     private VBox vbox;
 
     public void start() {
+        Platform.runLater(() -> stage = Constants.getStage());
         folders = AppSettings.get.folders();
         logger.log(MessageType.INFORMATION, GUI_APPLICATION_STARTED); // log a message when the Graphical User Interface (GUI) version of Drifty is triggered to start
         scale = screenSize.getHeight() / screenSize.getWidth();
@@ -130,54 +131,77 @@ public class Main {
         setControlActions();
         INSTANCE = this;
         batch = new Batch(consoleOut);
-        Platform.runLater(() -> {
-            createScene();
-            showScene();
-            Splash.close();
-        });
+        createScene();
+        showScene();
     }
 
-    
-
-    public static void setJobError(String message, int errorLevel) {
-        INSTANCE.errorMessage = message;
-        jobError.setValue(errorLevel);
+    private void createScene() {
+        scene = new Scene(bp);
+        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
+        scene.getStylesheets().add(Constants.contextMenuCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.labelCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.menuCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.checkBoxCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.vBoxCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.sceneCSS.toExternalForm());
+        scene.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
+        scene.widthProperty().addListener(((observable, oldValue, newValue) -> {
+            vbox.setPrefWidth((double) newValue);
+            if (consoleOut != null) {
+                consoleOut.setWidth((double) newValue);
+            }
+        }));
+        scene.heightProperty().addListener(((observable, oldValue, newValue) -> vbox.setPrefHeight((double) newValue)));
+        stage.xProperty().addListener(((observable, oldValue, newValue) -> {
+            if (consoleOut != null) {
+                consoleOut.rePosition((double) newValue, stage.getY());
+            }
+        }));
+        stage.yProperty().addListener(((observable, oldValue, newValue) -> {
+            if (consoleOut != null) {
+                consoleOut.rePosition(stage.getX(), (double) newValue);
+            }
+        }));
+        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
+        stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
+            if (firstRun) {
+                firstRun = false;
+                return;
+            }
+            if (isFocused && cbAutoPaste.isSelected()) {
+                tfLink.setText(getClipboardText());
+            }
+            if (isFocused && !wasFocused) {
+                if (consoleOut != null) {
+                    consoleOut.rePosition(width, height, stage.getX(), stage.getY());
+                }
+            }
+        }));
     }
 
-    
-    public static void updateProgress(double progress) {
-        if (progress > 0.0 && progress < 0.99) {
-            progressProperty.setValue(progress);
-        }
-        else {
-            progressProperty.setValue(0.0);
-        }
-    }
-
-    
-    public static void setDownloadInProgress(boolean value) {
-        downloadInProgress.setValue(value);
-    }
-
-    
-    public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
-        INSTANCE.jobList = jobList;
-        INSTANCE.batchDownloader();
-    }
-
-    
-    public static void setMessage(String message, MessageType messageType, MessageCategory messageCategory) {
-        Color color = switch (messageType) {
-            case INFORMATION -> INSTANCE.green;
-            case ERROR -> INSTANCE.red;
-            case WARNING -> INSTANCE.orange;
-        };
-        switch (messageCategory) {
-            case LINK -> Platform.runLater(() -> INSTANCE.setLinkOutput(color, message));
-            case DIRECTORY -> Platform.runLater(() -> INSTANCE.setDirOutput(color, message));
-            case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOutput(color, message));
-            case FILENAME -> Platform.runLater(() -> INSTANCE.setFilenameOutput(color, message));
-        }
+    private Scene scene;
+    private void showScene() {
+        new Thread(() -> {
+            while ((System.currentTimeMillis() - AppSettings.get.startTime()) < 4500) {
+                sleep(50);
+            }
+            Splash.almostDone();
+            while(Splash.animationNotDone()) {
+                sleep(10);
+            }
+            Platform.runLater(() -> {
+                stage.setScene(scene);
+                stage.setWidth(width);
+                stage.setHeight(height);
+                Mode.setIsGUILoaded(true);
+                stage.show();
+                if (AppSettings.get.startMax()) {
+                    toggleFullScreen();
+                }
+                Splash.close();
+            });
+        }).start();
     }
 
     private void createControls() {
@@ -225,81 +249,6 @@ public class Main {
         //placeControl(vbox,0,0,0,0);
     }
 
-    private HBox newHBox(Pos align, Node... nodes) {
-        HBox box = new HBox(nodes);
-        box.setPadding(new Insets(0,0,0,0));
-        box.setAlignment(align);
-        return box;
-    }
-
-    private ProgressBar pbar() {
-        ProgressBar pbar = new ProgressBar();
-        pbar.setPrefWidth(screenSize.getWidth());
-        pbar.progressProperty().bind(progressProperty);
-        return pbar;
-    }
-
-    private TextField newTextField() {
-        TextField tf = new TextField();
-        tf.setFont(new Font(monacoFont.toExternalForm(), 19 * scale));
-        tf.setPrefHeight(45 * scale);
-        return tf;
-    }
-
-    private HBox makeButtonBox() {
-        Image btnDownloadUp = new Image(Constants.downloadUp.toExternalForm());
-        Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
-        Image btnBatchUp = new Image(Constants.batchUp.toExternalForm());
-        Image btnBatchDown = new Image(Constants.batchDown.toExternalForm());
-        ivBtnDownload = imageViewButton(btnDownloadUp, btnDownloadDown);
-        ivBtnBatch = imageViewButton(btnBatchUp, btnBatchDown);
-        ivBtnConsole = imageToggle(.5);
-        HBox box = new HBox(100, ivBtnDownload, ivBtnConsole, ivBtnBatch);
-        box.setAlignment(Pos.CENTER);
-        return box;
-    }
-
-    private Label getSpacer() {
-        Label label = new Label();
-        label.setPrefWidth(screenSize.getWidth());
-        return label;
-    }
-
-    private Label label(String text) {
-        Label label = new Label(text);
-        label.setFont(new Font(monacoFont.toExternalForm(), 20 *  scale));
-        return label;
-    }
-
-    private ImageView imageToggle(double scale) {
-        ImageView imageView = new ImageView(Constants.imgUpUp);
-        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
-        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
-        double width = Constants.imgUpUp.getWidth();
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(width * scale);
-        return imageView;
-    }
-
-    private ImageView imageViewButton(Image imageUp, Image imageDown) {
-        ImageView imageView = new ImageView(imageUp);
-        double width = imageUp.getWidth();
-        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
-        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(width * scale);
-        return imageView;
-    }
-
-    private ImageView imageView(Image image, double ratio) {
-        ImageView iv = new ImageView(image);
-        double width = image.getWidth();
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(width * ratio);
-        return iv;
-    }
-
-    
     private void setControlProperties() {
         tfDir.setText(folders.getDownloadFolder());
         directoryExists.setValue(new File(tfDir.getText()).exists());
@@ -373,70 +322,117 @@ public class Main {
         ivBtnConsole.setOnMouseClicked(e -> toggleConsole(false));
     }
 
-    private void createScene() {
-        stage = Constants.getStage();
-        stage.focusedProperty().addListener(((observable, wasFocused, isFocused) -> {
-            if (firstRun) {
-                firstRun = false;
-                return;
-            }
-            if (isFocused && cbAutoPaste.isSelected()) {
-                tfLink.setText(getClipboardText());
-            }
-            if (isFocused && !wasFocused) {
-                if (consoleOut != null) {
-                    consoleOut.rePosition(width, height, stage.getX(), stage.getY());
-                }
-            }
-        }));
-        Scene scene = new Scene(bp);
-        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
-        scene.widthProperty().addListener(((observable, oldValue, newValue) -> {
-            vbox.setPrefWidth((double) newValue);
-            if (consoleOut != null) {
-                consoleOut.setWidth((double) newValue);
-            }
-        }));
-        scene.heightProperty().addListener(((observable, oldValue, newValue) -> vbox.setPrefHeight((double) newValue)));
-        scene.getStylesheets().add(Constants.contextMenuCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.labelCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.menuCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.checkBoxCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.textFieldCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.vBoxCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.sceneCSS.toExternalForm());
-        scene.getStylesheets().add(Constants.progressBarCSS.toExternalForm());
-        stage.xProperty().addListener(((observable, oldValue, newValue) -> {
-            if (consoleOut != null) {
-                consoleOut.rePosition((double) newValue, stage.getY());
-            }
-        }));
-        stage.yProperty().addListener(((observable, oldValue, newValue) -> {
-            if (consoleOut != null) {
-                consoleOut.rePosition(stage.getX(), (double) newValue);
-            }
-        }));
-        stage.fullScreenProperty().addListener(((observable, oldValue, newValue) -> ivBtnConsole.setVisible(!newValue)));
-        stage.setScene(scene);
+    public static void setJobError(String message, int errorLevel) {
+        INSTANCE.errorMessage = message;
+        jobError.setValue(errorLevel);
     }
 
-    private void showScene() {
-        stage.setWidth(width);
-        stage.setHeight(height);
-        if (consoleOut == null) {
-            consoleOut = new ConsoleOut(width, height, stage.getX(), stage.getY());
+    public static void updateProgress(double progress) {
+        if (progress > 0.0 && progress < 0.99) {
+            progressProperty.setValue(progress);
         }
-        Mode.setIsGUILoaded(true);
-        if (AppSettings.get.startMax()) {
-            toggleFullScreen();
+        else {
+            progressProperty.setValue(0.0);
         }
-        while((System.currentTimeMillis() - AppSettings.get.startTime()) < 4500) {
-            sleep(50);
-        }
-        stage.show();
     }
 
-    
+    public static void setDownloadInProgress(boolean value) {
+        downloadInProgress.setValue(value);
+    }
+
+    public static void runBatch(ConcurrentLinkedDeque<Job> jobList) {
+        INSTANCE.jobList = jobList;
+        INSTANCE.batchDownloader();
+    }
+
+    public static void setMessage(String message, MessageType messageType, MessageCategory messageCategory) {
+        Color color = switch (messageType) {
+            case INFORMATION -> INSTANCE.green;
+            case ERROR -> INSTANCE.red;
+            case WARNING -> INSTANCE.orange;
+        };
+        switch (messageCategory) {
+            case LINK -> Platform.runLater(() -> INSTANCE.setLinkOutput(color, message));
+            case DIRECTORY -> Platform.runLater(() -> INSTANCE.setDirOutput(color, message));
+            case DOWNLOAD -> Platform.runLater(() -> INSTANCE.setDownloadOutput(color, message));
+            case FILENAME -> Platform.runLater(() -> INSTANCE.setFilenameOutput(color, message));
+        }
+    }
+
+    private HBox newHBox(Pos align, Node... nodes) {
+        HBox box = new HBox(nodes);
+        box.setPadding(new Insets(0, 0, 0, 0));
+        box.setAlignment(align);
+        return box;
+    }
+
+    private ProgressBar pbar() {
+        ProgressBar pbar = new ProgressBar();
+        pbar.setPrefWidth(screenSize.getWidth());
+        pbar.progressProperty().bind(progressProperty);
+        return pbar;
+    }
+
+    private TextField newTextField() {
+        TextField tf = new TextField();
+        tf.setFont(new Font(monacoFont.toExternalForm(), 19 * scale));
+        tf.setPrefHeight(45 * scale);
+        return tf;
+    }
+
+    private HBox makeButtonBox() {
+        Image btnDownloadUp = new Image(Constants.downloadUp.toExternalForm());
+        Image btnDownloadDown = new Image(Constants.downloadDown.toExternalForm());
+        Image btnBatchUp = new Image(Constants.batchUp.toExternalForm());
+        Image btnBatchDown = new Image(Constants.batchDown.toExternalForm());
+        ivBtnDownload = imageViewButton(btnDownloadUp, btnDownloadDown);
+        ivBtnBatch = imageViewButton(btnBatchUp, btnBatchDown);
+        ivBtnConsole = imageToggle(.5);
+        HBox box = new HBox(100, ivBtnDownload, ivBtnConsole, ivBtnBatch);
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
+
+    private Label getSpacer() {
+        Label label = new Label();
+        label.setPrefWidth(screenSize.getWidth());
+        return label;
+    }
+
+    private Label label(String text) {
+        Label label = new Label(text);
+        label.setFont(new Font(monacoFont.toExternalForm(), 20 * scale));
+        return label;
+    }
+
+    private ImageView imageToggle(double scale) {
+        ImageView imageView = new ImageView(Constants.imgUpUp);
+        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
+        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
+        double width = Constants.imgUpUp.getWidth();
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageViewButton(Image imageUp, Image imageDown) {
+        ImageView imageView = new ImageView(imageUp);
+        double width = imageUp.getWidth();
+        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
+        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(width * scale);
+        return imageView;
+    }
+
+    private ImageView imageView(Image image, double ratio) {
+        ImageView iv = new ImageView(image);
+        double width = image.getWidth();
+        iv.setPreserveRatio(true);
+        iv.setFitWidth(width * ratio);
+        return iv;
+    }
+
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
             ivBtnConsole.setImage(Constants.imgUpUp);
@@ -461,7 +457,6 @@ public class Main {
         stage.setFullScreen(!stage.isFullScreen());
     }
 
-    
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = folders.getDownloadFolder();
@@ -474,7 +469,6 @@ public class Main {
         }
     }
 
-    
     private void openWebsite(String websiteURL, String websiteType) {
         if (OS.isNix()) { // for Linux / Unix systems
             try {
@@ -498,7 +492,6 @@ public class Main {
         }
     }
 
-    
     private void placeControl(Node node, double left, double right, double top, double bottom) {
         if (top != -1) {
             setTopAnchor(node, top);
@@ -514,11 +507,10 @@ public class Main {
         }
     }
 
-    
     private MenuBar menuBar(Menu... menus) {
-        return new MenuBar(menus);}
+        return new MenuBar(menus);
+    }
 
-    
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
@@ -541,7 +533,6 @@ public class Main {
         return menu;
     }
 
-    
     private Menu getHelpMenuItems() {
         Menu menu = new Menu("Help");
         MenuItem contactUs = new MenuItem("Contact Us");
@@ -558,7 +549,6 @@ public class Main {
         return menu;
     }
 
-    
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -573,7 +563,6 @@ public class Main {
         return contextMenu;
     }
 
-    
     private void verifyLink(String PreviousLink, String presentLink) {
         if (!PreviousLink.equals(presentLink)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false)) {
@@ -602,7 +591,6 @@ public class Main {
         }
     }
 
-    
     private void getFilename(String link) {
         new Thread(() -> {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -636,7 +624,6 @@ public class Main {
         }).start();
     }
 
-    
     private boolean isURL(String text) {
         String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
@@ -644,7 +631,6 @@ public class Main {
         return m.matches();
     }
 
-    
     private void setFilenameOutput(Color color, String message) {
         lblFilenameOut.setTextFill(color);
         lblFilenameOut.setText(message);
@@ -656,7 +642,6 @@ public class Main {
         }
     }
 
-    
     private void setLinkOutput(Color color, String message) {
         lblLinkOut.setTextFill(color);
         lblLinkOut.setText(message);
@@ -668,7 +653,6 @@ public class Main {
         }
     }
 
-    
     private void setDirOutput(Color color, String message) {
         lblDirOut.setTextFill(color);
         lblDirOut.setText(message);
@@ -680,7 +664,6 @@ public class Main {
         }
     }
 
-    
     private void setDownloadOutput(Color color, String message) {
         lblDownloadInfo.setTextFill(color);
         lblDownloadInfo.setText(message);
@@ -692,7 +675,6 @@ public class Main {
         }
     }
 
-    
     private static String getClipboardText() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         try {
@@ -703,7 +685,6 @@ public class Main {
         return null;
     }
 
-    
     private boolean confirmDownload() {
         String filename = tfFilename.getText();
         for (String folder : folders.getFolders()) {
@@ -731,7 +712,6 @@ public class Main {
         return true;
     }
 
-    
     private void checkFiles() {
         Map<String, Job> pathJobMap = new HashMap<>();
         List<String> files = new ArrayList<>();
@@ -769,7 +749,6 @@ public class Main {
         }
     }
 
-    
     private void batchDownloader() {
         processingBatch.setValue(true);
         new Thread(() -> {
@@ -840,7 +819,6 @@ public class Main {
         }).start();
     }
 
-    
     private void delayFolderSave(String folderString, File folder) {
         // If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 5 seconds
         // and if the String is still the same value, then we commit the folder to the list.
@@ -853,7 +831,6 @@ public class Main {
         }).start();
     }
 
-    
     private void bounceFilename() {
         if (processingBatch.getValue().equals(false)) {
             new Thread(() -> {
@@ -885,7 +862,6 @@ public class Main {
         }
     }
 
-    
     private boolean verifyLink() {
         boolean valid = false;
         try {
@@ -910,7 +886,7 @@ public class Main {
         }
         return file.exists();
     }
-    
+
     private boolean verifyFilename() {
         String pattern = "^[a-zA-Z0-9_.-]+$";
         String filename = tfFilename.getText();
@@ -927,7 +903,6 @@ public class Main {
         return valid;
     }
 
-    
     private void download() {
         boolean proceed = verifyLink() && verifyDirectory() && verifyFilename();
         if (proceed) {
@@ -939,7 +914,6 @@ public class Main {
         }
     }
 
-    
     public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
