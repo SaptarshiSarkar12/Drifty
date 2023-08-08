@@ -91,7 +91,8 @@ public class Splash extends Application {
     }
 
     private void startMain() {
-        new Thread(() -> new Main().start()).start();
+        new GUI.experiment.Main();
+        //new Thread(() -> new Main().start()).start();
     }
 
     public static boolean animationNotDone() {

@@ -496,7 +496,6 @@ public class Main {
             consoleOut.show();
             consoleOpen = true;
         }
-
     }
 
     private void toggleFullScreen() {
@@ -552,19 +551,15 @@ public class Main {
         if (top != -1) {
             setTopAnchor(node, top);
         }
-
         if (bottom != -1) {
             setBottomAnchor(node, bottom);
         }
-
         if (left != -1) {
             setLeftAnchor(node, left);
         }
-
         if (right != -1) {
             setRightAnchor(node, right);
         }
-
     }
 
     private MenuBar menuBar(Menu... menus) {
