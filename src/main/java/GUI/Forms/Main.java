@@ -89,7 +89,7 @@ public class Main {
     private Batch batch;
     private static Main INSTANCE;
     private final double width;
-    private final double height;
+    private double height;
     private boolean isYouTubeURL;
     private float downloadProgress;
     private static ProgressBar pBar;
@@ -143,6 +143,10 @@ public class Main {
         batch = new Batch(consoleOut);
         createScene();
         showScene();
+        Platform.runLater(() -> {
+            System.out.println("console height: " + height);
+            consoleOut = new ConsoleOut(width, height, 0,0);
+        });
     }
 
     private void createScene() {
@@ -198,6 +202,7 @@ public class Main {
     }
 
     private void showScene() {
+        height = height * 1.2;
         new Thread(() -> {
             while (Utility.timeSinceStart() < 4500 && !Mode.devMode()) {
                 sleep(50);
@@ -211,7 +216,7 @@ public class Main {
             Platform.runLater(() -> {
                 stage.setScene(scene);
                 stage.setWidth(width);
-                stage.setHeight(height * 1.2);
+                stage.setHeight(height);
                 Mode.setGuiLoaded(true);
                 stage.show();
                 if (AppSettings.get.startMax()) {
