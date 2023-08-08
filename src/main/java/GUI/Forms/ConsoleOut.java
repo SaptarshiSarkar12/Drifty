@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static GUI.Forms.Constants.*;
 import static javafx.scene.layout.AnchorPane.*;
 
 /**
@@ -41,6 +42,8 @@ public class ConsoleOut {
         setProperties();
         captureOutputs();
         ConsoleOut.INSTANCE = this;
+        System.out.println("Message Standard");
+        System.err.println("Error Message");
     }
 
     private static ConsoleOut INSTANCE;
@@ -70,14 +73,11 @@ public class ConsoleOut {
         ap.setStyle("-fx-background-color: transparent;");
         ap.getStyleClass().add("anchor-pane-transparent"); // Add the custom CSS class
         ap.setPrefHeight(height);
-        tabStandard = tab("Standard");
-        tabError = tab("Errors");
         taStandard = textArea("text-area-standard");
         taError = textArea("text-area-error");
+        tabStandard = tabStandard("Standard");
+        tabError = tabError("Errors");
         tabPane = tabPane();
-        tabStandard.setContent(taStandard);
-        tabError.setContent(taError);
-        tabPane.getTabs().setAll(tabStandard, tabError);
         button(10, 10);
     }
 
@@ -96,6 +96,15 @@ public class ConsoleOut {
         stage.initStyle(StageStyle.TRANSPARENT);
         scene = new Scene(ap);
         scene.getStylesheets().add(textAreaCSS.toExternalForm());
+        scene.getStylesheets().add(tabsCSS.toExternalForm());
+        scene.getStylesheets().add(contextMenuCSS.toExternalForm());
+        scene.getStylesheets().add(labelCSS.toExternalForm());
+        scene.getStylesheets().add(menuCSS.toExternalForm());
+        scene.getStylesheets().add(checkBoxCSS.toExternalForm());
+        scene.getStylesheets().add(textFieldCSS.toExternalForm());
+        scene.getStylesheets().add(vBoxCSS.toExternalForm());
+        scene.getStylesheets().add(sceneCSS.toExternalForm());
+        scene.getStylesheets().add(progressBarCSS.toExternalForm());
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.setX(mainX);
@@ -163,17 +172,27 @@ public class ConsoleOut {
         return textArea;
     }
 
-    private Tab tab(String title) {
+    private Tab tabStandard(String title) {
         Tab tab = new Tab(title);
-        tab.getStyleClass().add("tab-normal");
+        tab.setClosable(false);
+        tab.getStyleClass().setAll("standard-tab");
+        tab.setContent(taStandard);
+        return tab;
+    }
+
+    private Tab tabError(String title) {
+        Tab tab = new Tab(title);
+        tab.setClosable(false);
+        tab.getStyleClass().setAll("error-tab");
+        tab.setContent(taError);
         return tab;
     }
 
     private TabPane tabPane() {
         TabPane tabPane = new TabPane();
+        tabPane.getTabs().setAll(tabStandard, tabError);
         ap.getChildren().add(tabPane);
         placeControl(tabPane, 0, 0, 0, 0);
-        tabPane.getStylesheets().add(Constants.tabsCSS.toExternalForm());
         return tabPane;
     }
 
