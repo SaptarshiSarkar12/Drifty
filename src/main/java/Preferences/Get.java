@@ -64,12 +64,14 @@ public class Get {
             if (!json.isEmpty()) {
                 jobs = gson.fromJson(json, Jobs.class);
             }
-
+            if(jobs == null) {
+                return new Jobs();
+            }
             return jobs;
         } catch (IOException ignored) {
         }
 
-        return null;
+        return new Jobs();
     }
 
     public boolean startMax() {

@@ -1,8 +1,9 @@
-package GUI.experiment;
+package GUI.Forms;
 
 import Enums.Program;
 import GUI.Support.Job;
 import Utils.Utility;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
@@ -40,15 +41,19 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     protected ConcurrentLinkedDeque<Job> call() {
         updateProgress(0,1);
         this.updateMessage("Retrieving Filename");
+        Timer progTimer = new Timer();
+        progTimer.scheduleAtFixedRate(runProgress(), 2500, 150);
         Thread thread = new Thread(getFileCount());
         result = -1;
         thread.start();
         while(result == -1) {
             sleep(500);
         }
-        System.out.println("Threads Dead");
         boolean proceed = true;
         if(fileCount > 0) {
+            progTimer.cancel();
+            updateProgress(0,1);
+            progTimer = null;
             System.out.println("Filecount: " + fileCount);
             AskYesNo ask = new AskYesNo("There are " + fileCount + " files in this list. Proceed and get all filenames?");
             proceed = ask.isYes();
@@ -69,6 +74,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
             FormLogic.setColor(Constants.GREEN);
             updateMessage("File(s) added to batch.");
+            if(progTimer != null) progTimer.cancel();
+
             updateProgress(0,1);
         }
         return jobList;
@@ -107,6 +114,28 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         FileUtils.forceDelete(file);
                     } catch (IOException ignored) {}
                 }
+            }
+        };
+    }
+
+    boolean dirUp = true;
+    private TimerTask runProgress() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    double value = getProgress();
+                    value = dirUp ? value + .01 : value - .01;
+                    if (value > 1.0) {
+                        dirUp = !dirUp;
+                        value = 1.0;
+                    }
+                    if (value < 0) {
+                        dirUp = !dirUp;
+                        value = 0.0;
+                    }
+                    updateProgress(value,1.0);
+                });
             }
         };
     }

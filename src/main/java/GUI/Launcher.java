@@ -1,12 +1,15 @@
 package GUI;
+
 import Enums.Mode;
-import GUI.Forms.Splash;
+import GUI.Forms.Main;
 import Preferences.AppSettings;
 import Utils.Environment;
 import Utils.Utility;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+
 /**
  * Because JavaCompiler is not yet module capable, we need to launch JavaFX from a
  * separate class in order to get the GUIs to load at all. This also means that
@@ -21,6 +24,7 @@ public class Launcher {
     private final URL icon512 = getClass().getResource("/GUI/Icons/Icon512.png");
     private static final JFrame jFrame = new JFrame();
     private static final Launcher GUI_LAUNCHER = new Launcher();
+
     public static void main(String[] args) {
         Mode.setGUIMode();
         Utility.setStartTime();
@@ -38,6 +42,6 @@ public class Launcher {
         }
         Toolkit.getDefaultToolkit();
         Environment.initializeEnvironment();
-        Splash.main(args);
+        Main.main(args);
     }
 }

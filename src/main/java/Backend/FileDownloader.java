@@ -1,12 +1,12 @@
 package Backend;
 
 import CLI.DriftyCLI;
-import Enums.*;
-import GUI.Forms.Main;
+import Enums.MessageCategory;
+import Enums.MessageType;
+import Enums.Mode;
+import Enums.Program;
 import Utils.Environment;
 import Utils.MessageBroker;
-import Utils.Utility;
-import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.*;
@@ -194,41 +194,6 @@ public class FileDownloader implements Runnable {
 
     }
 
-    public static void downloadGUI() throws InterruptedException, IOException {
-        String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
-        String command = Program.get(Program.COMMAND);
-        outputFileName = Utility.cleanFilename(outputFileName);
-        messageBroker.sendMessage("Trying to download " + outputFileName + " ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
-        String[] fullCommand = (Format.isValid(ext)) ?
-                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
-                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
-        ProcessBuilder pb = new ProcessBuilder(fullCommand);
-        StringBuilder sb = new StringBuilder();
-        for (String arg : pb.command()) sb.append(arg).append(" ");
-        String msg = RUNNING_COMMAND + Program.get(Program.NAME) + " " + sb;
-        System.out.println(messageBroker);
-        messageBroker.sendMessage(DOWNLOADING + outputFileName + " ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        messageBroker.sendMessage(msg, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        pb.redirectErrorStream(true);
-        process = pb.start();
-        try {
-            try (InputStream inputStream = process.getInputStream();
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        int result = process.waitFor();
-        String errorMessage = ((result == 0) ? SUCCESSFULLY_DOWNLOADED : FAILED_TO_DOWNLOAD) + outputFileName;
-        Main.setJobError(errorMessage, result);
-    }
-
     public static boolean mergeDownloadedFileParts(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
         // check if all files are downloaded
         int completed = 0;
@@ -322,11 +287,6 @@ public class FileDownloader implements Runnable {
                     }
 
 
-                    if (Mode.isGUI()) {
-                        downloadGUI();
-                    }
-
-
                     if (isYoutubeLink(link)) {
                         downloadFromYouTube(directoryOfYt_dlp);
                     }
@@ -416,16 +376,6 @@ public class FileDownloader implements Runnable {
 
 
                 messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-                if (Mode.isGUI()) {
-                    try {
-                        downloadGUI();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-
-
-                }
-
 
                 downloadFile();
             }

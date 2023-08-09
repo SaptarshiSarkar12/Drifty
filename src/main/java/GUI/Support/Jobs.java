@@ -17,7 +17,6 @@ public class Jobs {
         if (jobList == null) {
             return new ConcurrentLinkedDeque<>();
         }
-
         return new ConcurrentLinkedDeque<>(jobList);
     }
 

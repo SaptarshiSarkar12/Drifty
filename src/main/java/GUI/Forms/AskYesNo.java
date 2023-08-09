@@ -1,4 +1,4 @@
-package GUI.experiment;
+package GUI.Forms;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;

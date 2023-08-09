@@ -25,7 +25,7 @@ public enum Mode {
         guiLoaded = isGUILoadingCompleted;
     }
 
-    public static boolean getGuiLoaded() {
+    public static boolean guiLoaded() {
         return guiLoaded;
     }
 

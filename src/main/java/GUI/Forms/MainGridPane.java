@@ -1,6 +1,5 @@
-package GUI.experiment;
+package GUI.Forms;
 
-import GUI.Forms.ConsoleOut;
 import GUI.Support.Job;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
@@ -13,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-import static GUI.experiment.Constants.*;
+import static GUI.Forms.Constants.*;
 
 public class MainGridPane extends GridPane {
 
@@ -44,7 +43,7 @@ public class MainGridPane extends GridPane {
     public final TextField tfDir = newTextField();
     public final TextField tfFilename = newTextField();
 
-    public MainGridPane(FormType type) {
+    public MainGridPane() {
         super();
         addGUI();
     }

@@ -6,6 +6,7 @@
     </inspection_tool>
     <inspection_tool class="BooleanMethodIsAlwaysInverted" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="BusyWait" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CommentedOutCode" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="DataFlowIssue" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="SUGGEST_NULLABLE_ANNOTATIONS" value="false" />
       <option name="DONT_REPORT_TRUE_ASSERT_STATEMENTS" value="false" />
@@ -24,7 +25,14 @@
     <inspection_tool class="ReassignedVariable" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" />
     <inspection_tool class="ReplaceNullCheck" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="StringOperationCanBeSimplified" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoreStringConstructor" value="true" />
+    </inspection_tool>
     <inspection_tool class="UNCHECKED_WARNING" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnnecessaryLocalVariable" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="m_ignoreImmediatelyReturnedVariables" value="false" />
+      <option name="m_ignoreAnnotatedVariables" value="false" />
+    </inspection_tool>
     <inspection_tool class="VulnerableLibrariesLocal" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="unused" enabled="false" level="WARNING" enabled_by_default="false" checkParameterExcludingHierarchy="false">
       <option name="LOCAL_VARIABLE" value="true" />

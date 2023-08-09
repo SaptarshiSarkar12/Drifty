@@ -226,10 +226,10 @@ public class ConsoleOut {
                 String text = lines[lines.length - 2];
                 Matcher matcher = pattern.matcher(text);
                 double value = 0.0;
-                while (matcher.find()) {
-                    value = Double.parseDouble(matcher.group(2)) / 100;
-                }
-                Main.updateProgress(value);
+                //while (matcher.find()) {
+                //    value = Double.parseDouble(matcher.group(2)) / 100;
+                //}
+                //Main.updateProgress(value);
             }
         }
     }
