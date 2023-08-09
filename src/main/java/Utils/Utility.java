@@ -1,14 +1,20 @@
 package Utils;
+
 import Backend.DefaultDownloadFolderLocationFinder;
 import Backend.Drifty;
-import Enums.Program;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
+import Enums.Program;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
@@ -19,6 +25,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
@@ -27,29 +34,30 @@ public final class Utility {
     private static Thread linkThread;
     private static boolean interrupted;
     private static long startTime;
+
     public static void setStartTime() {
         startTime = System.currentTimeMillis();
     }
 
-     public static long timeSinceStart() {
+    public static long timeSinceStart() {
         return System.currentTimeMillis() - startTime;
     }
 
-     public Utility(MessageBroker messageBroker) {
+    public Utility(MessageBroker messageBroker) {
         Utility.messageBroker = messageBroker;
     }
 
-     public static boolean isYoutubeLink(String url) {
+    public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
         return url.matches(pattern);
     }
 
-     public static boolean isInstagramLink(String url) {
+    public static boolean isInstagramLink(String url) {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/p/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
-     public static void isURLValid(String link) throws Exception {
+    public static void isURLValid(String link) throws Exception {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -67,11 +75,11 @@ public final class Utility {
                 throw new Exception("You are not connected to the Internet!");
             }
 
-         }
+        }
 
-     }
+    }
 
-     public static boolean urlIsValid(String link) {
+    public static boolean urlIsValid(String link) {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -84,10 +92,10 @@ public final class Utility {
             return false;
         }
 
-         return true;
+        return true;
     }
 
-     public String findFilenameInLink(String link) {
+    public String findFilenameInLink(String link) {
         // Check and inform user if the url contains filename.
         // Example: "example.com/file.txt" prints "Filename detected: file.txt"
         // example.com/file.json -> file.json
@@ -98,20 +106,20 @@ public final class Utility {
             return null;
         }
 
-         String extension = file.substring(index);
+        String extension = file.substring(index);
         // edge case 1 : "example.com/."
         if (extension.length() == 1) {
             messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
             return null;
         }
 
-         // file.png?width=200 -> file.png
+        // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
         messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFORMATION, MessageCategory.FILENAME);
         return fileName;
     }
 
-     public String saveToDefault() {
+    public String saveToDefault() {
         String downloadsFolder;
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFORMATION, MessageCategory.DIRECTORY);
         if (!OS.isWindows()) {
@@ -119,22 +127,22 @@ public final class Utility {
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
         }
 
-         else {
+        else {
             downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
         }
 
-         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
+        if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, MessageType.ERROR, MessageCategory.DIRECTORY);
         }
 
-         else {
+        else {
             messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFORMATION, MessageCategory.DIRECTORY);
         }
 
-         return downloadsFolder;
+        return downloadsFolder;
     }
 
-     public boolean yesNoValidation(String input, String printMessage) {
+    public boolean yesNoValidation(String input, String printMessage) {
         while (input.isEmpty()) {
             System.out.println(ENTER_Y_OR_N);
             messageBroker.sendMessage(ENTER_Y_OR_N, MessageType.ERROR, MessageCategory.LOG);
@@ -142,16 +150,16 @@ public final class Utility {
             input = SC.nextLine().toLowerCase();
         }
 
-         char choice = input.charAt(0);
+        char choice = input.charAt(0);
         if (choice == 'y') {
             return true;
         }
 
-         else if (choice == 'n') {
+        else if (choice == 'n') {
             return false;
         }
 
-         else {
+        else {
             System.out.println("Invalid input!");
             messageBroker.sendMessage("Invalid input!", MessageType.ERROR, MessageCategory.LOG);
             System.out.print(printMessage);
@@ -159,10 +167,10 @@ public final class Utility {
             yesNoValidation(input, printMessage);
         }
 
-         return false;
+        return false;
     }
 
-     public static void help() {
+    public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
@@ -181,7 +189,7 @@ public final class Utility {
         System.out.println("\tProject Website - " + Drifty.projectWebsite);
     }
 
-     public static void printBanner() {
+    public static void printBanner() {
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
         System.out.println(ANSI_CYAN + "  _____   _____   _____  ______  _______ __     __" + ANSI_RESET);
@@ -193,14 +201,14 @@ public final class Utility {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-     public static double[] fraction(double currentX, double currentY, double multiplier) {
+    public static double[] fraction(double currentX, double currentY, double multiplier) {
         double[] result = new double[2];
         result[0] = currentX * multiplier;
         result[1] = currentY * multiplier;
         return result;
     }
 
-     public static LinkedList<String> getLinkMetadata(String link) {
+    public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
             File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
@@ -215,7 +223,7 @@ public final class Utility {
                 interrupted = linkThread.isInterrupted();
             }
 
-             if (interrupted) {
+            if (interrupted) {
                 FileUtils.forceDelete(tempFolder);
                 return null;
             }
@@ -230,20 +238,21 @@ public final class Utility {
                         list.addLast(linkMetadata);
                     }
 
-                 }
+                }
 
-                 FileUtils.forceDelete(tempFolder); // delete the metadata files of Drifty from the temp directory
+                FileUtils.forceDelete(tempFolder); // delete the metadata files of Drifty from the temp directory
             }
 
-             return list;
+            return list;
         } catch (IOException e) {
             messageBroker.sendMessage("Failed to perform I/O operations on link metadata! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
             return null;
         }
 
-     }
+    }
 
-     public static String getURLFromJson(String json) {
+    public static String getURLFromJson(String jsonString) {
+        String json = makePretty(jsonString);
         String regexLink = "(\"webpage_url\": \")(.+)(\")";
         String urlLink = "";
         Pattern p = Pattern.compile(regexLink);
@@ -252,29 +261,39 @@ public final class Utility {
             urlLink = StringEscapeUtils.unescapeJava(m.group(2));
         }
 
-         return urlLink;
+        return urlLink;
     }
 
-     public static String getFilenameFromJson(String json) {
+    public static String makePretty(String json) {
+        //The regex strings won't match unless the json string is converted to pretty format
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement element = JsonParser.parseString(json);
+        return gson.toJson(element);
+    }
+
+
+    public static String getFilenameFromJson(String jsonString) {
+        String json = makePretty(jsonString);
         String filename;
         String regexFilename = "(\"title\": \")(.+)(\",)";
         Pattern p = Pattern.compile(regexFilename);
         Matcher m = p.matcher(json);
         if (m.find()) {
             filename = m.group(2);
-        } else {
+        }
+        else {
             filename = "Unknown Filename";
         }
 
-         return cleanFilename(filename);
+        return cleanFilename(filename);
     }
 
-     public static String cleanFilename(String filename) {
+    public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
         return fn.replaceAll("[^a-zA-Z0-9-._ ]+", "");
     }
 
-     private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
+    private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
         return () -> {
             String command = Program.get(Program.COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
@@ -286,31 +305,31 @@ public final class Utility {
         };
     }
 
-     public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision ) {
+    public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision) {
         // Both reMap methods will map a number in a range to a different range. So lets say you have a number, such as 25, and it came from a range of
         // values that go from 0 to 500. And you want to find the equivelant number in the range of 5,000 to 100,000, these classes do exactly that.
         // They also follow the strict algebraic way of accomplishing such a remap so they from any range to any other range where the numbers can
         // be positive or negative in any order in any way, it doesn't matter. The mapping will be accurate every time.
         double deltaA = fromRangeEnd - fromRangeStart;
         double deltaB = toRangeEnd - toRangeStart;
-        double scale  = deltaB / deltaA;
-        double negA   = -1 * fromRangeStart;
+        double scale = deltaB / deltaA;
+        double negA = -1 * fromRangeStart;
         double offset = (negA * scale) + toRangeStart;
         double finalNumber = (sourceNumber * scale) + offset;
         int calcScale = (int) Math.pow(10, decimalPrecision);
         return (double) Math.round(finalNumber * calcScale) / calcScale;
     }
 
-     public static int reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd) {
-        return (int) reMap(sourceNumber,fromRangeStart,fromRangeEnd,toRangeStart,toRangeEnd,0);
+    public static int reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd) {
+        return (int) reMap(sourceNumber, fromRangeStart, fromRangeEnd, toRangeStart, toRangeEnd, 0);
     }
 
-     public static void sleep(long time) {
+    public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
         } catch (InterruptedException e) {
             messageBroker.sendMessage("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
 
-     }
+    }
 }

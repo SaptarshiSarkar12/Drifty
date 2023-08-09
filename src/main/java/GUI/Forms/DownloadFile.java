@@ -1,4 +1,4 @@
-package GUI.experiment;
+package GUI.Forms;
 
 import Enums.Program;
 import Enums.Format;
@@ -36,6 +36,7 @@ public class DownloadFile extends Task<Integer> {
 
     @Override
     protected Integer call() throws Exception {
+        updateProgress(0,1);
         String outputFileName = Objects.requireNonNullElse(filename, DEFAULT_FILENAME);
         String command = Program.get(Program.COMMAND);
         outputFileName = Utility.cleanFilename(outputFileName);
@@ -51,7 +52,6 @@ public class DownloadFile extends Task<Integer> {
         updateMessage(DOWNLOADING + outputFileName);
         pb.redirectErrorStream(true);
         Process process = pb.start();
-        StringBuilder sbOutput = new StringBuilder();
         try {
             try (InputStream inputStream = process.getInputStream();
                  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -60,8 +60,8 @@ public class DownloadFile extends Task<Integer> {
                     if (this.isCancelled()) {
                         break;
                     }
-                    sbOutput.append(line);
-                    feedback.setValue(sbOutput.toString());
+                    String newLine = new String(line);
+                    feedback.setValue(newLine);
                 }
             }
         } catch (IOException e) {
@@ -77,15 +77,11 @@ public class DownloadFile extends Task<Integer> {
 
     private void setProperties() {
         feedback.addListener(((observable, oldValue, newValue) -> {
-            String[] list = newValue.split(lineFeed);
-            if(list.length > 3) {
-                String line = list[list.length -2];
-                Matcher m = pattern.matcher(line);
-                double value;
-                if(m.find()) {
-                    value = Double.parseDouble(m.group(2)) / 100;
-                    updateProgress(value,1.0);
-                }
+            Matcher m = pattern.matcher(newValue);
+            double value;
+            if(m.find()) {
+                value = Double.parseDouble(m.group(2)) / 100;
+                updateProgress(value,1.0);
             }
         }));
     }

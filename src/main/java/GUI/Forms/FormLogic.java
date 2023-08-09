@@ -1,4 +1,4 @@
-package GUI.experiment;
+package GUI.Forms;
 
 import Enums.OS;
 import GUI.Support.Folders;
@@ -43,8 +43,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static GUI.experiment.Constants.monacoFont;
-import static GUI.experiment.Constants.*;
+import static GUI.Forms.Constants.monacoFont;
+import static GUI.Forms.Constants.*;
 
 public class FormLogic {
 
@@ -56,11 +56,8 @@ public class FormLogic {
     private static final BooleanProperty linkValid = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private ConcurrentLinkedDeque<Job> jobList;
-    private ConcurrentLinkedDeque<Job> failedJobList = new ConcurrentLinkedDeque<>();
     private final String lineFeed = System.lineSeparator();
     private Folders folders;
-    private Worker<ConcurrentLinkedDeque<Job>> worker;
-
     private Job selectedJob;
     private FormLogic() {
         folders = AppSettings.get.folders();
@@ -124,10 +121,14 @@ public class FormLogic {
     }
 
     private void setControlProperties() {
+        downloadInProgress.addListener(((observable, oldValue, newValue) -> {
+            System.out.println("downloadInProgress old: " + oldValue + " new: " + newValue);
+            System.out.println("listView: " + form.listView.itemsProperty().isNotNull().get());
+        }));
         form.tfDir.setText(folders.getDownloadFolder());
         directoryExists.setValue(new File(form.tfDir.getText()).exists());
         BooleanBinding disableStartButton = downloadInProgress.or(directoryExists.not());
-        BooleanBinding hideStartButton = downloadInProgress.not().and(form.listView.itemsProperty().isNotNull());
+        BooleanBinding hideStartButton = form.listView.itemsProperty().isNotNull().and(downloadInProgress.not());
         BooleanBinding disableInputs = downloadInProgress.not().or(updatingBatch.not());
         BooleanBinding hasText = form.tfLink.textProperty().isEmpty().not().and(form.tfDir.textProperty().isEmpty().not().and(form.tfFilename.textProperty().isEmpty().not()));
         form.ivBtnSave.visibleProperty().bind(updatingBatch);
@@ -164,18 +165,9 @@ public class FormLogic {
         form.tfLink.editableProperty().bind(disableInputs);
         form.tfDir.editableProperty().bind(disableInputs);
         form.tfFilename.editableProperty().bind(disableInputs);
-        form.ivBtnStart.disableProperty().bind(disableStartButton);
         Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + lineFeed + "Link field when switching back to this screen."));
         form.cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
-        form.ivBtnStart.setOnMouseClicked(e -> new Thread(() -> {
-            if (confirmDownload()) {
-                jobList.clear();
-                jobList.add(new Job(form.tfLink.getText(), form.tfDir.getText(), form.tfFilename.getText()));
-                batchDownloader();
-            }
-
-        }).start());
         form.ivBtnSave.setOnMouseClicked(e -> new Thread(() -> {
             String link = form.tfLink.getText();
             String filename = form.tfFilename.getText();
@@ -216,7 +208,16 @@ public class FormLogic {
     }
 
     private void setControlActions() {
-        form.ivBtnStart.setOnMouseClicked(e->downloadFiles());
+        form.ivBtnStart.setOnMouseClicked(e -> new Thread(() -> {
+            if(!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
+                System.out.println("confirmDownload");
+                if (confirmDownload()) {
+                    System.out.println("batchDownloader");
+                    batchDownloader();
+                }
+            }
+
+        }).start());
         form.tfDir.setOnAction(e->updateBatch());
         form.tfFilename.setOnAction(e->updateBatch());
     }
@@ -234,9 +235,9 @@ public class FormLogic {
     private void batchDownloader() {
         processingBatch.setValue(true);
         updatingBatch.setValue(false);
+        form.lblDownloadInfo.setTextFill(GREEN);
         new Thread(() -> {
-            failedJobList.clear();
-            if (!jobList.isEmpty()) {
+             if (!jobList.isEmpty()) {
                 checkFiles();
                 final int totalNumberOfFiles = jobList.size();
                 System.out.println("Number of files to download : " + totalNumberOfFiles);
@@ -245,16 +246,30 @@ public class FormLogic {
                     fileCount++;
                     String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
                     System.out.println(processingFileText);
-                    Worker worker = new DownloadFile(job.getLink(), job.getFilename(), job.getDir());
-                    form.pBar.progressProperty().bind(worker.progressProperty());
-                    form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
-                    while(worker.isRunning() || worker.getState().equals(Worker.State.SCHEDULED)) {
+                    downloadInProgress.setValue(true);
+                    Platform.runLater(() -> {
+                        form.tfLink.setText(job.getLink());
+                        form.tfDir.setText(job.getDir());
+                        form.tfFilename.setText(job.getFilename());
+                    });
+                    Task<Integer> task = new DownloadFile(job.getLink(), job.getFilename(), job.getDir());
+                    Worker<Integer> worker = task;
+                    Thread thread = new Thread(task);
+                    Platform.runLater(() -> {
+                        form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
+                        form.pBar.progressProperty().bind(worker.progressProperty());
+                    });
+                    thread.start();
+                    while(thread.getState().equals(Thread.State.RUNNABLE)) {
                         sleep(10);
                     }
-                    if(worker.getValue().equals(0)) {
-                        jobList.remove(job);
-                        commitJobListToListView();
-                    }
+                    System.out.println("done");
+                    Platform.runLater(() -> {
+                        if(worker.valueProperty().get() == 0) {
+                            jobList.remove(job);
+                            commitJobListToListView();
+                        }
+                    });
                     sleep(3000);
                 }
             }
@@ -302,11 +317,8 @@ public class FormLogic {
                 for (Job job : pathJobMap.values()) {
                     jobList.remove(job);
                 }
-
             }
-
         }
-
     }
 
     private void setFilenameOutput(Color color, String message) {
@@ -392,18 +404,21 @@ public class FormLogic {
 
     private void getFilenames(String link) {
         Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link,form.tfDir.getText());
-        bindWorker(task);
+        Worker<ConcurrentLinkedDeque<Job>> worker = task;
+        Platform.runLater(() -> {
+            form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
+            form.pBar.progressProperty().bind(worker.progressProperty());
+        });
         new Thread(() -> {
             downloadInProgress.setValue(true);
             Thread thread = new Thread(task);
             thread.setDaemon(true);
             thread.start();
-            for (int i = 0; i < 20; i++) {
-                sleep(1000);
-            }
-            while(thread.getState().equals(Thread.State.RUNNABLE)) {
+            sleep(2000);
+            form.lblDownloadInfo.setTextFill(GREEN);
+            while(!thread.getState().equals(Thread.State.TERMINATED) && !thread.getState().equals(Thread.State.BLOCKED)) {
                 Platform.runLater(() -> {
-                    if (worker.valueProperty() != null) {
+                    if (worker.valueProperty().get() != null) {
                         for (Job job : worker.valueProperty().get()) {
                             if (!jobList.contains(job)) {
                                 jobList.add(job);
@@ -415,6 +430,7 @@ public class FormLogic {
                 });
                 sleep(50);
             }
+            System.err.println("getFilenames Thread State: " + thread.getState());
             sleep(500);
             Platform.runLater(() -> {
                 if (worker.getValue() != null) {
@@ -425,6 +441,7 @@ public class FormLogic {
                         commitJobListToListView();
                     }
                 }
+                clearControls();
             });
             downloadInProgress.setValue(false);
         }).start();
@@ -448,6 +465,7 @@ public class FormLogic {
             commitJobListToListView();
             form.tfLink.clear();
             form.tfFilename.clear();
+            form.listView.getItems().clear();
             setLinkOut(GREEN, "");
             setDirOut(GREEN, "");
             setFileOut(GREEN, "");
@@ -511,8 +529,12 @@ public class FormLogic {
     private void clearControls() {
         Platform.runLater(() -> {
             form.tfLink.clear();
-            form.tfDir.clear();
             form.tfFilename.clear();
+            form.lblDownloadInfo.textProperty().unbind();
+            form.lblDownloadInfo.setText("");
+            form.lblDirOut.setText("");
+            form.lblFilenameOut.setText("");
+            form.lblLinkOut.setText("");
         });
     }
 
@@ -618,13 +640,6 @@ public class FormLogic {
         btnOK.setOnAction(e -> stage.close());
         stage.showAndWait();
     }
-
-    private void bindWorker(Worker<ConcurrentLinkedDeque<Job>> worker) {
-        this.worker = worker;
-        form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
-        form.pBar.progressProperty().bind(worker.progressProperty());
-    }
-
 
     private void sleep(long time) {
         try {
