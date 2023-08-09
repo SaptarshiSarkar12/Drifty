@@ -208,8 +208,8 @@ public final class Utility {
                 FileUtils.forceDelete(tempFolder); // Deletes the previously generated temporary directory for Drifty
             }
 
-             tempFolder.mkdir();
-            linkThread = new Thread(getYT_IGLinkMetadata(tempFolder.getAbsolutePath(), link));
+            tempFolder.mkdir();
+            linkThread = new Thread(getYT_PlaylistOnly(tempFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -221,7 +221,7 @@ public final class Utility {
                 return null;
             }
 
-             File[] files = tempFolder.listFiles();
+            File[] files = tempFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
@@ -278,6 +278,18 @@ public final class Utility {
         return () -> {
             String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
+            new ProcBuilder(command).withArgs(args)
+                    .withOutputStream(System.out)
+                    .withErrorStream(System.err)
+                    .withNoTimeout()
+                    .run();
+        };
+    }
+
+     private static Runnable getYT_PlaylistOnly(String folderPath, String link) {
+        return () -> {
+            String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
+            String[] args = new String[]{"--flat-playlist", "--skip-download", "-P", folderPath, link};
             new ProcBuilder(command).withArgs(args)
                     .withOutputStream(System.out)
                     .withErrorStream(System.err)

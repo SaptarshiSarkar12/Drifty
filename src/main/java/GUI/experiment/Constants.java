@@ -28,6 +28,10 @@ class Constants {
     public static final URL closeDown = Constants.class.getResource("/GUI/Buttons/Close/CloseDown.png");
     public static final URL saveUp = Constants.class.getResource("/GUI/Buttons/Save/SaveUp.png");
     public static final URL saveDown = Constants.class.getResource("/GUI/Buttons/Save/SaveDown.png");
+    public static final URL backUp = Constants.class.getResource("/GUI/Buttons/Back/BackUp.png");
+    public static final URL backDown = Constants.class.getResource("/GUI/Buttons/Back/BackDown.png");
+    public static final URL startUp = Constants.class.getResource("/GUI/Buttons/Start/StartUp.png");
+    public static final URL startDown = Constants.class.getResource("/GUI/Buttons/Start/StartDown.png");
     public static final URL copyUp = Constants.class.getResource("/GUI/Buttons/Copy/CopyUp.png");
     public static final URL copyDown = Constants.class.getResource("/GUI/Buttons/Copy/CopyDown.png");
     public static final URL upUP = Constants.class.getResource("/GUI/Buttons/UpDown/UpUp.png");
@@ -52,6 +56,7 @@ class Constants {
     public static final URL icon512 = Constants.class.getResource("/GUI/Icons/Icon512.png");
     public static final URL monacoFont = Constants.class.getResource("/GUI/Fonts/Monaco.ttf");
     public static final Image imgMainGUIBanner = new Image(mainGUIBanner.toExternalForm());
+    public static final Image imgBatchGUIBanner = new Image(batchGUIBanner.toExternalForm());
     public static final Image imgLinkLabel = new Image(linkPNG.toExternalForm());
     public static final Image imgDirLabel = new Image(directoryPNG.toExternalForm());
     public static final Image imgFilenameLabel = new Image(filenamePNG.toExternalForm());
@@ -66,6 +71,10 @@ class Constants {
     public static final Image imgDownloadDown = new Image(downloadDown.toExternalForm());
     public static final Image imgBatchUp = new Image(batchUp.toExternalForm());
     public static final Image imgBatchDown = new Image(batchDown.toExternalForm());
+    public static final Image imgBackUp = new Image(backUp.toExternalForm());
+    public static final Image imgBackDown = new Image(backDown.toExternalForm());
+    public static final Image imgStartUp = new Image(startUp.toExternalForm());
+    public static final Image imgStartDown = new Image(startDown.toExternalForm());
     public static final Color GREEN = Color.rgb(0, 255, 0);
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);
