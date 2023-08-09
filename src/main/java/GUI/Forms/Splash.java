@@ -56,6 +56,7 @@ public class Splash extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         if(Mode.devMode()){
+            System.out.println("Devmode");
             startMain();
             return;
         }
@@ -91,8 +92,10 @@ public class Splash extends Application {
     }
 
     private void startMain() {
-        new GUI.experiment.Main();
-        //new Thread(() -> new Main().start()).start();
+        if(Mode.devMode())
+            new GUI.experiment.Main();
+        else
+            new Thread(() -> new Main().start()).start();
     }
 
     public static boolean animationNotDone() {

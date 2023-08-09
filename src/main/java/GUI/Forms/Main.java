@@ -306,28 +306,28 @@ public class Main {
             jobError.setValue(-5);
             waitingForErrorCode = false;
         }));
-        BooleanBinding checkState = cbAutoPaste.selectedProperty().not().not();
         BooleanBinding disableDownloadButton = downloadInProgress.or(directoryExists.not());
         BooleanBinding disableInputs = downloadInProgress.not();
         BooleanBinding hasText = tfLink.textProperty().isEmpty().not().and(tfDir.textProperty().isEmpty().not().and(tfFilename.textProperty().isEmpty().not()));
         ivBtnDownload.visibleProperty().bind(hasText);
-        tfLink.setAlignment(Pos.CENTER_LEFT);
         tfLink.editableProperty().bind(disableInputs);
+        tfDir.editableProperty().bind(disableInputs);
+        tfFilename.editableProperty().bind(disableInputs);
+        ivBtnDownload.disableProperty().bind(disableDownloadButton);
+        Tooltip.install(cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + systemDefaultLineSeparator + "Link field when switching back to this screen."));
+        tfLink.setAlignment(Pos.CENTER_LEFT);
         lblLinkOut.setAlignment(Pos.CENTER_LEFT);
         tfDir.setAlignment(Pos.CENTER_LEFT);
-        tfDir.editableProperty().bind(disableInputs);
         tfFilename.setAlignment(Pos.CENTER_LEFT);
-        tfFilename.editableProperty().bind(disableInputs);
         lblDirOut.setAlignment(Pos.CENTER_LEFT);
         lblFilenameOut.setAlignment(Pos.CENTER_LEFT);
         lblDownloadInfo.setAlignment(Pos.CENTER_LEFT);
-        ivBtnDownload.disableProperty().bind(disableDownloadButton);
-        Tooltip.install(cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + systemDefaultLineSeparator + "Link field when switching back to this screen."));
     }
 
     private void setControlActions() {
         cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
+        ivBtnBatch.setOnMouseClicked(e -> batch.show());
         ivBtnDownload.setOnMouseClicked(e -> new Thread(() -> {
             if (confirmDownload()) {
                 jobList.clear();
@@ -336,7 +336,6 @@ public class Main {
             }
 
         }).start());
-        ivBtnBatch.setOnMouseClicked(e -> batch.show());
         tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
