@@ -11,6 +11,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+
+import static GUI.experiment.Constants.*;
 
 public class MainGridPane extends GridPane {
 
@@ -23,19 +26,19 @@ public class MainGridPane extends GridPane {
     public final ImageView ivDir = newImageView(Constants.imgDirLabel,.7);
     public final ImageView ivFilename = newImageView(Constants.imgFilenameLabel,.7);
     public final ImageView ivAutoPaste = newImageView(Constants.imgAutoPasteLabel,.7);
-    public ImageView ivBtnStart = imageViewButton(Constants.imgStartUp, Constants.imgStartDown, .45);
+    public final ImageView ivBtnStart = imageViewButton(Constants.imgStartUp, Constants.imgStartDown, .45);
+    public final ImageView ivBtnSave = imageViewButton(Constants.imgSaveUp, Constants.imgSaveDown, .45);
     public final ImageView ivBtnConsole = imageToggle(.45);
 
     public final CheckBox cbAutoPaste = new CheckBox();
 
     private final HBox boxAutoPaste = boxAutoPaste();
     private final HBox boxLogo = newHBox(ivLogo);
-    private final HBox boxStart = newHBox(ivBtnStart);
 
     public final Label lblLinkOut = newLabel();
-    public final Label lblDirOutput = newLabel();
-    public final Label lblFilenameOutput = newLabel();
-    public final Label lblTaskOutput = newLabel();
+    public final Label lblDirOut = newLabel();
+    public final Label lblFilenameOut = newLabel();
+    public final Label lblDownloadInfo = newLabel();
 
     public final TextField tfLink = newTextField();
     public final TextField tfDir = newTextField();
@@ -58,10 +61,9 @@ public class MainGridPane extends GridPane {
         setColumnSpan(tfDir            , 3);
         setColumnSpan(tfFilename       , 3);
         setColumnSpan(lblLinkOut, 3);
-        setColumnSpan(lblDirOutput     , 3);
-        setColumnSpan(lblFilenameOutput, 3);
-        setColumnSpan(lblTaskOutput    , 3);
-        setColumnSpan(boxStart         , 2);
+        setColumnSpan(lblDirOut, 3);
+        setColumnSpan(lblFilenameOut, 3);
+        setColumnSpan(lblDownloadInfo, 3);
         setRowSpan(listView,11);
         add(boxLogo          , 0, 0);
         add(pBar             , 0, 1);
@@ -75,22 +77,24 @@ public class MainGridPane extends GridPane {
 
         add(ivDir            , 1, 6);
         add(tfDir            , 1, 7);
-        add(lblDirOutput     , 1, 8);
+        add(lblDirOut, 1, 8);
 
         add(ivFilename       , 1, 9);
         add(tfFilename       , 1, 10);
-        add(lblFilenameOutput, 1, 11);
-        add(lblTaskOutput    , 1, 12);
+        add(lblFilenameOut, 1, 11);
+        add(lblDownloadInfo, 1, 12);
 
-        add(boxStart    , 1, 13);
+        add(ivBtnSave    , 1, 13);
+        add(ivBtnStart    , 3, 13);
 
         setPrefWidth(Constants.screenSize.getWidth() * .4);
         setPrefHeight(Constants.screenSize.getHeight() * .4);
         setVgrow(pBar,Priority.ALWAYS);
-        setVgrow(lblDirOutput,Priority.ALWAYS);
-        setVgrow(lblFilenameOutput,Priority.ALWAYS);
+        setVgrow(lblDirOut,Priority.ALWAYS);
+        setVgrow(lblFilenameOut,Priority.ALWAYS);
         setVgrow(lblLinkOut,Priority.ALWAYS);
         setVgrow(ivBtnStart,Priority.ALWAYS);
+        setVgrow(ivBtnSave,Priority.ALWAYS);
         setVgap(5);
         setHgap(15);
         for (int colIndex = 0; colIndex < 3; colIndex++) {
@@ -106,7 +110,7 @@ public class MainGridPane extends GridPane {
     }
 
     public void bindToWorker(final Worker<ObservableList<Long>> worker) {
-        lblTaskOutput.textProperty().bind(worker.messageProperty());
+        lblDownloadInfo.textProperty().bind(worker.messageProperty());
         pBar.progressProperty().bind(worker.progressProperty());
     }
 
@@ -118,6 +122,7 @@ public class MainGridPane extends GridPane {
 
     private Label newLabel() {
         Label label = new Label("");
+        label.setFont(new Font(monacoFont.toExternalForm(), 20 * .75));
         label.setPrefWidth(Double.MAX_VALUE);
         return label;
     }

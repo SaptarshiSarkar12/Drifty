@@ -34,7 +34,7 @@ For the purposes of this Privacy Policy:
     more of the shares, equity interest or other securities entitled to vote
     for election of directors or other managing authority.
 
-  * Application means the software driftyConfig provided by the Company downloaded
+  * Application means the software program provided by the Company downloaded
     by You on any electronic device, named Drifty
 
   * Company (referred to as either "the Company", "We", "Us" or "Our" in this

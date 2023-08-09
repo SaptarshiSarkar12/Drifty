@@ -1,8 +1,9 @@
 package GUI.Forms;
 
-import Enums.DriftyConfig;
+import Enums.Program;
 import Enums.Format;
 import GUI.Support.*;
+import GUI.experiment.AskYesNo;
 import Preferences.AppSettings;
 import Utils.Utility;
 import com.google.gson.Gson;
@@ -584,7 +585,7 @@ public class Batch {
                     clockTimer = null;
                     setFileOut(Constants.GREEN, "");
                 }
-                File tempFolder = Paths.get(DriftyConfig.getConfig(DriftyConfig.PATH), "Drifty").toFile();
+                File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
                 if (tempFolder.exists()) {
                     List<File> fileList = new ArrayList<>();
                     File[] files = tempFolder.listFiles();

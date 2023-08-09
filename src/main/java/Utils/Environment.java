@@ -1,7 +1,7 @@
 package Utils;
 import Backend.CopyYtDlp;
 import Backend.Drifty;
-import Enums.DriftyConfig;
+import Enums.Program;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
@@ -27,8 +27,8 @@ public class Environment {
         else {
             yt_dlpProgramName = "yt-dlp";
         }
-        DriftyConfig.setYt_dlpProgramName(yt_dlpProgramName);
-        DriftyConfig.setYt_dlpProgramPath(Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
+        Program.setName(yt_dlpProgramName);
+        Program.setPath(Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
         messageBroker.sendMessage("yt-dlp program name is : " + yt_dlpProgramName, MessageType.INFORMATION, MessageCategory.LOG);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
@@ -53,12 +53,12 @@ public class Environment {
                 messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
             }
         }
-        DriftyConfig.setBatchPath(batchPath);
+        Program.setBatchPath(batchPath);
     }
 
     public static void updateYt_dlp() {
         messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
+        String command = Program.get(Program.COMMAND);
         ProcBuilder yt_dlpUpdateProcess = new ProcBuilder(command)
                 .withArg("-U")
                 .withOutputStream(System.out)

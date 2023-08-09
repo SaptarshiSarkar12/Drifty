@@ -1,4 +1,4 @@
-package GUI.Support;
+package GUI.experiment;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -33,9 +33,8 @@ public class AskYesNo {
     private String msg = "";
     private boolean okOnly = false;
 
-
     public AskYesNo() {
-        createControls();
+        finish();
     }
 
     public AskYesNo(String message, boolean okOnly) {
@@ -50,6 +49,7 @@ public class AskYesNo {
     }
 
     private void finish() {
+        createControls();
         String[] lines = msg.split(lf);
         int maxChar = 0;
         for (String line : lines) {
@@ -114,6 +114,7 @@ public class AskYesNo {
             stage.setWidth(width);
             stage.setHeight(height);
             Scene scene = new Scene(vbox);
+            scene.getStylesheets().add(Constants.sceneCSS.toExternalForm());
             stage.setScene(scene);
             stage.setAlwaysOnTop(true);
             stage.showAndWait();

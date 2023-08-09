@@ -5,7 +5,7 @@ import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
 import Enums.OS;
-import GUI.Support.AskYesNo;
+import GUI.experiment.AskYesNo;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.ManageFolders;

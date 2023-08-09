@@ -1,7 +1,7 @@
 package Utils;
 import Backend.DefaultDownloadFolderLocationFinder;
 import Backend.Drifty;
-import Enums.DriftyConfig;
+import Enums.Program;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
@@ -203,13 +203,12 @@ public final class Utility {
      public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
-            File tempFolder = Paths.get(DriftyConfig.getConfig(DriftyConfig.PATH), "Drifty").toFile();
+            File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
             if (tempFolder.exists() && tempFolder.isDirectory()) {
                 FileUtils.forceDelete(tempFolder); // Deletes the previously generated temporary directory for Drifty
             }
-
             tempFolder.mkdir();
-            linkThread = new Thread(getYT_PlaylistOnly(tempFolder.getAbsolutePath(), link));
+            linkThread = new Thread(getYT_IGLinkMetadata(tempFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -224,6 +223,7 @@ public final class Utility {
             File[] files = tempFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
+                    System.err.println("File: " + file.getAbsolutePath());
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
                     if (ext.toLowerCase().contains("json")) {
                         String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
@@ -276,20 +276,8 @@ public final class Utility {
 
      private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
         return () -> {
-            String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
+            String command = Program.get(Program.COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
-            new ProcBuilder(command).withArgs(args)
-                    .withOutputStream(System.out)
-                    .withErrorStream(System.err)
-                    .withNoTimeout()
-                    .run();
-        };
-    }
-
-     private static Runnable getYT_PlaylistOnly(String folderPath, String link) {
-        return () -> {
-            String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
-            String[] args = new String[]{"--flat-playlist", "--skip-download", "-P", folderPath, link};
             new ProcBuilder(command).withArgs(args)
                     .withOutputStream(System.out)
                     .withErrorStream(System.err)

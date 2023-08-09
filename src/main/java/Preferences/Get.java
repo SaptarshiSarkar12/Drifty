@@ -1,6 +1,6 @@
 package Preferences;
 
-import Enums.DriftyConfig;
+import Enums.Program;
 import GUI.Support.Folders;
 import GUI.Support.Jobs;
 import com.google.gson.Gson;
@@ -58,7 +58,7 @@ public class Get {
     public Jobs jobs() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Jobs jobs = new Jobs();
-        Path batchPath = Paths.get(DriftyConfig.getConfig(DriftyConfig.BATCH_PATH), JOBS.toString());
+        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.toString());
         try {
             String json = FileUtils.readFileToString(batchPath.toFile(), Charset.defaultCharset());
             if (!json.isEmpty()) {
