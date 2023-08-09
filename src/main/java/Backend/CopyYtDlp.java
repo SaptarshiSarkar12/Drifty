@@ -1,5 +1,5 @@
 package Backend;
-import Enums.DriftyConfig;
+import Enums.Program;
 import Enums.OS;
 import Utils.MessageBroker;
 import java.io.IOException;
@@ -15,9 +15,9 @@ public class CopyYtDlp {
     static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
 
     public boolean copyToTemp() throws IOException {
-        Path filePath = Paths.get(DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND));
+        Path filePath = Paths.get(Program.get(Program.COMMAND));
         if (!filePath.toFile().exists()) {
-            try (InputStream inputStream = CopyYtDlp.class.getClassLoader().getResourceAsStream(DriftyConfig.getConfig(DriftyConfig.NAME));
+            try (InputStream inputStream = CopyYtDlp.class.getClassLoader().getResourceAsStream(Program.get(Program.NAME));
                  OutputStream outputStream = Files.newOutputStream(filePath)) {
                 System.out.println("Copying file to: " + filePath);
                 if (inputStream != null) {
@@ -28,7 +28,7 @@ public class CopyYtDlp {
                     }
                 }
                 else {
-                    System.out.println("Resource not found: " + DriftyConfig.getConfig(DriftyConfig.NAME));
+                    System.out.println("Resource not found: " + Program.get(Program.NAME));
                 }
                 if (!OS.isWindows()) {
                     if (Files.exists(filePath)) {

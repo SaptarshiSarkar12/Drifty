@@ -75,6 +75,8 @@ class Constants {
     public static final Image imgBackDown = new Image(backDown.toExternalForm());
     public static final Image imgStartUp = new Image(startUp.toExternalForm());
     public static final Image imgStartDown = new Image(startDown.toExternalForm());
+    public static final Image imgSaveUp = new Image(saveUp.toExternalForm());
+    public static final Image imgSaveDown = new Image(saveDown.toExternalForm());
     public static final Color GREEN = Color.rgb(0, 255, 0);
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);

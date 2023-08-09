@@ -1,6 +1,6 @@
 package Preferences;
 
-import Enums.DriftyConfig;
+import Enums.Program;
 import GUI.Support.Folders;
 import GUI.Support.Jobs;
 import com.google.gson.Gson;
@@ -57,7 +57,7 @@ public class Set {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
-        Path batchPath = Paths.get(DriftyConfig.getConfig(DriftyConfig.BATCH_PATH), JOBS.toString());
+        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.toString());
         try {
             FileUtils.writeStringToFile(batchPath.toFile(), value, Charset.defaultCharset());
         } catch (IOException e) {

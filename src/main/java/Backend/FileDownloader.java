@@ -43,12 +43,12 @@ public class FileDownloader implements Runnable {
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
         if (Mode.isGUI()) {
-            setYt_dlpProgramName(DriftyConfig.getConfig(DriftyConfig.NAME));
+            setYt_dlpProgramName(Program.get(Program.NAME));
         }
 
 
         if (isYoutubeLink(link) || !DriftyCLI.getIsInstagramImage()) {
-            setYt_dlpProgramName(DriftyConfig.getConfig(DriftyConfig.NAME));
+            setYt_dlpProgramName(Program.get(Program.NAME));
         }
 
 
@@ -196,7 +196,7 @@ public class FileDownloader implements Runnable {
 
     public static void downloadGUI() throws InterruptedException, IOException {
         String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
-        String command = DriftyConfig.getConfig(DriftyConfig.YT_DLP_COMMAND);
+        String command = Program.get(Program.COMMAND);
         outputFileName = Utility.cleanFilename(outputFileName);
         messageBroker.sendMessage("Trying to download " + outputFileName + " ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
         String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
@@ -206,7 +206,7 @@ public class FileDownloader implements Runnable {
         ProcessBuilder pb = new ProcessBuilder(fullCommand);
         StringBuilder sb = new StringBuilder();
         for (String arg : pb.command()) sb.append(arg).append(" ");
-        String msg = RUNNING_COMMAND + DriftyConfig.getConfig(DriftyConfig.NAME) + " " + sb;
+        String msg = RUNNING_COMMAND + Program.get(Program.NAME) + " " + sb;
         System.out.println(messageBroker);
         messageBroker.sendMessage(DOWNLOADING + outputFileName + " ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
         messageBroker.sendMessage(msg, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
@@ -316,7 +316,7 @@ public class FileDownloader implements Runnable {
             if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
                 try {
                     isYt_dlpCheckedForUpdate = Environment.isUpdateForYt_dlpChecked();
-                    String directoryOfYt_dlp = DriftyConfig.getConfig(DriftyConfig.PATH);
+                    String directoryOfYt_dlp = Program.get(Program.PATH);
                     if (!isYt_dlpCheckedForUpdate) {
                         Environment.updateYt_dlp();
                     }
@@ -340,7 +340,7 @@ public class FileDownloader implements Runnable {
                 } catch (IOException e) {
                     messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
                     try {
-                        String tempDir = DriftyConfig.getConfig(DriftyConfig.PATH);
+                        String tempDir = Program.get(Program.PATH);
                         if (!isYt_dlpCheckedForUpdate) {
                             Environment.updateYt_dlp();
                         }
