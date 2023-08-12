@@ -1,5 +1,5 @@
 version: "1.0"
 profile:
   name: qodana.recommended
-projectJDK: 20
+projectJDK: 20.0.1
 linter: jetbrains/qodana-jvm-community:latest
