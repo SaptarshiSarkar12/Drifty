@@ -1,0 +1,7 @@
+version: "1.0"  
+projectJDK: 20
+linters: 
+  - name: qodana-jvm
+    version: latest
+  - name: qodana-js
+    version: latest
