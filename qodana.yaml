@@ -1,8 +1,8 @@
 version: "1.0"
 profile:
-  name: qodana.starter
+  name: qodana.recommended
 projectJDK: 20
-linter: 
+linters:
   - name: qodana-jvm
     version: latest
   - name: qodana-js
