@@ -5,8 +5,8 @@ import Footer from "../Footer";
 export const metadata = {
     title: "Download",
     description: 'Download Drifty',
-    themeColor: [      
-      { media: '(prefers-color-scheme: dark)', color: 'Medium Blue' },
+    themeColor: [
+      { media: '(prefers-color-scheme: dark)', color: '#0000cd' }, // equivalent to 'MediumBlue'
     ],
     viewport: {
       width: 'device-width',
@@ -26,7 +26,7 @@ export default async function download() {
 }
 
 export async function getData(){
-    const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases', {method:'GET'}, {next:{revalidate:3600}})
+    const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases', {method: 'GET'})
     const release = await res.json();
     return {
       release,
