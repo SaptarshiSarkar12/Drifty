@@ -3,5 +3,7 @@ profile:
   name: qodana.recommended
 projectJDK: 20
 linters:
-  - jetbrains/qodana-jvm:latest
-  - jetbrains/qodana-js:latest
+  - name: qodana-jvm
+    version: latest
+  - name: qodana-js
+    version: latest
