@@ -1,5 +1,7 @@
 version: "1.0"  
 projectJDK: 20
-linter: 
-  - jetbrains/qodana-jvm:latest
-  - jetbrains/qodana-js:latest
+linters: 
+  - name: qodana-jvm
+    version: latest
+  - name: qodana-js
+    version: latest
