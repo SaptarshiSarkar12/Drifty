@@ -1,6 +1,9 @@
 "use client";
+
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import Link from "next/link";
+
 export default function Contribute( {props} ) {
     const[values,setValues] = useState([]);
     useEffect(()=>{
@@ -18,8 +21,9 @@ export default function Contribute( {props} ) {
                     It is currently available in CLI (Command Line Interface) mode and
                     the GUI (Graphical User Interface) version is under active
                     development. We believe in team work. Any contribution that brings
-                    value to the project is highly appreciated. You can add value to
-                    this project by contributing.
+                    value to the project is highly appreciated.
+                    You can look into the <Link className={"font-bold bg-gradient-to-r from-pink-500 to-yellow-400 text-transparent bg-clip-text"} target={"_blank"} href={"https://github.com/users/SaptarshiSarkar12/projects/3"}>roadmap</Link> to know about the issues to work on,
+                    <b className={"bg-gradient-to-r from-green-500 to-green-400 text-transparent bg-clip-text"}> in progress</b> and completed.
                 </p>
             </div>
             <div className="md:w-1/2">
@@ -35,7 +39,6 @@ export default function Contribute( {props} ) {
                     <a className="md:rounded-full xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
                 </div>
             </div>
-            
         </div>
     )
 }

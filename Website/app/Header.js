@@ -9,7 +9,7 @@ function NavLink({ to, children, cn }) {
     </Link>
 }
 
-function MobileNav({ open, setOpen }) {
+function MobileNav({ open}) {
     return (
         <div className={`absolute z-10 top-0 -mt-7 pt-2 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
             <div className="flex items-start justify-center filter bg-top h-30"> {/*logo container*/}
@@ -33,16 +33,16 @@ function MobileNav({ open, setOpen }) {
 export default function Header({props}) {
     const [open, setOpen] = useState(false);
     const [hcolor,setHcolor] = useState(props+" pt-7")
-    const onScroll = useCallback(event => {
-        const { pageYOffset} = window;
-        if(pageYOffset===0) setHcolor(props+" pt-7");
+    const onScroll = useCallback(() => {
+        const { scrollY} = window;
+        if(scrollY === 0) setHcolor(props+" pt-7");
         else setHcolor("bg-var shadow-lg pt-4");
-    },[]);
+    },[props]);
   
     useEffect(() => {
-      //add eventlistener to window
+      //add event listener to window
       window.addEventListener("scroll", onScroll, { passive: true });
-      // remove event on unmount to prevent Linkmemory leak with the cleanup
+      // remove event on unmounting to prevent Linkmemory leak with the cleanup
     });
     return (
         <header className={`md:sticky top-0 ${hcolor} z-40` }>
@@ -52,7 +52,7 @@ export default function Header({props}) {
                     <Link className="font-semibold" href="/"><Image className=" w-12" src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/app/icon.png" alt="Logo Of Drifty" width={192} height={192}/></Link>
                 </div>
                 <div className="w-9/12 flex justify-end items-center">
-                    <div className="z-40 flex relative w-8 h-8 flex-col justify-between items-center md:hidden" onClick={() => { setOpen(!open) }}>
+                    <div className="z-40 flex relative w-8 h-8 flex-col justify-between items-center md:hidden" onClick={() => { setOpen(!open) }} role={"button"}>
                         {/* hamburger button */}
                         <span className={`h-1 w-full bg-black rounded-lg transform transition duration-300 ease-in-out ${open ? "rotate-45 translate-y-3.5" : ""}`} />
                         <span className={`h-1 w-full bg-black rounded-lg transition-all duration-300 ease-in-out ${open ? "hidden" : "w-full"}`} />
