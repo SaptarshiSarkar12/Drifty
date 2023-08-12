@@ -51,6 +51,10 @@ jobs:
         components: 'native-image'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       run: mvn -Pbuild-drifty-cli-for-${{ matrix.os }} package
+    - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.8.8
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui gluonfx:build@${{ matrix.os }}
     - name: List files in target directory
