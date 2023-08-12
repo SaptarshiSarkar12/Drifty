@@ -26,7 +26,7 @@ export default async function download() {
 }
 
 export async function getData(){
-    const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases',{method:'GET'},{next:{revalidate:3600}})
+    const res = await fetch('https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases', {method:'GET'}, {next:{revalidate:3600}})
     const release = await res.json();
     return {
       release,

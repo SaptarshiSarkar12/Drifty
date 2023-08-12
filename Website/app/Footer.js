@@ -59,7 +59,7 @@ export default function Footer() {
                             <span className="sr-only">hashnode</span>
                         </a>
                         <a href="https://www.bio.link/saptarshi" className="text-gray-500 hover:text-violet-700 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110">
-                        <i aria-hidden className="fa fa-sharp fa-solid fa-link"></i>
+                            <i aria-hidden className="fa fa-sharp fa-solid fa-link"></i>
                             <span className="sr-only">All My Links</span>
                         </a>
                     </div>
