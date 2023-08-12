@@ -17,8 +17,17 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
           fetch-depth: 0  # a full history is required for pull request analysis
-      - name: 'JetBrains Qodana Scan'
-        uses: JetBrains/qodana-action@v2023.2
+      - name: 'JetBrains Qodana Scan for Java'
+        uses: JetBrains/qodana-action@main
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          upload-result: true
+      - name: 'Change java linter to javascript linter'
+        run: |
+          sed -i '$c\linter: jetbrains/qodana-js:latest' qodana.yaml
+      - name: 'JetBrains Qodana Scan for JavaScript code'
+        uses: JetBrains/qodana-action@main
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
