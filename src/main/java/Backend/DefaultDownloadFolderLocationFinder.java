@@ -20,12 +20,9 @@ public class DefaultDownloadFolderLocationFinder {
             result = result.substring(p + REG_TOKEN.length()).trim();
             result = result.replace("%USERPROFILE%", System.getProperty("user.home"));
             return result;
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
-
     }
     static class StreamReader extends Thread {
         private final InputStream is;
@@ -40,8 +37,7 @@ public class DefaultDownloadFolderLocationFinder {
                 int c;
                 while ((c = is.read()) != -1)
                     sw.write(c);
-            }
-            catch (IOException ignored) {
+            } catch (IOException ignored) {
             }
         }
         public String getResult() {

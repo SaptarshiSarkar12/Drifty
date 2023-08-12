@@ -1,0 +1,102 @@
+{
+  "resources":{
+  "includes":[{
+    "pattern":"\\QGUI/Backgrounds/DriftyBatch.png\\E"
+  }, {
+    "pattern":"\\QGUI/Backgrounds/DriftyMain.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Back/BackDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Back/BackUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Batch/BatchDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Batch/BatchUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Close/CloseDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Close/CloseUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Copy/CopyDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Copy/CopyUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Download/DownloadDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Download/DownloadUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/RunBatch/RunBatchDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/RunBatch/RunBatchUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Save/SaveDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Save/SaveUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Start/StartDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/Start/StartUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/UpDown/DownDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/UpDown/DownUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/UpDown/UpDown.png\\E"
+  }, {
+    "pattern":"\\QGUI/Buttons/UpDown/UpUp.png\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/CheckBox.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/ContextMenu.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/Label.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/ListView.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/Menu.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/ProgressBar.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/Scene.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/Tabs.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/TextField.css\\E"
+  }, {
+    "pattern":"\\QGUI/CSS/VBox.css\\E"
+  }, {
+    "pattern":"\\QGUI/Fonts/Monaco.ttf\\E"
+  }, {
+    "pattern":"\\QGUI/Icons/Icon1024.png\\E"
+  }, {
+    "pattern":"\\QGUI/Icons/Icon512.png\\E"
+  }, {
+    "pattern":"\\QGUI/Labels/AutoPaste.png\\E"
+  }, {
+    "pattern":"\\QGUI/Labels/Directory.png\\E"
+  }, {
+    "pattern":"\\QGUI/Labels/Filename.png\\E"
+  }, {
+    "pattern":"\\QGUI/Labels/Link.png\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/ubidi.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
+  }, {
+    "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/Encodings.properties\\E"
+  }]},
+  "bundles":[{
+    "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
+    "locales":[""]
+  }, {
+    "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
+    "locales":[""]
+  }, {
+    "name":"com/sun/javafx/scene/control/skin/resources/controls",
+    "locales":[""]
+  }]
+}

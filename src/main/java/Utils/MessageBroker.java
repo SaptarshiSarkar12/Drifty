@@ -7,9 +7,7 @@ import Enums.Mode;
 import java.io.PrintStream;
 
 public class MessageBroker {
-
     Logger logger;
-
     PrintStream output;
 
     public MessageBroker(PrintStream consoleOutput) {
@@ -26,8 +24,7 @@ public class MessageBroker {
             if (!messageCategory.equals(MessageCategory.LOG))
                 output.println(message);
             logger.log(messageType, message);
-        }
-        else if (Mode.guiLoaded()) {
+        } else if (Mode.guiLoaded()) {
             logger.log(messageType, message);
         }
     }

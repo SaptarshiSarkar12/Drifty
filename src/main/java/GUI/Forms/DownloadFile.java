@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import static Utils.DriftyConstants.*;
 
 public class DownloadFile extends Task<Integer> {
-
     private final StringProperty standardOut = new SimpleStringProperty();
     private final StringProperty errorOut = new SimpleStringProperty();
     private final StringProperty feedback = new SimpleStringProperty();

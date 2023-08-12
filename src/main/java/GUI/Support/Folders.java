@@ -40,20 +40,15 @@ public class Folders {
             Path path = Paths.get(folder);
             if (!path.toFile().exists()) {
                 removeList.add(folder);
-            }
-            else {
+            } else {
                 if (!path.toFile().isDirectory()) {
                     removeList.add(folder);
                 }
-
             }
-
         }
-
         for (String folder : removeList) {
             folders.remove(folder);
         }
-
         AppSettings.set.folders(this);
     }
 

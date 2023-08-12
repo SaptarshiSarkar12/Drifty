@@ -3,14 +3,15 @@ package GUI.Forms;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -55,20 +56,17 @@ public class AskYesNo {
         for (String line : lines) {
             maxChar = Math.max(maxChar, line.length());
         }
-
         width = width + (maxChar * 5);
         height = height + (lines.length * 30);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
-        int screenHeight = (int) screenSize.getHeight(); // E.g.: 768
-        int screenWidth = (int) screenSize.getWidth(); // E.g.: 1366
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        int screenHeight = (int) screenSize.getHeight();  // E.g.: 768
+        int screenWidth = (int) screenSize.getWidth();    // E.g.: 1366
         if (width > screenWidth) {
             width = screenWidth * .9;
         }
-
         if (height > screenHeight) {
             height = screenHeight * .9;
         }
-
         createControls();
     }
 
@@ -78,16 +76,13 @@ public class AskYesNo {
             message.setText(msg);
             message.setWrapText(true);
         }
-
         btnYes = new Button("Yes");
         btnNo = new Button("No");
         btnOk = new Button("OK");
         HBox hbox;
         if (okOnly) {
             hbox = new HBox(20, btnOk);
-        }
-
-        else {
+        } else {
             hbox = new HBox(20, btnYes, btnNo);
         }
 
@@ -122,7 +117,6 @@ public class AskYesNo {
         while (waiting) {
             sleep(100);
         }
-
         return answerYes;
     }
 
@@ -132,6 +126,5 @@ public class AskYesNo {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

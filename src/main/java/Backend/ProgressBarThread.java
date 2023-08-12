@@ -86,15 +86,13 @@ public class ProgressBarThread extends Thread {
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
-            }
-            else {
+            } else {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
             bar = bar.substring(0, charAmt / 2 - 2) + (totalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
             return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + convertBytes(totalDownloadedBytes) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
-        }
-        else {
+        } else {
             int numberOfThreads = fileOutputStreams.size();
             StringBuilder result = new StringBuilder("[" + spinner + "]  " + convertBytes(totalDownloadedBytes));
             float filled;
@@ -135,8 +133,7 @@ public class ProgressBarThread extends Thread {
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
-            }
-            else {
+            } else {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
@@ -164,8 +161,7 @@ public class ProgressBarThread extends Thread {
                 }
             }
             return sizeWithUnit;
-        }
-        else {
+        } else {
             return totalDownloadedBytes + " bytes";
         }
     }
@@ -173,13 +169,11 @@ public class ProgressBarThread extends Thread {
     private void cleanup() {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
-            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        }
-        else if (downloadedBytes == totalDownloadedBytes) {
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
+        } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
-            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFORMATION, MessageCategory.DOWNLOAD);
-        }
-        else {
+            messageBroker.sendMessage("\n" + DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
+        } else {
             messageBroker.sendMessage("\n" + DOWNLOAD_FAILED, MessageType.ERROR, MessageCategory.DOWNLOAD);
         }
     }
@@ -199,8 +193,7 @@ public class ProgressBarThread extends Thread {
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
                         if (Mode.isCLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
-                        }
-                        else {
+                        } else {
                             generateProgressBar(spinner[i]);
                         }
                     }
@@ -219,14 +212,12 @@ public class ProgressBarThread extends Thread {
                         }
                         if (Mode.isCLI()) {
                             System.out.print("\r" + generateProgressBar(spinner[i]));
-                        }
-                        else {
+                        } else {
                             generateProgressBar(spinner[i]);
                         }
                     }
                 }
-            } catch (InterruptedException | IOException ignored) {
-            }
+            } catch (InterruptedException | IOException ignored) {}
         }
         cleanup();
     }

@@ -28,7 +28,7 @@ import static GUI.Forms.Constants.*;
 import static javafx.scene.layout.AnchorPane.*;
 
 /**
- * This class is the pop down console form that receives the 'System.out' capture
+ * This class is the pop-down console form that receives the 'System.out' capture
  * from the 'StringPropertyPrintStream' class. It only has one TextArea as its only control.
  */
 public class ConsoleOut {
@@ -123,10 +123,10 @@ public class ConsoleOut {
     }
 
     private void captureOutputs() {
-        ByteArrayOutputStream baosStandard = new ByteArrayOutputStream();
-        PrintStream printOutStandard = new StringPropertyPrintStream(baosStandard, standardOut, Out.STANDARD);
-        ByteArrayOutputStream baosError = new ByteArrayOutputStream();
-        PrintStream printOutError = new StringPropertyPrintStream(baosError, errorOut, Out.ERROR);
+        ByteArrayOutputStream standardOutputStream = new ByteArrayOutputStream();
+        PrintStream printOutStandard = new StringPropertyPrintStream(standardOutputStream, standardOut, Out.STANDARD);
+        ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+        PrintStream printOutError = new StringPropertyPrintStream(errorOutputStream, errorOut, Out.ERROR);
         System.setOut(printOutStandard);
         System.setErr(printOutError);
     }

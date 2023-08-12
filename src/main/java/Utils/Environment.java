@@ -9,31 +9,30 @@ import Preferences.AppSettings;
 import org.buildobjects.process.ProcBuilder;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Environment {
     private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
-
     public static void initializeEnvironment() {
-        messageBroker.sendMessage("User OS is : " + OS.getOSName(), MessageType.INFORMATION, MessageCategory.LOG);
+        messageBroker.sendMessage("User OS is : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
         String yt_dlpProgramName;
         if (OS.isWindows()) {
             yt_dlpProgramName = "yt-dlp.exe";
-        }
-        else if (OS.isMac()) {
+        } else if (OS.isMac()) {
             yt_dlpProgramName = "yt-dlp_macos";
-        }
-        else {
+        } else {
             yt_dlpProgramName = "yt-dlp";
         }
         Program.setName(yt_dlpProgramName);
         Program.setPath(Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
-        messageBroker.sendMessage("yt-dlp program name is : " + yt_dlpProgramName, MessageType.INFORMATION, MessageCategory.LOG);
+        messageBroker.sendMessage("yt-dlp program name is : " + yt_dlpProgramName, MessageType.INFO, MessageCategory.LOG);
+        InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
-            if(!copyYtDlp.copyToTemp()) {
-                AppSettings.set.lastDLPUpdateTime(System.currentTimeMillis());
+            if(copyYtDlp.copyToTemp(yt_dlpProgramStream)) {
+                AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
             }
         } catch (IOException e) {
             messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
@@ -41,8 +40,7 @@ public class Environment {
         String batchPath;
         if (OS.isWindows()) {
             batchPath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
-        }
-        else {
+        } else {
             batchPath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
         }
         File folder = new File(batchPath);
@@ -57,14 +55,14 @@ public class Environment {
     }
 
     public static void updateYt_dlp() {
-        messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFORMATION, MessageCategory.DOWNLOAD);
+        messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         String command = Program.get(Program.COMMAND);
         ProcBuilder yt_dlpUpdateProcess = new ProcBuilder(command)
                 .withArg("-U")
                 .withOutputStream(System.out)
                 .withErrorStream(System.err);
         yt_dlpUpdateProcess.run();
-        AppSettings.set.lastDLPUpdateTime(System.currentTimeMillis());
+        AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
     }
 
     public static boolean isUpdateForYt_dlpChecked() {

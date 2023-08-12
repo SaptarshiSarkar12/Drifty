@@ -15,12 +15,11 @@ import java.util.prefs.Preferences;
 
 import static Preferences.Labels.*;
 
-public class Set {
-    private Set() {
-    }
-
+public class Set { // This class is used to set the user preferences
     private static final Set INSTANCE = new Set();
-    private final Preferences prefs = Labels.prefs;
+    private final Preferences preferences = Labels.PREFERENCES;
+
+    private Set() {}
 
     protected static Set getInstance() {
         return INSTANCE;
@@ -30,27 +29,27 @@ public class Set {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(folders);
         AppSettings.clear.folders();
-        prefs.put(FOLDERS.toString(), value);
+        preferences.put(FOLDERS.toString(), value);
     }
 
     public void mainAutoPaste(boolean isMainAutoPasteEnabled) {
         AppSettings.clear.mainAutoPaste();
-        prefs.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
+        preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
 
     public void batchAutoPaste(boolean isBatchAutoPasteEnabled) {
         AppSettings.clear.batchAutoPaste();
-        prefs.putBoolean(BATCH_AUTO_PASTE.toString(), isBatchAutoPasteEnabled);
+        preferences.putBoolean(BATCH_AUTO_PASTE.toString(), isBatchAutoPasteEnabled);
     }
 
-    public void lastDLPUpdateTime(long lastYt_DlpUpdateTime) {
+    public void lastYt_DlpUpdateTime(long lastYt_DlpUpdateTime) {
         AppSettings.clear.lastDLPUpdateTime();
-        prefs.putLong(LAST_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
+        preferences.putLong(LAST_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
     }
 
     public void lastFolder(String lastFolderPath) {
         AppSettings.clear.lastFolder();
-        prefs.put(LAST_FOLDER.toString(), lastFolderPath);
+        preferences.put(LAST_FOLDER.toString(), lastFolderPath);
     }
 
     public void batchDownloadJobs(Jobs jobs) {
@@ -68,11 +67,11 @@ public class Set {
 
     public void startMax(boolean value) {
         AppSettings.clear.startMax();
-        prefs.putBoolean(START_MAX.toString(), value);
+        preferences.putBoolean(START_MAX.toString(), value);
     }
 
     public void startTime() {
         AppSettings.clear.startTime();
-        prefs.putLong(START_TIME.toString(), System.currentTimeMillis());
+        preferences.putLong(START_TIME.toString(), System.currentTimeMillis());
     }
 }

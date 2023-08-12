@@ -1,11 +1,12 @@
 package GUI.Forms;
 
 import Enums.OS;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.net.URL;
 
 /**
@@ -13,7 +14,7 @@ import java.net.URL;
  * It contains hooks into the resources folder for relevant files.
  */
 class Constants {
-    public static final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // E.g.: java.awt.Dimension[width=1366,height=768]
+    public static final Rectangle2D screenSize = Screen.getPrimary().getBounds();
     public static final URL mainGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
     public static final URL batchGUIBanner = Constants.class.getResource("/GUI/Backgrounds/DriftyBatch.png");
     public static final URL runBatchUp = Constants.class.getResource("/GUI/Buttons/RunBatch/RunBatchUp.png");
@@ -89,8 +90,7 @@ class Constants {
         Image icon;
         if (OS.isMac()) {
             icon = new Image(icon1024.toExternalForm());
-        }
-        else {
+        } else {
             icon = new Image(icon512.toExternalForm());
         }
         stage.getIcons().add(icon);
@@ -102,8 +102,7 @@ class Constants {
         Image icon;
         if (OS.isMac()) {
             icon = new Image(icon1024.toExternalForm());
-        }
-        else {
+        } else {
             icon = new Image(icon512.toExternalForm());
         }
         stage.getIcons().add(icon);

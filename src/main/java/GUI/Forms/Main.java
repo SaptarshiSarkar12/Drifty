@@ -4,6 +4,7 @@ import Backend.Drifty;
 import GUI.Support.ManageFolders;
 import Preferences.AppSettings;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
@@ -15,13 +16,14 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Objects;
 
 import static GUI.Forms.Constants.*;
 import static javafx.scene.layout.AnchorPane.*;
 
-
 public class Main extends Application {
-
+    private static Main INSTANCE;
+    private Stage stage;
 
     public static void main(String[] args) {
         launch(args);
@@ -33,30 +35,25 @@ public class Main extends Application {
         INSTANCE = this;
     }
 
-    private static Main INSTANCE;
-    private Stage stage;
-    private Scene scene;
-    private MainGridPane gridPane;
-
     private void createScene() {
         AnchorPane ap = new AnchorPane();
-        gridPane = new MainGridPane();
+        MainGridPane gridPane = new MainGridPane();
         MenuBar menu = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
         placeControl(gridPane,40,40,40,40);
         placeControl(menu,0,0,0,-1);
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
         stage = new Stage();
-        scene = new Scene(ap);
-        scene.getStylesheets().add(contextMenuCSS.toExternalForm());
-        scene.getStylesheets().add(labelCSS.toExternalForm());
-        scene.getStylesheets().add(menuCSS.toExternalForm());
-        scene.getStylesheets().add(checkBoxCSS.toExternalForm());
-        scene.getStylesheets().add(textFieldCSS.toExternalForm());
-        scene.getStylesheets().add(vBoxCSS.toExternalForm());
-        scene.getStylesheets().add(sceneCSS.toExternalForm());
-        scene.getStylesheets().add(progressBarCSS.toExternalForm());
-        scene.getStylesheets().add(listViewCSS.toExternalForm());
+        Scene scene = new Scene(ap);
+        scene.getStylesheets().add(Objects.requireNonNull(contextMenuCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(labelCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(menuCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(checkBoxCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(textFieldCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(vBoxCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(sceneCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(progressBarCSS).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(listViewCSS).toExternalForm());
         stage.setScene(scene);
         stage.show();
         FormLogic.initLogic(gridPane);
@@ -132,6 +129,7 @@ public class Main extends Application {
         contextMenu.getStyleClass().add("rightClick");
         return contextMenu;
     }
+
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = AppSettings.get.folders().getDownloadFolder();
@@ -142,13 +140,14 @@ public class Main extends Application {
         if (directory != null) {
             FormLogic.setDir(directory.getAbsolutePath());
         }
-
     }
 
-
+    protected static void openWebsite(String websiteURL, String websiteType) {
+        HostServices hostServices = INSTANCE.getHostServices();
+        hostServices.showDocument(websiteURL);
+    }
 
     public static void toggleFullScreen() {
         INSTANCE.stage.setFullScreen(!INSTANCE.stage.isFullScreen());
     }
-
 }

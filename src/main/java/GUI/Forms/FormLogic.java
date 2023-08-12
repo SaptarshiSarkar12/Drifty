@@ -1,6 +1,5 @@
 package GUI.Forms;
 
-import Enums.OS;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.Jobs;
@@ -30,11 +29,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
@@ -49,7 +44,7 @@ import static GUI.Forms.Constants.*;
 public class FormLogic {
 
     private static final FormLogic INSTANCE = new FormLogic();
-    private MainGridPane form;
+    private static MainGridPane form;
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
@@ -75,7 +70,7 @@ public class FormLogic {
         INSTANCE.commitJobListToListView();
     }
     public static void setColor(Color color) {
-        INSTANCE.form.lblDownloadInfo.setTextFill(color);
+        form.lblDownloadInfo.setTextFill(color);
     }
 
     public static void bumpFolders() {
@@ -83,35 +78,14 @@ public class FormLogic {
     }
 
     public static void setDir(String path) {
-        INSTANCE.form.tfDir.setText(path);
+        form.tfDir.setText(path);
     }
     public static void initLogic(MainGridPane pane) {
         INSTANCE.start(pane);
     }
 
     public static void openWeb(String websiteURL, String websiteType) {
-        INSTANCE.openWebsite(websiteURL,websiteType);
-    }
-
-    private void openWebsite(String websiteURL, String websiteType) {
-        if (OS.isNix()) { // for Linux / Unix systems
-            try {
-                String[] commandsToOpenWebsite = {"xdg-open", websiteURL};
-                Runtime openWebsite = Runtime.getRuntime();
-                openWebsite.exec(commandsToOpenWebsite);
-            } catch (IOException e) {
-                setLinkOut(RED,"Can't open link");
-            }
-        }
-        else if (OS.isWinMac()) { // For macOS and Windows systems
-            try {
-                Desktop desktop = Desktop.getDesktop();
-                desktop.browse(new URI(websiteURL));
-            } catch (IOException | URISyntaxException e) {
-                setLinkOut(RED,"Can't open link");
-            }
-
-        }
+        Main.openWebsite(websiteURL,websiteType);
     }
 
     private void start(MainGridPane pane) {
@@ -186,22 +160,16 @@ public class FormLogic {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
                     setDirOutput(RED, "Directory cannot be empty!");
-                }
-
-                else {
+                } else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
                         setDirOutput(GREEN, "Directory exists!");
                         directoryExists.setValue(true);
-                    }
-
-                    else {
+                    } else {
                         setDirOutput(RED, "Directory does not exist or is not a directory!");
                     }
-
                 }
-
             }
         }));
         form.tfLink.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
@@ -253,19 +221,18 @@ public class FormLogic {
                         form.tfFilename.setText(job.getFilename());
                     });
                     Task<Integer> task = new DownloadFile(job.getLink(), job.getFilename(), job.getDir());
-                    Worker<Integer> worker = task;
                     Thread thread = new Thread(task);
                     Platform.runLater(() -> {
-                        form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
-                        form.pBar.progressProperty().bind(worker.progressProperty());
+                        form.lblDownloadInfo.textProperty().bind(((Worker<Integer>) task).messageProperty());
+                        form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
                     });
                     thread.start();
                     while(thread.getState().equals(Thread.State.RUNNABLE)) {
                         sleep(10);
                     }
-                    System.out.println("done");
+                    downloadInProgress.setValue(false);
                     Platform.runLater(() -> {
-                        if(worker.valueProperty().get() == 0) {
+                        if(((Worker<Integer>) task).valueProperty().get() == 0) {
                             jobList.remove(job);
                             commitJobListToListView();
                         }
@@ -298,11 +265,8 @@ public class FormLogic {
                     if (path.contains(job.getFilename())) {
                         pathJobMap.put(path, job);
                     }
-
                 }
-
             }
-
         }
 
         if (!pathJobMap.isEmpty()) {
@@ -363,7 +327,6 @@ public class FormLogic {
                     filePath = path;
                     break;
                 }
-
             }
 
             if (fileExists) {
@@ -371,9 +334,7 @@ public class FormLogic {
                 AskYesNo ask = new AskYesNo(msg);
                 return ask.isYes();
             }
-
         }
-
         return true;
     }
 
@@ -473,6 +434,7 @@ public class FormLogic {
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miDel, miClear, separator, miInfo);
     }
+
     private void downloadFiles() {
 
     }
@@ -484,13 +446,9 @@ public class FormLogic {
                 linkValid.setValue(false);
                 if (presentLink.contains(" ")) {
                     Platform.runLater(() -> setLinkOutput(RED, "Link should not contain whitespace characters!"));
-                }
-
-                else if (!isURL(presentLink)) {
+                } else if (!isURL(presentLink)) {
                     Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
-                }
-
-                else {
+                } else {
                     try {
                         Utility.isURLValid(presentLink);
                         Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
@@ -538,7 +496,7 @@ public class FormLogic {
         });
     }
 
-    private void setLinkOut(Color color, String message) {
+    protected static void setLinkOut(Color color, String message) {
         Platform.runLater(() -> {
             form.lblLinkOut.setTextFill(color);
             form.lblLinkOut.setText(message);
@@ -634,7 +592,7 @@ public class FormLogic {
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
         stage.setScene(scene);
-        vBox.getStylesheets().add(upDown.toString());
+        vBox.getStylesheets().add(Objects.requireNonNull(upDown).toString());
         vBox.setPadding(new Insets(10));
         stage.setAlwaysOnTop(true);
         btnOK.setOnAction(e -> stage.close());

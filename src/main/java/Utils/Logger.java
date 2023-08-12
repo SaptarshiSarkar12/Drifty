@@ -24,8 +24,7 @@ public class Logger {
     private Logger() {
         if (Mode.isCLI()) {
             logFilename = "Drifty CLI.log";
-        }
-        else {
+        } else {
             logFilename = "Drifty GUI.log";
         }
         filePath = FileSystems.getDefault().getPath(logFilename);
@@ -39,8 +38,7 @@ public class Logger {
             }
             CLILoggerInstance = new Logger();
             return CLILoggerInstance;
-        }
-        else {
+        } else {
             if (GUILoggerInstance != null) {
                 return GUILoggerInstance;
             }

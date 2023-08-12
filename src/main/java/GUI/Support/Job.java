@@ -4,16 +4,16 @@ package GUI.Support;
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job
  */
 public class Job {
+    private String link;
+    private String dir;
+    private String filename;
+    private String error;
+
     public Job(String link, String dir, String filename) {
         this.link = link;
         this.dir = dir;
         this.filename = filename;
     }
-
-    private String link;
-    private String dir;
-    private String filename;
-    private String error;
 
     public String getLink() {
         return link;
