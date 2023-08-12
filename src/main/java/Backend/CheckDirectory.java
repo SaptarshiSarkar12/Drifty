@@ -17,9 +17,9 @@ class CheckDirectory {
         if (!(checkIfFolderExists(dir))) {
             Path directory = FileSystems.getDefault().getPath(dir);
             Files.createDirectory(directory);
-            message.sendMessage(DIRECTORY_CREATED, MessageType.INFORMATION, MessageCategory.DIRECTORY);
+            message.sendMessage(DIRECTORY_CREATED, MessageType.INFO, MessageCategory.DIRECTORY);
         } else {
-            message.sendMessage("Directory is valid !", MessageType.INFORMATION, MessageCategory.DIRECTORY);
+            message.sendMessage("Directory is valid !", MessageType.INFO, MessageCategory.DIRECTORY);
         }
     }
 

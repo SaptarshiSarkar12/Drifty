@@ -2,13 +2,13 @@ package Enums;
 
 import java.nio.file.Paths;
 public enum Program {
-    NAME,
-    PATH,
-    COMMAND,
+    NAME, // Name of the yt-dlp program
+    PATH, // Path to the temp folder
+    COMMAND, // command to call yt-dlp, the path along with the name of the yt-dlp program
     BATCH_PATH;
 
     private static String yt_dlpProgramName;
-    private static String yt_dlpProgramPath;
+    private static String tempFolderPath;
     private static String batchPath;
 
     public static void setName(String name) {
@@ -16,7 +16,7 @@ public enum Program {
     }
 
     public static void setPath(String path) {
-        Program.yt_dlpProgramPath = path;
+        Program.tempFolderPath = path;
     }
 
     public static void setBatchPath(String path) {
@@ -26,8 +26,8 @@ public enum Program {
     public static String get(Program program) {
         return switch (program) {
             case NAME -> yt_dlpProgramName;
-            case PATH -> yt_dlpProgramPath;
-            case COMMAND -> Paths.get(yt_dlpProgramPath, yt_dlpProgramName).toAbsolutePath().toString();
+            case PATH -> tempFolderPath;
+            case COMMAND -> Paths.get(tempFolderPath, yt_dlpProgramName).toAbsolutePath().toString();
             case BATCH_PATH -> batchPath;
         };
     }

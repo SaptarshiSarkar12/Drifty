@@ -3,6 +3,10 @@ package Utils;
  * This file contains some String constants which are repeatedly used in the whole project.
  */
 public final class DriftyConstants {
+    /**
+     * This is a private constructor of this class.
+     */
+    private DriftyConstants() {}
     public static final String VERSION_NUMBER = "v2.0.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -65,8 +69,4 @@ public final class DriftyConstants {
     public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube Video!";
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
     public static final String DEFAULT_FILENAME = "%(title)s.%(ext)s";
-    /**
-     * This is a private constructor of this class.
-     */
-    private DriftyConstants() {}
 }

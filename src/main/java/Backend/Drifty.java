@@ -31,70 +31,44 @@ public class Drifty {
 
     public void start() {
         Utility utility = new Utility(message);
-        message.sendMessage("Validating the link...", MessageType.INFORMATION, MessageCategory.LINK);
+        message.sendMessage("Validating the link...", MessageType.INFO, MessageCategory.LINK);
         if (url.contains(" ")) {
             message.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
             return;
-        }
-
-
-        else if (url.isEmpty()) {
+        } else if (url.isEmpty()) {
             message.sendMessage("Link cannot be empty!", MessageType.ERROR, MessageCategory.LINK);
             return;
-        }
-
-
-        else {
+        } else {
             try {
                 Utility.isURLValid(url);
-                message.sendMessage("Link is valid!", MessageType.INFORMATION, MessageCategory.LINK);
+                message.sendMessage("Link is valid!", MessageType.INFO, MessageCategory.LINK);
             } catch (Exception e) {
                 message.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
                 return;
             }
-
-
         }
-
-
         if (downloadsFolder == null) {
             downloadsFolder = utility.saveToDefault();
-        }
-
-
-        else {
+        } else {
             downloadsFolder = downloadsFolder.replace('\\', '/');
             if (downloadsFolder.equals(".//") || downloadsFolder.equals("./")) {
                 downloadsFolder = "";
-            }
-
-
-            else {
+            } else {
                 try {
                     new CheckDirectory(downloadsFolder);
                 } catch (IOException e) {
                     message.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
                     return;
                 }
-
-
             }
-
-
         }
-
-
         if (((fileName == null) || (fileName.isEmpty())) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
             fileName = utility.findFilenameInLink(url);
             if (fileName == null || fileName.isEmpty()) {
                 message.sendMessage("Filename cannot be empty!", MessageType.ERROR, MessageCategory.FILENAME);
                 return;
             }
-
-
         }
-
-
         new FileDownloader(url, fileName, downloadsFolder).run();
     }
 

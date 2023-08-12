@@ -20,7 +20,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
-
     private final String link;
     private final String dir;
     private final String regex = "(\\[download] Downloading item \\d+ of )(\\d+)";
@@ -109,7 +108,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         }
                     } catch (IOException ignored) {}
                 }
-                for(File file : deleteList) {
+                for (File file : deleteList) {
                     try {
                         FileUtils.forceDelete(file);
                     } catch (IOException ignored) {}

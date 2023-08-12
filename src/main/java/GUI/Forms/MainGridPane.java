@@ -15,7 +15,6 @@ import javafx.scene.text.Font;
 import static GUI.Forms.Constants.*;
 
 public class MainGridPane extends GridPane {
-
     private ConsoleOut consoleOut;
     private boolean consoleOpen = false;
     public ImageView ivLogo = newImageView(Constants.imgMainGUIBanner, .45);
@@ -51,40 +50,40 @@ public class MainGridPane extends GridPane {
     private void addGUI() {
         this.setHgap(20);
         this.setVgap(10);
-        setColumnSpan(boxLogo          , 4);
-        setColumnSpan(pBar             , 4);
-        setColumnSpan(boxAutoPaste     , 2);
-        setColumnSpan(ivDir            , 3);
-        setColumnSpan(ivFilename       , 3);
-        setColumnSpan(tfLink           , 3);
-        setColumnSpan(tfDir            , 3);
-        setColumnSpan(tfFilename       , 3);
+        setColumnSpan(boxLogo, 4);
+        setColumnSpan(pBar, 4);
+        setColumnSpan(boxAutoPaste, 2);
+        setColumnSpan(ivDir, 3);
+        setColumnSpan(ivFilename, 3);
+        setColumnSpan(tfLink, 3);
+        setColumnSpan(tfDir, 3);
+        setColumnSpan(tfFilename, 3);
         setColumnSpan(lblLinkOut, 3);
         setColumnSpan(lblDirOut, 3);
         setColumnSpan(lblFilenameOut, 3);
         setColumnSpan(lblDownloadInfo, 3);
         setRowSpan(listView,11);
-        add(boxLogo          , 0, 0);
-        add(pBar             , 0, 1);
+        add(boxLogo, 0, 0);
+        add(pBar, 0, 1);
 
-        add(listView         , 0, 3);
+        add(listView, 0, 3);
 
-        add(ivLink           , 1, 3);
-        add(boxAutoPaste     , 2, 3);
-        add(tfLink           , 1, 4);
+        add(ivLink, 1, 3);
+        add(boxAutoPaste, 2, 3);
+        add(tfLink, 1, 4);
         add(lblLinkOut, 1, 5);
 
-        add(ivDir            , 1, 6);
-        add(tfDir            , 1, 7);
+        add(ivDir, 1, 6);
+        add(tfDir, 1, 7);
         add(lblDirOut, 1, 8);
 
-        add(ivFilename       , 1, 9);
-        add(tfFilename       , 1, 10);
+        add(ivFilename, 1, 9);
+        add(tfFilename, 1, 10);
         add(lblFilenameOut, 1, 11);
         add(lblDownloadInfo, 1, 12);
 
-        add(ivBtnSave    , 1, 13);
-        add(ivBtnStart    , 3, 13);
+        add(ivBtnSave, 1, 13);
+        add(ivBtnStart, 3, 13);
 
         setPrefWidth(Constants.screenSize.getWidth() * .4);
         setPrefHeight(Constants.screenSize.getHeight() * .4);
@@ -185,9 +184,7 @@ public class MainGridPane extends GridPane {
             ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgUpUp));
             consoleOut.hide();
             consoleOpen = false;
-        }
-
-        else {
+        } else {
             ivBtnConsole.setImage(Constants.imgDownUp);
             ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
             ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
@@ -195,5 +192,4 @@ public class MainGridPane extends GridPane {
             consoleOpen = true;
         }
     }
-
 }

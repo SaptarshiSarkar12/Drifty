@@ -65,13 +65,13 @@ For the purposes of this Privacy Policy:
     using the Service, as applicable.
 
 
-Collecting and Using Your Personal Data  
+Collecting and Using Your Personal Data
 =======================================
 
-Types of Data Collected  
+Types of Data Collected
 -----------------------
 
-Personal Data  
+Personal Data
 ~~~~~~~~~~~~~
 
 While using Our Service, We may ask You to provide Us with certain personally
@@ -80,31 +80,31 @@ Personally identifiable information may include, but is not limited to:
 
   * Usage Data
 
-Usage Data  
+Usage Data
 ~~~~~~~~~~
 
 Usage Data is collected automatically when using the Service.
 
 Usage Data may include information such as Your Device's Internet Protocol
-address (e.g. IP address), browser messageType, browser version, the pages of our
+address (e.g. IP address), browser type, browser version, the pages of our
 Service that You visit, the time and date of Your visit, the time spent on
 those pages, unique device identifiers and other diagnostic data.
 
 When You access the Service by or through a mobile device, We may collect
-certain information automatically, including, but not limited to, the messageType of
+certain information automatically, including, but not limited to, the type of
 mobile device You use, Your mobile device unique ID, the IP address of Your
-mobile device, Your mobile operating system, the messageType of mobile Internet
+mobile device, Your mobile operating system, the type of mobile Internet
 browser You use, unique device identifiers and other diagnostic data.
 
 We may also collect information that Your browser sends whenever You visit our
 Service or when You access the Service by or through a mobile device.
 
-Use of Your Personal Data  
+Use of Your Personal Data
 -------------------------
 
 The Company may use Personal Data for the following purposes:
 
-  * To provide and maintain our Service , including to monitor the usage of
+  * To provide and maintain our Service, including to monitor the usage of
     our Service.
 
   * To manage Your Account: to manage Your registration as a user of the
@@ -137,7 +137,7 @@ The Company may use Personal Data for the following purposes:
     which Personal Data held by Us about our Service users is among the assets
     transferred.
 
-  * For other purposes : We may use Your information for other purposes, such
+  * For other purposes: We may use Your information for other purposes, such
     as data analysis, identifying usage trends, determining the effectiveness
     of our promotional campaigns and to evaluate and improve our Service,
     products, services, marketing and your experience.
@@ -165,7 +165,7 @@ We may share Your personal information in the following situations:
   * With Your consent : We may disclose Your personal information for any
     other purpose with Your consent.
 
-Retention of Your Personal Data  
+Retention of Your Personal Data
 -------------------------------
 
 The Company will retain Your Personal Data only for as long as is necessary
@@ -180,13 +180,13 @@ is used to strengthen the security or to improve the functionality of Our
 Service, or We are legally obligated to retain this data for longer time
 periods.
 
-Transfer of Your Personal Data  
+Transfer of Your Personal Data
 ------------------------------
 
 Your information, including Personal Data, is processed at the Company's
 operating offices and in any other places where the parties involved in the
 processing are located. It means that this information may be transferred to —
-and maintained on — computers located outside of Your state, province, country
+and maintained on — computers located outside Your state, province, country
 or other governmental jurisdiction where the data protection laws may differ
 than those from Your jurisdiction.
 
@@ -199,7 +199,7 @@ of Your Personal Data will take place to an organization or a country unless
 there are adequate controls in place including the security of Your data and
 other personal information.
 
-Delete Your Personal Data  
+Delete Your Personal Data
 -------------------------
 
 You have the right to delete or request that We assist in deleting the
@@ -217,24 +217,24 @@ provided to Us.
 Please note, however, that We may need to retain certain information when we
 have a legal obligation or lawful basis to do so.
 
-Disclosure of Your Personal Data  
+Disclosure of Your Personal Data
 --------------------------------
 
-Business Transactions  
+Business Transactions
 ~~~~~~~~~~~~~~~~~~~~~
 
 If the Company is involved in a merger, acquisition or asset sale, Your
 Personal Data may be transferred. We will provide notice before Your Personal
 Data is transferred and becomes subject to a different Privacy Policy.
 
-Law enforcement  
+Law enforcement
 ~~~~~~~~~~~~~~~
 
 Under certain circumstances, the Company may be required to disclose Your
 Personal Data if required to do so by law or in response to valid requests by
 public authorities (e.g. a court or a government agency).
 
-Other legal requirements  
+Other legal requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Company may disclose Your Personal Data in the good faith belief that such
@@ -246,7 +246,7 @@ action is necessary to:
   * Protect the personal safety of Users of the Service or the public
   * Protect against legal liability
 
-Security of Your Personal Data  
+Security of Your Personal Data
 ------------------------------
 
 The security of Your Personal Data is important to Us, but remember that no
@@ -254,7 +254,7 @@ method of transmission over the Internet, or method of electronic storage is
 100% secure. While We strive to use commercially acceptable means to protect
 Your Personal Data, We cannot guarantee its absolute security.
 
-Children's Privacy  
+Children's Privacy
 ==================
 
 Our Service does not address anyone under the age of 13. We do not knowingly
@@ -269,7 +269,7 @@ If We need to rely on consent as a legal basis for processing Your information
 and Your country requires consent from a parent, We may require Your parent's
 consent before We collect and use that information.
 
-Links to Other Websites  
+Links to Other Websites
 =======================
 
 Our Service may contain links to other websites that are not operated by Us.
@@ -280,7 +280,7 @@ visit.
 We have no control over and assume no responsibility for the content, privacy
 policies or practices of any third party sites or services.
 
-Changes to this Privacy Policy  
+Changes to this Privacy Policy
 ==============================
 
 We may update Our Privacy Policy from time to time. We will notify You of any
@@ -294,7 +294,7 @@ You are advised to review this Privacy Policy periodically for any changes.
 Changes to this Privacy Policy are effective when they are posted on this
 page.
 
-Contact Us  
+Contact Us
 ==========
 
 If you have any questions about this Privacy Policy, You can contact us:
@@ -302,5 +302,3 @@ If you have any questions about this Privacy Policy, You can contact us:
   * By email: saptarshi.programmer@gmail.com
 
   * By visiting this page on our website: https://saptarshisarkar12.github.io/Drifty/
-
-

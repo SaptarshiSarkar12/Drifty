@@ -115,13 +115,13 @@ public final class Utility {
 
         // file.png?width=200 -> file.png
         String fileName = file.split("([?])")[0];
-        messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFORMATION, MessageCategory.FILENAME);
+        messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
         return fileName;
     }
 
     public String saveToDefault() {
         String downloadsFolder;
-        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFORMATION, MessageCategory.DIRECTORY);
+        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFO, MessageCategory.DIRECTORY);
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
@@ -136,7 +136,7 @@ public final class Utility {
         }
 
         else {
-            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFORMATION, MessageCategory.DIRECTORY);
+            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFO, MessageCategory.DIRECTORY);
         }
 
         return downloadsFolder;

@@ -26,7 +26,7 @@ import static Utils.Utility.*;
  *
  * @version 2.0.0
  */
-public class DriftyCLI {
+public class Drifty_CLI {
     public static final Logger logger = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
@@ -41,7 +41,7 @@ public class DriftyCLI {
     private static String batchDownloadingFile;
 
     public static void main(String[] args) {
-        logger.log(MessageType.INFORMATION, CLI_APPLICATION_STARTED);
+        logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         message = new MessageBroker(System.out);
         utility = new Utility(message);
         printBanner();
@@ -54,18 +54,14 @@ public class DriftyCLI {
                 if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
                     help();
                     System.exit(0);
-                }
-                else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
+                } else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
                     name = args[i + 1];
-                }
-                else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
+                } else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
                     location = args[i + 1];
-                }
-                else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
+                } else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
                     System.out.println(APPLICATION_NAME + " " + VERSION_NUMBER);
                     System.exit(0);
-                }
-                else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
+                } else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
                     batchDownloading = true;
                     batchDownloadingFile = args[i + 1];
                     batchDownloader();
@@ -82,8 +78,7 @@ public class DriftyCLI {
                 downloadsFolder = location;
                 if (downloadsFolder == null) {
                     downloadsFolder = utility.saveToDefault();
-                }
-                else {
+                } else {
                     if (OS.isWindows()) {
                         downloadsFolder = downloadsFolder.replace('/', '\\');
                         if (!(downloadsFolder.endsWith("\\"))) {
@@ -94,7 +89,7 @@ public class DriftyCLI {
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
                 backend.start();
             }
-            logger.log(MessageType.INFORMATION, CLI_APPLICATION_TERMINATED);
+            logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
             System.exit(0);
         }
         while (true) {
@@ -110,17 +105,14 @@ public class DriftyCLI {
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
                         message.sendMessage("The given file should be a YAML file!", MessageType.ERROR, MessageCategory.LOG);
-                    }
-                    else {
+                    } else {
                         batchDownloader();
                         break;
                     }
-                }
-                else if (choice == 2) {
+                } else if (choice == 2) {
                     batchDownloading = false;
                     break;
-                }
-                else {
+                } else {
                     System.out.println("Invalid Input!");
                 }
             }
@@ -142,7 +134,7 @@ public class DriftyCLI {
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
             if (choice.equals("q")) {
-                logger.log(MessageType.INFORMATION, CLI_APPLICATION_TERMINATED);
+                logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }
             printBanner();
@@ -150,12 +142,12 @@ public class DriftyCLI {
     }
 
     private static void batchDownloader() {
-        Yaml yamlInstance = new Yaml();
+        Yaml yamlParser = new Yaml();
         try {
-            message.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFORMATION, MessageCategory.LOG);
+            message.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFO, MessageCategory.LOG);
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
-            Map<String, List<String>> data = yamlInstance.load(yamlDataFile);
-            message.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFORMATION, MessageCategory.LOG);
+            Map<String, List<String>> data = yamlParser.load(yamlDataFile);
+            message.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFO, MessageCategory.LOG);
             int numberOfLinks = data.get("links").size();
             int numberOfFileNames = data.get("fileNames").size();
             int numberOfDirectories = 0;
@@ -163,36 +155,31 @@ public class DriftyCLI {
                 numberOfDirectories = 1;
                 if (data.get("directory").get(0).isEmpty()) {
                     directory = ".";
-                }
-                else {
+                } else {
                     directory = data.get("directory").get(0);
                 }
-            }
-            else if (data.containsKey("directories")) {
+            } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
             }
             String linkMessage;
             if (numberOfLinks == 1) {
                 linkMessage = numberOfLinks + " link";
-            }
-            else {
+            } else {
                 linkMessage = numberOfLinks + " links";
             }
             String directoryMessage;
             if (numberOfDirectories == 1) {
                 directoryMessage = numberOfDirectories + " directory";
-            }
-            else {
+            } else {
                 directoryMessage = numberOfDirectories + " directories";
             }
             String fileNameMessage;
             if (numberOfFileNames == 1) {
                 fileNameMessage = numberOfFileNames + " filename";
-            }
-            else {
+            } else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            message.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFORMATION, MessageCategory.LOG);
+            message.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.LOG);
             for (int i = 0; i < numberOfLinks; i++) {
                 link = data.get("links").get(i);
                 try {
@@ -203,8 +190,7 @@ public class DriftyCLI {
                 }
                 if (directory.equals(".")) {
                     directory = utility.saveToDefault();
-                }
-                else if (directory.isEmpty()) {
+                } else if (directory.isEmpty()) {
                     try {
                         directory = data.get("directories").get(i);
                     } catch (Exception e) {
@@ -223,8 +209,7 @@ public class DriftyCLI {
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             fileName = SC.nextLine();
-        }
-        else {
+        } else {
             if (isYoutubeURL) {
                 System.out.print("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
                 SC.nextLine(); // To remove 'whitespace' from input buffer.
@@ -234,8 +219,7 @@ public class DriftyCLI {
                     System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
                     fileName = SC.nextLine();
                 }
-            }
-            else if (isInstagramLink) {
+            } else if (isInstagramLink) {
                 System.out.print("Is the instagram link of a video? (Enter Y for video and N for image) : ");
                 SC.nextLine(); // To remove 'whitespace' from input buffer.
                 String choiceString = SC.nextLine().toLowerCase();
@@ -244,12 +228,10 @@ public class DriftyCLI {
                     System.out.print("Please enter the filename for the Instagram image with the file extension (filename.extension [usually png]) : ");
                     fileName = SC.nextLine();
                     isInstagramImage = true;
-                }
-                else {
+                } else {
                     isInstagramImage = false;
                 }
-            }
-            else {
+            } else {
                 System.out.print(RENAME_FILE);
                 SC.nextLine(); // To remove whitespace from the input buffer
                 String choiceString = SC.nextLine().toLowerCase();
