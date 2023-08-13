@@ -244,7 +244,7 @@
                                 <phase>package</phase>
                             </execution>
                             <execution>
-                                <id>macos-13</id>
+                                <id>macos-latest</id>
                                 <configuration>
                                     <resourcesList>yt-dlp_macos</resourcesList>
                                 </configuration>
