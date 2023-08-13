@@ -95,8 +95,10 @@
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${guiMain}</mainClass>
-                    <nativeImageArgs>
+                    <runtimeArgs>
                         <arg>${system-native-image-arg}</arg>
+                    </runtimeArgs>
+                    <nativeImageArgs>
                         <arg>--enable-url-protocols=https</arg>
                         <arg>--enable-url-protocols=http</arg>
                         <arg>--no-fallback</arg>
