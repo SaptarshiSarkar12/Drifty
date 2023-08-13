@@ -31,7 +31,7 @@ public class Environment {
         InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
-            if(copyYtDlp.copyToTemp(yt_dlpProgramStream)) {
+            if (copyYtDlp.copyToTemp(yt_dlpProgramStream)) {
                 AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
             }
         } catch (IOException e) {
