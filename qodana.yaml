@@ -1,9 +1,5 @@
 version: "1.0"
 profile:
-  name: qodana.starter
-projectJDK: 20
-linters: 
-  - name: qodana-jvm
-    version: latest
-  - name: qodana-js
-    version: latest
+  name: qodana.recommended
+projectJDK: 19
+linter: jetbrains/qodana-jvm-community:latest

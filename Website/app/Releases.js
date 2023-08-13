@@ -20,13 +20,13 @@ export default function Releases({props}) {
             [index]: !prevState[index],
         }));
     };
-    const markertoHtml = async (itemBody, i) => {
+    const markerToHtml = async (itemBody, i) => {
         const cont = await remark().use(html).process(itemBody);
         setContent((prev)=> {prev[i]=cont.toString(); return prev});
     }
     useEffect(() => {
-        props.release.map((item, index) => {
-            markertoHtml(item.body,index);
+        props.release.forEach(async (item, index) => {
+            await markerToHtml(item.body, index);
         });
     }, [props.release]);
         
