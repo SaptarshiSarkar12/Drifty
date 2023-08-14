@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "autoprefixer": "10.4.14",
-    "eslint": "8.46.0",
+    "autoprefixer": "10.4.15",
+    "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
     "next": "13.4.13",
     "postcss": "8.4.27",
