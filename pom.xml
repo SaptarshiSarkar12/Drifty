@@ -256,7 +256,7 @@
             </dependencies>
             <properties>
                 <package.type>pkg</package.type>
-                <system-native-image-arg>--add-exports=org.graalvm.nativeimage.Platform$DARWIN_AMD64</system-native-image-arg>
+                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <mac.app.store>true</mac.app.store>
             </properties>
