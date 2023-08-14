@@ -71,7 +71,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.os }}-Build-Files
-        path: target.tar
+        path: ${{ matrix.os }}.tar
         
   list-Drifty-artifacts:
     runs-on: ubuntu-latest
