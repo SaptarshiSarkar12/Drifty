@@ -95,9 +95,6 @@
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${guiMain}</mainClass>
-                    <runtimeArgs>
-                        <arg>${system-native-image-arg}</arg>
-                    </runtimeArgs>
                     <nativeImageArgs>
                         <arg>--enable-url-protocols=https</arg>
                         <arg>--enable-url-protocols=http</arg>
@@ -105,6 +102,7 @@
                         <arg>--verbose</arg>
                         <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</arg>
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+                        <arg>${system-native-image-arg}</arg>
                     </nativeImageArgs>
                     <appIdentifier>${guiMain}</appIdentifier>
                     <releaseConfiguration>
@@ -244,7 +242,7 @@
             <id>build-drifty-gui-for-macos-latest</id>
             <properties>
                 <package.type>pkg</package.type>
-                <system-native-image-arg>org.graalvm.nativeimage.Platform$DARWIN_AMD64</system-native-image-arg>
+                <system-native-image-arg>--add-exports=org.graalvm.nativeimage.Platform$DARWIN_AMD64</system-native-image-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <mac.app.store>true</mac.app.store>
             </properties>
