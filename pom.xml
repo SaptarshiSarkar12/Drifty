@@ -240,20 +240,6 @@
         <profile>
             <!-- [macOS] GUI native image builder profile -->
             <id>build-drifty-gui-for-macos-latest</id>
-            <dependencies>
-                <!-- https://mvnrepository.com/artifact/org.graalvm.nativeimage/library-support -->
-                <dependency>
-                    <groupId>org.graalvm.nativeimage</groupId>
-                    <artifactId>library-support</artifactId>
-                    <version>23.0.1</version>
-                </dependency>
-                <!-- https://mvnrepository.com/artifact/org.graalvm.sdk/graal-sdk -->
-                <dependency>
-                    <groupId>org.graalvm.sdk</groupId>
-                    <artifactId>graal-sdk</artifactId>
-                    <version>23.0.1</version>
-                </dependency>
-            </dependencies>
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
