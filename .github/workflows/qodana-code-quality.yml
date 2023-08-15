@@ -23,8 +23,8 @@ jobs:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
           upload-result: true
-      - name: 'Remove qodana.yaml to initiate auto-js community linter'
-        run: "rm -r qodana.yaml"
+      - name: 'Qodana Scan for JavaScript'
+        run: "sed -i '$c\linter: jetbrains/qodana-js:latest' qodana.yaml"
       - name: 'JetBrains Qodana Scan for JavaScript code'
         uses: JetBrains/qodana-action@main
         env:
