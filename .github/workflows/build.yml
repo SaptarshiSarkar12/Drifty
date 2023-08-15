@@ -61,6 +61,11 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.8.8
+    - name: Set up Gluon's GraalVM
+      if: ${{ matrix.os == 'windows-latest' }}
+      uses: gluonhq/setup-graalvm@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
     - name: List files in target directory
