@@ -2,4 +2,4 @@ version: "1.0"
 profile:
   name: qodana.recommended
 projectJDK: 19
-linter: jetbrains/qodana-jvm-community:latest
+linter: jetbrains/qodana-jvm:latest
