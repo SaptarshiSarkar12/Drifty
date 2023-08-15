@@ -21,6 +21,7 @@
         <mac.app.store/>
         <resource-config-file/>
         <system-native-image-arg/>
+        <system-linker-arg/>
     </properties>
 
     <dependencies>
@@ -95,6 +96,9 @@
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${guiMain}</mainClass>
+                    <linkerArgs>
+                        <arg>${system-linker-arg}</arg>
+                    </linkerArgs>
                     <nativeImageArgs>
                         <arg>--enable-url-protocols=https</arg>
                         <arg>--enable-url-protocols=http</arg>
@@ -243,6 +247,7 @@
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <mac.app.store>true</mac.app.store>
             </properties>
@@ -251,6 +256,7 @@
             <!-- [Linux] GUI native image builder profile -->
             <id>build-drifty-gui-for-ubuntu-latest</id>
             <properties>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-linux.json</resource-config-file>
             </properties>
         </profile>
@@ -259,6 +265,7 @@
             <id>build-drifty-gui-for-windows-latest</id>
             <properties>
                 <package.type>msi</package.type>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-windows.json</resource-config-file>
             </properties>
         </profile>

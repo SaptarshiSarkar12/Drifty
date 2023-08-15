@@ -61,11 +61,8 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.8.8
-    - name: Set up Gluon's GraalVM
-      if: ${{ matrix.os == 'windows-latest' }}
-      uses: gluonhq/setup-graalvm@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build platform-specific C object for missing jdk libraries
+      run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
     - name: List files in target directory
@@ -89,7 +86,16 @@ jobs:
       run: mvn versions:set -DnewVersion=$VERSION
     - name: Download Build artifacts
       uses: actions/download-artifact@v3
-    - name: List all present files
-      run: ls
+    - name: Extract build files from tar
+      run: |
+        tar -xvf ubuntu-latest-Build-Files.tar
+        tar -xvf macos-latest-Build-Files.tar
+        tar -xvf windows-latest-Build-Files.tar
+    - name: List all build artifacts for Ubuntu
+      run: tree ubuntu-latest-Build-Files
+    - name: List all build artifacts for macOS
+      run: tree macos-latest-Build-Files
+    - name: List all build artifacts for Windows
+      run: tree windows-latest-Build-Files
     # - name: Create Release ($VERSION) with automated release notes
       # run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-string' # Assets path to be added later
