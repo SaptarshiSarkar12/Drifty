@@ -25,7 +25,7 @@ jobs:
           upload-result: true
       - name: 'Qodana Scan for JavaScript'
         run: |
-          "sed -i '$c\linter: jetbrains/qodana-js:latest' qodana.yaml"
+          sed -i "$c\linter: jetbrains/qodana-js:latest" qodana.yaml
       - name: 'JetBrains Qodana Scan for JavaScript code'
         uses: JetBrains/qodana-action@main
         env:
