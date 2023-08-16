@@ -15,12 +15,14 @@ on:
       - "Website/**"
       - "*.md"
       - "*.txt"
+      - "qodana.yaml"
   pull_request:
     branches: [ "master" ]
     paths-ignore:
       - "Website/**"      
       - "*.md"
       - "*.txt"
+      - "qodana.yaml"
   workflow_dispatch:
   workflow_call:
 
