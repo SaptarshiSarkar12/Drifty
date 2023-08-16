@@ -23,9 +23,14 @@ jobs:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
           upload-result: true
-      - name: 'Qodana Scan for JavaScript'
+      - name: 'Replace qodana.yaml with JavaScript linter configuration'
         run: |
-          "sed -i '$c\linter: jetbrains/qodana-js:latest' qodana.yaml"
+          echo \
+          "version: '1.0'
+          profile:
+            name: qodana.recommended
+          projectJDK: 19
+          linter: jetbrains/qodana-js:latest" > qodana.yaml
       - name: 'JetBrains Qodana Scan for JavaScript code'
         uses: JetBrains/qodana-action@main
         env:
