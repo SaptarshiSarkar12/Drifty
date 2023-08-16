@@ -113,10 +113,10 @@
                         <vendor>Drifty</vendor>
                         <description>Drifty is an open-source interactive file downloader system</description>
                         <packageType>${package.type}</packageType>
-                        <!-- for macOS/iOS -->
-                        <macAppStore>${mac.app.store}</macAppStore>
                         <bundleShortVersion>${project.version}</bundleShortVersion>
                         <bundleVersion>${project.version}</bundleVersion>
+                        <!-- for macOS/iOS -->
+                        <skipSigning>true</skipSigning>
                     </releaseConfiguration>
                 </configuration>
             </plugin>
