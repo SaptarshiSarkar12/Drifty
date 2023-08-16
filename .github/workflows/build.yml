@@ -67,6 +67,9 @@ jobs:
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
+    - name: Install tree command for macOS
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: brew install tree
     - name: List files in target directory
       run: tree target/
     - name: Tar build files # To prevent file permission loss
