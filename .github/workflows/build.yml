@@ -81,8 +81,8 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         move "target/CLI/windows/Drifty CLI.exe" CLI
-        ren target/gluonfx/x86_64-windows/Drifty-1.0.msi "target/gluonfx/x86_64-windows/Drifty GUI.msi"
-        ren target/gluonfx/x86_64-windows/Drifty.exe "target/gluonfx/x86_64-windows/Drifty GUI.exe"
+        Rename-Item target/gluonfx/x86_64-windows/Drifty-1.0.msi "Drifty GUI.msi"
+        Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty GUI.exe"
         move "target/gluonfx/x86_64-windows/Drifty GUI.msi" GUI
         move "target/gluonfx/x86_64-windows/Drifty GUI.exe" GUI
     - name: Categorise build artifacts for macOS
