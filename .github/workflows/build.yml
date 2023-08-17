@@ -108,7 +108,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Get Drifty version from version.json file
       run: |
-        echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
+        echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> "$GITHUB_ENV"
         echo "### Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
     - name: Set Drifty version in pom.xml
       run: mvn versions:set -DnewVersion=$VERSION
@@ -131,29 +131,29 @@ jobs:
         echo "### Artifacts Generated for Linux" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "linux/CLI/Drifty CLI"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "linux/CLI/Drifty CLI"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| CLI | Drifty CLI | $SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "linux/GUI/Drifty GUI"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "linux/GUI/Drifty GUI"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| GUI | Drifty GUI | $SIZE |" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts Generated for macOS" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "macos/CLI/Drifty CLI"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "macos/CLI/Drifty CLI"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| CLI | Drifty CLI | $SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "macos/GUI/Drifty GUI.pkg"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "macos/GUI/Drifty GUI.pkg"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| GUI | Drifty GUI.pkg | $SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "macos/GUI/Drifty GUI.app"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "macos/GUI/Drifty GUI.app"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| GUI | Drifty GUI.app | $SIZE |" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts Generated for Windows" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "windows/CLI/Drifty CLI.exe"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "windows/CLI/Drifty CLI.exe"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| CLI | Drifty CLI.exe | $SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "windows/GUI/Drifty GUI.msi"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "windows/GUI/Drifty GUI.msi"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| GUI | Drifty GUI.msi | $SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo SIZE=$(echo `du -h "windows/GUI/Drifty GUI.exe"` | sed 's/ .*//') >> $GITHUB_ENV
+        echo SIZE=$(echo `du -h "windows/GUI/Drifty GUI.exe"` | sed 's/ .*//') >> "$GITHUB_ENV"
         echo "| GUI | Drifty GUI.exe | $SIZE |" >> $GITHUB_STEP_SUMMARY
     
         if [ ${{ github.event_name != 'workflow_call' }} ]; then
