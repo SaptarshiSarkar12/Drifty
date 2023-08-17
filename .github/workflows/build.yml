@@ -67,45 +67,61 @@ jobs:
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
-    - name: Install tree command for macOS
-      if: ${{ matrix.os == 'macos-latest' }}
-      run: brew install tree
-    - name: List files in target directory
-      run: tree target/
+    - name: Categorise build artifacts
+      run: |
+        mkdir CLI
+        mkdir GUI        
+        if [ ${{ matrix.os }} == "windows-latest" ]; then
+          mv "target/CLI/windows/Drifty CLI.exe" -t CLI
+          mv target/gluonfx/x86_64-windows/Drifty-1.0.msi "target/gluonfx/x86_64-windows/Drifty GUI.msi"
+          mv target/gluonfx/x86_64-windows/Drifty.exe "target/gluonfx/x86_64-windows/Drifty GUI.exe"
+          mv "target/gluonfx/x86_64-windows/Drifty GUI.msi" "target/gluonfx/x86_64-windows/Drifty GUI.exe" -t GUI
+        elif [ ${{ matrix.os }} == "macos-latest" ]; then
+          mv "target/CLI/macos/Drifty CLI" -t CLI
+          mv target/gluonfx/x86_64-darwin/Drifty-1.0.pkg "target/gluonfx/x86_64-darwin/Drifty GUI.pkg"
+          mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty GUI.app"
+          mv "target/gluonfx/x86_64-darwin/Drifty GUI.pkg" "target/gluonfx/x86_64-darwin/Drifty GUI.app" -t GUI
+        elif [ ${{ matrix.os }} == "ubuntu-latest" ]; then
+          mv "target/CLI/linux/Drifty CLI" -t CLI
+          mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty GUI"
+          mv "target/gluonfx/x86_64-linux/Drifty GUI" -t GUI
+        fi
     - name: Tar build files # To prevent file permission loss
-      run: tar -cvf ${{ matrix.os }}.tar target
+      run: tar -cvf ${{ matrix.os }}.tar CLI GUI
     - name: Push generated artifacts for ${{ matrix.os }}
       uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.os }}-Build-Files
         path: ${{ matrix.os }}.tar
         
-  list-Drifty-artifacts:
+  generate-metadata-for-Drifty-artifacts:
     runs-on: ubuntu-latest
     needs: package-Drifty
     steps:
     - uses: actions/checkout@v3
     - name: Get Drifty version from version.json file
-      run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
+      run: |
+        echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
+        echo "### Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
     - name: Set Drifty version in pom.xml
       run: mvn versions:set -DnewVersion=$VERSION
     - name: Download Build artifacts
       uses: actions/download-artifact@v3
     - name: Make OS specific build directories
       run: |
-        mkdir ubuntu-latest
-        mkdir macos-latest
-        mkdir windows-latest
+        mkdir linux
+        mkdir macos
+        mkdir windows
     - name: Extract build files from tar
       run: |
-        tar -xvf ubuntu-latest-Build-Files/ubuntu-latest.tar -C ubuntu-latest
-        tar -xvf macos-latest-Build-Files/macos-latest.tar -C macos-latest
-        tar -xvf windows-latest-Build-Files/windows-latest.tar -C windows-latest
+        tar -xvf ubuntu-latest-Build-Files/ubuntu-latest.tar -C linux
+        tar -xvf macos-latest-Build-Files/macos-latest.tar -C macos
+        tar -xvf windows-latest-Build-Files/windows-latest.tar -C windows
     - name: List all build artifacts for Ubuntu
-      run: tree ubuntu-latest
+      run: tree linux
     - name: List all build artifacts for macOS
-      run: tree macos-latest
+      run: tree macos
     - name: List all build artifacts for Windows
-      run: tree windows-latest
+      run: tree windows
     # - name: Create Release ($VERSION) with automated release notes
       # run: gh release create v$VERSION --generate-notes '/path/to/asset.extension#Asset-Display-string' # Assets path to be added later
