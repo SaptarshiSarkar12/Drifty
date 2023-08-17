@@ -81,15 +81,15 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         move "target/CLI/windows/Drifty CLI.exe" CLI
-        rename target/gluonfx/x86_64-windows/Drifty-1.0.msi "target/gluonfx/x86_64-windows/Drifty GUI.msi"
-        rename target/gluonfx/x86_64-windows/Drifty.exe "target/gluonfx/x86_64-windows/Drifty GUI.exe"
+        ren target/gluonfx/x86_64-windows/Drifty-1.0.msi "target/gluonfx/x86_64-windows/Drifty GUI.msi"
+        ren target/gluonfx/x86_64-windows/Drifty.exe "target/gluonfx/x86_64-windows/Drifty GUI.exe"
         move "target/gluonfx/x86_64-windows/Drifty GUI.msi" GUI
         move "target/gluonfx/x86_64-windows/Drifty GUI.exe" GUI
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
         mv "target/CLI/macos/Drifty CLI" CLI
-        mv target/gluonfx/x86_64-darwin/Drifty-1.0.pkg "target/gluonfx/x86_64-darwin/Drifty GUI.pkg"
+        mv target/gluonfx/x86_64-darwin/Drifty-1.0.0.pkg "target/gluonfx/x86_64-darwin/Drifty GUI.pkg"
         mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty GUI.app"
         mv "target/gluonfx/x86_64-darwin/Drifty GUI.pkg" GUI
         mv "target/gluonfx/x86_64-darwin/Drifty GUI.app" GUI
