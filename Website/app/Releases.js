@@ -27,6 +27,8 @@ export default function Releases({props}) {
     const [buttonStates, setButtonStates] = useState({});
     const [content,setContent]=useState([]);
     const [applicationType, setApplicationType] = useState("GUI");
+    let filteredReleases = [];
+
     const handleButtonClick = (index) => {
         setButtonStates((prevState) => ({
             ...prevState,
@@ -38,15 +40,24 @@ export default function Releases({props}) {
         setContent((prev)=> {prev[i]=cont.toString(); return prev});
     }
     useEffect(() => {
-        props.release.forEach(async (item, index) => {
+        filteredReleases.forEach(async (item, index) => {
             await markerToHtml(item.body, index);
         });
-    }, [props.release]);
+    }, [filteredReleases]);
 
     const handleApplicationTypeChange = (applicationType) => {
         setApplicationType(applicationType.target.value);
     }
 
+    const filterReleasesFromVersion2 = () => {
+        props.release.forEach(item => {
+            if (item.tag_name.startsWith("v1.2")) {
+                filteredReleases.push(item);
+            }
+        });
+    }
+    filterReleasesFromVersion2();
+    
     return (
         <div id="download" className="bg-gradient-to-b from-[#3697e1] from-8% via-cyan-300 to-bottom to-12% -mt-2">
             <h2 className="text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5" >Download Drifty</h2>
@@ -66,23 +77,29 @@ export default function Releases({props}) {
             </div>
             <div>
                 <h1 className="text-center font-bold text-2xl pt-10">All Releases</h1>
-                <div className={"mt-5 mb-5 divide-y divide-gray-700"}>
-                    <h2 className={"text-center font-bold text-xl pt-5"}>Drifty GUI releases</h2>
-                </div>
             </div>
-            {props.release.map((item, index) => {
-                return <div key={index} className="text-center p-5 text-base font-normal">
-                    <span className="font-bold">{item.name} </span>
-                    {index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}
-                    <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count+item.assets[1].download_count} Downloads</p>
-                    <button onClick={() => handleButtonClick(index)} className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
-                    {buttonStates[index] && <div className=" md:p-5 overflow-hidden"  dangerouslySetInnerHTML={{ __html:content[index]}}></div>}
-                    <div className="grid grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
-                        <a className="md:w-28 md:h-8 xs: w-36 bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl" href={item.assets[1].browser_download_url}>Download <i className="fab fa-brands fa-windows"></i></a>
-                        <a className="md:w-32 md:h-8 xs: w-36 bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl" href={item.assets[0].browser_download_url}>Download <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
+            {filteredReleases.map((item, index) => {
+                return (
+                    <div key={index} className="text-center p-5 text-base font-normal">
+                        <span className="font-bold">{item.name} </span>
+                        {index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}
+                        <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count} Downloads</p>
+                        <button onClick={() => handleButtonClick(index)}
+                                className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
+                        {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
+                                                     dangerouslySetInnerHTML={{__html: content[index]}}></div>}
+                        <div className="grid grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
+                            <a className="md:w-28 md:h-8 xs: w-36 bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                               href={item.assets[1].browser_download_url}>Download <i
+                                className="fab fa-brands fa-windows"></i></a>
+                            <a className="md:w-32 md:h-8 xs: w-36 bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                               href={item.assets[0].browser_download_url}>Download <i
+                                className="fab fa-brands fa-apple"></i> <i
+                                className="fab fa-brands fa-linux"></i></a>
+                        </div>
                     </div>
-                </div>
-            })}
+                )}
+            )}
         </div>
     )
 }
