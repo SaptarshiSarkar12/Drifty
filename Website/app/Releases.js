@@ -3,17 +3,30 @@ import { useEffect, useState } from "react"
 import { remark } from 'remark';
 import html from 'remark-html';
 
-function alertFunction(b){
-    if (confirm("Do you want to download Drifty?")){
-        alert("Thanks for Downloading!");
-        window.open(b? "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty_CLI.exe"
-        :"https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty.jar")
+function downloadDrifty(OSName, applicationType) {
+    if (applicationType === "CLI") {
+        if (OSName === "Windows") {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe");
+        } else if (OSName === "Linux") {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux");
+        } else {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos");
+        }
+    } else {
+        if (OSName === "Windows") {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe");
+        } else if (OSName === "Linux") {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI");
+        } else {
+            window.open("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg");
+        }
     }
 }
+
 export default function Releases({props}) {
     const [buttonStates, setButtonStates] = useState({});
     const [content,setContent]=useState([]);
-
+    const [applicationType, setApplicationType] = useState("GUI");
     const handleButtonClick = (index) => {
         setButtonStates((prevState) => ({
             ...prevState,
@@ -29,15 +42,34 @@ export default function Releases({props}) {
             await markerToHtml(item.body, index);
         });
     }, [props.release]);
-        
+
+    const handleApplicationTypeChange = (applicationType) => {
+        setApplicationType(applicationType.target.value);
+    }
+
     return (
         <div id="download" className="bg-gradient-to-b from-[#3697e1] from-8% via-cyan-300 to-bottom to-12% -mt-2">
-            <h2 className="text-5xl sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Download Drifty</h2>
-            <div className="md:flex md:justify-center lg:pl-10 md:pl-0 xs:pl-7">
-                <button className="md:inline-block lg:-mr-40 xs:block xs:pl-20 xs:animate-no  md:animate-no sm:m-auto sm:mb-4 xs:pt-4 xs:py-au xs:w-80 xs:mb-5 xs:h-14 md:pl-8 md:py-5   md:h-20 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-xl font-semibold md:text-3xl leading-tight rounded-full  hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertFunction(true)} >Download Now <i className="fab fa-brands fa-windows"></i></button>
-                <button className="md:inline-block xs:block xs:pl-20 xs:animate-no md:animate-no sm:m-auto sm:mt-4 xs:pt-4 xs:w-80 xs:h-14 md:pl-8  md:py-5 md:mt-0  md:h-20 bg-gradient-to-r from-blue-600 to-green-500 text-white font-semibold xs:text-xl md:text-3xl leading-tight rounded-full  hover:from-pink-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:to-yellow-500 hover:drop-shadow-lg  focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=>alertFunction(false)} >Download Now <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></button>
+            <h2 className="text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5" >Download Drifty</h2>
+            <div className={"grid-cols-1 justify-items-center"}>
+                <label id="listbox-label" className="text-center block text-xl font-medium leading-6 text-gray-900">Select Application Type</label>
+                <div className="grid grid-cols-1 justify-items-center pb-2">
+                    <select id="listbox" name="Select Application Type" className="block w-80 px-4 py-2 mt-1 text-base text-gray-900 bg-white border border-gray-300 border-2 select-none rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-700 focus:border-2 sm:text-sm" value={applicationType} onChange={handleApplicationTypeChange}>
+                        <option value="GUI">GUI</option>
+                        <option value="CLI">CLI</option>
+                    </select>
+                </div>
             </div>
-            <p className=" text-center font-bold pt-10 pl-9">All Releases</p>
+            <div className="grid w-auto h-auto lg:grid-cols-3 space-y-4 justify-items-center py-3 md:grid-cols-1">
+                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadDrifty("Windows", applicationType)} >Download Now <i className="fab fa-brands fa-windows"></i></button>
+                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadDrifty("Linux", applicationType)} >Download Now <i className="fab fa-brands fa-linux"></i></button>
+                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadDrifty("Mac", applicationType)} >Download Now <i className="fab fa-brands fa-apple"></i></button>
+            </div>
+            <div>
+                <h1 className="text-center font-bold text-2xl pt-10">All Releases</h1>
+                <div className={"mt-5 mb-5 divide-y divide-gray-700"}>
+                    <h2 className={"text-center font-bold text-xl pt-5"}>Drifty GUI releases</h2>
+                </div>
+            </div>
             {props.release.map((item, index) => {
                 return <div key={index} className="text-center p-5 text-base font-normal">
                     <span className="font-bold">{item.name} </span>
