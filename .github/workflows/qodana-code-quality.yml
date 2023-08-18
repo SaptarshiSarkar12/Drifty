@@ -22,7 +22,9 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
+          args: --baseline,qodana-java.sarif.json
           upload-result: true
+          artifact-name: qodana-java
       - name: 'Replace qodana.yaml with JavaScript linter configuration'
         run: |
           echo \
@@ -36,4 +38,6 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
+          args: --baseline,qodana-js.sarif.json
           upload-result: true
+          artifact-name: qodana-js
