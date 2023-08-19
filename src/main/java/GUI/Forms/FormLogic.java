@@ -108,6 +108,9 @@ public class FormLogic {
                     Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
                 }
                 else {
+                    for(Object jobObject : form.listView.getItems()) {
+                        Job job = (Job) jobObject;
+                    }
                     try {
                         Utility.isURLValid(presentLink);
                         Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
