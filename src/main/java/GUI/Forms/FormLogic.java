@@ -437,12 +437,12 @@ public class FormLogic {
     }
 
     private void verifyLink(String PreviousLink, String presentLink) {
-        if (clearingLink) {
-            clearingLink = false;
-            Platform.runLater(() -> form.lblLinkOut.setText(""));
-            return;
-        }
         if (!PreviousLink.equals(presentLink)) {
+            if (clearingLink) {
+                clearingLink = false;
+                Platform.runLater(() -> form.lblLinkOut.setText(""));
+                return;
+            }
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
                 setLinkOutput(GREEN, "Validating link ...");
                 linkValid.setValue(false);
