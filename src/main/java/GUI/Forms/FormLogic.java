@@ -16,9 +16,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
@@ -32,13 +29,11 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static GUI.Forms.Constants.monacoFont;
 import static GUI.Forms.Constants.*;
 
 public class FormLogic {
@@ -50,10 +45,12 @@ public class FormLogic {
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty linkValid = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
+    private static boolean clearingLink = false;
     private ConcurrentLinkedDeque<Job> jobList;
     private final String lineFeed = System.lineSeparator();
     private Folders folders;
     private Job selectedJob;
+
     private FormLogic() {
         folders = AppSettings.get.folders();
         jobList = AppSettings.get.jobs().jobList();
@@ -61,14 +58,15 @@ public class FormLogic {
     }
 
     public static void addJob(ConcurrentLinkedDeque<Job> list) {
-        for(Job job : list) {
+        for (Job job : list) {
             boolean hasJob = INSTANCE.jobList.stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
-            if(!hasJob) {
+            if (!hasJob) {
                 INSTANCE.jobList.addLast(job);
             }
         }
         INSTANCE.commitJobListToListView();
     }
+
     public static void setColor(Color color) {
         form.lblDownloadInfo.setTextFill(color);
     }
@@ -80,12 +78,9 @@ public class FormLogic {
     public static void setDir(String path) {
         form.tfDir.setText(path);
     }
+
     public static void initLogic(MainGridPane pane) {
         INSTANCE.start(pane);
-    }
-
-    public static void openWeb(String websiteURL, String websiteType) {
-        Main.openWebsite(websiteURL,websiteType);
     }
 
     private void start(MainGridPane pane) {
@@ -146,12 +141,12 @@ public class FormLogic {
             String link = form.tfLink.getText();
             String filename = form.tfFilename.getText();
             String dir = form.tfDir.getText();
-            if(Paths.get(dir).toFile().exists() && filename.length() > 3) {
+            if (Paths.get(dir).toFile().exists() && filename.length() > 3) {
                 jobList.remove(selectedJob);
-                jobList.add(new Job(link,dir,filename));
+                jobList.add(new Job(link, dir, filename));
                 commitJobListToListView();
             }
-            form.tfLink.clear();
+            clearLink();
             form.tfFilename.clear();
             updatingBatch.setValue(false);
         }).start());
@@ -160,13 +155,15 @@ public class FormLogic {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
                     setDirOutput(RED, "Directory cannot be empty!");
-                } else {
+                }
+                else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
                         setDirOutput(GREEN, "Directory exists!");
                         directoryExists.setValue(true);
-                    } else {
+                    }
+                    else {
                         setDirOutput(RED, "Directory does not exist or is not a directory!");
                     }
                 }
@@ -177,7 +174,7 @@ public class FormLogic {
 
     private void setControlActions() {
         form.ivBtnStart.setOnMouseClicked(e -> new Thread(() -> {
-            if(!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
+            if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
                 System.out.println("confirmDownload");
                 if (confirmDownload()) {
                     System.out.println("batchDownloader");
@@ -186,26 +183,27 @@ public class FormLogic {
             }
 
         }).start());
-        form.tfDir.setOnAction(e->updateBatch());
-        form.tfFilename.setOnAction(e->updateBatch());
+        form.tfDir.setOnAction(e -> updateBatch());
+        form.tfFilename.setOnAction(e -> updateBatch());
     }
 
-    private void updateBatch(){
+    private void updateBatch() {
         updatingBatch.setValue(false);
-        if(selectedJob != null) {
-            Job job = new Job(form.tfLink.getText(),form.tfDir.getText(),form.tfFilename.getText());
+        if (selectedJob != null) {
+            Job job = new Job(form.tfLink.getText(), form.tfDir.getText(), form.tfFilename.getText());
             jobList.remove(selectedJob);
             jobList.addLast(job);
             commitJobListToListView();
         }
         selectedJob = null;
     }
+
     private void batchDownloader() {
         processingBatch.setValue(true);
         updatingBatch.setValue(false);
         form.lblDownloadInfo.setTextFill(GREEN);
         new Thread(() -> {
-             if (!jobList.isEmpty()) {
+            if (!jobList.isEmpty()) {
                 checkFiles();
                 final int totalNumberOfFiles = jobList.size();
                 System.out.println("Number of files to download : " + totalNumberOfFiles);
@@ -227,12 +225,12 @@ public class FormLogic {
                         form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
                     });
                     thread.start();
-                    while(thread.getState().equals(Thread.State.RUNNABLE)) {
+                    while (thread.getState().equals(Thread.State.RUNNABLE)) {
                         sleep(10);
                     }
                     downloadInProgress.setValue(false);
                     Platform.runLater(() -> {
-                        if(((Worker<Integer>) task).valueProperty().get() == 0) {
+                        if (((Worker<Integer>) task).valueProperty().get() == 0) {
                             jobList.remove(job);
                             commitJobListToListView();
                         }
@@ -364,7 +362,7 @@ public class FormLogic {
     }
 
     private void getFilenames(String link) {
-        Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link,form.tfDir.getText());
+        Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, form.tfDir.getText());
         Worker<ConcurrentLinkedDeque<Job>> worker = task;
         Platform.runLater(() -> {
             form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
@@ -372,12 +370,12 @@ public class FormLogic {
         });
         new Thread(() -> {
             downloadInProgress.setValue(true);
-            Thread thread = new Thread(task);
-            thread.setDaemon(true);
-            thread.start();
+            Thread getFilenameThread = new Thread(task);
+            getFilenameThread.setDaemon(true);
+            getFilenameThread.start();
             sleep(2000);
             form.lblDownloadInfo.setTextFill(GREEN);
-            while(!thread.getState().equals(Thread.State.TERMINATED) && !thread.getState().equals(Thread.State.BLOCKED)) {
+            while (!getFilenameThread.getState().equals(Thread.State.TERMINATED) && !getFilenameThread.getState().equals(Thread.State.BLOCKED)) {
                 Platform.runLater(() -> {
                     if (worker.valueProperty().get() != null) {
                         for (Job job : worker.valueProperty().get()) {
@@ -391,12 +389,11 @@ public class FormLogic {
                 });
                 sleep(50);
             }
-            System.err.println("getFilenames Thread State: " + thread.getState());
             sleep(500);
             Platform.runLater(() -> {
                 if (worker.getValue() != null) {
-                    for(Job job : worker.getValue()) {
-                        if(!jobList.contains(job)) {
+                    for (Job job : worker.getValue()) {
+                        if (!jobList.contains(job)) {
                             jobList.add(job);
                         }
                         commitJobListToListView();
@@ -424,7 +421,7 @@ public class FormLogic {
         miClear.setOnAction(e -> {
             jobList.clear();
             commitJobListToListView();
-            form.tfLink.clear();
+            clearLink();
             form.tfFilename.clear();
             form.listView.getItems().clear();
             setLinkOut(GREEN, "");
@@ -440,15 +437,22 @@ public class FormLogic {
     }
 
     private void verifyLink(String PreviousLink, String presentLink) {
+        if (clearingLink) {
+            clearingLink = false;
+            Platform.runLater(() -> form.lblLinkOut.setText(""));
+            return;
+        }
         if (!PreviousLink.equals(presentLink)) {
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
                 setLinkOutput(GREEN, "Validating link ...");
                 linkValid.setValue(false);
                 if (presentLink.contains(" ")) {
                     Platform.runLater(() -> setLinkOutput(RED, "Link should not contain whitespace characters!"));
-                } else if (!isURL(presentLink)) {
+                }
+                else if (!isURL(presentLink)) {
                     Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
-                } else {
+                }
+                else {
                     try {
                         Utility.isURLValid(presentLink);
                         Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
@@ -457,7 +461,6 @@ public class FormLogic {
                         String errorMessage = e.getMessage();
                         Platform.runLater(() -> setLinkOutput(RED, errorMessage));
                     }
-
                 }
                 if (linkValid.getValue().equals(true)) {
                     getFilenames(presentLink);
@@ -472,6 +475,7 @@ public class FormLogic {
         Matcher m = p.matcher(text);
         return m.matches();
     }
+
     private void setLinkOutput(Color color, String message) {
         form.lblLinkOut.setTextFill(color);
         form.lblLinkOut.setText(message);
@@ -484,9 +488,14 @@ public class FormLogic {
 
     }
 
+    private void clearLink() {
+        clearingLink = true;
+        Platform.runLater(() -> form.tfLink.clear());
+    }
+
     private void clearControls() {
         Platform.runLater(() -> {
-            form.tfLink.clear();
+            clearLink();
             form.tfFilename.clear();
             form.lblDownloadInfo.textProperty().unbind();
             form.lblDownloadInfo.setText("");
@@ -538,13 +547,14 @@ public class FormLogic {
 
     private Text text(String string, boolean bold, Color color, double size) {
         Text text = new Text(string);
-        text.setFont(new Font(monacoFont.toExternalForm(), size));
+        text.setFont(new Font(MONACO_TTF.toExternalForm(), size));
         text.setFill(color);
         if (bold) text.setStyle("-fx-font-weight: bold");
         text.setWrappingWidth(710);
         text.setLineSpacing(.5);
         return text;
     }
+
     private void info() {
         double h = 20;
         double n = 16;
@@ -590,9 +600,9 @@ public class FormLogic {
         scrollPane.setPrefHeight(height);
         VBox vBox = new VBox(20, scrollPane, btnOK);
         vBox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(vBox);
+        Scene scene = Constants.getScene(vBox);
         stage.setScene(scene);
-        vBox.getStylesheets().add(Objects.requireNonNull(upDown).toString());
+        vBox.getStylesheets().add(Objects.requireNonNull(UP_DOWN_PNG).toString());
         vBox.setPadding(new Insets(10));
         stage.setAlwaysOnTop(true);
         btnOK.setOnAction(e -> stage.close());

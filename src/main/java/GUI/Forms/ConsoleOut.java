@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static GUI.Forms.Constants.*;
 import static javafx.scene.layout.AnchorPane.*;
 
 /**
@@ -94,17 +93,7 @@ public class ConsoleOut {
     private void makeScene() {
         stage = Constants.getStage();
         stage.initStyle(StageStyle.TRANSPARENT);
-        scene = new Scene(ap);
-        scene.getStylesheets().add(textAreaCSS.toExternalForm());
-        scene.getStylesheets().add(tabsCSS.toExternalForm());
-        scene.getStylesheets().add(contextMenuCSS.toExternalForm());
-        scene.getStylesheets().add(labelCSS.toExternalForm());
-        scene.getStylesheets().add(menuCSS.toExternalForm());
-        scene.getStylesheets().add(checkBoxCSS.toExternalForm());
-        scene.getStylesheets().add(textFieldCSS.toExternalForm());
-        scene.getStylesheets().add(vBoxCSS.toExternalForm());
-        scene.getStylesheets().add(sceneCSS.toExternalForm());
-        scene.getStylesheets().add(progressBarCSS.toExternalForm());
+        scene = Constants.getScene(ap);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.setX(mainX);
@@ -197,16 +186,16 @@ public class ConsoleOut {
     }
 
     private void button(double right, double bottom) {
-        ImageView button = new ImageView(Constants.imgCopyUp);
+        ImageView button = new ImageView(Constants.IMG_COPY_UP);
         button.getStyleClass().add("text-area-style"); // Add the custom CSS class
         button.setOpacity(.01);
-        double width = Constants.imgCopyUp.getWidth();
+        double width = Constants.IMG_COPY_UP.getWidth();
         button.setFitWidth(width * .5);
         button.setPreserveRatio(true);
         button.setOnMouseEntered(e -> button.setOpacity(1));
         button.setOnMouseExited(e -> button.setOpacity(.01));
-        button.setOnMousePressed(e -> button.setImage(Constants.imgCopyDown));
-        button.setOnMouseReleased(e -> button.setImage(Constants.imgCopyUp));
+        button.setOnMousePressed(e -> button.setImage(Constants.IMG_COPY_DOWN));
+        button.setOnMouseReleased(e -> button.setImage(Constants.IMG_COPY_UP));
         ap.getChildren().add(button);
         placeControl(button, -1, right, -1, bottom);
         button.setOnMouseClicked(e -> {

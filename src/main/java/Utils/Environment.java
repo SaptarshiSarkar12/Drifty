@@ -16,7 +16,12 @@ import java.nio.file.Paths;
 public class Environment {
     private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     public static void initializeEnvironment() {
-        messageBroker.sendMessage("User OS is : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
+        /*
+        This method is only called by Launcher class which means it only applies to Mode.GUI
+        It first determines which yt-dlp program to copy out of resources based on the OS.
+        Next it figures out which path to use to store yt-dlp and the users batch list.
+         */
+        messageBroker.sendMessage("OS : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
         String yt_dlpProgramName;
         if (OS.isWindows()) {
             yt_dlpProgramName = "yt-dlp.exe";
@@ -25,9 +30,14 @@ public class Environment {
         } else {
             yt_dlpProgramName = "yt-dlp";
         }
+        String filePath;
+        if (OS.isWindows()) {
+            filePath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
+        } else {
+            filePath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
+        }
         Program.setName(yt_dlpProgramName);
-        Program.setPath(Paths.get(System.getProperty("java.io.tmpdir")).toAbsolutePath().toString());
-        messageBroker.sendMessage("yt-dlp program name is : " + yt_dlpProgramName, MessageType.INFO, MessageCategory.LOG);
+        Program.setPath(filePath);
         InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
@@ -37,13 +47,7 @@ public class Environment {
         } catch (IOException e) {
             messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
         }
-        String batchPath;
-        if (OS.isWindows()) {
-            batchPath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
-        } else {
-            batchPath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
-        }
-        File folder = new File(batchPath);
+        File folder = new File(filePath);
         if (!folder.exists()) {
             try {
                 Files.createDirectory(folder.toPath());
@@ -51,7 +55,7 @@ public class Environment {
                 messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
             }
         }
-        Program.setBatchPath(batchPath);
+        Program.setBatchPath(filePath);
     }
 
     public static void updateYt_dlp() {

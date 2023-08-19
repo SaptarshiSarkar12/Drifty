@@ -6,7 +6,7 @@ import Preferences.AppSettings;
 import Utils.Environment;
 import Utils.Utility;
 
-/**
+/*
  * Because Java Compiler is not yet module-capable, we need to launch JavaFX from a
  * separate class in order to get the GUIs to load completely.
  * <p>
