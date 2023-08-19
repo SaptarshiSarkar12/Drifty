@@ -20,7 +20,7 @@ import static javafx.scene.layout.AnchorPane.*;
 
 public class Main extends Application {
     private static Main INSTANCE;
-    private Stage stage;
+    private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
     public static void main(String[] args) {
@@ -29,6 +29,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
         createScene();
         INSTANCE = this;
     }
@@ -41,8 +42,8 @@ public class Main extends Application {
         placeControl(menu, 0, 0, 0, -1);
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
-        stage = Constants.getStage();
-        stage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+        primaryStage = Constants.getStage(primaryStage);
+        primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(firstRun) {
                 firstRun = false;
                 return;
@@ -57,8 +58,8 @@ public class Main extends Application {
         }));
         scene = Constants.getScene(ap);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
         FormLogic.initLogic(gridPane);
     }
 
@@ -149,6 +150,6 @@ public class Main extends Application {
     }
 
     public static void toggleFullScreen() {
-        INSTANCE.stage.setFullScreen(!INSTANCE.stage.isFullScreen());
+        INSTANCE.primaryStage.setFullScreen(!INSTANCE.primaryStage.isFullScreen());
     }
 }
