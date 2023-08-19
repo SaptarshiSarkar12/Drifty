@@ -19,7 +19,9 @@
         <cliMain>CLI.Drifty_CLI</cliMain>
         <package.type/>
         <mac.app.store/>
-        <resources/>
+        <resource-config-file/>
+        <system-native-image-arg/>
+        <system-linker-arg/>
     </properties>
 
     <dependencies>
@@ -88,28 +90,33 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- GUI native image builder plugin-->
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
                     <mainClass>${guiMain}</mainClass>
+                    <linkerArgs>
+                        <arg>${system-linker-arg}</arg>
+                    </linkerArgs>
                     <nativeImageArgs>
                         <arg>--enable-url-protocols=https</arg>
                         <arg>--enable-url-protocols=http</arg>
                         <arg>--no-fallback</arg>
                         <arg>--verbose</arg>
-                        <arg>${resources}</arg>
+                        <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</arg>
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+                        <arg>${system-native-image-arg}</arg>
                     </nativeImageArgs>
                     <appIdentifier>${guiMain}</appIdentifier>
                     <releaseConfiguration>
                         <vendor>Drifty</vendor>
                         <description>Drifty is an open-source interactive file downloader system</description>
                         <packageType>${package.type}</packageType>
-                        <!-- for macOS/iOS -->
-                        <macAppStore>${mac.app.store}</macAppStore>
                         <bundleShortVersion>${project.version}</bundleShortVersion>
                         <bundleVersion>${project.version}</bundleVersion>
+                        <!-- for macOS/iOS -->
+                        <skipSigning>true</skipSigning>
                     </releaseConfiguration>
                 </configuration>
             </plugin>
@@ -118,7 +125,11 @@
 
     <profiles>
         <profile>
+            <!-- [Windows] CLI native image builder profile -->
             <id>build-drifty-cli-for-windows-latest</id>
+            <properties>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -129,9 +140,11 @@
                         <configuration>
                             <imageName>Drifty CLI</imageName>
                             <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/windows</outputDirectory>
                             <buildArgs>
                                 <buildArg>--enable-url-protocols=https</buildArg>
                                 <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
@@ -140,12 +153,6 @@
                         <executions>
                             <execution>
                                 <id>build</id>
-                                <configuration>
-                                    <outputDirectory>target/CLI/windows</outputDirectory>
-                                    <buildArgs>
-                                        <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-windows.json</arg>
-                                    </buildArgs>
-                                </configuration>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
@@ -157,7 +164,11 @@
             </build>
         </profile>
         <profile>
+            <!-- [Linux] CLI native image builder profile -->
             <id>build-drifty-cli-for-ubuntu-latest</id>
+            <properties>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -168,9 +179,11 @@
                         <configuration>
                             <imageName>Drifty CLI</imageName>
                             <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/linux</outputDirectory>
                             <buildArgs>
                                 <buildArg>--enable-url-protocols=https</buildArg>
                                 <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
@@ -179,12 +192,6 @@
                         <executions>
                             <execution>
                                 <id>build</id>
-                                <configuration>
-                                    <outputDirectory>target/CLI/linux</outputDirectory>
-                                    <buildArgs>
-                                        <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-linux.json</arg>
-                                    </buildArgs>
-                                </configuration>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
@@ -196,7 +203,11 @@
             </build>
         </profile>
         <profile>
+            <!-- [macOS] CLI native image builder profile -->
             <id>build-drifty-cli-for-macos-latest</id>
+            <properties>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -207,9 +218,11 @@
                         <configuration>
                             <imageName>Drifty CLI</imageName>
                             <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/macos</outputDirectory>
                             <buildArgs>
                                 <buildArg>--enable-url-protocols=https</buildArg>
                                 <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
@@ -218,12 +231,6 @@
                         <executions>
                             <execution>
                                 <id>build</id>
-                                <configuration>
-                                    <outputDirectory>target/CLI/mac</outputDirectory>
-                                    <buildArgs>
-                                        <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-mac.json</arg>
-                                    </buildArgs>
-                                </configuration>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
@@ -235,24 +242,31 @@
             </build>
         </profile>
         <profile>
+            <!-- [macOS] GUI native image builder profile -->
             <id>build-drifty-gui-for-macos-latest</id>
             <properties>
                 <package.type>pkg</package.type>
-                <resources>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-mac.json</resources>
+                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
                 <mac.app.store>true</mac.app.store>
             </properties>
         </profile>
         <profile>
+            <!-- [Linux] GUI native image builder profile -->
             <id>build-drifty-gui-for-ubuntu-latest</id>
             <properties>
-                <resources>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-linux.json</resources>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
             </properties>
         </profile>
         <profile>
+            <!-- [Windows] GUI native image builder profile -->
             <id>build-drifty-gui-for-windows-latest</id>
             <properties>
                 <package.type>msi</package.type>
-                <resources>-H:ResourceConfigurationFiles=${pom.basedir}/config/resource-config-windows.json</resources>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
             </properties>
         </profile>
     </profiles>
