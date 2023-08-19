@@ -1,7 +1,10 @@
 package Backend;
 import java.io.*;
 
-public class DefaultDownloadFolderLocationFinder {
+/*
+This class locates the default Download folder, not the download folder that the user provided.
+ */
+public class DownloadFolderLocator {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
     public static String findPath() {
