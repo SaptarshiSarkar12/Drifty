@@ -13,7 +13,9 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -38,33 +40,33 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
 
     @Override
     protected ConcurrentLinkedDeque<Job> call() {
-        updateProgress(0,1);
+        updateProgress(0, 1);
         this.updateMessage("Retrieving Filename");
         Timer progTimer = new Timer();
         progTimer.scheduleAtFixedRate(runProgress(), 2500, 150);
         Thread thread = new Thread(getFileCount());
         result = -1;
         thread.start();
-        while(result == -1) {
+        while (result == -1) {
             sleep(500);
         }
         boolean proceed = true;
-        if(fileCount > 0) {
+        if (fileCount > 0) {
             progTimer.cancel();
-            updateProgress(0,1);
+            updateProgress(0, 1);
             progTimer = null;
             System.out.println("Filecount: " + fileCount);
             AskYesNo ask = new AskYesNo("There are " + fileCount + " files in this list. Proceed and get all filenames?");
             proceed = ask.isYes();
         }
-        if(proceed) {
+        if (proceed) {
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(getJson(), 1000, 150);
             LinkedList<String> jsonList = Utility.getLinkMetadata(link);
             timer.cancel();
             sleep(500);//give timerTask enough time to do its last run
             jobList.clear();
-            for(String json : jsonList) {
+            for (String json : jsonList) {
                 String filename = Utility.getFilenameFromJson(json);
                 String fileLink = Utility.getURLFromJson(json);
                 String baseName = FilenameUtils.getBaseName(filename);
@@ -73,9 +75,9 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
             FormLogic.setColor(Constants.GREEN);
             updateMessage("File(s) added to batch.");
-            if(progTimer != null) progTimer.cancel();
+            if (progTimer != null) progTimer.cancel();
 
-            updateProgress(0,1);
+            updateProgress(0, 1);
         }
         return jobList;
     }
@@ -88,10 +90,10 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 ConcurrentLinkedDeque<File> deleteList = new ConcurrentLinkedDeque<>();
                 ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
                 File[] files = tempFolder.listFiles();
-                for(File file : files) {
+                for (File file : files) {
                     try {
                         String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                        if(ext.equalsIgnoreCase("json")) {
+                        if (ext.equalsIgnoreCase("json")) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename = Utility.getFilenameFromJson(jsonString);
                             String baseName = FilenameUtils.getBaseName(filename);
@@ -99,25 +101,28 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             updateMessage("Found file: " + filename);
                             String link = Utility.getURLFromJson(jsonString);
                             jobList.addLast(new Job(link, dir, filename));
-                            if(fileCount > 1){
+                            if (fileCount > 1) {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);
                             }
                             FormLogic.addJob(jobList);
                             deleteList.addLast(file);
                         }
-                    } catch (IOException ignored) {}
+                    } catch (IOException ignored) {
+                    }
                 }
                 for (File file : deleteList) {
                     try {
                         FileUtils.forceDelete(file);
-                    } catch (IOException ignored) {}
+                    } catch (IOException ignored) {
+                    }
                 }
             }
         };
     }
 
     boolean dirUp = true;
+
     private TimerTask runProgress() {
         return new TimerTask() {
             @Override
@@ -133,7 +138,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         dirUp = !dirUp;
                         value = 0.0;
                     }
-                    updateProgress(value,1.0);
+                    updateProgress(value, 1.0);
                 });
             }
         };
@@ -145,16 +150,16 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         return () -> {
             feedback.addListener(((observable, oldValue, newValue) -> {
                 String[] list = newValue.split(lineFeed);
-                 if(list.length > 3) {
-                     for(String line : list) {
-                         Matcher m = pattern.matcher(line);
-                         int value;
-                         if(m.find()) {
-                             fileCount = Integer.parseInt(m.group(2));
-                             break;
-                         }
-                     }
-                 }
+                if (list.length > 3) {
+                    for (String line : list) {
+                        Matcher m = pattern.matcher(line);
+                        int value;
+                        if (m.find()) {
+                            fileCount = Integer.parseInt(m.group(2));
+                            break;
+                        }
+                    }
+                }
             }));
             try {
                 String command = Program.get(Program.COMMAND);
@@ -165,7 +170,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 StringBuilder sbOutput = new StringBuilder();
                 try {
                     try (InputStream inputStream = process.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (this.isCancelled()) {
@@ -186,7 +191,9 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-private int result = -1;
+
+    private int result = -1;
+
     private void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
