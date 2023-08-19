@@ -3,13 +3,11 @@ package GUI.Forms;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.concurrent.TimeUnit;
@@ -58,9 +56,8 @@ public class AskYesNo {
         }
         width = width + (maxChar * 5);
         height = height + (lines.length * 30);
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        int screenHeight = (int) screenSize.getHeight();  // E.g.: 768
-        int screenWidth = (int) screenSize.getWidth();    // E.g.: 1366
+        int screenHeight = (int) Constants.SCREEN_HEIGHT;  // E.g.: 768
+        int screenWidth = (int) Constants.SCREEN_WIDTH;    // E.g.: 1366
         if (width > screenWidth) {
             width = screenWidth * .9;
         }
@@ -108,8 +105,8 @@ public class AskYesNo {
             stage = new Stage();
             stage.setWidth(width);
             stage.setHeight(height);
-            Scene scene = new Scene(vbox);
-            scene.getStylesheets().add(Constants.sceneCSS.toExternalForm());
+            Scene scene = Constants.getScene(vbox);
+            scene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             stage.setScene(scene);
             stage.setAlwaysOnTop(true);
             stage.showAndWait();

@@ -1,4 +1,5 @@
-package GUI.Support;
+package GUI.Forms;
+import GUI.Support.Folders;
 import Preferences.AppSettings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Pos;
@@ -69,7 +70,7 @@ public class ManageFolders {
 
      public void showScene() {
         stage = new Stage();
-        scene = new Scene(vBox);
+        scene = Constants.getScene(vBox);
         stage.setScene(scene);
         stage.setWidth(width);
         stage.setHeight(height);

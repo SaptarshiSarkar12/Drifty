@@ -17,15 +17,15 @@ import static GUI.Forms.Constants.*;
 public class MainGridPane extends GridPane {
     private ConsoleOut consoleOut;
     private boolean consoleOpen = false;
-    public ImageView ivLogo = newImageView(Constants.imgMainGUIBanner, .45);
+    public ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
     public ProgressBar pBar = pBar();
     public ListView listView = listView();
-    public final ImageView ivLink = newImageView(Constants.imgLinkLabel, .7);
-    public final ImageView ivDir = newImageView(Constants.imgDirLabel,.7);
-    public final ImageView ivFilename = newImageView(Constants.imgFilenameLabel,.7);
-    public final ImageView ivAutoPaste = newImageView(Constants.imgAutoPasteLabel,.7);
-    public final ImageView ivBtnStart = imageViewButton(Constants.imgStartUp, Constants.imgStartDown, .45);
-    public final ImageView ivBtnSave = imageViewButton(Constants.imgSaveUp, Constants.imgSaveDown, .45);
+    public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
+    public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL,.7);
+    public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL,.7);
+    public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL,.7);
+    public final ImageView ivBtnStart = imageViewButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
+    public final ImageView ivBtnSave = imageViewButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
     public final ImageView ivBtnConsole = imageToggle(.45);
 
     public final CheckBox cbAutoPaste = new CheckBox();
@@ -85,8 +85,8 @@ public class MainGridPane extends GridPane {
         add(ivBtnSave, 1, 13);
         add(ivBtnStart, 3, 13);
 
-        setPrefWidth(Constants.screenSize.getWidth() * .4);
-        setPrefHeight(Constants.screenSize.getHeight() * .4);
+        setPrefWidth(Constants.SCREEN_WIDTH * .4);
+        setPrefHeight(Constants.SCREEN_HEIGHT * .4);
         setVgrow(pBar,Priority.ALWAYS);
         setVgrow(lblDirOut,Priority.ALWAYS);
         setVgrow(lblFilenameOut,Priority.ALWAYS);
@@ -120,7 +120,7 @@ public class MainGridPane extends GridPane {
 
     private Label newLabel() {
         Label label = new Label("");
-        label.setFont(new Font(monacoFont.toExternalForm(), 20 * .75));
+        label.setFont(new Font(MONACO_TTF.toExternalForm(), 20 * .75));
         label.setPrefWidth(Double.MAX_VALUE);
         return label;
     }
@@ -167,11 +167,11 @@ public class MainGridPane extends GridPane {
     }
 
     private ImageView imageToggle(double scale) {
-        ImageView imageView = new ImageView(Constants.imgUpUp);
-        imageView.setOnMousePressed(e -> imageView.setImage(Constants.imgUpDown));
-        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.imgUpUp));
+        ImageView imageView = new ImageView(Constants.IMG_UP_UP);
+        imageView.setOnMousePressed(e -> imageView.setImage(Constants.IMG_UP_DOWN));
+        imageView.setOnMouseReleased(e -> imageView.setImage(Constants.IMG_UP_UP));
         imageView.setOnMouseClicked(e-> toggleConsole(false));
-        double width = Constants.imgUpUp.getWidth();
+        double width = Constants.IMG_UP_UP.getWidth();
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(width * scale);
         return imageView;
@@ -179,15 +179,15 @@ public class MainGridPane extends GridPane {
 
     private void toggleConsole(boolean close) {
         if (consoleOpen || close) {
-            ivBtnConsole.setImage(Constants.imgUpUp);
-            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgUpDown));
-            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgUpUp));
+            ivBtnConsole.setImage(Constants.IMG_UP_UP);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.IMG_UP_DOWN));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.IMG_UP_UP));
             consoleOut.hide();
             consoleOpen = false;
         } else {
-            ivBtnConsole.setImage(Constants.imgDownUp);
-            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.imgDownDown));
-            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.imgDownUp));
+            ivBtnConsole.setImage(Constants.IMG_DOWN_UP);
+            ivBtnConsole.setOnMousePressed(e -> ivBtnConsole.setImage(Constants.IMG_DOWN_DOWN));
+            ivBtnConsole.setOnMouseReleased(e -> ivBtnConsole.setImage(Constants.IMG_DOWN_UP));
             consoleOut.show();
             consoleOpen = true;
         }
