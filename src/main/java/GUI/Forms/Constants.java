@@ -80,6 +80,7 @@ class Constants {
     public static final Color RED = Color.rgb(157, 0, 0);
     public static final Color ORANGE = Color.rgb(180, 80, 0);
     public static final Color BLACK = Color.rgb(0, 0, 0);
+    public static final Color YELLOW = Color.rgb(255, 255, 0);
     public static final long SECOND = 1000;
     public static final long MINUTE = SECOND * 60;
     public static final long HOUR = MINUTE * 60;

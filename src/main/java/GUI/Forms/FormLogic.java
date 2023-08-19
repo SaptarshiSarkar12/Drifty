@@ -109,20 +109,27 @@ public class FormLogic {
                 }
                 else {
                     boolean dupLink = false;
+                    String dupFilename = "";
                     for(Object jobObject : form.listView.getItems()) {
                         Job job = (Job) jobObject;
                         if(job.getLink().equals(presentLink)) {
-                            //dupLink = true;
+                            dupLink = true;
+                            dupFilename = job.getFilename();
                             break;
                         }
                     }
-                    try {
-                        Utility.isURLValid(presentLink);
-                        Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
-                        linkValid.setValue(true);
-                    } catch (Exception e) {
-                        String errorMessage = e.getMessage();
-                        Platform.runLater(() -> setLinkOutput(RED, errorMessage));
+                    if(dupLink) {
+                        setLinkOut(YELLOW, "Already in batch: \"" + dupFilename + "\"");
+                    }
+                    else {
+                        try {
+                            Utility.isURLValid(presentLink);
+                            Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
+                            linkValid.setValue(true);
+                        } catch (Exception e) {
+                            String errorMessage = e.getMessage();
+                            Platform.runLater(() -> setLinkOutput(RED, errorMessage));
+                        }
                     }
                 }
                 if (linkValid.getValue().equals(true)) {
