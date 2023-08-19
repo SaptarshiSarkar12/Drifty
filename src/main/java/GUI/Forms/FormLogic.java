@@ -18,21 +18,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static GUI.Forms.Constants.*;
 
@@ -75,16 +75,8 @@ public class FormLogic {
         INSTANCE.folders = AppSettings.get.folders();
     }
 
-    public static void setDir(String path) {
-        form.tfDir.setText(path);
-    }
-
     public static void initLogic(MainGridPane pane) {
         INSTANCE.start(pane);
-    }
-
-    public static void setLink(String link) {
-        form.tfLink.setText(link);
     }
 
     public static boolean isAutoPaste() {
@@ -95,40 +87,40 @@ public class FormLogic {
         if (!PreviousLink.equals(presentLink)) {
             if (clearingLink) {
                 clearingLink = false;
-                Platform.runLater(() -> form.lblLinkOut.setText(""));
+                setLinkOutput(GREEN, "");
                 return;
             }
             if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
                 setLinkOutput(GREEN, "Validating link ...");
                 linkValid.setValue(false);
                 if (presentLink.contains(" ")) {
-                    Platform.runLater(() -> setLinkOutput(RED, "Link should not contain whitespace characters!"));
+                    setLinkOutput(RED, "Link should not contain whitespace characters!");
                 }
-                else if (!isURL(presentLink)) {
-                    Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
+                else if (!Utility.isURL(presentLink)) {
+                    setLinkOutput(RED, "String is not a URL");
                 }
                 else {
                     boolean dupLink = false;
                     String dupFilename = "";
-                    for(Object jobObject : form.listView.getItems()) {
+                    for (Object jobObject : form.listView.getItems()) {
                         Job job = (Job) jobObject;
-                        if(job.getLink().equals(presentLink)) {
+                        if (job.getLink().equals(presentLink)) {
                             dupLink = true;
                             dupFilename = job.getFilename();
                             break;
                         }
                     }
-                    if(dupLink) {
-                        setLinkOut(YELLOW, "Already in batch: \"" + dupFilename + "\"");
+                    if (dupLink) {
+                        setLinkOutput(YELLOW, "Already in batch: \"" + dupFilename + "\"");
                     }
                     else {
                         try {
                             Utility.isURLValid(presentLink);
-                            Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
+                            setLinkOutput(GREEN, "Valid URL");
                             linkValid.setValue(true);
                         } catch (Exception e) {
                             String errorMessage = e.getMessage();
-                            Platform.runLater(() -> setLinkOutput(RED, errorMessage));
+                            setLinkOutput(RED, errorMessage);
                         }
                     }
                 }
@@ -150,7 +142,7 @@ public class FormLogic {
             System.out.println("downloadInProgress old: " + oldValue + " new: " + newValue);
             System.out.println("listView: " + form.listView.itemsProperty().isNotNull().get());
         }));
-        form.tfDir.setText(folders.getDownloadFolder());
+        setDir(folders.getDownloadFolder());
         directoryExists.setValue(new File(form.tfDir.getText()).exists());
         BooleanBinding disableStartButton = downloadInProgress.or(directoryExists.not());
         BooleanBinding hideStartButton = form.listView.itemsProperty().isNotNull().and(downloadInProgress.not());
@@ -164,12 +156,12 @@ public class FormLogic {
                     updatingBatch.setValue(true);
                     selectedJob = job;
                     String error = job.getError();
-                    form.tfLink.setText(job.getLink());
-                    form.tfDir.setText(job.getDir());
-                    form.tfFilename.setText(job.getFilename());
+                    setLink(job.getLink());
+                    setDir(job.getDir());
+                    setFilename(job.getFilename());
                     if (error != null) {
                         if (!error.isEmpty()) {
-                            setFileOut(RED, error);
+                            setFilenameOutput(RED, error);
                         }
                     }
                 }
@@ -231,11 +223,10 @@ public class FormLogic {
     private void setControlActions() {
         form.ivBtnStart.setOnMouseClicked(e -> new Thread(() -> {
             if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
-                System.out.println("confirmDownload");
-                if (confirmDownload()) {
-                    System.out.println("batchDownloader");
-                    batchDownloader();
-                }
+                clearLink();
+                clearFilename();
+                checkForDuplicateFiles();
+                batchDownloader();
             }
 
         }).start());
@@ -269,11 +260,9 @@ public class FormLogic {
                     String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
                     System.out.println(processingFileText);
                     downloadInProgress.setValue(true);
-                    Platform.runLater(() -> {
-                        form.tfLink.setText(job.getLink());
-                        form.tfDir.setText(job.getDir());
-                        form.tfFilename.setText(job.getFilename());
-                    });
+                    setLink(job.getLink());
+                    setDir(job.getDir());
+                    setFilename(job.getFilename());
                     Task<Integer> task = new DownloadFile(job.getLink(), job.getFilename(), job.getDir());
                     Thread thread = new Thread(task);
                     Platform.runLater(() -> {
@@ -339,69 +328,31 @@ public class FormLogic {
         }
     }
 
-    private void setFilenameOutput(Color color, String message) {
-        form.lblFilenameOut.setTextFill(color);
-        form.lblFilenameOut.setText(message);
-        if (color.equals(RED)) {
-            new Thread(() -> {
-                sleep(3000);
-                Platform.runLater(() -> setFilenameOutput(GREEN, ""));
-            }).start();
-        }
-
-    }
-
-    private void setDownloadOutput(Color color, String message) {
-        form.lblDownloadInfo.setTextFill(color);
-        form.lblDownloadInfo.setText(message);
-        if (color.equals(RED)) {
-            new Thread(() -> {
-                sleep(3000);
-                Platform.runLater(() -> setDownloadOutput(GREEN, ""));
-            }).start();
-        }
-
-    }
-
-    private boolean confirmDownload() {
-        String filename = form.tfFilename.getText();
-        for (String folder : folders.getFolders()) {
-            boolean fileExists = false;
-            String filePath = "";
-            CheckFile walker = new CheckFile(folder, filename);
-            Thread thread = new Thread(walker);
-            thread.start();
-            while (thread.getState().equals(Thread.State.RUNNABLE)) {
-                sleep(100);
-            }
-
-            for (String path : walker.getFileList()) {
-                if (path.contains(filename)) {
-                    fileExists = true;
-                    filePath = path;
-                    break;
+    private void checkForDuplicateFiles() {
+        ConcurrentLinkedQueue<Job> deleteList = new ConcurrentLinkedQueue<>();
+        for (Job job : jobList) {
+            String filename = job.getFilename();
+            for (String folder : folders.getFolders()) {
+                boolean fileExists = false;
+                String filePath = "";
+                CheckFile walker = new CheckFile(folder, filename);
+                Thread thread = new Thread(walker);
+                thread.start();
+                while (thread.getState().equals(Thread.State.RUNNABLE)) {
+                    sleep(100);
+                }
+                if (walker.fileFound()) {
+                    String msg = "The file: " + lineFeed + lineFeed + filePath + lineFeed + lineFeed + " Already exists, Do you wish to download it again?";
+                    AskYesNo ask = new AskYesNo(msg);
+                    if (!ask.isYes()) {
+                        deleteList.add(job);
+                    }
                 }
             }
-
-            if (fileExists) {
-                String msg = "The file: " + lineFeed + lineFeed + filePath + lineFeed + lineFeed + " Already exists, Do you wish to download it again?";
-                AskYesNo ask = new AskYesNo(msg);
-                return ask.isYes();
-            }
         }
-        return true;
-    }
-
-    private void setDirOutput(Color color, String message) {
-        form.lblDirOut.setTextFill(color);
-        form.lblDirOut.setText(message);
-        if (color.equals(RED)) {
-            new Thread(() -> {
-                sleep(3000);
-                Platform.runLater(() -> setDirOutput(GREEN, ""));
-            }).start();
+        for (Job job : deleteList) {
+            jobList.remove(job);
         }
-
     }
 
     private void delayFolderSave(String folderString, File folder) {
@@ -480,9 +431,9 @@ public class FormLogic {
             clearLink();
             form.tfFilename.clear();
             form.listView.getItems().clear();
-            setLinkOut(GREEN, "");
-            setDirOut(GREEN, "");
-            setFileOut(GREEN, "");
+            setLinkOutput(GREEN, "");
+            setDirOutput(GREEN, "");
+            setFilenameOutput(GREEN, "");
         });
         miInfo.setOnAction(e -> info());
         return new ContextMenu(miDel, miClear, separator, miInfo);
@@ -492,61 +443,96 @@ public class FormLogic {
 
     }
 
-    private boolean isURL(String text) {
-        String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(text);
-        return m.matches();
+    public static void setLink(String link) {
+        Platform.runLater(() -> form.tfLink.setText(link));
     }
 
+    private void clearLink() {
+        clearingLink = true;
+        Platform.runLater(() -> {
+            form.tfLink.clear();
+            setLinkOutput(GREEN, "");
+        });
+    }
+
+    public static void setDir(String path) {
+        Platform.runLater(() -> form.tfDir.setText(path));
+    }
+
+    public static void setFilename(String path) {
+        Platform.runLater(() -> form.tfFilename.setText(path));
+    }
+
+    /*
+    These methods control the labels under the TextFields (arranged in the order they appear on the form)
+     */
+
     private void setLinkOutput(Color color, String message) {
-        form.lblLinkOut.setTextFill(color);
-        form.lblLinkOut.setText(message);
+        Platform.runLater(() -> {
+            form.lblLinkOut.setTextFill(color);
+            form.lblLinkOut.setText(message);
+        });
+        if (color.equals(RED)) {
+            new Thread(() -> {
+                sleep(4500);
+                setLinkOutput(GREEN, "");
+            }).start();
+        }
+    }
+
+    private void setDirOutput(Color color, String message) {
+        form.lblDirOut.setTextFill(color);
+        form.lblDirOut.setText(message);
         if (color.equals(RED)) {
             new Thread(() -> {
                 sleep(3000);
-                Platform.runLater(() -> setLinkOutput(GREEN, ""));
+                Platform.runLater(() -> setDirOutput(GREEN, ""));
             }).start();
         }
 
     }
 
-    private void clearLink() {
-        clearingLink = true;
-        Platform.runLater(() -> form.tfLink.clear());
-    }
-
-    private void clearControls() {
-        Platform.runLater(() -> {
-            clearLink();
-            form.tfFilename.clear();
-            form.lblDownloadInfo.textProperty().unbind();
-            form.lblDownloadInfo.setText("");
-            form.lblDirOut.setText("");
-            form.lblFilenameOut.setText("");
-            form.lblLinkOut.setText("");
-        });
-    }
-
-    protected static void setLinkOut(Color color, String message) {
-        Platform.runLater(() -> {
-            form.lblLinkOut.setTextFill(color);
-            form.lblLinkOut.setText(message);
-        });
-    }
-
-    private void setDirOut(Color color, String message) {
-        Platform.runLater(() -> {
-            form.lblDirOut.setTextFill(color);
-            form.lblDirOut.setText(message);
-        });
-    }
-
-    private void setFileOut(Color color, String message) {
+    private void setFilenameOutput(Color color, String message) {
         Platform.runLater(() -> {
             form.lblFilenameOut.setTextFill(color);
             form.lblFilenameOut.setText(message);
+            if (color.equals(RED)) {
+                new Thread(() -> {
+                    sleep(3000);
+                    Platform.runLater(() -> setFilenameOutput(GREEN, ""));
+                }).start();
+            }
         });
+    }
+
+    private void setDownloadOutput(Color color, String message) {
+        Platform.runLater(() -> {
+            form.lblDownloadInfo.textProperty().unbind();
+            form.lblDownloadInfo.setTextFill(color);
+            form.lblDownloadInfo.setText(message);
+            if (color.equals(RED)) {
+                new Thread(() -> {
+                    sleep(3000);
+                    Platform.runLater(() -> setDownloadOutput(GREEN, ""));
+                }).start();
+            }
+        });
+
+    }
+
+    private void clearFilename() {
+        Platform.runLater(() -> {
+            setFilenameOutput(GREEN, "");
+            setDownloadOutput(GREEN, "");
+            setFilenameOutput(GREEN, "");
+        });
+    }
+
+    private void clearControls() {
+        clearLink();
+        clearFilename();
+        setDirOutput(GREEN, "");
+        setLinkOutput(GREEN, "");
     }
 
     private void commitJobListToListView() {
@@ -557,10 +543,20 @@ public class FormLogic {
                 }
                 else {
                     if (jobList.size() > 1) {
+                        //Remove duplicate jobs if any
+                        Set<String> encounteredLinks = new HashSet<>();
+                        ConcurrentLinkedDeque<Job> duplicates = jobList.stream()
+                                .filter(job -> !encounteredLinks.add(job.getLink()))
+                                .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
+                        for (Job job : duplicates) {
+                            jobList.remove(job);
+                        }
+                        //Sort the Job list
                         ArrayList<Job> sortList = new ArrayList<>(jobList);
                         sortList.sort(Comparator.comparing(Job::toString));
                         jobList = new ConcurrentLinkedDeque<>(sortList);
                     }
+                    //Assign the jobList to the ListView
                     form.listView.getItems().setAll(jobList);
                 }
             }
@@ -568,68 +564,75 @@ public class FormLogic {
         });
     }
 
-    private Text text(String string, boolean bold, Color color, double size) {
-        Text text = new Text(string);
-        text.setFont(new Font(MONACO_TTF.toExternalForm(), size));
-        text.setFill(color);
-        if (bold) text.setStyle("-fx-font-weight: bold");
-        text.setWrappingWidth(710);
-        text.setLineSpacing(.5);
-        return text;
-    }
-
     private void info() {
         double h = 20;
         double n = 16;
         TextFlow tf = new TextFlow();
         tf.getChildren().add(text("Link:\n", true, Color.BLUE, h));
-        tf.getChildren().add(text("The batch form lets you easily create batches for downloading. You start by pasting your web links into the Link field. Once a link has been put into Link field, Drifty will start to process it where it will attempt to determine the name of the file being downloaded. Once it has done that, you will see the filename show up in the list box on the left.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("You can also add multiple links if they are separated with a single space. But you cannot have any spaces in the url itself or the link will not validate.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("The Drifty GUI lets you easily create batches for downloading, or download a single file. You start by pasting your web links into the Link field. Once a link has been put into Link field, Drifty will start to process it where it will attempt to determine the name of the file being downloaded. Once it has done that, you will see the filename show up in the batch list on the left.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("The URLs you paste into the link field must be valid URLs or Drifty wont process them.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Checking the ", false, BLACK, n));
         tf.getChildren().add(text("Auto Paste ", true, BLACK, n));
-        tf.getChildren().add(text("option will let you go to another window and put a link in the clipboard then when you come back to this window, the link will be pasted into the Link field automatically.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("If you paste in a link that happens to extract multiple files for downloading, such as a Youtube play list, Drifty will attempt to get all of the filenames from each one in the list. There will be a timer present that indicates the thread is working. This can take a long time depending on how many files are in the playlist, so be patient. You will not see any files in the job list until it has gone through every file in the list.\n\nHowever, you can click on the arrow to pop out the console viewer and see the process oin action.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("option will let you go to another window and put a link in the clipboard then when you come back to Drifty, the link will be pasted into the Link field automatically and processed then added to the batch list.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("If you paste in a link that happens to extract multiple files for downloading, such as a Youtube play list, Drifty will first attempt to get the number of files in the list, then it will ask you if you would like it to obtain all of the filenames in the list. The progress bar will indicate how many filenames have been obtained and the batch list will populate with download jobs with each new filename discovered.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Directory:\n", true, Color.BLUE, h));
-        tf.getChildren().add(text("Right clicking anywhere on the form brings up a menu where you can add directories to use as download folders. As you add more directories, they accumulate and persist between reloads. The last directory that you add will be considered the current download directory. Drifty will look through all of the added folders for a matching filename and it will let you know when it finds duplicates and give you the option to not download them again, once you start the batch job.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("Right clicking anywhere on the form brings up a menu where you can add directories to use as download folders. As you add more directories, they accumulate and persist between reloads. The last directory that you add last will be considered the current download directory. When you click start which begins the download process for all jobs in the batch list, Drifty will look through all of the added folders for a matching filenames and it will let you know when it finds duplicates and give you the option to not download them again.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Right clicking on the form and choosing to edit the directory list pulls up a form with all of the directories you have added. Click on one to remove it if necessary.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Filename:\n", true, Color.BLUE, h));
-        tf.getChildren().add(text("Drifty tries to get the name of the file from the link. This process can take a little time but not usually more than 5 to 10 seconds. If the file has no extension, then the extension of '.mp4' is added automatically. Also, If Drifty cannot determine the name of the file, you can type in whatever filename you'd like, then click on Save to commit that to the job in the list. You can also determine the download format of the file by setting the filename extension to one of these options: 3gp, aac, flv, m4a, mp3, mp4, ogg, wav, webm.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("Drifty tries to get the name of the file from the link. This process can take a little time but not usually more than 10 to 20 seconds. By default, Drifty adds the extension of 'mp4' to video file downloads because these have the highest chance of success. If Drifty cannot determine the name of the file, you can type in whatever filename you'd like, then click on Save to commit that to the job in the list. You can also determine the download format of the file by setting the filename extension to one of these options: 3gp, aac, flv, m4a, mp3, mp4, ogg, wav, webm.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Job list:\n", true, Color.BLUE, h));
         tf.getChildren().add(text("Once the list box on the left has the jobs in it that you want, you can click on each one in turn and the link, download directory and filename will be placed into the related fields so you can edit them if you need to. Just click on Save when you're done editing.\n\n", false, BLACK, n));
         tf.getChildren().add(text("You can right click on any item in the list to remove it or clear out the job list completely.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("The Job list and the directory list will persist between program reloads. The job list will empty out once all files have successfully downloaded. You start the batch by clicking on the Run Batch button. Any files that fail to download will get recycled back into a batch list on this form. I found that they will download usually after a second attempt.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("The Job list and the directory list will persist between program reloads. The job list will empty out one at a time as each file in the list is downloaded. You start the batch by clicking on the Start button. Any files that fail to download will get recycled back into the list on this form. I found that they will download usually after a second attempt.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Auto Paste:\n", true, Color.BLUE, h));
         tf.getChildren().add(text("The whole point of Auto Paste is to help speed things up. When you check the box, then go out to your browser and find links that you want to download, just copy them into your clip board then ALT+TAB back to Drifty or just click on it to make it the active window. Drifty will sense that it has been made the active screen and the contents of your clipboard will be analyzed to make sure it is a valid URL, then it will process it if so.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Multi-link pasting:\n", true, Color.BLUE, h));
-        tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\nAnother thing you can do is grab a YouTube playlist and Drifty will process extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Console (Arrow):\n", true, Color.BLUE, h));
-        tf.getChildren().add(text("Clicking on the arrow will extend the console which shows the output from the yt-dlp program. If you hover the mouse over the bottom right corner, a Copy button will appear. Clicking on it will copy all of the text from the console into your clipboard.\n", false, BLACK, n));
-        //tf.getChildren().add(text("\n\n",false,BLACK,13));
+        tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, BLACK, n));
+        tf.getChildren().add(text("Youtube Playlists:\n", true, Color.BLUE, h));
+        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));        //tf.getChildren().add(text("\n\n",false,BLACK,13));
+        tf.setStyle("-fx-background-color: transparent");
+
         double width = 500;
         double height = 700;
         Button btnOK = new Button("OK");
         Stage stage = getStage();
         stage.setWidth(width);
         stage.setHeight(height + 100);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        VBox vox = new VBox(tf);
+        //stage.initStyle(StageStyle.TRANSPARENT);
+        VBox vox = new VBox(20, tf);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
-        vox.setPadding(new Insets(15));
+        vox.setPadding(new Insets(30));
+        vox.setAlignment(Pos.CENTER);
+        vox.setStyle("-fx-background-color: transparent");
         ScrollPane scrollPane = new ScrollPane(vox);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setPrefWidth(width);
         scrollPane.setPrefHeight(height);
-        VBox vBox = new VBox(20, scrollPane, btnOK);
-        vBox.setAlignment(Pos.CENTER);
-        Scene scene = Constants.getScene(vBox);
+        scrollPane.setFitToWidth(true);
+        Scene scene = Constants.getScene(scrollPane);
+        scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
-        vBox.getStylesheets().add(Objects.requireNonNull(UP_DOWN_PNG).toString());
-        vBox.setPadding(new Insets(10));
         stage.setAlwaysOnTop(true);
+        stage.setTitle("Information");
+        stage.setOnCloseRequest(e -> stage.close());
+        VBox.setVgrow(vox, Priority.ALWAYS);
+        VBox.setVgrow(tf, Priority.ALWAYS);
         btnOK.setOnAction(e -> stage.close());
+        scrollPane.setVvalue(0.0);
         stage.showAndWait();
+    }
+
+    private Text text(String string, boolean bold, Color color, double size) {
+        // This is used by the info() method for custom text formatting
+        Text text = new Text(string);
+        text.setFont(new Font(MONACO_TTF.toExternalForm(), size));
+        text.setFill(color);
+        if (bold) text.setStyle("-fx-font-weight: bold;");
+        text.setWrappingWidth(710);
+        text.setLineSpacing(.5);
+        return text;
     }
 
     private void sleep(long time) {
@@ -639,7 +642,6 @@ public class FormLogic {
             throw new RuntimeException(e);
         }
     }
-
 }
 
 

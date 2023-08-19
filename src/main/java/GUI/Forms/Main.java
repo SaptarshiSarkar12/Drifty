@@ -2,6 +2,7 @@ package GUI.Forms;
 
 import Backend.Drifty;
 import Preferences.AppSettings;
+import Utils.Utility;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -52,7 +53,8 @@ public class Main extends Application {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
-                    FormLogic.setLink(clipboardText);
+                    if(Utility.isURL(clipboardText))
+                        FormLogic.setLink(clipboardText);
                 }
             }
         }));

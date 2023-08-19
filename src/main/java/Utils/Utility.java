@@ -1,6 +1,6 @@
 package Utils;
 
-import Backend.DefaultDownloadFolderLocationFinder;
+import Backend.DownloadFolderLocator;
 import Backend.Drifty;
 import Enums.MessageCategory;
 import Enums.MessageType;
@@ -128,7 +128,7 @@ public final class Utility {
         }
 
         else {
-            downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+            downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
 
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
@@ -304,6 +304,15 @@ public final class Utility {
                     .run();
         };
     }
+
+    public static boolean isURL(String text) {
+        String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        return m.matches();
+    }
+
+
 
     public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision) {
         // Both reMap methods will map a number in a range to a different range. So lets say you have a number, such as 25, and it came from a range of

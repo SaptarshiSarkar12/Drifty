@@ -18,6 +18,9 @@ class Constants {
     private static final Rectangle2D SCREEN_SIZE = Screen.getPrimary().getBounds();
     public static final double SCREEN_WIDTH = SCREEN_SIZE.getWidth();
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
+    /*
+    Graphic Files
+     */
     public static final URL DRIFTY_MAIN_PNG = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
     public static final URL BATCH_UP_PNG = Constants.class.getResource("/GUI/Buttons/Batch/BatchUp.png");
     public static final URL BATCH_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Batch/BatchDown.png");
@@ -41,6 +44,12 @@ class Constants {
     public static final URL AUTO_PASTE_PNG = Constants.class.getResource("/GUI/Labels/AutoPaste.png");
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/GUI/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/GUI/Labels/Filename.png");
+    public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/Icon1024.png");
+    public static final URL ICON_512_PNG = Constants.class.getResource("/GUI/Icons/Icon512.png");
+
+    /*
+    Stylesheets
+     */
     public static final URL SCENE_CSS = Constants.class.getResource("/GUI/CSS/Scene.css");
     public static final URL TABS_CSS = Constants.class.getResource("/GUI/CSS/Tabs.css");
     public static final URL LIST_VIEW_CSS = Constants.class.getResource("/GUI/CSS/ListView.css");
@@ -51,9 +60,16 @@ class Constants {
     public static final URL V_BOX_CSS = Constants.class.getResource("/GUI/CSS/VBox.css");
     public static final URL MENU_CSS = Constants.class.getResource("/GUI/CSS/Menu.css");
     public static final URL PROGRESS_BAR_CSS = Constants.class.getResource("/GUI/CSS/ProgressBar.css");
-    public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/Icon1024.png");
-    public static final URL ICON_512_PNG = Constants.class.getResource("/GUI/Icons/Icon512.png");
+    public static final URL SCROLL_PANE_CSS = Constants.class.getResource("/GUI/CSS/ScrollPane.css");
+
+    /*
+    Font Files
+     */
     public static final URL MONACO_TTF = Constants.class.getResource("/GUI/Fonts/Monaco.ttf");
+
+    /*
+    JavaFX Image Objects
+     */
     public static final Image IMG_MAIN_GUI_BANNER = new Image(DRIFTY_MAIN_PNG.toExternalForm());
     public static final Image IMG_LINK_LABEL = new Image(LINK_PNG.toExternalForm());
     public static final Image IMG_DIR_LABEL = new Image(DIRECTORY_PNG.toExternalForm());
@@ -75,16 +91,27 @@ class Constants {
     public static final Image IMG_START_DOWN = new Image(START_DOWN_PNG.toExternalForm());
     public static final Image IMG_SAVE_UP = new Image(SAVE_UP_PNG.toExternalForm());
     public static final Image IMG_SAVE_DOWN = new Image(SAVE_DOWN_PNG.toExternalForm());
+
+    /*
+    Colors
+     */
     public static final Color GREEN = Color.rgb(0, 255, 0);
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);
     public static final Color ORANGE = Color.rgb(180, 80, 0);
     public static final Color BLACK = Color.rgb(0, 0, 0);
     public static final Color YELLOW = Color.rgb(255, 255, 0);
+
+    /*
+    Time Constants
+     */
     public static final long SECOND = 1000;
     public static final long MINUTE = SECOND * 60;
     public static final long HOUR = MINUTE * 60;
 
+    /*
+    Methods for obtaining consistent Stages and Scenes
+     */
     public static Stage getStage() {
         Stage stage = new Stage();
         Image icon;
@@ -116,6 +143,7 @@ class Constants {
         scene.getStylesheets().add(SCENE_CSS.toExternalForm());
         scene.getStylesheets().add(PROGRESS_BAR_CSS.toExternalForm());
         scene.getStylesheets().add(LIST_VIEW_CSS.toExternalForm());
+        scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
         return scene;
     }
 }
