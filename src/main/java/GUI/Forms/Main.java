@@ -41,7 +41,7 @@ public class Main extends Application {
         placeControl(menu, 0, 0, 0, -1);
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
-        stage = new Stage();
+        stage = Constants.getStage();
         stage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if(firstRun) {
                 firstRun = false;
