@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
       checks: write
     steps:
       - uses: actions/checkout@v3
@@ -22,12 +21,22 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
+          args: --baseline,qodana-java.sarif.json
           upload-result: true
-      - name: 'Remove qodana.yaml to initiate auto-js community linter'
-        run: "rm -r qodana.yaml"
+          artifact-name: qodana-java
+      - name: 'Replace qodana.yaml with JavaScript linter configuration'
+        run: |
+          echo \
+          "version: '1.0'
+          profile:
+            name: qodana.recommended
+          projectJDK: 19
+          linter: jetbrains/qodana-js:latest" > qodana.yaml
       - name: 'JetBrains Qodana Scan for JavaScript code'
         uses: JetBrains/qodana-action@main
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
+          args: --baseline,qodana-js.sarif.json
           upload-result: true
+          artifact-name: qodana-js
