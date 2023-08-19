@@ -11,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 
 import static GUI.Forms.Constants.*;
 
@@ -114,6 +116,23 @@ public class MainGridPane extends GridPane {
 
     private ListView listView() {
         ListView<Job> listView = new ListView<>();
+        listView.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Job item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    // Make empty cells not selectable
+                    setDisable(true);
+                    setText("");
+                }
+                else {
+                    // Set the text for non-empty cells
+                    setDisable(false);
+                    setText(item.toString());
+                }
+            }
+        });
+
         listView.setMaxWidth(250);
         return listView;
     }
