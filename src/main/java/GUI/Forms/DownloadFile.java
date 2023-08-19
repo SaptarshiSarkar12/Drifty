@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Enums.Domain;
 import Enums.Program;
 import Enums.Format;
 import Utils.Utility;
@@ -26,11 +27,13 @@ public class DownloadFile extends Task<Integer> {
     private final String link;
     private final String filename;
     private final String dir;
+    private final Domain domain;
 
     public DownloadFile(String link, String filename, String dir) {
         this.link = link;
         this.filename = filename;
         this.dir = dir;
+        this.domain = Domain.getDomain(link);
         setProperties();
     }
 
@@ -42,9 +45,12 @@ public class DownloadFile extends Task<Integer> {
         outputFileName = Utility.cleanFilename(outputFileName);
         updateMessage("Trying to download " + outputFileName);
         String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
-        String[] fullCommand = (Format.isValid(ext)) ?
-                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
-                new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+        String[] fullCommand = switch(domain) {
+            case YOUTUBE, INSTAGRAM -> (Format.isValid(ext)) ?
+                    new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
+                    new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+            case OTHER -> new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+        };
         ProcessBuilder pb = new ProcessBuilder(fullCommand);
         StringBuilder sb = new StringBuilder();
         for (String arg : pb.command()) sb.append(arg).append(" ");
