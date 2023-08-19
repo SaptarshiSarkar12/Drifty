@@ -108,8 +108,13 @@ public class FormLogic {
                     Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
                 }
                 else {
+                    boolean dupLink = false;
                     for(Object jobObject : form.listView.getItems()) {
                         Job job = (Job) jobObject;
+                        if(job.getLink().equals(presentLink)) {
+                            //dupLink = true;
+                            break;
+                        }
                     }
                     try {
                         Utility.isURLValid(presentLink);

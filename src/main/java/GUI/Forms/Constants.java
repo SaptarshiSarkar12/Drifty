@@ -1,6 +1,5 @@
 package GUI.Forms;
 
-import Enums.OS;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -88,26 +87,20 @@ class Constants {
     public static Stage getStage() {
         Stage stage = new Stage();
         Image icon;
-        if (OS.isMac()) {
-            icon = new Image(ICON_1024_PNG.toExternalForm());
-        } else {
-            icon = new Image(ICON_512_PNG.toExternalForm());
-        }
+        icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);
         stage.setOnCloseRequest(e -> System.exit(0));
+        stage.setTitle("Drifty GUI");
         return stage;
     }
 
     public static Stage getStage(Stage stage) {
         Image icon;
-        if (OS.isMac()) {
-            icon = new Image(ICON_1024_PNG.toExternalForm());
-        } else {
-            icon = new Image(ICON_512_PNG.toExternalForm());
-        }
+        icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);
         stage.setOnCloseRequest(e -> System.exit(0));
         stage.setResizable(true);
+        stage.setTitle("Drifty GUI");
         return stage;
     }
 
