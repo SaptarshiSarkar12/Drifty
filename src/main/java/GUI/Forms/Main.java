@@ -9,6 +9,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -21,7 +22,7 @@ public class Main extends Application {
     private static Main INSTANCE;
     private Stage stage;
     private Scene scene;
-
+    private boolean firstRun = true;
     public static void main(String[] args) {
         launch(args);
     }
@@ -41,6 +42,19 @@ public class Main extends Application {
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
         stage = new Stage();
+        stage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if(firstRun) {
+                firstRun = false;
+                return;
+            }
+            if (FormLogic.isAutoPaste()) {
+                Clipboard clipboard = Clipboard.getSystemClipboard();
+                if (clipboard.hasString()) {
+                    String clipboardText = clipboard.getString();
+                    FormLogic.setLink(clipboardText);
+                }
+            }
+        }));
         scene = Constants.getScene(ap);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         stage.setScene(scene);

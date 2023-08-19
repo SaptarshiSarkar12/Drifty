@@ -83,6 +83,47 @@ public class FormLogic {
         INSTANCE.start(pane);
     }
 
+    public static void setLink(String link) {
+        form.tfLink.setText(link);
+    }
+
+    public static boolean isAutoPaste() {
+        return form.cbAutoPaste.isSelected();
+    }
+
+    private void verifyLink(String PreviousLink, String presentLink) {
+        if (!PreviousLink.equals(presentLink)) {
+            if (clearingLink) {
+                clearingLink = false;
+                Platform.runLater(() -> form.lblLinkOut.setText(""));
+                return;
+            }
+            if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
+                setLinkOutput(GREEN, "Validating link ...");
+                linkValid.setValue(false);
+                if (presentLink.contains(" ")) {
+                    Platform.runLater(() -> setLinkOutput(RED, "Link should not contain whitespace characters!"));
+                }
+                else if (!isURL(presentLink)) {
+                    Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
+                }
+                else {
+                    try {
+                        Utility.isURLValid(presentLink);
+                        Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
+                        linkValid.setValue(true);
+                    } catch (Exception e) {
+                        String errorMessage = e.getMessage();
+                        Platform.runLater(() -> setLinkOutput(RED, errorMessage));
+                    }
+                }
+                if (linkValid.getValue().equals(true)) {
+                    getFilenames(presentLink);
+                }
+            }
+        }
+    }
+
     private void start(MainGridPane pane) {
         form = pane;
         setControlProperties();
@@ -434,39 +475,6 @@ public class FormLogic {
 
     private void downloadFiles() {
 
-    }
-
-    private void verifyLink(String PreviousLink, String presentLink) {
-        if (!PreviousLink.equals(presentLink)) {
-            if (clearingLink) {
-                clearingLink = false;
-                Platform.runLater(() -> form.lblLinkOut.setText(""));
-                return;
-            }
-            if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
-                setLinkOutput(GREEN, "Validating link ...");
-                linkValid.setValue(false);
-                if (presentLink.contains(" ")) {
-                    Platform.runLater(() -> setLinkOutput(RED, "Link should not contain whitespace characters!"));
-                }
-                else if (!isURL(presentLink)) {
-                    Platform.runLater(() -> setLinkOutput(RED, "String is not a URL"));
-                }
-                else {
-                    try {
-                        Utility.isURLValid(presentLink);
-                        Platform.runLater(() -> setLinkOutput(GREEN, "Valid URL"));
-                        linkValid.setValue(true);
-                    } catch (Exception e) {
-                        String errorMessage = e.getMessage();
-                        Platform.runLater(() -> setLinkOutput(RED, errorMessage));
-                    }
-                }
-                if (linkValid.getValue().equals(true)) {
-                    getFilenames(presentLink);
-                }
-            }
-        }
     }
 
     private boolean isURL(String text) {
