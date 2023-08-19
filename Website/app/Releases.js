@@ -81,7 +81,7 @@ export default function Releases({props}) {
             {filteredReleases.map((item, index) => {
                 return (
                     <div key={index} className="text-center p-5 text-base font-normal">
-                        <span className="font-bold">{item.name} </span>
+                        <span className="font-bold">{item.tag_name} </span>
                         {index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}
                         <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count} Downloads</p>
                         <button onClick={() => handleButtonClick(index)}
