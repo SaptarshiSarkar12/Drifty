@@ -98,7 +98,6 @@ public class FileDownloader implements Runnable {
                     } catch (InterruptedException ignored) {}
                 } else {
                     InputStream urlStream = url.openStream();
-                    System.out.println();
                     readableByteChannel = Channels.newChannel(urlStream);
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
                     ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
@@ -239,7 +238,7 @@ public class FileDownloader implements Runnable {
                         }
                         if (isYoutubeLink(link)) {
                             downloadFromYouTube(tempDir);
-                        } else if (!isInstagramImage) {
+                        } else {
                             downloadFromInstagram(tempDir);
                         }
                     } catch (InterruptedException ie) {

@@ -2,6 +2,7 @@ package GUI.Forms;
 
 import GUI.Support.Folders;
 import GUI.Support.Job;
+import GUI.Support.JobHistory;
 import GUI.Support.Jobs;
 import Preferences.AppSettings;
 import Utils.CheckFile;
@@ -27,17 +28,16 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static GUI.Forms.Constants.*;
 
 public class FormLogic {
-
     private static final FormLogic INSTANCE = new FormLogic();
     private static MainGridPane form;
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
@@ -46,15 +46,24 @@ public class FormLogic {
     private static final BooleanProperty linkValid = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private static boolean clearingLink = false;
+    private final String nl = System.lineSeparator();
     private ConcurrentLinkedDeque<Job> jobList;
-    private final String lineFeed = System.lineSeparator();
     private Folders folders;
     private Job selectedJob;
+    private final JobHistory jobHistory;
 
     private FormLogic() {
         folders = AppSettings.get.folders();
         jobList = AppSettings.get.jobs().jobList();
+        jobHistory = AppSettings.get.jobHistory();
         commitJobListToListView();
+    }
+
+    private void start(MainGridPane pane) {
+        form = pane;
+        setControlProperties();
+        setControlActions();
+        form.tfLink.requestFocus();
     }
 
     public static void addJob(ConcurrentLinkedDeque<Job> list) {
@@ -84,64 +93,62 @@ public class FormLogic {
     }
 
     private void verifyLink(String PreviousLink, String presentLink) {
-        if (!PreviousLink.equals(presentLink)) {
-            if (clearingLink) {
-                clearingLink = false;
-                setLinkOutput(GREEN, "");
-                return;
-            }
-            if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
-                setLinkOutput(GREEN, "Validating link ...");
-                linkValid.setValue(false);
-                if (presentLink.contains(" ")) {
-                    setLinkOutput(RED, "Link should not contain whitespace characters!");
+        new Thread(() -> {
+            if (!PreviousLink.equals(presentLink)) {
+                if (clearingLink) {
+                    clearingLink = false;
+                    setLinkOutput(GREEN, "");
+                    return;
                 }
-                else if (!Utility.isURL(presentLink)) {
-                    setLinkOutput(RED, "String is not a URL");
-                }
-                else {
-                    boolean dupLink = false;
-                    String dupFilename = "";
-                    for (Object jobObject : form.listView.getItems()) {
-                        Job job = (Job) jobObject;
-                        if (job.getLink().equals(presentLink)) {
-                            dupLink = true;
-                            dupFilename = job.getFilename();
-                            break;
-                        }
+                if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
+                    setLinkOutput(GREEN, "Validating link ...");
+                    checkFiles();
+                    linkValid.setValue(false);
+                    if (presentLink.contains(" ")) {
+                        setLinkOutput(RED, "Link should not contain whitespace characters!");
                     }
-                    if (dupLink) {
-                        setLinkOutput(YELLOW, "Already in batch: \"" + dupFilename + "\"");
+                    else if (!Utility.isURL(presentLink)) {
+                        setLinkOutput(RED, "String is not a URL");
                     }
                     else {
-                        try {
-                            Utility.isURLValid(presentLink);
-                            setLinkOutput(GREEN, "Valid URL");
-                            linkValid.setValue(true);
-                        } catch (Exception e) {
-                            String errorMessage = e.getMessage();
-                            setLinkOutput(RED, errorMessage);
+                        if (linkExistsButUserProceeds(presentLink)) {
+                            boolean dupLink = false;
+                            String dupFilename = "";
+                            for (Object jobObject : form.listView.getItems()) {
+                                Job job = (Job) jobObject;
+                                if (job.getLink().equals(presentLink)) {
+                                    dupLink = true;
+                                    dupFilename = job.getFilename();
+                                    break;
+                                }
+                            }
+                            if (dupLink) {
+                                setLinkOutput(YELLOW, "Already in batch: \"" + dupFilename + "\"");
+                            }
+                            else {
+                                try {
+                                    Utility.isURLValid(presentLink);
+                                    setLinkOutput(GREEN, "Valid URL");
+                                    linkValid.setValue(true);
+                                } catch (Exception e) {
+                                    String errorMessage = e.getMessage();
+                                    setLinkOutput(RED, errorMessage);
+                                }
+                            }
+                        }
+                        else {
+                            return;
                         }
                     }
-                }
-                if (linkValid.getValue().equals(true)) {
-                    getFilenames(presentLink);
+                    if (linkValid.getValue().equals(true)) {
+                        getFilenames(presentLink);
+                    }
                 }
             }
-        }
-    }
-
-    private void start(MainGridPane pane) {
-        form = pane;
-        setControlProperties();
-        setControlActions();
+        }).start();
     }
 
     private void setControlProperties() {
-        downloadInProgress.addListener(((observable, oldValue, newValue) -> {
-            System.out.println("downloadInProgress old: " + oldValue + " new: " + newValue);
-            System.out.println("listView: " + form.listView.itemsProperty().isNotNull().get());
-        }));
         setDir(folders.getDownloadFolder());
         directoryExists.setValue(new File(form.tfDir.getText()).exists());
         BooleanBinding disableStartButton = downloadInProgress.or(directoryExists.not());
@@ -179,10 +186,9 @@ public class FormLogic {
         });
         form.listView.setContextMenu(getListMenu());
         form.ivBtnStart.visibleProperty().bind(hideStartButton);
-        form.tfLink.editableProperty().bind(disableInputs);
         form.tfDir.editableProperty().bind(disableInputs);
         form.tfFilename.editableProperty().bind(disableInputs);
-        Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + lineFeed + "Link field when switching back to this screen."));
+        Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + nl + "Link field when switching back to this screen."));
         form.cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
         form.ivBtnSave.setOnMouseClicked(e -> new Thread(() -> {
@@ -217,6 +223,7 @@ public class FormLogic {
                 }
             }
         }));
+        form.tfLink.editableProperty().bind(disableInputs);
         form.tfLink.textProperty().addListener(((observable, oldValue, newValue) -> verifyLink(oldValue, newValue)));
     }
 
@@ -225,7 +232,6 @@ public class FormLogic {
             if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
                 clearLink();
                 clearFilename();
-                checkForDuplicateFiles();
                 batchDownloader();
             }
 
@@ -250,15 +256,29 @@ public class FormLogic {
         updatingBatch.setValue(false);
         form.lblDownloadInfo.setTextFill(GREEN);
         new Thread(() -> {
-            if (!jobList.isEmpty()) {
-                checkFiles();
+            if (jobList != null && !jobList.isEmpty()) {
                 final int totalNumberOfFiles = jobList.size();
-                System.out.println("Number of files to download : " + totalNumberOfFiles);
                 int fileCount = 0;
                 for (Job job : jobList) {
                     fileCount++;
                     String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
-                    System.out.println(processingFileText);
+                    if (fileExists(job.getFilename())) {
+                        Platform.runLater(() -> setDownloadOutput(TEAL, job.getFilename() + " Exists already!"));
+                        jobList.remove(job);
+                        jobHistory.addJob(job);
+                        commitJobListToListView();
+                        sleep(2500);
+                        for (double x = 1; x >= 0; x -= .05) {
+                            final double opacity = x;
+                            Platform.runLater(() -> form.lblDownloadInfo.setOpacity(opacity));
+                            sleep(75);
+                        }
+                        Platform.runLater(() -> {
+                            form.lblDownloadInfo.setText("");
+                            form.lblDownloadInfo.setOpacity(1);
+                        });
+                        continue;
+                    }
                     downloadInProgress.setValue(true);
                     setLink(job.getLink());
                     setDir(job.getDir());
@@ -271,12 +291,13 @@ public class FormLogic {
                     });
                     thread.start();
                     while (thread.getState().equals(Thread.State.RUNNABLE)) {
-                        sleep(10);
+                        sleep(1000);
                     }
                     downloadInProgress.setValue(false);
                     Platform.runLater(() -> {
                         if (((Worker<Integer>) task).valueProperty().get() == 0) {
                             jobList.remove(job);
+                            jobHistory.addJob(job);
                             commitJobListToListView();
                         }
                     });
@@ -284,74 +305,77 @@ public class FormLogic {
                 }
             }
             processingBatch.setValue(false);
+            clearLink();
+            clearFilename();
         }).start();
     }
 
-    private void checkFiles() {
-        Map<String, Job> pathJobMap = new HashMap<>();
-        List<String> files = new ArrayList<>();
-        for (Job job : jobList) {
-            files.add(job.getFilename());
-        }
-
-        for (String folder : folders.getFolders()) {
-            CheckFile walker = new CheckFile(folder, files);
-            Thread thread = new Thread(walker);
+    private boolean fileExists(String filename) {
+        for (String folder : AppSettings.get.folders().getFolders()) {
+            Path downloadFolder = Paths.get(folder);
+            CheckFile checkFile = new CheckFile(downloadFolder, filename);
+            Thread thread = new Thread(checkFile);
             thread.start();
             while (thread.getState().equals(Thread.State.RUNNABLE)) {
-                sleep(100);
+                sleep(250);
             }
-
-            LinkedList<String> list = walker.getFileList();
-            for (Job job : jobList) {
-                for (String path : list) {
-                    if (path.contains(job.getFilename())) {
-                        pathJobMap.put(path, job);
-                    }
-                }
-            }
+            return checkFile.fileFound();
         }
-
-        if (!pathJobMap.isEmpty()) {
-            StringBuilder sb = new StringBuilder("The following files already exist:" + lineFeed + lineFeed);
-            for (String path : pathJobMap.keySet()) {
-                sb.append(path).append(lineFeed);
-            }
-
-            sb.append(lineFeed).append("Do you want to download them again?");
-            AskYesNo ask = new AskYesNo(sb.toString());
-            if (!ask.isYes()) {
-                for (Job job : pathJobMap.values()) {
-                    jobList.remove(job);
-                }
-            }
-        }
+        return false;
     }
 
-    private void checkForDuplicateFiles() {
-        ConcurrentLinkedQueue<Job> deleteList = new ConcurrentLinkedQueue<>();
-        for (Job job : jobList) {
-            String filename = job.getFilename();
-            for (String folder : folders.getFolders()) {
-                boolean fileExists = false;
-                String filePath = "";
-                CheckFile walker = new CheckFile(folder, filename);
-                Thread thread = new Thread(walker);
-                thread.start();
-                while (thread.getState().equals(Thread.State.RUNNABLE)) {
-                    sleep(100);
+    private boolean linkExistsButUserProceeds(String link) {
+        List<Job> deleteList = new ArrayList<>();
+        for (Job job : jobHistory.getHistory()) {
+            if (job.getLink().equals(link)) {
+                AskYesNo ask = new AskYesNo("You have processed this link once before, do you wish to continue?");
+                if (ask.getResponse().isYes()) {
+                    ask = new AskYesNo("You must change the name of the file if you wish to download this file\n" +
+                            "again because Drifty will not overwrite an existing file.", true);
+                    ask.showOK();
+                    form.tfFilename.setText(job.getFilename());
+                    jobList.addLast(job);
+                    commitJobListToListView();
+                    updatingBatch.setValue(true);
+                    selectedJob = job;
+                    Platform.runLater(() -> form.tfFilename.requestFocus());
+                    return false;
                 }
-                if (walker.fileFound()) {
-                    String msg = "The file: " + lineFeed + lineFeed + filePath + lineFeed + lineFeed + " Already exists, Do you wish to download it again?";
-                    AskYesNo ask = new AskYesNo(msg);
-                    if (!ask.isYes()) {
-                        deleteList.add(job);
+                else {
+                    clearLink();
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void checkFiles() {
+        List<Job> deleteList = new ArrayList<>();
+        for (Job job : jobHistory.getHistory()) {
+            for (Job listJob : jobList) {
+                if (job.getLink().equals(listJob.getLink())) {
+                    for (String folder : folders.getFolders()) {
+                        CheckFile walker = new CheckFile(folder, job.getFilename());
+                        Thread thread = new Thread(walker);
+                        thread.start();
+                        while (thread.getState().equals(Thread.State.RUNNABLE)) {
+                            sleep(100);
+                        }
+                        if (walker.fileFound()) {
+                            AskYesNo ask = new AskYesNo("You have already downloaded the file:" + nl.repeat(2) + job.getFilename() + nl.repeat(2) +
+                                    "And it exists in this download folder:" + folder + nl.repeat(2) + "Do you want to download it again?");
+                            if (ask.getResponse().isNo()) {
+                                deleteList.add(job);
+                            }
+                        }
                     }
                 }
             }
         }
         for (Job job : deleteList) {
             jobList.remove(job);
+            commitJobListToListView();
         }
     }
 
@@ -362,7 +386,6 @@ public class FormLogic {
             sleep(3000);
             if (form.tfDir.getText().equals(folderString)) {
                 folders.addFolder(folder.getAbsolutePath());
-                System.out.println("Folder Added: " + folder.getAbsolutePath());
             }
 
         }).start();
@@ -387,6 +410,18 @@ public class FormLogic {
                     if (worker.valueProperty().get() != null) {
                         for (Job job : worker.valueProperty().get()) {
                             if (!jobList.contains(job)) {
+                                if (jobHistory.jobMatch(job)) {
+                                    AskYesNo ask = new AskYesNo("You have downloaded " + job.getFilename() + " in the past. Do you still want to add it to the job batch?");
+                                    if (ask.getResponse().isYes())
+                                        jobList.add(job);
+                                    else
+                                        continue;
+                                }
+                                if (jobHistory.jobFileExists(job)) {
+                                    AskYesNo ask = new AskYesNo("This file: " + job.getFilename() + " already exists in one of your download folders. Do you want to download it again?");
+                                    if (ask.getResponse().isNo())
+                                        continue;
+                                }
                                 jobList.add(job);
                                 System.err.println("Added Job: " + job.getFilename());
                                 commitJobListToListView();
@@ -398,9 +433,21 @@ public class FormLogic {
             }
             sleep(500);
             Platform.runLater(() -> {
-                if (worker.getValue() != null) {
-                    for (Job job : worker.getValue()) {
+                if (worker.valueProperty().get() != null) {
+                    for (Job job : worker.valueProperty().get()) {
                         if (!jobList.contains(job)) {
+                            if (jobHistory.jobMatch(job)) {
+                                AskYesNo ask = new AskYesNo("You have downloaded " + job.getFilename() + " in the past. Do you still want to add it to the job batch?");
+                                if (ask.getResponse().isYes())
+                                    jobList.add(job);
+                                else
+                                    continue;
+                            }
+                            if (jobHistory.jobFileExists(job)) {
+                                AskYesNo ask = new AskYesNo("This file: " + job.getFilename() + " already exists in one of your download folders. Do you want to download it again?");
+                                if (ask.getResponse().isNo())
+                                    continue;
+                            }
                             jobList.add(job);
                         }
                         commitJobListToListView();
@@ -435,14 +482,13 @@ public class FormLogic {
             setDirOutput(GREEN, "");
             setFilenameOutput(GREEN, "");
         });
-        miInfo.setOnAction(e -> info());
+        miInfo.setOnAction(e -> help());
         return new ContextMenu(miDel, miClear, separator, miInfo);
     }
 
-    private void downloadFiles() {
-
-    }
-
+    /*
+    These methods are used to set or clear the TextFields themselves;
+     */
     public static void setLink(String link) {
         Platform.runLater(() -> form.tfLink.setText(link));
     }
@@ -459,8 +505,23 @@ public class FormLogic {
         Platform.runLater(() -> form.tfDir.setText(path));
     }
 
-    public static void setFilename(String path) {
-        Platform.runLater(() -> form.tfFilename.setText(path));
+    public static void setFilename(String filename) {
+        Platform.runLater(() -> form.tfFilename.setText(filename));
+    }
+
+    private void clearFilename() {
+        Platform.runLater(() -> {
+            setFilename("");
+            setDownloadOutput(GREEN, "");
+            setFilenameOutput(GREEN, "");
+        });
+    }
+
+    private void clearControls() {
+        clearLink();
+        clearFilename();
+        setDirOutput(GREEN, "");
+        setLinkOutput(GREEN, "");
     }
 
     /*
@@ -520,21 +581,9 @@ public class FormLogic {
 
     }
 
-    private void clearFilename() {
-        Platform.runLater(() -> {
-            setFilenameOutput(GREEN, "");
-            setDownloadOutput(GREEN, "");
-            setFilenameOutput(GREEN, "");
-        });
-    }
-
-    private void clearControls() {
-        clearLink();
-        clearFilename();
-        setDirOutput(GREEN, "");
-        setLinkOutput(GREEN, "");
-    }
-
+    /*
+    These methods are for general form flow
+     */
     private void commitJobListToListView() {
         Platform.runLater(() -> {
             if (jobList != null) {
@@ -564,7 +613,7 @@ public class FormLogic {
         });
     }
 
-    private void info() {
+    private void help() {
         double h = 20;
         double n = 16;
         TextFlow tf = new TextFlow();
@@ -615,7 +664,7 @@ public class FormLogic {
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
-        stage.setTitle("Information");
+        stage.setTitle("Help");
         stage.setOnCloseRequest(e -> stage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(tf, Priority.ALWAYS);
@@ -625,7 +674,7 @@ public class FormLogic {
     }
 
     private Text text(String string, boolean bold, Color color, double size) {
-        // This is used by the info() method for custom text formatting
+        // This is used by the help() method for custom text formatting
         Text text = new Text(string);
         text.setFont(new Font(MONACO_TTF.toExternalForm(), size));
         text.setFill(color);

@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -98,7 +99,7 @@ class Constants {
     public static final Color GREEN = Color.rgb(0, 255, 0);
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);
-    public static final Color ORANGE = Color.rgb(180, 80, 0);
+    public static final Color PURPLE = Color.rgb(125, 0, 75);
     public static final Color BLACK = Color.rgb(0, 0, 0);
     public static final Color YELLOW = Color.rgb(255, 255, 0);
 
@@ -144,6 +145,11 @@ class Constants {
         scene.getStylesheets().add(PROGRESS_BAR_CSS.toExternalForm());
         scene.getStylesheets().add(LIST_VIEW_CSS.toExternalForm());
         scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
+        scene.getStylesheets().add(SCENE_CSS.toExternalForm());
         return scene;
+    }
+
+    public static Font getMonaco(double size) {
+        return new Font(MONACO_TTF.toExternalForm(), size);
     }
 }

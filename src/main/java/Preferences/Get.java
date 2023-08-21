@@ -2,6 +2,7 @@ package Preferences;
 
 import Enums.Program;
 import GUI.Support.Folders;
+import GUI.Support.JobHistory;
 import GUI.Support.Jobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -55,17 +56,14 @@ public class Get { // This class is used to get the user preferences
 
     public Jobs jobs() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Jobs jobs = new Jobs();
-        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.toString());
+        Jobs jobs;
+        Path jobBatchFile = Paths.get(Program.get(Program.DATA_PATH), JOBS.toString());
         try {
-            String json = FileUtils.readFileToString(batchPath.toFile(), Charset.defaultCharset());
-            if (!json.isEmpty()) {
+            String json = FileUtils.readFileToString(jobBatchFile.toFile(), Charset.defaultCharset());
+            if (json != null && !json.isEmpty()) {
                 jobs = gson.fromJson(json, Jobs.class);
+                return jobs;
             }
-            if (jobs == null) {
-                return new Jobs();
-            }
-            return jobs;
         } catch (IOException ignored) {}
         return new Jobs();
     }
@@ -76,5 +74,19 @@ public class Get { // This class is used to get the user preferences
 
     public long startTime() {
         return preferences.getLong(START_TIME.toString(), System.currentTimeMillis());
+    }
+
+    public JobHistory jobHistory() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JobHistory jobHistory;
+        Path jobHistoryFile = Paths.get(Program.get(Program.DATA_PATH), JOB_HISTORY.toString());
+        try {
+            String json = FileUtils.readFileToString(jobHistoryFile.toFile(), Charset.defaultCharset());
+            if (json != null && !json.isEmpty()) {
+                jobHistory = gson.fromJson(json, JobHistory.class);
+                return jobHistory;
+            }
+        } catch (IOException ignored) {}
+        return new JobHistory();
     }
 }

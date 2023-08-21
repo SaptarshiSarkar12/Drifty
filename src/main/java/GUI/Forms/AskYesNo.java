@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * user when a yes / no question is needed or if we just need to notify the user of
  * something, in which case there is only an OK button offered.
  */
-public class AskYesNo {
+class AskYesNo {
     private final String lf = System.lineSeparator();
     private double width = 200;
     private double height = 150;
@@ -27,23 +27,27 @@ public class AskYesNo {
     private Button btnOk;
     private Label message;
     private VBox vbox;
-    private boolean answerYes = false;
-    private boolean waiting = true;
+    public static boolean answerYes = false;
     private String msg = "";
     private boolean okOnly = false;
+    private static boolean waiting = true;
+    private final GetResponse getResponse = new GetResponse();
 
     public AskYesNo() {
+        waiting = true;
         finish();
     }
 
     public AskYesNo(String message, boolean okOnly) {
         this.msg = message;
         this.okOnly = okOnly;
+        waiting = true;
         finish();
     }
 
     public AskYesNo(String message) {
         this.msg = message;
+        waiting = true;
         finish();
     }
 
@@ -69,6 +73,7 @@ public class AskYesNo {
 
     private void createControls() {
         message = new Label("Are you sure?");
+        message.setFont(Constants.getMonaco(17));
         if (!msg.isEmpty()) {
             message.setText(msg);
             message.setWrapText(true);
@@ -79,7 +84,8 @@ public class AskYesNo {
         HBox hbox;
         if (okOnly) {
             hbox = new HBox(20, btnOk);
-        } else {
+        }
+        else {
             hbox = new HBox(20, btnYes, btnNo);
         }
 
@@ -88,33 +94,51 @@ public class AskYesNo {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         btnYes.setOnAction(e -> {
-            answerYes = true;
+            getResponse.setAnswer(true);
             waiting = false;
             stage.close();
         });
         btnNo.setOnAction(e -> {
-            answerYes = false;
+            getResponse.setAnswer(false);
             waiting = false;
             stage.close();
         });
-        btnOk.setOnAction(e -> stage.close());
+        btnOk.setOnAction(e -> {
+            waiting = false;
+            stage.close();
+        });
     }
 
-    public boolean isYes() {
+    public GetResponse getResponse() {
+        showScene();
+        return getResponse;
+    }
+
+    public void showOK() {
+        showScene();
+    }
+
+    private void showScene() {
         Platform.runLater(() -> {
-            stage = new Stage();
+            stage = Constants.getStage();
             stage.setWidth(width);
             stage.setHeight(height);
             Scene scene = Constants.getScene(vbox);
-            scene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             stage.setScene(scene);
             stage.setAlwaysOnTop(true);
             stage.showAndWait();
         });
-        while (waiting) {
-            sleep(100);
+        while(waiting) {
+            sleep(200);
         }
-        return answerYes;
+    }
+
+    public boolean isWaiting() {
+        return waiting;
+    }
+
+    public static boolean waiting() {
+        return waiting;
     }
 
     private void sleep(long time) {
