@@ -1,12 +1,5 @@
 package GUI;
 
-import Enums.Mode;
-import GUI.Forms.Main;
-import Preferences.AppSettings;
-import Utils.Environment;
-import Utils.Utility;
-
-
 /*
  * Because Java Compiler is not yet module-capable, we need to launch JavaFX from a
  * separate class in order to get the GUIs to load completely.
@@ -16,6 +9,13 @@ import Utils.Utility;
  */
 public class Launcher {
     public static void main(String[] args) {
+        System.out.println("""
+                ****************************************
+                * Run GUI.Main instead of GUI.Launcher *
+                ****************************************
+                """);
+        System.exit(0);
+/*
         Mode.setGUIMode();
         Utility.setStartTime();
         System.setProperty("apple.awt.UIElement", "false");
@@ -32,5 +32,6 @@ public class Launcher {
         }
         Environment.initializeEnvironment();
         Main.main(args);
+*/
     }
 }

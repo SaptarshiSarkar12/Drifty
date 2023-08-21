@@ -1,7 +1,9 @@
 package GUI.Forms;
 
 import Backend.Drifty;
+import Enums.Mode;
 import Preferences.AppSettings;
+import Utils.Environment;
 import Utils.Utility;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -25,6 +27,20 @@ public class Main extends Application {
     private Scene scene;
     private boolean firstRun = true;
     public static void main(String[] args) {
+        Mode.setGUIMode();
+        Utility.setStartTime();
+        for (String arg : args) {
+            if (arg.toLowerCase().contains("--enablemaxstart")) {
+                AppSettings.set.startMax(true);
+            }
+            if (arg.toLowerCase().contains("--disablemaxstart")) {
+                AppSettings.set.startMax(false);
+            }
+            if (arg.toLowerCase().contains("--devmode")) {
+                Mode.setDev();
+            }
+        }
+        Environment.initializeEnvironment();
         launch(args);
     }
 
