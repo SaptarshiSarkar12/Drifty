@@ -122,7 +122,7 @@ export default function Releases({props}) {
                 )}
             )}
             <div className={"grid grid-cols-1 justify-items-center"}>
-                <h2 className={"text-center text-sm font-bold"}>Looking for older releases?</h2>
+                <h2 className={"text-center text-sm font-bold"}>Looking for more releases?</h2>
                 <a target={"_blank"} href={"https://github.com/SaptarshiSarkar12/Drifty/releases"} className={"text-center text-sm font-bold text-blue-500"}>View all releases</a>
             </div>
         </div>
