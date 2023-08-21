@@ -95,7 +95,7 @@ export default function Releases({props}) {
                 <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadLatestRelease("MacOS", applicationType)} >Download Now <i className="fab fa-brands fa-apple"></i></button>
             </div>
             <div>
-                <h1 className="text-center font-bold text-2xl pt-10">All Releases</h1>
+                <h1 className="text-center font-bold text-2xl pt-10">Past Releases</h1>
             </div>
             {filteredReleases.map((item, index) => {
                 return (
@@ -107,14 +107,14 @@ export default function Releases({props}) {
                                 className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
                         {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
                                                      dangerouslySetInnerHTML={{__html: content[index]}}></div>}
-                        <div className="grid md:grid-flow-col  md:gap-30 xs:gap-3 justify-center text-white mt-3 font-semibold">
-                            <button className="pl-3 pr-3 w-auto h-auto bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                        <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
+                            <button className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                                onClick={() => downloadOlderReleases("Windows", applicationType, item.tag_name)}>Download <i
                                 className="fab fa-brands fa-windows"></i></button>
-                            <button className="pl-3 pr-3 w-auto h-auto bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                            <button className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                                onClick={() => downloadOlderReleases("Linux", applicationType, item.tag_name)}>Download <i
                                 className="fab fa-brands fa-linux"></i></button>
-                            <button className="pl-3 pr-3 w-auto h-auto bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                            <button className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                                onClick={() => downloadOlderReleases("MacOS", applicationType, item.tag_name)}>Download <i
                                 className="fab fa-brands fa-apple"></i></button>
                         </div>
