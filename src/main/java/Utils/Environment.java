@@ -55,7 +55,7 @@ public class Environment {
                 messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
             }
         }
-        Program.setBatchPath(filePath);
+        Program.setDataPath(filePath);
     }
 
     public static void updateYt_dlp() {

@@ -2,6 +2,7 @@ package Preferences;
 
 import Enums.Program;
 import GUI.Support.Folders;
+import GUI.Support.JobHistory;
 import GUI.Support.Jobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,9 +57,9 @@ public class Set { // This class is used to set the user preferences
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
-        Path batchPath = Paths.get(Program.get(Program.BATCH_PATH), JOBS.toString());
+        Path batchJobsFile = Paths.get(Program.get(Program.DATA_PATH), JOBS.toString());
         try {
-            FileUtils.writeStringToFile(batchPath.toFile(), value, Charset.defaultCharset());
+            FileUtils.writeStringToFile(batchJobsFile.toFile(), value, Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,5 +74,17 @@ public class Set { // This class is used to set the user preferences
     public void startTime() {
         AppSettings.clear.startTime();
         preferences.putLong(START_TIME.toString(), System.currentTimeMillis());
+    }
+
+    public void jobHistory(JobHistory jobHistory) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String value = gson.toJson(jobHistory);
+        AppSettings.clear.jobHistory();
+        Path jobHistoryFile = Paths.get(Program.get(Program.DATA_PATH), JOB_HISTORY.toString());
+        try {
+            FileUtils.writeStringToFile(jobHistoryFile.toFile(), value, Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

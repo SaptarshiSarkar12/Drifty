@@ -231,7 +231,6 @@ public final class Utility {
             File[] files = tempFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    System.err.println("File: " + file.getAbsolutePath());
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
                     if (ext.toLowerCase().contains("json")) {
                         String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());

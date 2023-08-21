@@ -55,9 +55,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             progTimer.cancel();
             updateProgress(0, 1);
             progTimer = null;
-            System.out.println("Filecount: " + fileCount);
             AskYesNo ask = new AskYesNo("There are " + fileCount + " files in this list. Proceed and get all filenames?");
-            proceed = ask.isYes();
+            proceed = ask.getResponse().isYes();
         }
         if (proceed) {
             Timer timer = new Timer();
@@ -174,7 +173,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (this.isCancelled()) {
-                                System.out.println("Canceled");
                                 break;
                             }
                             String newLine = new String(line);

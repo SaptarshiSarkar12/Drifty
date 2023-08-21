@@ -19,7 +19,6 @@ public class CopyYtDlp {
         String yt_dlpFileName = Program.get(Program.NAME);
         Path yt_dlpTempFilePath = Paths.get(Program.get(Program.PATH) + "/" + yt_dlpFileName);
         try (OutputStream outputStream = Files.newOutputStream(yt_dlpTempFilePath)) {
-            System.out.println("Copying file to: " + yt_dlpTempFilePath);
             if (inputStream != null) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;

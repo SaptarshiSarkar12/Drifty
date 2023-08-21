@@ -52,6 +52,10 @@ public class Clear { // This class is used to clear the user preferences
         preferences.remove(START_TIME.toString());
     }
 
+    public void jobHistory() {
+        preferences.remove(JOB_HISTORY.toString());
+    }
+
     public void clearAll() {
         try {
             preferences.clear();

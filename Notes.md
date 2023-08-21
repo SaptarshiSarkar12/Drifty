@@ -32,7 +32,7 @@ Using the Preferences class is preferrable to having an .ini file stored somewhe
 This package has the classes that are relevant to the different JavaFX screens along with other classes such as data structure classes. Those are in the Support package.
 
 * MainGUI - The main user screen. I maintained the same Menu as was in the Swift code. I added a right click ContextMenu for adding and managing download folders
-* BatchGUI - This is used to create batches. Right clicking on the form and chosing `info` will pop up a window that explains how to use the form. The instructions are very thorough.
+* BatchGUI - This is used to create batches. Right clicking on the form and chosing `help` will pop up a window that explains how to use the form. The instructions are very thorough.
 
 Some of the controls have ToolTips where hovering the mouse on them provides relevant information.
 

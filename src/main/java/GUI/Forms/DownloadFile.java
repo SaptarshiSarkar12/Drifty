@@ -1,15 +1,18 @@
 package GUI.Forms;
 
 import Enums.Domain;
-import Enums.Program;
 import Enums.Format;
+import Enums.Program;
 import Utils.Utility;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -39,13 +42,13 @@ public class DownloadFile extends Task<Integer> {
 
     @Override
     protected Integer call() throws Exception {
-        updateProgress(0,1);
+        updateProgress(0, 1);
         String outputFileName = Objects.requireNonNullElse(filename, DEFAULT_FILENAME);
         String command = Program.get(Program.COMMAND);
         outputFileName = Utility.cleanFilename(outputFileName);
         updateMessage("Trying to download " + outputFileName);
         String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
-        String[] fullCommand = switch(domain) {
+        String[] fullCommand = switch (domain) {
             case YOUTUBE, INSTAGRAM -> (Format.isValid(ext)) ?
                     new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
                     new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
@@ -77,7 +80,7 @@ public class DownloadFile extends Task<Integer> {
         updateValue(result);
         String errorMessage = ((result == 0) ? SUCCESSFULLY_DOWNLOADED : FAILED_TO_DOWNLOAD) + outputFileName;
         updateMessage(errorMessage);
-        updateProgress(0.0,1.0);
+        updateProgress(0.0, 1.0);
         return result;
     }
 
@@ -85,9 +88,9 @@ public class DownloadFile extends Task<Integer> {
         feedback.addListener(((observable, oldValue, newValue) -> {
             Matcher m = pattern.matcher(newValue);
             double value;
-            if(m.find()) {
+            if (m.find()) {
                 value = Double.parseDouble(m.group(2)) / 100;
-                updateProgress(value,1.0);
+                updateProgress(value, 1.0);
             }
         }));
     }
