@@ -25,4 +25,11 @@ public class Jobs {
 
         AppSettings.set.batchDownloadJobs(this);
     }
+
+    public ConcurrentLinkedDeque<Job> getJobList() {
+        if (jobList == null) {
+            return new ConcurrentLinkedDeque<>();
+        }
+        return new ConcurrentLinkedDeque<>(jobList);
+    }
 }

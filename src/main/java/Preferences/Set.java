@@ -1,12 +1,11 @@
 package Preferences;
 
 import Enums.Program;
-import GUI.Support.Folders;
-import GUI.Support.JobHistory;
-import GUI.Support.Jobs;
+import GUI.Support.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
+import org.hildan.fxgson.FxGson;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -27,7 +26,9 @@ public class Set { // This class is used to set the user preferences
     }
 
     public void folders(Folders folders) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Folders.class, new FoldersTypeAdapter());
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(folders);
         AppSettings.clear.folders();
         preferences.put(FOLDERS.toString(), value);
@@ -54,7 +55,10 @@ public class Set { // This class is used to set the user preferences
     }
 
     public void batchDownloadJobs(Jobs jobs) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
+        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
         Path batchJobsFile = Paths.get(Program.get(Program.DATA_PATH), JOBS.toString());
@@ -77,7 +81,11 @@ public class Set { // This class is used to set the user preferences
     }
 
     public void jobHistory(JobHistory jobHistory) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
+        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
+        gsonBuilder.registerTypeAdapter(JobHistory.class, new JobHistoryTypeAdapter());
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobHistory);
         AppSettings.clear.jobHistory();
         Path jobHistoryFile = Paths.get(Program.get(Program.DATA_PATH), JOB_HISTORY.toString());

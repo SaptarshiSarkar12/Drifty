@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
+import org.hildan.fxgson.FxGson;
 
 import java.io.File;
 import java.io.IOException;
@@ -265,7 +266,8 @@ public final class Utility {
 
     public static String makePretty(String json) {
         //The regex strings won't match unless the json string is converted to pretty format
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        GsonBuilder g = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(g).setPrettyPrinting().create();
         JsonElement element = JsonParser.parseString(json);
         return gson.toJson(element);
     }

@@ -13,6 +13,11 @@ public class JobHistory {
 
     private final List<Job> jobHistory = new ArrayList<>();
 
+
+    public List<Job> getJobHistory() {
+        return jobHistory;  // Public getter method
+    }
+
     public void addJob(Job job) {
         boolean hasJob = false;
         for (Job jobHistory : jobHistory) {
