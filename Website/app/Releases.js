@@ -51,7 +51,7 @@ export default function Releases({props}) {
         const releases = [];
         props.release.map((item, index) => {
             if (index !== 0) {
-                if (item.tag_name.startsWith("v2") && releases.length <= 5) {
+                if (item.tag_name.startsWith("v1.2") && releases.length <= 5) {
                     releases.push(item);
                 }
             }
@@ -63,7 +63,7 @@ export default function Releases({props}) {
         let noOfReleases = filteredReleases.length;
         props.release.map((item, index) => {
             if (releases.length <= 5 && noOfReleases < 5 && index !== 0) {
-                if (!item.tag_name.startsWith("v2")) {
+                if (!item.tag_name.startsWith("v1.2")) {
                     releases.push(item);
                     noOfReleases++;
                 }
@@ -116,7 +116,7 @@ export default function Releases({props}) {
                 return (
                     <div key={index} className="text-center p-5 text-base font-normal">
                         <span className="font-bold">{item.tag_name} </span>
-                        {index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}
+                        {/*{index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}*/}
                         <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count} Downloads</p> {/* TODO: Add download count for all three OS artifacts */}
                         <button onClick={() => handleButtonClick(index)}
                                 className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
