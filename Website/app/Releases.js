@@ -47,11 +47,12 @@ export default function Releases({props}) {
     const [buttonStates, setButtonStates] = useState({});
     const [content,setContent]=useState([]);
     const [applicationType, setApplicationType] = useState("GUI");
+    const maxReleasesToDisplay = 3;
     const filteredReleases = useMemo(() => {
         const releases = [];
         props.release.map((item, index) => {
             if (index !== 0) {
-                if (item.tag_name.startsWith("v1.2") && releases.length <= 5) {
+                if (item.tag_name.startsWith("v2") && releases.length <= maxReleasesToDisplay) {
                     releases.push(item);
                 }
             }
@@ -62,8 +63,8 @@ export default function Releases({props}) {
         const releases = [];
         let noOfReleases = filteredReleases.length;
         props.release.map((item, index) => {
-            if (releases.length <= 5 && noOfReleases < 5 && index !== 0) {
-                if (!item.tag_name.startsWith("v1.2")) {
+            if (releases.length <= maxReleasesToDisplay && noOfReleases < maxReleasesToDisplay && index !== 0) {
+                if (!item.tag_name.startsWith("v2")) {
                     releases.push(item);
                     noOfReleases++;
                 }
@@ -105,9 +106,18 @@ export default function Releases({props}) {
                 </div>
             </div>
             <div className="grid w-auto h-auto lg:grid-cols-3 space-y-4 justify-items-center py-3 md:grid-cols-1">
-                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadLatestRelease("Windows", applicationType)} >Download Now <i className="fab fa-brands fa-windows"></i></button>
-                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadLatestRelease("Linux", applicationType)} >Download Now <i className="fab fa-brands fa-linux"></i></button>
-                <button className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out" onClick={()=> downloadLatestRelease("MacOS", applicationType)} >Download Now <i className="fab fa-brands fa-apple"></i></button>
+                <button
+                    className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out"
+                    onClick={() => downloadLatestRelease("Windows", applicationType)}>Download Now <i
+                    className="fab fa-brands fa-windows"></i></button>
+                <button
+                    className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out"
+                    onClick={() => downloadLatestRelease("Linux", applicationType)}>Download Now <i
+                    className="fab fa-brands fa-linux"></i></button>
+                <button
+                    className="xs:animate-no md:animate-no sm:m-auto xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none  active:bg-blue-400 active:shadow-lg transition duration-0 ease-in-out"
+                    onClick={() => downloadLatestRelease("MacOS", applicationType)}>Download Now <i
+                    className="fab fa-brands fa-apple"></i></button>
             </div>
             <div>
                 <h1 className="text-center font-bold text-2xl pt-10">Past Releases</h1>
@@ -116,15 +126,15 @@ export default function Releases({props}) {
                 return (
                     <div key={index} className="text-center p-5 text-base font-normal">
                         <span className="font-bold">{item.tag_name} </span>
-                        {/*{index === 0 && <span className="p-1 rounded-3xl bg-green-500">Latest</span>}*/}
-                        <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count} Downloads</p> {/* TODO: Add download count for all three OS artifacts */}
+                        <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count + item.assets[2].download_count + item.assets[3].download_count + item.assets[4].download_count + item.assets[5].download_count} Downloads</p>
                         <button onClick={() => handleButtonClick(index)}
                                 className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
                         {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
                                                      dangerouslySetInnerHTML={{__html: content[index]}}></div>}
                         <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
-                            <button className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                               onClick={() => downloadOlderReleases("Windows", applicationType, item.tag_name)}>Download <i
+                            <button
+                                className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                                onClick={() => downloadOlderReleases("Windows", applicationType, item.tag_name)}>Download <i
                                 className="fab fa-brands fa-windows"></i></button>
                             <button className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                                onClick={() => downloadOlderReleases("Linux", applicationType, item.tag_name)}>Download <i
@@ -147,22 +157,16 @@ export default function Releases({props}) {
                                 {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
                                                              dangerouslySetInnerHTML={{__html: content[index]}}></div>}
                                 <div className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
-                                    <a className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl" href={item.assets[1].browser_download_url}>Download <i className="fab fa-brands fa-windows"></i></a>
-                                    <a className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl" href={item.assets[0].browser_download_url}>Download <i className="fab fa-brands fa-apple"></i> <i className="fab fa-brands fa-linux"></i></a>
+                                    <button
+                                        className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                                        onClick={() => window.open(item.assets[1].browser_download_url)}>Download <i
+                                        className="fab fa-brands fa-windows"></i></button>
+                                    <button
+                                        className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                                        onClick={() => window.open(item.assets[0].browser_download_url)}>Download <i
+                                        className="fab fa-brands fa-apple"></i> <i
+                                        className="fab fa-brands fa-linux"></i></button>
                                 </div>
-                                {/*<div*/}
-                                {/*    className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">*/}
-                                {/*    <button*/}
-                                {/*        className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"*/}
-                                {/*        onClick={() => downloadOlderReleases("Windows", applicationType, item.tag_name)}>Download <i*/}
-                                {/*        className="fab fa-brands fa-windows"></i></button>*/}
-                                {/*    <button*/}
-                                {/*        className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"*/}
-                                {/*        onClick={() => downloadOlderReleases("Linux", applicationType, item.tag_name)}>Download <i*/}
-                                {/*        className="fab fa-brands fa-linux"></i></button>*/}
-                                {/*    <button*/}
-                                {/*        className="pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"></button>*/}
-                                {/*</div>*/}
                             </div>
                         )
                     }
