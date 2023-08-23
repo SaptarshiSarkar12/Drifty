@@ -9,19 +9,19 @@ export default function Demo(){
     const tabs = ["Drifty CLI", "Drifty GUI"];
     return(
         <div id="demo" className="bg-bottom">
-            <h1 className="text-center font-extrabold text-4xl pt-6">Demonstration of Drifty</h1>
-            <p className="text-center text-black text-2xl py-3">Here is a quick demo of Drifty</p>
+            <h1 className="select-none text-center font-extrabold text-4xl pt-6">Demonstration of Drifty</h1>
+            <p className="select-none text-center text-black text-2xl py-3">Here is a quick demo of Drifty</p>
             <div className={"text-center"}>
                 <Tab.Group>
                     <Tab.List className={"space-x-2"}>
                         {tabs.map((tab) => (
                             <Tab className={({ selected }) =>
                                 classNames(
-                                    'w-44 rounded-full py-2.5 font-medium leading-5 text-white',
-                                    'ring-blue ring-opacity-60 ring-offset-2 ring-offset-blue-200 focus:outline-none focus:ring-2',
+                                    'w-44 rounded-full py-2.5 font-extrabold leading-5 text-blue-700',
+                                    'ring-blue ring-opacity-60 ring-offset-2 ring-offset-bottom focus:outline-none focus:ring-2',
                                     selected
-                                        ? 'bg-blue-600 shadow'
-                                        : 'text-blue-700 hover:bg-purple-800/[0.12]'
+                                        ? 'text-white bg-blue-600 shadow'
+                                        : 'hover:bg-gray-700/[0.12]'
                                 )
                             } key={tab}>{tab}</Tab>
                         ))}
