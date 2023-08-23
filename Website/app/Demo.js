@@ -17,7 +17,7 @@ export default function Demo(){
                         {tabs.map((tab) => (
                             <Tab className={({ selected }) =>
                                 classNames(
-                                    'w-44 rounded-full py-2.5 font-extrabold leading-5 text-blue-700',
+                                    'w-40 rounded-full py-2.5 font-extrabold text-blue-700',
                                     'ring-blue ring-opacity-60 ring-offset-2 ring-offset-bottom focus:outline-none focus:ring-2',
                                     'hover:-translate-y-1 hover:scale-110 duration-200',
                                     selected
