@@ -33,7 +33,7 @@ export default function Demo(){
                             'focus:outline-none focus:ring-0'
                         )}>
                             <div className="flex justify-center">
-                                <video width="80%" muted autoPlay loop>
+                                <video width="90%" muted autoPlay loop>
                                     <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
                                     Your browser does not support the video tag
                                 </video>
