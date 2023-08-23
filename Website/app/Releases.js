@@ -87,7 +87,10 @@ export default function Releases({props}) {
         filteredReleases.forEach(async (item, index) => {
             await markerToHtml(item.body, index);
         });
-    }, [filteredReleases]);
+        filterOlderReleases.forEach(async (item, index) => {
+            await markerToHtml(item.body, index + filteredReleases.length);
+        });
+    }, [filteredReleases, filterOlderReleases]);
 
     const handleApplicationTypeChange = (applicationType) => {
         setApplicationType(applicationType.target.value);
@@ -127,7 +130,7 @@ export default function Releases({props}) {
                             <span className="font-bold">{item.tag_name} </span>
                             <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count + item.assets[2].download_count + item.assets[3].download_count + item.assets[4].download_count + item.assets[5].download_count} Downloads</p>
                             <button onClick={() => handleButtonClick(index)}
-                                    className="select-none text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
+                                    className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
                             {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
                                                          dangerouslySetInnerHTML={{__html: content[index]}}></div>}
                             <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
@@ -146,13 +149,14 @@ export default function Releases({props}) {
                     )}
                 )}
                 {filterOlderReleases.map((item, index) => {
+                        index = index + filteredReleases.length;
                         if (filterOlderReleases.length !== 0) {
                             return (
                                 <div key={index} className="text-center p-5 text-base font-normal">
                                     <span className="font-bold">{item.tag_name} </span>
                                     <p>{new Date(item.published_at).toString()} with {item.assets[0].download_count + item.assets[1].download_count} Downloads</p>
                                     <button onClick={() => handleButtonClick(index)}
-                                            className="select-none text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
+                                            className="text-slate-800/50">{buttonStates[index] ? "Hide" : "Learn More"}</button>
                                     {buttonStates[index] && <div className=" md:p-5 overflow-hidden"
                                                                  dangerouslySetInnerHTML={{__html: content[index]}}></div>}
                                     <div className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
