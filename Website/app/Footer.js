@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 export default function Footer() {
     return (
-        <div>
+        <div className={"select-none"}>
             <footer className="p-4 bg-bottom sm:p-6">
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">

@@ -45,7 +45,7 @@ export default function Header({props}) {
       // remove event on unmounting to prevent Linkmemory leak with the cleanup
     });
     return (
-        <header className={`md:sticky top-0 ${hcolor} z-40` }>
+        <header className={`md:sticky top-0 ${hcolor} z-40 select-none` }>
             <nav className="flex filter drop-shadow-md  px-4 py-4 h-20 items-center">
                 <MobileNav open={open} setOpen={setOpen} />
                 <div className="w-4/12 flex items-center lg:pl-20">
@@ -61,7 +61,7 @@ export default function Header({props}) {
                     <div className="hidden md:flex mr-20">
                     	<NavLink to="/#" cn="mx-4">
                     		<button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">HOME</button>
-            		</NavLink>
+            		    </NavLink>
                     	<NavLink to="/about" cn="mx-4">
                     		<button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">ABOUT</button>
                     	</NavLink>

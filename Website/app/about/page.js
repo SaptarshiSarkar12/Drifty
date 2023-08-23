@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function about(){
     return(
-        <div>
+        <div className={"select-none"}>
             <Header props={"bg-top"}/>
             <div className="bg-gradient-to-b from-top from-18% via-about via-12% to-bottom to-12%">
                 <h1 className="text-center font-bold text-5xl pt-8 sm:pl-8">About</h1>

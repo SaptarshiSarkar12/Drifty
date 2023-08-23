@@ -11,14 +11,15 @@ export default function Demo(){
         <div id="demo" className="bg-bottom">
             <h1 className="select-none text-center font-extrabold text-4xl pt-6">Demonstration of Drifty</h1>
             <p className="select-none text-center text-black text-2xl py-3">Here is a quick demo of Drifty</p>
-            <div className={"text-center"}>
+            <div className={"text-center select-none"}>
                 <Tab.Group>
-                    <Tab.List className={"space-x-2"}>
+                    <Tab.List className={"space-x-3.5"}>
                         {tabs.map((tab) => (
                             <Tab className={({ selected }) =>
                                 classNames(
-                                    'w-44 rounded-full py-2.5 font-extrabold leading-5 text-blue-700',
+                                    'w-44 pl-3 pr-3 rounded-full py-2.5 font-extrabold leading-5 text-blue-700',
                                     'ring-blue ring-opacity-60 ring-offset-2 ring-offset-bottom focus:outline-none focus:ring-2',
+                                    'hover:-translate-y-1 hover:scale-110 duration-200',
                                     selected
                                         ? 'text-white bg-blue-600 shadow'
                                         : 'hover:bg-gray-700/[0.12]'
