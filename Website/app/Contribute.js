@@ -27,21 +27,21 @@ export default function Contribute({ props }) {
                 </p>
             </div>
             <div className="md:w-1/2">
-            <h2 className="text-5xl sm:text-4xl my-12 font-bold lg:mt-20 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Be a part of Drifty Family!</h2>
+                <h2 className="text-5xl sm:text-4xl my-12 font-bold lg:mt-20 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Be a part of Drifty Family!</h2>
                 <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-8 xs:grid-cols-4 rounded-sm	 space-x-0 gap-y-4 justify-items-center xs:pb-10">
                     {props.contrib.map((item, index) => {
-                        return index < 6 && <a  href={item.html_url} key={index}><Image width={64} height={64} src={item.avatar_url + ".webp&s=64"} alt={item.login}></Image></a>
+                        return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full" width={64} height={64} src={item.avatar_url + ".webp&s=64"} alt={item.login}></Image></a>
                     })}
                     <a href="https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors" target="_blank" >
-                        <div className="h-16 w-16 flex items-center justify-center border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
-                            +{totalNoOfContributors - 6}
+                        <div className="rounded-full h-16 w-16 flex items-center justify-center border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+                            {totalNoOfContributors - 6}+
                         </div>
                     </a>
                 </div>
-                <div className="grid grid-cols-3 justify-center gap-4 pl-3 pr-3 text-lg font-bold w-auto h-auto">
-                    <a className="md:rounded-full xs:p-2 lg:w-52  lg:p-2 border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden className="fab fa-github pr-1"></i>Contribute</a>
-                    <a className="md:rounded-full xs:p-2 lg:p-2 lg:w-52  border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
-                    <a className="md:rounded-full xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
+                <div class="flex flex-cols-3 justify-around items-center xs:gap-7 text-lg font-semibold mx-3">
+                    <a class="rounded-lg md:rounded-full xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" class="fab fa-github pr-1"></i>Contribute</a>
+                    <a class="rounded-lg md:rounded-full xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" class="fa fa-regular fa-star pr-1"></i>Stars : 80</a>
+                    <a class="rounded-lg md:rounded-full xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" class="fa fa-duotone fa-code-fork pr-1"></i>Forks : 77</a>
                 </div>
             </div>
         </div>
