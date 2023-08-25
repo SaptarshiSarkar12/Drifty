@@ -27,7 +27,7 @@ export default function Contribute({ props }) {
                 </p>
             </div>
             <div className="md:w-1/2">
-                <h2 className="text-5xl sm:text-4xl my-12 font-bold lg:mt-20 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Be a part of Drifty Family!</h2>
+                <h2 className="text-5xl sm:text-4xl my-12 font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Be a part of Drifty Family!</h2>
                 <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-8 xs:grid-cols-4 rounded-sm	 space-x-0 gap-y-4 justify-items-center xs:pb-10">
                     {props.contrib.map((item, index) => {
                         return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full" width={80} height={80} src={item.avatar_url + ".webp&s=80"} alt={item.login}></Image></a>
