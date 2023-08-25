@@ -5,7 +5,6 @@ import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
 import Enums.Program;
-import Utils.Environment;
 import Utils.MessageBroker;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -36,7 +35,6 @@ public class FileDownloader implements Runnable {
     private static URL url;
     private static String yt_dlpProgramName;
     private static boolean supportsMultithreading;
-    private static boolean isYt_dlpCheckedForUpdate = true;
 
     public FileDownloader(String link, String fileName, String dir) {
         FileDownloader.link = link;
@@ -132,23 +130,23 @@ public class FileDownloader implements Runnable {
         }
         ProcessBuilder processBuilder;
         messageBroker.sendMessage("Trying to download " + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        if ((dir.isEmpty()) || (dir.equalsIgnoreCase("."))) {
+        if (dir.isEmpty() || dir.equalsIgnoreCase("." + System.getProperty("file.separator"))) {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName);
         } else {
             processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
         }
         processBuilder.inheritIO();
         messageBroker.sendMessage(DOWNLOADING + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        Process yt_dlp = null;
+        int exitValueOfYt_Dlp = -1;
         try {
-            yt_dlp = processBuilder.start();
+            Process yt_dlp = processBuilder.start();
             yt_dlp.waitFor();
+            exitValueOfYt_Dlp = yt_dlp.exitValue();
         } catch (IOException e) {
             messageBroker.sendMessage("An I/O error occurred while initialising YouTube video downloader! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
         } catch (InterruptedException e) {
             messageBroker.sendMessage("The YouTube video download process was interrupted by user! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
         }
-        int exitValueOfYt_Dlp = yt_dlp.exitValue();
         if (exitValueOfYt_Dlp == 0) {
             messageBroker.sendMessage(SUCCESSFULLY_DOWNLOADED + fileDownloadMessage + " !", MessageType.INFO, MessageCategory.DOWNLOAD);
         } else if (exitValueOfYt_Dlp == 1) {
@@ -219,46 +217,27 @@ public class FileDownloader implements Runnable {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
                 try {
-                    isYt_dlpCheckedForUpdate = Environment.isUpdateForYt_dlpChecked();
                     String directoryOfYt_dlp = Program.get(Program.PATH);
-                    if (!isYt_dlpCheckedForUpdate) {
-                        Environment.updateYt_dlp();
-                    }
                     if (isYoutubeLink(link)) {
                         downloadFromYouTube(directoryOfYt_dlp);
                     } else if (!isInstagramImage) {
                         downloadFromInstagram(directoryOfYt_dlp);
                     }
-                } catch (IOException e) {
-                    messageBroker.sendMessage(GETTING_READY_TO_DOWNLOAD_FILE, MessageType.INFO, MessageCategory.DOWNLOAD);
-                    try {
-                        String tempDir = Program.get(Program.PATH);
-                        if (!isYt_dlpCheckedForUpdate) {
-                            Environment.updateYt_dlp();
-                        }
-                        if (isYoutubeLink(link)) {
-                            downloadFromYouTube(tempDir);
-                        } else {
-                            downloadFromInstagram(tempDir);
-                        }
-                    } catch (InterruptedException ie) {
-                        messageBroker.sendMessage(USER_INTERRUPTION, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                    } catch (Exception e1) {
-                        messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                        String msg = e1.getMessage();
-                        String[] messageArray = msg.split(",");
-                        if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                            messageBroker.sendMessage(DRIFTY_COMPONENT_NOT_EXECUTABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                        } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
-                            messageBroker.sendMessage(PERMISSION_DENIED_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                        } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
-                            messageBroker.sendMessage(YOUTUBE_VIDEO_UNAVAILABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                        } else {
-                            messageBroker.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
-                        }
-                    }
                 } catch (InterruptedException e) {
                     messageBroker.sendMessage(USER_INTERRUPTION, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                } catch (Exception e) {
+                    messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    String msg = e.getMessage();
+                    String[] messageArray = msg.split(",");
+                    if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                        messageBroker.sendMessage(DRIFTY_COMPONENT_NOT_EXECUTABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
+                        messageBroker.sendMessage(PERMISSION_DENIED_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
+                        messageBroker.sendMessage(YOUTUBE_VIDEO_UNAVAILABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else {
+                        messageBroker.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    }
                 }
             } else {
                 if (link.endsWith("/") || link.endsWith("\\")) {

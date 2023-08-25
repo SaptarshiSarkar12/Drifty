@@ -1,4 +1,5 @@
 package Backend;
+
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Utils.MessageBroker;
@@ -8,8 +9,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import static Utils.DriftyConstants.*;
+
 /**
- * This class checks if a directory exists or not. if it doesn't, the directory is created.
+ * This class checks if a directory exists or not. If it doesn't, the directory is created.
  */
 class CheckDirectory {
     private static final MessageBroker message = Drifty.getMessageBrokerInstance();

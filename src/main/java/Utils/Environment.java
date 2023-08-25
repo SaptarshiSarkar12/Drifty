@@ -16,9 +16,10 @@ public class Environment {
     private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
     public static void initializeEnvironment() {
         /*
-        This method is only called by Launcher class which means it only applies to Mode.GUI
+        This method is called by both Drifty_CLI and Launcher classes.
         It first determines which yt-dlp program to copy out of resources based on the OS.
-        Next it figures out which path to use to store yt-dlp and the users batch list.
+        Next, it figures out which path to use to store yt-dlp and the users batch list.
+        Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
          */
         messageBroker.sendMessage("OS : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
         String yt_dlpProgramName;
@@ -29,19 +30,19 @@ public class Environment {
         } else {
             yt_dlpProgramName = "yt-dlp";
         }
-        String filePath;
+        String configFolderPath;
         if (OS.isWindows()) {
-            filePath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
+            configFolderPath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
         } else {
-            filePath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
+            configFolderPath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
         }
         Program.setName(yt_dlpProgramName);
-        Program.setPath(filePath);
+        Program.setPath(configFolderPath);
         InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
             boolean isCopySuccessful = true;
-            if (!Files.exists(Paths.get(filePath, yt_dlpProgramName))) {
+            if (!Files.exists(Paths.get(configFolderPath, yt_dlpProgramName))) {
                 isCopySuccessful = copyYtDlp.copyToTemp(yt_dlpProgramStream);
             }
             if (isCopySuccessful && !isUpdateForYt_dlpChecked()) {
@@ -50,7 +51,7 @@ public class Environment {
         } catch (IOException e) {
             messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
         }
-        File folder = new File(filePath);
+        File folder = new File(configFolderPath);
         if (!folder.exists()) {
             try {
                 Files.createDirectory(folder.toPath());
@@ -58,7 +59,7 @@ public class Environment {
                 messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
             }
         }
-        Program.setDataPath(filePath);
+        Program.setDataPath(configFolderPath);
     }
 
     public static void updateYt_dlp() {

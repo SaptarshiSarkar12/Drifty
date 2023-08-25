@@ -5,7 +5,7 @@ public enum Program {
     NAME, PATH, COMMAND, DATA_PATH;
 
     private static String yt_dlpProgramName;
-    private static String tempFolderPath;
+    private static String configFolderPath;
     private static String dataPath;
 
     public static void setName(String name) {
@@ -13,7 +13,7 @@ public enum Program {
     }
 
     public static void setPath(String path) {
-        Program.tempFolderPath = path;
+        Program.configFolderPath = path + System.getProperty("file.separator");
     }
 
     public static void setDataPath(String path) {
@@ -23,8 +23,8 @@ public enum Program {
     public static String get(Program program) {
         return switch (program) {
             case NAME -> yt_dlpProgramName;
-            case PATH -> tempFolderPath;
-            case COMMAND -> Paths.get(tempFolderPath, yt_dlpProgramName).toAbsolutePath().toString();
+            case PATH -> configFolderPath;
+            case COMMAND -> Paths.get(configFolderPath, yt_dlpProgramName).toAbsolutePath().toString();
             case DATA_PATH -> dataPath;
         };
     }

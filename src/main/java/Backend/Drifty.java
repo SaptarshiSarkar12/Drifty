@@ -62,11 +62,13 @@ public class Drifty {
                 }
             }
         }
-        if (((fileName == null) || (fileName.isEmpty())) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
-            fileName = utility.findFilenameInLink(url);
-            if (fileName == null || fileName.isEmpty()) {
-                message.sendMessage("Filename cannot be empty!", MessageType.ERROR, MessageCategory.FILENAME);
-                return;
+        if ((fileName == null) || (fileName.isEmpty())) {
+            if (!(Utility.isYoutubeLink(url) || Utility.isInstagramLink(url))) {
+                fileName = utility.findFilenameInLink(url);
+                if (fileName == null || fileName.isEmpty()) {
+                    message.sendMessage("Filename cannot be empty!", MessageType.ERROR, MessageCategory.FILENAME);
+                    return;
+                }
             }
         }
         new FileDownloader(url, fileName, downloadsFolder).run();
