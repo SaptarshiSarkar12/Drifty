@@ -38,10 +38,10 @@ export default function Contribute({ props }) {
                         </div>
                     </a>
                 </div>
-                <div class="flex flex-cols-3 justify-around items-center xs:gap-7 text-lg font-semibold mx-3">
-                    <a class="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" class="fab fa-github pr-1"></i>Contribute</a>
-                    <a class="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" class="fa fa-regular fa-star pr-1"></i>Stars : 80</a>
-                    <a class="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" class="fa fa-duotone fa-code-fork pr-1"></i>Forks : 77</a>
+               <div className="flex flex-cols-3 justify-around items-center xs:gap-7 text-lg font-semibold mx-3">
+                   <a className="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" className="fab fa-github pr-1"></i>Contribute</a>
+                   <a className="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
+                   <a class="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
                 </div>
             </div>
         </div>
