@@ -4,10 +4,7 @@ import Backend.Drifty;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
-import Utils.Logger;
-import Utils.MessageBroker;
-import Utils.ScannerFactory;
-import Utils.Utility;
+import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -32,7 +29,7 @@ public class Drifty_CLI {
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
     protected static boolean isInstagramImage;
-    private static MessageBroker message;
+    private static MessageBroker messageBroker;
     private static String link;
     private static Utility utility;
     private static String directory;
@@ -42,9 +39,12 @@ public class Drifty_CLI {
 
     public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
-        message = new MessageBroker(System.out);
-        utility = new Utility(message);
+        messageBroker = new MessageBroker(System.out);
+        utility = new Utility(messageBroker);
         printBanner();
+        messageBroker.sendMessage("Initializing environment...", MessageType.INFO, MessageCategory.INITIALIZATION);
+        Environment.initializeEnvironment();
+        messageBroker.sendMessage("Environment initialized successfully!", MessageType.INFO, MessageCategory.INITIALIZATION);
         String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
@@ -70,7 +70,7 @@ public class Drifty_CLI {
             if (!batchDownloading) {
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
-                fileName = (name == null) ? fileName : name;
+                fileName = Objects.requireNonNullElse(name, fileName);
                 if (!isYoutubeURL && !isInstagramLink) {
                     fileName = utility.findFilenameInLink(link);
                 }
@@ -104,7 +104,7 @@ public class Drifty_CLI {
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
-                        message.sendMessage("The given file should be a YAML file!", MessageType.ERROR, MessageCategory.LOG);
+                        messageBroker.sendMessage("The given file should be a YAML file!", MessageType.ERROR, MessageCategory.LOG);
                     } else {
                         batchDownloader();
                         break;
@@ -144,10 +144,10 @@ public class Drifty_CLI {
     private static void batchDownloader() {
         Yaml yamlParser = new Yaml();
         try {
-            message.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFO, MessageCategory.LOG);
+            messageBroker.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFO, MessageCategory.LOG);
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
-            message.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFO, MessageCategory.LOG);
+            messageBroker.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFO, MessageCategory.LOG);
             int numberOfLinks = data.get("links").size();
             int numberOfFileNames = data.get("fileNames").size();
             int numberOfDirectories = 0;
@@ -179,7 +179,7 @@ public class Drifty_CLI {
             } else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            message.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.LOG);
+            messageBroker.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.LOG);
             for (int i = 0; i < numberOfLinks; i++) {
                 link = data.get("links").get(i);
                 try {
@@ -201,7 +201,7 @@ public class Drifty_CLI {
                 backend.start();
             }
         } catch (FileNotFoundException e) {
-            message.sendMessage("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
+            messageBroker.sendMessage("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
         }
     }
 
