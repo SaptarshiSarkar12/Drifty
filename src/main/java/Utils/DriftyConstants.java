@@ -38,7 +38,7 @@ public final class DriftyConstants {
     public static final String USER_HOME_PROPERTY = "user.home";
     public static final String RENAME_FILE = "Would you like to rename this file? (Enter Y for yes and N for no) : ";
     public static final String RENAME_VIDEO_TITLE = "Would you like to rename the video title? (Enter Y for yes and N for no) : ";
-    public static final String QUIT_OR_CONTINUE = "Press Q to Quit Or Press <Enter> to Continue";
+    public static final String QUIT_OR_CONTINUE = "Enter Q to Quit Or any other key to Continue";
     public static final String FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER = "Failed to retrieve default download folder!";
     public static final String FAILED_TO_CONNECT_TO_URL = "Failed to connect to ";
     public static final String DEFAULT_DOWNLOAD_FOLDER = "Default download folder detected : ";
