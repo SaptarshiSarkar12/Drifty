@@ -23,11 +23,11 @@ public final class DriftyConstants {
     public static final String AUTO_FILE_NAME_DETECTION_FAILED = "An error occurred! Either the file name or the extension was missing in the url.\nThe url must be of the form of https://www.example.com/fileName.extension or an YouTube/Instagram link";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
-    public static final String HELP_FLAG = "-help";
-    public static final String NAME_FLAG = "-name";
-    public static final String VERSION_FLAG = "-version";
-    public static final String LOCATION_FLAG = "-location";
-    public static final String BATCH_FLAG = "-batch";
+    public static final String HELP_FLAG = "--help";
+    public static final String NAME_FLAG = "--name";
+    public static final String VERSION_FLAG = "--version";
+    public static final String LOCATION_FLAG = "--location";
+    public static final String BATCH_FLAG = "--batch";
     public static final String HELP_FLAG_SHORT = "-h";
     public static final String NAME_FLAG_SHORT = "-n";
     public static final String VERSION_FLAG_SHORT = "-v";
