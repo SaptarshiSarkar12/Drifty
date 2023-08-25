@@ -6,7 +6,6 @@ import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
 import Preferences.AppSettings;
-import org.buildobjects.process.ProcBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,8 +40,12 @@ public class Environment {
         InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
         CopyYtDlp copyYtDlp = new CopyYtDlp();
         try {
-            if (copyYtDlp.copyToTemp(yt_dlpProgramStream)) {
-                AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
+            boolean isCopySuccessful = true;
+            if (!Files.exists(Paths.get(filePath, yt_dlpProgramName))) {
+                isCopySuccessful = copyYtDlp.copyToTemp(yt_dlpProgramStream);
+            }
+            if (isCopySuccessful && !isUpdateForYt_dlpChecked()) {
+                updateYt_dlp();
             }
         } catch (IOException e) {
             messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
@@ -61,12 +64,17 @@ public class Environment {
     public static void updateYt_dlp() {
         messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         String command = Program.get(Program.COMMAND);
-        ProcBuilder yt_dlpUpdateProcess = new ProcBuilder(command)
-                .withArg("-U")
-                .withOutputStream(System.out)
-                .withErrorStream(System.err);
-        yt_dlpUpdateProcess.run();
-        AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
+        ProcessBuilder yt_dlpUpdateProcess = new ProcessBuilder(command, "-U");
+        yt_dlpUpdateProcess.inheritIO();
+        try {
+            Process updateYt_dlp = yt_dlpUpdateProcess.start();
+            updateYt_dlp.waitFor();
+            AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
+        } catch (IOException e) {
+            messageBroker.sendMessage("Failed to update yt-dlp! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
+        } catch (InterruptedException e) {
+            messageBroker.sendMessage("Component (yt-dlp) update process was interrupted! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
+        }
     }
 
     public static boolean isUpdateForYt_dlpChecked() {
