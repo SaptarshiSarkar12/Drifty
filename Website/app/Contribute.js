@@ -33,7 +33,7 @@ export default function Contribute({ props }) {
                         return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full" width={64} height={64} src={item.avatar_url + ".webp&s=64"} alt={item.login}></Image></a>
                     })}
                     <a href="https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors" target="_blank" >
-                        <div className="rounded-full h-16 w-16 flex items-center justify-center border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
+                        <div className="rounded-full h-20 w-20 text-xl font-semibold flex items-center justify-center border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">
                             {totalNoOfContributors - 6}+
                         </div>
                     </a>
