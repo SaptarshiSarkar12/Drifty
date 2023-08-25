@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Build and Package Drifty
 
 on:
@@ -74,25 +66,28 @@ jobs:
     - name: Categorise build artifacts for linux
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
-        mv "target/CLI/linux/Drifty CLI" -t CLI
-        mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty GUI"
-        mv "target/gluonfx/x86_64-linux/Drifty GUI" -t GUI
+        mv "target/CLI/linux/Drifty CLI" "target/CLI/linux/Drifty-CLI_linux"
+        mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
+        mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty-GUI_linux"
+        mv "target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t GUI
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        move "target/CLI/windows/Drifty CLI.exe" CLI
-        Rename-Item target/gluonfx/x86_64-windows/Drifty-1.0.msi "Drifty GUI.msi"
-        Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty GUI.exe"
-        move "target/gluonfx/x86_64-windows/Drifty GUI.msi" GUI
-        move "target/gluonfx/x86_64-windows/Drifty GUI.exe" GUI
+        Rename-Item "target/CLI/windows/Drifty CLI.exe" Drifty-CLI.exe
+        move "target/CLI/windows/Drifty-CLI.exe" CLI
+        Rename-Item target/gluonfx/x86_64-windows/Drifty-1.0.msi "Drifty-GUI.msi"
+        Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty-GUI.exe"
+        move "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
+        move "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
-        mv "target/CLI/macos/Drifty CLI" CLI
-        mv target/gluonfx/x86_64-darwin/Drifty-1.0.0.pkg "target/gluonfx/x86_64-darwin/Drifty GUI.pkg"
-        mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty GUI.app"
-        mv "target/gluonfx/x86_64-darwin/Drifty GUI.pkg" GUI
-        mv "target/gluonfx/x86_64-darwin/Drifty GUI.app" GUI
+        mv "target/CLI/macos/Drifty CLI" "target/CLI/macos/Drifty-CLI_macos"
+        mv "target/CLI/macos/Drifty-CLI_macos" CLI
+        mv target/gluonfx/x86_64-darwin/Drifty-1.0.0.pkg "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
+        mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty-GUI.app"
+        mv "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" GUI
+        mv "target/gluonfx/x86_64-darwin/Drifty-GUI.app" GUI
     - name: Tar build files # To prevent file permission loss
       run: tar -cvf ${{ matrix.os }}.tar CLI GUI
     - name: Push generated artifacts for ${{ matrix.os }}
@@ -124,14 +119,14 @@ jobs:
         tar -xvf windows-latest-Build-Files/windows-latest.tar -C windows
     - name: Get Size of Build Artifacts
       run: |
-        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/CLI/Drifty CLI'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/GUI/Drifty GUI'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/CLI/Drifty CLI'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/GUI/Drifty GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/GUI/Drifty GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/CLI/Drifty CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/GUI/Drifty GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/GUI/Drifty GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/CLI/Drifty-CLI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/GUI/Drifty-GUI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/CLI/Drifty-CLI_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
         echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
@@ -140,22 +135,22 @@ jobs:
         echo "### Artifacts :package: Generated for Linux :penguin:" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo "| CLI | Drifty CLI | $CLI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo "| GUI | Drifty GUI | $GUI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| CLI | Drifty-CLI_linux | $CLI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| GUI | Drifty-GUI_linux | $GUI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
         
-        echo "### Artifacts :package: Generated for macOS :green_apple:" >> $GITHUB_STEP_SUMMARY
+        echo "### Artifacts :package: Generated for macOS :apple:" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo "| CLI | Drifty CLI | $CLI_MACOS_SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo "| GUI | Drifty GUI.pkg | $GUI_MACOS_PKG_SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo "| GUI | Drifty GUI.app | $GUI_MACOS_APP_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| CLI | Drifty-CLI_macos | $CLI_MACOS_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| GUI | Drifty-GUI.pkg | $GUI_MACOS_PKG_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| GUI | Drifty-GUI.app | $GUI_MACOS_APP_SIZE |" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts :package: Generated for Windows :window:" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
-        echo "| CLI | Drifty CLI.exe | $CLI_WINDOWS_SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo "| GUI | Drifty GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
-        echo "| GUI | Drifty GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| CLI | Drifty-CLI.exe | $CLI_WINDOWS_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
     
         if [ ${{ github.event_name != 'workflow_call' }} ]; then
           echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
@@ -165,5 +160,5 @@ jobs:
       if: ${{ github.event_name == 'workflow_call' }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty CLI#Drifty CLI_linux' 'linux/GUI/Drifty GUI#Drifty GUI' 'macos/CLI/Drifty CLI#Drifty CLI_macos' 'macos/GUI/Drifty GUI.pkg#Drifty GUI.pkg' 'windows/CLI/Drifty CLI.exe#Drifty CLI.exe' 'windows/GUI/Drifty GUI.msi#Drifty GUI.msi' 'windows/GUI/Drifty GUI.exe#Drifty GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'macos/GUI/Drifty-GUI.app#Drifty-GUI.app' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
