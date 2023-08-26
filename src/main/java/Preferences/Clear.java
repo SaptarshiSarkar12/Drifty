@@ -33,7 +33,7 @@ public class Clear { // This class is used to clear the user preferences
     }
 
     public void lastDLPUpdateTime() {
-        preferences.remove(LAST_DLP_UPDATE_TIME.toString());
+        preferences.remove(LAST_YT_DLP_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {

@@ -1,13 +1,9 @@
 package Backend;
 
-import CLI.Drifty_CLI;
 import Enums.MessageCategory;
 import Enums.MessageType;
-import Enums.Mode;
 import Enums.Program;
 import Utils.MessageBroker;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 
 import java.io.*;
 import java.net.*;
@@ -18,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static Utils.DriftyConstants.*;
+import static Utils.Utility.isInstagramLink;
 import static Utils.Utility.isYoutubeLink;
 
 /**
@@ -41,12 +38,7 @@ public class FileDownloader implements Runnable {
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
-        if (Mode.isGUI()) {
-            setYt_dlpProgramName(Program.get(Program.NAME));
-        }
-        if (isYoutubeLink(link) || !Drifty_CLI.getIsInstagramImage()) {
-            setYt_dlpProgramName(Program.get(Program.NAME));
-        }
+        setYt_dlpProgramName(Program.get(Program.NAME));
     }
 
     public static String getDir() {
@@ -82,7 +74,7 @@ public class FileDownloader implements Runnable {
 
                     ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, totalSize);
                     progressBarThread.start();
-                    messageBroker.sendMessage(DOWNLOADING + fileName + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+                    messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     // check if all the files are downloaded
                     try {
                         while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
@@ -100,7 +92,7 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fos = new FileOutputStream(dir + fileName);
                     ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName);
                     progressBarThread.start();
-                    messageBroker.sendMessage("Downloading " + fileName + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+                    messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
@@ -109,11 +101,11 @@ public class FileDownloader implements Runnable {
                     } catch (InterruptedException ignored) {}
                 }
             } catch (SecurityException e) {
-                messageBroker.sendMessage("Write access to " + dir + fileName + " denied !", MessageType.ERROR, MessageCategory.DOWNLOAD);
+                messageBroker.sendMessage("Write access to \"" + dir + fileName + "\" denied !", MessageType.ERROR, MessageCategory.DOWNLOAD);
             } catch (FileNotFoundException fileNotFoundException) {
                 messageBroker.sendMessage(FILE_NOT_FOUND, MessageType.ERROR, MessageCategory.DOWNLOAD);
             } catch (IOException e) {
-                messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                messageBroker.sendMessage(FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
             }
         } catch (NullPointerException e) {
             messageBroker.sendMessage(FAILED_TO_READ_DATA_STREAM, MessageType.ERROR, MessageCategory.DOWNLOAD);
@@ -128,15 +120,10 @@ public class FileDownloader implements Runnable {
         } else {
             fileDownloadMessage = outputFileName;
         }
-        ProcessBuilder processBuilder;
-        messageBroker.sendMessage("Trying to download " + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        if (dir.isEmpty() || dir.equalsIgnoreCase("." + System.getProperty("file.separator"))) {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName);
-        } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
-        }
+        messageBroker.sendMessage("Trying to download \"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
         processBuilder.inheritIO();
-        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+        messageBroker.sendMessage(DOWNLOADING + "\"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         int exitValueOfYt_Dlp = -1;
         try {
             Process yt_dlp = processBuilder.start();
@@ -205,46 +192,42 @@ public class FileDownloader implements Runnable {
         if (dir.isEmpty()) {
             dir = System.getProperty("user.home");
         }
-        if (!(dir.endsWith("\\"))) {
+        if (!(dir.endsWith(System.getProperty("file.separator")))) {
             dir = dir + System.getProperty("file.separator");
         }
+        boolean isYouTubeLink = isYoutubeLink(link);
+        boolean isInstagramLink = isInstagramLink(link);
         try {
-            boolean isInstagramLink = Drifty_CLI.getIsInstagramLink();
-            boolean isInstagramImage = false;
-            if (isInstagramLink) {
-                isInstagramImage = Drifty_CLI.getIsInstagramImage();
-            }
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
-            if (isYoutubeLink(link) || (!isInstagramImage && isInstagramLink)) {
+            if (isYouTubeLink || isInstagramLink) {
                 try {
                     String directoryOfYt_dlp = Program.get(Program.PATH);
-                    if (isYoutubeLink(link)) {
+                    if (isYouTubeLink) {
                         downloadFromYouTube(directoryOfYt_dlp);
-                    } else if (!isInstagramImage) {
+                    } else {
                         downloadFromInstagram(directoryOfYt_dlp);
                     }
                 } catch (InterruptedException e) {
                     messageBroker.sendMessage(USER_INTERRUPTION, MessageType.ERROR, MessageCategory.DOWNLOAD);
                 } catch (Exception e) {
-                    messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    if (isYouTubeLink) {
+                        messageBroker.sendMessage(FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else {
+                        messageBroker.sendMessage(FAILED_TO_DOWNLOAD_INSTAGRAM_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    }
                     String msg = e.getMessage();
                     String[] messageArray = msg.split(",");
                     if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                         messageBroker.sendMessage(DRIFTY_COMPONENT_NOT_EXECUTABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                    } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube video is asked to be downloaded
-                        messageBroker.sendMessage(PERMISSION_DENIED_YOUTUBE_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
-                    } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube Video is unavailable
-                        messageBroker.sendMessage(YOUTUBE_VIDEO_UNAVAILABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube / Instagram video is asked to be downloaded
+                        messageBroker.sendMessage(PERMISSION_DENIED_YT_IG_VIDEO, MessageType.ERROR, MessageCategory.DOWNLOAD);
+                    } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube / Instagram video is unavailable
+                        messageBroker.sendMessage(VIDEO_UNAVAILABLE, MessageType.ERROR, MessageCategory.DOWNLOAD);
                     } else {
-                        messageBroker.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
+                        messageBroker.sendMessage("An Unknown Error occurred! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
                     }
                 }
             } else {
-                if (link.endsWith("/") || link.endsWith("\\")) {
-                    link += "media";
-                } else {
-                    link += "/media";
-                }
                 url = new URI(link).toURL();
                 URLConnection openConnection = url.openConnection();
                 openConnection.connect();
@@ -255,7 +238,7 @@ public class FileDownloader implements Runnable {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
                 }
-                messageBroker.sendMessage(TRYING_TO_DOWNLOAD_FILE, MessageType.INFO, MessageCategory.DOWNLOAD);
+                messageBroker.sendMessage("Trying to download \"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                 downloadFile();
             }
         } catch (MalformedURLException | URISyntaxException e) {
@@ -273,18 +256,10 @@ public class FileDownloader implements Runnable {
         } else {
             fileDownloadMessage = outputFileName;
         }
-        ProcessBuilder processBuilder; // Creates a new ProcessBuilder object
-        messageBroker.sendMessage("Trying to download " + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        int height = (int) screenSize.getHeight();  // E.g.: 768
-        int width = (int) screenSize.getWidth();    // E.g.: 1366
-        if (dir.isEmpty() || (dir.equalsIgnoreCase("."))) {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory
-        } else {
-            processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
-        }
+        messageBroker.sendMessage("Trying to download \"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         processBuilder.inheritIO();
-        messageBroker.sendMessage(DOWNLOADING + fileDownloadMessage + " ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+        messageBroker.sendMessage(DOWNLOADING + "\"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         Process yt_dlp = processBuilder.start(); // Starts the download process
         yt_dlp.waitFor();
         int exitValueOfYt_Dlp = yt_dlp.exitValue();

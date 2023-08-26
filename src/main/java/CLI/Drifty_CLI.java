@@ -68,25 +68,15 @@ public class Drifty_CLI {
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
                 fileName = Objects.requireNonNullElse(name, fileName);
-                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.DOWNLOAD);
-                if (!isYoutubeURL && !isInstagramLink) {
-                    fileName = utility.findFilenameInLink(link);
-                } else {
-                    LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-                    for (String json : linkMetadataList) {
-                        fileName = Utility.getFilenameFromJson(json) + ".mp4";
-                    }
-                }
-                takeFileNameInputIfNull();
+                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
+                fileName = utility.findFilenameInLink(link);
+                renameFilenameIfRequired();
                 downloadsFolder = location;
                 if (downloadsFolder == null) {
-                    downloadsFolder = utility.saveToDefault();
+                    downloadsFolder = getFormattedDefaultDownloadsFolder();
                 } else {
                     if (OS.isWindows()) {
                         downloadsFolder = downloadsFolder.replace('/', '\\');
-                        if (!(downloadsFolder.endsWith("\\"))) {
-                            downloadsFolder = downloadsFolder + System.getProperty("file.separator");
-                        }
                     }
                 }
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
@@ -107,7 +97,7 @@ public class Drifty_CLI {
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
-                        messageBroker.sendMessage("The given file should be a YAML file!", MessageType.ERROR, MessageCategory.LOG);
+                        messageBroker.sendMessage("The data file should be a YAML file!", MessageType.ERROR, MessageCategory.BATCH);
                     } else {
                         batchDownloader();
                         break;
@@ -127,16 +117,9 @@ public class Drifty_CLI {
                 downloadsFolder = SC.next();
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
-                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.DOWNLOAD);
-                if (!isYoutubeURL && !isInstagramLink) {
-                    fileName = utility.findFilenameInLink(link);
-                } else {
-                    LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-                    for (String json : linkMetadataList) {
-                        fileName = Utility.getFilenameFromJson(json) + ".mp4";
-                    }
-                }
-                takeFileNameInputIfNull();
+                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
+                fileName = utility.findFilenameInLink(link);
+                renameFilenameIfRequired();
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
                 backend.start();
             }
@@ -157,9 +140,21 @@ public class Drifty_CLI {
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
             messageBroker.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFO, MessageCategory.LOG);
-            int numberOfLinks = data.get("links").size();
-            int numberOfFileNames = data.get("fileNames").size();
-            int numberOfDirectories = 0;
+            int numberOfLinks;
+            try {
+                numberOfLinks = data.get("links").size();
+            } catch (NullPointerException e) {
+                messageBroker.sendMessage("No links specified. Exiting...", MessageType.ERROR, MessageCategory.LINK);
+                return;
+            }
+            int numberOfFileNames;
+            if (data.containsKey("fileNames")) {
+                numberOfFileNames = data.get("fileNames").size();
+            } else {
+                messageBroker.sendMessage("No filename specified. Filename will be retrieved from the link.", MessageType.INFO, MessageCategory.FILENAME);
+                numberOfFileNames = 0;
+            }
+            int numberOfDirectories;
             if (data.containsKey("directory")) {
                 numberOfDirectories = 1;
                 if (data.get("directory").get(0).isEmpty()) {
@@ -169,6 +164,10 @@ public class Drifty_CLI {
                 }
             } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
+            } else {
+                messageBroker.sendMessage("No directory specified. Default downloads folder will be used.", MessageType.INFO, MessageCategory.DIRECTORY);
+                numberOfDirectories = 0;
+                directory = ".";
             }
             String linkMessage;
             if (numberOfLinks == 1) {
@@ -188,22 +187,27 @@ public class Drifty_CLI {
             } else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            messageBroker.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.LOG);
+            messageBroker.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.BATCH);
             for (int i = 0; i < numberOfLinks; i++) {
+                messageBroker.sendMessage("==================================================", MessageType.INFO, MessageCategory.STYLE);
                 link = data.get("links").get(i);
-                try {
+                messageBroker.sendMessage("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link, MessageType.INFO, MessageCategory.LINK);
+                isYoutubeURL = isYoutubeLink(link);
+                isInstagramLink = isInstagramLink(link);
+                if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
-                } catch (Exception e) {
+                } else {
+                    messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
                     fileName = utility.findFilenameInLink(link);
-                    takeFileNameInputIfNull();
                 }
+                renameFilenameIfRequired();
                 if (directory.equals(".")) {
-                    directory = utility.saveToDefault();
+                    directory = getFormattedDefaultDownloadsFolder();
                 } else if (directory.isEmpty()) {
                     try {
                         directory = data.get("directories").get(i);
                     } catch (Exception e) {
-                        directory = ".";
+                        directory = getFormattedDefaultDownloadsFolder();
                     }
                 }
                 Drifty backend = new Drifty(link, directory, fileName, System.out);
@@ -214,47 +218,22 @@ public class Drifty_CLI {
         }
     }
 
-    private static void takeFileNameInputIfNull() {
+    private static void renameFilenameIfRequired() { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             fileName = SC.nextLine();
         } else {
-            if (isYoutubeURL) {
-                System.out.print("Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
-                SC.nextLine(); // To remove 'whitespace' from input buffer.
-                String choiceString = SC.nextLine().toLowerCase();
-                boolean choice = utility.yesNoValidation(choiceString, "Do you like to use the video title as the filename? (Enter Y for yes and N for no) : ");
-                if (!choice) {
-                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.nextLine();
-                }
-            } else if (isInstagramLink) {
-                System.out.print("Is the instagram link of a video? (Enter Y for video and N for image) : ");
-                SC.nextLine(); // To remove 'whitespace' from input buffer.
-                String choiceString = SC.nextLine().toLowerCase();
-                boolean choice = utility.yesNoValidation(choiceString, "Is the instagram link of a video? (Enter Y for video and N for image) : ");
-                if (!choice) {
-                    System.out.print("Please enter the filename for the Instagram image with the file extension (filename.extension [usually png]) : ");
-                    fileName = SC.nextLine();
-                    isInstagramImage = true;
-                } else {
-                    isInstagramImage = false;
-                }
-            } else {
-                System.out.print(RENAME_FILE);
-                SC.nextLine(); // To remove whitespace from the input buffer
-                String choiceString = SC.nextLine().toLowerCase();
-                boolean choice = utility.yesNoValidation(choiceString, ENTER_FILE_NAME_WITH_EXTENSION);
-                if (choice) {
-                    System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-                    fileName = SC.nextLine();
-                }
+            System.out.print("Would you like to use this filename? (Enter Y for yes and N for no) : ");
+            if (!batchDownloading) {
+                SC.nextLine(); // To remove 'whitespace' from input buffer. The whitespace will not be present in the input buffer if the user is using batch downloading because only yml file is parsed but no user input is taken.
+            }
+            String choiceString = SC.nextLine().toLowerCase();
+            boolean choice = utility.yesNoValidation(choiceString, "Would you like to use this filename? (Enter Y for yes and N for no) : ");
+            if (!choice) {
+                System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                fileName = SC.nextLine();
             }
         }
-    }
-
-    public static boolean getIsInstagramImage() {
-        return isInstagramImage;
     }
 
     public static boolean getIsInstagramLink() {

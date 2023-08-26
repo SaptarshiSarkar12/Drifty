@@ -80,6 +80,6 @@ public class Environment {
 
     public static boolean isUpdateForYt_dlpChecked() {
         final long oneDayInMilliSeconds = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        return (System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime()) < oneDayInMilliSeconds;
+        return (System.currentTimeMillis() - AppSettings.get.lastYt_dlpUpdateTime()) < oneDayInMilliSeconds;
     }
 }
