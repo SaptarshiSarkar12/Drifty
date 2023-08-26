@@ -30,10 +30,10 @@ public class Main extends Application {
         Mode.setGUIMode();
         Utility.setStartTime();
         for (String arg : args) {
-            if (arg.toLowerCase().contains("--enablemaxstart")) {
+            if (arg.toLowerCase().contains("--enable-max-start")) {
                 AppSettings.set.startMax(true);
             }
-            if (arg.toLowerCase().contains("--disablemaxstart")) {
+            if (arg.toLowerCase().contains("--disable-max-start")) {
                 AppSettings.set.startMax(false);
             }
             if (arg.toLowerCase().contains("--devmode")) {

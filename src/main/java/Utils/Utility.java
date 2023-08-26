@@ -16,8 +16,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
 import org.hildan.fxgson.FxGson;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -65,19 +64,17 @@ public final class Utility {
             connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
         } catch (ConnectException e) {
-            throw new Exception(e);
+            messageBroker.sendMessage("Connection to the link timed out! Please check your internet connection. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         } catch (UnknownHostException unknownHost) {
             try {
                 URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
-                throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+                messageBroker.sendMessage("Link is invalid!", MessageType.ERROR, MessageCategory.LINK); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
-                throw new Exception("You are not connected to the Internet!");
+                messageBroker.sendMessage("You are not connected to the Internet!", MessageType.ERROR, MessageCategory.LINK);
             }
-
         }
-
     }
 
     public static boolean urlIsValid(String link) {
@@ -108,7 +105,7 @@ public final class Utility {
         }
 
         String extension = file.substring(index);
-        // edge case 1 : "example.com/."
+        // edge case 1: "example.com/."
         if (extension.length() == 1) {
             messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
             return null;
@@ -212,12 +209,12 @@ public final class Utility {
     public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
-            File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
-            if (tempFolder.exists() && tempFolder.isDirectory()) {
-                FileUtils.forceDelete(tempFolder); // Deletes the previously generated temporary directory for Drifty
+            File driftyConfigFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
+            if (driftyConfigFolder.exists() && driftyConfigFolder.isDirectory()) {
+                FileUtils.forceDelete(driftyConfigFolder); // Deletes the previously generated temporary directory for Drifty
             }
-            tempFolder.mkdir();
-            linkThread = new Thread(getYT_IGLinkMetadata(tempFolder.getAbsolutePath(), link));
+            driftyConfigFolder.mkdir();
+            linkThread = new Thread(getYT_IGLinkMetadata(driftyConfigFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -225,11 +222,11 @@ public final class Utility {
             }
 
             if (interrupted) {
-                FileUtils.forceDelete(tempFolder);
+                FileUtils.forceDelete(driftyConfigFolder);
                 return null;
             }
 
-            File[] files = tempFolder.listFiles();
+            File[] files = driftyConfigFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
@@ -240,7 +237,7 @@ public final class Utility {
 
                 }
 
-                FileUtils.forceDelete(tempFolder); // delete the metadata files of Drifty from the temp directory
+                FileUtils.forceDelete(driftyConfigFolder); // delete the metadata files of Drifty from the config directory
             }
 
             return list;
@@ -254,14 +251,13 @@ public final class Utility {
     public static String getURLFromJson(String jsonString) {
         String json = makePretty(jsonString);
         String regexLink = "(\"webpage_url\": \")(.+)(\")";
-        String urlLink = "";
+        String extractedUrl = "";
         Pattern p = Pattern.compile(regexLink);
         Matcher m = p.matcher(json);
         if (m.find()) {
-            urlLink = StringEscapeUtils.unescapeJava(m.group(2));
+            extractedUrl = StringEscapeUtils.unescapeJava(m.group(2));
         }
-
-        return urlLink;
+        return extractedUrl;
     }
 
     public static String makePretty(String json) {
@@ -275,18 +271,18 @@ public final class Utility {
 
     public static String getFilenameFromJson(String jsonString) {
         String json = makePretty(jsonString);
-        String filename;
+        String fileName;
         String regexFilename = "(\"title\": \")(.+)(\",)";
         Pattern p = Pattern.compile(regexFilename);
         Matcher m = p.matcher(json);
         if (m.find()) {
-            filename = m.group(2);
+            fileName = cleanFilename(m.group(2));
+            messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
+        } else {
+            fileName = cleanFilename("Unknown Filename");
+            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG, MessageType.ERROR, MessageCategory.FILENAME);
         }
-        else {
-            filename = "Unknown Filename";
-        }
-
-        return cleanFilename(filename);
+        return fileName;
     }
 
     public static String cleanFilename(String filename) {
@@ -298,11 +294,15 @@ public final class Utility {
         return () -> {
             String command = Program.get(Program.COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
-            new ProcBuilder(command).withArgs(args)
-                    .withOutputStream(System.out)
+            try {
+                new ProcBuilder(command).withArgs(args)
+                    .withOutputStream(new FileOutputStream(Logger.getInstance().getLogFilename()))
                     .withErrorStream(System.err)
                     .withNoTimeout()
                     .run();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         };
     }
 

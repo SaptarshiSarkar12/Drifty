@@ -63,7 +63,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             timer.scheduleAtFixedRate(getJson(), 1000, 150);
             LinkedList<String> jsonList = Utility.getLinkMetadata(link);
             timer.cancel();
-            sleep(500);//give timerTask enough time to do its last run
+            sleep(500); //give timerTask enough time to do its last run
             jobList.clear();
             for (String json : jsonList) {
                 String filename = Utility.getFilenameFromJson(json);
