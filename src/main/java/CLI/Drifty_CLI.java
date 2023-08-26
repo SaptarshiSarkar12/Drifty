@@ -10,10 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
@@ -71,8 +68,14 @@ public class Drifty_CLI {
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
                 fileName = Objects.requireNonNullElse(name, fileName);
+                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.DOWNLOAD);
                 if (!isYoutubeURL && !isInstagramLink) {
                     fileName = utility.findFilenameInLink(link);
+                } else {
+                    LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+                    for (String json : linkMetadataList) {
+                        fileName = Utility.getFilenameFromJson(json) + ".mp4";
+                    }
                 }
                 takeFileNameInputIfNull();
                 downloadsFolder = location;
@@ -124,8 +127,14 @@ public class Drifty_CLI {
                 downloadsFolder = SC.next();
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
+                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.DOWNLOAD);
                 if (!isYoutubeURL && !isInstagramLink) {
                     fileName = utility.findFilenameInLink(link);
+                } else {
+                    LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+                    for (String json : linkMetadataList) {
+                        fileName = Utility.getFilenameFromJson(json) + ".mp4";
+                    }
                 }
                 takeFileNameInputIfNull();
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);

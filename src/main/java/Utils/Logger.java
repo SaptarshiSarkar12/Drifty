@@ -1,4 +1,5 @@
 package Utils;
+
 import Enums.Mode;
 import Enums.MessageType;
 import java.io.*;
@@ -9,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import static Utils.DriftyConstants.FAILED_TO_CLEAR_LOG;
 import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
+
 /**
  * This class deals with creating Log files for Drifty.
  */
@@ -16,10 +18,10 @@ public class Logger {
     private static Logger CLILoggerInstance;
     private static Logger GUILoggerInstance;
     Path filePath;
-    DateFormat dateFormat;
+    private final DateFormat dateFormat;
     boolean isLogEmpty;
     Calendar calendarObject = Calendar.getInstance();
-    String logFilename;
+    private final String logFilename;
 
     private Logger() {
         if (Mode.isCLI()) {
@@ -47,10 +49,14 @@ public class Logger {
         }
     }
 
+    public String getLogFilename() {
+        return logFilename;
+    }
+
     private void clearLog() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
             isLogEmpty = true;
-            out.write("");
+            logWriter.write("");
         } catch (IOException e) {
             System.out.println(FAILED_TO_CLEAR_LOG);
         }
@@ -61,9 +67,9 @@ public class Logger {
         if (!isLogEmpty) {
             clearLog();
         }
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
             isLogEmpty = true;
-            out.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
+            logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
             System.out.println(FAILED_TO_CREATE_LOG + logMessage);
         }
