@@ -61,7 +61,7 @@ public class Main extends Application {
         ap.getChildren().add(menu);
         primaryStage = Constants.getStage(primaryStage);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if(firstRun) {
+            if (firstRun) {
                 firstRun = false;
                 return;
             }
@@ -69,8 +69,9 @@ public class Main extends Application {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
-                    if(Utility.isURL(clipboardText))
+                    if (Utility.isURL(clipboardText)) {
                         FormLogic.setLink(clipboardText);
+                    }
                 }
             }
         }));
@@ -154,8 +155,8 @@ public class Main extends Application {
 
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.get.folders().getDownloadFolder();
-        String initFolder = lastFolder.isEmpty() ? System.getProperty("user.home") : lastFolder;
+        String lastDownloadsFolder = AppSettings.get.folders().getDownloadFolder();
+        String initFolder = lastDownloadsFolder.isEmpty() ? Utility.getFormattedDefaultDownloadsFolder() : lastDownloadsFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);
         if (directory != null) {

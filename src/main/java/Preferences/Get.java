@@ -2,6 +2,7 @@ package Preferences;
 
 import Enums.Program;
 import GUI.Support.*;
+import Utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hildan.fxgson.FxGson;
@@ -46,12 +47,12 @@ public class Get { // This class is used to get the user preferences
         return preferences.getBoolean(BATCH_AUTO_PASTE.toString(), false);
     }
 
-    public long lastDLPUpdateTime() {
-        return preferences.getLong(LAST_DLP_UPDATE_TIME.toString(), 1000L);
+    public long lastYt_dlpUpdateTime() {
+        return preferences.getLong(LAST_YT_DLP_UPDATE_TIME.toString(), 1000L);
     }
 
     public String lastDownloadFolder() {
-        String defaultPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
+        String defaultPath = Paths.get(Utility.getFormattedDefaultDownloadsFolder()).toAbsolutePath().toString();
         return preferences.get(LAST_FOLDER.toString(), defaultPath);
     }
 

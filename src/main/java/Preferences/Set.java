@@ -46,7 +46,7 @@ public class Set { // This class is used to set the user preferences
 
     public void lastYt_DlpUpdateTime(long lastYt_DlpUpdateTime) {
         AppSettings.clear.lastDLPUpdateTime();
-        preferences.putLong(LAST_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
+        preferences.putLong(LAST_YT_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
     }
 
     public void lastFolder(String lastFolderPath) {

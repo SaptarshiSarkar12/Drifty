@@ -6,7 +6,7 @@ package Enums;
 public enum Mode {
     CLI, GUI;
     private static Mode mode = Mode.CLI;
-    private static boolean guiLoaded = false;
+    private static boolean isGUILoaded = false;
     private static boolean developer = false;
 
     public static void setDev() {
@@ -21,12 +21,12 @@ public enum Mode {
         Mode.mode = Mode.GUI;
     }
 
-    public static void setGuiLoaded(boolean isGUILoadingCompleted) {
-        guiLoaded = isGUILoadingCompleted;
+    public static void setIsGUILoaded(boolean isGUILoadingCompleted) {
+        isGUILoaded = isGUILoadingCompleted;
     }
 
-    public static boolean guiLoaded() {
-        return guiLoaded;
+    public static boolean isGUILoaded() {
+        return isGUILoaded;
     }
 
     public static boolean isGUI() {

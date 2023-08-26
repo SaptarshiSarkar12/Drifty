@@ -93,50 +93,50 @@ public final class Utility {
         return true;
     }
 
-    public String findFilenameInLink(String link) {
-        // Check and inform user if the url contains filename.
-        // Example: "example.com/file.txt" prints "Filename detected: file.txt"
-        // example.com/file.json -> file.json
-        String file = link.substring(link.lastIndexOf("/") + 1);
-        int index = file.lastIndexOf(".");
-        if (index < 0) {
-            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
-            return null;
+    public static String findFilenameInLink(String link) {
+        String fileName = "";
+        if (isInstagramLink(link) || isYoutubeLink(link)) {
+            LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+            for (String json : linkMetadataList) {
+                fileName = Utility.getFilenameFromJson(json);
+            }
+        } else {
+            // Example: "example.com/file.txt" prints "Filename detected: file.txt"
+            // example.com/file.json -> file.json
+            String file = link.substring(link.lastIndexOf("/") + 1);
+            int index = file.lastIndexOf(".");
+            if (index < 0) {
+                messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
+                return null;
+            }
+            String extension = file.substring(index);
+            // edge case 1: "example.com/."
+            if (extension.length() == 1) {
+                messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
+                return null;
+            }
+            // file.png?width=200 -> file.png
+            fileName = file.split("([?])")[0];
+            messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
         }
-
-        String extension = file.substring(index);
-        // edge case 1: "example.com/."
-        if (extension.length() == 1) {
-            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
-            return null;
-        }
-
-        // file.png?width=200 -> file.png
-        String fileName = file.split("([?])")[0];
-        messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
         return fileName;
     }
 
-    public String saveToDefault() {
+    public static String getFormattedDefaultDownloadsFolder() {
         String downloadsFolder;
         messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFO, MessageCategory.DIRECTORY);
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
-        }
-
-        else {
+        } else {
             downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
 
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, MessageType.ERROR, MessageCategory.DIRECTORY);
-        }
-
-        else {
+        } else {
             messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFO, MessageCategory.DIRECTORY);
         }
-
         return downloadsFolder;
     }
 
@@ -164,7 +164,6 @@ public final class Utility {
             input = SC.nextLine().toLowerCase();
             yesNoValidation(input, printMessage);
         }
-
         return false;
     }
 
@@ -261,13 +260,12 @@ public final class Utility {
     }
 
     public static String makePretty(String json) {
-        //The regex strings won't match unless the json string is converted to pretty format
+        // The regex strings won't match unless the json string is converted to pretty format
         GsonBuilder g = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(g).setPrettyPrinting().create();
         JsonElement element = JsonParser.parseString(json);
         return gson.toJson(element);
     }
-
 
     public static String getFilenameFromJson(String jsonString) {
         String json = makePretty(jsonString);
@@ -276,10 +274,10 @@ public final class Utility {
         Pattern p = Pattern.compile(regexFilename);
         Matcher m = p.matcher(json);
         if (m.find()) {
-            fileName = cleanFilename(m.group(2));
-            messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
+            fileName = cleanFilename(m.group(2)) + ".mp4";
+            messageBroker.sendMessage(FILENAME_DETECTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
         } else {
-            fileName = cleanFilename("Unknown Filename");
+            fileName = cleanFilename("Unknown Filename") + ".mp4";
             messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG, MessageType.ERROR, MessageCategory.FILENAME);
         }
         return fileName;
@@ -301,7 +299,7 @@ public final class Utility {
                     .withNoTimeout()
                     .run();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                messageBroker.sendMessage("Failed to log yt-dlp filename retrieving process output! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
             }
         };
     }
@@ -313,11 +311,9 @@ public final class Utility {
         return m.matches();
     }
 
-
-
     public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision) {
-        // Both reMap methods will map a number in a range to a different range. So lets say you have a number, such as 25, and it came from a range of
-        // values that go from 0 to 500. And you want to find the equivelant number in the range of 5,000 to 100,000, these classes do exactly that.
+        // Both reMap methods will map a number in a range to a different range. So let's say you have a number, such as 25, and it came from a range of
+        // values that go from 0 to 500. And you want to find the equivalent number in the range of 5,000 to 100,000, these classes do exactly that.
         // They also follow the strict algebraic way of accomplishing such a remap so they from any range to any other range where the numbers can
         // be positive or negative in any order in any way, it doesn't matter. The mapping will be accurate every time.
         double deltaA = fromRangeEnd - fromRangeStart;
@@ -340,6 +336,5 @@ public final class Utility {
         } catch (InterruptedException e) {
             messageBroker.sendMessage("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
-
     }
 }

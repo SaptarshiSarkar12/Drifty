@@ -21,15 +21,12 @@ public class MessageBroker {
 
     public void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         if (Mode.isCLI()) {
-            if (!messageCategory.equals(MessageCategory.LOG))
+            if (!messageCategory.equals(MessageCategory.LOG)) {
                 output.println(message);
+            }
             logger.log(messageType, message);
-        } else if (Mode.guiLoaded()) {
+        } else if (Mode.isGUI() && Mode.isGUILoaded()) {
             logger.log(messageType, message);
         }
-    }
-
-    public PrintStream getOutput() {
-        return output;
     }
 }

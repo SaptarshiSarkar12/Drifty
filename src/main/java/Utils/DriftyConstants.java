@@ -21,9 +21,8 @@ public final class DriftyConstants {
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
     public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Failed to detect the filename! Either the file name or the extension was missing in the url.\nThe url must be of the form of https://www.example.com/fileName.extension.";
-    public static final String AUTO_FILE_NAME_DETECTION_FAILED_YT_IG = "Failed to detect the filename! The url must be of the form of a YouTube/Instagram Video/Image link.\nTaking \"Unknown Filename\" as the filename.";
+    public static final String AUTO_FILE_NAME_DETECTION_FAILED_YT_IG = "Failed to detect the filename! The url must be of the form of a YouTube/Instagram Video/Image link.\nTaking \"Unknown Filename.mp4\" as the filename.";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
-    public static final String TRYING_TO_DOWNLOAD_FILE = "Trying to download the file ...";
     public static final String HELP_FLAG = "--help";
     public static final String NAME_FLAG = "--name";
     public static final String VERSION_FLAG = "--version";
@@ -61,8 +60,9 @@ public final class DriftyConstants {
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
     public static final String FAILED_TO_DOWNLOAD_YOUTUBE_VIDEO = "Failed to download YouTube video!";
-    public static final String YOUTUBE_VIDEO_UNAVAILABLE = "The requested YouTube video is unavailable, it has been deleted from YouTube.";
-    public static final String PERMISSION_DENIED_YOUTUBE_VIDEO = "You do not have access to download the video, permission is denied.";
+    public static final String FAILED_TO_DOWNLOAD_INSTAGRAM_VIDEO = "Failed to download Instagram video!";
+    public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";
+    public static final String PERMISSION_DENIED_YT_IG_VIDEO = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
     public static final String FAILED_TO_INITIALISE_YOUTUBE_VIDEO_DOWNLOADER = "Failed to initialise YouTube video downloader!";
     public static final String THREAD_ERROR_ENCOUNTERED = "Error: thread encountered an error";
