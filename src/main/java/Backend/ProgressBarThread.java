@@ -3,6 +3,7 @@ package Backend;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
+import Utils.Environment;
 import Utils.MessageBroker;
 
 import java.io.FileOutputStream;
@@ -16,7 +17,7 @@ import static Utils.DriftyConstants.*;
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
-    private final static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    private final static MessageBroker messageBroker = Environment.getMessageBroker();
     private final float charPercent;
     private final List<Long> partSizes;
     private final String fileName;

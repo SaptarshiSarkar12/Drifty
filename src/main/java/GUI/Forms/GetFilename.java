@@ -112,9 +112,10 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 }
                 for (File file : deleteList) {
                     try {
-                        FileUtils.forceDelete(file);
-                    } catch (IOException ignored) {
-                    }
+                        if (file.exists()) {
+                            FileUtils.forceDelete(file);
+                        }
+                    } catch (IOException ignored) {}
                 }
             }
         };

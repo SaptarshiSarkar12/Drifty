@@ -30,7 +30,7 @@ public class Logger {
             logFilename = "Drifty GUI.log";
         }
         filePath = FileSystems.getDefault().getPath(logFilename);
-        dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public static Logger getInstance() {

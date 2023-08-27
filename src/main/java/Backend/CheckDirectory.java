@@ -2,6 +2,7 @@ package Backend;
 
 import Enums.MessageCategory;
 import Enums.MessageType;
+import Utils.Environment;
 import Utils.MessageBroker;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import static Utils.DriftyConstants.*;
  * This class checks if a directory exists or not. If it doesn't, the directory is created.
  */
 class CheckDirectory {
-    private static final MessageBroker message = Drifty.getMessageBrokerInstance();
+    private static final MessageBroker message = Environment.getMessageBroker();
     CheckDirectory(String dir) throws IOException {
         if (!(checkIfFolderExists(dir))) {
             Path directory = FileSystems.getDefault().getPath(dir);

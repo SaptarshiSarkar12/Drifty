@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
-    static MessageBroker messageBroker;
+    static MessageBroker messageBroker = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
     private static Thread linkThread;
     private static boolean interrupted;
@@ -43,9 +43,7 @@ public final class Utility {
         return System.currentTimeMillis() - startTime;
     }
 
-    public Utility(MessageBroker messageBroker) {
-        Utility.messageBroker = messageBroker;
-    }
+    public Utility() {}
 
     public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
@@ -57,12 +55,14 @@ public final class Utility {
         return url.matches(pattern);
     }
 
-    public static void isURLValid(String link) throws Exception {
+    public static boolean isURLValid(String link) {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
+            messageBroker.sendMessage("Link is valid!", MessageType.INFO, MessageCategory.LINK);
+            return true;
         } catch (ConnectException e) {
             messageBroker.sendMessage("Connection to the link timed out! Please check your internet connection. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         } catch (UnknownHostException unknownHost) {
@@ -73,8 +73,19 @@ public final class Utility {
                 messageBroker.sendMessage("Link is invalid!", MessageType.ERROR, MessageCategory.LINK); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
                 messageBroker.sendMessage("You are not connected to the Internet!", MessageType.ERROR, MessageCategory.LINK);
+            } catch (MalformedURLException e) {
+                messageBroker.sendMessage("The link is not correctly formatted! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            } catch (IOException e) {
+                messageBroker.sendMessage("Failed to connect to the project website! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
             }
+        } catch (ProtocolException e) {
+            messageBroker.sendMessage("An error occurred with the protocol! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+        } catch (MalformedURLException e) {
+            messageBroker.sendMessage("The link is not correctly formatted! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+        } catch (IOException e) {
+            messageBroker.sendMessage("Failed to connect to " + link + " ! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
+        return false;
     }
 
     public static boolean urlIsValid(String link) {
@@ -292,15 +303,11 @@ public final class Utility {
         return () -> {
             String command = Program.get(Program.COMMAND);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
-            try {
-                new ProcBuilder(command).withArgs(args)
-                    .withOutputStream(new FileOutputStream(Logger.getInstance().getLogFilename()))
-                    .withErrorStream(System.err)
-                    .withNoTimeout()
-                    .run();
-            } catch (IOException e) {
-                messageBroker.sendMessage("Failed to log yt-dlp filename retrieving process output! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
-            }
+            new ProcBuilder(command)
+                .withArgs(args)
+                .withErrorStream(System.err)
+                .withNoTimeout()
+                .run();
         };
     }
 

@@ -1,5 +1,7 @@
 package GUI;
 
+import GUI.Forms.Main;
+
 /*
  * Because Java Compiler is not yet module-capable, we need to launch JavaFX from a
  * separate class in order to get the GUIs to load completely.
@@ -7,14 +9,15 @@ package GUI;
  * This class also sets the Mode enum to GUI which can be used throughout
  * the code to check which mode the code is running in.
  */
-public class Launcher {
+public class Drifty_GUI {
     public static void main(String[] args) {
-        System.out.println("""
-                ****************************************
-                * Run GUI.Main instead of GUI.Launcher *
-                ****************************************
-                """);
-        System.exit(0);
+//        System.out.println("""
+//                ****************************************
+//                * Run GUI.Main instead of GUI.Launcher *
+//                ****************************************
+//                """);
+//        System.exit(0);
+        Main.main(args);
 /*
         Mode.setGUIMode();
         Utility.setStartTime();

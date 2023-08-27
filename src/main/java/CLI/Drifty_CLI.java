@@ -36,12 +36,14 @@ public class Drifty_CLI {
 
     public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
-        messageBroker = new MessageBroker(System.out);
-        utility = new Utility(messageBroker);
-        printBanner();
+        Environment.setMessageBroker(new MessageBroker(System.out));
+        messageBroker = Environment.getMessageBroker();
         messageBroker.sendMessage("Initializing environment...", MessageType.INFO, MessageCategory.INITIALIZATION);
         Environment.initializeEnvironment();
         messageBroker.sendMessage("Environment initialized successfully!", MessageType.INFO, MessageCategory.INITIALIZATION);
+        messageBroker = Environment.getMessageBroker();
+        utility = new Utility();
+        printBanner();
         String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
@@ -69,7 +71,7 @@ public class Drifty_CLI {
                 isInstagramLink = isInstagramLink(link);
                 fileName = Objects.requireNonNullElse(name, fileName);
                 messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
-                fileName = utility.findFilenameInLink(link);
+                fileName = findFilenameInLink(link);
                 renameFilenameIfRequired();
                 downloadsFolder = location;
                 if (downloadsFolder == null) {
@@ -118,7 +120,7 @@ public class Drifty_CLI {
                 isYoutubeURL = isYoutubeLink(link);
                 isInstagramLink = isInstagramLink(link);
                 messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
-                fileName = utility.findFilenameInLink(link);
+                fileName = findFilenameInLink(link);
                 renameFilenameIfRequired();
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
                 backend.start();
@@ -198,7 +200,7 @@ public class Drifty_CLI {
                     fileName = data.get("fileNames").get(i);
                 } else {
                     messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
-                    fileName = utility.findFilenameInLink(link);
+                    fileName = findFilenameInLink(link);
                 }
                 renameFilenameIfRequired();
                 if (directory.equals(".")) {
