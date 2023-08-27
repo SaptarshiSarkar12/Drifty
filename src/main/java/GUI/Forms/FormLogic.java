@@ -1,11 +1,15 @@
 package GUI.Forms;
 
+import Enums.MessageCategory;
+import Enums.MessageType;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.JobHistory;
 import GUI.Support.Jobs;
 import Preferences.AppSettings;
 import Utils.CheckFile;
+import Utils.Environment;
+import Utils.MessageBroker;
 import Utils.Utility;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
@@ -38,8 +42,9 @@ import java.util.stream.Collectors;
 import static GUI.Forms.Constants.*;
 
 public class FormLogic {
-    private static final FormLogic INSTANCE = new FormLogic();
+    public static final FormLogic INSTANCE = new FormLogic();
     private static MainGridPane form;
+    private static final MessageBroker messageBroker = Environment.getMessageBroker();
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
     private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
@@ -97,18 +102,18 @@ public class FormLogic {
             if (!PreviousLink.equals(presentLink)) {
                 if (clearingLink) {
                     clearingLink = false;
-                    setLinkOutput(GREEN, "");
+                    messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
                     return;
                 }
                 if (downloadInProgress.getValue().equals(false) && processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
-                    setLinkOutput(GREEN, "Validating link ...");
+                    messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
                     checkFiles();
                     linkValid.setValue(false);
                     if (presentLink.contains(" ")) {
-                        setLinkOutput(RED, "Link should not contain whitespace characters!");
+                        messageBroker.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
                     }
                     else if (!Utility.isURL(presentLink)) {
-                        setLinkOutput(RED, "String is not a URL");
+                        messageBroker.sendMessage("Link is not a valid URL!", MessageType.ERROR, MessageCategory.LINK);
                     }
                     else {
                         if (linkExistsButUserProceeds(presentLink)) {
@@ -123,21 +128,20 @@ public class FormLogic {
                                 }
                             }
                             if (dupLink) {
-                                setLinkOutput(YELLOW, "Already in batch: \"" + dupFilename + "\"");
+                                messageBroker.sendMessage("Already in batch: \"" + dupFilename + "\"", MessageType.WARN, MessageCategory.LINK);
                             }
                             else {
-                                try {
-                                    Utility.isURLValid(presentLink);
-                                    setLinkOutput(GREEN, "Valid URL");
+                                boolean isUrlValid = Utility.isURLValid(presentLink);
+                                if (isUrlValid) {
                                     linkValid.setValue(true);
-                                } catch (Exception e) {
-                                    String errorMessage = e.getMessage();
-                                    setLinkOutput(RED, errorMessage);
                                 }
                             }
                         }
                         else {
-                            return;
+                            boolean isUrlValid = Utility.isURLValid(presentLink);
+                            if (isUrlValid) {
+                                linkValid.setValue(true);
+                            }
                         }
                     }
                     if (linkValid.getValue().equals(true)) {
@@ -168,7 +172,7 @@ public class FormLogic {
                     setFilename(job.getFilename());
                     if (error != null) {
                         if (!error.isEmpty()) {
-                            setFilenameOutput(RED, error);
+                            messageBroker.sendMessage(error, MessageType.ERROR, MessageCategory.FILENAME);
                         }
                     }
                 }
@@ -208,17 +212,17 @@ public class FormLogic {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
-                    setDirOutput(RED, "Directory cannot be empty!");
+                    messageBroker.sendMessage("Directory cannot be empty!", MessageType.ERROR, MessageCategory.DIRECTORY);
                 }
                 else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
-                        setDirOutput(GREEN, "Directory exists!");
+                        messageBroker.sendMessage("Directory exists!", MessageType.INFO, MessageCategory.DIRECTORY);
                         directoryExists.setValue(true);
                     }
                     else {
-                        setDirOutput(RED, "Directory does not exist or is not a directory!");
+                        messageBroker.sendMessage("Directory does not exist or is not a directory!", MessageType.ERROR, MessageCategory.DIRECTORY);
                     }
                 }
             }
@@ -263,7 +267,7 @@ public class FormLogic {
                     fileCount++;
                     String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
                     if (fileExists(job.getFilename())) {
-                        Platform.runLater(() -> setDownloadOutput(TEAL, job.getFilename() + " Exists already!"));
+                        Platform.runLater(() -> messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.WARN, MessageCategory.FILENAME));
                         jobList.remove(job);
                         jobHistory.addJob(job);
                         commitJobListToListView();
@@ -438,15 +442,16 @@ public class FormLogic {
                         if (!jobList.contains(job)) {
                             if (jobHistory.jobMatch(job)) {
                                 AskYesNo ask = new AskYesNo("You have downloaded " + job.getFilename() + " in the past. Do you still want to add it to the job batch?");
-                                if (ask.getResponse().isYes())
+                                if (ask.getResponse().isYes()) {
                                     jobList.add(job);
-                                else
+                                } else
                                     continue;
                             }
                             if (jobHistory.jobFileExists(job)) {
                                 AskYesNo ask = new AskYesNo("This file: " + job.getFilename() + " already exists in one of your download folders. Do you want to download it again?");
-                                if (ask.getResponse().isNo())
+                                if (ask.getResponse().isNo()) {
                                     continue;
+                                }
                             }
                             jobList.add(job);
                         }
@@ -478,9 +483,9 @@ public class FormLogic {
             clearLink();
             form.tfFilename.clear();
             form.listView.getItems().clear();
-            setLinkOutput(GREEN, "");
-            setDirOutput(GREEN, "");
-            setFilenameOutput(GREEN, "");
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.FILENAME);
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DIRECTORY);
         });
         miInfo.setOnAction(e -> help());
         return new ContextMenu(miDel, miClear, separator, miInfo);
@@ -497,7 +502,7 @@ public class FormLogic {
         clearingLink = true;
         Platform.runLater(() -> {
             form.tfLink.clear();
-            setLinkOutput(GREEN, "");
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
         });
     }
 
@@ -512,23 +517,23 @@ public class FormLogic {
     private void clearFilename() {
         Platform.runLater(() -> {
             setFilename("");
-            setDownloadOutput(GREEN, "");
-            setFilenameOutput(GREEN, "");
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DOWNLOAD);
+            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.FILENAME);
         });
     }
 
     private void clearControls() {
         clearLink();
         clearFilename();
-        setDirOutput(GREEN, "");
-        setLinkOutput(GREEN, "");
+        messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
+        messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DIRECTORY);
     }
 
     /*
     These methods control the labels under the TextFields (arranged in the order they appear on the form)
      */
 
-    private void setLinkOutput(Color color, String message) {
+    public void setLinkOutput(Color color, String message) {
         Platform.runLater(() -> {
             form.lblLinkOut.setTextFill(color);
             form.lblLinkOut.setText(message);
@@ -541,7 +546,7 @@ public class FormLogic {
         }
     }
 
-    private void setDirOutput(Color color, String message) {
+    public void setDirOutput(Color color, String message) {
         form.lblDirOut.setTextFill(color);
         form.lblDirOut.setText(message);
         if (color.equals(RED)) {
@@ -553,7 +558,7 @@ public class FormLogic {
 
     }
 
-    private void setFilenameOutput(Color color, String message) {
+    public void setFilenameOutput(Color color, String message) {
         Platform.runLater(() -> {
             form.lblFilenameOut.setTextFill(color);
             form.lblFilenameOut.setText(message);
@@ -566,7 +571,7 @@ public class FormLogic {
         });
     }
 
-    private void setDownloadOutput(Color color, String message) {
+    public void setDownloadOutput(Color color, String message) {
         Platform.runLater(() -> {
             form.lblDownloadInfo.textProperty().unbind();
             form.lblDownloadInfo.setTextFill(color);

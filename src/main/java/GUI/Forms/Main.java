@@ -1,10 +1,10 @@
 package GUI.Forms;
 
 import Backend.Drifty;
+import Enums.MessageType;
 import Enums.Mode;
 import Preferences.AppSettings;
-import Utils.Environment;
-import Utils.Utility;
+import Utils.*;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -26,8 +26,12 @@ public class Main extends Application {
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
+    private static final Logger logger = Logger.getInstance();
+
     public static void main(String[] args) {
         Mode.setGUIMode();
+        logger.log(MessageType.INFO, DriftyConstants.GUI_APPLICATION_STARTED);
+        Environment.setMessageBroker(new MessageBroker());
         Utility.setStartTime();
         for (String arg : args) {
             if (arg.toLowerCase().contains("--enable-max-start")) {

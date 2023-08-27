@@ -3,6 +3,7 @@ package Backend;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Program;
+import Utils.Environment;
 import Utils.MessageBroker;
 
 import java.io.*;
@@ -22,7 +23,7 @@ import static Utils.Utility.isYoutubeLink;
  */
 public class FileDownloader implements Runnable {
     private static Process process;
-    private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    private static final MessageBroker messageBroker = Environment.getMessageBroker();
     private static final int numberOfThreads = 3;
     private static final long threadingThreshold = 1024 * 1024 * 50;
     private static String dir;

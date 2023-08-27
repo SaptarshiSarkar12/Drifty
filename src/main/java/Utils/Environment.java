@@ -1,6 +1,5 @@
 package Utils;
 import Backend.CopyYtDlp;
-import Backend.Drifty;
 import Enums.Program;
 import Enums.MessageCategory;
 import Enums.MessageType;
@@ -13,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Environment {
-    private static final MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    private static MessageBroker messageBroker;
     public static void initializeEnvironment() {
         /*
         This method is called by both Drifty_CLI and Launcher classes.
@@ -62,6 +61,10 @@ public class Environment {
         Program.setDataPath(configFolderPath);
     }
 
+    public static void setMessageBroker(MessageBroker messageBroker) {
+        Environment.messageBroker = messageBroker;
+    }
+
     public static void updateYt_dlp() {
         messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         String command = Program.get(Program.COMMAND);
@@ -81,5 +84,9 @@ public class Environment {
     public static boolean isUpdateForYt_dlpChecked() {
         final long oneDayInMilliSeconds = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         return (System.currentTimeMillis() - AppSettings.get.lastYt_dlpUpdateTime()) < oneDayInMilliSeconds;
+    }
+
+    public static MessageBroker getMessageBroker() {
+        return messageBroker;
     }
 }

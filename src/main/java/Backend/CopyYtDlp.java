@@ -3,6 +3,7 @@ package Backend;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Program;
+import Utils.Environment;
 import Utils.MessageBroker;
 
 import java.io.IOException;
@@ -12,17 +13,18 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 public class CopyYtDlp {
-    static MessageBroker messageBroker = Drifty.getMessageBrokerInstance();
+    static MessageBroker messageBroker = Environment.getMessageBroker();
 
     public boolean copyToTemp(InputStream inputStream) throws IOException {
         String yt_dlpFileName = Program.get(Program.NAME);
-        Path yt_dlpTempFilePath = Paths.get(Program.get(Program.PATH) + "/" + yt_dlpFileName);
+        Path yt_dlpTempFilePath = Paths.get(Program.get(Program.PATH) + System.getProperty("file.separator") + yt_dlpFileName);
         try (OutputStream outputStream = Files.newOutputStream(yt_dlpTempFilePath)) {
             if (inputStream != null) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
-                while((bytesRead = inputStream.read(buffer)) != -1) {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
             }
