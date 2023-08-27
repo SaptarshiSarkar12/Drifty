@@ -9,7 +9,7 @@ import GUI.Forms.Main;
  * This class also sets the Mode enum to GUI which can be used throughout
  * the code to check which mode the code is running in.
  */
-public class Drifty_GUI {
+public class Launcher {
     public static void main(String[] args) {
 //        System.out.println("""
 //                ****************************************
