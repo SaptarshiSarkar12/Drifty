@@ -48,14 +48,14 @@ public class Environment {
                 updateYt_dlp();
             }
         } catch (IOException e) {
-            messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
+            messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
         }
         File folder = new File(configFolderPath);
         if (!folder.exists()) {
             try {
                 Files.createDirectory(folder.toPath());
             } catch (IOException e) {
-                messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
+                messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
             }
         }
         Program.setDataPath(configFolderPath);
@@ -66,7 +66,7 @@ public class Environment {
     }
 
     public static void updateYt_dlp() {
-        messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.DOWNLOAD);
+        messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.INITIALIZATION);
         String command = Program.get(Program.COMMAND);
         ProcessBuilder yt_dlpUpdateProcess = new ProcessBuilder(command, "-U");
         yt_dlpUpdateProcess.inheritIO();
