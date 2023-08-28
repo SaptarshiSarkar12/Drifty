@@ -14,10 +14,10 @@ export default function Contribute({ props }) {
             })
     }, [])
     return (
-        <div id="contrib" className="md:flex md:flex-row justify-evenly bg-var text-white pb-5">
-            <div className="md:w-1/2 md:pr-8">
-                <h2 className="text-5xl sm:text-4xl font-bold lg:mt-20 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >More Information About Drifty</h2>
-                <p className="text-2xl lg:ml-20 md:ml-10 font-sans mb-8 leading-normal xs:px-4">
+        <div id="contribute" className="md:grid md:grid-cols-2 justify-center bg-var select-none text-white pb-5">
+            <div className="md:pr-8 mb-2">
+                <h2 className="text-5xl sm:text-4xl font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 xs:p-5 text-center" >More Information About Drifty</h2>
+                <p className="text-2xl text-center ml-5 mr-5 font-sans mb-8 leading-normal xs:px-4">
                     It is currently available in CLI (Command Line Interface) mode and
                     the GUI (Graphical User Interface) version is under active
                     development. We believe in team work. Any contribution that brings
@@ -26,9 +26,9 @@ export default function Contribute({ props }) {
                     <b className={"bg-gradient-to-r from-green-500 to-green-400 text-transparent bg-clip-text"}> in progress</b> and completed.
                 </p>
             </div>
-            <div className="md:w-1/2">
-                <h2 className="text-5xl sm:text-4xl my-12 font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 md:pl-20 xs:p-5 xs:text-center" >Be a part of Drifty Family!</h2>
-                <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-8 md:gap-2 xs:grid-cols-4 rounded-sm	 space-x-0 gap-y-4 justify-items-center xs:pb-10">
+            <div className="ml-2">
+                <h2 className="text-5xl sm:text-4xl font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 xs:p-5 text-center" >Be a part of Drifty Family!</h2>
+                <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-8 md:gap-2 xs:grid-cols-4 rounded-full space-x-0 gap-y-4 justify-items-center xs:pb-10 ">
                     {props.contrib.map((item, index) => {
                         return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full" width={64} height={64} src={item.avatar_url + ".webp&s=64"} alt={item.login}></Image></a>
                     })}
@@ -38,10 +38,10 @@ export default function Contribute({ props }) {
                         </div>
                     </a>
                 </div>
-               <div className="flex flex-cols-3 justify-around items-center xs:gap-7 text-lg font-semibold mx-3">
-                   <a className="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" className="fab fa-github pr-1"></i>Contribute</a>
-                   <a className="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
-                   <a className="rounded-lg xs:p-2 lg:p-2 lg:w-52 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
+                <div className="grid grid-cols-3 justify-items-center text-lg font-semibold pr-3 space-x-3">
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" className="fab fa-github pr-1"></i>Contribute</a>
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
                 </div>
             </div>
         </div>
