@@ -39,9 +39,9 @@ export default function Contribute({ props }) {
                     </a>
                 </div>
                 <div className="grid grid-cols-3 justify-items-center text-lg font-semibold pr-3 space-x-3">
-                   <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" className="fab fa-github pr-1"></i>Contribute</a>
-                   <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
-                   <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty"><i aria-hidden="true" className="fab fa-github pr-1"></i>Contribute</a>
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><i aria-hidden="true" className="fa fa-regular fa-star pr-1"></i>Stars : {values[0]}</a>
+                    <a className="rounded-lg p-2 w-auto lg:w-48 border-2 md:border-white text-center hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300" href="https://github.com/SaptarshiSarkar12/Drifty/network/members"><i aria-hidden="true" className="fa fa-duotone fa-code-fork pr-1"></i>Forks : {values[1]}</a>
                 </div>
             </div>
         </div>
