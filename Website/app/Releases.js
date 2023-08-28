@@ -97,7 +97,7 @@ export default function Releases({props}) {
     }
     
     return (
-        <div id="download" className="bg-gradient-to-b from-[#3697e1] from-8% via-cyan-300 to-bottom to-12% -mt-2">
+        <div id="download" className="bg-gradient-to-b from-top from-8% via-cyan-300 to-bottom to-12% -mt-2">
             <h2 className="select-none text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5" >Download Drifty</h2>
             <div className={"select-none grid-cols-1 justify-items-center"}>
                 <h2 className="text-center block text-xl font-medium leading-6 text-gray-900">Select Application Type</h2>
