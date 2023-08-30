@@ -104,6 +104,7 @@ class Constants {
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);
     public static final Color PURPLE = Color.rgb(125, 0, 75);
+    public static final Color HOTPINK = Color.rgb(255, 0, 175);
     public static final Color BLACK = Color.rgb(0, 0, 0);
     public static final Color YELLOW = Color.rgb(255, 255, 0);
 
