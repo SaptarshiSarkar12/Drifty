@@ -83,6 +83,8 @@
   }, {
     "pattern":"\\Qyt-dlp\\E"
   }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
+  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/ubidi.icu\\E"
@@ -95,12 +97,12 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":["", "und"]
+    "locales":["und"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":["", "und"]
+    "locales":["und"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":["", "und"]
+    "locales":["und"]
   }]
 }

@@ -1,7 +1,7 @@
 [
 {
   "name":"GUI.Forms.Main",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
 {
   "name":"GUI.Support.Folders",
@@ -68,8 +68,27 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.glass.ui.Application"
+},
+{
+  "name":"com.sun.glass.ui.Menu"
+},
+{
+  "name":"com.sun.glass.ui.MenuItem$Callback"
+},
+{
+  "name":"com.sun.glass.ui.Size"
+},
+{
+  "name":"com.sun.glass.ui.View"
+},
+{
   "name":"com.sun.javafx.collections.ObservableListWrapper",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.javafx.font.coretext.CTFactory",
+  "methods":[{"name":"getFactory","parameterTypes":[] }]
 },
 {
   "name":"com.sun.javafx.font.freetype.FTFactory",
@@ -164,7 +183,18 @@
 },
 {
   "name":"java.lang.Class",
-  "methods":[{"name":"getRecordComponents","parameterTypes":[] }, {"name":"isRecord","parameterTypes":[] }]
+  "methods":[{"name":"forName","parameterTypes":["java.lang.Module","java.lang.String"] }, {"name":"getModule","parameterTypes":[] }, {"name":"getRecordComponents","parameterTypes":[] }, {"name":"isRecord","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Module",
+  "methods":[{"name":"getDescriptor","parameterTypes":[] }, {"name":"getLayer","parameterTypes":[] }, {"name":"getName","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.ModuleLayer",
+  "methods":[{"name":"boot","parameterTypes":[] }, {"name":"findModule","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Runnable"
 },
 {
   "name":"java.lang.String"

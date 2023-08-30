@@ -1,3 +1,4 @@
 .root {
-    -fx-background-color: linear-gradient(rgb(179, 182, 182) 20%, rgb(125, 130, 130) 65%, rgb(102, 106, 106) 100%);
+    /*-fx-background-color: linear-gradient(rgb(179, 182, 182) 20%, rgb(125, 130, 130) 65%, rgb(102, 106, 106) 100%);*/
+    -fx-background-color: linear-gradient(rgb(54, 101, 200) 25%, rgb(0, 180, 255) 55%);
 }

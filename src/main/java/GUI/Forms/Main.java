@@ -1,10 +1,10 @@
 package GUI.Forms;
 
 import Backend.Drifty;
-import Enums.MessageType;
 import Enums.Mode;
 import Preferences.AppSettings;
-import Utils.*;
+import Utils.Environment;
+import Utils.Utility;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -26,21 +26,11 @@ public class Main extends Application {
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
-    private static Logger logger;
-
     public static void main(String[] args) {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
-        logger = Logger.getInstance();
-        logger.log(MessageType.INFO, DriftyConstants.GUI_APPLICATION_STARTED);
-        Environment.setMessageBroker(new MessageBroker());
         Utility.setStartTime();
         for (String arg : args) {
-            if (arg.toLowerCase().contains("--enable-max-start")) {
-                AppSettings.set.startMax(true);
-            }
-            if (arg.toLowerCase().contains("--disable-max-start")) {
-                AppSettings.set.startMax(false);
-            }
             if (arg.toLowerCase().contains("--devmode")) {
                 Mode.setDev();
             }
@@ -52,6 +42,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Drifty");
         createScene();
         INSTANCE = this;
     }
@@ -59,14 +50,14 @@ public class Main extends Application {
     private void createScene() {
         AnchorPane ap = new AnchorPane();
         MainGridPane gridPane = new MainGridPane();
-        MenuBar menu = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenuItems());
-        placeControl(gridPane, 40, 40, 40, 40);
-        placeControl(menu, 0, 0, 0, -1);
+        MenuBar menu = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenu());
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
+        placeControl(gridPane, 40, 40, 40, 40);
+        placeControl(menu, 0, 0, 0, -1);
         primaryStage = Constants.getStage(primaryStage);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (firstRun) {
+            if(firstRun) {
                 firstRun = false;
                 return;
             }
@@ -74,9 +65,8 @@ public class Main extends Application {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
-                    if (Utility.isURL(clipboardText)) {
+                    if(Utility.isURL(clipboardText))
                         FormLogic.setLink(clipboardText);
-                    }
                 }
             }
         }));
@@ -84,6 +74,7 @@ public class Main extends Application {
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         primaryStage.setScene(scene);
         primaryStage.show();
+        menu.setUseSystemMenuBar(true);
         FormLogic.initLogic(gridPane);
     }
 
@@ -115,20 +106,20 @@ public class Main extends Application {
 
     private MenuBar menuBar(Menu... menus) {
         MenuBar menuBar = new MenuBar(menus);
-        //menuBar.setPrefWidth(screenSize.getWidth());
-        menuBar.setUseSystemMenuBar(true);
         return menuBar;
     }
 
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
+        MenuItem settings = new MenuItem("Settings");
         fullScreen.setOnAction(e -> Main.toggleFullScreen());
-        menu.getItems().setAll(fullScreen);
+        settings.setOnAction(e -> new Settings().show());
+        menu.getItems().setAll(fullScreen, settings);
         return menu;
     }
 
-    private Menu getHelpMenuItems() {
+    private Menu getHelpMenu() {
         Menu menu = new Menu("Help");
         MenuItem contactUs = new MenuItem("Contact Us");
         MenuItem contribute = new MenuItem("Contribute");
@@ -160,8 +151,8 @@ public class Main extends Application {
 
     private void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastDownloadsFolder = AppSettings.get.folders().getDownloadFolder();
-        String initFolder = lastDownloadsFolder.isEmpty() ? Utility.getFormattedDefaultDownloadsFolder() : lastDownloadsFolder;
+        String lastFolder = AppSettings.get.folders().getDownloadFolder();
+        String initFolder = lastFolder.isEmpty() ? System.getProperty("user.home") : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);
         if (directory != null) {

@@ -1,8 +1,8 @@
 package Utils;
 import Backend.CopyYtDlp;
+import Enums.MessageType;
 import Enums.Program;
 import Enums.MessageCategory;
-import Enums.MessageType;
 import Enums.OS;
 import Preferences.AppSettings;
 import java.io.File;
@@ -15,7 +15,7 @@ public class Environment {
     private static MessageBroker messageBroker;
     public static void initializeEnvironment() {
         /*
-        This method is called by both Drifty_CLI and Launcher classes.
+        This method is called by both Drifty_CLI and Main classes.
         It first determines which yt-dlp program to copy out of resources based on the OS.
         Next, it figures out which path to use to store yt-dlp and the users batch list.
         Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
@@ -73,7 +73,7 @@ public class Environment {
         try {
             Process updateYt_dlp = yt_dlpUpdateProcess.start();
             updateYt_dlp.waitFor();
-            AppSettings.set.lastYt_DlpUpdateTime(System.currentTimeMillis());
+            AppSettings.set.lastDLPUpdateTime(System.currentTimeMillis());
         } catch (IOException e) {
             messageBroker.sendMessage("Failed to update yt-dlp! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
         } catch (InterruptedException e) {
@@ -83,7 +83,7 @@ public class Environment {
 
     public static boolean isUpdateForYt_dlpChecked() {
         final long oneDayInMilliSeconds = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        return (System.currentTimeMillis() - AppSettings.get.lastYt_dlpUpdateTime()) < oneDayInMilliSeconds;
+        return (System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime()) < oneDayInMilliSeconds;
     }
 
     public static MessageBroker getMessageBroker() {

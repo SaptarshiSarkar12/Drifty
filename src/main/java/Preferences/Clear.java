@@ -11,7 +11,7 @@ import static Preferences.Labels.*;
 
 public class Clear { // This class is used to clear the user preferences
     MessageBroker messageBroker = new MessageBroker();
-    public static final Clear INSTANCE = new Clear();
+    private static final Clear INSTANCE = new Clear();
     private final Preferences preferences = Labels.PREFERENCES;
 
     private Clear() {}
@@ -28,12 +28,8 @@ public class Clear { // This class is used to clear the user preferences
         preferences.remove(MAIN_AUTO_PASTE.toString());
     }
 
-    public void batchAutoPaste() {
-        preferences.remove(BATCH_AUTO_PASTE.toString());
-    }
-
     public void lastDLPUpdateTime() {
-        preferences.remove(LAST_YT_DLP_UPDATE_TIME.toString());
+        preferences.remove(LAST_DLP_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {
@@ -44,16 +40,16 @@ public class Clear { // This class is used to clear the user preferences
         preferences.remove(JOBS.toString());
     }
 
-    public void startMax() {
-        preferences.remove(START_MAX.toString());
-    }
-
-    public void startTime() {
-        preferences.remove(START_TIME.toString());
-    }
-
     public void jobHistory() {
         preferences.remove(JOB_HISTORY.toString());
+    }
+
+    public void menuBarAsSystem() {
+        preferences.remove(MENU_BAR_SYSTEM.toString());
+    }
+
+    public void alwaysAutoPaste() {
+        preferences.remove(ALWAYS_AUTO_PASTE.toString());
     }
 
     public void clearAll() {

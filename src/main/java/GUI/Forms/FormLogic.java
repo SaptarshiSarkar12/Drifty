@@ -94,7 +94,7 @@ public class FormLogic {
     }
 
     public static boolean isAutoPaste() {
-        return form.cbAutoPaste.isSelected();
+        return form.cbAutoPaste.isSelected() || AppSettings.get.alwaysAutoPaste();
     }
 
     private void verifyLink(String PreviousLink, String presentLink) {
@@ -145,7 +145,11 @@ public class FormLogic {
                         }
                     }
                     if (linkValid.getValue().equals(true)) {
+                        System.out.println("Getting filenames");
                         getFilenames(presentLink);
+                    }
+                    else {
+                        System.out.println("Link not valid");
                     }
                 }
             }

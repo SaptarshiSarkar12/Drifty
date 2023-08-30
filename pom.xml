@@ -15,7 +15,7 @@
         <javafx.version>20</javafx.version>
         <gluonfx-maven-plugin.version>1.0.19</gluonfx-maven-plugin.version>
         <native-maven-plugin.version>0.9.23</native-maven-plugin.version>
-        <guiMain>GUI.Launcher</guiMain>
+        <guiMain>GUI.Main</guiMain>
         <cliMain>CLI.Drifty_CLI</cliMain>
         <package.type/>
         <mac.app.store/>
@@ -27,6 +27,10 @@
         <javafx-maven-plugin>0.0.8</javafx-maven-plugin>
     </properties>
 
+    <!--
+    To package:
+    mvn clean -Pbuild-drifty-gui-for-macos-latest gluonfx:build gluonfx:package
+    -->
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -95,6 +99,7 @@
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>${versions-maven-plugin}</version>
             </plugin>
+            <!--JavaFX Maven Plugin-->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -103,8 +108,8 @@
                     <mainClass>${guiMain}</mainClass>
                 </configuration>
             </plugin>
+            <!-- GUI native image builder plugin-->
             <plugin>
-                <!-- GUI native image builder plugin-->
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>${gluonfx-maven-plugin.version}</version>

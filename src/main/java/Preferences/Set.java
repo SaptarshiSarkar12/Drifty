@@ -39,14 +39,9 @@ public class Set { // This class is used to set the user preferences
         preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
 
-    public void batchAutoPaste(boolean isBatchAutoPasteEnabled) {
-        AppSettings.clear.batchAutoPaste();
-        preferences.putBoolean(BATCH_AUTO_PASTE.toString(), isBatchAutoPasteEnabled);
-    }
-
-    public void lastYt_DlpUpdateTime(long lastYt_DlpUpdateTime) {
+    public void lastDLPUpdateTime(long value) {
         AppSettings.clear.lastDLPUpdateTime();
-        preferences.putLong(LAST_YT_DLP_UPDATE_TIME.toString(), lastYt_DlpUpdateTime);
+        preferences.putLong(LAST_DLP_UPDATE_TIME.toString(), value);
     }
 
     public void lastFolder(String lastFolderPath) {
@@ -70,16 +65,6 @@ public class Set { // This class is used to set the user preferences
 
     }
 
-    public void startMax(boolean value) {
-        AppSettings.clear.startMax();
-        preferences.putBoolean(START_MAX.toString(), value);
-    }
-
-    public void startTime() {
-        AppSettings.clear.startTime();
-        preferences.putLong(START_TIME.toString(), System.currentTimeMillis());
-    }
-
     public void jobHistory(JobHistory jobHistory) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
@@ -94,5 +79,15 @@ public class Set { // This class is used to set the user preferences
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void menuBarAsSystem(boolean value) {
+        AppSettings.clear.menuBarAsSystem();
+        preferences.putBoolean(MENU_BAR_SYSTEM.toString(), value);
+    }
+
+    public void alwaysAutoPaste(boolean value) {
+        AppSettings.clear.alwaysAutoPaste();
+        preferences.putBoolean(ALWAYS_AUTO_PASTE.toString(), value);
     }
 }
