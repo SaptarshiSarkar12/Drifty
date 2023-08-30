@@ -143,8 +143,8 @@
     </build>
 
     <profiles>
+        <!-- [Windows] CLI native image builder profile -->
         <profile>
-            <!-- [Windows] CLI native image builder profile -->
             <id>build-drifty-cli-for-windows-latest</id>
             <properties>
                 <resource-config-file>resource-config-windows.json</resource-config-file>
@@ -182,8 +182,8 @@
                 </plugins>
             </build>
         </profile>
+        <!-- [Linux] CLI native image builder profile -->
         <profile>
-            <!-- [Linux] CLI native image builder profile -->
             <id>build-drifty-cli-for-ubuntu-latest</id>
             <properties>
                 <resource-config-file>resource-config-linux.json</resource-config-file>
@@ -221,8 +221,8 @@
                 </plugins>
             </build>
         </profile>
+        <!-- [macOS] CLI native image builder profile -->
         <profile>
-            <!-- [macOS] CLI native image builder profile -->
             <id>build-drifty-cli-for-macos-latest</id>
             <properties>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
@@ -260,8 +260,8 @@
                 </plugins>
             </build>
         </profile>
+        <!-- [macOS] GUI native image builder profile -->
         <profile>
-            <!-- [macOS] GUI native image builder profile -->
             <id>build-drifty-gui-for-macos-latest</id>
             <properties>
                 <package.type>pkg</package.type>
@@ -271,16 +271,16 @@
                 <mac.app.store>true</mac.app.store>
             </properties>
         </profile>
+        <!-- [Linux] GUI native image builder profile -->
         <profile>
-            <!-- [Linux] GUI native image builder profile -->
             <id>build-drifty-gui-for-ubuntu-latest</id>
             <properties>
                 <system-linker-arg>${pom.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-linux.json</resource-config-file>
             </properties>
         </profile>
+        <!-- [Windows] GUI native image builder profile -->
         <profile>
-            <!-- [Windows] GUI native image builder profile -->
             <id>build-drifty-gui-for-windows-latest</id>
             <properties>
                 <package.type>msi</package.type>
