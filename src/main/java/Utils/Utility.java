@@ -286,7 +286,6 @@ public final class Utility {
         Matcher m = p.matcher(json);
         if (m.find()) {
             fileName = cleanFilename(m.group(2)) + ".mp4";
-            messageBroker.sendMessage(FILENAME_DETECTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
         } else {
             fileName = cleanFilename("Unknown Filename") + ".mp4";
             messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG, MessageType.ERROR, MessageCategory.FILENAME);
