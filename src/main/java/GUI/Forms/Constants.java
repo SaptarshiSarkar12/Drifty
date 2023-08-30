@@ -100,7 +100,7 @@ class Constants {
     /*
     Colors
      */
-    public static final Color GREEN = Color.rgb(0, 255, 0);
+    public static final Color GREEN = Color.rgb(0, 150, 0);
     public static final Color TEAL = Color.rgb(0, 255, 255);
     public static final Color RED = Color.rgb(157, 0, 0);
     public static final Color PURPLE = Color.rgb(125, 0, 75);
@@ -145,17 +145,16 @@ class Constants {
 
     public static Scene getScene(Parent root) {
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(CHECK_BOX_CSS.toExternalForm());
         scene.getStylesheets().add(CONTEXT_MENU_CSS.toExternalForm());
         scene.getStylesheets().add(LABEL_CSS.toExternalForm());
+        scene.getStylesheets().add(LIST_VIEW_CSS.toExternalForm());
         scene.getStylesheets().add(MENU_CSS.toExternalForm());
-        scene.getStylesheets().add(CHECK_BOX_CSS.toExternalForm());
+        scene.getStylesheets().add(PROGRESS_BAR_CSS.toExternalForm());
+        scene.getStylesheets().add(SCENE_CSS.toExternalForm());
+        scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
         scene.getStylesheets().add(TEXT_FIELD_CSS.toExternalForm());
         scene.getStylesheets().add(V_BOX_CSS.toExternalForm());
-        scene.getStylesheets().add(SCENE_CSS.toExternalForm());
-        scene.getStylesheets().add(PROGRESS_BAR_CSS.toExternalForm());
-        scene.getStylesheets().add(LIST_VIEW_CSS.toExternalForm());
-        scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
-        scene.getStylesheets().add(SCENE_CSS.toExternalForm());
         return scene;
     }
 
