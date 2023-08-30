@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>GUI.Launcher</string>
+	<string>GUI.Forms.Main</string>
 	<key>CFBundleVersion</key>
 	<string>2.0.0</string>
 	<key>CFBundleShortVersionString</key>

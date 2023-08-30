@@ -1,7 +1,8 @@
 package Utils;
 
-import Enums.Mode;
 import Enums.MessageType;
+import Enums.Mode;
+
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;

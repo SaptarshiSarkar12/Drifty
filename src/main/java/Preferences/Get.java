@@ -2,7 +2,6 @@ package Preferences;
 
 import Enums.Program;
 import GUI.Support.*;
-import Utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.hildan.fxgson.FxGson;
@@ -43,16 +42,12 @@ public class Get { // This class is used to get the user preferences
         return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
     }
 
-    public boolean batchAutoPaste() {
-        return preferences.getBoolean(BATCH_AUTO_PASTE.toString(), false);
-    }
-
-    public long lastYt_dlpUpdateTime() {
-        return preferences.getLong(LAST_YT_DLP_UPDATE_TIME.toString(), 1000L);
+    public long lastDLPUpdateTime() {
+        return preferences.getLong(LAST_DLP_UPDATE_TIME.toString(), 1000L);
     }
 
     public String lastDownloadFolder() {
-        String defaultPath = Paths.get(Utility.getFormattedDefaultDownloadsFolder()).toAbsolutePath().toString();
+        String defaultPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
         return preferences.get(LAST_FOLDER.toString(), defaultPath);
     }
 
@@ -73,14 +68,6 @@ public class Get { // This class is used to get the user preferences
         return new Jobs();
     }
 
-    public boolean startMax() {
-        return preferences.getBoolean(START_MAX.toString(), false);
-    }
-
-    public long startTime() {
-        return preferences.getLong(START_TIME.toString(), System.currentTimeMillis());
-    }
-
     public JobHistory jobHistory() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
@@ -98,4 +85,13 @@ public class Get { // This class is used to get the user preferences
         } catch (IOException ignored) {}
         return new JobHistory();
     }
+
+    public boolean menuBarAsSystem() {
+        return preferences.getBoolean(MENU_BAR_SYSTEM.toString(), true);
+    }
+
+    public boolean alwaysAutoPaste() {
+        return preferences.getBoolean(ALWAYS_AUTO_PASTE.toString(), false);
+    }
+
 }
