@@ -13,13 +13,15 @@ import java.nio.file.Paths;
 
 public class Environment {
     private static MessageBroker messageBroker;
+
+    /*
+    This method is called by both Drifty_CLI and Main classes.
+    It first determines which yt-dlp program to copy out of resources based on the OS.
+    Next, it figures out which path to use to store yt-dlp and the users batch list.
+    Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
+    */
     public static void initializeEnvironment() {
-        /*
-        This method is called by both Drifty_CLI and Main classes.
-        It first determines which yt-dlp program to copy out of resources based on the OS.
-        Next, it figures out which path to use to store yt-dlp and the users batch list.
-        Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
-         */
+        messageBroker = Environment.getMessageBroker();
         messageBroker.sendMessage("OS : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
         String yt_dlpProgramName;
         if (OS.isWindows()) {

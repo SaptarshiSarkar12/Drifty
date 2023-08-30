@@ -122,7 +122,10 @@ class Constants {
         Image icon;
         icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);
-        stage.setOnCloseRequest(e -> System.exit(0));
+        stage.setOnCloseRequest(e -> {
+            Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_TERMINATED, MessageType.INFO, MessageCategory.LOG);
+            System.exit(0);
+        });
         stage.setTitle("Drifty GUI");
         return stage;
     }

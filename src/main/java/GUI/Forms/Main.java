@@ -1,9 +1,13 @@
 package GUI.Forms;
 
 import Backend.Drifty;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Enums.Mode;
 import Preferences.AppSettings;
+import Utils.DriftyConstants;
 import Utils.Environment;
+import Utils.MessageBroker;
 import Utils.Utility;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -29,6 +33,8 @@ public class Main extends Application {
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
+        Environment.setMessageBroker(new MessageBroker());
+        Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_STARTED, MessageType.INFO, MessageCategory.LOG);
         Utility.setStartTime();
         for (String arg : args) {
             if (arg.toLowerCase().contains("--devmode")) {
@@ -99,7 +105,10 @@ public class Main extends Application {
         website.setOnAction(e -> openWebsite(Drifty.projectWebsite, "project website"));
         MenuItem about = new MenuItem("About");
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(e -> System.exit(0));
+        exit.setOnAction(e -> {
+            Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_TERMINATED, MessageType.INFO, MessageCategory.LOG);
+            System.exit(0);
+        });
         menu.getItems().setAll(website, about, exit);
         return menu;
     }
