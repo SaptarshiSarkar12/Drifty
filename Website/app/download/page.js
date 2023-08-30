@@ -1,6 +1,6 @@
-import Releases from "../Releases";
 import Header from "../Header";
 import Footer from "../Footer";
+import Releases from "@/app/download/Releases";
 
 export const metadata = {
     title: "Download",
@@ -23,7 +23,7 @@ export default async function download() {
            <Releases className="bg-about" props={data} />
            <Footer />
         </>
-    )    
+    )
 }
 
 export async function getData(){
