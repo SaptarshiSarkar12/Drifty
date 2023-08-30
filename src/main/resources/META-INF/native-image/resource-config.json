@@ -94,6 +94,12 @@
     "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
     "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/Encodings.properties\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/glass/utils/NativeLibLoader.class\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qlibglass.dylib\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qlibprism_es2.dylib\\E"
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
