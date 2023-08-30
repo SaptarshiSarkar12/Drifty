@@ -26,10 +26,11 @@ public class Main extends Application {
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
-    private static final Logger logger = Logger.getInstance();
+    private static Logger logger;
 
     public static void main(String[] args) {
         Mode.setGUIMode();
+        logger = Logger.getInstance();
         logger.log(MessageType.INFO, DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.setMessageBroker(new MessageBroker());
         Utility.setStartTime();
