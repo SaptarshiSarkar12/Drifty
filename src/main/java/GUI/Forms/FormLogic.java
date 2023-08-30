@@ -420,15 +420,17 @@ public class FormLogic {
                             if (!jobList.contains(job)) {
                                 if (jobHistory.jobMatch(job)) {
                                     AskYesNo ask = new AskYesNo("You have downloaded " + job.getFilename() + " in the past. Do you still want to add it to the job batch?");
-                                    if (ask.getResponse().isYes())
+                                    if (ask.getResponse().isYes()) {
                                         jobList.add(job);
-                                    else
+                                    } else {
                                         continue;
+                                    }
                                 }
                                 if (jobHistory.jobFileExists(job)) {
                                     AskYesNo ask = new AskYesNo("This file: " + job.getFilename() + " already exists in one of your download folders. Do you want to download it again?");
-                                    if (ask.getResponse().isNo())
+                                    if (ask.getResponse().isNo()) {
                                         continue;
+                                    }
                                 }
                                 jobList.add(job);
                                 System.err.println("Added Job: " + job.getFilename());
@@ -448,8 +450,9 @@ public class FormLogic {
                                 AskYesNo ask = new AskYesNo("You have downloaded " + job.getFilename() + " in the past. Do you still want to add it to the job batch?");
                                 if (ask.getResponse().isYes()) {
                                     jobList.add(job);
-                                } else
+                                } else {
                                     continue;
+                                }
                             }
                             if (jobHistory.jobFileExists(job)) {
                                 AskYesNo ask = new AskYesNo("This file: " + job.getFilename() + " already exists in one of your download folders. Do you want to download it again?");
