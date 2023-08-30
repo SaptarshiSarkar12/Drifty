@@ -37,6 +37,7 @@ public class MessageBroker {
             logger.log(messageType, message);
         }
         else if (Mode.isGUI()) {
+            FormLogic ui = FormLogic.INSTANCE;
             if (!message.isEmpty()) {
                 logger.log(messageType, message);
             }
@@ -46,10 +47,10 @@ public class MessageBroker {
                 default -> YELLOW;
             };
             switch (messageCategory) {
-                case LINK -> FormLogic.INSTANCE.setLinkOutput(color, message);
-                case FILENAME -> FormLogic.INSTANCE.setFilenameOutput(color, message);
-                case DIRECTORY -> FormLogic.INSTANCE.setDirOutput(color, message);
-                case DOWNLOAD -> FormLogic.INSTANCE.setDownloadOutput(color, message);
+                case LINK -> ui.setLinkOutput(color, message);
+                case FILENAME -> ui.setFilenameOutput(color, message);
+                case DIRECTORY -> ui.setDirOutput(color, message);
+                case DOWNLOAD -> ui.setDownloadOutput(color, message);
             }
         }
     }
