@@ -3,7 +3,6 @@
 target/
 Website/.next
 Website/node_modules
-pomNEW.xml
 ### IntelliJ IDEA ###
 .idea
 .idea/modules.xml
