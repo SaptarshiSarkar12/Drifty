@@ -145,11 +145,11 @@ public class FormLogic {
                         }
                     }
                     if (linkValid.getValue().equals(true)) {
-                        System.out.println("Getting filenames");
+                        messageBroker.sendMessage("Getting filenames", MessageType.INFO, MessageCategory.LOG);
                         getFilenames(presentLink);
                     }
                     else {
-                        System.out.println("Link not valid");
+                        messageBroker.sendMessage("Link is not valid!", MessageType.ERROR, MessageCategory.LINK);
                     }
                 }
             }
