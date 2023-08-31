@@ -51,10 +51,6 @@ jobs:
         components: 'native-image'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       run: mvn -Pbuild-drifty-cli-for-${{ matrix.os }} package
-    - name: Setup Gluon's GraalVM
-      uses: gluonhq/setup-graalvm@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
       uses: stCarolas/setup-maven@v4.5
       with:
