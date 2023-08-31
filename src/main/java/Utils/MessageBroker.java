@@ -37,14 +37,19 @@ public class MessageBroker {
             logger.log(messageType, message);
         }
         else if (Mode.isGUI()) {
-            FormLogic ui = FormLogic.INSTANCE;
+            FormLogic ui;
+            if (!messageCategory.equals(LOG)) {
+                ui = FormLogic.INSTANCE;
+            } else {
+                ui = null;
+            }
             if (!message.isEmpty()) {
                 logger.log(messageType, message);
             }
             Color color = switch (messageType) {
                 case ERROR -> RED;
-                case INFO -> GREEN;
-                default -> YELLOW;
+                case INFO -> LIMEGREEN;
+                default -> DARKGOLDENROD;
             };
             switch (messageCategory) {
                 case LINK -> ui.setLinkOutput(color, message);

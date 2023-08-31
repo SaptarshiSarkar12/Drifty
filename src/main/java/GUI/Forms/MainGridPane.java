@@ -137,6 +137,7 @@ public class MainGridPane extends GridPane {
         Label label = new Label("");
         label.setFont(new Font(MONACO_TTF.toExternalForm(), 20 * .75));
         label.setPrefWidth(Double.MAX_VALUE);
+        label.getStyleClass().add("outline");
         return label;
     }
 
