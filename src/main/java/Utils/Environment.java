@@ -1,18 +1,22 @@
 package Utils;
-import Backend.CopyYtDlp;
-import Enums.MessageType;
-import Enums.Program;
+
+import Backend.CopyYtDLP;
 import Enums.MessageCategory;
+import Enums.MessageType;
 import Enums.OS;
+import Enums.Program;
 import Preferences.AppSettings;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static Enums.Program.YT_DLP;
+
 public class Environment {
-    private static MessageBroker messageBroker;
+    private static MessageBroker messageBroker = new MessageBroker();
 
     /*
     This method is called by both Drifty_CLI and Main classes.
@@ -21,46 +25,25 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
-        messageBroker = Environment.getMessageBroker();
         messageBroker.sendMessage("OS : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
-        String yt_dlpProgramName;
-        if (OS.isWindows()) {
-            yt_dlpProgramName = "yt-dlp.exe";
-        } else if (OS.isMac()) {
-            yt_dlpProgramName = "yt-dlp_macos";
-        } else {
-            yt_dlpProgramName = "yt-dlp";
+        String ytDLP = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
+        String appUseFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".config", "Drifty").toAbsolutePath().toString();
+        Program.setExecutableName(ytDLP);
+        Program.setDriftyPath(appUseFolderPath);
+        InputStream ytDLPStream = ClassLoader.getSystemResourceAsStream(ytDLP);
+        CopyYtDLP copyYtDlp = new CopyYtDLP();
+        boolean ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
+        if (ytDLPExists && updateYtDLP()) {
+            updateYt_dlp();
         }
-        String configFolderPath;
-        if (OS.isWindows()) {
-            configFolderPath = Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString();
-        } else {
-            configFolderPath = Paths.get(System.getProperty("user.home"),".config", "Drifty").toAbsolutePath().toString();
-        }
-        Program.setName(yt_dlpProgramName);
-        Program.setPath(configFolderPath);
-        InputStream yt_dlpProgramStream = ClassLoader.getSystemResourceAsStream(yt_dlpProgramName);
-        CopyYtDlp copyYtDlp = new CopyYtDlp();
-        try {
-            boolean isCopySuccessful = true;
-            if (!Files.exists(Paths.get(configFolderPath, yt_dlpProgramName))) {
-                isCopySuccessful = copyYtDlp.copyToTemp(yt_dlpProgramStream);
-            }
-            if (isCopySuccessful && !isUpdateForYt_dlpChecked()) {
-                updateYt_dlp();
-            }
-        } catch (IOException e) {
-            messageBroker.sendMessage("Failed  to set the time of last yt-dlp update as preference! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
-        }
-        File folder = new File(configFolderPath);
+        File folder = new File(appUseFolderPath);
         if (!folder.exists()) {
             try {
                 Files.createDirectory(folder.toPath());
             } catch (IOException e) {
-                messageBroker.sendMessage("Failed to create Drifty configuration directory ! " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
+                messageBroker.sendMessage("Failed to create Drifty folder: " + appUseFolderPath + " - " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
             }
         }
-        Program.setDataPath(configFolderPath);
     }
 
     public static void setMessageBroker(MessageBroker messageBroker) {
@@ -69,7 +52,7 @@ public class Environment {
 
     public static void updateYt_dlp() {
         messageBroker.sendMessage("Checking for component (yt-dlp) update ...", MessageType.INFO, MessageCategory.INITIALIZATION);
-        String command = Program.get(Program.COMMAND);
+        String command = Program.get(YT_DLP);
         ProcessBuilder yt_dlpUpdateProcess = new ProcessBuilder(command, "-U");
         yt_dlpUpdateProcess.inheritIO();
         try {
@@ -83,9 +66,10 @@ public class Environment {
         }
     }
 
-    public static boolean isUpdateForYt_dlpChecked() {
-        final long oneDayInMilliSeconds = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        return (System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime()) < oneDayInMilliSeconds;
+    public static boolean updateYtDLP() {
+        final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime();
+        return timeSinceLastUpdate >= oneDay;
     }
 
     public static MessageBroker getMessageBroker() {

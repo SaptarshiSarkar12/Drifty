@@ -7,12 +7,21 @@ public class Job {
     private String link;
     private String dir;
     private String filename;
-    private String error;
 
     public Job(String link, String dir, String filename) {
         this.link = link;
         this.dir = dir;
         this.filename = filename;
+    }
+
+    public Job(Job job) {
+        this.link = job.getLink();
+        this.dir = job.getDir();
+        this.filename = job.getFilename();
+    }
+
+    public boolean matches(Job otherJob) {
+        return otherJob.getLink().equals(link) && otherJob.getDir().equals(dir) && otherJob.getFilename().equals(filename);
     }
 
     public String getLink() {
@@ -37,14 +46,6 @@ public class Job {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 
     @Override

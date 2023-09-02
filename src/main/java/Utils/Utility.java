@@ -16,16 +16,18 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
 import org.hildan.fxgson.FxGson;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.*;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
@@ -43,7 +45,8 @@ public final class Utility {
         return System.currentTimeMillis() - startTime;
     }
 
-    public Utility() {}
+    public Utility() {
+    }
 
     public static boolean isYoutubeLink(String url) {
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
@@ -84,6 +87,8 @@ public final class Utility {
             messageBroker.sendMessage("The link is not correctly formatted! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         } catch (IOException e) {
             messageBroker.sendMessage("Failed to connect to " + link + " ! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+        } catch (IllegalArgumentException e) {
+            messageBroker.sendMessage("Not a URL" + link + " ! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
         return false;
     }
@@ -111,7 +116,8 @@ public final class Utility {
             for (String json : linkMetadataList) {
                 fileName = Utility.getFilenameFromJson(json);
             }
-        } else {
+        }
+        else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
             // example.com/file.json -> file.json
             String file = link.substring(link.lastIndexOf("/") + 1);
@@ -139,13 +145,15 @@ public final class Utility {
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
-        } else {
+        }
+        else {
             downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
 
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, MessageType.ERROR, MessageCategory.DIRECTORY);
-        } else {
+        }
+        else {
             messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFO, MessageCategory.DIRECTORY);
         }
         return downloadsFolder;
@@ -219,12 +227,12 @@ public final class Utility {
     public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
-            File driftyConfigFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
-            if (driftyConfigFolder.exists() && driftyConfigFolder.isDirectory()) {
-                FileUtils.forceDelete(driftyConfigFolder); // Deletes the previously generated temporary directory for Drifty
+            File driftyJsonFolder = Program.getJsonDataPath().toFile();
+            if (driftyJsonFolder.exists() && driftyJsonFolder.isDirectory()) {
+                FileUtils.forceDelete(driftyJsonFolder); // Deletes the previously generated temporary directory for Drifty
             }
-            driftyConfigFolder.mkdir();
-            linkThread = new Thread(getYT_IGLinkMetadata(driftyConfigFolder.getAbsolutePath(), link));
+            driftyJsonFolder.mkdir();
+            linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             linkThread.start();
             while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -232,11 +240,11 @@ public final class Utility {
             }
 
             if (interrupted) {
-                FileUtils.forceDelete(driftyConfigFolder);
+                FileUtils.forceDelete(driftyJsonFolder);
                 return null;
             }
 
-            File[] files = driftyConfigFolder.listFiles();
+            File[] files = driftyJsonFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
@@ -247,7 +255,7 @@ public final class Utility {
 
                 }
 
-                FileUtils.forceDelete(driftyConfigFolder); // delete the metadata files of Drifty from the config directory
+                FileUtils.forceDelete(driftyJsonFolder); // delete the metadata files of Drifty from the config directory
             }
 
             return list;
@@ -287,8 +295,9 @@ public final class Utility {
         if (m.find()) {
             fileName = cleanFilename(m.group(2)) + ".mp4";
             messageBroker.sendMessage(FILENAME_EXTRACTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
-        } else {
-            fileName = cleanFilename("Unknown Filename") + ".mp4";
+        }
+        else {
+            fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
             messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG, MessageType.ERROR, MessageCategory.FILENAME);
         }
         return fileName;
@@ -296,18 +305,18 @@ public final class Utility {
 
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
-        return fn.replaceAll("[^a-zA-Z0-9-._ ]+", "");
+        return fn.replaceAll("[^a-zA-Z0-9-._)<(> ]+", "");
     }
 
-    private static Runnable getYT_IGLinkMetadata(String folderPath, String link) {
+    private static Runnable ytDLPJsonData(String folderPath, String link) {
         return () -> {
-            String command = Program.get(Program.COMMAND);
+            String command = Program.get(YT_DLP);
             String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
             new ProcBuilder(command)
-                .withArgs(args)
-                .withErrorStream(System.err)
-                .withNoTimeout()
-                .run();
+                    .withArgs(args)
+                    .withErrorStream(System.err)
+                    .withNoTimeout()
+                    .run();
         };
     }
 
@@ -343,5 +352,18 @@ public final class Utility {
         } catch (InterruptedException e) {
             messageBroker.sendMessage("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
         }
+    }
+
+    private static final Random random = new Random(System.currentTimeMillis());
+
+    public static String randomString(int characterCount) {
+        String source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        int count = source.length();
+        StringBuilder sb = new StringBuilder();
+        for (int x = 0; x < characterCount; x++) {
+            int index = random.nextInt(count);
+            sb.append(source.charAt(index));
+        }
+        return sb.toString();
     }
 }

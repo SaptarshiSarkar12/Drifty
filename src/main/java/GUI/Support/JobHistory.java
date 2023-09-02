@@ -1,71 +1,38 @@
 package GUI.Support;
 
 import Preferences.AppSettings;
-import Utils.CheckFile;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
 
-    private final List<Job> jobHistory = new ArrayList<>();
-
-
-    public List<Job> getJobHistory() {
-        return jobHistory;  // Public getter method
+    public JobHistory() {
+        this.jobList = new ConcurrentLinkedDeque<>();
     }
 
-    public void addJob(Job job) {
-        boolean hasJob = false;
-        for (Job jobHistory : jobHistory) {
-            if (jobHistory.getLink().equals(job.getLink())) {
-                return;
-            }
+    private ConcurrentLinkedDeque<Job> jobList;
+
+    public ConcurrentLinkedDeque<Job> getJobList() {
+        if (jobList == null) {
+            this.jobList = new ConcurrentLinkedDeque<>();
         }
-        jobHistory.add(job);
-        AppSettings.set.jobHistory(this);
-    }
-
-    public boolean jobFileExists(Job newJob) {
-        for (Job job : jobHistory) {
-            if (job.getLink().equals(newJob.getLink()) && job.getFilename().equals(newJob.getFilename())) {
-                for (String folder : AppSettings.get.folders().getFolders()) {
-                    Path downloadPath = Paths.get(folder);
-                    CheckFile checkFile = new CheckFile(downloadPath, job.getFilename());
-                    Thread thread = new Thread(checkFile);
-                    thread.start();
-                    while (thread.getState().equals(Thread.State.RUNNABLE)) {
-                        sleep(100);
-                    }
-                    if (checkFile.fileFound())
-                        return true;
-                }
-            }
+        if(jobList.isEmpty())
+            return jobList;
+        ConcurrentLinkedDeque<Job> list = new ConcurrentLinkedDeque<>();
+        for(Job job : jobList) {
+            String link = job.getLink();
+            String dir = job.getDir();
+            String filename = job.getFilename();
+            list.addLast(new Job(link, dir, filename));
+            System.out.println(link + ": " + dir + ": " + filename);
         }
-        return false;
+        return list;
     }
 
-    public boolean jobMatch(Job newJob) {
-        for (Job job : jobHistory) {
-            if (job.getLink().equals(newJob.getLink()) && job.getFilename().equals(newJob.getFilename())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<Job> getHistory() {
-        return jobHistory;
-    }
-
-    private void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
+        if (jobList != null) {
+            this.jobList = new ConcurrentLinkedDeque<>(jobList);
+            AppSettings.set.jobHistory(this);
         }
     }
 }

@@ -11,6 +11,10 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * loops that run the jobs.
  */
 public class Jobs {
+
+    public Jobs() {
+        this.jobList = new ConcurrentLinkedDeque<>();
+    }
     private ConcurrentLinkedDeque<Job> jobList;
 
     public ConcurrentLinkedDeque<Job> jobList() {
@@ -22,14 +26,6 @@ public class Jobs {
 
     public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = new ConcurrentLinkedDeque<>(jobList);
-
         AppSettings.set.batchDownloadJobs(this);
-    }
-
-    public ConcurrentLinkedDeque<Job> getJobList() {
-        if (jobList == null) {
-            return new ConcurrentLinkedDeque<>();
-        }
-        return new ConcurrentLinkedDeque<>(jobList);
     }
 }

@@ -13,13 +13,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
+import static Enums.Program.JOB_FILE;
+import static Enums.Program.JOB_HISTORY_FILE;
 import static Preferences.Labels.*;
 
 public class Set { // This class is used to set the user preferences
     private static final Set INSTANCE = new Set();
     private final Preferences preferences = Labels.PREFERENCES;
 
-    private Set() {}
+    public Set() {}
 
     protected static Set getInstance() {
         return INSTANCE;
@@ -56,9 +58,9 @@ public class Set { // This class is used to set the user preferences
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
-        Path batchJobsFile = Paths.get(Program.get(Program.DATA_PATH), JOBS.toString());
+        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
         try {
-            FileUtils.writeStringToFile(batchJobsFile.toFile(), value, Charset.defaultCharset());
+            FileUtils.writeStringToFile(jobBatchFile.toFile(), value, Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,8 +74,7 @@ public class Set { // This class is used to set the user preferences
         gsonBuilder.registerTypeAdapter(JobHistory.class, new JobHistoryTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobHistory);
-        AppSettings.clear.jobHistory();
-        Path jobHistoryFile = Paths.get(Program.get(Program.DATA_PATH), JOB_HISTORY.toString());
+        Path jobHistoryFile = Paths.get(Program.get(JOB_HISTORY_FILE));
         try {
             FileUtils.writeStringToFile(jobHistoryFile.toFile(), value, Charset.defaultCharset());
         } catch (IOException e) {

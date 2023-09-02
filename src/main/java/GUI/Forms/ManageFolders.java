@@ -1,17 +1,21 @@
 package GUI.Forms;
+
 import GUI.Support.Folders;
 import Preferences.AppSettings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 /**
  * This class is called when the user right clicks on any of the GUIs and chooses
- * 'manage folders'. It is a pop up form that pulls the list of folders that the
+ * 'manage folders'. It is a pop-up form that pulls the list of folders that the
  * user has added, allowing them to remove folders from the list. Folders are
  * scanned each time a download is attempted where the program scours the folders
  * looking for duplicate filenames and if any are found, the user is notified
@@ -27,14 +31,15 @@ public class ManageFolders {
     private ListView<String> lvFolders;
     private javafx.scene.control.Button btnRemove;
     private javafx.scene.control.Button btnClose;
+
     public ManageFolders() {
         this.folders = AppSettings.get.folders();
         createControls();
         setControls();
     }
 
-     private void createControls() {
-        lvFolders = new ListView<>(folders.getFolders());
+    private void createControls() {
+        lvFolders = listView(folders.getFolders());
         btnRemove = new javafx.scene.control.Button("Remove");
         btnClose = new javafx.scene.control.Button("Close");
         lvFolders.setMinWidth(width * .9);
@@ -55,20 +60,41 @@ public class ManageFolders {
         btnClose.setMinHeight(35);
         btnClose.setMaxHeight(35);
         btnClose.setPrefHeight(35);
-        HBox hBox = new HBox(20,btnRemove, btnClose);
+        HBox hBox = new HBox(20, btnRemove, btnClose);
         hBox.setAlignment(Pos.CENTER);
-        vBox = new VBox(15,lvFolders, hBox);
+        vBox = new VBox(15, lvFolders, hBox);
         vBox.setAlignment(Pos.CENTER);
     }
 
-     private void setControls() {
-        btnRemove.setOnAction(e->remove());
-        btnClose.setOnAction(e->close());
+    private ListView<String> listView(ObservableList<String> folderList) {
+        ListView<String> listView = new ListView<>(folderList);
+        listView.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    // Make empty cells not selectable
+                    setDisable(true);
+                    setText("");
+                }
+                else {
+                    // Set the text for non-empty cells
+                    setDisable(false);
+                    setText(item);
+                }
+            }
+        });
+        return listView;
+    }
+
+    private void setControls() {
+        btnRemove.setOnAction(e -> remove());
+        btnClose.setOnAction(e -> close());
         BooleanBinding selected = lvFolders.getSelectionModel().selectedIndexProperty().greaterThan(-1);
         btnRemove.visibleProperty().bind(selected);
     }
 
-     public void showScene() {
+    public void showScene() {
         stage = new Stage();
         scene = Constants.getScene(vBox);
         stage.setScene(scene);
@@ -79,11 +105,11 @@ public class ManageFolders {
         stage.showAndWait();
     }
 
-     private void close() {
+    private void close() {
         stage.close();
     }
 
-     private void remove() {
+    private void remove() {
         folders.removeFolder(lvFolders.getSelectionModel().getSelectedItem());
         lvFolders.getItems().setAll(folders.getFolders());
     }

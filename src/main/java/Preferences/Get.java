@@ -4,8 +4,8 @@ import Enums.Program;
 import GUI.Support.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.hildan.fxgson.FxGson;
 import org.apache.commons.io.FileUtils;
+import org.hildan.fxgson.FxGson;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,6 +13,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
+import static Enums.Program.JOB_FILE;
+import static Enums.Program.JOB_HISTORY_FILE;
 import static Preferences.Labels.*;
 
 public class Get { // This class is used to get the user preferences
@@ -57,14 +59,15 @@ public class Get { // This class is used to get the user preferences
         gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         Jobs jobs;
-        Path jobBatchFile = Paths.get(Program.get(Program.DATA_PATH), JOBS.toString());
+        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
         try {
             String json = FileUtils.readFileToString(jobBatchFile.toFile(), Charset.defaultCharset());
             if (json != null && !json.isEmpty()) {
                 jobs = gson.fromJson(json, Jobs.class);
                 return jobs;
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
         return new Jobs();
     }
 
@@ -75,14 +78,20 @@ public class Get { // This class is used to get the user preferences
         gsonBuilder.registerTypeAdapter(JobHistory.class, new JobHistoryTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         JobHistory jobHistory;
-        Path jobHistoryFile = Paths.get(Program.get(Program.DATA_PATH), JOB_HISTORY.toString());
+        Path jobHistoryFile = Paths.get(Program.get(JOB_HISTORY_FILE));
         try {
+            if (!jobHistoryFile.toFile().exists()) {
+                jobHistory = new JobHistory();
+                String json = gson.toJson(jobHistory);
+                FileUtils.write(jobHistoryFile.toFile(), json, Charset.defaultCharset());
+            }
             String json = FileUtils.readFileToString(jobHistoryFile.toFile(), Charset.defaultCharset());
             if (json != null && !json.isEmpty()) {
                 jobHistory = gson.fromJson(json, JobHistory.class);
                 return jobHistory;
             }
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
         return new JobHistory();
     }
 

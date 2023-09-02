@@ -9,21 +9,22 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 
-import static GUI.Forms.Constants.*;
+import static GUI.Forms.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
     public ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
     public ProgressBar pBar = pBar();
     public ListView listView = listView();
     public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
-    public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL,.7);
-    public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL,.7);
-    public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL,.7);
+    public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
+    public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
+    public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
     public final ImageView ivBtnStart = imageViewButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
     public final ImageView ivBtnSave = imageViewButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
     public final CheckBox cbAutoPaste = new CheckBox();
@@ -60,7 +61,7 @@ public class MainGridPane extends GridPane {
         setColumnSpan(lblDirOut, 3);
         setColumnSpan(lblFilenameOut, 3);
         setColumnSpan(lblDownloadInfo, 3);
-        setRowSpan(listView,11);
+        setRowSpan(listView, 11);
         add(boxLogo, 0, 0);
         add(pBar, 0, 1);
 
@@ -85,12 +86,12 @@ public class MainGridPane extends GridPane {
 
         setPrefWidth(Constants.SCREEN_WIDTH * .4);
         setPrefHeight(Constants.SCREEN_HEIGHT * .4);
-        setVgrow(pBar,Priority.ALWAYS);
-        setVgrow(lblDirOut,Priority.ALWAYS);
-        setVgrow(lblFilenameOut,Priority.ALWAYS);
-        setVgrow(lblLinkOut,Priority.ALWAYS);
-        setVgrow(ivBtnStart,Priority.ALWAYS);
-        setVgrow(ivBtnSave,Priority.ALWAYS);
+        setVgrow(pBar, Priority.ALWAYS);
+        setVgrow(lblDirOut, Priority.ALWAYS);
+        setVgrow(lblFilenameOut, Priority.ALWAYS);
+        setVgrow(lblLinkOut, Priority.ALWAYS);
+        setVgrow(ivBtnStart, Priority.ALWAYS);
+        setVgrow(ivBtnSave, Priority.ALWAYS);
         setVgap(5);
         setHgap(15);
         for (int colIndex = 0; colIndex < 3; colIndex++) {
@@ -100,9 +101,9 @@ public class MainGridPane extends GridPane {
         }
         ColumnConstraints constraints = new ColumnConstraints();
         constraints.setMaxWidth(250);
-        getColumnConstraints().set(0,constraints);
-        GridPane.setMargin(boxLogo, new Insets(0,0,50,0));
-        GridPane.setMargin(pBar, new Insets(0,0,25,0));
+        getColumnConstraints().set(0, constraints);
+        GridPane.setMargin(boxLogo, new Insets(0, 0, 50, 0));
+        GridPane.setMargin(pBar, new Insets(0, 0, 25, 0));
     }
 
     public void bindToWorker(final Worker<ObservableList<Long>> worker) {
@@ -146,7 +147,8 @@ public class MainGridPane extends GridPane {
         tf.setPrefWidth(Double.MAX_VALUE);
         return tf;
     }
-    private ProgressBar pBar(){
+
+    private ProgressBar pBar() {
         ProgressBar pb = new ProgressBar(0.0);
         pb.setPrefWidth(Double.MAX_VALUE);
         pb.setMinHeight(25);
@@ -158,8 +160,9 @@ public class MainGridPane extends GridPane {
         box.setAlignment(Pos.CENTER);
         return box;
     }
+
     private HBox boxAutoPaste() {
-        HBox box = new HBox(10,ivAutoPaste, cbAutoPaste);
+        HBox box = new HBox(10, ivAutoPaste, cbAutoPaste);
         box.setAlignment(Pos.CENTER_RIGHT);
         return box;
     }

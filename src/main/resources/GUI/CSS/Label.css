@@ -11,6 +11,6 @@
     -fx-text-fill:rgb(0,103,193)
 }
 .outline.label .text {
-    -fx-stroke: black;
-    -fx-stroke-width: 0.3px;
+    -fx-stroke: rgb(50,50,50);
+    -fx-stroke-width: .02em;
 }

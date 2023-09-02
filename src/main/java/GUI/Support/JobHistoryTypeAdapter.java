@@ -1,62 +1,29 @@
 package GUI.Support;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class JobHistoryTypeAdapter extends TypeAdapter<JobHistory> {
+public class JobHistoryTypeAdapter implements JsonSerializer<JobHistory>,
+        JsonDeserializer<JobHistory> {
     @Override
-    public void write(JsonWriter out, JobHistory value) {
-        // Write the JobHistory object to JSON here
+    public JsonElement serialize(JobHistory jobHistory, Type type, JsonSerializationContext context) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("jobList", context.serialize(jobHistory.getJobList()));
+        return jsonObject;
     }
 
-    @Override
-    public JobHistory read(JsonReader in) throws IOException {
+    public JobHistory deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+        JsonObject jsonObject = json.getAsJsonObject();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("jobList");
+
         JobHistory jobHistory = new JobHistory();
-        in.beginObject();
-        while (in.hasNext()) {
-            String fieldName = in.nextName();
-            if ("jobHistory".equals(fieldName)) {
-                in.beginArray();
-                while (in.hasNext()) {
-                    Job job = readJob(in); // Helper method to read Job objects
-                    jobHistory.addJob(job);
-                }
-                in.endArray();
-            } else {
-                in.skipValue();
-            }
-        }
-        in.endObject();
-        return jobHistory;
-    }
+        ConcurrentLinkedDeque<Job> jobList = context.deserialize(jsonArray, new TypeToken<ConcurrentLinkedDeque<JobHistory>>(){}.getType());
 
-    private Job readJob(JsonReader in) throws IOException {
-        in.beginObject();
-        String link = null;
-        String dir = null;
-        String filename = null;
-        while (in.hasNext()) {
-            String fieldName = in.nextName();
-            switch (fieldName) {
-                case "link":
-                    link = in.nextString();
-                    break;
-                case "dir":
-                    dir = in.nextString();
-                    break;
-                case "filename":
-                    filename = in.nextString();
-                    break;
-                // Handle other fields as needed
-                default:
-                    in.skipValue();
-                    break;
-            }
-        }
-        in.endObject();
-        return new Job(link, dir, filename);
+        jobHistory.setJobList(jobList);
+
+        return jobHistory;
     }
 }
