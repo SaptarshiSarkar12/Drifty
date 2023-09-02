@@ -13,4 +13,8 @@ module Drifty {
 
     exports GUI.Forms to javafx.graphics;
     exports GUI.Support;
+
+    opens GUI.Support to com.google.gson;
+    opens GUI.Forms to com.google.gson;
+
 }
