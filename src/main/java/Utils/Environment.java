@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import static Enums.Program.YT_DLP;
 
 public class Environment {
-    private static MessageBroker messageBroker = new MessageBroker();
+    private static MessageBroker messageBroker = Environment.getMessageBroker();
 
     /*
     This method is called by both Drifty_CLI and Main classes.
@@ -33,16 +33,19 @@ public class Environment {
         InputStream ytDLPStream = ClassLoader.getSystemResourceAsStream(ytDLP);
         CopyYtDLP copyYtDlp = new CopyYtDLP();
         boolean ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
-        if (ytDLPExists && updateYtDLP()) {
+        if (ytDLPExists && isYtDLPUpdated()) {
             updateYt_dlp();
         }
         File folder = new File(appUseFolderPath);
         if (!folder.exists()) {
             try {
                 Files.createDirectory(folder.toPath());
+                messageBroker.sendMessage("Created Drifty folder : " + appUseFolderPath, MessageType.INFO, MessageCategory.INITIALIZATION);
             } catch (IOException e) {
                 messageBroker.sendMessage("Failed to create Drifty folder: " + appUseFolderPath + " - " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
             }
+        } else {
+            messageBroker.sendMessage("Drifty folder already exists : " + appUseFolderPath, MessageType.INFO, MessageCategory.INITIALIZATION);
         }
     }
 
@@ -66,7 +69,7 @@ public class Environment {
         }
     }
 
-    public static boolean updateYtDLP() {
+    public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime();
         return timeSinceLastUpdate >= oneDay;

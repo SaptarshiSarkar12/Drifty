@@ -38,7 +38,11 @@ public class MessageBroker {
         }
         else if (Mode.isGUI()) {
             FormLogic ui;
-            ui = FormLogic.INSTANCE;
+            if (!messageCategory.equals(LOG)) {
+                ui = FormLogic.INSTANCE;
+            } else {
+                ui = null;
+            }
             if (!message.isEmpty()) {
                 logger.log(messageType, message);
             }

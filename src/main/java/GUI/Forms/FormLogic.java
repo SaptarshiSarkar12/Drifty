@@ -123,7 +123,7 @@ public class FormLogic {
                     new Thread(() -> {
                         //This waits for the clearFilenameOutput() that will be executed from the previous setFilename() call.
                         sleep(500);
-                        setFilenameOutput(RED, "This file exists, renamed to prevent over-write.");
+                        messageBroker.sendMessage("Filename (" + oldValue + ") already exists in folder (" + form.tfDir.getText() + "). Renamed to \"" + newValue + "\" to prevent over-write.", MessageType.ERROR, MessageCategory.FILENAME);
                     }).start();
                 }
                 else {
@@ -222,7 +222,7 @@ public class FormLogic {
                     return;
                 }
                 if(linkInJobList(presentLink)) {
-                    setLinkOutput(RED,"URL already in job list");
+                    messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
                     clearLink();
                     return;
                 }
@@ -331,7 +331,7 @@ public class FormLogic {
                 int fileCount = 0;
                 for (Job job : jobList) {
                     fileCount++;
-                    String processingFileText = "Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job;
+                    messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
                     if (fileExists(job.getFilename())) {
                         Platform.runLater(() -> messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.ERROR, MessageCategory.FILENAME));
                         removeJob(job);
@@ -422,9 +422,9 @@ public class FormLogic {
                         }
                         if (walker.fileFound()) {
                             deleteList.add(job);
-                            AskYesNo ask = new AskYesNo("You have already downloaded the file:" + nl.repeat(2) +
+                            AskYesNo ask = new AskYesNo("You have already downloaded the file : " + nl.repeat(2) +
                                                                 job.getFilename() + nl.repeat(2) +
-                                                                "And it exists here:" + folder + nl.repeat(2) +
+                                                                "And it exists here : " + folder + nl.repeat(2) +
                                                                 "If you want to download it again, it will be given a slightly different filename because Drifty will not over-write an existing file." + nl.repeat(2) +
                                                                 "Do you want to download it again?");
                             if (ask.getResponse().isYes()) {
@@ -452,7 +452,7 @@ public class FormLogic {
         Platform.runLater(() -> {
             /*
             These bindings allow the Worker thread to post relevant information to the UI including the progress bar which
-            accurately depicts remaining number of filenames to extract from the link. However, if there is only one filename
+            accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
             to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
             The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
             will be thrown and possibly the program execution halted.
@@ -481,7 +481,7 @@ public class FormLogic {
             }
             sleep(500);
             System.out.println("Final check for new job to add");
-            checkHistoryAddJobs(worker); //Check one last time
+            checkHistoryAddJobs(worker); // Check one last time
             clearControls();
             gettingFilenames = false;
         }).start();

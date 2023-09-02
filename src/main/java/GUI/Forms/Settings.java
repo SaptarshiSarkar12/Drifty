@@ -1,6 +1,9 @@
 package GUI.Forms;
 
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Preferences.AppSettings;
+import Utils.Environment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,7 +29,10 @@ public class Settings {
         createControls();
         setControlProperties();
         stage = Constants.getStage();
-        stage.setOnCloseRequest(e -> stage.close());
+        stage.setOnCloseRequest(e -> {
+            Environment.getMessageBroker().sendMessage("Settings closed", MessageType.INFO, MessageCategory.SETTINGS);
+            stage.close();
+        });
         stage.setAlwaysOnTop(true);
         scene = Constants.getScene(gp);
         stage.setScene(scene);

@@ -1,6 +1,9 @@
 package GUI.Support;
 
+import Enums.MessageCategory;
+import Enums.MessageType;
 import Preferences.AppSettings;
+import Utils.Environment;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -19,12 +22,13 @@ public class JobHistory {
         if(jobList.isEmpty())
             return jobList;
         ConcurrentLinkedDeque<Job> list = new ConcurrentLinkedDeque<>();
+        Environment.getMessageBroker().sendMessage("Job History Fetched", MessageType.INFO, MessageCategory.INITIALIZATION);
         for(Job job : jobList) {
             String link = job.getLink();
             String dir = job.getDir();
             String filename = job.getFilename();
             list.addLast(new Job(link, dir, filename));
-            System.out.println(link + ": " + dir + ": " + filename);
+            Environment.getMessageBroker().sendMessage("Link: " + link + "; Dir: " + dir + "; Filename: " + filename, MessageType.INFO, MessageCategory.INITIALIZATION);
         }
         return list;
     }

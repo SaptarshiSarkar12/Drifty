@@ -21,14 +21,6 @@ public enum Mode {
         Mode.mode = Mode.GUI;
     }
 
-    public static void setIsGUILoaded(boolean isGUILoadingCompleted) {
-        isGUILoaded = isGUILoadingCompleted;
-    }
-
-    public static boolean isGUILoaded() {
-        return isGUILoaded;
-    }
-
     public static boolean isGUI() {
         return mode.equals(Mode.GUI);
     }
