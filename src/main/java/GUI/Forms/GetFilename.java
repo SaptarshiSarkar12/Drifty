@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Enums.Colors;
 import Enums.Program;
 import GUI.Support.Job;
 import Utils.Utility;
@@ -12,7 +13,6 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static Enums.Program.YT_DLP;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
@@ -72,7 +74,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 filename = baseName + ".mp4";
                 jobList.addLast(new Job(fileLink, dir, filename));
             }
-            FormLogic.setColor(Constants.GREEN);
+            FormLogic.setColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) progTimer.cancel();
 
@@ -82,13 +84,13 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     }
 
     private TimerTask getJson() {
-        File tempFolder = Paths.get(Program.get(Program.PATH), "Drifty").toFile();
+        File appFolder = Program.getJsonDataPath().toFile();
         return new TimerTask() {
             @Override
             public void run() {
                 ConcurrentLinkedDeque<File> deleteList = new ConcurrentLinkedDeque<>();
                 ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
-                File[] files = tempFolder.listFiles();
+                File[] files = appFolder.listFiles();
                 for (File file : files) {
                     try {
                         String ext = FilenameUtils.getExtension(file.getAbsolutePath());
@@ -162,7 +164,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 }
             }));
             try {
-                String command = Program.get(Program.COMMAND);
+                String command = Program.get(YT_DLP);
                 String[] args = new String[]{command, "--flat-playlist", "--skip-download", "-P", dir, link};
                 ProcessBuilder pb = new ProcessBuilder(args);
                 pb.redirectErrorStream(true);

@@ -21,7 +21,7 @@ public final class DriftyConstants {
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String INVALID_LINK = "Invalid Link!";
     public static final String AUTO_FILE_NAME_DETECTION_FAILED = "Failed to detect the filename! Either the file name or the extension was missing in the url.\nThe url must be of the form of https://www.example.com/fileName.extension.";
-    public static final String AUTO_FILE_NAME_DETECTION_FAILED_YT_IG = "Failed to detect the filename! The url must be of the form of a YouTube/Instagram Video/Image link.\nTaking \"Unknown Filename.mp4\" as the filename.";
+    public static final String AUTO_FILE_NAME_DETECTION_FAILED_YT_IG = "Failed to detect the filename! A default name will be used instead.";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";
     public static final String HELP_FLAG = "--help";
     public static final String NAME_FLAG = "--name";

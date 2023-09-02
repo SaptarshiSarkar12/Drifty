@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.isInstagramLink;
 import static Utils.Utility.isYoutubeLink;
@@ -39,7 +40,7 @@ public class FileDownloader implements Runnable {
         FileDownloader.fileName = fileName;
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
-        setYt_dlpProgramName(Program.get(Program.NAME));
+        setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
     }
 
     public static String getDir() {
@@ -113,7 +114,7 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public static void downloadFromYouTube(String dirOfYt_dlp) {
+    public static void downloadFromYouTube() {
         String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
         String fileDownloadMessage;
         if (outputFileName.equals(DEFAULT_FILENAME)) {
@@ -122,7 +123,7 @@ public class FileDownloader implements Runnable {
             fileDownloadMessage = outputFileName;
         }
         messageBroker.sendMessage("Trying to download \"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
+        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
         processBuilder.inheritIO();
         messageBroker.sendMessage(DOWNLOADING + "\"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         int exitValueOfYt_Dlp = -1;
@@ -202,11 +203,10 @@ public class FileDownloader implements Runnable {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYouTubeLink || isInstagramLink) {
                 try {
-                    String directoryOfYt_dlp = Program.get(Program.PATH);
                     if (isYouTubeLink) {
-                        downloadFromYouTube(directoryOfYt_dlp);
+                        downloadFromYouTube();
                     } else {
-                        downloadFromInstagram(directoryOfYt_dlp);
+                        downloadFromInstagram();
                     }
                 } catch (InterruptedException e) {
                     messageBroker.sendMessage(USER_INTERRUPTION, MessageType.ERROR, MessageCategory.DOWNLOAD);
@@ -249,7 +249,7 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public static void downloadFromInstagram(String dirOfYt_dlp) throws InterruptedException, IOException {
+    public static void downloadFromInstagram() throws InterruptedException, IOException {
         String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
         String fileDownloadMessage;
         if (outputFileName.equals(DEFAULT_FILENAME)) {
@@ -258,7 +258,7 @@ public class FileDownloader implements Runnable {
             fileDownloadMessage = outputFileName;
         }
         messageBroker.sendMessage("Trying to download \"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
-        ProcessBuilder processBuilder = new ProcessBuilder(dirOfYt_dlp + yt_dlpProgramName, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
+        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         processBuilder.inheritIO();
         messageBroker.sendMessage(DOWNLOADING + "\"" + fileDownloadMessage + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
         Process yt_dlp = processBuilder.start(); // Starts the download process

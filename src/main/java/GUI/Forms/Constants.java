@@ -8,7 +8,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -96,17 +95,6 @@ class Constants {
     public static final Image IMG_START_DOWN = new Image(START_DOWN_PNG.toExternalForm());
     public static final Image IMG_SAVE_UP = new Image(SAVE_UP_PNG.toExternalForm());
     public static final Image IMG_SAVE_DOWN = new Image(SAVE_DOWN_PNG.toExternalForm());
-
-    /*
-    Colors
-     */
-    public static final Color GREEN = Color.rgb(0, 150, 0);
-    public static final Color TEAL = Color.rgb(0, 255, 255);
-    public static final Color RED = Color.rgb(157, 0, 0);
-    public static final Color PURPLE = Color.rgb(125, 0, 75);
-    public static final Color HOTPINK = Color.rgb(255, 0, 175);
-    public static final Color BLACK = Color.rgb(0, 0, 0);
-    public static final Color YELLOW = Color.rgb(255, 255, 0);
 
     /*
     Time Constants

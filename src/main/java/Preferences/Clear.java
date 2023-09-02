@@ -40,10 +40,6 @@ public class Clear { // This class is used to clear the user preferences
         preferences.remove(JOBS.toString());
     }
 
-    public void jobHistory() {
-        preferences.remove(JOB_HISTORY.toString());
-    }
-
     public void menuBarAsSystem() {
         preferences.remove(MENU_BAR_SYSTEM.toString());
     }

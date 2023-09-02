@@ -9,11 +9,11 @@ import javafx.scene.paint.Color;
 import java.io.PrintStream;
 
 import static Enums.MessageCategory.LOG;
-import static javafx.scene.paint.Color.*;
+import static Enums.Colors.*;
 
 public class MessageBroker {
     Logger logger;
-    PrintStream output;
+    PrintStream output = new PrintStream(System.out);
 
     public MessageBroker(PrintStream consoleOutput) {
         output = consoleOutput;
@@ -38,18 +38,14 @@ public class MessageBroker {
         }
         else if (Mode.isGUI()) {
             FormLogic ui;
-            if (!messageCategory.equals(LOG)) {
-                ui = FormLogic.INSTANCE;
-            } else {
-                ui = null;
-            }
+            ui = FormLogic.INSTANCE;
             if (!message.isEmpty()) {
                 logger.log(messageType, message);
             }
             Color color = switch (messageType) {
                 case ERROR -> RED;
-                case INFO -> LIMEGREEN;
-                default -> DARKGOLDENROD;
+                case INFO -> GREEN;
+                default -> YELLOW;
             };
             switch (messageCategory) {
                 case LINK -> ui.setLinkOutput(color, message);

@@ -32,6 +32,7 @@ public class Main extends Application {
     private boolean firstRun = true;
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
+        Environment.initializeEnvironment();
         Mode.setGUIMode();
         Environment.setMessageBroker(new MessageBroker());
         Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_STARTED, MessageType.INFO, MessageCategory.LOG);
@@ -41,7 +42,6 @@ public class Main extends Application {
                 Mode.setDev();
             }
         }
-        Environment.initializeEnvironment();
         launch(args);
     }
 
@@ -72,7 +72,7 @@ public class Main extends Application {
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if(Utility.isURL(clipboardText))
-                        FormLogic.setLink(clipboardText);
+                        FormLogic.form.tfLink.setText(clipboardText);
                 }
             }
         }));

@@ -6,7 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class JobsTypeAdapter implements JsonSerializer<Jobs>, JsonDeserializer<Jobs> {
+public class JobsTypeAdapter implements JsonSerializer<Jobs>,
+        JsonDeserializer<Jobs> {
 
     @Override
     public JsonElement serialize(Jobs jobs, Type type, JsonSerializationContext context) {
@@ -16,8 +17,7 @@ public class JobsTypeAdapter implements JsonSerializer<Jobs>, JsonDeserializer<J
     }
 
     @Override
-    public Jobs deserialize(JsonElement json, Type type, JsonDeserializationContext context)
-            throws JsonParseException {
+    public Jobs deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray jsonArray = jsonObject.getAsJsonArray("jobList");
 
