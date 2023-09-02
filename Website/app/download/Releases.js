@@ -102,7 +102,7 @@ export default function Releases({props}) {
             <div className={"select-none grid-cols-1 justify-items-center"}>
                 <h2 className="text-center block text-xl font-medium leading-6 text-gray-900">Select Application Type</h2>
                 <div className="grid grid-cols-1 justify-items-center pb-2">
-                    <select id="listbox" name="Select Application Type" className="block w-80 px-4 py-2 mt-1 text-base text-gray-900 bg-white border border-gray-300 border-2 select-none rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-700 focus:border-2 sm:text-sm" value={applicationType} onChange={handleApplicationTypeChange}>
+                    <select id="listbox" name="Select Application Type" className="block w-80 px-4 py-2 mt-1 text-base text-gray-900 bg-white border-gray-300 border-2 select-none rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-700 focus:border-2 sm:text-sm" value={applicationType} onChange={handleApplicationTypeChange}>
                         <option value="GUI">GUI</option>
                         <option value="CLI">CLI</option>
                     </select>

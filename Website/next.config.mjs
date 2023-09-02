@@ -24,10 +24,7 @@ const nextConfig = {
         ],
         dangerouslyAllowSVG: true,
         unoptimized: true
-    },
-    experimental: {
-        mdxRs: true,
-    },
+    }
 }
 
 const withMDX = createMDX({

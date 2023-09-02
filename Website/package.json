@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@mdx-js/loader": "^2.3.0",
     "@mdx-js/react": "^2.3.0",
+    "@mui/icons-material": "^5.14.7",
+    "@mui/material": "^5.14.7",
     "@next/mdx": "^13.4.19",
     "@types/mdx": "^2.0.7",
     "autoprefixer": "10.4.15",
