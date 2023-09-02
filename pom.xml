@@ -125,6 +125,7 @@
                         <arg>--verbose</arg>
                         <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</arg>
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+<!--                        <arg>-o Drifty GUI</arg>-->
                         <arg>${system-native-image-arg}</arg>
                     </nativeImageArgs>
                     <appIdentifier>${guiMain}</appIdentifier>

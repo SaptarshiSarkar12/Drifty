@@ -32,10 +32,10 @@ public class Main extends Application {
     private boolean firstRun = true;
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        Environment.initializeEnvironment();
         Mode.setGUIMode();
         Environment.setMessageBroker(new MessageBroker());
         Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_STARTED, MessageType.INFO, MessageCategory.LOG);
+        Environment.initializeEnvironment();
         Utility.setStartTime();
         for (String arg : args) {
             if (arg.toLowerCase().contains("--devmode")) {
