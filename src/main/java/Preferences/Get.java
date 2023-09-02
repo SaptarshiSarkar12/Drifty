@@ -29,7 +29,6 @@ public class Get { // This class is used to get the user preferences
 
     public Folders folders() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Folders.class, new FoldersTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         Folders folders = new Folders();
         String json = preferences.get(FOLDERS.toString(), "");
@@ -55,8 +54,6 @@ public class Get { // This class is used to get the user preferences
 
     public Jobs jobs() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         Jobs jobs;
         Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
@@ -73,9 +70,6 @@ public class Get { // This class is used to get the user preferences
 
     public JobHistory jobHistory() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
-        gsonBuilder.registerTypeAdapter(JobHistory.class, new JobHistoryTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         JobHistory jobHistory;
         Path jobHistoryFile = Paths.get(Program.get(JOB_HISTORY_FILE));

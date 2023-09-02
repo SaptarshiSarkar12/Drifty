@@ -29,7 +29,6 @@ public class Set { // This class is used to set the user preferences
 
     public void folders(Folders folders) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Folders.class, new FoldersTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(folders);
         AppSettings.clear.folders();
@@ -53,8 +52,6 @@ public class Set { // This class is used to set the user preferences
 
     public void batchDownloadJobs(Jobs jobs) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobs);
         AppSettings.clear.jobs();
@@ -69,9 +66,6 @@ public class Set { // This class is used to set the user preferences
 
     public void jobHistory(JobHistory jobHistory) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Jobs.class, new JobsTypeAdapter());
-        gsonBuilder.registerTypeAdapter(Job.class, new JobTypeAdapter());
-        gsonBuilder.registerTypeAdapter(JobHistory.class, new JobHistoryTypeAdapter());
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobHistory);
         Path jobHistoryFile = Paths.get(Program.get(JOB_HISTORY_FILE));
