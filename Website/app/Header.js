@@ -18,13 +18,16 @@ function MobileNav({ open}) {
             <div className="grid grid-rows-3 justify-items-center bg-top">
                 <NavLink to="/about" cn="text-xl font-normal my-4">
                 	<button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">About</button>
-        	</NavLink>
+        	    </NavLink>
                 <NavLink to="/download" cn="text-xl font-normal my-4">
                 	<button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Download</button>
-        	</NavLink>
+        	    </NavLink>
+                <NavLink to="/docs" cn="text-xl font-normal my-4">
+                    <button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Docs</button>
+                </NavLink>
                 <NavLink to="/contact" cn="text-xl font-normal my-4">
                 	<button className="p-2 w-28 h-11 rounded-full  bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300  hover:shadow-lg">Contact</button>
-        	</NavLink>
+        	    </NavLink>
             </div>
         </div>
     )

@@ -56,7 +56,7 @@ export default function Docs() {
     return(
         <div className="text-center bg-gradient-to-b from-top to-bottom">
             <h1 className={"text-5xl p-5 pb-7"}>Documentation</h1>
-            <div className={"grid grid-flow-col"}>
+            <div className={"grid md:grid-flow-col"}>
                 <div className={"grid grid-cols-1"}>
                 {sections.map((page) => {
                     if (page.hasChildren) {
@@ -82,7 +82,7 @@ export default function Docs() {
                                             return (
                                                 <Link key={index} className={"p-1 hover:text-blue-800 font-medium hover:font-bold rounded-lg"}
                                                       href={child.href}>
-                                                    <h1 className={"text-sm"}>{child.name}</h1>
+                                                    <h1 className={"text-xl md:text-sm"}>{child.name}</h1>
                                                 </Link>
                                             )
                                         })}
@@ -92,20 +92,23 @@ export default function Docs() {
                         )
                     } else {
                         return (
-                            <Accordion expanded={expanded === page.title} onChange={handleChange(page.title)} elevation={0} disableGutters={true} key={page.title} className={"text-black border-none h-auto w-auto md:w-60"} sx={{
-                                '&:before': {
-                                    display: 'none'
-                                },
-                                backgroundColor: 'transparent',
-                                '&.Mui-expanded': { margin: 0 },
-                                padding: 0
-                            }}>
-                                <AccordionSummary key={page.title} className={classNames(
-                                    expanded === page.title && "bg-blue-600 text-white",
-                                    "hover:bg-blue-600 rounded m-2 border-none font-bold hover:text-white")}>
-                                    <h3>{page.title}</h3>
-                                </AccordionSummary>
-                            </Accordion>
+                            <Link key={page.title} className={"p-1 hover:text-blue-800 font-medium hover:font-bold rounded-lg"}
+                                  href={page.href}>
+                                <Accordion expanded={expanded === page.title} onChange={handleChange(page.title)} elevation={0} disableGutters={true} key={page.title} className={"text-black border-none h-auto w-auto md:w-60"} sx={{
+                                    '&:before': {
+                                        display: 'none'
+                                    },
+                                    backgroundColor: 'transparent',
+                                    '&.Mui-expanded': { margin: 0 },
+                                    padding: 0
+                                }}>
+                                    <AccordionSummary className={classNames(
+                                        expanded === page.title && "bg-blue-600 text-white",
+                                        "hover:bg-blue-600 rounded m-2 border-none font-bold hover:text-white")}>
+                                            <h1 className={"text-xl md:text-sm"}>{page.title}</h1>
+                                    </AccordionSummary>
+                                </Accordion>
+                            </Link>
                         )
                     }
                 })}
