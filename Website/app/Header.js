@@ -12,6 +12,12 @@ function NavLink({ to, children, cn }) {
 function MobileNav({ open}) {
     return (
         <div className={`absolute z-10 top-0 -mt-7 pt-2 left-0 h-screen w-screen bg-top transform ${!open && "-translate-x-full"} transition-transform duration-300 ease-in-out filter drop-shadow-md`}>
+            {() => {
+                if (open) {
+                    var target = document.getElementById("accordion");
+                    target += "hidden";
+                }
+            }}
             <div className="flex items-start justify-center filter bg-top h-30"> {/*logo container*/}
                 <Link className="text-xl font-semibold" href="/"><Image src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/app/icon.png" width={60} height={60} alt="Logo of Drifty"/></Link>
             </div>
@@ -71,6 +77,9 @@ export default function Header({props}) {
                     	<NavLink to="/download" cn="mx-4">
                     		<button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">DOWNLOAD</button>
                     	</NavLink>
+                        <NavLink to="/docs" cn="mx-4">
+                            <button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">DOCS</button>
+                        </NavLink>
                     	<NavLink to="/contact" cn="mx-4">
                     		<button className="p-2 rounded-full shadow-lg bg-btn-color hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">CONTACT</button>
                     	</NavLink>
