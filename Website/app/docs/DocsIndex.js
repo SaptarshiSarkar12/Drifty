@@ -1,6 +1,4 @@
 import DocsLayout from "@/app/docs/DocsLayout";
-import Header from "@/app/Header";
-import Footer from "@/app/Footer";
 import Link from "next/link";
 
 const sections = [
@@ -10,8 +8,8 @@ const sections = [
         href: "/docs/quickstart",
         hasChildren: true,
         children: [
-            {  name: "Quickstart with Drifty GUI", href: "/docs/quickstart-drifty-gui" },
-            {  name: "Quickstart with Drifty CLI", href: "/docs/quickstart-drifty-cli" }
+            {  name: "Drifty GUI", href: "/docs/quickstart-drifty-gui" },
+            {  name: "Drifty CLI", href: "/docs/quickstart-drifty-cli" }
         ]
     },
     {
@@ -20,8 +18,8 @@ const sections = [
         href: "/docs/getting-started",
         hasChildren: true,
         children: [
-            {  name: "Getting Started with Drifty GUI", href: "/docs/getting-started-drifty-gui" },
-            {  name: "Getting Started with Drifty CLI", href: "/docs/getting-started-drifty-cli" }
+            {  name: "Drifty GUI", href: "/docs/getting-started-drifty-gui" },
+            {  name: "Drifty CLI", href: "/docs/getting-started-drifty-cli" }
         ]
     },
     {

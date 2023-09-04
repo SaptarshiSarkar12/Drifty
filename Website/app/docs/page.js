@@ -3,11 +3,14 @@ import Header from "@/app/Header";
 import DocsIndex from "@/app/docs/DocsIndex";
 
 export const metadata = {
-    title: "Documentation",
+    title: {
+        template: "Documentation - %s",
+        default: "Documentation"
+    },
     description: "Learn how to get started with the project",
 }
 
-export default async function docs() {
+export default function docs() {
     return(
         <>
             <Header props={"bg-top"}/>

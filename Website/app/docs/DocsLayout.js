@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {AccordionDetails} from "@mui/material";
 import {useState} from "react";
 import {classNames} from "@/app/classNames";
-import {isMobileNavOpen} from "@/app/Header";
+import {MDXProvider} from "@mdx-js/react";
 
 const sections = [
     {
