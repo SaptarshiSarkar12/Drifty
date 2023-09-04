@@ -43,7 +43,6 @@ public final class DriftyConstants {
     public static final String FAILED_TO_CONNECT_TO_URL = "Failed to connect to ";
     public static final String DEFAULT_DOWNLOAD_FOLDER = "Default download folder detected : ";
     public static final String FILENAME_DETECTED = "Filename detected : ";
-    public static final String FILENAME_EXTRACTED = "Filename extracted from JSON data : ";
     public static final String BANNER_BORDER = "====================================================================";
     public static final String FAILED_TO_CREATE_LOG = "Failed to create log : ";
     public static final String FAILED_TO_CLEAR_LOG = "Failed to clear Log contents !";

@@ -294,7 +294,7 @@ public final class Utility {
         Matcher m = p.matcher(json);
         if (m.find()) {
             fileName = cleanFilename(m.group(2)) + ".mp4";
-            messageBroker.sendMessage(FILENAME_EXTRACTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
+            messageBroker.sendMessage(FILENAME_DETECTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
         }
         else {
             fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
