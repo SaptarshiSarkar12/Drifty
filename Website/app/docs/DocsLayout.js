@@ -113,9 +113,7 @@ export default function DocsLayout({children}) {
                     }
                 })}
                 </div>
-                <MDXProvider>
-                    {children}
-                </MDXProvider>
+                {children}
             </div>
         </div>
     )
