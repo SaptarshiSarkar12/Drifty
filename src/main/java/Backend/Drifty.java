@@ -43,7 +43,7 @@ public class Drifty {
                 return;
             }
         }
-        if (downloadsFolder == null || downloadsFolder.equals("." + System.getProperty("file.separator"))) {
+        if (downloadsFolder == null || downloadsFolder.equals(".")) {
             downloadsFolder = Utility.getFormattedDefaultDownloadsFolder();
         }
         downloadsFolder = downloadsFolder.replace('\\', '/');
