@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: Install required build dependencies for Linux
@@ -100,9 +100,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-Drifty
     steps:
-    - uses: actions/checkout@v3
-    - name: Get Drifty version from version.json file
-      run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> "$GITHUB_ENV"
+    - uses: actions/checkout@v4
+    - name: Get Drifty version from .version file
+      run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
     - name: Set Drifty version in pom.xml
       run: mvn versions:set -DnewVersion=$VERSION
     - name: Download Build artifacts
