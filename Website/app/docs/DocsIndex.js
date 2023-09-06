@@ -44,7 +44,9 @@ const sections = [
 
 export default function DocsIndex() {
     return(
-        <DocsLayout>
+        <DocsLayout
+            className={"grid md:grid-flow-col"}
+        >
             <div className={"grid grid-cols-2 gap-2 md:grid-cols-4 p-5"}>
                 {sections.map((page, index) => {
                     return (

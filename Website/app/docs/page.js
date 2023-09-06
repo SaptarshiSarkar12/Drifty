@@ -12,10 +12,6 @@ export const metadata = {
 
 export default function docs() {
     return(
-        <>
-            <Header props={"bg-top"}/>
-            <DocsIndex />
-            <Footer />
-        </>
+        <DocsIndex />
     )
 }
