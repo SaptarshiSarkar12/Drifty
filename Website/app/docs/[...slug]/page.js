@@ -10,7 +10,7 @@ import langNginx from 'highlight.js/lib/languages/nginx'
 import "@/app/github-dark.css"
 
 export async function generateStaticParams() {
-    const files = fs.readdirSync('docs')
+    const files = fs.readdirSync('public/docs')
     return files.map(filename => ({
         params: {
             slug: filename.replace('.mdx', '')
@@ -19,9 +19,8 @@ export async function generateStaticParams() {
 }
 
 function getPageContent(slug) {
-    const file = fs.readFileSync(path.join('docs', slug + '.mdx'), 'utf8')
+    const file = fs.readFileSync(path.join('public/docs', slug + '.mdx'), 'utf8')
     const { data, content } = matter(file)
-
     return {
         data,
         slug,
@@ -41,7 +40,7 @@ export default function Page({ params }) {
         <DocsLayout
             className={"grid md:grid-flow-col"}
         >
-            <article className={"prose max-w-screen-sm prose-lg text-black prose-headings:text-gray-900"}>
+            <article className={"prose max-w-sm md:max-w-none prose-lg text-black prose-headings:text-gray-900"}>
                 <MDXRemote source={page.content} options={options} />
             </article>
         </DocsLayout>
