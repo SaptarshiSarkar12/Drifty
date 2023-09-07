@@ -137,6 +137,8 @@ class AskYesNo {
     }
 
     private void showScene() {
+        double screenWidth = Constants.SCREEN_WIDTH;
+        double screenHeight = Constants.SCREEN_HEIGHT;
         waiting = true;
         stage = Constants.getStage();
         Scene scene = Constants.getScene(vbox);
@@ -144,7 +146,14 @@ class AskYesNo {
         stage.setHeight(height);
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
-        stage.centerOnScreen();
+        double halfScreenWidth = screenWidth / 2;
+        double halfScreenHeight = screenHeight / 2;
+        double halfWidth = width / 2;
+        double halfHeight = (height / 2) + 35;
+        double newX = halfScreenWidth - halfWidth;
+        double newY = halfScreenHeight - halfHeight;
+        stage.setX(newX);
+        stage.setY(newY);
         stage.setOnCloseRequest(e->{
             answer.setAnswer(false);
             stage.close();
