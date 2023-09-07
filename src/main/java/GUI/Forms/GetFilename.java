@@ -74,7 +74,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 filename = baseName + ".mp4";
                 jobList.addLast(new Job(fileLink, dir, filename));
             }
-            FormLogic.setColor(Colors.GREEN);
+            FormLogic.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) progTimer.cancel();
 

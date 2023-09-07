@@ -7,7 +7,10 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,6 +98,26 @@ public class Get { // This class is used to get the user preferences
 
     public boolean alwaysAutoPaste() {
         return preferences.getBoolean(ALWAYS_AUTO_PASTE.toString(), false);
+    }
+
+    public FileExtensions getFileExtensions(URL jsonURL) {
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(jsonURL.openStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String json = content.toString();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
+        if (!json.isEmpty()) {
+            return gson.fromJson(json, FileExtensions.class);
+        }
+        return null;
     }
 
 }

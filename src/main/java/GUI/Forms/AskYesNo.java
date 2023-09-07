@@ -31,23 +31,20 @@ class AskYesNo {
     private String msg = "";
     private boolean okOnly = false;
     private static boolean waiting = true;
-    private final GetResponse getResponse = new GetResponse();
+    private final GetResponse answer = new GetResponse();
 
     public AskYesNo() {
-        waiting = true;
         finish();
     }
 
     public AskYesNo(String message, boolean okOnly) {
         this.msg = message;
         this.okOnly = okOnly;
-        waiting = true;
         finish();
     }
 
     public AskYesNo(String message) {
         this.msg = message;
-        waiting = true;
         finish();
     }
 
@@ -94,12 +91,12 @@ class AskYesNo {
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         btnYes.setOnAction(e -> {
-            getResponse.setAnswer(true);
+            answer.setAnswer(true);
             waiting = false;
             stage.close();
         });
         btnNo.setOnAction(e -> {
-            getResponse.setAnswer(false);
+            answer.setAnswer(false);
             waiting = false;
             stage.close();
         });
@@ -110,40 +107,36 @@ class AskYesNo {
     }
 
     public GetResponse getResponse() {
-        showScene();
-        return getResponse;
+        if(Platform.isFxApplicationThread()) {
+            showScene();
+        }
+        else {
+            Platform.runLater(this::showScene);
+            while(answer.inLimbo())
+                sleep();
+        }
+        return answer;
     }
 
     public void showOK() {
-        showScene();
+        Platform.runLater(this::showScene);
     }
 
     private void showScene() {
-        Platform.runLater(() -> {
-            stage = Constants.getStage();
-            stage.setWidth(width);
-            stage.setHeight(height);
-            Scene scene = Constants.getScene(vbox);
-            stage.setScene(scene);
-            stage.setAlwaysOnTop(true);
-            stage.showAndWait();
-        });
-        while(waiting) {
-            sleep(200);
-        }
+        waiting = true;
+        stage = Constants.getStage();
+        stage.setWidth(width);
+        stage.setHeight(height);
+        Scene scene = Constants.getScene(vbox);
+        stage.setScene(scene);
+        stage.setAlwaysOnTop(true);
+        stage.showAndWait();
     }
 
-    public boolean isWaiting() {
-        return waiting;
-    }
 
-    public static boolean waiting() {
-        return waiting;
-    }
-
-    private void sleep(long time) {
+    private void sleep() {
         try {
-            TimeUnit.MILLISECONDS.sleep(time);
+            TimeUnit.MILLISECONDS.sleep(50);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

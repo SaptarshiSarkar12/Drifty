@@ -3,8 +3,12 @@ package Backend;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
+import GUI.Forms.FormLogic;
 import Utils.Environment;
 import Utils.MessageBroker;
+import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +38,7 @@ public class ProgressBarThread extends Thread {
     private List<Long> downloadSpeeds;
     private static float totalDownloadPercent;
     private long totalDownloadedBytes;
+    private DoubleProperty progress;
 
     public ProgressBarThread(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, String fileName, Long totalSize) {
         this.partSizes = partSizes;
@@ -51,6 +56,10 @@ public class ProgressBarThread extends Thread {
         downloadSpeeds = new ArrayList<>(fileOutputStreams.size());
         for (int i = 0; i < fileOutputStreams.size(); i++) {
             charPercents.add((int) (partSizes.get(i) / charAmt));
+        }
+        if(Mode.isGUI()){
+            progress = new SimpleDoubleProperty();
+            FormLogic.bindToProgressbar(progress);
         }
     }
 
@@ -80,6 +89,13 @@ public class ProgressBarThread extends Thread {
             String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
             String bar = a + b;
             totalDownloadPercent = (int) (100 * downloadedBytes / totalDownloadedBytes);
+            if(Mode.isGUI()) {
+                if(progress == null) {
+                    progress = new SimpleDoubleProperty();
+                    FormLogic.bindToProgressbar(progress);
+                }
+                Platform.runLater(() -> progress.setValue((double) downloadedBytes / (double) totalDownloadedBytes));
+            }
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             if ((int) totalDownloadPercent != 100) {

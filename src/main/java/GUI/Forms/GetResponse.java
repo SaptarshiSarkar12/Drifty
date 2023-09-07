@@ -2,31 +2,41 @@ package GUI.Forms;
 
 import java.util.concurrent.TimeUnit;
 
+import static GUI.Forms.GetResponse.State.*;
+
 class GetResponse {
 
-    private boolean answer;
+    enum State {
+        YES, NO, LIMBO
+    }
+
+    private State answer = LIMBO;
 
     public boolean isYes() {
-        while(AskYesNo.waiting()) {
-            sleep(200);
+        while(answer.equals(LIMBO)) {
+            sleep();
         }
-        return answer;
+        return answer.equals(YES);
     }
 
     public boolean isNo() {
-        while(AskYesNo.waiting()) {
-            sleep(200);
+        while(answer.equals(LIMBO)) {
+            sleep();
         }
-        return !answer;
+        return answer.equals(NO);
+    }
+
+    public boolean inLimbo() {
+        return answer.equals(LIMBO);
     }
 
     public void setAnswer(boolean answer) {
-        this.answer = answer;
+        this.answer = answer ? YES : NO;
     }
 
-    private void sleep(long time) {
+    private void sleep() {
         try {
-            TimeUnit.MILLISECONDS.sleep(time);
+            TimeUnit.MILLISECONDS.sleep(200);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
