@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.concurrent.TimeUnit;
@@ -89,6 +90,7 @@ class AskYesNo {
         if (!msg.isEmpty()) {
             message.setText(msg);
             message.setWrapText(true);
+            message.setTextAlignment(TextAlignment.CENTER);
         }
         btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
@@ -113,7 +115,7 @@ class AskYesNo {
         }
 
         hbox.setAlignment(Pos.CENTER);
-        vbox = new VBox(15, message, hbox);
+        vbox = new VBox(30, message, hbox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
     }
@@ -137,9 +139,9 @@ class AskYesNo {
     private void showScene() {
         waiting = true;
         stage = Constants.getStage();
+        Scene scene = Constants.getScene(vbox);
         stage.setWidth(width);
         stage.setHeight(height);
-        Scene scene = Constants.getScene(vbox);
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
