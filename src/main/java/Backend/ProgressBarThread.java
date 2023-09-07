@@ -97,12 +97,7 @@ public class ProgressBarThread extends Thread {
             String downloadSpeedUnit;
             if(Mode.isGUI()) {
                 double totalProgress = (double) downloadedBytes / (double) totalDownloadedBytes;
-                if(totalProgress < .99) {
-                    Platform.runLater(() -> progress.setValue(totalProgress));
-                }
-                else {
-                    Platform.runLater(() -> progress.setValue(0.0));
-                }
+                Platform.runLater(() -> progress.setValue(totalProgress));
             }
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = convertBytes(downloadSpeed);
