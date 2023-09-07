@@ -84,8 +84,10 @@ public class MainGridPane extends GridPane {
         add(btnSave, 1, 13);
         add(btnStart, 3, 13);
 
+/*
         setPrefWidth(Constants.SCREEN_WIDTH * .4);
         setPrefHeight(Constants.SCREEN_HEIGHT * .4);
+*/
         setVgrow(pBar, Priority.ALWAYS);
         setVgrow(lblDirOut, Priority.ALWAYS);
         setVgrow(lblFilenameOut, Priority.ALWAYS);
