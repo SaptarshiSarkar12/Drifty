@@ -16,7 +16,7 @@
         <gluonfx-maven-plugin.version>1.0.19</gluonfx-maven-plugin.version>
         <native-maven-plugin.version>0.9.23</native-maven-plugin.version>
         <guiMain>GUI.Forms.Main</guiMain>
-        <cliMain>CLI.Drifty_CLI</cliMain>
+        <cliMain>CLI.Main</cliMain>
         <package.type/>
         <mac.app.store/>
         <resource-config-file/>

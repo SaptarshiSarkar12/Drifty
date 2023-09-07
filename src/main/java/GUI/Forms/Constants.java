@@ -23,40 +23,24 @@ class Constants {
     public static final double SCREEN_WIDTH = SCREEN_SIZE.getWidth();
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
     /*
-    Graphic Files
+    Graphics Files
      */
     public static final URL EXTENSIONS_JSON = Constants.class.getResource("/GUI/BinaryExtensions.json");
     public static final URL DRIFTY_MAIN_PNG = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
-    public static final URL BATCH_UP_PNG = Constants.class.getResource("/GUI/Buttons/Batch/BatchUp.png");
-    public static final URL BATCH_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Batch/BatchDown.png");
-    public static final URL DOWNLOAD_UP_PNG = Constants.class.getResource("/GUI/Buttons/Download/DownloadUp.png");
-    public static final URL DOWNLOAD_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Download/DownloadDown.png");
-    public static final URL CLOSE_UP_PNG = Constants.class.getResource("/GUI/Buttons/Close/CloseUp.png");
-    public static final URL CLOSE_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Close/CloseDown.png");
     public static final URL SAVE_UP_PNG = Constants.class.getResource("/GUI/Buttons/Save/SaveUp.png");
     public static final URL SAVE_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Save/SaveDown.png");
-    public static final URL BACK_UP_PNG = Constants.class.getResource("/GUI/Buttons/Back/BackUp.png");
-    public static final URL BACK_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Back/BackDown.png");
     public static final URL START_UP_PNG = Constants.class.getResource("/GUI/Buttons/Start/StartUp.png");
     public static final URL START_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Start/StartDown.png");
-    public static final URL COPY_UP_PNG = Constants.class.getResource("/GUI/Buttons/Copy/CopyUp.png");
-    public static final URL COPY_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Copy/CopyDown.png");
-    public static final URL UP_UP_PNG = Constants.class.getResource("/GUI/Buttons/UpDown/UpUp.png");
-    public static final URL UP_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/UpDown/UpDown.png");
-    public static final URL DOWN_UP_PNG = Constants.class.getResource("/GUI/Buttons/UpDown/DownUp.png");
-    public static final URL DOWN_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/UpDown/DownDown.png");
     public static final URL LINK_PNG = Constants.class.getResource("/GUI/Labels/Link.png");
     public static final URL AUTO_PASTE_PNG = Constants.class.getResource("/GUI/Labels/AutoPaste.png");
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/GUI/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/GUI/Labels/Filename.png");
     public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/Icon1024.png");
-    public static final URL ICON_512_PNG = Constants.class.getResource("/GUI/Icons/Icon512.png");
 
     /*
     Stylesheets
      */
     public static final URL SCENE_CSS = Constants.class.getResource("/GUI/CSS/Scene.css");
-    public static final URL TABS_CSS = Constants.class.getResource("/GUI/CSS/Tabs.css");
     public static final URL LIST_VIEW_CSS = Constants.class.getResource("/GUI/CSS/ListView.css");
     public static final URL TEXT_FIELD_CSS = Constants.class.getResource("/GUI/CSS/TextField.css");
     public static final URL CONTEXT_MENU_CSS = Constants.class.getResource("/GUI/CSS/ContextMenu.css");
@@ -80,29 +64,10 @@ class Constants {
     public static final Image IMG_DIR_LABEL = new Image(DIRECTORY_PNG.toExternalForm());
     public static final Image IMG_FILENAME_LABEL = new Image(FILENAME_PNG.toExternalForm());
     public static final Image IMG_AUTO_PASTE_LABEL = new Image(AUTO_PASTE_PNG.toExternalForm());
-    public static final Image IMG_UP_UP = new Image(UP_UP_PNG.toExternalForm());
-    public static final Image IMG_UP_DOWN = new Image(UP_DOWN_PNG.toExternalForm());
-    public static final Image IMG_DOWN_UP = new Image(DOWN_UP_PNG.toExternalForm());
-    public static final Image IMG_DOWN_DOWN = new Image(DOWN_DOWN_PNG.toExternalForm());
-    public static final Image IMG_COPY_UP = new Image(COPY_UP_PNG.toExternalForm());
-    public static final Image IMG_COPY_DOWN = new Image(COPY_DOWN_PNG.toExternalForm());
-    public static final Image IMG_DOWNLOAD_UP = new Image(DOWNLOAD_UP_PNG.toExternalForm());
-    public static final Image IMG_DOWNLOAD_DOWN = new Image(DOWNLOAD_DOWN_PNG.toExternalForm());
-    public static final Image IMG_BATCH_UP = new Image(BATCH_UP_PNG.toExternalForm());
-    public static final Image IMG_BATCH_DOWN = new Image(BATCH_DOWN_PNG.toExternalForm());
-    public static final Image IMG_BACK_UP = new Image(BACK_UP_PNG.toExternalForm());
-    public static final Image IMG_BACK_DOWN = new Image(BACK_DOWN_PNG.toExternalForm());
     public static final Image IMG_START_UP = new Image(START_UP_PNG.toExternalForm());
     public static final Image IMG_START_DOWN = new Image(START_DOWN_PNG.toExternalForm());
     public static final Image IMG_SAVE_UP = new Image(SAVE_UP_PNG.toExternalForm());
     public static final Image IMG_SAVE_DOWN = new Image(SAVE_DOWN_PNG.toExternalForm());
-
-    /*
-    Time Constants
-     */
-    public static final long SECOND = 1000;
-    public static final long MINUTE = SECOND * 60;
-    public static final long HOUR = MINUTE * 60;
 
     /*
     Methods for obtaining consistent Stages and Scenes
@@ -129,7 +94,6 @@ class Constants {
         });
         stage.setResizable(true);
         stage.setTitle("Drifty GUI");
-
         return stage;
     }
 
