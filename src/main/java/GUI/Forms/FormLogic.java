@@ -293,7 +293,7 @@ public class FormLogic {
                                 form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
                             });
                             thread.start();
-                            while (thread.getState().equals(Thread.State.RUNNABLE)) {
+                            while (!thread.getState().equals(Thread.State.TERMINATED)) {
                                 sleep(1000);
                             }
                             Platform.runLater(() -> {
@@ -304,7 +304,7 @@ public class FormLogic {
                                 else {
                                     Thread lastChance = new Thread(new FileDownloader(job));
                                     lastChance.start();
-                                    while (lastChance.getState().equals(Thread.State.RUNNABLE)) {
+                                    while (!lastChance.getState().equals(Thread.State.TERMINATED)) {
                                         sleep(500);
                                     }
                                     removeJob(job);
@@ -315,7 +315,7 @@ public class FormLogic {
                         case OTHER -> {
                             Thread download = new Thread(new FileDownloader(job));
                             download.start();
-                            while (download.getState().equals(Thread.State.RUNNABLE)) {
+                            while (!download.getState().equals(Thread.State.TERMINATED)) {
                                 sleep(100);
                             }
                             removeJob(job);
@@ -458,7 +458,7 @@ public class FormLogic {
         CheckFile checkFile = new CheckFile(downloadFolder, filename);
         Thread thread = new Thread(checkFile);
         thread.start();
-        while (thread.getState().equals(Thread.State.RUNNABLE)) {
+        while (!thread.getState().equals(Thread.State.TERMINATED)) {
             sleep(250);
         }
         return checkFile.fileFound();
@@ -630,7 +630,7 @@ public class FormLogic {
                     CheckFile checkFile = new CheckFile(downloadPath, job.getFilename());
                     Thread thread = new Thread(checkFile);
                     thread.start();
-                    while (thread.getState().equals(Thread.State.RUNNABLE)) {
+                    while (!thread.getState().equals(Thread.State.TERMINATED)) {
                         sleep(100);
                     }
                     return checkFile.fileFound();
