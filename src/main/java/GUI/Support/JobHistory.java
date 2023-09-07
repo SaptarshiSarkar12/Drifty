@@ -11,7 +11,7 @@ public class JobHistory {
 
     public JobHistory() {
         this.jobList = new ConcurrentLinkedDeque<>();
-        this.jobList.add(new Job("Template","JobHistory","Pattern"));
+        this.jobList.add(new Job("Template","JobHistory","Pattern", false));
     }
 
     private ConcurrentLinkedDeque<Job> jobList;
@@ -28,7 +28,7 @@ public class JobHistory {
             String link = job.getLink();
             String dir = job.getDir();
             String filename = job.getFilename();
-            list.addLast(new Job(link, dir, filename));
+            list.addLast(new Job(link, dir, filename, false));
             Environment.getMessageBroker().sendMessage("Link: " + link + "; Dir: " + dir + "; Filename: " + filename, MessageType.INFO, MessageCategory.INITIALIZATION);
         }
         return list;
