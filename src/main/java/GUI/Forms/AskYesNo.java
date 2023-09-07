@@ -60,6 +60,7 @@ class AskYesNo {
         }
         width = width + (maxChar * 5);
         height = height + (lines.length * 30);
+/*
         int screenHeight = (int) Constants.SCREEN_HEIGHT;  // E.g.: 768
         int screenWidth = (int) Constants.SCREEN_WIDTH;    // E.g.: 1366
         if (width > screenWidth) {
@@ -68,6 +69,7 @@ class AskYesNo {
         if (height > screenHeight) {
             height = screenHeight * .9;
         }
+*/
         createControls();
     }
 
