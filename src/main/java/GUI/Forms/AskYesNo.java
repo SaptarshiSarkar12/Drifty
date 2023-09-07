@@ -72,7 +72,7 @@ class AskYesNo {
 
     private Button newButton(String text, EventHandler<ActionEvent> event) {
         Button button = new Button(text);
-        button.setFont(Constants.getMonaco(16));
+        button.setFont(Constants.getMonaco(17));
         button.setMinWidth(80);
         button.setMaxWidth(80);
         button.setPrefWidth(80);
