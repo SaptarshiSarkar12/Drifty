@@ -56,10 +56,9 @@ public class FormLogic {
     public static MainGridPane form;
     private static final MessageBroker messageBroker = Environment.getMessageBroker();
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
-    private static final BooleanProperty downloadInProgress = new SimpleBooleanProperty(false);
+    private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
-    private static boolean processingBatch = false;
     private static boolean linkValid = false;
     private final String nl = System.lineSeparator();
     private final FileExtensions fileExtensions;
@@ -93,8 +92,8 @@ public class FormLogic {
         setDir(folders.getDownloadFolder());
         directoryExists.setValue(new File(form.tfDir.getText()).exists());
 
-        BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(downloadInProgress).or(directoryExists.not()).or(verifyingLinks);
-        BooleanBinding disableInputs = downloadInProgress.or(verifyingLinks);
+        BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(processingBatch).or(directoryExists.not()).or(verifyingLinks);
+        BooleanBinding disableInputs = processingBatch.or(verifyingLinks);
         BooleanBinding hasText = form.tfLink.textProperty().isEmpty().not().and(form.tfDir.textProperty().isEmpty().not().and(form.tfFilename.textProperty().isEmpty().not()));
 
         form.btnSave.visibleProperty().bind(updatingBatch);
@@ -163,9 +162,9 @@ public class FormLogic {
             updatingBatch.setValue(false);
         }).start());
         form.btnStart.setOnAction(e -> new Thread(() -> {
-            if (processingBatch)
+            if (processingBatch.getValue().equals(true))
                 return;
-            if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
+            if (!form.listView.getItems().isEmpty() && processingBatch.getValue().equals(false)) {
                 clearLink();
                 clearFilename();
                 clearFilenameOutput();
@@ -255,7 +254,7 @@ public class FormLogic {
         shown in the GUI
          */
         return () -> {
-            processingBatch = true;
+            processingBatch.setValue(true);
             updatingBatch.setValue(false);
             form.lblDownloadInfo.setTextFill(GREEN);
             checkFiles();
@@ -281,7 +280,6 @@ public class FormLogic {
                         clearDownloadOutput();
                         continue;
                     }
-                    downloadInProgress.setValue(true);
                     setLink(job.getLink());
                     setDir(job.getDir());
                     setFilename(job.getFilename());
@@ -325,13 +323,16 @@ public class FormLogic {
                         }
                     }
                     sleep(3000);
-                    downloadInProgress.setValue(false);
                 }
             }
             clearLink();
             clearFilename();
             clearFilenameOutput();
-            processingBatch = false;
+            processingBatch.setValue(false);
+            Platform.runLater(() -> {
+                form.pBar.progressProperty().unbind();
+                form.pBar.setProgress(0.0);
+            });
         };
     }
 
@@ -353,7 +354,7 @@ public class FormLogic {
                 return;
             }
             if (!linkInJobList(presentLink)) {
-                if (downloadInProgress.getValue().equals(false) && updatingBatch.getValue().equals(false) && !processingBatch) {
+                if (processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
                     messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
                     linkValid = Utility.isURLValid(presentLink);
                     if (!linkValid) {
