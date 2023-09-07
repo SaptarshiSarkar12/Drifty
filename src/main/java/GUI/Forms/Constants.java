@@ -25,7 +25,6 @@ class Constants {
     /*
     Graphics Files
      */
-    public static final URL EXTENSIONS_JSON = Constants.class.getResource("/GUI/BinaryExtensions.json");
     public static final URL DRIFTY_MAIN_PNG = Constants.class.getResource("/GUI/Backgrounds/DriftyMain.png");
     public static final URL SAVE_UP_PNG = Constants.class.getResource("/GUI/Buttons/Save/SaveUp.png");
     public static final URL SAVE_DOWN_PNG = Constants.class.getResource("/GUI/Buttons/Save/SaveDown.png");

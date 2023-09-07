@@ -3,8 +3,6 @@
   "includes":[{
     "pattern":"GUI/Backgrounds/DriftyMain.png"
   }, {
-    "pattern":"GUI/BinaryExtensions.json"
-  }, {
     "pattern":"GUI/Buttons/Save/SaveDown.png"
   }, {
     "pattern":"GUI/Buttons/Save/SaveUp.png"
@@ -59,12 +57,12 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":[""]
+    "locales":["", "und"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":[""]
+    "locales":["", "und"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":[""]
+    "locales":["", "und"]
   }]
 }

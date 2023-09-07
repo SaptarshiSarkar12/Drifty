@@ -1,10 +1,7 @@
 package GUI.Forms;
 
 import Backend.FileDownloader;
-import Enums.Colors;
-import Enums.Domain;
-import Enums.MessageCategory;
-import Enums.MessageType;
+import Enums.*;
 import GUI.Support.FileExtensions;
 import GUI.Support.Folders;
 import GUI.Support.Job;
@@ -19,6 +16,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
@@ -61,7 +59,6 @@ public class FormLogic {
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
     private static boolean linkValid = false;
     private final String nl = System.lineSeparator();
-    private final FileExtensions fileExtensions;
     private ConcurrentLinkedDeque<Job> jobList;
     private final ConcurrentLinkedDeque<Job> jobHistoryList;
     private Folders folders;
@@ -74,7 +71,6 @@ public class FormLogic {
         folders = AppSettings.get.folders();
         jobList = AppSettings.get.jobs().jobList();
         jobHistoryList = AppSettings.get.jobHistory().getJobList();
-        fileExtensions = AppSettings.get.getFileExtensions(EXTENSIONS_JSON);
     }
 
     /*
@@ -206,14 +202,14 @@ public class FormLogic {
             String userText = form.tfLink.getText();
             if (userText.equals(first)) {
                 if (userText.contains("  ") || userText.contains(System.lineSeparator())) {
+                    messageBroker.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
                     clearLink();
                     return;
                 }
                 String[] links;
                 if (userText.contains(" ")) {
                     links = userText.trim().split(" ");
-                }
-                else {
+                } else {
                     links = new String[]{userText};
                 }
                 verifyingLinks.setValue(true);
@@ -287,9 +283,9 @@ public class FormLogic {
                     setLink(job.getLink());
                     setDir(job.getDir());
                     setFilename(job.getFilename());
-                    Domain domain = Domain.getDomain(job.getLink(), fileExtensions);
+                    Domain domain = Domain.getDomain(job.getLink());
                     switch (domain) {
-                        case YOUTUBE, INSTAGRAM, BINARY_FILE -> {
+                        case YOUTUBE, INSTAGRAM -> {
                             Task<Integer> task = new DownloadFile(job, domain);
                             Thread thread = new Thread(task);
                             Platform.runLater(() -> {
@@ -304,9 +300,8 @@ public class FormLogic {
                                 if (((Worker<Integer>) task).valueProperty().get() == 0) {
                                     removeJob(job);
                                     addJobHistory(job);
-                                }
-                                else {
-                                    Thread lastChance = new Thread(new FileDownloader(job));
+                                } else {
+                                    Thread lastChance = new Thread(new FileDownloader(job.getLink(), job.getFilename(), job.getDir()));
                                     lastChance.start();
                                     while (!lastChance.getState().equals(Thread.State.TERMINATED)) {
                                         sleep(500);
@@ -317,16 +312,22 @@ public class FormLogic {
                             });
                         }
                         case OTHER -> {
-                            Thread download = new Thread(new FileDownloader(job));
+                            Thread download = new Thread(new FileDownloader(job.getLink(), job.getFilename(), job.getDir()));
+                            SimpleDoubleProperty progress = new SimpleDoubleProperty((float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE));
+                            Platform.runLater(() -> {
+                                FormLogic.bindToProgressbar(progress);
+                            });
                             download.start();
                             while (!download.getState().equals(Thread.State.TERMINATED)) {
+                                Platform.runLater(() -> {
+                                    progress.setValue((float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE) / 100);
+                                });
                                 sleep(100);
                             }
                             removeJob(job);
                             addJobHistory(job);
                         }
                     }
-                    sleep(3000);
                 }
             }
             clearLink();
@@ -361,10 +362,7 @@ public class FormLogic {
                 if (processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
                     messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
                     linkValid = Utility.isURLValid(presentLink);
-                    if (!linkValid) {
-                        messageBroker.sendMessage("Link is not a valid URL! Check for spaces.", MessageType.ERROR, MessageCategory.LINK);
-                    }
-                    else {
+                    if (linkValid) {
                         Job job = hasHistory(presentLink);
                         if (job != null) {
                             messageBroker.sendMessage("Link exists in past activity: \"" + job.getLink() + "\"", MessageType.WARN, MessageCategory.LINK);
