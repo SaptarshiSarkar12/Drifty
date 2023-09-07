@@ -152,8 +152,7 @@ class AskYesNo {
         double halfHeight = (height / 2) + 35;
         double newX = halfScreenWidth - halfWidth;
         double newY = halfScreenHeight - halfHeight;
-        stage.setX(newX);
-        stage.setY(newY);
+        stage.centerOnScreen();
         stage.setOnCloseRequest(e->{
             answer.setAnswer(false);
             stage.close();
