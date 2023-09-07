@@ -130,6 +130,7 @@ class AskYesNo {
         Scene scene = Constants.getScene(vbox);
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
+        stage.centerOnScreen();
         stage.showAndWait();
     }
 
