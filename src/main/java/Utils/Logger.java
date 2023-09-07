@@ -18,10 +18,10 @@ import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
 public class Logger {
     private static Logger CLILoggerInstance;
     private static Logger GUILoggerInstance;
-    Path filePath;
+    private final Path filePath;
     private final DateFormat dateFormat;
     boolean isLogEmpty;
-    Calendar calendarObject = Calendar.getInstance();
+    private final Calendar calendarObject = Calendar.getInstance();
     private final String logFilename;
 
     private Logger() {

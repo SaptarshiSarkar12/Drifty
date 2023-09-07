@@ -18,9 +18,9 @@ import javafx.scene.text.Font;
 import static GUI.Forms.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
-    public ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
-    public ProgressBar pBar = pBar();
-    public ListView listView = listView();
+    public final ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
+    public final ProgressBar pBar = pBar();
+    public final ListView listView = listView();
     public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
     public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);

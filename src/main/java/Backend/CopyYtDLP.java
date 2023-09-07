@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class CopyYtDLP {
-    static MessageBroker messageBroker = Environment.getMessageBroker();
+    static final MessageBroker messageBroker = Environment.getMessageBroker();
 
     public boolean copyYtDLP(InputStream inputStream) {
         Path ytDLPPath = Program.getYtDLPFullPath();

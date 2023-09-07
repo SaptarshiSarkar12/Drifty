@@ -17,7 +17,7 @@ import java.util.List;
  * subdirectories, which is used to look for duplicate files.
  */
 public class CheckFile implements Runnable {
-    MessageBroker messageBroker = new MessageBroker();
+    private final MessageBroker messageBroker = new MessageBroker();
     private final List<String> searchList;
     private final Path rootPath;
     public static boolean stopWalk = false;

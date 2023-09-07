@@ -12,8 +12,8 @@ import static Enums.MessageCategory.LOG;
 import static Enums.Colors.*;
 
 public class MessageBroker {
-    Logger logger;
-    PrintStream output = new PrintStream(System.out);
+    private final Logger logger;
+    private PrintStream output = new PrintStream(System.out);
 
     public MessageBroker(PrintStream consoleOutput) {
         output = consoleOutput;
