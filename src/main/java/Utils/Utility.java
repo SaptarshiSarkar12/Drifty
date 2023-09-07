@@ -238,7 +238,7 @@ public final class Utility {
             driftyJsonFolder.mkdir();
             linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             linkThread.start();
-            while ((linkThread.getState().equals(Thread.State.RUNNABLE) || linkThread.getState().equals(Thread.State.TIMED_WAITING)) && !linkThread.isInterrupted()) {
+            while (!linkThread.getState().equals(Thread.State.TERMINATED) && !linkThread.isInterrupted()) {
                 sleep(100);
                 interrupted = linkThread.isInterrupted();
             }
