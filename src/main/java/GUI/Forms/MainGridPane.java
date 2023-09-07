@@ -197,6 +197,7 @@ public class MainGridPane extends GridPane {
         button.setOnMousePressed(e->button.setGraphic(imageViewDn));
         button.setOnMouseReleased(e->button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);
+        button.getStyleClass().add("glassButton");
         return button;
     }
 }
