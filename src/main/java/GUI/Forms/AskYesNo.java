@@ -1,6 +1,8 @@
 package GUI.Forms;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -68,6 +70,19 @@ class AskYesNo {
         createControls();
     }
 
+    private Button newButton(String text, EventHandler<ActionEvent> event) {
+        Button button = new Button(text);
+        button.setFont(Constants.getMonaco(16));
+        button.setMinWidth(80);
+        button.setMaxWidth(80);
+        button.setPrefWidth(80);
+        button.setMinHeight(35);
+        button.setMaxHeight(35);
+        button.setPrefHeight(35);
+        button.setOnAction(event);
+        return button;
+    }
+
     private void createControls() {
         message = new Label("Are you sure?");
         message.setFont(Constants.getMonaco(17));
@@ -75,9 +90,20 @@ class AskYesNo {
             message.setText(msg);
             message.setWrapText(true);
         }
-        btnYes = new Button("Yes");
-        btnNo = new Button("No");
-        btnOk = new Button("OK");
+        btnYes = newButton("Yes", e -> {
+            answer.setAnswer(true);
+            waiting = false;
+            stage.close();
+        });
+        btnNo = newButton("No", e -> {
+            answer.setAnswer(false);
+            waiting = false;
+            stage.close();
+        });
+        btnOk = newButton("OK", e -> {
+            waiting = false;
+            stage.close();
+        });
         HBox hbox;
         if (okOnly) {
             hbox = new HBox(20, btnOk);
@@ -90,20 +116,6 @@ class AskYesNo {
         vbox = new VBox(15, message, hbox);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
-        btnYes.setOnAction(e -> {
-            answer.setAnswer(true);
-            waiting = false;
-            stage.close();
-        });
-        btnNo.setOnAction(e -> {
-            answer.setAnswer(false);
-            waiting = false;
-            stage.close();
-        });
-        btnOk.setOnAction(e -> {
-            waiting = false;
-            stage.close();
-        });
     }
 
     public GetResponse getResponse() {
@@ -131,6 +143,10 @@ class AskYesNo {
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
+        stage.setOnCloseRequest(e->{
+            answer.setAnswer(false);
+            stage.close();
+        });
         stage.showAndWait();
     }
 
