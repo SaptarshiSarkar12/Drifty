@@ -20,7 +20,7 @@ import static Utils.Utility.*;
  *
  * @version 2.0.0
  */
-public class Drifty_CLI {
+public class Main {
     public static final Logger logger = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static boolean isYoutubeURL;
