@@ -175,7 +175,32 @@ public class FormLogic {
         }).start());
         form.tfDir.setOnAction(e -> updateBatch());
         form.tfFilename.setOnAction(e -> updateBatch());
-        form.tfLink.setOnKeyTyped(e -> new Thread(() -> {
+        form.tfLink.setOnKeyTyped(e -> processLink());
+        form.listView.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
+                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                if (job != null) {
+                    updatingBatch.setValue(true);
+                    selectedJob = job;
+                    setLink(job.getLink());
+                    setDir(job.getDir());
+                    setFilename(job.getFilename());
+                }
+            }
+        });
+        form.listView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE) {
+                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                if (job != null) {
+                    removeJob(job);
+                    clearControls();
+                }
+            }
+        });
+    }
+
+    private void processLink() {
+        new Thread(() -> {
             String first = form.tfLink.getText();
             sleep(1000);
             String userText = form.tfLink.getText();
@@ -203,28 +228,7 @@ public class FormLogic {
                 clearLink();
                 clearFilename();
             }
-        }).start());
-        form.listView.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
-                if (job != null) {
-                    updatingBatch.setValue(true);
-                    selectedJob = job;
-                    setLink(job.getLink());
-                    setDir(job.getDir());
-                    setFilename(job.getFilename());
-                }
-            }
-        });
-        form.listView.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.DELETE) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
-                if (job != null) {
-                    removeJob(job);
-                    clearControls();
-                }
-            }
-        });
+        }).start();
     }
 
     /*
@@ -750,6 +754,11 @@ public class FormLogic {
          */
         AppSettings.clear.jobHistory();
         INSTANCE.jobHistoryList.clear();
+    }
+
+    public static void pasteFromClipboard(String text) {
+        INSTANCE.setLink(text);
+        INSTANCE.processLink();
     }
 
     /*

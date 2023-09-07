@@ -72,7 +72,7 @@ public class Main extends Application {
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if(Utility.isURL(clipboardText))
-                        FormLogic.form.tfLink.setText(clipboardText);
+                        FormLogic.pasteFromClipboard(clipboardText);
                 }
             }
         }));
