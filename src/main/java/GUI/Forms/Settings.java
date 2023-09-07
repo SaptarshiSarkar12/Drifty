@@ -1,9 +1,6 @@
 package GUI.Forms;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Preferences.AppSettings;
-import Utils.Environment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,6 +23,11 @@ public class Settings {
     private CheckBox cbPaste;
 
     public void show() {
+        AskYesNo ask = new AskYesNo("Settings coming soon", true);
+        ask.showOK();
+/*
+        PLEASE DO NOT DELETE!
+
         createControls();
         setControlProperties();
         stage = Constants.getStage();
@@ -37,6 +39,7 @@ public class Settings {
         scene = Constants.getScene(gp);
         stage.setScene(scene);
         stage.show();
+*/
     }
 
     private void createControls() {
