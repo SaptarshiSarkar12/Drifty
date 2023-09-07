@@ -145,6 +145,7 @@ class AskYesNo {
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
+        stage.setResizable(false);
         stage.setOnCloseRequest(e->{
             answer.setAnswer(false);
             stage.close();
