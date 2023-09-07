@@ -11,7 +11,6 @@ public class JobHistory {
 
     public JobHistory() {
         this.jobList = new ConcurrentLinkedDeque<>();
-        this.jobList.add(new Job("Template","JobHistory","Pattern", false));
     }
 
     private ConcurrentLinkedDeque<Job> jobList;
