@@ -1,6 +1,52 @@
 {
   "resources":{
   "includes":[{
+    "pattern":"Drifty:\\QGUI/Backgrounds/DriftyMain.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/BinaryExtensions.json\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Buttons/Save/SaveDown.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Buttons/Save/SaveUp.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Buttons/Start/StartDown.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Buttons/Start/StartUp.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/Button.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/CheckBox.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/ContextMenu.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/Label.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/ListView.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/Menu.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/ProgressBar.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/Scene.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/ScrollPane.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/TextField.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/CSS/VBox.css\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Fonts/Monaco.ttf\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Icons/Icon1024.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Labels/AutoPaste.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Labels/Directory.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Labels/Filename.png\\E"
+  }, {
+    "pattern":"Drifty:\\QGUI/Labels/Link.png\\E"
+  }, {
     "pattern":"\\QGUI/Backgrounds/DriftyBatch.png\\E"
   }, {
     "pattern":"\\QGUI/Backgrounds/DriftyMain.png\\E"
@@ -81,6 +127,8 @@
   }, {
     "pattern":"\\QGUI/Labels/Link.png\\E"
   }, {
+    "pattern":"\\Qyt-dlp\\E"
+  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
@@ -95,12 +143,12 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":["und"]
+    "locales":["", "und"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":["und"]
+    "locales":["", "und"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":["und"]
+    "locales":["", "und"]
   }]
 }
