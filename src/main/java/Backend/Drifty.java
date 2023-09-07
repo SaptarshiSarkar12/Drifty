@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class Drifty {
-    public static String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
+    public static final String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
     private static final MessageBroker messageBroker = Environment.getMessageBroker();
     private static String downloadsFolder = null;
     private static String url;

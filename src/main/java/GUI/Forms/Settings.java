@@ -57,10 +57,6 @@ public class Settings {
         cbPaste.selectedProperty().addListener((observable, oldValue, newValue) -> AppSettings.set.alwaysAutoPaste(newValue));
     }
 
-    private void setToolTips() {
-
-    }
-
     private CheckBox checkBox(Item item) {
         CheckBox cb = new CheckBox();
         switch (item) {

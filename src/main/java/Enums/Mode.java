@@ -6,7 +6,6 @@ package Enums;
 public enum Mode {
     CLI, GUI;
     private static Mode mode = Mode.CLI;
-    private static boolean isGUILoaded = false;
     private static boolean developer = false;
 
     public static void setDev() {
