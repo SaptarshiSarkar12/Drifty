@@ -121,10 +121,8 @@ public class Main extends Application {
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
-        MenuItem settings = new MenuItem("Settings");
         fullScreen.setOnAction(e -> Main.toggleFullScreen());
-        settings.setOnAction(e -> new Settings().show());
-        menu.getItems().setAll(fullScreen, settings);
+        menu.getItems().setAll(fullScreen);
         return menu;
     }
 
@@ -147,13 +145,15 @@ public class Main extends Application {
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Job History");
+        MenuItem settings = new MenuItem("Settings");
+        settings.setOnAction(e -> new Settings().show());
         wipeHistory.setOnAction(e->{
             AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download job history?\n(This will NOT delete any downloaded files)");
             if(ask.getResponse().isYes()) {
                 FormLogic.clearJobHistory();
             }
         });
-        menu.getItems().add(wipeHistory);
+        menu.getItems().addAll(wipeHistory, settings);
         return menu;
     }
 
