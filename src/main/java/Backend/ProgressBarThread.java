@@ -83,6 +83,10 @@ public class ProgressBarThread extends Thread {
     }
 
     private String generateProgressBar(String spinner) {
+        if(progress == null && Mode.isGUI()) {
+            progress = new SimpleDoubleProperty();
+            FormLogic.bindToProgressbar(progress);
+        }
         if (!isMultiThreadedDownloading) {
             float filled = downloadedBytes / charPercent;
             String a = new String(new char[(int) filled]).replace("\0", "=");
@@ -91,6 +95,15 @@ public class ProgressBarThread extends Thread {
             totalDownloadPercent = (int) (100 * downloadedBytes / totalDownloadedBytes);
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
+            if(Mode.isGUI()) {
+                double totalProgress = (double) downloadedBytes / (double) totalDownloadedBytes;
+                if(totalProgress < .99) {
+                    Platform.runLater(() -> progress.setValue(totalProgress));
+                }
+                else {
+                    Platform.runLater(() -> progress.setValue(0.0));
+                }
+            }
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = convertBytes(downloadSpeed);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
@@ -148,18 +161,6 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedUnit = "bytes";
             }
             result.append(" [").append(bar).append("] ").append(String.format("%.2f", downloadSpeedWithoutUnit)).append(" ").append(downloadSpeedUnit).append("/s");
-            if(Mode.isGUI()) {
-                if(progress == null) {
-                    progress = new SimpleDoubleProperty();
-                    FormLogic.bindToProgressbar(progress);
-                }
-                if(totalDownloadPercent <= 100) {
-                    Platform.runLater(() -> progress.setValue((double) downloadedBytes / (double) totalDownloadedBytes));
-                }
-                else {
-                    Platform.runLater(() -> progress.setValue(0.0));
-                }
-            }
             return result.toString();
         }
     }
