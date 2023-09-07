@@ -1,6 +1,5 @@
 module Drifty {
     requires org.apache.commons.text;
-    requires org.apache.commons.lang3;
     requires org.apache.commons.io;
     requires com.google.gson;
     requires org.hildan.fxgson;
@@ -13,6 +12,7 @@ module Drifty {
 
     exports GUI.Forms to javafx.graphics;
     exports GUI.Support;
+    exports Enums;
 
     opens GUI.Support to com.google.gson;
     opens GUI.Forms to com.google.gson;

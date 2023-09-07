@@ -46,7 +46,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Drifty");
         createScene();
@@ -56,7 +56,7 @@ public class Main extends Application {
     private void createScene() {
         AnchorPane ap = new AnchorPane();
         MainGridPane gridPane = new MainGridPane();
-        MenuBar menu = menuBar(getMenuItemsOfMenu(), getWindowMenu(), getHelpMenu());
+        MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
         placeControl(gridPane, 40, 40, 40, 40);
@@ -144,6 +144,19 @@ public class Main extends Application {
         return menu;
     }
 
+    private Menu getEditMenu() {
+        Menu menu = new Menu("Edit");
+        MenuItem wipeHistory = new MenuItem("Clear Job History");
+        wipeHistory.setOnAction(e->{
+            AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download job history?\n(This will NOT delete any downloaded files)");
+            if(ask.getResponse().isYes()) {
+                FormLogic.clearJobHistory();
+            }
+        });
+        menu.getItems().add(wipeHistory);
+        return menu;
+    }
+
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
@@ -151,7 +164,7 @@ public class Main extends Application {
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            FormLogic.bumpFolders();
+            FormLogic.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");

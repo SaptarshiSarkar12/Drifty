@@ -3,6 +3,7 @@ package GUI.Forms;
 import Enums.Domain;
 import Enums.Format;
 import Enums.Program;
+import GUI.Support.Job;
 import Utils.Utility;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -33,11 +34,11 @@ public class DownloadFile extends Task<Integer> {
     private final String dir;
     private final Domain domain;
 
-    public DownloadFile(String link, String filename, String dir) {
-        this.link = link;
-        this.filename = filename;
-        this.dir = dir;
-        this.domain = Domain.getDomain(link);
+    public DownloadFile(Job job, Domain domain) {
+        this.link = job.getLink();
+        this.filename = job.getFilename();
+        this.dir = job.getDir();
+        this.domain = domain;
         setProperties();
     }
 
@@ -51,10 +52,14 @@ public class DownloadFile extends Task<Integer> {
         String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
         String[] fullCommand = switch (domain) {
             case YOUTUBE, INSTAGRAM -> (Format.isValid(ext)) ?
-                    new String[]{command, "--quiet", "--progress", "-P", dir, link, "-f", ext, "-o", outputFileName} :
-                    new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
-            case OTHER -> new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+                    new String[]{command, "--quiet", "--progress", "--no-abort-on-error", "-P", dir, link, "-f", ext, "-o", outputFileName} :
+                    new String[]{command, "--quiet", "--progress", "--no-abort-on-error", "-P", dir, link, "-o", outputFileName};
+            case BINARY_FILE -> new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
+            case OTHER -> new String[]{""};
         };
+        if(fullCommand[0].isEmpty()) {
+            throw new RuntimeException("Non youtube link sent in error");
+        }
         ProcessBuilder pb = new ProcessBuilder(fullCommand);
         StringBuilder sb = new StringBuilder();
         for (String arg : pb.command()) sb.append(arg).append(" ");

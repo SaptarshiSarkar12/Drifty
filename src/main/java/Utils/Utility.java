@@ -31,7 +31,7 @@ import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
-    static MessageBroker messageBroker = Environment.getMessageBroker();
+    private static final MessageBroker messageBroker = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
     private static Thread linkThread;
     private static boolean interrupted;
@@ -56,6 +56,10 @@ public final class Utility {
     public static boolean isInstagramLink(String url) {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/p/([^/?#&]+)).*";
         return url.matches(pattern);
+    }
+
+    public static boolean isExtractableLink(String link) {
+        return isYoutubeLink(link) || isInstagramLink(link);
     }
 
     public static boolean isURLValid(String link) {

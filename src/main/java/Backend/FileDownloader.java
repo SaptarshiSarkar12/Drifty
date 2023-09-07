@@ -3,6 +3,7 @@ package Backend;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Program;
+import GUI.Support.Job;
 import Utils.Environment;
 import Utils.MessageBroker;
 
@@ -34,6 +35,7 @@ public class FileDownloader implements Runnable {
     private static URL url;
     private static String yt_dlpProgramName;
     private static boolean supportsMultithreading;
+    private static boolean success = false;
 
     public FileDownloader(String link, String fileName, String dir) {
         FileDownloader.link = link;
@@ -41,10 +43,24 @@ public class FileDownloader implements Runnable {
         FileDownloader.dir = dir;
         FileDownloader.supportsMultithreading = false;
         setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
+        success = false;
+    }
+
+    public FileDownloader(Job job) {
+        FileDownloader.link = job.getLink();
+        FileDownloader.fileName = job.getFilename();
+        FileDownloader.dir = job.getDir();
+        FileDownloader.supportsMultithreading = false;
+        setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
+        success = false;
     }
 
     public static String getDir() {
         return dir;
+    }
+
+    public boolean DownloadSucceeded() {
+        return success;
     }
 
     private static void downloadFile() {
@@ -97,6 +113,7 @@ public class FileDownloader implements Runnable {
                     messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
                     progressBarThread.setDownloading(false);
+                    success = true;
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);

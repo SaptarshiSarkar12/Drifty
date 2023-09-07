@@ -1,5 +1,10 @@
 package GUI.Support;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job
  */
@@ -12,6 +17,12 @@ public class Job {
         this.link = link;
         this.dir = dir;
         this.filename = filename;
+    }
+
+    public Job(String link, String dir) {
+        this.link = link;
+        this.dir = dir;
+        this.filename = getName();
     }
 
     public Job(Job job) {
@@ -46,6 +57,22 @@ public class Job {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public boolean fileExists() {
+        Path path = Paths.get(dir,filename);
+        return path.toFile().exists();
+    }
+
+    private String getName() {
+        String name = link;
+        String regex = "(/)([^/]+)$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(link);
+        if(m.find()) {
+            name = m.group(2);
+        }
+        return name;
     }
 
     @Override
