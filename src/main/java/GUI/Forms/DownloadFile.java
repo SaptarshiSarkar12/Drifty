@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public class DownloadFile extends Task<Integer> {
@@ -46,7 +45,7 @@ public class DownloadFile extends Task<Integer> {
     protected Integer call() throws Exception {
         updateProgress(0, 1);
         String outputFileName = Objects.requireNonNullElse(filename, DEFAULT_FILENAME);
-        String command = Program.get(YT_DLP);
+        String command = Program.get(Program.YT_DLP);
         outputFileName = Utility.cleanFilename(outputFileName);
         updateMessage("Trying to download " + outputFileName);
         String ext = FilenameUtils.getExtension(outputFileName).toLowerCase();
