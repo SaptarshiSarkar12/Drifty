@@ -9,11 +9,59 @@ import langHttp from 'highlight.js/lib/languages/http'
 import langNginx from 'highlight.js/lib/languages/nginx'
 import "@/app/github-dark.css"
 
+const sections = [
+    {
+        title: "Quickstart",
+        description: "The fastest way to get started with Drifty",
+        href: "/docs/quickstart",
+        filename: "quickstart.mdx",
+        hasChildren: true,
+        children: [
+            {  name: "Drifty GUI", href: "/docs/quickstart/drifty-gui", filename: "drifty-gui.mdx" },
+            {  name: "Drifty CLI", href: "/docs/quickstart/drifty-cli", filename: "drifty-cli.mdx" }
+        ]
+    },
+    {
+        title: "Getting Started",
+        description: "Learn how to get started with the project",
+        href: "/docs/getting-started",
+        filename: "getting-started.mdx",
+        hasChildren: true,
+        children: [
+            {  name: "Drifty GUI", href: "/docs/getting-started/drifty-gui", filename: "drifty-gui.mdx" },
+            {  name: "Drifty CLI", href: "/docs/getting-started/drifty-cli", filename: "drifty-cli.mdx"}
+        ]
+    },
+    {
+        title: "FAQ",
+        description: "Frequently asked questions",
+        href: "/docs/faq",
+        filename: "faq.mdx",
+        hasChildren: false
+    },
+    {
+        title: "Contributing",
+        description: "Learn how to contribute to the project",
+        href: "/docs/contributing",
+        filename: "contributing.mdx",
+        hasChildren: false
+    },
+    {
+        title: "Troubleshooting",
+        description: "Learn how to troubleshoot common errors",
+        href: "/docs/troubleshooting",
+        filename: "troubleshooting.mdx",
+        hasChildren: false
+    }
+];
+
 export async function generateStaticParams() {
     const files = fs.readdirSync('public/docs')
-    return files.map(filename => ({
+    return sections.map(page => ({
         params: {
-            slug: filename.replace('.mdx', '')
+            slug: page.filename.replace('.mdx', '').concat(
+                    page.hasChildren ? page.children.map(child => child.filename.replace('.mdx', '')) : []
+            )
         }
     }));
 }
