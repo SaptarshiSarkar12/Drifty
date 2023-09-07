@@ -97,33 +97,12 @@ public class FormLogic {
         BooleanBinding disableInputs = downloadInProgress.or(verifyingLinks);
         BooleanBinding hasText = form.tfLink.textProperty().isEmpty().not().and(form.tfDir.textProperty().isEmpty().not().and(form.tfFilename.textProperty().isEmpty().not()));
 
-        form.ivBtnSave.visibleProperty().bind(updatingBatch);
-        form.ivBtnStart.disableProperty().bind(disableStartButton);
+        form.btnSave.visibleProperty().bind(updatingBatch);
+        form.btnStart.disableProperty().bind(disableStartButton);
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
 
-        form.listView.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
-                if (job != null) {
-                    updatingBatch.setValue(true);
-                    selectedJob = job;
-                    setLink(job.getLink());
-                    setDir(job.getDir());
-                    setFilename(job.getFilename());
-                }
-            }
-        });
-        form.listView.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.DELETE) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
-                if (job != null) {
-                    removeJob(job);
-                    clearControls();
-                }
-            }
-        });
         form.listView.setContextMenu(getListMenu());
         form.tfFilename.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
@@ -148,18 +127,6 @@ public class FormLogic {
 
         form.cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
-        form.ivBtnSave.setOnMouseClicked(e -> new Thread(() -> {
-            String link = form.tfLink.getText();
-            String filename = form.tfFilename.getText();
-            String dir = form.tfDir.getText();
-            if (Paths.get(dir).toFile().exists() && filename.length() > 3) {
-                removeJob(selectedJob);
-                addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
-            }
-            clearLink();
-            clearFilename();
-            updatingBatch.setValue(false);
-        }).start());
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
@@ -179,6 +146,36 @@ public class FormLogic {
                 }
             }
         }));
+        setDirContextMenu();
+    }
+
+    private void setControlActions() {
+        form.btnSave.setOnAction(e -> new Thread(() -> {
+            String link = form.tfLink.getText();
+            String filename = form.tfFilename.getText();
+            String dir = form.tfDir.getText();
+            if (Paths.get(dir).toFile().exists() && filename.length() > 3) {
+                removeJob(selectedJob);
+                addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
+            }
+            clearLink();
+            clearFilename();
+            updatingBatch.setValue(false);
+        }).start());
+        form.btnStart.setOnAction(e -> new Thread(() -> {
+            if (processingBatch)
+                return;
+            if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
+                clearLink();
+                clearFilename();
+                clearFilenameOutput();
+                Thread download = new Thread(batchDownloader());
+                download.start();
+            }
+
+        }).start());
+        form.tfDir.setOnAction(e -> updateBatch());
+        form.tfFilename.setOnAction(e -> updateBatch());
         form.tfLink.setOnKeyTyped(e -> new Thread(() -> {
             String first = form.tfLink.getText();
             sleep(1000);
@@ -208,24 +205,27 @@ public class FormLogic {
                 clearFilename();
             }
         }).start());
-        setDirContextMenu();
-    }
-
-    private void setControlActions() {
-        form.ivBtnStart.setOnMouseClicked(e -> new Thread(() -> {
-            if (processingBatch)
-                return;
-            if (!form.listView.getItems().isEmpty() && downloadInProgress.getValue().equals(false)) {
-                clearLink();
-                clearFilename();
-                clearFilenameOutput();
-                Thread download = new Thread(batchDownloader());
-                download.start();
+        form.listView.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
+                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                if (job != null) {
+                    updatingBatch.setValue(true);
+                    selectedJob = job;
+                    setLink(job.getLink());
+                    setDir(job.getDir());
+                    setFilename(job.getFilename());
+                }
             }
-
-        }).start());
-        form.tfDir.setOnAction(e -> updateBatch());
-        form.tfFilename.setOnAction(e -> updateBatch());
+        });
+        form.listView.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.DELETE) {
+                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                if (job != null) {
+                    removeJob(job);
+                    clearControls();
+                }
+            }
+        });
     }
 
     /*

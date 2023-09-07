@@ -25,8 +25,8 @@ public class MainGridPane extends GridPane {
     public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
     public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public final ImageView ivBtnStart = imageViewButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
-    public final ImageView ivBtnSave = imageViewButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
+    public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
+    public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
     public final CheckBox cbAutoPaste = new CheckBox();
 
     private final HBox boxAutoPaste = boxAutoPaste();
@@ -81,8 +81,8 @@ public class MainGridPane extends GridPane {
         add(lblFilenameOut, 1, 11);
         add(lblDownloadInfo, 1, 12);
 
-        add(ivBtnSave, 1, 13);
-        add(ivBtnStart, 3, 13);
+        add(btnSave, 1, 13);
+        add(btnStart, 3, 13);
 
         setPrefWidth(Constants.SCREEN_WIDTH * .4);
         setPrefHeight(Constants.SCREEN_HEIGHT * .4);
@@ -90,8 +90,8 @@ public class MainGridPane extends GridPane {
         setVgrow(lblDirOut, Priority.ALWAYS);
         setVgrow(lblFilenameOut, Priority.ALWAYS);
         setVgrow(lblLinkOut, Priority.ALWAYS);
-        setVgrow(ivBtnStart, Priority.ALWAYS);
-        setVgrow(ivBtnSave, Priority.ALWAYS);
+        setVgrow(btnStart, Priority.ALWAYS);
+        setVgrow(btnSave, Priority.ALWAYS);
         setVgap(5);
         setHgap(15);
         for (int colIndex = 0; colIndex < 3; colIndex++) {
@@ -183,5 +183,20 @@ public class MainGridPane extends GridPane {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(width * scale);
         return imageView;
+    }
+
+    private Button newButton(Image imageUp, Image imageDown, double scale) {
+        Button button = new Button();
+        ImageView imageViewUp = new ImageView(imageUp);
+        ImageView imageViewDn = new ImageView(imageDown);
+        double width = imageUp.getWidth();
+        imageViewUp.setPreserveRatio(true);
+        imageViewUp.setFitWidth(width * scale);
+        imageViewDn.setPreserveRatio(true);
+        imageViewDn.setFitWidth(width * scale);
+        button.setOnMousePressed(e->button.setGraphic(imageViewDn));
+        button.setOnMouseReleased(e->button.setGraphic(imageViewUp));
+        button.setGraphic(imageViewUp);
+        return button;
     }
 }

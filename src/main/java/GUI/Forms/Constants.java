@@ -50,6 +50,7 @@ class Constants {
     public static final URL MENU_CSS = Constants.class.getResource("/GUI/CSS/Menu.css");
     public static final URL PROGRESS_BAR_CSS = Constants.class.getResource("/GUI/CSS/ProgressBar.css");
     public static final URL SCROLL_PANE_CSS = Constants.class.getResource("/GUI/CSS/ScrollPane.css");
+    public static final URL BUTTON_CSS = Constants.class.getResource("/GUI/CSS/Button.css");
 
     /*
     Font Files
@@ -109,6 +110,7 @@ class Constants {
         scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
         scene.getStylesheets().add(TEXT_FIELD_CSS.toExternalForm());
         scene.getStylesheets().add(V_BOX_CSS.toExternalForm());
+        scene.getStylesheets().add(BUTTON_CSS.toExternalForm());
         return scene;
     }
 
