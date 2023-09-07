@@ -89,13 +89,6 @@ public class ProgressBarThread extends Thread {
             String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
             String bar = a + b;
             totalDownloadPercent = (int) (100 * downloadedBytes / totalDownloadedBytes);
-            if(Mode.isGUI()) {
-                if(progress == null) {
-                    progress = new SimpleDoubleProperty();
-                    FormLogic.bindToProgressbar(progress);
-                }
-                Platform.runLater(() -> progress.setValue((double) downloadedBytes / (double) totalDownloadedBytes));
-            }
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             if ((int) totalDownloadPercent != 100) {
@@ -155,6 +148,18 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedUnit = "bytes";
             }
             result.append(" [").append(bar).append("] ").append(String.format("%.2f", downloadSpeedWithoutUnit)).append(" ").append(downloadSpeedUnit).append("/s");
+            if(Mode.isGUI()) {
+                if(progress == null) {
+                    progress = new SimpleDoubleProperty();
+                    FormLogic.bindToProgressbar(progress);
+                }
+                if(totalDownloadPercent <= 100) {
+                    Platform.runLater(() -> progress.setValue((double) downloadedBytes / (double) totalDownloadedBytes));
+                }
+                else {
+                    Platform.runLater(() -> progress.setValue(0.0));
+                }
+            }
             return result.toString();
         }
     }
