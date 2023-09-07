@@ -21,7 +21,6 @@ public enum Domain {
 
     public static Domain getDomain(String link, FileExtensions fileExtensions) {
         String ext = FilenameUtils.getExtension(link);
-        System.out.println("File Extension: " + ext);
         if (fileExtensions.match(ext)) {
             return BINARY_FILE;
         }

@@ -72,7 +72,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 String fileLink = Utility.getURLFromJson(json);
                 String baseName = FilenameUtils.getBaseName(filename);
                 filename = baseName + ".mp4";
-                jobList.addLast(new Job(fileLink, dir, filename));
+                jobList.addLast(new Job(fileLink, dir, filename, false));
             }
             FormLogic.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
@@ -101,7 +101,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             filename = baseName + ".mp4";
                             updateMessage("Found file: " + filename);
                             String link = Utility.getURLFromJson(jsonString);
-                            jobList.addLast(new Job(link, dir, filename));
+                            jobList.addLast(new Job(link, dir, filename, false));
                             if (fileCount > 1) {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);

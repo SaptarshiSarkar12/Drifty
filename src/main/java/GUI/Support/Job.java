@@ -12,11 +12,13 @@ public class Job {
     private String link;
     private String dir;
     private String filename;
+    private boolean repeatDownload = false;
 
-    public Job(String link, String dir, String filename) {
+    public Job(String link, String dir, String filename, boolean repeatDownload) {
         this.link = link;
         this.dir = dir;
         this.filename = filename;
+        this.repeatDownload = repeatDownload;
     }
 
     public Job(String link, String dir) {
@@ -29,10 +31,15 @@ public class Job {
         this.link = job.getLink();
         this.dir = job.getDir();
         this.filename = job.getFilename();
+        this.repeatDownload = job.repeatOK();
     }
 
     public boolean matches(Job otherJob) {
         return otherJob.getLink().equals(link) && otherJob.getDir().equals(dir) && otherJob.getFilename().equals(filename);
+    }
+
+    public boolean matchesLink(Job job) {
+        return job.getLink().equals(link);
     }
 
     public String getLink() {
@@ -73,6 +80,18 @@ public class Job {
             name = m.group(2);
         }
         return name;
+    }
+
+    public void repeatApproved() {
+        repeatDownload = true;
+    }
+
+    public boolean repeatOK() {
+        return repeatDownload;
+    }
+
+    public boolean noRepeat() {
+        return !repeatDownload;
     }
 
     @Override
