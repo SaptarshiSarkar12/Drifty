@@ -384,7 +384,7 @@ public class FormLogic {
                         if (Utility.isExtractableLink(presentLink)) {
                             Thread getNames = new Thread(getFilenames(presentLink));
                             getNames.start();
-                            while (getNames.getState().equals(Thread.State.RUNNABLE)) {
+                            while (!getNames.getState().equals(Thread.State.TERMINATED)) {
                                 sleep(150);
                             }
                         }
