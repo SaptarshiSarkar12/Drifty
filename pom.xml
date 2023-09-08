@@ -14,7 +14,7 @@
         <junit.version>5.10.0</junit.version>
         <javafx.version>20</javafx.version>
         <gluonfx-maven-plugin.version>1.0.19</gluonfx-maven-plugin.version>
-        <native-maven-plugin.version>0.9.26</native-maven-plugin.version>
+        <native-maven-plugin.version>0.9.25</native-maven-plugin.version>
         <guiMain>GUI.Forms.Main</guiMain>
         <cliMain>CLI.Main</cliMain>
         <package.type/>
