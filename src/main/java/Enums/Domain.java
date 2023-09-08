@@ -3,7 +3,7 @@ package Enums;
 import Utils.Utility;
 
 public enum Domain {
-    YOUTUBE, INSTAGRAM, BINARY_FILE, OTHER;
+    YOUTUBE, INSTAGRAM, OTHER;
 
     public static Domain getDomain(String link) {
         if (Utility.isYoutubeLink(link)) {
