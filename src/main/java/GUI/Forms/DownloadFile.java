@@ -53,7 +53,6 @@ public class DownloadFile extends Task<Integer> {
             case YOUTUBE, INSTAGRAM -> (Format.isValid(ext)) ?
                     new String[]{command, "--quiet", "--progress", "--no-abort-on-error", "-P", dir, link, "-f", ext, "-o", outputFileName} :
                     new String[]{command, "--quiet", "--progress", "--no-abort-on-error", "-P", dir, link, "-o", outputFileName};
-            case BINARY_FILE -> new String[]{command, "--quiet", "--progress", "-P", dir, link, "-o", outputFileName};
             case OTHER -> new String[]{""};
         };
         if(fullCommand[0].isEmpty()) {
