@@ -59,7 +59,6 @@ public class FormLogic {
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
     private final Map<String, Boolean> linkReDownloadMap = new HashMap<>();
     private final String nl = System.lineSeparator();
-    private ConcurrentLinkedDeque<Job> jobList;
     private Folders folders;
     private Job selectedJob;
 
@@ -68,7 +67,6 @@ public class FormLogic {
      */
     private FormLogic() {
         folders = AppSettings.get.folders();
-        jobList = AppSettings.get.jobs().jobList();
     }
 
     /*
@@ -313,10 +311,10 @@ public class FormLogic {
             form.lblDownloadInfo.setTextFill(GREEN);
             checkFiles();
             List<Job> removeList = new ArrayList<>();
-            if (jobList != null && !jobList.isEmpty()) {
-                final int totalNumberOfFiles = jobList.size();
+            if (getJobs().notNull() && getJobs().isNotEmpty()) {
+                final int totalNumberOfFiles = getJobs().jobList().size();
                 int fileCount = 0;
-                LinkedList<Job> tempJobList = new LinkedList<>(jobList);
+                LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
                 for (Job job : tempJobList) {
                     fileCount++;
                     messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
@@ -408,7 +406,7 @@ public class FormLogic {
     }
 
     private boolean linkInJobList(String link) {
-        for (Job job : jobList) {
+        for (Job job : getJobs().jobList()) {
             if (job.getLink().equals(link))
                 return true;
         }
@@ -417,16 +415,16 @@ public class FormLogic {
 
     private void addJob(Job newJob) {
         Job oldJob = null;
-        for (Job job : jobList) {
+        for (Job job : getJobs().jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
                 break;
             }
         }
         if (oldJob != null) {
-            jobList.remove(oldJob);
+            getJobs().remove(oldJob);
         }
-        jobList.add(newJob);
+        getJobs().add(newJob);
         commitJobListToListView();
     }
 
@@ -442,7 +440,7 @@ public class FormLogic {
     }
 
     private void removeJob(Job job) {
-        jobList.remove(job);
+        getJobs().remove(job);
         commitJobListToListView();
         messageBroker.sendMessage("Job Removed : " + job.getLink(), MessageType.INFO, MessageCategory.BATCH);
     }
@@ -502,7 +500,7 @@ public class FormLogic {
         //job batch persists between reloads, and we can't be sure that there were no changes to the files in the download folders between reloads.
         List<Job> deleteList = new ArrayList<>();
         List<Job> replaceList = new ArrayList<>();
-        for (Job job : jobList) {
+        for (Job job : getJobs().jobList()) {
             Path path = Paths.get(job.getDir(), job.getFilename());
             if (path.toFile().exists()) {
                 deleteList.add(job);
@@ -589,7 +587,7 @@ public class FormLogic {
                     boolean existsHasHistory = fileExists && hasHistory;
                     boolean existsNoHistory = fileExists && !hasHistory;
                     boolean fileHasHistory = hasHistory && !fileExists;
-                    if (!jobList.contains(job)) {
+                    if (!getJobs().jobList().contains(job)) {
                         if (existsHasHistory) {
                             message = String.format(pastJobFileExists, job.getFilename());
                             ask = new AskYesNo(message, renameFile(job.getFilename(), job.getDir()));
@@ -666,7 +664,7 @@ public class FormLogic {
             }
         });
         miClear.setOnAction(e -> {
-            jobList.clear();
+            getJobs().clear();
             commitJobListToListView();
             clearLink();
             clearFilename();
@@ -721,7 +719,7 @@ public class FormLogic {
         then it only adds jobs that do not exist.
          */
         for (Job job : list) {
-            boolean hasJob = INSTANCE.jobList.stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
+            boolean hasJob = INSTANCE.getJobs().jobList().stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
             if (!hasJob) {
                 INSTANCE.addJob(job);
             }
@@ -881,36 +879,39 @@ public class FormLogic {
         return form.tfFilename.getText();
     }
 
+    private Jobs getJobs() {
+        return AppSettings.get.jobs();
+    }
+
     /*
     These methods are for general form flow
      */
 
     private void commitJobListToListView() {
         Platform.runLater(() -> {
-            if (jobList != null) {
-                if (jobList.isEmpty()) {
+            if (getJobs().notNull()) {
+                if (getJobs().isEmpty()) {
                     form.listView.getItems().clear();
                 }
                 else {
-                    if (jobList.size() > 1) {
+                    if (getJobs().jobList().size() > 1) {
                         //Remove duplicate jobs if any
                         Set<String> encounteredLinks = new HashSet<>();
-                        ConcurrentLinkedDeque<Job> duplicates = jobList.stream()
+                        ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
                                 .filter(job -> !encounteredLinks.add(job.getLink()))
                                 .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
                         for (Job job : duplicates) {
                             removeJob(job);
                         }
                         //Sort the Job list
-                        ArrayList<Job> sortList = new ArrayList<>(jobList);
+                        ArrayList<Job> sortList = new ArrayList<>(getJobs().jobList());
                         sortList.sort(Comparator.comparing(Job::toString));
-                        jobList = new ConcurrentLinkedDeque<>(sortList);
+                        getJobs().setList(new ConcurrentLinkedDeque<>(sortList));
                     }
                     //Assign the jobList to the ListView
-                    form.listView.getItems().setAll(jobList);
+                    form.listView.getItems().setAll(getJobs().jobList());
                 }
             }
-            new Jobs().setJobList(jobList); //this uses the Jobs class to set the Property.
         });
     }
 

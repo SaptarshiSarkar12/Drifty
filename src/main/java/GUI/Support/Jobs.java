@@ -24,8 +24,53 @@ public class Jobs {
         return new ConcurrentLinkedDeque<>(jobList);
     }
 
-    public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
-        this.jobList = new ConcurrentLinkedDeque<>(jobList);
-        AppSettings.set.batchDownloadJobs(this);
+    public void add(Job newJob) {
+        for(Job job : jobList) {
+            if(job.matches(newJob))
+                return;
+        }
+        jobList.addLast(newJob);
+        save();
+    }
+
+    public void remove(Job oldJob) {
+        Job removeJob = null;
+        for(Job job : jobList) {
+            if (job.matches(oldJob)) {
+                removeJob = oldJob;
+            }
+        }
+        if(removeJob != null) {
+            jobList.remove(removeJob);
+        }
+        save();
+    }
+
+    public void setList(ConcurrentLinkedDeque<Job> jobList) {
+        this.jobList = jobList;
+    }
+
+    private void save() {
+        AppSettings.set.Jobs(this);
+    }
+
+    public boolean isNull() {
+        return jobList == null;
+    }
+
+    public boolean notNull() {
+        return jobList != null;
+    }
+
+    public boolean isEmpty() {
+        return jobList.isEmpty();
+    }
+
+    public boolean isNotEmpty() {
+        return !jobList.isEmpty();
+    }
+
+    public void clear() {
+        jobList.clear();
     }
 }
