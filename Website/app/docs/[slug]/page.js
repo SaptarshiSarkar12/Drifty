@@ -54,7 +54,7 @@ export default function Page({ params }) {
     }
     return (
         <DocsLayout className={"grid md:grid-flow-col"}>
-            <article className={"float-left prose max-w-sm xs:max-w-xs md:max-w-none prose-lg text-black prose-headings:text-gray-900"}>
+            <article className={"float-left prose max-w-sm justify-center md:max-w-none prose-lg text-black prose-headings:text-gray-900"}>
                 <MDXRemote source={page.content} options={options} />
             </article>
         </DocsLayout>
