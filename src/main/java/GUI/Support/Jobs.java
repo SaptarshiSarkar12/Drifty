@@ -48,6 +48,7 @@ public class Jobs {
 
     public void setList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = jobList;
+        save();
     }
 
     private void save() {
