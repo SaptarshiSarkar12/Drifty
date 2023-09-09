@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Backend.DownloadMetrics;
 import Backend.FileDownloader;
 import Enums.*;
 import GUI.Support.Folders;
@@ -41,10 +42,10 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
-import static Enums.DownloadProperties.PROGRESS;
 import static GUI.Forms.Constants.MONACO_TTF;
 import static GUI.Forms.Constants.getStage;
 
@@ -132,7 +133,7 @@ public class FormLogic {
             String filename = getFilename();
             String dir = getDir();
             if (Paths.get(dir, filename).toFile().exists()) {
-                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
+                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Do you want to continue?");
                 if (ask.getResponse().isNo()) {
                     filename = renameFile(filename, dir);
                 }
@@ -241,14 +242,14 @@ public class FormLogic {
             if (!linkInJobList(link)) {
                 messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
                 if (Utility.linkValid(link)) {
+                    messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
                     if (Utility.isExtractableLink(link)) {
                         Thread getNames = new Thread(getFilenames(link));
                         getNames.start();
                         while (!getNames.getState().equals(Thread.State.TERMINATED)) {
                             sleep(150);
                         }
-                    }
-                    else if (AppSettings.get.jobHistory().exists(link)) {
+                    } else if (AppSettings.get.jobHistory().exists(link)) {
                         Job job = new Job(link, getDir());
                         String filename = job.getFilename();
                         String message;
@@ -268,31 +269,28 @@ public class FormLogic {
                                     filename = ask.getFilename();
                                     addJob(new Job(link, getDir(), filename, true));
                                 }
-                            }
-                            else {
+                            } else {
                                 AskYesNo ask = new AskYesNo(message, false);
                                 if (ask.getResponse().isYes()) {
                                     addJob(job);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             message = "You have downloaded this link once before but the file does not exist in any of your download folders. Clicking Yes will add this download to the list and clicking No will not add it to the list.";
                             AskYesNo ask = new AskYesNo(message, false);
                             if (ask.getResponse().isYes()) {
                                 addJob(job);
                             }
                         }
-                    }
-                    else {
-                        addJob(new Job(link, getDir()));
+                    } else {
+                        Platform.runLater(() -> addJob(new Job(link, getDir())));
                     }
                 }
                 clearFilename();
                 clearLink();
             }
             else {
-                messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
+                messageBroker.sendMessage("Link already in job list!", MessageType.ERROR, MessageCategory.LINK);
                 clearLink();
             }
         };
@@ -301,20 +299,13 @@ public class FormLogic {
     private Runnable batchDownloader() {
         /*
         When the jobList is iterated, the link from a Job is passed through the Domain enum class where the file
-        extension is compared against a list of known BINARY file extensions. That list exists in the file called
-        BinaryExtensions.json in the Resources GUI folder. What matters in terms of what a BINARY file is, is whether
-        or not the file contains plain text - where you could open it in a text editor, and it would have actual words
-        in it, or if it is a truly binary file such as .zip, .exe, .dll, .dmg, .iso etc.
+        extension is checked for YouTube or Instagram links.
 
-        Binary files are best handled by yt-dlp and will be handed to the GUI downloader task where download progress
-        will be displayed as well as all appropriate logging etc.
-
-        YouTube and Instagram files also get sent to the GUI DownloadFile class which is a class that extends a
+        YouTube and Instagram files' links are sent to the GUI DownloadFile class, which is a class that extends a
         modern version of Task where feedback is attainable through various methods.
 
-        File extensions that are not in the binary extension list, are sent to the CLI file downloader, where the
-        progress bar will be bound to the relevant variables in that class so that download progress can still be
-        shown in the GUI
+        Other files' links are sent to the CLI file downloader, where the
+        progress bar will be bound to the relevant variables in that class so that download progress can still be shown in the GUI.
          */
         return () -> {
             processingBatch.setValue(true);
@@ -330,9 +321,11 @@ public class FormLogic {
                     fileCount++;
                     messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
                     if (job.fileExists()) {
-                        Platform.runLater(() -> messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.ERROR, MessageCategory.FILENAME));
-                        removeJob(job);
-                        AppSettings.get.jobHistory().addJob(job);
+                        Platform.runLater(() -> {
+                            messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.ERROR, MessageCategory.FILENAME);
+                            removeJob(job);
+                            AppSettings.get.jobHistory().addJob(job);
+                        });
                         sleep(2500);
                         for (double x = 1; x >= 0; x -= .05) {
                             final double opacity = x;
@@ -350,34 +343,37 @@ public class FormLogic {
                     switch (domain) {
                         case YOUTUBE, INSTAGRAM -> {
                             Task<Integer> task = new DownloadFile(job, domain);
-                            Thread thread = new Thread(task);
+                            AtomicReference<Thread> thread = new AtomicReference<>(new Thread(task));
                             Platform.runLater(() -> {
                                 form.lblDownloadInfo.textProperty().bind(((Worker<Integer>) task).messageProperty());
                                 form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
                             });
-                            thread.start();
-                            while (!thread.getState().equals(Thread.State.TERMINATED)) {
+                            thread.get().start();
+                            while (!thread.get().getState().equals(Thread.State.TERMINATED)) {
                                 sleep(1000);
                             }
-                            if (((Worker<Integer>) task).valueProperty().get() != 0 && !task.isCancelled()) {
-                                sleep(3000);
-                                thread = new Thread(task);
-                                thread.start();
-                                while (!thread.getState().equals(Thread.State.TERMINATED)) {
-                                    sleep(1000);
-                                }
-                                if (((Worker<Integer>) task).valueProperty().get() == 0) {
+                            Platform.runLater(() -> {
+                                if (((Worker<Integer>) task).valueProperty().get() != 0 && !task.isCancelled()) {
+                                    sleep(3000);
+                                    thread.set(new Thread(task));
+                                    thread.get().start();
+                                    while (!thread.get().getState().equals(Thread.State.TERMINATED)) {
+                                        sleep(1000);
+                                    }
+                                    if (((Worker<Integer>) task).valueProperty().get() == 0) {
+                                        form.listView.getItems().remove(job);
+                                        removeList.add(job);
+                                    }
+                                } else {
                                     form.listView.getItems().remove(job);
                                     removeList.add(job);
                                 }
-                            }
-                            else {
-                                form.listView.getItems().remove(job);
-                                removeList.add(job);
-                            }
+                            });
                         }
                         case OTHER -> {
-                            Thread download = new Thread(new FileDownloader(job.getLink(), job.getFilename(), job.getDir()));
+                            FileDownloader downloader = new FileDownloader(job.getLink(), job.getFilename(), job.getDir());
+                            Thread download = new Thread(downloader);
+                            DownloadMetrics downloadMetrics = downloader.getDownloadMetrics();
                             DoubleProperty progress = new SimpleDoubleProperty(0.0);
                             Platform.runLater(() -> {
                                 form.pBar.progressProperty().unbind();
@@ -385,11 +381,13 @@ public class FormLogic {
                             });
                             download.start();
                             while (!download.getState().equals(Thread.State.TERMINATED)) {
-                                progress.setValue((double) DownloadProperties.get(PROGRESS));
+                                progress.setValue(downloadMetrics.getProgress());
                                 sleep(100);
                             }
-                            form.listView.getItems().remove(job);
-                            removeList.add(job);
+                            Platform.runLater(() -> {
+                                form.listView.getItems().remove(job);
+                                removeList.add(job);
+                            });
                         }
                     }
                 }
@@ -446,7 +444,7 @@ public class FormLogic {
     private void removeJob(Job job) {
         jobList.remove(job);
         commitJobListToListView();
-        messageBroker.sendMessage("Job Removed: " + job.getLink(), MessageType.INFO, MessageCategory.BATCH);
+        messageBroker.sendMessage("Job Removed : " + job.getLink(), MessageType.INFO, MessageCategory.BATCH);
     }
 
     private void updateBatch() {
@@ -595,12 +593,10 @@ public class FormLogic {
                         if (existsHasHistory) {
                             message = String.format(pastJobFileExists, job.getFilename());
                             ask = new AskYesNo(message, renameFile(job.getFilename(), job.getDir()));
-                        }
-                        else if (existsNoHistory) {
+                        } else if (existsNoHistory) {
                             message = String.format(fileExistsString, job.getFilename());
                             ask = new AskYesNo(message, false);
-                        }
-                        else if (fileHasHistory) {
+                        } else if (fileHasHistory) {
                             message = String.format(pastJobNoFile, job.getFilename());
                             ask = new AskYesNo(message, false);
                         }
@@ -614,10 +610,9 @@ public class FormLogic {
                                     addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
                                 }
                             }
-                        }
-                        else
+                        } else {
                             addJob(job);
-
+                        }
                     }
                 }
             }
@@ -764,6 +759,7 @@ public class FormLogic {
 
     private void clearLink() {
         Platform.runLater(() -> {
+            setLink("");
             form.tfLink.clear();
             form.tfLink.requestFocus();
         });
@@ -943,7 +939,7 @@ public class FormLogic {
         tf.getChildren().add(text("Multi-link pasting:\n", true, BLUE, h));
         tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Youtube Playlists:\n", true, BLUE, h));
-        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));        //tf.getChildren().add(text("\n\n",false,BLACK,13));
+        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));
         tf.setStyle("-fx-background-color: transparent");
 
         double width = 500;
@@ -952,7 +948,6 @@ public class FormLogic {
         Stage stage = getStage();
         stage.setWidth(width);
         stage.setHeight(height + 100);
-        //stage.initStyle(StageStyle.TRANSPARENT);
         VBox vox = new VBox(20, tf);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);

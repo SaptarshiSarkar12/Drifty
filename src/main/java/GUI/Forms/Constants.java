@@ -74,6 +74,7 @@ class Constants {
      */
     public static Stage getStage() {
         Stage stage = new Stage();
+        stage.centerOnScreen();
         Image icon;
         icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);

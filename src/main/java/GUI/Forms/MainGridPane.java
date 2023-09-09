@@ -126,7 +126,7 @@ public class MainGridPane extends GridPane {
                 else {
                     // Set the text for non-empty cells
                     setDisable(false);
-                    setText(item.toString());
+                    Platform.runLater(() -> setText(item.toString()));
                 }
             }
         });
