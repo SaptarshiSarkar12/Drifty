@@ -1,6 +1,6 @@
 package Backend;
 
-import Enums.DownloaderProps;
+import Enums.DownloadProperties;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Program;
@@ -24,24 +24,24 @@ import static Utils.Utility.isYoutubeLink;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
-    private static final MessageBroker messageBroker = Environment.getMessageBroker();
-    private static final int numberOfThreads = (int) DownloaderProps.getValue(DownloaderProps.NUMBER_OF_THREADS);
-    private static final long threadingThreshold = (long) DownloaderProps.getValue(DownloaderProps.THREADING_THRESHOLD);
-    private static String dir;
-    private static String fileName;
-    private static String link;
-    private static URL url;
-    private static String yt_dlpProgramName;
+    private final MessageBroker messageBroker = Environment.getMessageBroker();
+    private final int numberOfThreads = (int) DownloadProperties.get(DownloadProperties.NUMBER_OF_THREADS);
+    private final long threadingThreshold = (long) DownloadProperties.get(DownloadProperties.THREADING_THRESHOLD);
+    private final String dir;
+    private String fileName;
+    private String link;
+    private URL url;
+    private String yt_dlpProgramName;
 
     public FileDownloader(String link, String fileName, String dir) {
-        FileDownloader.link = link;
-        FileDownloader.fileName = fileName;
-        FileDownloader.dir = dir;
-        DownloaderProps.setValue(DownloaderProps.SUPPORTS_MULTI_THREADING, false);
+        this.link = link;
+        this.fileName = fileName;
+        this.dir = dir;
+        DownloadProperties.set(DownloadProperties.SUPPORTS_MULTI_THREADING, false);
         setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
     }
 
-    public static String getDir() {
+    public String getDir() {
         if (dir.endsWith(File.separator)) {
             return dir;
         } else {
@@ -49,27 +49,27 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    private static void downloadFile() {
+    private void downloadFile() {
         try {
             ReadableByteChannel readableByteChannel;
             try {
-                boolean supportsMultithreading = (boolean) DownloaderProps.getValue(DownloaderProps.SUPPORTS_MULTI_THREADING);
-                long totalSize = (long) DownloaderProps.getValue(DownloaderProps.TOTAL_SIZE);
+                boolean supportsMultithreading = (boolean) DownloadProperties.get(DownloadProperties.SUPPORTS_MULTI_THREADING);
+                long totalSize = (long) DownloadProperties.get(DownloadProperties.TOTAL_SIZE);
                 if (supportsMultithreading) {
-                    List<FileOutputStream> fileOutputStreams = new ArrayList<>(FileDownloader.numberOfThreads);
-                    List<Long> partSizes = new ArrayList<>(FileDownloader.numberOfThreads);
-                    List<File> tempFiles = new ArrayList<>(FileDownloader.numberOfThreads);
-                    List<DownloaderThread> downloaderThreads = new ArrayList<>(FileDownloader.numberOfThreads);
-                    long partSize = Math.floorDiv(totalSize, FileDownloader.numberOfThreads);
+                    List<FileOutputStream> fileOutputStreams = new ArrayList<>(numberOfThreads);
+                    List<Long> partSizes = new ArrayList<>(numberOfThreads);
+                    List<File> tempFiles = new ArrayList<>(numberOfThreads);
+                    List<DownloaderThread> downloaderThreads = new ArrayList<>(numberOfThreads);
+                    long partSize = Math.floorDiv(totalSize, numberOfThreads);
                     long start, end;
                     FileOutputStream fileOut;
                     File file;
-                    for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
+                    for (int i = 0; i < numberOfThreads; i++) {
                         file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
-                        end = ((FileDownloader.numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
+                        end = ((numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -78,7 +78,7 @@ public class FileDownloader implements Runnable {
                         tempFiles.add(file);
                     }
 
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, totalSize);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, dir, totalSize);
                     progressBarThread.start();
                     messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     // check if all the files are downloaded
@@ -86,7 +86,7 @@ public class FileDownloader implements Runnable {
                         while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                             Thread.sleep(1000);
                         }
-                        DownloaderProps.setValue(DownloaderProps.IS_DOWNLOAD_ACTIVE, false);
+                        DownloadProperties.set(DownloadProperties.IS_DOWNLOAD_ACTIVE, false);
                         // keep the main thread from closing the IO for short amt. of time so UI thread can finish and output
                         try {
                             Thread.sleep(1000);
@@ -100,7 +100,7 @@ public class FileDownloader implements Runnable {
                     progressBarThread.start();
                     messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    DownloaderProps.setValue(DownloaderProps.IS_DOWNLOAD_ACTIVE, false);
+                    DownloadProperties.set(DownloadProperties.IS_DOWNLOAD_ACTIVE, false);
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);
@@ -118,7 +118,7 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public static void downloadFromYouTube() {
+    public void downloadFromYouTube() {
         String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
         String fileDownloadMessage;
         if (outputFileName.equals(DEFAULT_FILENAME)) {
@@ -147,13 +147,13 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public static boolean mergeDownloadedFileParts(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
+    public boolean mergeDownloadedFileParts(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
         // check if all files are downloaded
         int completed = 0;
         FileOutputStream fileOutputStream;
         DownloaderThread downloaderThread;
         long partSize;
-        for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
+        for (int i = 0; i < numberOfThreads; i++) {
             fileOutputStream = fileOutputStreams.get(i);
             partSize = partSizes.get(i);
             downloaderThread = downloaderThreads.get(i);
@@ -164,10 +164,10 @@ public class FileDownloader implements Runnable {
             }
         }
         // check if it is merged-able
-        if (completed == FileDownloader.numberOfThreads) {
+        if (completed == numberOfThreads) {
             fileOutputStream = new FileOutputStream(getDir() + fileName);
             long position = 0;
-            for (int i = 0; i < FileDownloader.numberOfThreads; i++) {
+            for (int i = 0; i < numberOfThreads; i++) {
                 File f = tempFiles.get(i);
                 FileInputStream fs = new FileInputStream(f);
                 ReadableByteChannel rbs = Channels.newChannel(fs);
@@ -180,8 +180,8 @@ public class FileDownloader implements Runnable {
         return false;
     }
 
-    private static void setYt_dlpProgramName(String yt_dlpProgramName) {
-        FileDownloader.yt_dlpProgramName = yt_dlpProgramName;
+    private void setYt_dlpProgramName(String yt_dlpProgramName) {
+        this.yt_dlpProgramName = yt_dlpProgramName;
     }
 
     @Override
@@ -231,9 +231,9 @@ public class FileDownloader implements Runnable {
                 URLConnection openConnection = url.openConnection();
                 openConnection.connect();
                 long totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
-                DownloaderProps.setValue(DownloaderProps.TOTAL_SIZE, totalSize);
+                DownloadProperties.set(DownloadProperties.TOTAL_SIZE, totalSize);
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                DownloaderProps.setValue(DownloaderProps.SUPPORTS_MULTI_THREADING, ((totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes"))));
+                DownloadProperties.set(DownloadProperties.SUPPORTS_MULTI_THREADING, ((totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes"))));
                 if (fileName.isEmpty()) {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
@@ -248,7 +248,7 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public static void downloadFromInstagram() throws InterruptedException, IOException {
+    private void downloadFromInstagram() throws InterruptedException, IOException {
         String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
         String fileDownloadMessage;
         if (outputFileName.equals(DEFAULT_FILENAME)) {

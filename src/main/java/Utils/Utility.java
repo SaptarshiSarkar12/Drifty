@@ -62,7 +62,7 @@ public final class Utility {
         return isYoutubeLink(link) || isInstagramLink(link);
     }
 
-    public static boolean isURLValid(String link) {
+    public static boolean linkValid(String link) {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

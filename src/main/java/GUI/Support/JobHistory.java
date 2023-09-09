@@ -10,33 +10,56 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class JobHistory {
 
     public JobHistory() {
-        this.jobList = new ConcurrentLinkedDeque<>();
+        this.jobHistoryList = new ConcurrentLinkedDeque<>();
     }
 
-    private ConcurrentLinkedDeque<Job> jobList;
+    private ConcurrentLinkedDeque<Job> jobHistoryList;
 
-    public ConcurrentLinkedDeque<Job> getJobList() {
-        if (jobList == null) {
-            this.jobList = new ConcurrentLinkedDeque<>();
-        }
-        if(jobList.isEmpty())
-            return jobList;
-        ConcurrentLinkedDeque<Job> list = new ConcurrentLinkedDeque<>();
+    public ConcurrentLinkedDeque<Job> getList() {
         Environment.getMessageBroker().sendMessage("Job History Fetched", MessageType.INFO, MessageCategory.INITIALIZATION);
-        for(Job job : jobList) {
-            String link = job.getLink();
-            String dir = job.getDir();
-            String filename = job.getFilename();
-            list.addLast(new Job(link, dir, filename, false));
-            Environment.getMessageBroker().sendMessage("Link: " + link + "; Dir: " + dir + "; Filename: " + filename, MessageType.INFO, MessageCategory.INITIALIZATION);
+        if (jobHistoryList == null) {
+            this.jobHistoryList = new ConcurrentLinkedDeque<>();
         }
-        return list;
+        return new ConcurrentLinkedDeque<>(jobHistoryList);
     }
 
-    public void setJobList(ConcurrentLinkedDeque<Job> jobList) {
-        if (jobList != null) {
-            this.jobList = new ConcurrentLinkedDeque<>(jobList);
-            AppSettings.set.jobHistory(this);
+    public void addJob(Job newJob) {
+        for (Job job : jobHistoryList) {
+            if (job.matchesLink(newJob))
+                return;
         }
+        jobHistoryList.addLast(newJob);
+        save();
+    }
+
+    public void clear() {
+        jobHistoryList = new ConcurrentLinkedDeque<>();
+        save();
+    }
+
+    public boolean isEmpty() {
+        return jobHistoryList.isEmpty();
+    }
+
+    public boolean exists(Job job) {
+        for (Job j : jobHistoryList) {
+            if (j.getLink().equals(job.getLink())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean exists(String link) {
+        for (Job job : jobHistoryList) {
+            if (job.getLink().equals(link)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void save() {
+        AppSettings.set.jobHistory(this);
     }
 }

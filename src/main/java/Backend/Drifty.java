@@ -38,7 +38,7 @@ public class Drifty {
             messageBroker.sendMessage("Link cannot be empty!", MessageType.ERROR, MessageCategory.LINK);
             return;
         } else {
-            boolean isUrlValid = Utility.isURLValid(url);
+            boolean isUrlValid = Utility.linkValid(url);
             if (!isUrlValid) {
                 return;
             }

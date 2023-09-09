@@ -4,10 +4,12 @@ import Enums.MessageCategory;
 import Enums.MessageType;
 import Utils.DriftyConstants;
 import Utils.Environment;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -17,11 +19,9 @@ import java.net.URL;
  * It contains hooks into the resources folder for relevant files.
  */
 class Constants {
-    /*
-        private static final Rectangle2D SCREEN_SIZE = Screen.getPrimary().getBounds();
-        public static final double SCREEN_WIDTH = SCREEN_SIZE.getWidth();
-        public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
-    */
+    private static final Rectangle2D SCREEN_SIZE = Screen.getPrimary().getBounds();
+    public static final double SCREEN_WIDTH = SCREEN_SIZE.getWidth();
+    public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
     /*
     Graphics Files
      */

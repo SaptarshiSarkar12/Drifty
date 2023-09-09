@@ -2,7 +2,6 @@ package GUI.Forms;
 
 import Backend.FileDownloader;
 import Enums.*;
-import GUI.Support.FileExtensions;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.Jobs;
@@ -42,12 +41,12 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
-import static GUI.Forms.Constants.*;
+import static Enums.DownloadProperties.PROGRESS;
+import static GUI.Forms.Constants.MONACO_TTF;
+import static GUI.Forms.Constants.getStage;
 
 public class FormLogic {
     public static final FormLogic INSTANCE = new FormLogic();
@@ -57,10 +56,9 @@ public class FormLogic {
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
-    private static boolean linkValid = false;
+    private final Map<String, Boolean> linkReDownloadMap = new HashMap<>();
     private final String nl = System.lineSeparator();
     private ConcurrentLinkedDeque<Job> jobList;
-    private final ConcurrentLinkedDeque<Job> jobHistoryList;
     private Folders folders;
     private Job selectedJob;
 
@@ -70,7 +68,6 @@ public class FormLogic {
     private FormLogic() {
         folders = AppSettings.get.folders();
         jobList = AppSettings.get.jobs().jobList();
-        jobHistoryList = AppSettings.get.jobHistory().getJobList();
     }
 
     /*
@@ -86,7 +83,7 @@ public class FormLogic {
 
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
-        directoryExists.setValue(new File(form.tfDir.getText()).exists());
+        directoryExists.setValue(new File(getDir()).exists());
 
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(processingBatch).or(directoryExists.not()).or(verifyingLinks);
         BooleanBinding disableInputs = processingBatch.or(verifyingLinks);
@@ -99,21 +96,6 @@ public class FormLogic {
         form.tfLink.disableProperty().bind(disableInputs);
 
         form.listView.setContextMenu(getListMenu());
-        form.tfFilename.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.equals(oldValue)) {
-                if (fileExists(newValue)) {
-                    setFilename(renameFile(newValue, form.tfDir.getText()));
-                    new Thread(() -> {
-                        //This waits for the clearFilenameOutput() that will be executed from the previous setFilename() call.
-                        sleep(500);
-                        messageBroker.sendMessage("Filename (" + oldValue + ") already exists in folder (" + form.tfDir.getText() + "). Renamed to \"" + newValue + "\" to prevent over-write.", MessageType.ERROR, MessageCategory.FILENAME);
-                    }).start();
-                }
-                else {
-                    clearFilenameOutput();
-                }
-            }
-        });
 
         Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + nl + "Link field when switching back to this screen."));
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
@@ -146,10 +128,14 @@ public class FormLogic {
 
     private void setControlActions() {
         form.btnSave.setOnAction(e -> new Thread(() -> {
-            String link = form.tfLink.getText();
-            String filename = form.tfFilename.getText();
-            String dir = form.tfDir.getText();
-            if (Paths.get(dir).toFile().exists() && filename.length() > 3) {
+            String link = getLink();
+            String filename = getFilename();
+            String dir = getDir();
+            if (Paths.get(dir, filename).toFile().exists()) {
+                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
+                if (ask.getResponse().isNo()) {
+                    filename = renameFile(filename, dir);
+                }
                 removeJob(selectedJob);
                 addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             }
@@ -176,8 +162,7 @@ public class FormLogic {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
                 Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
                 if (job != null) {
-                    updatingBatch.setValue(true);
-                    selectedJob = job;
+                    selectJob(job);
                     setLink(job.getLink());
                     setDir(job.getDir());
                     setFilename(job.getFilename());
@@ -197,9 +182,9 @@ public class FormLogic {
 
     private void processLink() {
         new Thread(() -> {
-            String first = form.tfLink.getText();
+            String first = getLink();
             sleep(1000);
-            String userText = form.tfLink.getText();
+            String userText = getLink();
             if (userText.equals(first)) {
                 if (userText.contains("  ") || userText.contains(System.lineSeparator())) {
                     messageBroker.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
@@ -209,7 +194,8 @@ public class FormLogic {
                 String[] links;
                 if (userText.contains(" ")) {
                     links = userText.trim().split(" ");
-                } else {
+                }
+                else {
                     links = new String[]{userText};
                 }
                 verifyingLinks.setValue(true);
@@ -235,6 +221,83 @@ public class FormLogic {
     application freeze never happens. Runnables are assigned to Tasks.
      */
 
+    private Runnable verifyLink(String link) {
+        /*
+        When adding links to the jobList, only YouTube and Instagram links will be put through the process of
+        searching the link for more than one download, in case the link happens to be a link to a playlist. This
+        will probably be far more common with YouTube links.
+
+        If the link does not test positive for YouTube or Instagram, then it is merely added to the jobList as a job
+        with only the link and the download folder given to the Job class. However, the Job class will take all
+        the text after the last forward slash in the link and set it as the filename for that job.
+
+        Users should be instructed to click through each job in the list and make sure the filename is what they
+        want. They can change it after clicking on the job in the list then clicking on the save button.
+         */
+        return () -> {
+            if (link.isEmpty()) {
+                return;
+            }
+            if (!linkInJobList(link)) {
+                messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
+                if (Utility.linkValid(link)) {
+                    if (Utility.isExtractableLink(link)) {
+                        Thread getNames = new Thread(getFilenames(link));
+                        getNames.start();
+                        while (!getNames.getState().equals(Thread.State.TERMINATED)) {
+                            sleep(150);
+                        }
+                    }
+                    else if (AppSettings.get.jobHistory().exists(link)) {
+                        Job job = new Job(link, getDir());
+                        String filename = job.getFilename();
+                        String message;
+                        String folder = fileExists(filename);
+                        boolean fileInThisDownloadFolder = job.fileExists();
+                        if (!folder.isEmpty()) {
+                            String addendum = "exists in a different download folder: " + nl + folder + nl.repeat(2) + "and will not be renamed";
+                            if (fileInThisDownloadFolder) {
+                                addendum = "exists in the current download folder and will be renamed as shown" + nl + "(you may change it if you wish).";
+                            }
+                            message = "You have downloaded this link before and the file:" + nl + filename + nl.repeat(2) +
+                                    addendum + nl.repeat(2) +
+                                    "If you click Yes, the job will be added to the list. Clicking No will not add the job to the list.";
+                            if (fileInThisDownloadFolder) {
+                                AskYesNo ask = new AskYesNo(message, renameFile(filename, getDir()));
+                                if (ask.getResponse().isYes()) {
+                                    filename = ask.getFilename();
+                                    addJob(new Job(link, getDir(), filename, true));
+                                }
+                            }
+                            else {
+                                AskYesNo ask = new AskYesNo(message, false);
+                                if (ask.getResponse().isYes()) {
+                                    addJob(job);
+                                }
+                            }
+                        }
+                        else {
+                            message = "You have downloaded this link once before but the file does not exist in any of your download folders. Clicking Yes will add this download to the list and clicking No will not add it to the list.";
+                            AskYesNo ask = new AskYesNo(message, false);
+                            if (ask.getResponse().isYes()) {
+                                addJob(job);
+                            }
+                        }
+                    }
+                    else {
+                        addJob(new Job(link, getDir()));
+                    }
+                }
+                clearFilename();
+                clearLink();
+            }
+            else {
+                messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
+                clearLink();
+            }
+        };
+    }
+
     private Runnable batchDownloader() {
         /*
         When the jobList is iterated, the link from a Job is passed through the Domain enum class where the file
@@ -258,18 +321,18 @@ public class FormLogic {
             updatingBatch.setValue(false);
             form.lblDownloadInfo.setTextFill(GREEN);
             checkFiles();
+            List<Job> removeList = new ArrayList<>();
             if (jobList != null && !jobList.isEmpty()) {
                 final int totalNumberOfFiles = jobList.size();
                 int fileCount = 0;
-                for (Job job : jobList) {
-                    if (jobList.isEmpty())
-                        break;
+                LinkedList<Job> tempJobList = new LinkedList<>(jobList);
+                for (Job job : tempJobList) {
                     fileCount++;
                     messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
                     if (job.fileExists()) {
                         Platform.runLater(() -> messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.ERROR, MessageCategory.FILENAME));
                         removeJob(job);
-                        jobHistoryList.addLast(job);
+                        AppSettings.get.jobHistory().addJob(job);
                         sleep(2500);
                         for (double x = 1; x >= 0; x -= .05) {
                             final double opacity = x;
@@ -296,39 +359,44 @@ public class FormLogic {
                             while (!thread.getState().equals(Thread.State.TERMINATED)) {
                                 sleep(1000);
                             }
-                            Platform.runLater(() -> {
-                                if (((Worker<Integer>) task).valueProperty().get() == 0) {
-                                    removeJob(job);
-                                    addJobHistory(job);
-                                } else {
-                                    Thread lastChance = new Thread(new FileDownloader(job.getLink(), job.getFilename(), job.getDir()));
-                                    lastChance.start();
-                                    while (!lastChance.getState().equals(Thread.State.TERMINATED)) {
-                                        sleep(500);
-                                    }
-                                    removeJob(job);
-                                    addJobHistory(job);
+                            if (((Worker<Integer>) task).valueProperty().get() != 0 && !task.isCancelled()) {
+                                sleep(3000);
+                                thread = new Thread(task);
+                                thread.start();
+                                while (!thread.getState().equals(Thread.State.TERMINATED)) {
+                                    sleep(1000);
                                 }
-                            });
+                                if (((Worker<Integer>) task).valueProperty().get() == 0) {
+                                    form.listView.getItems().remove(job);
+                                    removeList.add(job);
+                                }
+                            }
+                            else {
+                                form.listView.getItems().remove(job);
+                                removeList.add(job);
+                            }
                         }
                         case OTHER -> {
                             Thread download = new Thread(new FileDownloader(job.getLink(), job.getFilename(), job.getDir()));
-                            SimpleDoubleProperty progress = new SimpleDoubleProperty((float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE));
+                            DoubleProperty progress = new SimpleDoubleProperty(0.0);
                             Platform.runLater(() -> {
-                                FormLogic.bindToProgressbar(progress);
+                                form.pBar.progressProperty().unbind();
+                                form.pBar.progressProperty().bind(progress);
                             });
                             download.start();
                             while (!download.getState().equals(Thread.State.TERMINATED)) {
-                                Platform.runLater(() -> {
-                                    progress.setValue((float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE) / 100);
-                                });
+                                progress.setValue((double) DownloadProperties.get(PROGRESS));
                                 sleep(100);
                             }
-                            removeJob(job);
-                            addJobHistory(job);
+                            form.listView.getItems().remove(job);
+                            removeList.add(job);
                         }
                     }
                 }
+            }
+            for (Job job : removeList) {
+                removeJob(job);
+                addJobHistory(job);
             }
             clearLink();
             clearFilename();
@@ -338,69 +406,6 @@ public class FormLogic {
                 form.pBar.progressProperty().unbind();
                 form.pBar.setProgress(0.0);
             });
-        };
-    }
-
-    private Runnable verifyLink(String presentLink) {
-        /*
-        When adding links to the jobList, only YouTube and Instagram links will be put through the process of
-        searching the link for more than one download, in case the link happens to be a link to a playlist. This
-        will probably be far more common with YouTube links.
-
-        If the link does not test positive for YouTube or Instagram, then it is merely added to the jobList as a job
-        with only the link and the download folder given to the Job class. However, the Job class will take all
-        the text after the last forward slash in the link and set it as the filename for that job.
-
-        Users should be instructed to click through each job in the list and make sure the filename is what they
-        want. They can change it after clicking on the job in the list then clicking on the save button.
-         */
-        return () -> {
-            if (presentLink.isEmpty()) {
-                return;
-            }
-            if (!linkInJobList(presentLink)) {
-                if (processingBatch.getValue().equals(false) && updatingBatch.getValue().equals(false)) {
-                    messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
-                    linkValid = Utility.isURLValid(presentLink);
-                    if (linkValid) {
-                        Job job = hasHistory(presentLink);
-                        if (job != null) {
-                            messageBroker.sendMessage("Link exists in past activity: \"" + job.getLink() + "\"", MessageType.WARN, MessageCategory.LINK);
-                            AskYesNo ask = new AskYesNo("You have processed this link once before," + nl + "If you continue, and the file exists in the download folder," + nl + "the file(s) will be renamed to avoid over-writing any existing file(s)." + nl + "Do you wish to continue?");
-                            if (ask.getResponse().isYes()) {
-                                if (job.fileExists()) {
-                                    String filename = renameFile(job.getFilename(), job.getDir());
-                                    setFilename(filename);
-                                    job.setFilename(filename);
-                                    job.repeatApproved();
-                                }
-                                addJob(job);
-                                selectedJob = job;
-                                Platform.runLater(() -> form.tfFilename.requestFocus());
-                            }
-                            else {
-                                clearLink();
-                            }
-                            return;
-                        }
-                        if (Utility.isExtractableLink(presentLink)) {
-                            Thread getNames = new Thread(getFilenames(presentLink));
-                            getNames.start();
-                            while (!getNames.getState().equals(Thread.State.TERMINATED)) {
-                                sleep(150);
-                            }
-                        }
-                        else {
-                            addJob(new Job(presentLink, form.tfDir.getText()));
-                            clearLink();
-                        }
-                    }
-                }
-            }
-            else {
-                messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
-                clearLink();
-            }
         };
     }
 
@@ -428,8 +433,7 @@ public class FormLogic {
     }
 
     private void addJobHistory(Job newJob) {
-        jobHistoryList.addLast(newJob);
-        AppSettings.get.jobHistory().setJobList(jobHistoryList);
+        AppSettings.get.jobHistory().addJob(newJob);
     }
 
     private void addDuplicateJob(@NotNull Job job) {
@@ -448,28 +452,32 @@ public class FormLogic {
     private void updateBatch() {
         updatingBatch.setValue(false);
         if (selectedJob != null) {
-            Job job = new Job(form.tfLink.getText(), form.tfDir.getText(), form.tfFilename.getText(), selectedJob.repeatOK());
+            Job job = new Job(getLink(), getDir(), getFilename(), selectedJob.repeatOK());
             removeJob(selectedJob);
             addJob(job);
         }
         selectedJob = null;
     }
 
-    private boolean fileExists(String filename) {
-        Path downloadFolder = Paths.get(form.tfDir.getText());
-        CheckFile checkFile = new CheckFile(downloadFolder, filename);
-        Thread thread = new Thread(checkFile);
-        thread.start();
-        while (!thread.getState().equals(Thread.State.TERMINATED)) {
-            sleep(250);
+    private String fileExists(String filename) {
+        for (String folder : AppSettings.get.folders().getFolders()) {
+            Path downloadFolder = Paths.get(folder);
+            CheckFile checkFile = new CheckFile(downloadFolder, filename);
+            Thread thread = new Thread(checkFile);
+            thread.start();
+            while (!thread.getState().equals(Thread.State.TERMINATED)) {
+                sleep(250);
+            }
+            if (checkFile.fileFound())
+                return folder;
         }
-        return checkFile.fileFound();
+        return "";
     }
 
     private Job hasHistory(String link) {
-        if (jobHistoryList.isEmpty())
+        if (AppSettings.get.jobHistory().isEmpty())
             return null;
-        for (Job job : jobHistoryList) {
+        for (Job job : AppSettings.get.jobHistory().getList()) {
             if (job.getLink().equals(link)) {
                 return job;
             }
@@ -481,38 +489,14 @@ public class FormLogic {
         Path path = Paths.get(dir, filename);
         String newFilename = filename;
         int fileNum = -1;
-        if (path.toFile().exists()) {
-            File folder = new File(dir);
-            File[] files = folder.listFiles();
-            for (File file : files) {
-                String name = file.getName();
-                if (name.startsWith(filename)) {
-                    if (name.contains("(") && name.contains(")")) {
-                        int num = getNumberFromFilename(filename);
-                        fileNum = Math.max(num, fileNum);
-                    }
-                }
-            }
-        }
+        String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
+        String ext = "." + FilenameUtils.getExtension(filename);
         while (path.toFile().exists()) {
-            String base = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
-            String ext = "." + FilenameUtils.getExtension(filename);
             fileNum += 1;
-            newFilename = base + " (" + fileNum + ")" + ext;
+            newFilename = baseName + " (" + fileNum + ")" + ext;
             path = Paths.get(dir, newFilename);
         }
         return newFilename;
-    }
-
-    private int getNumberFromFilename(String filename) {
-        int number = -1;
-        String regex = "(\\()(\\d+)(\\))";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(filename);
-        if (m.find()) {
-            number = Integer.parseInt(m.group(m.groupCount() - 1));
-        }
-        return number;
     }
 
     private void checkFiles() {
@@ -520,27 +504,20 @@ public class FormLogic {
         //job batch persists between reloads, and we can't be sure that there were no changes to the files in the download folders between reloads.
         List<Job> deleteList = new ArrayList<>();
         List<Job> replaceList = new ArrayList<>();
-        for (Job job : jobHistoryList) {
-            for (Job listJob : jobList) {
-                if (job.getLink().equals(listJob.getLink()) && listJob.noRepeat()) {
-                    for (String folder : folders.getFolders()) {
-                        Path path = Paths.get(folder, listJob.getFilename());
-                        if (path.toFile().exists()) {
-                            deleteList.add(job);
-                            AskYesNo ask = new AskYesNo("You have already downloaded the file : " + nl +
-                                                                listJob.getFilename() + nl.repeat(2) +
-                                                                "And it exists here : " + nl + folder + nl.repeat(2) +
-                                                                "This job will download the file into this folder:" + nl + listJob.getDir() + nl.repeat(2) +
-                                                                "If the folders are the same, it will be given a slightly different filename because" + nl + "Drifty will not over-write an existing file." + nl.repeat(2) +
-                                                                "Do you want to download it again?");
-                            if (ask.getResponse().isYes()) {
-                                String filename = renameFile(job.getFilename(), job.getDir());
-                                setFilename(filename);
-                                replaceList.add(new Job(job.getLink(), job.getDir(), filename, true));
-                            }
-                            break;
-                        }
-                    }
+        for (Job job : jobList) {
+            Path path = Paths.get(job.getDir(), job.getFilename());
+            if (path.toFile().exists()) {
+                deleteList.add(job);
+                String message = "The file: " + nl + job.getFilename() + nl.repeat(2) +
+                        "Already exists in folder:" + nl + job.getDir() + nl.repeat(2) +
+                        "It will be renamed as shown here, or you can give it a new name. If you change it to the same name, your current file will be replaced." + nl.repeat(2) +
+                        "If you chose yes, the download will proceed using the filename shown (or whatever you change it to). If you chose No, the job will be removed from the list and it will not be downloaded.";
+                String filename = renameFile(job.getFilename(), job.getDir());
+                AskYesNo ask = new AskYesNo(message, filename);
+                if (ask.getResponse().isYes()) {
+                    filename = ask.getFilename();
+                    setFilename(filename);
+                    replaceList.add(new Job(job.getLink(), job.getDir(), filename, true));
                 }
             }
         }
@@ -550,13 +527,12 @@ public class FormLogic {
         for (Job job : replaceList) {
             addJob(job);
         }
-        commitJobListToListView();
     }
 
     private Runnable getFilenames(String link) {
         return () -> {
             //Using a Worker Task, this method gets the filename(s) from the link.
-            Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, form.tfDir.getText());
+            Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
             Worker<ConcurrentLinkedDeque<Job>> worker = task;
             Platform.runLater(() -> {
             /*
@@ -597,27 +573,51 @@ public class FormLogic {
     }
 
     private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {
-        String pastJob = "You have downloaded %s in the past. " + nl.repeat(2) + "If you still wish to download this file again, it will be given a unique name so that the existing file is not over-written" + nl.repeat(2) + "Do you still want to download this file?";
-        String fileExists = "This file:" + nl.repeat(2) + "%s" + nl.repeat(2) + "Exists in folder:" + nl.repeat(2) + "%s" + nl.repeat(2) + "If you download it again, it will be given a slightly different name to avoid over-writing the existing file." + nl.repeat(2) + "Do you wish to download it again?";
+        String pastJobNoFile = "You have downloaded %s in the past, but the file does not exist in your download folder." + nl.repeat(2) + " Click Yes if you still wish to download this file. Otherwise, click No.";
+        String pastJobFileExists = "You have downloaded %s in the past, and the file exists in your download folder." + nl.repeat(2) +
+                "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) +
+                "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
+        String fileExistsString = "This file:" + nl.repeat(2) + "%s" + nl.repeat(2) + "Exists in in the download folder." + nl.repeat(2) +
+                "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) +
+                "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
         Platform.runLater(() -> {
+            String message;
+            AskYesNo ask = new AskYesNo("");
+            boolean addJob;
             if (worker.valueProperty().get() != null) {
                 for (Job job : worker.valueProperty().get()) {
+                    boolean fileExists = job.fileExists();
+                    boolean hasHistory = AppSettings.get.jobHistory().exists(job.getLink());
+                    boolean existsHasHistory = fileExists && hasHistory;
+                    boolean existsNoHistory = fileExists && !hasHistory;
+                    boolean fileHasHistory = hasHistory && !fileExists;
                     if (!jobList.contains(job)) {
-                        if (jobHistoryMatch(job)) {
-                            AskYesNo ask = new AskYesNo(String.format(pastJob, job.getFilename()));
-                            if (ask.getResponse().isYes()) {
-                                addDuplicateJob(job);
+                        if (existsHasHistory) {
+                            message = String.format(pastJobFileExists, job.getFilename());
+                            ask = new AskYesNo(message, renameFile(job.getFilename(), job.getDir()));
+                        }
+                        else if (existsNoHistory) {
+                            message = String.format(fileExistsString, job.getFilename());
+                            ask = new AskYesNo(message, false);
+                        }
+                        else if (fileHasHistory) {
+                            message = String.format(pastJobNoFile, job.getFilename());
+                            ask = new AskYesNo(message, false);
+                        }
+                        if (fileHasHistory || existsHasHistory || existsNoHistory) {
+                            addJob = ask.getResponse().isYes();
+                            if (addJob) {
+                                String newFilename = ask.getFilename();
+                                boolean repeatDownload = newFilename.equals(job.getFilename());
+                                String filename = newFilename.isEmpty() ? job.getFilename() : newFilename;
+                                if (!filename.isEmpty()) {
+                                    addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
+                                }
                             }
                         }
-                        else if (jobFileExists(job)) {
-                            AskYesNo ask = new AskYesNo(String.format(fileExists, job.getFilename(), job.getDir()));
-                            if (ask.getResponse().isYes()) {
-                                addDuplicateJob(job);
-                            }
-                        }
-                        else {
+                        else
                             addJob(job);
-                        }
+
                     }
                 }
             }
@@ -625,7 +625,7 @@ public class FormLogic {
     }
 
     public boolean jobFileExists(Job newJob) {
-        for (Job job : jobHistoryList) {
+        for (Job job : AppSettings.get.jobHistory().getList()) {
             if (job.getLink().equals(newJob.getLink()) && job.getFilename().equals(newJob.getFilename())) {
                 for (String folder : AppSettings.get.folders().getFolders()) {
                     Path downloadPath = Paths.get(folder);
@@ -642,14 +642,6 @@ public class FormLogic {
         return false;
     }
 
-    private boolean jobHistoryMatch(Job newJob) {
-        for (Job job : jobHistoryList) {
-            if (job.matches(newJob))
-                return true;
-        }
-        return false;
-    }
-
     private void delayFolderSave(String folderString, File folder) {
         /*
         If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 3 seconds
@@ -657,7 +649,7 @@ public class FormLogic {
         */
         new Thread(() -> {
             sleep(3000);
-            if (form.tfDir.getText().equals(folderString)) {
+            if (getDir().equals(folderString)) {
                 if (folder.exists() && folder.isDirectory()) {
                     folders.addFolder(folder.getAbsolutePath());
                     setDirContextMenu();
@@ -712,11 +704,6 @@ public class FormLogic {
     accessible from anywhere in the entire code base.
      */
 
-    public static void bindToProgressbar(DoubleProperty progress) {
-        form.pBar.progressProperty().unbind();
-        form.pBar.progressProperty().bind(progress);
-    }
-
     public static void initLogic(MainGridPane pane) {
         INSTANCE.start(pane);
     }
@@ -750,8 +737,7 @@ public class FormLogic {
         /*
         Called from the Edit menu, this wipes out the job history that is stored in the users file system
          */
-        AppSettings.clear.jobHistory();
-        INSTANCE.jobHistoryList.clear();
+        AppSettings.get.jobHistory().clear();
     }
 
     public static void pasteFromClipboard(String text) {
@@ -887,6 +873,18 @@ public class FormLogic {
         messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DIRECTORY);
     }
 
+    private String getLink() {
+        return form.tfLink.getText();
+    }
+
+    private String getDir() {
+        return form.tfDir.getText();
+    }
+
+    private String getFilename() {
+        return form.tfFilename.getText();
+    }
+
     /*
     These methods are for general form flow
      */
@@ -1000,6 +998,11 @@ public class FormLogic {
         if (directory != null) {
             setDir(directory.getAbsolutePath());
         }
+    }
+
+    private void selectJob(Job job) {
+        selectedJob = job;
+        updatingBatch.setValue(true);
     }
 
     private void sleep(long time) {

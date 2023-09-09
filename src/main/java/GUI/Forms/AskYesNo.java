@@ -8,12 +8,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.concurrent.TimeUnit;
+
+import static GUI.Forms.AskYesNo.State.*;
 
 /**
  * This class is meant to be used as a quick and dirty means of interacting with the
@@ -21,6 +25,10 @@ import java.util.concurrent.TimeUnit;
  * something, in which case there is only an OK button offered.
  */
 class AskYesNo {
+    enum State {
+        YES_NO, OK, FILENAME
+    }
+    private final State state;
     private final String lf = System.lineSeparator();
     private double width = 200;
     private double height = 150;
@@ -30,37 +38,45 @@ class AskYesNo {
     private Button btnOk;
     private Label message;
     private VBox vbox;
+    private TextField tfFilename;
     public static boolean answerYes = false;
     private String msg = "";
-    private boolean okOnly = false;
+    private String filename = "";
     private static boolean waiting = true;
     private final GetResponse answer = new GetResponse();
 
     public AskYesNo() {
+        state = OK;
         finish();
     }
 
     public AskYesNo(String message, boolean okOnly) {
         this.msg = message;
-        this.okOnly = okOnly;
+        this.state = okOnly ? OK : YES_NO;
+        finish();
+    }
+
+    public AskYesNo(String message, String filename) {
+        this.msg = message;
+        this.filename = filename;
+        this.state = FILENAME;
         finish();
     }
 
     public AskYesNo(String message) {
         this.msg = message;
+        this.state = OK;
         finish();
     }
 
     private void finish() {
-        createControls();
         String[] lines = msg.split(lf);
         int maxChar = 0;
         for (String line : lines) {
             maxChar = Math.max(maxChar, line.length());
         }
-        width = width + (maxChar * 5);
-        height = height + (lines.length * 30);
-/*
+        width = width + (maxChar * 2);
+        height = height + (lines.length * 20);
         int screenHeight = (int) Constants.SCREEN_HEIGHT;  // E.g.: 768
         int screenWidth = (int) Constants.SCREEN_WIDTH;    // E.g.: 1366
         if (width > screenWidth) {
@@ -69,7 +85,6 @@ class AskYesNo {
         if (height > screenHeight) {
             height = screenHeight * .9;
         }
-*/
         createControls();
     }
 
@@ -87,6 +102,10 @@ class AskYesNo {
     }
 
     private void createControls() {
+        Text text = new Text(msg);
+        text.setFont(Constants.getMonaco(16));
+        text.setTextAlignment(TextAlignment.LEFT);
+        text.setWrappingWidth(width * .85);
         message = new Label("Are you sure?");
         message.setFont(Constants.getMonaco(17));
         if (!msg.isEmpty()) {
@@ -108,18 +127,25 @@ class AskYesNo {
             waiting = false;
             stage.close();
         });
-        HBox hbox;
-        if (okOnly) {
-            hbox = new HBox(20, btnOk);
-        }
-        else {
-            hbox = new HBox(20, btnYes, btnNo);
-        }
-
+        tfFilename = new TextField(filename);
+        tfFilename.setMinWidth(width * .4);
+        tfFilename.setMaxWidth(width * .4);
+        tfFilename.setPrefWidth(width * .4);
+        tfFilename.textProperty().addListener(((observable, oldValue, newValue) -> this.filename = newValue));
+        HBox hbox = new HBox();
+        hbox.setSpacing(20);
         hbox.setAlignment(Pos.CENTER);
-        vbox = new VBox(30, message, hbox);
+        vbox = new VBox(30, text);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
+        if(state.equals(FILENAME)) {
+            vbox.getChildren().add(tfFilename);
+        }
+        switch(state) {
+            case OK -> hbox.getChildren().add(btnOk);
+            case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
+        }
+        vbox.getChildren().add(hbox);
     }
 
     public GetResponse getResponse() {
@@ -155,7 +181,9 @@ class AskYesNo {
         stage.showAndWait();
     }
 
-
+    public String getFilename() {
+        return filename;
+    }
     private void sleep() {
         try {
             TimeUnit.MILLISECONDS.sleep(50);
