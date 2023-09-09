@@ -50,7 +50,7 @@ public class Set { // This class is used to set the user preferences
         preferences.put(LAST_FOLDER.toString(), lastFolderPath);
     }
 
-    public void batchDownloadJobs(Jobs jobs) {
+    public void Jobs(Jobs jobs) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobs);
