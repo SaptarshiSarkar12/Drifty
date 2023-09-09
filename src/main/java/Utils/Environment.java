@@ -24,7 +24,7 @@ public class Environment {
     Next, it figures out which path to use to store yt-dlp and the users batch list.
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
-    public static void initializeEnvironment() {
+    public static void initializeEnvironment() throws IOException {
         messageBroker.sendMessage("OS : " + OS.getOSName(), MessageType.INFO, MessageCategory.LOG);
         String ytDLP = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
         String appUseFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".config", "Drifty").toAbsolutePath().toString();

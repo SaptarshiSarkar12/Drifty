@@ -9,6 +9,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class Main {
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         Environment.setMessageBroker(new MessageBroker(System.out));
         messageBroker = Environment.getMessageBroker();

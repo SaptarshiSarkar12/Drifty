@@ -22,6 +22,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 
 import static javafx.scene.layout.AnchorPane.*;
 
@@ -30,7 +31,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         Environment.setMessageBroker(new MessageBroker());

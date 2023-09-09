@@ -2,7 +2,6 @@ package Preferences;
 
 import Enums.MessageCategory;
 import Enums.MessageType;
-import GUI.Support.JobHistory;
 import Utils.MessageBroker;
 
 import java.util.prefs.BackingStoreException;
@@ -48,10 +47,6 @@ public class Clear { // This class is used to clear the user preferences
 
     public void alwaysAutoPaste() {
         preferences.remove(ALWAYS_AUTO_PASTE.toString());
-    }
-
-    public void jobHistory() {
-        AppSettings.set.jobHistory(new JobHistory());
     }
 
     public void clearAll() {

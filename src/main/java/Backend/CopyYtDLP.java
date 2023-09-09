@@ -5,6 +5,7 @@ import Enums.MessageType;
 import Enums.Program;
 import Utils.Environment;
 import Utils.MessageBroker;
+import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +17,12 @@ import java.nio.file.Path;
 public class CopyYtDLP {
     static final MessageBroker messageBroker = Environment.getMessageBroker();
 
-    public boolean copyYtDLP(InputStream inputStream) {
+    public boolean copyYtDLP(InputStream inputStream) throws IOException {
         Path ytDLPPath = Program.getYtDLPFullPath();
         if (!Files.exists(ytDLPPath)) {
+            if(!ytDLPPath.toFile().getParentFile().exists()) {
+                FileUtils.createParentDirectories(ytDLPPath.toFile());
+            }
             try (OutputStream outputStream = Files.newOutputStream(ytDLPPath)) {
                 if (inputStream != null) {
                     byte[] buffer = new byte[4096];

@@ -1,7 +1,7 @@
 package Enums;
 
-public enum DownloaderProps {
-    IS_DOWNLOAD_ACTIVE, DOWNLOAD_PERCENTAGE, TOTAL_SIZE, SUPPORTS_MULTI_THREADING, NUMBER_OF_THREADS, THREADING_THRESHOLD;
+public enum DownloadProperties {
+    IS_DOWNLOAD_ACTIVE, DOWNLOAD_PERCENTAGE, PROGRESS, TOTAL_SIZE, SUPPORTS_MULTI_THREADING, NUMBER_OF_THREADS, THREADING_THRESHOLD;
 
     private static boolean isDownloadActive = false;
     private static float downloadPercentage = 0.0f;
@@ -10,13 +10,16 @@ public enum DownloaderProps {
     private static int numberOfThreads = 3;
     private static final long threadingThreshold = 52428800; // 52428800 bytes = 50 MB
 
-    public static synchronized Object getValue(DownloaderProps prop) {
+    public static synchronized Object get(DownloadProperties prop) {
         switch (prop) {
             case IS_DOWNLOAD_ACTIVE -> {
                 return isDownloadActive;
             }
             case DOWNLOAD_PERCENTAGE -> {
                 return downloadPercentage;
+            }
+            case PROGRESS -> {
+                return downloadPercentage / 100.0;
             }
             case TOTAL_SIZE -> {
                 return totalSize;
@@ -36,7 +39,7 @@ public enum DownloaderProps {
         }
     }
 
-    public static synchronized void setValue(DownloaderProps prop, Object value) {
+    public static synchronized void set(DownloadProperties prop, Object value) {
         switch (prop) {
             case IS_DOWNLOAD_ACTIVE -> isDownloadActive = (boolean) value;
             case DOWNLOAD_PERCENTAGE -> downloadPercentage = (float) value;

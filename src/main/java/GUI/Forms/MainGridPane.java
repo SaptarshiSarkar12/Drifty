@@ -1,6 +1,7 @@
 package GUI.Forms;
 
 import GUI.Support.Job;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
@@ -84,10 +85,8 @@ public class MainGridPane extends GridPane {
         add(btnSave, 1, 13);
         add(btnStart, 3, 13);
 
-/*
         setPrefWidth(Constants.SCREEN_WIDTH * .4);
         setPrefHeight(Constants.SCREEN_HEIGHT * .4);
-*/
         setVgrow(pBar, Priority.ALWAYS);
         setVgrow(lblDirOut, Priority.ALWAYS);
         setVgrow(lblFilenameOut, Priority.ALWAYS);
@@ -122,7 +121,7 @@ public class MainGridPane extends GridPane {
                 if (empty || item == null) {
                     // Make empty cells not selectable
                     setDisable(true);
-                    setText("");
+                    Platform.runLater(() -> setText(""));
                 }
                 else {
                     // Set the text for non-empty cells

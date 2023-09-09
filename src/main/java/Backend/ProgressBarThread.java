@@ -1,6 +1,6 @@
 package Backend;
 
-import Enums.DownloaderProps;
+import Enums.DownloadProperties;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
@@ -35,18 +35,20 @@ public class ProgressBarThread extends Thread {
     private List<Long> downloadSpeeds;
     private long totalDownloadedBytes;
     private DoubleProperty progress;
+    private String dir;
 
-    public ProgressBarThread(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, String fileName, Long totalSize) {
+    public ProgressBarThread(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, String fileName, String dir, Long totalSize) {
         this.partSizes = partSizes;
         this.fileName = fileName;
-        DownloaderProps.setValue(DownloaderProps.TOTAL_SIZE, totalSize);
+        this.dir = dir;
+        DownloadProperties.set(DownloadProperties.TOTAL_SIZE, totalSize);
         this.fileOutputStreams = fileOutputStreams;
         charPercent = 0;
         fos = null;
         totalDownloadedBytes = 0;
         charAmt = 80 / fileOutputStreams.size(); // value to determine length of terminal progressbar
-        isMultiThreadedDownloading = (boolean) DownloaderProps.getValue(DownloaderProps.SUPPORTS_MULTI_THREADING);
-        DownloaderProps.setValue(DownloaderProps.IS_DOWNLOAD_ACTIVE, true);
+        isMultiThreadedDownloading = (boolean) DownloadProperties.get(DownloadProperties.SUPPORTS_MULTI_THREADING);
+        DownloadProperties.set(DownloadProperties.IS_DOWNLOAD_ACTIVE, true);
         charPercents = new ArrayList<>(fileOutputStreams.size());
         downloadedBytesPerPart = new ArrayList<>(fileOutputStreams.size());
         downloadSpeeds = new ArrayList<>(fileOutputStreams.size());
@@ -57,7 +59,7 @@ public class ProgressBarThread extends Thread {
 
     public ProgressBarThread(FileOutputStream fos, long totalDownloadedBytes, String fileName) {
         this.charAmt = 20; // value to determine length of terminal progressbar
-        DownloaderProps.setValue(DownloaderProps.IS_DOWNLOAD_ACTIVE, true);
+        DownloadProperties.set(DownloadProperties.IS_DOWNLOAD_ACTIVE, true);
         this.downloadSpeed = 0;
         this.downloadedBytes = 0;
         this.totalDownloadedBytes = totalDownloadedBytes;
@@ -76,10 +78,10 @@ public class ProgressBarThread extends Thread {
             String a = new String(new char[(int) filled]).replace("\0", "=");
             String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
             String bar = a + b;
-            DownloaderProps.setValue(DownloaderProps.DOWNLOAD_PERCENTAGE, (100f * downloadedBytes / totalDownloadedBytes));
+            DownloadProperties.set(DownloadProperties.DOWNLOAD_PERCENTAGE, (100f * downloadedBytes / totalDownloadedBytes));
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
-            float totalDownloadPercent = (float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE);
+            float totalDownloadPercent = (float) DownloadProperties.get(DownloadProperties.DOWNLOAD_PERCENTAGE);
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = convertBytes(downloadSpeed);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
@@ -123,8 +125,8 @@ public class ProgressBarThread extends Thread {
             String a = new String(new char[(int) filled]).replace("\0", "=");
             String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
             String bar = a + b;
-            DownloaderProps.setValue(DownloaderProps.DOWNLOAD_PERCENTAGE, (100f * totalDownloadedBytes / totalSizeOfTheFile));
-            float totalDownloadPercent = (float) DownloaderProps.getValue(DownloaderProps.DOWNLOAD_PERCENTAGE);
+            DownloadProperties.set(DownloadProperties.DOWNLOAD_PERCENTAGE, (100f * totalDownloadedBytes / totalSizeOfTheFile));
+            float totalDownloadPercent = (float) DownloadProperties.get(DownloadProperties.DOWNLOAD_PERCENTAGE);
             bar = bar.substring(0, (charAmt / 2) - 2) + String.format("%02d", (int) (totalDownloadPercent)) + "%" + bar.substring((charAmt / 2) + 1);
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
@@ -163,15 +165,15 @@ public class ProgressBarThread extends Thread {
     }
 
     private void cleanup() {
-        DownloaderProps.setValue(DownloaderProps.DOWNLOAD_PERCENTAGE, 0f);
+        DownloadProperties.set(DownloadProperties.DOWNLOAD_PERCENTAGE, 0f);
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
             System.out.println();
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
+            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = convertBytes(downloadedBytes);
             System.out.println();
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + FileDownloader.getDir() + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
+            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY, MessageType.INFO, MessageCategory.DOWNLOAD);
         } else {
             System.out.println();
             messageBroker.sendMessage(DOWNLOAD_FAILED, MessageType.ERROR, MessageCategory.DOWNLOAD);
@@ -183,8 +185,8 @@ public class ProgressBarThread extends Thread {
         long initialMeasurement;
         String[] spinner = new String[]{"/", "-", "\\", "|"};
         List<Long> initialMeasurements = isMultiThreadedDownloading ? new ArrayList<>(fileOutputStreams.size()) : null;
-        this.totalSizeOfTheFile = (long) DownloaderProps.getValue(DownloaderProps.TOTAL_SIZE);
-        boolean downloading = (boolean) DownloaderProps.getValue(DownloaderProps.IS_DOWNLOAD_ACTIVE);
+        this.totalSizeOfTheFile = (long) DownloadProperties.get(DownloadProperties.TOTAL_SIZE);
+        boolean downloading = (boolean) DownloadProperties.get(DownloadProperties.IS_DOWNLOAD_ACTIVE);
         while (downloading) {
             try {
                 if (!isMultiThreadedDownloading) {
@@ -221,7 +223,7 @@ public class ProgressBarThread extends Thread {
                 }
             } catch (InterruptedException | IOException ignored) {}
             finally {
-                downloading = (boolean) DownloaderProps.getValue(DownloaderProps.IS_DOWNLOAD_ACTIVE);
+                downloading = (boolean) DownloadProperties.get(DownloadProperties.IS_DOWNLOAD_ACTIVE);
             }
         }
         cleanup();
