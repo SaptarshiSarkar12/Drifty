@@ -51,10 +51,6 @@ public class Jobs {
         save();
     }
 
-    private void save() {
-        AppSettings.set.Jobs(this);
-    }
-
     public boolean isNull() {
         return jobList == null;
     }
@@ -73,5 +69,10 @@ public class Jobs {
 
     public void clear() {
         jobList.clear();
+        save();
+    }
+
+    private void save() {
+        AppSettings.set.Jobs(this);
     }
 }
