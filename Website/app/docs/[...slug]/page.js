@@ -56,11 +56,10 @@ const sections = [
 ];
 
 export async function generateStaticParams() {
-    const files = fs.readdirSync('public/docs')
-    return sections.map(page => ({
+    const sections = JSON.parse(fs.readFileSync(path.join('public', 'sections.json'), 'utf8'))
+    return sections.sections.map(page => ({
         params: {
-            slug: page.filename.replace('.mdx', '').concat(
-                    page.hasChildren ? page.children.map(child => child.filename.replace('.mdx', '')) : []
+            slug: page.filename.replace('.mdx', '').concat(page.hasChildren ? page.children.map(child => child.filename.replace('.mdx', '')) : []
             )
         }
     }));
