@@ -5,8 +5,6 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import DocsLayout from "@/app/docs/DocsLayout";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from 'rehype-highlight';
-import langHttp from 'highlight.js/lib/languages/http'
-import langNginx from 'highlight.js/lib/languages/nginx'
 import "@/app/github-dark.css"
 
 export async function generateStaticParams() {
@@ -14,51 +12,26 @@ export async function generateStaticParams() {
         {
             title: "Quickstart",
             description: "The fastest way to get started with Drifty",
-            href: "/docs/quickstart",
-            filename: "quickstart.mdx",
-            hasChildren: true,
-            children: [
-                {  name: "Drifty GUI", href: "/docs/quickstart/drifty-gui", filename: "drifty-gui.mdx" },
-                {  name: "Drifty CLI", href: "/docs/quickstart/drifty-cli", filename: "drifty-cli.mdx" }
-            ]
+            href: "quickstart"
         },
         {
             title: "Getting Started",
             description: "Learn how to get started with the project",
-            href: "/docs/getting-started",
-            filename: "getting-started.mdx",
-            hasChildren: true,
-            children: [
-                {  name: "Drifty GUI", href: "/docs/getting-started/drifty-gui", filename: "drifty-gui.mdx" },
-                {  name: "Drifty CLI", href: "/docs/getting-started/drifty-cli", filename: "drifty-cli.mdx"}
-            ]
+            href: "getting-started"
         },
         {
             title: "FAQ",
             description: "Frequently asked questions",
-            href: "/docs/faq",
-            filename: "faq.mdx",
-            hasChildren: false
+            href: "faq"
         },
         {
             title: "Contributing",
             description: "Learn how to contribute to the project",
-            href: "/docs/contributing",
-            filename: "contributing.mdx",
-            hasChildren: false
-        },
-        {
-            title: "Troubleshooting",
-            description: "Learn how to troubleshoot common errors",
-            href: "/docs/troubleshooting",
-            filename: "troubleshooting.mdx",
-            hasChildren: false
+            href: "contributing"
         }
-    ];
-    return sections.map(page => ({
-        params: {
-            slug: page.filename.replace('.mdx', '').concat(page.hasChildren ? page.children.map(child => child.filename.replace('.mdx', '')) : [])
-        }
+    ]
+    return sections.map((page) => ({
+        slug: page.href
     }));
 }
 
@@ -67,7 +40,6 @@ function getPageContent(slug) {
     const { data, content } = matter(file)
     return {
         data,
-        slug,
         content
     }
 }
@@ -77,7 +49,7 @@ export default function Page({ params }) {
     const options = {
         mdxOptions: {
             remarkPlugins: [remarkGfm],
-            rehypePlugins: [rehypeHighlight, { languages: { http: langHttp, nginx: langNginx} }]
+            rehypePlugins: [rehypeHighlight]
         }
     }
     return (
