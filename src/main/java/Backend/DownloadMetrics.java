@@ -3,10 +3,10 @@ package Backend;
 public class DownloadMetrics {
     private boolean isDownloadActive;
     private float downloadPercentage;
-    private double totalSize;
+    private long totalSize;
     private boolean supportsMultiThreading;
-    private int numberOfThreads;
-    private long threadingThreshold;
+    private final int numberOfThreads = 3;
+    private final long threadingThreshold = 52428800; // 50 MB
 
     public boolean isDownloadActive() {
         return isDownloadActive;
@@ -28,11 +28,11 @@ public class DownloadMetrics {
         return downloadPercentage / 100.0;
     }
 
-    public double getTotalSize() {
+    public long getTotalSize() {
         return totalSize;
     }
 
-    public void setTotalSize(double totalSize) {
+    public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;
     }
 
@@ -48,15 +48,7 @@ public class DownloadMetrics {
         return numberOfThreads;
     }
 
-    public void setNumberOfThreads(int numberOfThreads) {
-        this.numberOfThreads = numberOfThreads;
-    }
-
     public long getThreadingThreshold() {
         return threadingThreshold;
-    }
-
-    public void setThreadingThreshold(long threadingThreshold) {
-        this.threadingThreshold = threadingThreshold;
     }
 }

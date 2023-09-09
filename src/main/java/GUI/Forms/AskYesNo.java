@@ -45,11 +45,6 @@ class AskYesNo {
     private static boolean waiting = true;
     private final GetResponse answer = new GetResponse();
 
-    public AskYesNo() {
-        state = OK;
-        finish();
-    }
-
     public AskYesNo(String message, boolean okOnly) {
         this.msg = message;
         this.state = okOnly ? OK : YES_NO;
@@ -70,13 +65,13 @@ class AskYesNo {
     }
 
     private void finish() {
-        String[] lines = msg.split(lf);
+        String[] lines = this.msg.split(lf);
         int maxChar = 0;
         for (String line : lines) {
             maxChar = Math.max(maxChar, line.length());
         }
         width = width + (maxChar * 2);
-        height = height + (lines.length * 20);
+        height = height + (lines.length * 40);
         int screenHeight = (int) Constants.SCREEN_HEIGHT;  // E.g.: 768
         int screenWidth = (int) Constants.SCREEN_WIDTH;    // E.g.: 1366
         if (width > screenWidth) {
@@ -129,8 +124,8 @@ class AskYesNo {
         });
         tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
-        tfFilename.setMaxWidth(width * .4);
-        tfFilename.setPrefWidth(width * .4);
+        tfFilename.setMaxWidth(width * .8);
+        tfFilename.setPrefWidth(width * .8);
         tfFilename.textProperty().addListener(((observable, oldValue, newValue) -> this.filename = newValue));
         HBox hbox = new HBox();
         hbox.setSpacing(20);
@@ -151,8 +146,7 @@ class AskYesNo {
     public GetResponse getResponse() {
         if(Platform.isFxApplicationThread()) {
             showScene();
-        }
-        else {
+        } else {
             Platform.runLater(this::showScene);
             while(answer.inLimbo())
                 sleep();
@@ -173,7 +167,8 @@ class AskYesNo {
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
-        stage.setOnCloseRequest(e->{
+        stage.setOnCloseRequest(e-> {
+            waiting = false;
             answer.setAnswer(false);
             stage.close();
         });

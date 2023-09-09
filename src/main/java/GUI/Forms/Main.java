@@ -145,12 +145,12 @@ public class Main extends Application {
 
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
-        MenuItem wipeHistory = new MenuItem("Clear Job History");
+        MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
         settings.setOnAction(e -> new Settings().show());
-        wipeHistory.setOnAction(e->{
-            AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download job history?\n(This will NOT delete any downloaded files)");
-            if(ask.getResponse().isYes()) {
+        wipeHistory.setOnAction(e-> {
+            AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
+            if (ask.getResponse().isYes()) {
                 FormLogic.clearJobHistory();
             }
         });
