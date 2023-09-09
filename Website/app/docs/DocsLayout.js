@@ -6,7 +6,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {AccordionDetails} from "@mui/material";
 import {useState} from "react";
 import {classNames} from "@/app/classNames";
-import {MDXProvider} from "@mdx-js/react";
 import Header from "@/app/Header";
 import Footer from "@/app/Footer";
 
@@ -61,7 +60,7 @@ export default function DocsLayout({children, className}) {
         <>
             <Header props={"bg-top"}/>
             <div className="text-center bg-gradient-to-b from-top to-bottom">
-                <h1 className={"text-5xl p-5 pb-7"}>Documentation</h1>
+                <h1 className={"text-5xl xs:text-4xl p-5 pb-7"}>Documentation</h1>
                 <hr className="h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-black to-transparent" />
                 <div id={"accordion"} className={className}>
                     <div className={"grid grid-cols-1"}>
