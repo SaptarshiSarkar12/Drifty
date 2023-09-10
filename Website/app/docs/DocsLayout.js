@@ -1,9 +1,6 @@
 "use client";
 import Link from "next/link";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {AccordionDetails} from "@mui/material";
+import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import {useState} from "react";
 import {classNames} from "@/app/classNames";
 import Header from "@/app/Header";
@@ -67,20 +64,12 @@ export default function DocsLayout({children, className}) {
                     {sections.map((page) => {
                         if (page.hasChildren) {
                             return (
-                                <Accordion expanded={expanded === page.title} onChange={handleChange(page.title)} elevation={0} disableGutters={true} key={page.title} className={"text-black border-none h-auto w-auto md:w-60"} sx={{
-                                    '&:before': {
-                                        display: 'none'
-                                    },
-                                    backgroundColor: 'transparent'
-                                }}>
-                                    <AccordionSummary key={page.title} className={classNames(
+                                <Accordion key={page.title} className={"text-black border-none h-auto w-auto md:w-60"} onChange={handleChange(page.title)}>
+                                    <AccordionItem key={page.title} className={classNames(
                                         expanded === page.title && "bg-blue-600 text-white",
                                         "hover:bg-blue-600 rounded m-2 font-bold hover:text-white")}
-                                        expandIcon={<ExpandMoreIcon/>}
+                                         title={page.title}
                                     >
-                                        <h3>{page.title}</h3>
-                                    </AccordionSummary>
-                                    <AccordionDetails sx={{ maxWidth: '480px' }}>
                                         <div className={"grid grid-cols-1"}>
                                             {page.children.map((child, index) => {
                                                 return (
@@ -91,26 +80,19 @@ export default function DocsLayout({children, className}) {
                                                 )
                                             })}
                                         </div>
-                                    </AccordionDetails>
+                                    </AccordionItem>
                                 </Accordion>
                             )
                         } else {
                             return (
                                 <Link key={page.title} className={"p-1 hover:text-blue-800 font-medium hover:font-bold rounded-lg"}
                                       href={page.href}>
-                                    <Accordion expanded={expanded === page.title} onChange={handleChange(page.title)} elevation={0} disableGutters={true} key={page.title} className={"text-black border-none h-auto w-auto md:w-60"} sx={{
-                                        '&:before': {
-                                            display: 'none'
-                                        },
-                                        backgroundColor: 'transparent',
-                                        '&.Mui-expanded': { margin: 0 },
-                                        padding: 0
-                                    }}>
-                                        <AccordionSummary className={classNames(
+                                    <Accordion className={"text-black border-none h-auto w-auto md:w-60"}>
+                                        <AccordionItem className={classNames(
                                             expanded === page.title && "bg-blue-600 text-white",
-                                            "hover:bg-blue-600 rounded m-2 border-none font-bold hover:text-white")}>
-                                                <h1 className={"text-xl md:text-sm"}>{page.title}</h1>
-                                        </AccordionSummary>
+                                            "hover:bg-blue-600 rounded m-2 border-none font-bold hover:text-white")}
+                                                       title={page.title}
+                                        />
                                     </Accordion>
                                 </Link>
                             )
