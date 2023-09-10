@@ -7,13 +7,15 @@ export default function MainSection() {
             <div className="lg:flex lg:w-1/2">
                 <div className=" lg:flex lg:flex-col  text-white py-20 px-6 md:text" >
                     <h1 className="text-8xl lg:ml-20 font-extrabold text-white  mt-0 mb-6">Drifty</h1>
-                    <p className="text-2xl  lg:ml-20 font-sans mb-8 ">Drifty is an open-source interactive File Downloader system built
-                        with Java. It takes the link to the file to be downloaded, the directory where it
-                        needs to be saved and the filename of the downloaded file as input
-                        and downloads it in the given directory with the given filename.</p>
+                    <p className="text-2xl  lg:ml-20 font-sans mb-8 ">
+                        Drifty is an Open-Source interactive File Downloader system built
+                        with Java. It takes the link of the file to be downloaded and
+                        downloads it in the appropriate folder with the appropriate filename
+                        retrieved from the link.
+                    </p>
                     <div className="flex space-x-3 justify-start lg:ml-20 lg:mt-3 lg:mb-16">
-                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 text-white font-medium text-lg leading-tight rounded-lg shadow-md  hover:from-pink-500 hover:to-yellow-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition ease-in-out" href="/#contribute" role="button">More Info</Link>
-                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:from-pink-500 hover:to-yellow-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition ease-in-out" href="/#demo" role="button">Demo</Link>
+                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 text-white font-medium text-lg leading-tight rounded-lg shadow-md  hover:from-pink-500 hover:to-yellow-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition" href="/#contribute" role="button">More Info</Link>
+                        <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 text-white font-medium text-lg leading-tight rounded-lg shadow-md hover:from-pink-500 hover:to-yellow-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition" href="/#demo" role="button">Demo</Link>
                     </div>
                 </div>
             </div>

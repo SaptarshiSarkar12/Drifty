@@ -18,9 +18,9 @@ export default function Contribute({ props }) {
             <div className="md:pr-8 mb-2">
                 <h2 className="text-5xl sm:text-4xl font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 xs:p-5 text-center" >More Information About Drifty</h2>
                 <p className="text-2xl text-center ml-5 mr-5 font-sans mb-8 leading-normal xs:px-4">
-                    It is currently available in CLI (Command Line Interface) mode and
-                    the GUI (Graphical User Interface) version is under active
-                    development. We believe in team work. Any contribution that brings
+                    It is available both in CLI (Command Line Interface) and
+                    GUI (Graphical User Interface) mode for all the major platforms like
+                    Windows, Linux and MacOS. We believe in team work. Any contribution that brings
                     value to the project is highly appreciated.
                     You can look into the <Link className={"font-bold bg-gradient-to-r from-pink-500 to-yellow-400 text-transparent bg-clip-text"} target={"_blank"} href={"https://github.com/users/SaptarshiSarkar12/projects/3"}>roadmap</Link> to know about the issues to work on,
                     <b className={"bg-gradient-to-r from-green-500 to-green-400 text-transparent bg-clip-text"}> in progress</b> and completed.
@@ -30,7 +30,7 @@ export default function Contribute({ props }) {
                 <h2 className="text-5xl sm:text-4xl font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 xs:p-5 text-center" >Be a part of Drifty Family!</h2>
                 <div className="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-8 md:gap-2 xs:grid-cols-4 rounded-full space-x-0 gap-y-4 justify-items-center xs:pb-10 ">
                     {props.contrib.map((item, index) => {
-                        return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full" width={64} height={64} src={item.avatar_url + ".webp&s=64"} alt={item.login}></Image></a>
+                        return index < 6 && <a href={item.html_url} key={index}><Image className="rounded-full hover:transition ease-in-out hover:-translate-y-1 hover:scale-110 delay-150 duration-300" width={64} height={64} src={item.avatar_url + ".webp&s=77"} alt={item.login}></Image></a>
                     })}
                     <a href="https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors" target="_blank" >
                         <div className="gap-1 rounded-full h-16 w-16 text-xl font-semibold flex items-center justify-center border-2 md:border-white text-center   hover:text-black xs:transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300">

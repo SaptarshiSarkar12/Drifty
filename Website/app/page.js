@@ -3,6 +3,7 @@ import MainSection from "./MainSection"
 import Contribute from "./Contribute";
 import Demo from "./Demo"
 import Footer from "./Footer";
+import Features from "@/app/features";
 
 export default async function Home() {
     const data = await getData()
@@ -11,6 +12,7 @@ export default async function Home() {
             <Header props={"bg-top"}/>
             <MainSection/>
             <Contribute props={data}/>
+            <Features/>
             <Demo/>
             <Footer/>
         </>

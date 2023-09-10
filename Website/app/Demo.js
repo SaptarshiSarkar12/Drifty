@@ -33,14 +33,24 @@ export default function Demo(){
                             'focus:outline-none focus:ring-0'
                         )}>
                             <div className="flex justify-center">
-                                <video width="90%" muted autoPlay loop>
+                                <video width="90%" muted loop poster={"Video Thumbnails/CLI.png"} controls>
                                     <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
-                                    Your browser does not support the video tag
+                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
+                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.
                                 </video>
                             </div>
                         </Tab.Panel>
-                        <Tab.Panel>
-                            GUI video here
+                        <Tab.Panel className={classNames(
+                            'rounded-xl bg-bottom p-3',
+                            'focus:outline-none focus:ring-0'
+                        )}>
+                            <div className="flex justify-center">
+                                <video width="90%" muted loop poster={"Video Thumbnails/GUI.png"} controls>
+                                    <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
+                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
+                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.
+                                </video>
+                            </div>
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
