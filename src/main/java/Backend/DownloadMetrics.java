@@ -1,31 +1,41 @@
 package Backend;
 
 public class DownloadMetrics {
-    private boolean isDownloadActive;
-    private float downloadPercentage;
+    private boolean active;
+    private float progressPercent;
     private long totalSize;
-    private boolean supportsMultiThreading;
-    private final int numberOfThreads = 3;
+    private boolean multithreaded;
+    private final int threadCount = 3;
     private final long threadingThreshold = 52428800; // 50 MB
 
-    public boolean isDownloadActive() {
-        return isDownloadActive;
+    private boolean success;
+
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setDownloadActive(boolean downloadActive) {
-        isDownloadActive = downloadActive;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
-    public float getDownloadPercentage() {
-        return downloadPercentage;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setDownloadPercentage(float downloadPercentage) {
-        this.downloadPercentage = downloadPercentage;
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public float getProgressPercent() {
+        return progressPercent;
+    }
+
+    public void setProgressPercent(float progressPercent) {
+        this.progressPercent = progressPercent;
     }
 
     public double getProgress() {
-        return downloadPercentage / 100.0;
+        return progressPercent / 100.0;
     }
 
     public long getTotalSize() {
@@ -36,16 +46,16 @@ public class DownloadMetrics {
         this.totalSize = totalSize;
     }
 
-    public boolean isSupportsMultiThreading() {
-        return supportsMultiThreading;
+    public boolean isMultithreaded() {
+        return multithreaded;
     }
 
-    public void setSupportsMultiThreading(boolean supportsMultiThreading) {
-        this.supportsMultiThreading = supportsMultiThreading;
+    public void setMultithreaded(boolean multithreaded) {
+        this.multithreaded = multithreaded;
     }
 
-    public int getNumberOfThreads() {
-        return numberOfThreads;
+    public int getThreadCount() {
+        return threadCount;
     }
 
     public long getThreadingThreshold() {
