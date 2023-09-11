@@ -38,9 +38,9 @@ public class FileDownloader implements Runnable {
         this.fileName = fileName;
         this.dir = dir;
         this.downloadMetrics = new DownloadMetrics();
-        this.numberOfThreads = downloadMetrics.getNumberOfThreads();
+        this.numberOfThreads = downloadMetrics.getThreadCount();
         this.threadingThreshold = downloadMetrics.getThreadingThreshold();
-        downloadMetrics.setSupportsMultiThreading(false);
+        downloadMetrics.setMultithreaded(false);
         setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
     }
 
@@ -56,7 +56,7 @@ public class FileDownloader implements Runnable {
         try {
             ReadableByteChannel readableByteChannel;
             try {
-                boolean supportsMultithreading = downloadMetrics.isSupportsMultiThreading();
+                boolean supportsMultithreading = downloadMetrics.isMultithreaded();
                 long totalSize = downloadMetrics.getTotalSize();
                 if (supportsMultithreading) {
                     List<FileOutputStream> fileOutputStreams = new ArrayList<>(numberOfThreads);
@@ -89,7 +89,7 @@ public class FileDownloader implements Runnable {
                         while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                             Thread.sleep(1000);
                         }
-                        downloadMetrics.setDownloadActive(false);
+                        downloadMetrics.setActive(false);
                         // keep the main thread from closing the IO for short amt. of time so UI thread can finish and output
                         try {
                             Thread.sleep(1000);
@@ -103,7 +103,7 @@ public class FileDownloader implements Runnable {
                     progressBarThread.start();
                     messageBroker.sendMessage(DOWNLOADING + "\"" + fileName + "\" ...", MessageType.INFO, MessageCategory.DOWNLOAD);
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    downloadMetrics.setDownloadActive(false);
+                    downloadMetrics.setActive(false);
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                     try {
                         Thread.sleep(1500);
@@ -236,7 +236,7 @@ public class FileDownloader implements Runnable {
                 long totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
                 downloadMetrics.setTotalSize(totalSize);
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                downloadMetrics.setSupportsMultiThreading((totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes")));
+                downloadMetrics.setMultithreaded((totalSize > threadingThreshold) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes")));
                 if (fileName.isEmpty()) {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];

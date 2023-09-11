@@ -46,7 +46,7 @@ public final class DriftyConstants {
     public static final String BANNER_BORDER = "====================================================================";
     public static final String FAILED_TO_CREATE_LOG = "Failed to create log : ";
     public static final String FAILED_TO_CLEAR_LOG = "Failed to clear Log contents !";
-    public static final String DOWNLOADED = "Downloaded ";
+    public static final String DOWNLOADED = "Successfully downloaded ";
     public static final String DOWNLOADING = "Downloading ";
     public static final String DOWNLOAD_FAILED = "Download failed!";
     public static final String SUCCESSFULLY = " successfully !";
