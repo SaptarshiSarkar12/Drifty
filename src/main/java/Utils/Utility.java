@@ -54,7 +54,7 @@ public final class Utility {
     }
 
     public static boolean isInstagramLink(String url) {
-        String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/p/([^/?#&]+)).*";
+        String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
