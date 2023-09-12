@@ -2,9 +2,13 @@ package GUI.Forms;
 
 import Backend.DownloadMetrics;
 import Backend.FileDownloader;
-import Enums.*;
+import Enums.Colors;
+import Enums.Domain;
+import Enums.MessageCategory;
+import Enums.MessageType;
 import GUI.Support.Folders;
 import GUI.Support.Job;
+import GUI.Support.JobHistory;
 import GUI.Support.Jobs;
 import Preferences.AppSettings;
 import Utils.CheckFile;
@@ -40,9 +44,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
@@ -57,8 +59,8 @@ public class FormLogic {
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
-    private final Map<String, Boolean> linkReDownloadMap = new HashMap<>();
     private final String nl = System.lineSeparator();
+    //private ConcurrentLinkedDeque<Job> jobList;
     private Folders folders;
     private Job selectedJob;
 
@@ -100,7 +102,13 @@ public class FormLogic {
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
-
+        form.listView.setOnMouseClicked(e -> {
+            Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+            setLink(job.getLink());
+            setDir(job.getDir());
+            setFilename(job.getFilename());
+            selectJob(job);
+        });
         form.cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
@@ -126,12 +134,13 @@ public class FormLogic {
     }
 
     private void setControlActions() {
+        form.pBar.setProgress(.5);
         form.btnSave.setOnAction(e -> new Thread(() -> {
             String link = getLink();
             String filename = getFilename();
             String dir = getDir();
             if (Paths.get(dir, filename).toFile().exists()) {
-                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Do you want to continue?");
+                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
                 if (ask.getResponse().isNo()) {
                     filename = renameFile(filename, dir);
                 }
@@ -149,8 +158,7 @@ public class FormLogic {
                 clearLink();
                 clearFilename();
                 clearFilenameOutput();
-                Thread download = new Thread(batchDownloader());
-                download.start();
+                new Thread(this::batchDownloader).start();
             }
 
         }).start());
@@ -237,172 +245,187 @@ public class FormLogic {
             if (link.isEmpty()) {
                 return;
             }
+            String message;
+            String filename;
+            String dir;
             if (!linkInJobList(link)) {
                 messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
                 if (Utility.linkValid(link)) {
-                    messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
-                    if (Utility.isExtractableLink(link)) {
+                    if (getHistory().exists(link)) {
+                        Job job = getHistory().getJob(link);
+                        filename = job.getFilename();
+                        dir = getDir();
+                        String intro = "You have downloaded this link before. The filename is:" + nl + filename + nl.repeat(2);
+                        String folder = fileExists(filename);
+                        if (!folder.isEmpty()) {
+                            message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) +
+                                    "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) +
+                                    "YES will add the job to the list with new filename. NO will do nothing.";
+                        }
+                        else {
+                            message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) +
+                                    "Do you still wish to download this file?";
+                        }
+                        AskYesNo ask = new AskYesNo(message, renameFile(filename, dir));
+                        if (ask.getResponse().isYes()) {
+                            filename = ask.getFilename();
+                            addJob(new Job(link, dir, filename, true));
+                        }
+                    }
+                    else if (Utility.isExtractableLink(link)) {
                         Thread getNames = new Thread(getFilenames(link));
                         getNames.start();
                         while (!getNames.getState().equals(Thread.State.TERMINATED)) {
                             sleep(150);
                         }
-                    } else if (AppSettings.get.jobHistory().exists(link)) {
-                        Job job = new Job(link, getDir());
-                        String filename = job.getFilename();
-                        String message;
-                        String folder = fileExists(filename);
-                        boolean fileInThisDownloadFolder = job.fileExists();
-                        if (!folder.isEmpty()) {
-                            String addendum = "exists in a different download folder: " + nl + folder + nl.repeat(2) + "and will not be renamed";
-                            if (fileInThisDownloadFolder) {
-                                addendum = "exists in the current download folder and will be renamed as shown" + nl + "(you may change it if you wish).";
-                            }
-                            message = "You have downloaded this link before and the file:" + nl + filename + nl.repeat(2) +
-                                    addendum + nl.repeat(2) +
-                                    "If you click Yes, the job will be added to the list. Clicking No will not add the job to the list.";
-                            if (fileInThisDownloadFolder) {
-                                AskYesNo ask = new AskYesNo(message, renameFile(filename, getDir()));
-                                if (ask.getResponse().isYes()) {
-                                    filename = ask.getFilename();
-                                    addJob(new Job(link, getDir(), filename, true));
-                                }
-                            } else {
-                                AskYesNo ask = new AskYesNo(message, false);
-                                if (ask.getResponse().isYes()) {
-                                    addJob(job);
-                                }
-                            }
-                        } else {
-                            message = "You have downloaded this link once before but the file does not exist in any of your download folders. Clicking Yes will add this download to the list and clicking No will not add it to the list.";
-                            AskYesNo ask = new AskYesNo(message, false);
-                            if (ask.getResponse().isYes()) {
-                                addJob(job);
-                            }
-                        }
-                    } else {
-                        Platform.runLater(() -> addJob(new Job(link, getDir())));
+                    }
+                    else {
+                        addJob(new Job(link, getDir()));
                     }
                 }
                 clearFilename();
                 clearLink();
             }
             else {
-                messageBroker.sendMessage("Link already in job list!", MessageType.ERROR, MessageCategory.LINK);
+                messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
                 clearLink();
             }
         };
     }
 
-    private Runnable batchDownloader() {
+    private void batchDownloader() {
         /*
         When the jobList is iterated, the link from a Job is passed through the Domain enum class where the file
-        extension is checked for YouTube or Instagram links.
+        extension is compared against a list of known BINARY file extensions. That list exists in the file called
+        BinaryExtensions.json in the Resources GUI folder. What matters in terms of what a BINARY file is, is whether
+        or not the file contains plain text - where you could open it in a text editor, and it would have actual words
+        in it, or if it is a truly binary file such as .zip, .exe, .dll, .dmg, .iso etc.
 
-        YouTube and Instagram files' links are sent to the GUI DownloadFile class, which is a class that extends a
+        Binary files are best handled by yt-dlp and will be handed to the GUI downloader task where download progress
+        will be displayed as well as all appropriate logging etc.
+
+        YouTube and Instagram files also get sent to the GUI DownloadFile class which is a class that extends a
         modern version of Task where feedback is attainable through various methods.
 
-        Other files' links are sent to the CLI file downloader, where the
-        progress bar will be bound to the relevant variables in that class so that download progress can still be shown in the GUI.
+        File extensions that are not in the binary extension list, are sent to the CLI file downloader, where the
+        progress bar will be bound to the relevant variables in that class so that download progress can still be
+        shown in the GUI
          */
-        return () -> {
-            processingBatch.setValue(true);
-            updatingBatch.setValue(false);
-            form.lblDownloadInfo.setTextFill(GREEN);
-            checkFiles();
-            List<Job> removeList = new ArrayList<>();
-            if (getJobs().notNull() && getJobs().isNotEmpty()) {
-                final int totalNumberOfFiles = getJobs().jobList().size();
-                int fileCount = 0;
-                LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
-                for (Job job : tempJobList) {
-                    fileCount++;
-                    messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
-                    if (job.fileExists()) {
-                        Platform.runLater(() -> {
-                            messageBroker.sendMessage(job.getFilename() + " Exists already!", MessageType.ERROR, MessageCategory.FILENAME);
-                            removeJob(job);
-                            AppSettings.get.jobHistory().addJob(job);
-                        });
-                        sleep(2500);
-                        for (double x = 1; x >= 0; x -= .05) {
-                            final double opacity = x;
-                            Platform.runLater(() -> form.lblDownloadInfo.setOpacity(opacity));
-                            sleep(75);
-                        }
-                        Platform.runLater(() -> form.lblDownloadInfo.setOpacity(1));
-                        clearDownloadOutput();
-                        continue;
-                    }
-                    setLink(job.getLink());
-                    setDir(job.getDir());
-                    setFilename(job.getFilename());
-                    Domain domain = Domain.getDomain(job.getLink());
-                    switch (domain) {
-                        case YOUTUBE, INSTAGRAM -> {
-                            Task<Integer> task = new DownloadFile(job, domain);
-                            AtomicReference<Thread> thread = new AtomicReference<>(new Thread(task));
-                            Platform.runLater(() -> {
-                                form.lblDownloadInfo.textProperty().bind(((Worker<Integer>) task).messageProperty());
-                                form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
-                            });
-                            thread.get().start();
-                            while (!thread.get().getState().equals(Thread.State.TERMINATED)) {
-                                sleep(1000);
-                            }
-                            Platform.runLater(() -> {
-                                if (((Worker<Integer>) task).valueProperty().get() != 0 && !task.isCancelled()) {
-                                    sleep(3000);
-                                    thread.set(new Thread(task));
-                                    thread.get().start();
-                                    while (!thread.get().getState().equals(Thread.State.TERMINATED)) {
-                                        sleep(1000);
+        processingBatch.setValue(true);
+        updatingBatch.setValue(false);
+        form.lblDownloadInfo.setTextFill(GREEN);
+        if (getJobs().notNull() && getJobs().isNotEmpty()) {
+            final int totalNumberOfFiles = getJobs().jobList().size();
+            int fileCount = 0;
+            LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
+            for (Job job : tempJobList) {
+                String link = job.getLink();
+                fileCount++;
+                messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
+                setLink(link);
+                setDir(job.getDir());
+                setFilename(job.getFilename());
+                Domain domain = Domain.getDomain(job.getLink());
+                ExecutorService executor = Executors.newFixedThreadPool(1);
+                Map<Job, Future<Integer>> futureMap = new HashMap<>();
+                switch (domain) {
+                    case YOUTUBE, INSTAGRAM -> {
+                        Task<Integer> task = new DownloadFile(job.getLink(),
+                                                              job.getDir(),
+                                                              job.getFilename(),
+                                                              form.tfLink.textProperty(),
+                                                              form.tfDir.textProperty(),
+                                                              form.tfFilename.textProperty(),
+                                                              form.pBar.progressProperty());
+                        Future<Integer> future = (Future<Integer>) executor.submit(task);
+                        futureMap.put(job, future);
+                        boolean done = false;
+                        while(!done) {
+                            for(Job j : futureMap.keySet()) {
+                                Future<Integer> f = futureMap.get(j);
+                                done = true;
+                                try {
+                                    if(f.get() != null && f.get().equals(0)) {
+                                        removeJob(j);
+                                        done = false;
                                     }
-                                    if (((Worker<Integer>) task).valueProperty().get() == 0) {
-                                        form.listView.getItems().remove(job);
-                                        removeList.add(job);
-                                    }
-                                } else {
-                                    form.listView.getItems().remove(job);
-                                    removeList.add(job);
+                                } catch (ExecutionException | InterruptedException e) {
+                                    throw new RuntimeException(e);
                                 }
-                            });
-                        }
-                        case OTHER -> {
-                            FileDownloader downloader = new FileDownloader(job.getLink(), job.getFilename(), job.getDir());
-                            Thread download = new Thread(downloader);
-                            DownloadMetrics downloadMetrics = downloader.getDownloadMetrics();
-                            DoubleProperty progress = new SimpleDoubleProperty(0.0);
-                            Platform.runLater(() -> {
-                                form.pBar.progressProperty().unbind();
-                                form.pBar.progressProperty().bind(progress);
-                            });
-                            download.start();
-                            while (!download.getState().equals(Thread.State.TERMINATED)) {
-                                progress.setValue(downloadMetrics.getProgress());
-                                sleep(100);
                             }
-                            Platform.runLater(() -> {
-                                form.listView.getItems().remove(job);
-                                removeList.add(job);
-                            });
+                            sleep(500);
                         }
+                        for(Job j : futureMap.keySet()) {
+                            Future<Integer> f = futureMap.get(j);
+                            try {
+                                if(f.get() != null && f.get() == 0) {
+                                    removeJob(j);
+                                }
+                            } catch (ExecutionException | InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+/*
+                        Thread thread = new Thread(task);
+                        form.lblDownloadInfo.textProperty().bind(((Worker<Integer>) task).messageProperty());
+                        Platform.runLater(() -> {
+                            form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
+                        });
+                        thread.start();
+                        System.out.println("Thread Started, getting return");
+                        Integer ret = ((Worker<Integer>) task).valueProperty().get();
+                        System.out.println("Result = " + ret + " \nWaiting...");
+                        while (!thread.getState().equals(Thread.State.TERMINATED) && ret == null) {
+                            ret = ((Worker<Integer>) task).valueProperty().get();
+                            sleep(500);
+                        }
+                        if (ret != null && ret == 0 && !task.isCancelled()) {
+                            removeJob(job);
+                        }
+*/
+                    }
+                    case OTHER -> {
+                        FileDownloader fDownloader = new FileDownloader(job.getLink(), job.getFilename(), job.getDir());
+                        DownloadMetrics metrics = fDownloader.getDownloadMetrics();
+                        Thread download = new Thread(fDownloader);
+                        DoubleProperty progress = new SimpleDoubleProperty(0.0);
+                        Platform.runLater(() -> {
+                            form.pBar.progressProperty().unbind();
+                            form.pBar.progressProperty().bind(progress);
+                        });
+                        download.start();
+                        while (!download.getState().equals(Thread.State.TERMINATED)) {
+                            progress.setValue(metrics.getProgress());
+                            sleep(100);
+                        }
+                        if (metrics.isSuccess())
+                            removeJob(job);
                     }
                 }
             }
-            for (Job job : removeList) {
-                removeJob(job);
-                addJobHistory(job);
+        }
+        clearLink();
+        clearFilename();
+        clearFilenameOutput();
+        processingBatch.setValue(false);
+        Platform.runLater(() -> {
+            form.pBar.progressProperty().unbind();
+            form.pBar.setProgress(0.0);
+        });
+    }
+
+    private String fileExists(String filename) {
+        for (String folder : AppSettings.get.folders().getFolders()) {
+            CheckFile checkFile = new CheckFile(folder, filename);
+            Thread thread = new Thread(checkFile);
+            thread.start();
+            while (!thread.getState().equals(Thread.State.TERMINATED)) {
+                sleep(100);
             }
-            clearLink();
-            clearFilename();
-            clearFilenameOutput();
-            processingBatch.setValue(false);
-            Platform.runLater(() -> {
-                form.pBar.progressProperty().unbind();
-                form.pBar.setProgress(0.0);
-            });
-        };
+            if (checkFile.fileFound())
+                return folder;
+        }
+        return "";
     }
 
     private boolean linkInJobList(String link) {
@@ -428,21 +451,10 @@ public class FormLogic {
         commitJobListToListView();
     }
 
-    private void addJobHistory(Job newJob) {
-        AppSettings.get.jobHistory().addJob(newJob);
-    }
-
-    private void addDuplicateJob(@NotNull Job job) {
-        String link = job.getLink();
-        String dir = job.getDir();
-        String filename = renameFile(job.getFilename(), job.getDir());
-        addJob(new Job(link, dir, filename, true));
-    }
-
-    private void removeJob(Job job) {
-        getJobs().remove(job);
+    private void removeJob(Job oldJob) {
+        getJobs().remove(oldJob);
         commitJobListToListView();
-        messageBroker.sendMessage("Job Removed : " + job.getLink(), MessageType.INFO, MessageCategory.BATCH);
+        messageBroker.sendMessage("Job Removed: " + oldJob.getLink(), MessageType.INFO, MessageCategory.BATCH);
     }
 
     private void updateBatch() {
@@ -453,32 +465,6 @@ public class FormLogic {
             addJob(job);
         }
         selectedJob = null;
-    }
-
-    private String fileExists(String filename) {
-        for (String folder : AppSettings.get.folders().getFolders()) {
-            Path downloadFolder = Paths.get(folder);
-            CheckFile checkFile = new CheckFile(downloadFolder, filename);
-            Thread thread = new Thread(checkFile);
-            thread.start();
-            while (!thread.getState().equals(Thread.State.TERMINATED)) {
-                sleep(250);
-            }
-            if (checkFile.fileFound())
-                return folder;
-        }
-        return "";
-    }
-
-    private Job hasHistory(String link) {
-        if (AppSettings.get.jobHistory().isEmpty())
-            return null;
-        for (Job job : AppSettings.get.jobHistory().getList()) {
-            if (job.getLink().equals(link)) {
-                return job;
-            }
-        }
-        return null;
     }
 
     private String renameFile(String filename, String dir) {
@@ -493,36 +479,6 @@ public class FormLogic {
             path = Paths.get(dir, newFilename);
         }
         return newFilename;
-    }
-
-    private void checkFiles() {
-        //This is only used when the user hits Start, and it checks duplicate downloads even though they were checked during the initial job add process because the
-        //job batch persists between reloads, and we can't be sure that there were no changes to the files in the download folders between reloads.
-        List<Job> deleteList = new ArrayList<>();
-        List<Job> replaceList = new ArrayList<>();
-        for (Job job : getJobs().jobList()) {
-            Path path = Paths.get(job.getDir(), job.getFilename());
-            if (path.toFile().exists()) {
-                deleteList.add(job);
-                String message = "The file: " + nl + job.getFilename() + nl.repeat(2) +
-                        "Already exists in folder:" + nl + job.getDir() + nl.repeat(2) +
-                        "It will be renamed as shown here, or you can give it a new name. If you change it to the same name, your current file will be replaced." + nl.repeat(2) +
-                        "If you chose yes, the download will proceed using the filename shown (or whatever you change it to). If you chose No, the job will be removed from the list and it will not be downloaded.";
-                String filename = renameFile(job.getFilename(), job.getDir());
-                AskYesNo ask = new AskYesNo(message, filename);
-                if (ask.getResponse().isYes()) {
-                    filename = ask.getFilename();
-                    setFilename(filename);
-                    replaceList.add(new Job(job.getLink(), job.getDir(), filename, true));
-                }
-            }
-        }
-        for (Job job : deleteList) {
-            removeJob(job);
-        }
-        for (Job job : replaceList) {
-            addJob(job);
-        }
     }
 
     private Runnable getFilenames(String link) {
@@ -583,7 +539,7 @@ public class FormLogic {
             if (worker.valueProperty().get() != null) {
                 for (Job job : worker.valueProperty().get()) {
                     boolean fileExists = job.fileExists();
-                    boolean hasHistory = AppSettings.get.jobHistory().exists(job.getLink());
+                    boolean hasHistory = getHistory().exists(job.getLink());
                     boolean existsHasHistory = fileExists && hasHistory;
                     boolean existsNoHistory = fileExists && !hasHistory;
                     boolean fileHasHistory = hasHistory && !fileExists;
@@ -591,10 +547,12 @@ public class FormLogic {
                         if (existsHasHistory) {
                             message = String.format(pastJobFileExists, job.getFilename());
                             ask = new AskYesNo(message, renameFile(job.getFilename(), job.getDir()));
-                        } else if (existsNoHistory) {
+                        }
+                        else if (existsNoHistory) {
                             message = String.format(fileExistsString, job.getFilename());
                             ask = new AskYesNo(message, false);
-                        } else if (fileHasHistory) {
+                        }
+                        else if (fileHasHistory) {
                             message = String.format(pastJobNoFile, job.getFilename());
                             ask = new AskYesNo(message, false);
                         }
@@ -608,31 +566,14 @@ public class FormLogic {
                                     addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
                                 }
                             }
-                        } else {
-                            addJob(job);
                         }
+                        else
+                            addJob(job);
+
                     }
                 }
             }
         });
-    }
-
-    public boolean jobFileExists(Job newJob) {
-        for (Job job : AppSettings.get.jobHistory().getList()) {
-            if (job.getLink().equals(newJob.getLink()) && job.getFilename().equals(newJob.getFilename())) {
-                for (String folder : AppSettings.get.folders().getFolders()) {
-                    Path downloadPath = Paths.get(folder);
-                    CheckFile checkFile = new CheckFile(downloadPath, job.getFilename());
-                    Thread thread = new Thread(checkFile);
-                    thread.start();
-                    while (!thread.getState().equals(Thread.State.TERMINATED)) {
-                        sleep(100);
-                    }
-                    return checkFile.fileFound();
-                }
-            }
-        }
-        return false;
     }
 
     private void delayFolderSave(String folderString, File folder) {
@@ -730,7 +671,7 @@ public class FormLogic {
         /*
         Called from the Edit menu, this wipes out the job history that is stored in the users file system
          */
-        AppSettings.get.jobHistory().clear();
+        INSTANCE.getHistory().clear();
     }
 
     public static void pasteFromClipboard(String text) {
@@ -757,7 +698,6 @@ public class FormLogic {
 
     private void clearLink() {
         Platform.runLater(() -> {
-            setLink("");
             form.tfLink.clear();
             form.tfLink.requestFocus();
         });
@@ -879,10 +819,6 @@ public class FormLogic {
         return form.tfFilename.getText();
     }
 
-    private Jobs getJobs() {
-        return AppSettings.get.jobs();
-    }
-
     /*
     These methods are for general form flow
      */
@@ -940,7 +876,7 @@ public class FormLogic {
         tf.getChildren().add(text("Multi-link pasting:\n", true, BLUE, h));
         tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Youtube Playlists:\n", true, BLUE, h));
-        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));
+        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));        //tf.getChildren().add(text("\n\n",false,BLACK,13));
         tf.setStyle("-fx-background-color: transparent");
 
         double width = 500;
@@ -949,6 +885,7 @@ public class FormLogic {
         Stage stage = getStage();
         stage.setWidth(width);
         stage.setHeight(height + 100);
+        //stage.initStyle(StageStyle.TRANSPARENT);
         VBox vox = new VBox(20, tf);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
@@ -996,6 +933,14 @@ public class FormLogic {
         }
     }
 
+    private Jobs getJobs() {
+        return AppSettings.get.jobs();
+    }
+
+    private JobHistory getHistory() {
+        return AppSettings.get.jobHistory();
+    }
+
     private void selectJob(Job job) {
         selectedJob = job;
         updatingBatch.setValue(true);
@@ -1009,5 +954,3 @@ public class FormLogic {
         }
     }
 }
-
-

@@ -42,6 +42,10 @@ public class Job {
         return job.getLink().equals(link);
     }
 
+    public boolean matchesLink(String link) {
+        return this.link.equals(link);
+    }
+
     public String getLink() {
         return link;
     }
