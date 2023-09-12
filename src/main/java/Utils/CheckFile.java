@@ -51,6 +51,7 @@ public class CheckFile implements Runnable {
         return folderWalker.fileFound();
     }
 
+
     public LinkedList<String> getFileList() {
         return folderWalker.fileList;
     }

@@ -15,6 +15,7 @@ public class Jobs {
     public Jobs() {
         this.jobList = new ConcurrentLinkedDeque<>();
     }
+
     private ConcurrentLinkedDeque<Job> jobList;
 
     public ConcurrentLinkedDeque<Job> jobList() {
@@ -25,8 +26,8 @@ public class Jobs {
     }
 
     public void add(Job newJob) {
-        for(Job job : jobList) {
-            if(job.matches(newJob))
+        for (Job job : jobList) {
+            if (job.matches(newJob))
                 return;
         }
         jobList.addLast(newJob);
@@ -35,12 +36,12 @@ public class Jobs {
 
     public void remove(Job oldJob) {
         Job removeJob = null;
-        for(Job job : jobList) {
+        for (Job job : jobList) {
             if (job.matches(oldJob)) {
                 removeJob = oldJob;
             }
         }
-        if(removeJob != null) {
+        if (removeJob != null) {
             jobList.remove(removeJob);
         }
         save();

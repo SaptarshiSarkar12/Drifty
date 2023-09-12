@@ -110,17 +110,14 @@ class AskYesNo {
         }
         btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
-            waiting = false;
-            stage.close();
+            close();
         });
         btnNo = newButton("No", e -> {
             answer.setAnswer(false);
-            waiting = false;
-            stage.close();
+            close();
         });
         btnOk = newButton("OK", e -> {
-            waiting = false;
-            stage.close();
+            close();
         });
         tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
@@ -143,6 +140,10 @@ class AskYesNo {
         vbox.getChildren().add(hbox);
     }
 
+    private void close() {
+        waiting = false;
+        stage.close();
+    }
     public GetResponse getResponse() {
         if(Platform.isFxApplicationThread()) {
             showScene();

@@ -59,6 +59,14 @@ public class JobHistory {
         return false;
     }
 
+    public Job getJob(String link) {
+        for(Job job : jobHistoryList)  {
+            if(job.matchesLink(link))
+                return job;
+        }
+        return null;
+    }
+
     private void save() {
         AppSettings.set.jobHistory(this);
     }
