@@ -9,7 +9,7 @@ public class DownloadFolderLocator {
 
     public static String findPath() {
         try {
-            Process process = new ProcessBuilder("reg", "query", "\"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell folders\"", "/v", "{374DE290-123F-4565-9164-39C4925E467B}").start();
+            Process process = new ProcessBuilder("reg", "query", "\"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\"", "/v", "{374DE290-123F-4565-9164-39C4925E467B}").start();
             StreamReader reader = new StreamReader(process.getInputStream());
             reader.start();
             process.waitFor();
