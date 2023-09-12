@@ -134,7 +134,6 @@ public class FormLogic {
     }
 
     private void setControlActions() {
-        form.pBar.setProgress(.5);
         form.btnSave.setOnAction(e -> new Thread(() -> {
             String link = getLink();
             String filename = getFilename();
