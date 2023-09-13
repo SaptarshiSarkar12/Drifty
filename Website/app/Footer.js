@@ -42,8 +42,8 @@ export default function Footer() {
                     <span className="text-sm text-gray-600 sm:text-center dark:text-gray-500">© 2023 <Link href="/" className="hover:text-[#122ffa]">Drifty</Link>. All Rights Reserved.
                     </span>
                     <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
-                        <a href="https://www.twitter.com/SSarkar2007" className="text-gray-500 hover:text-twitter-color hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
+                        <a href="https://www.twitter.com/SSarkar2007" className="text-gray-500 hover:text-black hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110">
+                            <svg className="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" aria-hidden="true"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
                             <span className="sr-only">Twitter Profile</span>
                         </a>
                         <a href="https://www.linkedin.com/in/saptarshi-sarkar-305162253/" className="text-gray-500 hover:text-linkedin-color hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110">

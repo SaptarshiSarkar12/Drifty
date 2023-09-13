@@ -33,7 +33,7 @@ export default function Demo(){
                             'focus:outline-none focus:ring-0'
                         )}>
                             <div className="flex justify-center">
-                                <video width="90%" muted loop poster={"Video Thumbnails/CLI white 2.jpg"} controls className={"rounded-lg"}>
+                                <video width="90%" muted loop poster={"Video Thumbnails/CLI pink 2.jpg"} controls className={"rounded-lg"}>
                                     <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
                                     <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
                                     Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.
@@ -45,7 +45,7 @@ export default function Demo(){
                             'focus:outline-none focus:ring-0'
                         )}>
                             <div className="flex justify-center">
-                                <video width="90%" muted loop poster={"Video Thumbnails/GUI white 2.jpg"} controls className={"rounded-lg"}>
+                                <video width="90%" muted loop poster={"Video Thumbnails/GUI pink 2.jpg"} controls className={"rounded-lg"}>
                                     <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
                                     <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
                                     Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.

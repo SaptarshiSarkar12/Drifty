@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <script src="https://kit.fontawesome.com/5c11ffe082.js" crossOrigin="anonymous" async></script>
+        <script src="https://kit.fontawesome.com/d93986da58.js" crossOrigin="anonymous" async></script>
         <meta name="google-site-verification" content="v1CBGEYFNFLCTulyDwIJDu2cV0EA2ZwokOXQC9GfkiE" />
       </head>
       <body className={inter.className}>{children}</body>
