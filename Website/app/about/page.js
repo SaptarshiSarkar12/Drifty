@@ -32,7 +32,7 @@ export default function about(){
                     <p className="p-6 text-xl text-white text-center">I am a passionate Software Developer and an open-source enthusiast building this interactive file downloading system called <a className="bg-gradient-to-r from-orange-500 to-yellow-400 text-transparent bg-clip-text" href="https://saptarshisarkar12.github.io/Drifty/"><b>Drifty</b></a> using Java. I am open for collaboration on open-source projects. I love contributing to open-source projects and enjoy maintaining an open-source project.</p>
                 </div>
                 <div className="grid justify-center mt-5 pb-5">
-                    <a className="bg-white rounded-lg p-2 border-2 border-black hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:text-white hover:bg-twitter-color" href="https://twitter.com/SSarkar2007"><button><i className="fab fa-x-twitter" aria-hidden="true"></i> Let&apos;s Connect</button></a>
+                    <a className="bg-white rounded-lg p-2 border-2 border-black hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:text-white hover:bg-black" href="https://twitter.com/SSarkar2007"><button><i className="fab fa-x-twitter" aria-hidden="true"></i> Let&apos;s Connect</button></a>
                 </div>
                 <div className="mt-5 mx-5 border-t-2 border-black">
                     <h1 className="text-center font-bold text-4xl py-5">My Stats</h1>
