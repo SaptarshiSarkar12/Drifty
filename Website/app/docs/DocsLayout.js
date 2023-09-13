@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import {Accordion, AccordionItem} from "@nextui-org/accordion";
+import { Disclosure } from '@headlessui/react'
+import { ChevronUpIcon } from '@heroicons/react/20/solid'
 import {useState} from "react";
 import {classNames} from "@/app/classNames";
 import Header from "@/app/Header";
