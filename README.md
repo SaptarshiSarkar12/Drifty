@@ -30,6 +30,17 @@
 ## Demo
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
+For **Batch Downloading** via **Drifty CLI**, the path to a YAML file has to be provided to it.
+It should have the following structure :
+```yaml
+links: ["", ""] # [REQUIRED] - Links to the files to be downloaded
+# Below parameters are OPTIONAL
+fileNames: [""] # Will be auto-retrieved if not provided
+# If the directory is not provided, the files will be downloaded in the default downloads folder.
+directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
+directories: [""] # Use 'directories' when the download folder is different for each of the files
+```
+
 [Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
 
 
