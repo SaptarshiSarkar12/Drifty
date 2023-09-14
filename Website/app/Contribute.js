@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 import Image from "next/image"
 import Link from "next/link";
 
 export default function Contribute({ props }) {
     const [values, setValues] = useState([]);
-    let totalNoOfContributors = props.contrib.length;
     useEffect(() => {
         fetch("https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty").then((res) => res.json())
             .then((data) => {
                 setValues([data.items[0].stargazers_count, data.items[0].forks_count])
             })
     }, [])
+    props.contrib = props.contrib.filter((item) => {
+        return item.type === "User"
+    });
+    let totalNoOfContributors = props.contrib.length;
     return (
         <div id="contribute" className="md:grid md:grid-cols-2 justify-center bg-var select-none text-white pb-5">
             <div className="md:pr-8 mb-2">
