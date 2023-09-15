@@ -40,7 +40,7 @@ class AskYesNo {
     private VBox vbox;
     private TextField tfFilename;
     public static boolean answerYes = false;
-    private String msg = "";
+    private final String msg;
     private String filename = "";
     private static boolean waiting = true;
     private final GetResponse answer = new GetResponse();
@@ -116,9 +116,7 @@ class AskYesNo {
             answer.setAnswer(false);
             close();
         });
-        btnOk = newButton("OK", e -> {
-            close();
-        });
+        btnOk = newButton("OK", e -> close());
         tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
         tfFilename.setMaxWidth(width * .8);

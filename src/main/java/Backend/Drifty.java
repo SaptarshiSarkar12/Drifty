@@ -1,67 +1,70 @@
 package Backend;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
+import Preferences.AppSettings;
 import Utils.Environment;
 import Utils.MessageBroker;
 import Utils.Utility;
 
-import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Drifty {
     public static final String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
-    private static final MessageBroker messageBroker = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static String downloadsFolder = null;
     private static String url;
-    private static String fileName;
+    private static String filename;
 
     public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
-        fileName = fileNameOfTheDownloadedFile;
+        filename = fileNameOfTheDownloadedFile;
     }
 
     public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, PrintStream outputStream) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
-        fileName = fileNameOfTheDownloadedFile;
+        filename = fileNameOfTheDownloadedFile;
     }
 
     public void start() {
         Utility utility = new Utility();
-        messageBroker.sendMessage("Validating the link...", MessageType.INFO, MessageCategory.LINK);
+        M.msgLinkInfo("Validating the link...");
         if (url.contains(" ")) {
-            messageBroker.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("Link should not contain whitespace characters!");
             return;
-        } else if (url.isEmpty()) {
-            messageBroker.sendMessage("Link cannot be empty!", MessageType.ERROR, MessageCategory.LINK);
+        }
+        else if (url.isEmpty()) {
+            M.msgLinkError("Link cannot be empty!");
             return;
-        } else {
+        }
+        else {
             boolean isUrlValid = Utility.linkValid(url);
             if (!isUrlValid) {
                 return;
             }
         }
         if (downloadsFolder == null || downloadsFolder.equals(".")) {
-            downloadsFolder = Utility.getFormattedDefaultDownloadsFolder();
+            downloadsFolder = Utility.getHomeDownloadFolder();
         }
-        downloadsFolder = downloadsFolder.replace('\\', '/');
-        try {
-            new CheckDirectory(downloadsFolder);
-        } catch (IOException e) {
-            messageBroker.sendMessage(e.getMessage(), MessageType.ERROR, MessageCategory.DIRECTORY);
+        else if (downloadsFolder.toLowerCase().contains("l")) {
+            downloadsFolder = AppSettings.get.lastDownloadFolder();
+        }
+        Path path = Paths.get(downloadsFolder);
+        downloadsFolder = path.toAbsolutePath().toString();
+        AppSettings.get.folders().addFolder(downloadsFolder);
+        if (!path.toFile().exists()) {
+            M.msgDirError("Download folder does not exist!");
+            System.out.println("Specified download folder does not exist!");
             return;
         }
-        if (fileName == null) {
-            messageBroker.sendMessage("Filename cannot be null!", MessageType.ERROR, MessageCategory.FILENAME);
-        } else if (fileName.isEmpty()) {
-            messageBroker.sendMessage("Filename cannot be empty!", MessageType.ERROR, MessageCategory.FILENAME);
+        if (filename == null) {
+            M.msgFilenameError("Filename cannot be null!");
         }
-        new FileDownloader(url, fileName, downloadsFolder).run();
-    }
-
-    public void startGUIDownload() {
-        new FileDownloader(url, fileName, downloadsFolder).run();
+        else if (filename.isEmpty()) {
+            M.msgFilenameError("Filename cannot be empty!");
+        }
+        new FileDownloader(url, filename, downloadsFolder).run();
     }
 }

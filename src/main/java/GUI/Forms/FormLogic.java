@@ -1,11 +1,6 @@
 package GUI.Forms;
 
-import Backend.DownloadMetrics;
-import Backend.FileDownloader;
-import Enums.Colors;
-import Enums.Domain;
-import Enums.MessageCategory;
-import Enums.MessageType;
+import Enums.*;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.JobHistory;
@@ -18,9 +13,9 @@ import Utils.Utility;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
@@ -54,13 +49,14 @@ import static GUI.Forms.Constants.getStage;
 public class FormLogic {
     public static final FormLogic INSTANCE = new FormLogic();
     public static MainGridPane form;
-    private static final MessageBroker messageBroker = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
     private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
     private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
     private final String nl = System.lineSeparator();
-    //private ConcurrentLinkedDeque<Job> jobList;
+    private int speedValueUpdateCount = 0;
+    private int speedValue = 0;
     private Folders folders;
     private Job selectedJob;
 
@@ -115,17 +111,17 @@ public class FormLogic {
             if (!newValue.equals(oldValue)) {
                 directoryExists.setValue(false);
                 if (newValue.isEmpty()) {
-                    messageBroker.sendMessage("Directory cannot be empty!", MessageType.ERROR, MessageCategory.DIRECTORY);
+                    M.msgDirError("Directory cannot be empty!");
                 }
                 else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
-                        messageBroker.sendMessage("Directory exists!", MessageType.INFO, MessageCategory.DIRECTORY);
+                        M.msgDirInfo("Directory exists!");
                         directoryExists.setValue(true);
                     }
                     else {
-                        messageBroker.sendMessage("Directory does not exist or is not a directory!", MessageType.ERROR, MessageCategory.DIRECTORY);
+                        M.msgDirError("Directory does not exist or is not a directory!");
                     }
                 }
             }
@@ -143,7 +139,7 @@ public class FormLogic {
                 if (ask.getResponse().isNo()) {
                     filename = renameFile(filename, dir);
                 }
-                removeJob(selectedJob);
+                removeJobFromList(selectedJob);
                 addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             }
             clearLink();
@@ -157,9 +153,8 @@ public class FormLogic {
                 clearLink();
                 clearFilename();
                 clearFilenameOutput();
-                new Thread(this::batchDownloader).start();
+                new Thread(batchDownloader()).start();
             }
-
         }).start());
         form.tfDir.setOnAction(e -> updateBatch());
         form.tfFilename.setOnAction(e -> updateBatch());
@@ -179,7 +174,7 @@ public class FormLogic {
             if (e.getCode() == KeyCode.DELETE) {
                 Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
                 if (job != null) {
-                    removeJob(job);
+                    removeJobFromList(job);
                     clearControls();
                 }
             }
@@ -193,7 +188,7 @@ public class FormLogic {
             String userText = getLink();
             if (userText.equals(first)) {
                 if (userText.contains("  ") || userText.contains(System.lineSeparator())) {
-                    messageBroker.sendMessage("Link should not contain whitespace characters!", MessageType.ERROR, MessageCategory.LINK);
+                    M.msgLinkError("Link should not contain whitespace characters!");
                     clearLink();
                     return;
                 }
@@ -248,12 +243,16 @@ public class FormLogic {
             String filename;
             String dir;
             if (!linkInJobList(link)) {
-                messageBroker.sendMessage("Validating link...", MessageType.INFO, MessageCategory.LINK);
+                M.msgLinkInfo("Validating link...");
                 if (Utility.linkValid(link)) {
                     if (getHistory().exists(link)) {
                         Job job = getHistory().getJob(link);
                         filename = job.getFilename();
                         dir = getDir();
+                        if(dir == null) {
+                            System.err.println("dir is null");
+                            System.exit(0);
+                        }
                         String intro = "You have downloaded this link before. The filename is:" + nl + filename + nl.repeat(2);
                         String folder = fileExists(filename);
                         if (!folder.isEmpty()) {
@@ -284,17 +283,62 @@ public class FormLogic {
                 }
                 clearFilename();
                 clearLink();
+                clearLinkOutput();
+                clearFilenameOutput();
             }
             else {
-                messageBroker.sendMessage("Link already in job list", MessageType.ERROR, MessageCategory.LINK);
+                M.msgLinkError("Link already in job list");
                 clearLink();
             }
         };
     }
 
-    private void batchDownloader() {
+    private Runnable getFilenames(String link) {
+        return () -> {
+            //Using a Worker Task, this method gets the filename(s) from the link.
+            Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
+            Worker<ConcurrentLinkedDeque<Job>> worker = task;
+            Platform.runLater(() -> {
+            /*
+            These bindings allow the Worker thread to post relevant information to the UI including the progress bar which
+            accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
+            to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
+            The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
+            will be thrown and possibly the program execution halted.
+            */
+                form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
+                form.pBar.progressProperty().bind(worker.progressProperty());
+            });
+
+            /*
+            This parent thread allows us to repeatedly check the Worker Task Thread for new filenames found so that we can add them
+            to the job batch as they are discovered. Doing this in this thread keeps the UI from appearing frozen to the user.
+            We use the checkHistoryAddJobs method to look for discovered filenames. If we didn't do it this way, then we would need
+            to wait until all filenames are discovered then add the jobs to the batch list in one action. Doing it this way
+            gives the user more consistent feedback of the process while it is happening. This matters when a link contains
+            a lot of files because each file discovered takes a while and when there are even hundreds of files, this process
+            can appear to take a long time, so constant feedback for the user becomes relevant.
+             */
+
+            setLink(link);
+            Thread getFilenameThread = new Thread(task);
+            getFilenameThread.setDaemon(true);
+            getFilenameThread.start();
+            sleep(2000);
+            form.lblDownloadInfo.setTextFill(GREEN);
+            while (!getFilenameThread.getState().equals(Thread.State.TERMINATED) && !getFilenameThread.getState().equals(Thread.State.BLOCKED)) {
+                checkHistoryAddJobs(worker);
+                sleep(50);
+            }
+            sleep(500);
+            checkHistoryAddJobs(worker); // Check one last time
+            clearControls();
+        };
+    }
+
+    private Runnable batchDownloader() {
         /*
-        When the jobList is iterated, the link from a Job is passed through the Domain enum class where the file
+        When the jobList is iterated, the link from a Job is passed through the LinkType enum class where the file
         extension is compared against a list of known BINARY file extensions. That list exists in the file called
         BinaryExtensions.json in the Resources GUI folder. What matters in terms of what a BINARY file is, is whether
         or not the file contains plain text - where you could open it in a text editor, and it would have actual words
@@ -310,107 +354,58 @@ public class FormLogic {
         progress bar will be bound to the relevant variables in that class so that download progress can still be
         shown in the GUI
          */
-        processingBatch.setValue(true);
-        updatingBatch.setValue(false);
-        form.lblDownloadInfo.setTextFill(GREEN);
-        if (getJobs().notNull() && getJobs().isNotEmpty()) {
-            final int totalNumberOfFiles = getJobs().jobList().size();
-            int fileCount = 0;
-            LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
-            for (Job job : tempJobList) {
-                String link = job.getLink();
-                fileCount++;
-                messageBroker.sendMessage("Processing file " + fileCount + " of " + totalNumberOfFiles + ": " + job, MessageType.INFO, MessageCategory.BATCH);
-                setLink(link);
-                setDir(job.getDir());
-                setFilename(job.getFilename());
-                Domain domain = Domain.getDomain(job.getLink());
-                ExecutorService executor = Executors.newFixedThreadPool(1);
-                Map<Job, Future<Integer>> futureMap = new HashMap<>();
-                switch (domain) {
-                    case YOUTUBE, INSTAGRAM -> {
-                        Task<Integer> task = new DownloadFile(job.getLink(),
-                                                              job.getDir(),
-                                                              job.getFilename(),
-                                                              form.tfLink.textProperty(),
-                                                              form.tfDir.textProperty(),
-                                                              form.tfFilename.textProperty(),
-                                                              form.pBar.progressProperty());
-                        Future<Integer> future = (Future<Integer>) executor.submit(task);
-                        futureMap.put(job, future);
-                        boolean done = false;
-                        while(!done) {
-                            for(Job j : futureMap.keySet()) {
-                                Future<Integer> f = futureMap.get(j);
-                                done = true;
-                                try {
-                                    if(f.get() != null && f.get().equals(0)) {
-                                        removeJob(j);
-                                        done = false;
-                                    }
-                                } catch (ExecutionException | InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-                            sleep(500);
-                        }
-                        for(Job j : futureMap.keySet()) {
-                            Future<Integer> f = futureMap.get(j);
-                            try {
-                                if(f.get() != null && f.get() == 0) {
-                                    removeJob(j);
-                                }
-                            } catch (ExecutionException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-/*
-                        Thread thread = new Thread(task);
-                        form.lblDownloadInfo.textProperty().bind(((Worker<Integer>) task).messageProperty());
-                        Platform.runLater(() -> {
-                            form.pBar.progressProperty().bind(((Worker<Integer>) task).progressProperty());
-                        });
-                        thread.start();
-                        System.out.println("Thread Started, getting return");
-                        Integer ret = ((Worker<Integer>) task).valueProperty().get();
-                        System.out.println("Result = " + ret + " \nWaiting...");
-                        while (!thread.getState().equals(Thread.State.TERMINATED) && ret == null) {
-                            ret = ((Worker<Integer>) task).valueProperty().get();
-                            sleep(500);
-                        }
-                        if (ret != null && ret == 0 && !task.isCancelled()) {
-                            removeJob(job);
-                        }
-*/
+
+        return () -> {
+            processingBatch.setValue(true);
+            updatingBatch.setValue(false);
+            form.lblDownloadInfo.setTextFill(GREEN);
+            IntegerProperty speedValueProperty = new SimpleIntegerProperty();
+            speedValueProperty.addListener(((observable, oldValue, newValue) -> {
+                if(!oldValue.equals(newValue)) {
+                    speedValue += (int) newValue;
+                    speedValueUpdateCount++;
+                    if(speedValueUpdateCount == 5) {
+                        int speed = speedValue / 5;
+                        speedValueUpdateCount = 0;
+                        speedValue = 0;
+                        setFilenameOutput(GREEN,speed + " /s");
                     }
-                    case OTHER -> {
-                        FileDownloader fDownloader = new FileDownloader(job.getLink(), job.getFilename(), job.getDir());
-                        DownloadMetrics metrics = fDownloader.getDownloadMetrics();
-                        Thread download = new Thread(fDownloader);
-                        DoubleProperty progress = new SimpleDoubleProperty(0.0);
-                        Platform.runLater(() -> {
-                            form.pBar.progressProperty().unbind();
-                            form.pBar.progressProperty().bind(progress);
-                        });
-                        download.start();
-                        while (!download.getState().equals(Thread.State.TERMINATED)) {
-                            progress.setValue(metrics.getProgress());
-                            sleep(100);
+                }
+            }));
+            if (getJobs().notNull() && getJobs().isNotEmpty()) {
+                final int totalFiles = getJobs().jobList().size();
+                int fileCount = 0;
+                LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
+                for (Job job : tempJobList) {
+                    fileCount++;
+                    M.msgBatchInfo("Processing file " + fileCount + " of " + totalFiles + ": " + job);
+                    DownloadFile downloadFile = new DownloadFile(job,
+                                                                 form.tfLink.textProperty(),
+                                                                 form.tfDir.textProperty(),
+                                                                 form.tfFilename.textProperty(),
+                                                                 form.lblDownloadInfo.textProperty(),
+                                                                 speedValueProperty,
+                                                                 form.pBar.progressProperty());
+                    Task<Integer> task = downloadFile;
+                    try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+                        Future<Integer> future = (Future<Integer>) executor.submit(task);
+                        while(downloadFile.notDone()) {
+                            sleep(500);
                         }
-                        if (metrics.isSuccess())
-                            removeJob(job);
+                        int exitCode = downloadFile.getExitCode();
+                        if(exitCode == 0) { //Success
+                            removeJobFromList(job);
+                            getHistory().addJob(job);
+                        }
                     }
                 }
             }
-        }
-        clearLink();
-        clearFilename();
-        clearFilenameOutput();
-        processingBatch.setValue(false);
-        Platform.runLater(() -> {
-            form.pBar.progressProperty().unbind();
-            form.pBar.setProgress(0.0);
-        });
+            clearLink();
+            clearLinkOutput();
+            clearFilename();
+            clearFilenameOutput();
+            processingBatch.setValue(false);
+        };
     }
 
     private String fileExists(String filename) {
@@ -450,17 +445,17 @@ public class FormLogic {
         commitJobListToListView();
     }
 
-    private void removeJob(Job oldJob) {
+    private void removeJobFromList(Job oldJob) {
         getJobs().remove(oldJob);
         commitJobListToListView();
-        messageBroker.sendMessage("Job Removed: " + oldJob.getLink(), MessageType.INFO, MessageCategory.BATCH);
+        M.msgBatchInfo("Job Removed: " + oldJob.getLink());
     }
 
     private void updateBatch() {
         updatingBatch.setValue(false);
         if (selectedJob != null) {
             Job job = new Job(getLink(), getDir(), getFilename(), selectedJob.repeatOK());
-            removeJob(selectedJob);
+            removeJobFromList(selectedJob);
             addJob(job);
         }
         selectedJob = null;
@@ -478,49 +473,6 @@ public class FormLogic {
             path = Paths.get(dir, newFilename);
         }
         return newFilename;
-    }
-
-    private Runnable getFilenames(String link) {
-        return () -> {
-            //Using a Worker Task, this method gets the filename(s) from the link.
-            Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
-            Worker<ConcurrentLinkedDeque<Job>> worker = task;
-            Platform.runLater(() -> {
-            /*
-            These bindings allow the Worker thread to post relevant information to the UI including the progress bar which
-            accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
-            to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
-            The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
-            will be thrown and possibly the program execution halted.
-            */
-                form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
-                form.pBar.progressProperty().bind(worker.progressProperty());
-            });
-
-            /*
-            This parent thread allows us to repeatedly check the Worker Task Thread for new filenames found so that we can add them
-            to the job batch as they are discovered. Doing this in this thread keeps the UI from appearing frozen to the user.
-            We use the checkHistoryAddJobs method to look for discovered filenames. If we didn't do it this way, then we would need
-            to wait until all filenames are discovered then add the jobs to the batch list in one action. Doing it this way
-            gives the user more consistent feedback of the process while it is happening. This matters when a link contains
-            a lot of files because each file discovered takes a while and when there are even hundreds of files, this process
-            can appear to take a long time, so constant feedback for the user becomes relevant.
-             */
-
-
-            Thread getFilenameThread = new Thread(task);
-            getFilenameThread.setDaemon(true);
-            getFilenameThread.start();
-            sleep(2000);
-            form.lblDownloadInfo.setTextFill(GREEN);
-            while (!getFilenameThread.getState().equals(Thread.State.TERMINATED) && !getFilenameThread.getState().equals(Thread.State.BLOCKED)) {
-                checkHistoryAddJobs(worker);
-                sleep(50);
-            }
-            sleep(500);
-            checkHistoryAddJobs(worker); // Check one last time
-            clearControls();
-        };
     }
 
     private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {
@@ -599,7 +551,7 @@ public class FormLogic {
         miDel.setOnAction(e -> {
             Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
             if (job != null) {
-                removeJob(job);
+                removeJobFromList(job);
                 clearControls();
             }
         });
@@ -609,9 +561,9 @@ public class FormLogic {
             clearLink();
             clearFilename();
             form.listView.getItems().clear();
-            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
-            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.FILENAME);
-            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DIRECTORY);
+            M.msgLinkInfo("");
+            M.msgFilenameInfo("");
+            M.msgDirInfo("");
         });
         miInfo.setOnAction(e -> help());
         return new ContextMenu(miDel, miClear, separator, miInfo);
@@ -705,8 +657,8 @@ public class FormLogic {
     private void clearFilename() {
         Platform.runLater(() -> {
             setFilename("");
-            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DOWNLOAD);
-            messageBroker.sendMessage("", MessageType.INFO, MessageCategory.FILENAME);
+            M.msgDownloadInfo("");
+            M.msgFilenameInfo("");
         });
     }
 
@@ -778,21 +730,23 @@ public class FormLogic {
     }
 
     public void setDownloadOutput(Color color, String message) {
-        Platform.runLater(() -> {
-            form.lblDownloadInfo.getStyleClass().clear();
-            if (color.equals(Colors.GREEN) || color.equals(Colors.PURPLE) || color.equals(Colors.HOTPINK)) {
-                form.lblDownloadInfo.getStyleClass().add("outline");
-            }
-            form.lblDownloadInfo.textProperty().unbind();
-            form.lblDownloadInfo.setTextFill(color);
-            form.lblDownloadInfo.setText(message);
-            if (color.equals(RED) || color.equals(YELLOW)) {
-                new Thread(() -> {
-                    sleep(5000);
-                    clearDownloadOutput();
-                }).start();
-            }
-        });
+        if(processingBatch.getValue().equals(false)) {
+            Platform.runLater(() -> {
+                form.lblDownloadInfo.getStyleClass().clear();
+                if (color.equals(Colors.GREEN) || color.equals(Colors.PURPLE) || color.equals(Colors.HOTPINK)) {
+                    form.lblDownloadInfo.getStyleClass().add("outline");
+                }
+                form.lblDownloadInfo.textProperty().unbind();
+                form.lblDownloadInfo.setTextFill(color);
+                form.lblDownloadInfo.setText(message);
+                if (color.equals(RED) || color.equals(YELLOW)) {
+                    new Thread(() -> {
+                        sleep(5000);
+                        clearDownloadOutput();
+                    }).start();
+                }
+            });
+        }
     }
 
     private void clearDownloadOutput() {
@@ -802,8 +756,8 @@ public class FormLogic {
     private void clearControls() {
         clearLink();
         clearFilename();
-        messageBroker.sendMessage("", MessageType.INFO, MessageCategory.LINK);
-        messageBroker.sendMessage("", MessageType.INFO, MessageCategory.DIRECTORY);
+        M.msgLinkInfo("");
+        M.msgDirInfo("");
     }
 
     private String getLink() {
@@ -829,23 +783,21 @@ public class FormLogic {
                     form.listView.getItems().clear();
                 }
                 else {
-                    if (getJobs().jobList().size() > 1) {
-                        //Remove duplicate jobs if any
-                        Set<String> encounteredLinks = new HashSet<>();
-                        ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
-                                .filter(job -> !encounteredLinks.add(job.getLink()))
-                                .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
-                        for (Job job : duplicates) {
-                            removeJob(job);
-                        }
-                        //Sort the Job list
-                        ArrayList<Job> sortList = new ArrayList<>(getJobs().jobList());
-                        sortList.sort(Comparator.comparing(Job::toString));
-                        getJobs().setList(new ConcurrentLinkedDeque<>(sortList));
+                    //Remove duplicate jobs if any
+                    Set<String> encounteredLinks = new HashSet<>();
+                    ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
+                            .filter(job -> !encounteredLinks.add(job.getLink()))
+                            .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
+                    for (Job job : duplicates) {
+                        removeJobFromList(job);
                     }
-                    //Assign the jobList to the ListView
-                    form.listView.getItems().setAll(getJobs().jobList());
+                    //Sort the Job list
+                    ArrayList<Job> sortList = new ArrayList<>(getJobs().jobList());
+                    sortList.sort(Comparator.comparing(Job::toString));
+                    getJobs().setList(new ConcurrentLinkedDeque<>(sortList));
                 }
+                //Assign the jobList to the ListView
+                form.listView.getItems().setAll(getJobs().jobList());
             }
         });
     }

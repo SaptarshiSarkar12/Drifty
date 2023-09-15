@@ -1,10 +1,9 @@
 package GUI.Support;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Preferences.AppSettings;
 import Utils.Environment;
 
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
@@ -16,7 +15,7 @@ public class JobHistory {
     private ConcurrentLinkedDeque<Job> jobHistoryList;
 
     public ConcurrentLinkedDeque<Job> getList() {
-        Environment.getMessageBroker().sendMessage("Job History Fetched", MessageType.INFO, MessageCategory.INITIALIZATION);
+        Environment.getMessageBroker().msgInitInfo("Job History Fetched");
         if (jobHistoryList == null) {
             this.jobHistoryList = new ConcurrentLinkedDeque<>();
         }
@@ -60,14 +59,34 @@ public class JobHistory {
     }
 
     public Job getJob(String link) {
-        for(Job job : jobHistoryList)  {
-            if(job.matchesLink(link))
+        for (Job job : jobHistoryList) {
+            if (job.matchesLink(link))
                 return job;
         }
         return null;
     }
 
     private void save() {
+        removeDupes();
         AppSettings.set.jobHistory(this);
+    }
+
+    private void removeDupes() {
+        LinkedList<Job> removeList = new LinkedList<>();
+        for (Job jobSource : jobHistoryList) {
+            int dupeCount = 0;
+            for (Job job : jobHistoryList) {
+                boolean dupeFound = jobSource.matchesLink(job);
+                if (dupeFound) {
+                    dupeCount++;
+                }
+                if (dupeFound && dupeCount > 1) {
+                    removeList.addLast(job);
+                }
+            }
+        }
+        for (Job job : removeList) {
+            jobHistoryList.remove(job);
+        }
     }
 }

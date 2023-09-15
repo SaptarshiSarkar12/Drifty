@@ -1,7 +1,5 @@
 package Backend;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Enums.Program;
 import Utils.Environment;
 import Utils.MessageBroker;
@@ -15,12 +13,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class CopyYtDLP {
-    static final MessageBroker messageBroker = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
 
     public boolean copyYtDLP(InputStream inputStream) throws IOException {
         Path ytDLPPath = Program.getYtDLPFullPath();
         if (!Files.exists(ytDLPPath)) {
-            if(!ytDLPPath.toFile().getParentFile().exists()) {
+            if (!ytDLPPath.toFile().getParentFile().exists()) {
                 FileUtils.createParentDirectories(ytDLPPath.toFile());
             }
             try (OutputStream outputStream = Files.newOutputStream(ytDLPPath)) {
@@ -38,11 +36,11 @@ public class CopyYtDLP {
                     yt_dlp.waitFor();
                 }
             } catch (FileAlreadyExistsException e) {
-                messageBroker.sendMessage("yt-dlp not copied to " + Program.get(Program.DRIFTY_PATH) + " because it already exists!", MessageType.WARN, MessageCategory.LOG);
+                M.msgLogWarning("yt-dlp not copied to " + Program.get(Program.DRIFTY_PATH) + " because it already exists!");
             } catch (InterruptedException e) {
-                messageBroker.sendMessage("Failed to make yt-dlp executable: " + e.getMessage(), MessageType.WARN, MessageCategory.LOG);
+                M.msgLogWarning("Failed to make yt-dlp executable: " + e.getMessage());
             } catch (IOException e) {
-                messageBroker.sendMessage("Failed to copy yt-dlp executable: " + e.getMessage(), MessageType.ERROR, MessageCategory.INITIALIZATION);
+                M.msgInitError("Failed to copy yt-dlp executable: " + e.getMessage());
             }
         }
         return Files.exists(ytDLPPath);

@@ -1,7 +1,10 @@
 package Preferences;
 
 import Enums.Program;
-import GUI.Support.*;
+import GUI.Support.FileExtensions;
+import GUI.Support.Folders;
+import GUI.Support.JobHistory;
+import GUI.Support.Jobs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
@@ -24,7 +27,8 @@ public class Get { // This class is used to get the user preferences
     private final Preferences preferences = Labels.PREFERENCES;
     private static final Get INSTANCE = new Get();
 
-    private Get() {}
+    private Get() {
+    }
 
     protected static Get getInstance() {
         return INSTANCE;

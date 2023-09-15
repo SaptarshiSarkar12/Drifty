@@ -1,24 +1,26 @@
 package Backend;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Enums.Mode;
 import Utils.Environment;
 import Utils.MessageBroker;
+import com.simtechdata.unitconverter.Converter;
 import javafx.beans.property.DoubleProperty;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static Utils.DriftyConstants.*;
+import static com.simtechdata.unitconverter.Converter.Category.DATA;
+import static com.simtechdata.unitconverter.Converter.UnitDefinition.*;
 
 /**
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
-    private final static MessageBroker messageBroker = Environment.getMessageBroker();
+    private final static MessageBroker M = Environment.getMessageBroker();
     private final float charPercent;
     private final List<Long> partSizes;
     private final String fileName;
@@ -36,6 +38,8 @@ public class ProgressBarThread extends Thread {
     private long totalDownloadedBytes;
     private DoubleProperty progress;
     private String dir;
+    private final String[] spinBars = new String[]{"/", "-", "\\", "|"};
+    private int spinBarIndex = -1;
 
     public ProgressBarThread(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, String fileName, String dir, Long totalSize, DownloadMetrics downloadMetrics) {
         this.partSizes = partSizes;
@@ -74,7 +78,11 @@ public class ProgressBarThread extends Thread {
         charPercents = null;
     }
 
-    private String generateProgressBar(String spinner) {
+    private String generateProgressBar() {
+        spinBarIndex ++;
+        if(spinBarIndex == 3)
+            spinBarIndex = 0;
+        String spinner = spinBars[spinBarIndex];
         if (!isMultiThreadedDownloading) {
             float filled = downloadedBytes / charPercent;
             String a = new String(new char[(int) filled]).replace("\0", "=");
@@ -146,49 +154,44 @@ public class ProgressBarThread extends Thread {
         }
     }
 
+    private final Converter c = new Converter.Builder(DATA).units(BYTE).decimals(2).locale(Locale.getDefault()).build();
     private String convertBytes(long bytes) {
-        String sizeWithUnit;
-        double bytesWithDecimals;
-        if (bytes > 1024) {
-            bytesWithDecimals = bytes / 1024.0;
-            sizeWithUnit = String.format("%.2f", bytesWithDecimals) + " KB";
-            if (bytesWithDecimals > 1024) {
-                bytesWithDecimals = bytesWithDecimals / 1024;
-                sizeWithUnit = String.format("%.2f", bytesWithDecimals) + " MB";
-                if (bytesWithDecimals > 1024) {
-                    bytesWithDecimals = bytesWithDecimals / 1024;
-                    sizeWithUnit = String.format("%.2f", bytesWithDecimals) + "GB";
-                }
-            }
-            return sizeWithUnit;
-        } else {
-            return totalDownloadedBytes + " bytes";
+        double base = (double) bytes / 10.0;
+        String sizeWithUnit = base + " bytes";
+        double trackBytes = 0.0;
+        if (base > 1000) {
+            trackBytes = c.convert(base, KILOBYTE);
+            sizeWithUnit = c.convertToString(base, KILOBYTE);
         }
+        if (trackBytes > 1000) {
+            trackBytes = c.convert(base, MEGABYTE);
+            sizeWithUnit = c.convertToString(base, MEGABYTE);
+        }
+        if (trackBytes > 1000) {
+            sizeWithUnit = c.convertToString(base, GIGABYTE);
+        }
+        return sizeWithUnit;
     }
 
     private void cleanup() {
         downloadMetrics.setProgressPercent(0f);
         if (isMultiThreadedDownloading) {
-            downloadMetrics.setSuccess(true);
             String sizeWithUnit = convertBytes(totalDownloadedBytes);
             System.out.println();
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName, MessageType.INFO, MessageCategory.DOWNLOAD);
+            M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
         } else if (downloadedBytes == totalDownloadedBytes) {
-            downloadMetrics.setSuccess(true);
             String sizeWithUnit = convertBytes(downloadedBytes);
             System.out.println();
-            messageBroker.sendMessage(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName, MessageType.INFO, MessageCategory.DOWNLOAD);
+            M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
         } else {
-            downloadMetrics.setSuccess(false);
             System.out.println();
-            messageBroker.sendMessage(DOWNLOAD_FAILED, MessageType.ERROR, MessageCategory.DOWNLOAD);
+            M.msgDownloadError(DOWNLOAD_FAILED);
         }
     }
 
     @Override
     public void run() {
         long initialMeasurement;
-        String[] spinner = new String[]{"/", "-", "\\", "|"};
         List<Long> initialMeasurements = isMultiThreadedDownloading ? new ArrayList<>(fileOutputStreams.size()) : null;
         this.totalSizeOfTheFile = downloadMetrics.getTotalSize();
         boolean downloading = downloadMetrics.isActive();
@@ -201,9 +204,9 @@ public class ProgressBarThread extends Thread {
                         downloadedBytes = fos.getChannel().size();
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
                         if (Mode.isCLI()) {
-                            System.out.print("\r" + generateProgressBar(spinner[i]));
+                            System.out.print("\r" + generateProgressBar());
                         } else {
-                            generateProgressBar(spinner[i]);
+                            generateProgressBar();
                         }
                     }
                 }
@@ -220,9 +223,9 @@ public class ProgressBarThread extends Thread {
                             downloadSpeeds.add(j, (downloadedPartBytes - initialMeasurements.get(j)) * 4);
                         }
                         if (Mode.isCLI()) {
-                            System.out.print("\r" + generateProgressBar(spinner[i]));
+                            System.out.print("\r" + generateProgressBar());
                         } else {
-                            generateProgressBar(spinner[i]);
+                            generateProgressBar();
                         }
                     }
                 }

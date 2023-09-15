@@ -2,8 +2,6 @@ package Utils;
 
 import Backend.DownloadFolderLocator;
 import Backend.Drifty;
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Enums.OS;
 import Enums.Program;
 import com.google.gson.Gson;
@@ -31,7 +29,7 @@ import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
-    private static final MessageBroker messageBroker = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
     private static Thread linkThread;
     private static boolean interrupted;
@@ -48,18 +46,18 @@ public final class Utility {
     public Utility() {
     }
 
-    public static boolean isYoutubeLink(String url) {
+    public static boolean isYoutube(String url) {
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
         return url.matches(pattern);
     }
 
-    public static boolean isInstagramLink(String url) {
+    public static boolean isInstagram(String url) {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
     public static boolean isExtractableLink(String link) {
-        return isYoutubeLink(link) || isInstagramLink(link);
+        return isYoutube(link) || isInstagram(link);
     }
 
     public static boolean linkValid(String link) {
@@ -68,31 +66,31 @@ public final class Utility {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
-            messageBroker.sendMessage("Link is valid!", MessageType.INFO, MessageCategory.LINK);
+            M.msgLinkInfo("Link is valid!");
             return true;
         } catch (ConnectException e) {
-            messageBroker.sendMessage("Connection to the link timed out! Please check your internet connection. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
         } catch (UnknownHostException unknownHost) {
             try {
                 URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
-                messageBroker.sendMessage("Link is invalid!", MessageType.ERROR, MessageCategory.LINK); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+                M.msgLinkError("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
-                messageBroker.sendMessage("You are not connected to the Internet!", MessageType.ERROR, MessageCategory.LINK);
+                M.msgLinkError("You are not connected to the Internet!");
             } catch (MalformedURLException e) {
-                messageBroker.sendMessage("The link is not correctly formatted! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+                M.msgLinkError("The link is not correctly formatted! " + e.getMessage());
             } catch (IOException e) {
-                messageBroker.sendMessage("Failed to connect to the project website! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+                M.msgLinkError("Failed to connect to the project website! " + e.getMessage());
             }
         } catch (ProtocolException e) {
-            messageBroker.sendMessage("An error occurred with the protocol! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("An error occurred with the protocol! " + e.getMessage());
         } catch (MalformedURLException e) {
-            messageBroker.sendMessage("The link is not correctly formatted! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("The link is not correctly formatted! " + e.getMessage());
         } catch (IOException e) {
-            messageBroker.sendMessage("Failed to connect to " + link + " ! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("Failed to connect to " + link + " ! " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            messageBroker.sendMessage("Not a URL" + link + " ! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError(link + " is not a URL; error: " + e.getMessage());
         }
         return false;
     }
@@ -114,11 +112,11 @@ public final class Utility {
     }
 
     public static String findFilenameInLink(String link) {
-        String fileName = "";
-        if (isInstagramLink(link) || isYoutubeLink(link)) {
+        String filename = "";
+        if (isInstagram(link) || isYoutube(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
             for (String json : linkMetadataList) {
-                fileName = Utility.getFilenameFromJson(json);
+                filename = Utility.getFilenameFromJson(json);
             }
         }
         else {
@@ -127,25 +125,25 @@ public final class Utility {
             String file = link.substring(link.lastIndexOf("/") + 1);
             int index = file.lastIndexOf(".");
             if (index < 0) {
-                messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
                 return null;
             }
             String extension = file.substring(index);
             // edge case 1: "example.com/."
             if (extension.length() == 1) {
-                messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, MessageType.ERROR, MessageCategory.FILENAME);
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
                 return null;
             }
             // file.png?width=200 -> file.png
-            fileName = file.split("([?])")[0];
-            messageBroker.sendMessage(FILENAME_DETECTED + fileName, MessageType.INFO, MessageCategory.FILENAME);
+            filename = file.split("([?])")[0];
+            M.msgFilenameInfo(FILENAME_DETECTED);
         }
-        return fileName;
+        return filename;
     }
 
-    public static String getFormattedDefaultDownloadsFolder() {
+    public static String getHomeDownloadFolder() {
         String downloadsFolder;
-        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, MessageType.INFO, MessageCategory.DIRECTORY);
+        M.msgDirInfo(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
@@ -155,10 +153,10 @@ public final class Utility {
         }
 
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
-            messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, MessageType.ERROR, MessageCategory.DIRECTORY);
+            M.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
         }
         else {
-            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, MessageType.INFO, MessageCategory.DIRECTORY);
+            M.msgDirInfo(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
         }
         return downloadsFolder;
     }
@@ -166,7 +164,7 @@ public final class Utility {
     public boolean yesNoValidation(String input, String printMessage) {
         while (input.isEmpty()) {
             System.out.println(ENTER_Y_OR_N);
-            messageBroker.sendMessage(ENTER_Y_OR_N, MessageType.ERROR, MessageCategory.LOG);
+            M.msgLogError(ENTER_Y_OR_N);
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
         }
@@ -182,7 +180,7 @@ public final class Utility {
 
         else {
             System.out.println("Invalid input!");
-            messageBroker.sendMessage("Invalid input!", MessageType.ERROR, MessageCategory.LOG);
+            M.msgLogError("Invalid input!");
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
             yesNoValidation(input, printMessage);
@@ -264,7 +262,7 @@ public final class Utility {
 
             return list;
         } catch (IOException e) {
-            messageBroker.sendMessage("Failed to perform I/O operations on link metadata! " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("Failed to perform I/O operations on link metadata! " + e.getMessage());
             return null;
         }
 
@@ -292,19 +290,20 @@ public final class Utility {
 
     public static String getFilenameFromJson(String jsonString) {
         String json = makePretty(jsonString);
-        String fileName;
+        String filename;
         String regexFilename = "(\"title\": \")(.+)(\",)";
+        String regexFileSize = "";
         Pattern p = Pattern.compile(regexFilename);
         Matcher m = p.matcher(json);
         if (m.find()) {
-            fileName = cleanFilename(m.group(2)) + ".mp4";
-            messageBroker.sendMessage(FILENAME_DETECTED + "\"" + fileName + "\"", MessageType.INFO, MessageCategory.FILENAME);
+            filename = cleanFilename(m.group(2)) + ".mp4";
+            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         }
         else {
-            fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
-            messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG, MessageType.ERROR, MessageCategory.FILENAME);
+            filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
+            M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
         }
-        return fileName;
+        return filename;
     }
 
     public static String cleanFilename(String filename) {
@@ -354,7 +353,7 @@ public final class Utility {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
         } catch (InterruptedException e) {
-            messageBroker.sendMessage("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage(), MessageType.ERROR, MessageCategory.LINK);
+            M.msgLinkError("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage());
         }
     }
 

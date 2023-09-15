@@ -1,7 +1,6 @@
 package Preferences;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
+import Utils.Environment;
 import Utils.MessageBroker;
 
 import java.util.prefs.BackingStoreException;
@@ -10,7 +9,7 @@ import java.util.prefs.Preferences;
 import static Preferences.Labels.*;
 
 public class Clear { // This class is used to clear the user preferences
-    private final MessageBroker messageBroker = new MessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static final Clear INSTANCE = new Clear();
     private final Preferences preferences = Labels.PREFERENCES;
 
@@ -53,7 +52,7 @@ public class Clear { // This class is used to clear the user preferences
         try {
             preferences.clear();
         } catch (BackingStoreException e) {
-            messageBroker.sendMessage("Failed to clear all the preferences! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
+            M.msgLogError("Failed to clear all the preferences! " + e.getMessage());
         }
     }
 }
