@@ -1,7 +1,5 @@
 package Utils;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
@@ -17,7 +15,7 @@ import java.util.List;
  * subdirectories, which is used to look for duplicate files.
  */
 public class CheckFile implements Runnable {
-    private final MessageBroker messageBroker = new MessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private final List<String> searchList;
     private final Path rootPath;
     public static boolean stopWalk = false;
@@ -62,7 +60,7 @@ public class CheckFile implements Runnable {
             folderWalker = new FolderWalker(searchList, findOneFile);
             Files.walkFileTree(rootPath, folderWalker);
         } catch (IOException e) {
-            messageBroker.sendMessage("Failed to walk through folders! " + e.getMessage(), MessageType.ERROR, MessageCategory.LOG);
+            M.msgLogError("Failed to walk through folders! " + e.getMessage());
         }
     }
 

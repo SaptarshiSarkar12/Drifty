@@ -1,8 +1,6 @@
 package GUI.Forms;
 
 import Backend.Drifty;
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Enums.Mode;
 import Preferences.AppSettings;
 import Utils.DriftyConstants;
@@ -28,14 +26,17 @@ import static javafx.scene.layout.AnchorPane.*;
 
 public class Main extends Application {
     private static Main INSTANCE;
+    private static MessageBroker M;
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
+
     public static void main(String[] args) throws IOException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         Environment.setMessageBroker(new MessageBroker());
-        Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_STARTED, MessageType.INFO, MessageCategory.LOG);
+        M = Environment.getMessageBroker();
+        M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
         Utility.setStartTime();
         for (String arg : args) {
@@ -64,7 +65,7 @@ public class Main extends Application {
         placeControl(menu, 0, 0, 0, -1);
         primaryStage = Constants.getStage(primaryStage);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if(firstRun) {
+            if (firstRun) {
                 firstRun = false;
                 return;
             }
@@ -72,7 +73,7 @@ public class Main extends Application {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
-                    if(Utility.isURL(clipboardText))
+                    if (Utility.isURL(clipboardText))
                         FormLogic.pasteFromClipboard(clipboardText);
                 }
             }
@@ -107,7 +108,7 @@ public class Main extends Application {
         MenuItem about = new MenuItem("About");
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
-            Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_TERMINATED, MessageType.INFO, MessageCategory.LOG);
+            M.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         menu.getItems().setAll(website, about, exit);
@@ -148,7 +149,7 @@ public class Main extends Application {
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
         settings.setOnAction(e -> new Settings().show());
-        wipeHistory.setOnAction(e-> {
+        wipeHistory.setOnAction(e -> {
             AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
                 FormLogic.clearJobHistory();

@@ -2,8 +2,6 @@ package GUI.Support;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job
@@ -76,14 +74,8 @@ public class Job {
     }
 
     private String getName() {
-        String name = link;
-        String regex = "(/)([^/]+)$";
-        Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(link);
-        if(m.find()) {
-            name = m.group(2);
-        }
-        return name;
+        String[] nameParts = link.split("/");
+        return nameParts[nameParts.length - 1];
     }
 
     public void repeatApproved() {

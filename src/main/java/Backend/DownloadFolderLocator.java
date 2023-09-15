@@ -1,5 +1,8 @@
 package Backend;
-import java.io.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 /*
 This class locates the default Download folder, not the download folder that the user provided.
@@ -27,13 +30,16 @@ public class DownloadFolderLocator {
             return null;
         }
     }
+
     static class StreamReader extends Thread {
         private final InputStream is;
         private final StringWriter sw;
+
         StreamReader(InputStream is) {
             this.is = is;
             sw = new StringWriter();
         }
+
         @Override
         public void run() {
             try {
@@ -43,6 +49,7 @@ public class DownloadFolderLocator {
             } catch (IOException ignored) {
             }
         }
+
         public String getResult() {
             return sw.toString();
         }

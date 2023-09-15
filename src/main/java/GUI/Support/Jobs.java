@@ -35,15 +35,14 @@ public class Jobs {
     }
 
     public void remove(Job oldJob) {
-        Job removeJob = null;
-        for (Job job : jobList) {
-            if (job.matches(oldJob)) {
-                removeJob = oldJob;
+        Job removeJob = oldJob;
+        for(Job job : jobList) {
+            if(job.matchesLink(oldJob)) {
+                removeJob = job;
+                break;
             }
         }
-        if (removeJob != null) {
-            jobList.remove(removeJob);
-        }
+        jobList.remove(removeJob);
         save();
     }
 

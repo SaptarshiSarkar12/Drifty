@@ -1,9 +1,9 @@
 package CLI;
 
 import Backend.Drifty;
-import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.OS;
+import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -39,9 +39,9 @@ public class Main {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         Environment.setMessageBroker(new MessageBroker(System.out));
         messageBroker = Environment.getMessageBroker();
-        messageBroker.sendMessage("Initializing environment...", MessageType.INFO, MessageCategory.INITIALIZATION);
+        messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
-        messageBroker.sendMessage("Environment initialized successfully!", MessageType.INFO, MessageCategory.INITIALIZATION);
+        messageBroker.msgInitInfo("Environment initialized successfully!");
         messageBroker = Environment.getMessageBroker();
         utility = new Utility();
         printBanner();
@@ -68,15 +68,15 @@ public class Main {
                 }
             }
             if (!batchDownloading) {
-                isYoutubeURL = isYoutubeLink(link);
-                isInstagramLink = isInstagramLink(link);
+                isYoutubeURL = isYoutube(link);
+                isInstagramLink = isInstagram(link);
                 fileName = Objects.requireNonNullElse(name, fileName);
-                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
+                messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 renameFilenameIfRequired();
                 downloadsFolder = location;
                 if (downloadsFolder == null) {
-                    downloadsFolder = getFormattedDefaultDownloadsFolder();
+                    downloadsFolder = AppSettings.get.lastDownloadFolder();
                 } else {
                     if (OS.isWindows()) {
                         downloadsFolder = downloadsFolder.replace('/', '\\');
@@ -100,7 +100,7 @@ public class Main {
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
-                        messageBroker.sendMessage("The data file should be a YAML file!", MessageType.ERROR, MessageCategory.BATCH);
+                        messageBroker.msgBatchError("The data file should be a YAML file!");
                     } else {
                         batchDownloader();
                         break;
@@ -116,11 +116,11 @@ public class Main {
                 System.out.print(ENTER_FILE_LINK);
                 String link = SC.next();
                 SC.nextLine();
-                System.out.print("Enter the download directory (Enter \".\" for default downloads folder) : ");
+                System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.get.lastDownloadFolder() + ") : ");
                 downloadsFolder = SC.next();
-                isYoutubeURL = isYoutubeLink(link);
-                isInstagramLink = isInstagramLink(link);
-                messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
+                isYoutubeURL = isYoutube(link);
+                isInstagramLink = isInstagram(link);
+                messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 renameFilenameIfRequired();
                 Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
@@ -139,22 +139,22 @@ public class Main {
     private static void batchDownloader() {
         Yaml yamlParser = new Yaml();
         try {
-            messageBroker.sendMessage("Trying to load YAML data file (" + batchDownloadingFile + ") ...", MessageType.INFO, MessageCategory.LOG);
+            messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
-            messageBroker.sendMessage("YAML data file (" + batchDownloadingFile + ") loaded successfully", MessageType.INFO, MessageCategory.LOG);
+            messageBroker.msgLogInfo("YAML data file (" + batchDownloadingFile + ") loaded successfully");
             int numberOfLinks;
             try {
                 numberOfLinks = data.get("links").size();
             } catch (NullPointerException e) {
-                messageBroker.sendMessage("No links specified. Exiting...", MessageType.ERROR, MessageCategory.LINK);
+                messageBroker.msgLinkInfo("No links specified. Exiting...");
                 return;
             }
             int numberOfFileNames;
             if (data.containsKey("fileNames")) {
                 numberOfFileNames = data.get("fileNames").size();
             } else {
-                messageBroker.sendMessage("No filename specified. Filename will be retrieved from the link.", MessageType.INFO, MessageCategory.FILENAME);
+                messageBroker.msgFilenameInfo("No filename specified. Filename will be retrieved from the link.");
                 numberOfFileNames = 0;
             }
             int numberOfDirectories;
@@ -168,7 +168,7 @@ public class Main {
             } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
             } else {
-                messageBroker.sendMessage("No directory specified. Default downloads folder will be used.", MessageType.INFO, MessageCategory.DIRECTORY);
+                messageBroker.msgDirInfo("No directory specified. Default downloads folder will be used.");
                 numberOfDirectories = 0;
                 directory = ".";
             }
@@ -190,34 +190,34 @@ public class Main {
             } else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            messageBroker.sendMessage("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage, MessageType.INFO, MessageCategory.BATCH);
+            messageBroker.msgBatchInfo("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage);
             for (int i = 0; i < numberOfLinks; i++) {
-                messageBroker.sendMessage("==================================================", MessageType.INFO, MessageCategory.STYLE);
+                messageBroker.msgStyleInfo("==================================================");
                 link = data.get("links").get(i);
-                messageBroker.sendMessage("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link, MessageType.INFO, MessageCategory.LINK);
-                isYoutubeURL = isYoutubeLink(link);
-                isInstagramLink = isInstagramLink(link);
+                messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
+                isYoutubeURL = isYoutube(link);
+                isInstagramLink = isInstagram(link);
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
                 } else {
-                    messageBroker.sendMessage("Retrieving filename from link...", MessageType.INFO, MessageCategory.FILENAME);
+                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
                 }
                 renameFilenameIfRequired();
                 if (directory.equals(".")) {
-                    directory = getFormattedDefaultDownloadsFolder();
+                    directory = AppSettings.get.lastDownloadFolder();
                 } else if (directory.isEmpty()) {
                     try {
                         directory = data.get("directories").get(i);
                     } catch (Exception e) {
-                        directory = getFormattedDefaultDownloadsFolder();
+                        directory = AppSettings.get.lastDownloadFolder();
                     }
                 }
                 Drifty backend = new Drifty(link, directory, fileName, System.out);
                 backend.start();
             }
         } catch (FileNotFoundException e) {
-            messageBroker.sendMessage("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage(), MessageType.ERROR, MessageCategory.DOWNLOAD);
+            messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
         }
     }
 

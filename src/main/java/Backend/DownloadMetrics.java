@@ -6,7 +6,7 @@ public class DownloadMetrics {
     private long totalSize;
     private boolean multithreaded;
     private final int threadCount = 3;
-    private final long threadingThreshold = 52428800; // 50 MB
+    private final long threadMaxDataSize = 52428800; // 50 MB
 
     private boolean success;
 
@@ -58,7 +58,7 @@ public class DownloadMetrics {
         return threadCount;
     }
 
-    public long getThreadingThreshold() {
-        return threadingThreshold;
+    public long getThreadMaxDataSize() {
+        return threadMaxDataSize;
     }
 }

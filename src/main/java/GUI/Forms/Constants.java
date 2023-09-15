@@ -1,7 +1,5 @@
 package GUI.Forms;
 
-import Enums.MessageCategory;
-import Enums.MessageType;
 import Utils.DriftyConstants;
 import Utils.Environment;
 import javafx.geometry.Rectangle2D;
@@ -79,7 +77,7 @@ class Constants {
         icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);
         stage.setOnCloseRequest(e -> {
-            Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_TERMINATED, MessageType.INFO, MessageCategory.LOG);
+            Environment.getMessageBroker().msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         stage.setTitle("Drifty GUI");
@@ -90,7 +88,7 @@ class Constants {
         Image icon = new Image(ICON_1024_PNG.toExternalForm());
         stage.getIcons().add(icon);
         stage.setOnCloseRequest(e -> {
-            Environment.getMessageBroker().sendMessage(DriftyConstants.GUI_APPLICATION_TERMINATED, MessageType.INFO, MessageCategory.LOG);
+            Environment.getMessageBroker().msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         stage.setResizable(true);

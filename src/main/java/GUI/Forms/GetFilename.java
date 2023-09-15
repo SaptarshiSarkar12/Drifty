@@ -43,7 +43,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     @Override
     protected ConcurrentLinkedDeque<Job> call() {
         updateProgress(0, 1);
-        this.updateMessage("Retrieving Filename");
+        this.updateMessage("Retrieving Filename(s)");
         Timer progTimer = new Timer();
         progTimer.scheduleAtFixedRate(runProgress(), 2500, 150);
         Thread thread = new Thread(getFileCount());
