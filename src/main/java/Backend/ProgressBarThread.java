@@ -77,7 +77,7 @@ public class ProgressBarThread extends Thread {
 
     private String generateProgressBar() {
         spinBarIndex ++;
-        if(spinBarIndex == 3)
+        if (spinBarIndex == 3)
             spinBarIndex = 0;
         String spinner = spinBars[spinBarIndex];
         if (!isMultiThreadedDownloading) {
@@ -176,19 +176,19 @@ public class ProgressBarThread extends Thread {
         while (downloading) {
             try {
                 if (!isMultiThreadedDownloading) {
-                    for (int i = 0; i <= 3; i++) {
+                    for (int i = 0; i <= downloadMetrics.getThreadCount(); i++) {
                         initialMeasurement = fos.getChannel().size();
                         Thread.sleep(250);
                         downloadedBytes = fos.getChannel().size();
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
                         if (Mode.isCLI()) {
+                            System.out.print("\033[2K");
                             System.out.print("\r" + generateProgressBar());
                         } else {
                             generateProgressBar();
                         }
                     }
-                }
-                else {
+                } else {
                     for (int i = 0; i <= fileOutputStreams.size(); i++) {
                         for (int j = 0; j < fileOutputStreams.size(); j++) {
                             initialMeasurements.add(j, fileOutputStreams.get(j).getChannel().size());
@@ -201,6 +201,7 @@ public class ProgressBarThread extends Thread {
                             downloadSpeeds.add(j, (downloadedPartBytes - initialMeasurements.get(j)) * 4);
                         }
                         if (Mode.isCLI()) {
+                            System.out.print("\033[2K");
                             System.out.print("\r" + generateProgressBar());
                         } else {
                             generateProgressBar();

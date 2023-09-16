@@ -5,9 +5,8 @@ public class DownloadMetrics {
     private float progressPercent;
     private long totalSize;
     private boolean multithreaded;
-    private final int threadCount = 3;
+    private final int threadCount = 6;
     private final long maxFileSplitSize = 52428800; // 50 MB
-    private boolean success;
 
     public boolean isActive() {
         return active;
@@ -23,10 +22,6 @@ public class DownloadMetrics {
 
     public void setProgressPercent(float progressPercent) {
         this.progressPercent = progressPercent;
-    }
-
-    public double getProgress() {
-        return progressPercent / 100.0;
     }
 
     public long getTotalSize() {
