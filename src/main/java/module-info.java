@@ -10,7 +10,6 @@ module Drifty {
     requires org.yaml.snakeyaml;
     requires org.jetbrains.annotations;
     requires java.desktop;
-    requires com.simtechdata.unitconverter;
 
     exports GUI.Forms to javafx.graphics;
     exports GUI.Support;
