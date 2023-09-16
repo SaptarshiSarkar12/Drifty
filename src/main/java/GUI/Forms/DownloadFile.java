@@ -153,7 +153,7 @@ public class DownloadFile extends Task<Integer> {
         URL url = null;
         String path = job.getFile().getAbsolutePath();
         try {
-            long numParts = 3L;
+            long numParts = 6L;
             url = new URI(link).toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
@@ -203,17 +203,18 @@ public class DownloadFile extends Task<Integer> {
             }
             updateProgress(0.0, 1.0);
             updateMessage("Merging Files");
+            String msg = "Saving file to download folder .";
             FileOutputStream fos = new FileOutputStream(job.getFile());
             long position = 0;
             for (int i = 0; i < numParts; i++) {
                 int v = i + 1;
-                String msg = "Merging file " + v + " of " + numParts;
                 updateMessage(msg);
                 File f = list.get(i).getFile();
                 FileInputStream fs = new FileInputStream(f);
                 ReadableByteChannel rbs = Channels.newChannel(fs);
                 fos.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
+                msg = msg + ".";
             }
             fos.close();
             exitCode = 0;
