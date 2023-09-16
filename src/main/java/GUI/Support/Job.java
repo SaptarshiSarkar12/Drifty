@@ -82,16 +82,8 @@ public class Job {
         return nameParts[nameParts.length - 1];
     }
 
-    public void repeatApproved() {
-        repeatDownload = true;
-    }
-
     public boolean repeatOK() {
         return repeatDownload;
-    }
-
-    public boolean noRepeat() {
-        return !repeatDownload;
     }
 
     @Override

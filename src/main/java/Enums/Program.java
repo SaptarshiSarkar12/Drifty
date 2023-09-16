@@ -23,6 +23,7 @@ public enum Program {
             case JOB_FILE -> Paths.get(driftyPath, "Jobs.json").toAbsolutePath().toString();
         };
     }
+
     public static Path getYtDLPFullPath() {
         return Paths.get(driftyPath, ytDLP);
     }

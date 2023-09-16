@@ -39,11 +39,6 @@ public class Main extends Application {
         M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
         Utility.setStartTime();
-        for (String arg : args) {
-            if (arg.toLowerCase().contains("--devmode")) {
-                Mode.setDev();
-            }
-        }
         launch(args);
     }
 
@@ -105,13 +100,12 @@ public class Main extends Application {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
         website.setOnAction(e -> openWebsite(Drifty.projectWebsite, "project website"));
-        MenuItem about = new MenuItem("About");
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
             M.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
-        menu.getItems().setAll(website, about, exit);
+        menu.getItems().setAll(website, exit);
         return menu;
     }
 

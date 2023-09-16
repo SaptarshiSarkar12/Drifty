@@ -5,16 +5,8 @@ package Enums;
  */
 public enum Mode {
     CLI, GUI;
+
     private static Mode mode = Mode.CLI;
-    private static boolean developer = false;
-
-    public static void setDev() {
-        developer = true;
-    }
-
-    public static boolean devMode() {
-        return developer;
-    }
 
     public static void setGUIMode() {
         Mode.mode = Mode.GUI;

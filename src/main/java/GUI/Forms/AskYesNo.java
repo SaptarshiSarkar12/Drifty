@@ -28,6 +28,7 @@ class AskYesNo {
     enum State {
         YES_NO, OK, FILENAME
     }
+
     private final State state;
     private final String lf = System.lineSeparator();
     private double width = 200;
@@ -143,7 +144,7 @@ class AskYesNo {
         stage.close();
     }
     public GetResponse getResponse() {
-        if(Platform.isFxApplicationThread()) {
+        if (Platform.isFxApplicationThread()) {
             showScene();
         } else {
             Platform.runLater(this::showScene);
@@ -178,6 +179,7 @@ class AskYesNo {
     public String getFilename() {
         return filename;
     }
+
     private void sleep() {
         try {
             TimeUnit.MILLISECONDS.sleep(50);

@@ -55,12 +55,4 @@ public class Folders {
     public ObservableList<String> getFolders() {
         return FXCollections.observableArrayList(folders);
     }
-
-    public ObservableList<Path> getFolderPaths() {
-        ObservableList<Path> paths = FXCollections.observableArrayList();
-        for(String folder : folders) {
-            paths.add(Paths.get(folder));
-        }
-        return paths;
-    }
 }

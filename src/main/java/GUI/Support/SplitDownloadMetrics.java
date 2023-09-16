@@ -6,12 +6,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SplitDownloadMetrics {
-
     private final int id;
     private final long start;
     private final long end;
@@ -30,14 +28,6 @@ public class SplitDownloadMetrics {
         this.end = end;
         this.filename = filename;
         this.url = url;
-    }
-
-    public long getBytesRead() {
-        return bytesRead;
-    }
-
-    public void setBytesRead(long bytesRead) {
-        this.bytesRead = bytesRead;
     }
 
     public int getId() {
@@ -86,10 +76,6 @@ public class SplitDownloadMetrics {
         failed = true;
     }
 
-    public boolean success() {
-        return success;
-    }
-
     public void setSuccess() {
         success = !failed;
     }
@@ -97,29 +83,12 @@ public class SplitDownloadMetrics {
     public boolean running() {
         return !success && !failed;
     }
+
     public boolean stop() {
         return stop;
     }
 
     public void setStop() {
         stop = true;
-    }
-
-    public byte[] getFileContent() {
-        if(file.exists()) {
-            try (InputStream is = new FileInputStream(file)) {
-                byte[] buffer = new byte[(int) file.length()];
-                int bytesRead = is.read(buffer);
-                if(bytesRead == -1) {
-                    throw new IOException("Failed to read file part: " + filename);
-                }
-                return buffer;
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return null;
     }
 }

@@ -2,8 +2,6 @@ package GUI.Forms;
 
 import GUI.Support.Job;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -29,15 +27,12 @@ public class MainGridPane extends GridPane {
     public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
     public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
     public final CheckBox cbAutoPaste = new CheckBox();
-
     private final HBox boxAutoPaste = boxAutoPaste();
     private final HBox boxLogo = newHBox(ivLogo);
-
     public final Label lblLinkOut = newLabel();
     public final Label lblDirOut = newLabel();
     public final Label lblFilenameOut = newLabel();
     public final Label lblDownloadInfo = newLabel();
-
     public final TextField tfLink = newTextField();
     public final TextField tfDir = newTextField();
     public final TextField tfFilename = newTextField();
@@ -107,11 +102,6 @@ public class MainGridPane extends GridPane {
         GridPane.setMargin(pBar, new Insets(0, 0, 25, 0));
     }
 
-    public void bindToWorker(final Worker<ObservableList<Long>> worker) {
-        lblDownloadInfo.textProperty().bind(worker.messageProperty());
-        pBar.progressProperty().bind(worker.progressProperty());
-    }
-
     private ListView listView() {
         ListView<Job> listView = new ListView<>();
         listView.setCellFactory(param -> new ListCell<>() {
@@ -122,8 +112,7 @@ public class MainGridPane extends GridPane {
                     // Make empty cells not selectable
                     setDisable(true);
                     Platform.runLater(() -> setText(""));
-                }
-                else {
+                } else {
                     // Set the text for non-empty cells
                     setDisable(false);
                     Platform.runLater(() -> setText(item.toString()));
@@ -174,16 +163,6 @@ public class MainGridPane extends GridPane {
         iv.setPreserveRatio(true);
         iv.setFitWidth(width * scale);
         return iv;
-    }
-
-    private ImageView imageViewButton(Image imageUp, Image imageDown, double scale) {
-        ImageView imageView = new ImageView(imageUp);
-        double width = imageUp.getWidth();
-        imageView.setOnMouseReleased(e -> imageView.setImage(imageUp));
-        imageView.setOnMousePressed(e -> imageView.setImage(imageDown));
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(width * scale);
-        return imageView;
     }
 
     private Button newButton(Image imageUp, Image imageDown, double scale) {

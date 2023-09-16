@@ -32,7 +32,7 @@ class Constants {
     public static final URL AUTO_PASTE_PNG = Constants.class.getResource("/GUI/Labels/AutoPaste.png");
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/GUI/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/GUI/Labels/Filename.png");
-    public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/Icon1024.png");
+    public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/AppIcon.png");
 
     /*
     Stylesheets

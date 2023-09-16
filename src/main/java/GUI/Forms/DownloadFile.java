@@ -231,7 +231,7 @@ public class DownloadFile extends Task<Integer> {
             message = String.format(FAILED_CONNECTION_F, url);
             exitCode = 1;
         } catch (NullPointerException e) {
-            message = FAILED_READIND_STREAM;
+            message = FAILED_READING_STREAM;
             exitCode = 1;
         }
         sendFinalMessage(message);
@@ -304,7 +304,7 @@ public class DownloadFile extends Task<Integer> {
             message = String.format(FAILED_CONNECTION_F, url);
             exitCode = 1;
         } catch (NullPointerException e) {
-            message = FAILED_READIND_STREAM;
+            message = FAILED_READING_STREAM;
             exitCode = 1;
         } finally {
             try {

@@ -17,12 +17,12 @@ public class Environment {
     private static MessageBroker M = Environment.getMessageBroker();
 
     /*
-    This method is called by both Drifty_CLI and Main classes.
+    This method is called by both CLI.Main and GUI.Forms.Main classes.
     It first determines which yt-dlp program to copy out of resources based on the OS.
     Next, it figures out which path to use to store yt-dlp and the users batch list.
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
-    public static void initializeEnvironment() throws IOException {
+    public static void initializeEnvironment() {
         M.msgLogInfo("OS : " + OS.getOSName());
         String ytDLP = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
         String appUseFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".config", "Drifty").toAbsolutePath().toString();
@@ -30,7 +30,12 @@ public class Environment {
         Program.setDriftyPath(appUseFolderPath);
         InputStream ytDLPStream = ClassLoader.getSystemResourceAsStream(ytDLP);
         CopyYtDLP copyYtDlp = new CopyYtDLP();
-        boolean ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
+        boolean ytDLPExists = false;
+        try {
+            ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
+        } catch (IOException e) {
+            M.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
+        }
         if (ytDLPExists && isYtDLPUpdated()) {
             updateYt_dlp();
         }

@@ -29,18 +29,16 @@ import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
+    private static final Random random = new Random(System.currentTimeMillis());
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
     private static Thread linkThread;
     private static boolean interrupted;
     private static long startTime;
 
+
     public static void setStartTime() {
         startTime = System.currentTimeMillis();
-    }
-
-    public static long timeSinceStart() {
-        return System.currentTimeMillis() - startTime;
     }
 
     public Utility() {
@@ -95,22 +93,6 @@ public final class Utility {
         return false;
     }
 
-    public static boolean urlIsValid(String link) {
-        try {
-            URL url = URI.create(link).toURL();
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
-            connection.connect();
-            URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
-            HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
-            connectProjectWebsite.connect();
-        } catch (IOException e) {
-            return false;
-        }
-
-        return true;
-    }
-
     public static String findFilenameInLink(String link) {
         String filename = "";
         if (isInstagram(link) || isYoutube(link)) {
@@ -118,11 +100,14 @@ public final class Utility {
             for (String json : linkMetadataList) {
                 filename = Utility.getFilenameFromJson(json);
             }
-        }
-        else {
+        } else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
             // example.com/file.json -> file.json
             String file = link.substring(link.lastIndexOf("/") + 1);
+            if (file.isEmpty()) {
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
+                return null;
+            }
             int index = file.lastIndexOf(".");
             if (index < 0) {
                 M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
@@ -136,7 +121,7 @@ public final class Utility {
             }
             // file.png?width=200 -> file.png
             filename = file.split("([?])")[0];
-            M.msgFilenameInfo(FILENAME_DETECTED);
+            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         }
         return filename;
     }
@@ -147,15 +132,13 @@ public final class Utility {
         if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
-        }
-        else {
+        } else {
             downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
 
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             M.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
-        }
-        else {
+        } else {
             M.msgDirInfo(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
         }
         return downloadsFolder;
@@ -172,13 +155,9 @@ public final class Utility {
         char choice = input.charAt(0);
         if (choice == 'y') {
             return true;
-        }
-
-        else if (choice == 'n') {
+        } else if (choice == 'n') {
             return false;
-        }
-
-        else {
+        } else {
             System.out.println("Invalid input!");
             M.msgLogError("Invalid input!");
             System.out.print(printMessage);
@@ -201,7 +180,6 @@ public final class Utility {
         System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava DriftyCLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
-        System.out.println("\033[37;3m* Requires java 20 or higher. \n" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
         System.out.println("\tProject Website - " + Drifty.projectWebsite);
@@ -217,13 +195,6 @@ public final class Utility {
         System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
         System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
-    }
-
-    public static double[] fraction(double currentX, double currentY, double multiplier) {
-        double[] result = new double[2];
-        result[0] = currentX * multiplier;
-        result[1] = currentY * multiplier;
-        return result;
     }
 
     public static LinkedList<String> getLinkMetadata(String link) {
@@ -256,16 +227,13 @@ public final class Utility {
                     }
 
                 }
-
                 FileUtils.forceDelete(driftyJsonFolder); // delete the metadata files of Drifty from the config directory
             }
-
             return list;
         } catch (IOException e) {
             M.msgLinkError("Failed to perform I/O operations on link metadata! " + e.getMessage());
             return null;
         }
-
     }
 
     public static String getURLFromJson(String jsonString) {
@@ -298,8 +266,7 @@ public final class Utility {
         if (m.find()) {
             filename = cleanFilename(m.group(2)) + ".mp4";
             M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
-        }
-        else {
+        } else {
             filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
             M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
         }
@@ -324,29 +291,10 @@ public final class Utility {
     }
 
     public static boolean isURL(String text) {
-        String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        String regex = "^(http(s)?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
         return m.matches();
-    }
-
-    public static double reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd, int decimalPrecision) {
-        // Both reMap methods will map a number in a range to a different range. So let's say you have a number, such as 25, and it came from a range of
-        // values that go from 0 to 500. And you want to find the equivalent number in the range of 5,000 to 100,000, these classes do exactly that.
-        // They also follow the strict algebraic way of accomplishing such a remap so they from any range to any other range where the numbers can
-        // be positive or negative in any order in any way, it doesn't matter. The mapping will be accurate every time.
-        double deltaA = fromRangeEnd - fromRangeStart;
-        double deltaB = toRangeEnd - toRangeStart;
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRangeStart;
-        double offset = (negA * scale) + toRangeStart;
-        double finalNumber = (sourceNumber * scale) + offset;
-        int calcScale = (int) Math.pow(10, decimalPrecision);
-        return (double) Math.round(finalNumber * calcScale) / calcScale;
-    }
-
-    public static int reMap(double sourceNumber, double fromRangeStart, double fromRangeEnd, double toRangeStart, double toRangeEnd) {
-        return (int) reMap(sourceNumber, fromRangeStart, fromRangeEnd, toRangeStart, toRangeEnd, 0);
     }
 
     public static void sleep(long time) {
@@ -356,8 +304,6 @@ public final class Utility {
             M.msgLinkError("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage());
         }
     }
-
-    private static final Random random = new Random(System.currentTimeMillis());
 
     public static String randomString(int characterCount) {
         String source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
