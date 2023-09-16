@@ -67,12 +67,12 @@ public class DownloadFile extends Task<Integer> {
     }
 
     @Override
-    protected Integer call() throws IOException, InterruptedException {
+    protected Integer call() throws IOException, InterruptedException, URISyntaxException {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
             case YOU_TUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
-            case OTHER -> splitDownload();
+            case OTHER -> splitDecision();
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -95,24 +95,18 @@ public class DownloadFile extends Task<Integer> {
         sendFinalMessage("");
     }
 
-/*
-    private String getValueString(double baseValue) {
-        double total = c.convert(baseValue, BYTE);
-        String result = total + " Bytes";
-        if (total > 1000) {
-            total = c.convert(baseValue, KILOBYTE_B1000);
-            result = c.convertToString(baseValue, KILOBYTE_B1000);
+    private void splitDecision() throws IOException, URISyntaxException {
+        URL url = new URI(link).toURL();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.connect();
+        long fileSize = con.getHeaderFieldLong("Content-Length", -1);
+        if(Unit.getValue(fileSize, Unit.MB) > 50) {
+            splitDownload();
         }
-        if (total > 1000) {
-            total = c.convert(baseValue, MEGABYTE_B1000);
-            result = c.convertToString(baseValue, MEGABYTE_B1000);
+        else {
+            downloadFile();
         }
-        if (total > 1000) {
-            result = c.convertToString(baseValue, GIGABYTE_B1000);
-        }
-        return result;
     }
-*/
 
     private Runnable split(SplitDownloadMetrics sdm) {
         return () -> {
