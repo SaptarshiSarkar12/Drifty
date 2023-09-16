@@ -206,6 +206,9 @@ public class DownloadFile extends Task<Integer> {
             FileOutputStream fos = new FileOutputStream(job.getFile());
             long position = 0;
             for (int i = 0; i < numParts; i++) {
+                int v = i + 1;
+                String msg = "Merging file " + v + " of " + numParts;
+                updateMessage(msg);
                 File f = list.get(i).getFile();
                 FileInputStream fs = new FileInputStream(f);
                 ReadableByteChannel rbs = Channels.newChannel(fs);
