@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
-
     public JobHistory() {
         this.jobHistoryList = new ConcurrentLinkedDeque<>();
     }
@@ -36,19 +35,6 @@ public class JobHistory {
         save();
     }
 
-    public boolean isEmpty() {
-        return jobHistoryList.isEmpty();
-    }
-
-    public boolean exists(Job job) {
-        for (Job j : jobHistoryList) {
-            if (j.getLink().equals(job.getLink())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean exists(String link) {
         for (Job job : jobHistoryList) {
             if (job.getLink().equals(link)) {
@@ -67,11 +53,11 @@ public class JobHistory {
     }
 
     private void save() {
-        removeDupes();
+        removeDuplicates();
         AppSettings.set.jobHistory(this);
     }
 
-    private void removeDupes() {
+    private void removeDuplicates() {
         LinkedList<Job> removeList = new LinkedList<>();
         for (Job jobSource : jobHistoryList) {
             int dupeCount = 0;

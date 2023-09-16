@@ -6,17 +6,8 @@ public class DownloadMetrics {
     private long totalSize;
     private boolean multithreaded;
     private final int threadCount = 3;
-    private final long threadMaxDataSize = 52428800; // 50 MB
-
+    private final long maxFileSplitSize = 52428800; // 50 MB
     private boolean success;
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
 
     public boolean isActive() {
         return active;
@@ -58,7 +49,7 @@ public class DownloadMetrics {
         return threadCount;
     }
 
-    public long getThreadMaxDataSize() {
-        return threadMaxDataSize;
+    public long getMaxFileSplitSize() {
+        return maxFileSplitSize;
     }
 }

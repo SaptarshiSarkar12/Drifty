@@ -22,11 +22,6 @@ public class CheckFile implements Runnable {
     private boolean findOneFile = false;
     private FolderWalker folderWalker;
 
-    public CheckFile(String rootPath, List<String> searchList) {
-        this.rootPath = Paths.get(rootPath);
-        this.searchList = searchList;
-    }
-
     public CheckFile(String rootPath, String searchFile) {
         this.rootPath = Paths.get(rootPath);
         this.searchList = new ArrayList<>();
@@ -34,24 +29,8 @@ public class CheckFile implements Runnable {
         findOneFile = true;
     }
 
-    public CheckFile(Path rootPath, String searchFile) {
-        this.rootPath = rootPath;
-        this.searchList = new ArrayList<>();
-        this.searchList.add(searchFile);
-        findOneFile = true;
-    }
-
-    public static void setStopWalk() {
-        stopWalk = true;
-    }
-
     public boolean fileFound() {
         return folderWalker.fileFound();
-    }
-
-
-    public LinkedList<String> getFileList() {
-        return folderWalker.fileList;
     }
 
     @Override

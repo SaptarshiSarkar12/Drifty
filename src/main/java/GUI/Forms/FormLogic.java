@@ -299,7 +299,7 @@ public class FormLogic {
 
     private Runnable getFilenames(String link) {
         return () -> {
-            //Using a Worker Task, this method gets the filename(s) from the link.
+            // Using a Worker Task, this method gets the filename(s) from the link.
             Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
             Worker<ConcurrentLinkedDeque<Job>> worker = task;
             Platform.runLater(() -> {
@@ -341,24 +341,6 @@ public class FormLogic {
     }
 
     private Runnable batchDownloader() {
-        /*
-        When the jobList is iterated, the link from a Job is passed through the LinkType enum class where the file
-        extension is compared against a list of known BINARY file extensions. That list exists in the file called
-        BinaryExtensions.json in the Resources GUI folder. What matters in terms of what a BINARY file is, is whether
-        or not the file contains plain text - where you could open it in a text editor, and it would have actual words
-        in it, or if it is a truly binary file such as .zip, .exe, .dll, .dmg, .iso etc.
-
-        Binary files are best handled by yt-dlp and will be handed to the GUI downloader task where download progress
-        will be displayed as well as all appropriate logging etc.
-
-        YouTube and Instagram files also get sent to the GUI DownloadFile class which is a class that extends a
-        modern version of Task where feedback is attainable through various methods.
-
-        File extensions that are not in the binary extension list, are sent to the CLI file downloader, where the
-        progress bar will be bound to the relevant variables in that class so that download progress can still be
-        shown in the GUI
-         */
-
         return () -> {
             processingBatch.setValue(true);
             updatingBatch.setValue(false);
@@ -521,10 +503,8 @@ public class FormLogic {
                                     addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
                                 }
                             }
-                        }
-                        else
+                        } else
                             addJob(job);
-
                     }
                 }
             }
@@ -787,7 +767,7 @@ public class FormLogic {
                     form.listView.getItems().clear();
                 }
                 else {
-                    //Remove duplicate jobs if any
+                    // Remove duplicate jobs if any
                     Set<String> encounteredLinks = new HashSet<>();
                     ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
                             .filter(job -> !encounteredLinks.add(job.getLink()))
@@ -795,12 +775,12 @@ public class FormLogic {
                     for (Job job : duplicates) {
                         removeJobFromList(job);
                     }
-                    //Sort the Job list
+                    // Sort the Job list
                     ArrayList<Job> sortList = new ArrayList<>(getJobs().jobList());
                     sortList.sort(Comparator.comparing(Job::toString));
                     getJobs().setList(new ConcurrentLinkedDeque<>(sortList));
                 }
-                //Assign the jobList to the ListView
+                // Assign the jobList to the ListView
                 form.listView.getItems().setAll(getJobs().jobList());
             }
         });
@@ -831,7 +811,7 @@ public class FormLogic {
         tf.getChildren().add(text("Multi-link pasting:\n", true, BLUE, h));
         tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, BLACK, n));
         tf.getChildren().add(text("Youtube Playlists:\n", true, BLUE, h));
-        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));        //tf.getChildren().add(text("\n\n",false,BLACK,13));
+        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));
         tf.setStyle("-fx-background-color: transparent");
 
         double width = 500;
@@ -840,7 +820,6 @@ public class FormLogic {
         Stage stage = getStage();
         stage.setWidth(width);
         stage.setHeight(height + 100);
-        //stage.initStyle(StageStyle.TRANSPARENT);
         VBox vox = new VBox(20, tf);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);

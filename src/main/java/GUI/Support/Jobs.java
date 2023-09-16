@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * loops that run the jobs.
  */
 public class Jobs {
-
     public Jobs() {
         this.jobList = new ConcurrentLinkedDeque<>();
     }
@@ -49,10 +48,6 @@ public class Jobs {
     public void setList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = jobList;
         save();
-    }
-
-    public boolean isNull() {
-        return jobList == null;
     }
 
     public boolean notNull() {

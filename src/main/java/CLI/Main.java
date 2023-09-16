@@ -9,9 +9,11 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
@@ -35,7 +37,7 @@ public class Main {
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         Environment.setMessageBroker(new MessageBroker(System.out));
         messageBroker = Environment.getMessageBroker();
@@ -116,6 +118,10 @@ public class Main {
                 System.out.print(ENTER_FILE_LINK);
                 String link = SC.next();
                 SC.nextLine();
+                if (!Utility.isURL(link)) {
+                    messageBroker.msgLinkError("Link is invalid!");
+                    continue;
+                }
                 System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.get.lastDownloadFolder() + ") : ");
                 downloadsFolder = SC.next();
                 isYoutubeURL = isYoutube(link);
@@ -224,6 +230,7 @@ public class Main {
     private static void renameFilenameIfRequired() { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+            SC.nextLine();
             fileName = SC.nextLine();
         } else {
             System.out.print("Would you like to use this filename? (Enter Y for yes and N for no) : ");
@@ -237,9 +244,5 @@ public class Main {
                 fileName = SC.nextLine();
             }
         }
-    }
-
-    public static boolean getIsInstagramLink() {
-        return isInstagramLink;
     }
 }

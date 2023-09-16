@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import static GUI.Forms.GetResponse.State.*;
 
 class GetResponse {
-
     enum State {
         YES, NO, LIMBO
     }

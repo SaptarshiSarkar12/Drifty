@@ -37,7 +37,7 @@ public class FileDownloader implements Runnable {
         this.dir = dir;
         this.downloadMetrics = new DownloadMetrics();
         this.numberOfThreads = downloadMetrics.getThreadCount();
-        this.threadMaxDataSize = downloadMetrics.getThreadMaxDataSize();
+        this.threadMaxDataSize = downloadMetrics.getMaxFileSplitSize();
         downloadMetrics.setMultithreaded(false);
         setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
     }
@@ -189,7 +189,7 @@ public class FileDownloader implements Runnable {
     public void run() {
         link = link.replace('\\', '/');
         if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-            link = "https:///" + link;
+            link = "https://" + link;
         }
         if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
             if (!(link.endsWith("?raw=true"))) {
@@ -269,9 +269,5 @@ public class FileDownloader implements Runnable {
         } else if (exitValueOfYt_Dlp == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
-    }
-
-    public DownloadMetrics getDownloadMetrics() {
-        return this.downloadMetrics;
     }
 }

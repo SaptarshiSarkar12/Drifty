@@ -3,7 +3,6 @@ package Preferences;
 import Utils.Environment;
 import Utils.MessageBroker;
 
-import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import static Preferences.Labels.*;
@@ -46,13 +45,5 @@ public class Clear { // This class is used to clear the user preferences
 
     public void alwaysAutoPaste() {
         preferences.remove(ALWAYS_AUTO_PASTE.toString());
-    }
-
-    public void clearAll() {
-        try {
-            preferences.clear();
-        } catch (BackingStoreException e) {
-            M.msgLogError("Failed to clear all the preferences! " + e.getMessage());
-        }
     }
 }

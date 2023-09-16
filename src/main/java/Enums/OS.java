@@ -1,9 +1,11 @@
 package Enums;
+
 /**
- * This enum class is used to set which OS Drifty is run on
+ * This enum class is used to set the OS on which Drifty is running
  */
 public enum OS {
     WIN, MAC, LINUX, SOLARIS, FREEBSD;
+
     private static OS osType;
     private static String osName;
 
@@ -43,26 +45,5 @@ public enum OS {
             setOSType();
         }
         return osType.equals(OS.MAC);
-    }
-
-    public static boolean isLinux() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.LINUX);
-    }
-
-    public static boolean isWinMac() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.WIN) || osType.equals(OS.MAC);
-    }
-
-    public static boolean isNix() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.LINUX) || osType.equals(OS.SOLARIS) || osType.equals(OS.FREEBSD);
     }
 }

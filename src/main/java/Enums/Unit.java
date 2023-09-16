@@ -2,11 +2,7 @@ package Enums;
 import java.text.DecimalFormat;
 
 public enum Unit {
-
     B, KB, MB, GB, TB;
-
-    private static final DecimalFormat two = new DecimalFormat("#.00");
-    private static final DecimalFormat one = new DecimalFormat("#.0");
 
     public static double getValue(long bytes, Unit unit) {
         double temp = (double) bytes;
@@ -19,27 +15,22 @@ public enum Unit {
         };
     }
 
-    private static Unit findUnit(long bytes) {
-        double converted = (double) bytes;
-        return findUnit(converted);
-    }
-
     private static Unit findUnit(double bytes) {
         Unit unit = B;
         double finalBytes = bytes;
-        if(bytes > 1000) {
+        if (bytes > 1000) {
             unit = KB;
             finalBytes = bytes / 1024;
         }
-        if(finalBytes > 1000) {
+        if (finalBytes > 1000) {
             unit = MB;
             finalBytes = bytes / 1024 / 1024;
         }
-        if(finalBytes > 1000) {
+        if (finalBytes > 1000) {
             unit = GB;
             finalBytes = bytes / 1024 / 1024 / 1024;
         }
-        if(finalBytes > 1000) {
+        if (finalBytes > 1000) {
             unit = TB;
         }
         return unit;
@@ -61,5 +52,4 @@ public enum Unit {
         double converted = (double) bytes;
         return format(converted, decimalPlaces);
     }
-
 }

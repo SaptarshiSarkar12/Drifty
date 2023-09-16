@@ -34,7 +34,7 @@ public final class DriftyConstants {
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
     public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (filename.extension) : ";
-    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/filename.extension) or a YouTube/Instagram Video/Image link : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/filename.extension) or a YouTube/Instagram Video link : ";
     public static final String USER_HOME_PROPERTY = "user.home";
     public static final String RENAME_FILE = "Would you like to rename this file? (Enter Y for yes and N for no) : ";
     public static final String RENAME_VIDEO_TITLE = "Would you like to rename the video title? (Enter Y for yes and N for no) : ";
@@ -54,7 +54,7 @@ public final class DriftyConstants {
     public static final String RUNNING_COMMAND = "Running Command: ";
     public static final String FILE_NOT_FOUND = "An error occurred! Requested file does not exist, please check the url.";
     public static final String FAILED_TO_DOWNLOAD_CONTENTS = "Failed to download the contents ! ";
-    public static final String FAILED_READIND_STREAM = "Failed to get I/O operations channel to read from the data stream !";
+    public static final String FAILED_READING_STREAM = "Failed to get I/O operations channel to read from the data stream !";
     public static final String YOUTUBE_DOWNLOAD_FAILED = "Failed to download YouTube video!";
     public static final String INSTAGRAM_DOWNLOAD_FAILED = "Failed to download Instagram video!";
     public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";

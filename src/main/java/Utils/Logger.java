@@ -50,10 +50,6 @@ public class Logger {
         }
     }
 
-    public String getLogFilename() {
-        return logFilename;
-    }
-
     private void clearLog() {
         try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
             isLogEmpty = true;
