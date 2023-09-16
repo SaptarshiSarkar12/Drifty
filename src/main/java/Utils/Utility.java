@@ -1,129 +1,157 @@
 package Utils;
 
-import Backend.DefaultDownloadFolderLocationFinder;
+import Backend.DownloadFolderLocator;
 import Backend.Drifty;
-import CLI.Drifty_CLI;
+import Enums.OS;
+import Enums.Program;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.buildobjects.process.ProcBuilder;
+import org.hildan.fxgson.FxGson;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.*;
+import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
+    private static final Random random = new Random(System.currentTimeMillis());
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
-    MessageBroker messageBroker;
+    private static Thread linkThread;
+    private static boolean interrupted;
+    private static long startTime;
 
-    public Utility() {}
 
-    public Utility(MessageBroker messageBroker) {
-        this.messageBroker = messageBroker;
+    public static void setStartTime() {
+        startTime = System.currentTimeMillis();
     }
 
-    /**
-     * This method checks whether the link provided is of YouTube or not and returns the resultant boolean value accordingly.
-     * @param url link to the file to be downloaded
-     * @return true if the url is of YouTube and false if it is not.
-     */
-    public static boolean isYoutubeLink(String url) {
-        String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+    public Utility() {
+    }
+
+    public static boolean isYoutube(String url) {
+        String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
         return url.matches(pattern);
     }
 
-    /**
-     * This method checks whether the link provided is of Instagram or not and returns the resultant boolean value accordingly.
-     * @param url link to the file to be downloaded
-     * @return true if the url is of Instagram and false if it is not.
-     */
-    public static boolean isInstagramLink(String url) {
-        String pattern = "(https?:\\/\\/(?:www\\.)?instagr(am|.am)?(\\.com)?\\/p\\/([^/?#&]+)).*";
+    public static boolean isInstagram(String url) {
+        String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
-    /**
-     * @param link Link to the file that the user wants to download
-     * @throws Exception if URL is not valid or cannot be connected to, then this Exception is thrown with proper message
-     */
-    public static void isURLValid(String link) throws Exception {
+    public static boolean isExtractableLink(String link) {
+        return isYoutube(link) || isInstagram(link);
+    }
+
+    public static boolean linkValid(String link) {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD"); // Faster validation and hence improves performance
             connection.connect();
-        } catch (ConnectException e){
-            throw new Exception(e);
-        } catch (UnknownHostException unknownHost){
+            M.msgLinkInfo("Link is valid!");
+            return true;
+        } catch (ConnectException e) {
+            M.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
+        } catch (UnknownHostException unknownHost) {
             try {
                 URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
-                throw new Exception("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not a valid one! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+                M.msgLinkError("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
-                throw new Exception("You are not connected to the Internet!");
+                M.msgLinkError("You are not connected to the Internet!");
+            } catch (MalformedURLException e) {
+                M.msgLinkError("The link is not correctly formatted! " + e.getMessage());
+            } catch (IOException e) {
+                M.msgLinkError("Failed to connect to the project website! " + e.getMessage());
             }
+        } catch (ProtocolException e) {
+            M.msgLinkError("An error occurred with the protocol! " + e.getMessage());
+        } catch (MalformedURLException e) {
+            M.msgLinkError("The link is not correctly formatted! " + e.getMessage());
+        } catch (IOException e) {
+            M.msgLinkError("Failed to connect to " + link + " ! " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            M.msgLinkError(link + " is not a URL; error: " + e.getMessage());
         }
+        return false;
     }
 
-    /**
-     * This method finds <b>the name of the file from the link</b> provided.
-     * @param link The download link of the file to be downloaded.
-     * @return the filename if it is detected else null.
-     */
-    public String findFilenameInLink(String link) {
-        // Check and inform user if the url contains filename.
-        // Example : "example.com/file.txt" prints "Filename detected: file.txt"
-        // example.com/file.json -> file.json
-        String file = link.substring(link.lastIndexOf("/") + 1);
-        int index = file.lastIndexOf(".");
-        if (index < 0) {
-            this.messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
-            return null;
+    public static String findFilenameInLink(String link) {
+        String filename = "";
+        if (isInstagram(link) || isYoutube(link)) {
+            LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+            for (String json : linkMetadataList) {
+                filename = Utility.getFilenameFromJson(json);
+            }
+        } else {
+            // Example: "example.com/file.txt" prints "Filename detected: file.txt"
+            // example.com/file.json -> file.json
+            String file = link.substring(link.lastIndexOf("/") + 1);
+            if (file.isEmpty()) {
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
+                return null;
+            }
+            int index = file.lastIndexOf(".");
+            if (index < 0) {
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
+                return null;
+            }
+            String extension = file.substring(index);
+            // edge case 1: "example.com/."
+            if (extension.length() == 1) {
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
+                return null;
+            }
+            // file.png?width=200 -> file.png
+            filename = file.split("([?])")[0];
+            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         }
-        String extension = file.substring(index);
-        // edge case 1 : "example.com/."
-        if (extension.length() == 1) {
-            this.messageBroker.sendMessage(AUTO_FILE_NAME_DETECTION_FAILED, LOGGER_ERROR, "Filename");
-            return null;
-        }
-        // file.png?width=200 -> file.png
-        String fileName = file.split("([?])")[0];
-        this.messageBroker.sendMessage(FILENAME_DETECTED + fileName, LOGGER_INFO, "Filename");
-        return fileName;
+        return filename;
     }
 
-    /**
-     * This method finds the default downloads folder and create log accordingly.
-     * @return The path of the default download folder.
-     */
-    public String saveToDefault() {
+    public static String getHomeDownloadFolder() {
         String downloadsFolder;
-        messageBroker.sendMessage(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER, LOGGER_INFO, "directory");
-        if (!System.getProperty(OS_NAME).contains(WINDOWS_OS_NAME)) {
+        M.msgDirInfo(TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER);
+        if (!OS.isWindows()) {
             String home = System.getProperty(USER_HOME_PROPERTY);
             downloadsFolder = home + DOWNLOADS_FILE_PATH;
         } else {
-            downloadsFolder = DefaultDownloadFolderLocationFinder.findPath() + System.getProperty("file.separator");
+            downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
+
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
-            messageBroker.sendMessage(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER, LOGGER_ERROR, "directory");
+            M.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
         } else {
-            messageBroker.sendMessage(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder, LOGGER_INFO, "directory");
+            M.msgDirInfo(DEFAULT_DOWNLOAD_FOLDER + downloadsFolder);
         }
         return downloadsFolder;
     }
 
-    /**
-     * This method performs Yes-No validation and returns the boolean value accordingly.
-     * @param input        Input String to validate.
-     * @param printMessage The message to print to re-input the confirmation.
-     * @return true if the user enters Y [Yes] and false if not.
-     */
     public boolean yesNoValidation(String input, String printMessage) {
-        while (input.length() == 0) {
+        while (input.isEmpty()) {
             System.out.println(ENTER_Y_OR_N);
-            messageBroker.sendMessage(ENTER_Y_OR_N, LOGGER_ERROR, "only log");
+            M.msgLogError(ENTER_Y_OR_N);
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
         }
+
         char choice = input.charAt(0);
         if (choice == 'y') {
             return true;
@@ -131,7 +159,7 @@ public final class Utility {
             return false;
         } else {
             System.out.println("Invalid input!");
-            messageBroker.sendMessage("Invalid input!", LOGGER_ERROR, "only log");
+            M.msgLogError("Invalid input!");
             System.out.print(printMessage);
             input = SC.nextLine().toLowerCase();
             yesNoValidation(input, printMessage);
@@ -139,9 +167,6 @@ public final class Utility {
         return false;
     }
 
-    /**
-     * This is the help method of Drifty that gets printed in the console when correct help flag has been passed as a parameter to Drifty CLI.
-     */
     public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
         System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
@@ -154,16 +179,12 @@ public final class Utility {
         System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLI.");
         System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
-        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava Drifty_CLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
-        System.out.println("\033[37;3m* Requires java 20 or higher. \n" + ANSI_RESET);
+        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava DriftyCLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
         System.out.println("\tProject Website - " + Drifty.projectWebsite);
     }
 
-    /**
-     * This function prints the banner of the application in the console.
-     */
     public static void printBanner() {
         System.out.print("\033[H\033[2J");
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
@@ -176,17 +197,122 @@ public final class Utility {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    /**
-     * This method prints the banner without any colour of text except white.
-     */
-    public static void initialPrintBanner() {
-        System.out.println(BANNER_BORDER);
-        System.out.println("  _____   _____   _____  ______  _______ __     __");
-        System.out.println(" |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /");
-        System.out.println(" | |  | || |__) |  | |  | |__      | |    \\ \\_/ /");
-        System.out.println(" | |  | ||  _  /   | |  |  __|     | |     \\   / ");
-        System.out.println(" | |__| || | \\ \\  _| |_ | |        | |      | |  ");
-        System.out.println(" |_____/ |_|  \\_\\|_____||_|        |_|      |_|  ");
-        System.out.println(BANNER_BORDER);
+    public static LinkedList<String> getLinkMetadata(String link) {
+        try {
+            LinkedList<String> list = new LinkedList<>();
+            File driftyJsonFolder = Program.getJsonDataPath().toFile();
+            if (driftyJsonFolder.exists() && driftyJsonFolder.isDirectory()) {
+                FileUtils.forceDelete(driftyJsonFolder); // Deletes the previously generated temporary directory for Drifty
+            }
+            driftyJsonFolder.mkdir();
+            linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
+            linkThread.start();
+            while (!linkThread.getState().equals(Thread.State.TERMINATED) && !linkThread.isInterrupted()) {
+                sleep(100);
+                interrupted = linkThread.isInterrupted();
+            }
+
+            if (interrupted) {
+                FileUtils.forceDelete(driftyJsonFolder);
+                return null;
+            }
+
+            File[] files = driftyJsonFolder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String ext = FilenameUtils.getExtension(file.getAbsolutePath());
+                    if (ext.toLowerCase().contains("json")) {
+                        String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
+                        list.addLast(linkMetadata);
+                    }
+
+                }
+                FileUtils.forceDelete(driftyJsonFolder); // delete the metadata files of Drifty from the config directory
+            }
+            return list;
+        } catch (IOException e) {
+            M.msgLinkError("Failed to perform I/O operations on link metadata! " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static String getURLFromJson(String jsonString) {
+        String json = makePretty(jsonString);
+        String regexLink = "(\"webpage_url\": \")(.+)(\")";
+        String extractedUrl = "";
+        Pattern p = Pattern.compile(regexLink);
+        Matcher m = p.matcher(json);
+        if (m.find()) {
+            extractedUrl = StringEscapeUtils.unescapeJava(m.group(2));
+        }
+        return extractedUrl;
+    }
+
+    public static String makePretty(String json) {
+        // The regex strings won't match unless the json string is converted to pretty format
+        GsonBuilder g = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(g).setPrettyPrinting().create();
+        JsonElement element = JsonParser.parseString(json);
+        return gson.toJson(element);
+    }
+
+    public static String getFilenameFromJson(String jsonString) {
+        String json = makePretty(jsonString);
+        String filename;
+        String regexFilename = "(\"title\": \")(.+)(\",)";
+        String regexFileSize = "";
+        Pattern p = Pattern.compile(regexFilename);
+        Matcher m = p.matcher(json);
+        if (m.find()) {
+            filename = cleanFilename(m.group(2)) + ".mp4";
+            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
+        } else {
+            filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
+            M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
+        }
+        return filename;
+    }
+
+    public static String cleanFilename(String filename) {
+        String fn = StringEscapeUtils.unescapeJava(filename);
+        return fn.replaceAll("[^a-zA-Z0-9-._)<(> ]+", "");
+    }
+
+    private static Runnable ytDLPJsonData(String folderPath, String link) {
+        return () -> {
+            String command = Program.get(YT_DLP);
+            String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
+            new ProcBuilder(command)
+                    .withArgs(args)
+                    .withErrorStream(System.err)
+                    .withNoTimeout()
+                    .run();
+        };
+    }
+
+    public static boolean isURL(String text) {
+        String regex = "^(http(s)?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(text);
+        return m.matches();
+    }
+
+    public static void sleep(long time) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(time);
+        } catch (InterruptedException e) {
+            M.msgLinkError("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage());
+        }
+    }
+
+    public static String randomString(int characterCount) {
+        String source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        int count = source.length();
+        StringBuilder sb = new StringBuilder();
+        for (int x = 0; x < characterCount; x++) {
+            int index = random.nextInt(count);
+            sb.append(source.charAt(index));
+        }
+        return sb.toString();
     }
 }
