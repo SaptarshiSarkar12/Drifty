@@ -1,6 +1,5 @@
 package GUI.Forms;
 
-import Backend.DownloaderThread;
 import Enums.LinkType;
 import Enums.Program;
 import Enums.Unit;
@@ -23,10 +22,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
@@ -159,9 +155,12 @@ public class DownloadFile extends Task<Integer> {
     }
 
     private void splitDownload() {
+        String message = "";
+        URL url = null;
+        String path = job.getFile().getAbsolutePath();
         try {
             long numParts = 3L;
-            URL url = new URI(link).toURL();
+            url = new URI(link).toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
             long fileSize = con.getHeaderFieldLong("Content-Length", -1);
@@ -221,13 +220,23 @@ public class DownloadFile extends Task<Integer> {
             }
             fos.close();
             exitCode = 0;
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        } catch (MalformedURLException | URISyntaxException e) {
+            M.msgLinkError(INVALID_LINK);
+            exitCode = 1;
+        } catch (SecurityException e) {
+            message = String.format(WRITE_ACCESS_DENIED_F, path);
+            exitCode = 1;
+        } catch (FileNotFoundException e) {
+            message = FILE_NOT_FOUND;
+            exitCode = 1;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            message = String.format(FAILED_CONNECTION_F, url);
+            exitCode = 1;
+        } catch (NullPointerException e) {
+            message = FAILED_READIND_STREAM;
+            exitCode = 1;
         }
+        sendFinalMessage(message);
     }
 
     private static void copyFileContents(File sourceFile, OutputStream outputStream) throws IOException {
@@ -276,7 +285,6 @@ public class DownloadFile extends Task<Integer> {
                 double seconds = (end - start) / 1000.0;
                 if (seconds >= 1.5) {
                     start = end;
-                    ;
                     String totalDownloaded = Unit.format(totalBytesRead, 2);
                     double bitsTransferred = bytesInTime / 10 / seconds;
                     String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred * 100, 2) + "its/s (Total: " + totalDownloaded + ")";

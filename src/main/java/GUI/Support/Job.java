@@ -1,5 +1,6 @@
 package GUI.Support;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -64,6 +65,9 @@ public class Job {
         return filename;
     }
 
+    public File getFile() {
+        return Paths.get(dir, filename).toFile();
+    }
     public void setFilename(String filename) {
         this.filename = filename;
     }
