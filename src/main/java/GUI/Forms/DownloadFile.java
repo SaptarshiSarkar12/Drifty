@@ -1,12 +1,14 @@
 package GUI.Forms;
 
+import Backend.DownloaderThread;
 import Enums.LinkType;
 import Enums.Program;
+import Enums.Unit;
 import GUI.Support.Job;
+import GUI.Support.SplitDownloadMetrics;
 import Utils.Environment;
 import Utils.MessageBroker;
 import Utils.Utility;
-import com.simtechdata.unitconverter.Converter;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -16,15 +18,21 @@ import javafx.concurrent.Task;
 
 import java.io.*;
 import java.net.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.*;
-import static com.simtechdata.unitconverter.Converter.Category.DATA;
-import static com.simtechdata.unitconverter.Converter.UnitDefinition.*;
 
 public class DownloadFile extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -36,13 +44,17 @@ public class DownloadFile extends Task<Integer> {
     private final LinkType type;
     private int exitCode = 1;
     private boolean done = false;
-    private final Converter bitConverter = new Converter.Builder(DATA).units(BYTE).decimals(2).build();
+    private final Job job;
+    private final DecimalFormat format = new DecimalFormat("#.00");
+    private final AtomicLong totalTransferred = new AtomicLong();
+    private final AtomicLong totalSpeedValue = new AtomicLong();
 
     public DownloadFile(Job job,
                         StringProperty linkProperty, StringProperty dirProperty, StringProperty filenameProperty,
                         StringProperty downloadMessage,
                         IntegerProperty transferSpeedProperty,
                         DoubleProperty progressProperty) {
+        this.job = job;
         this.link = job.getLink();
         this.filename = Utility.cleanFilename(job.getFilename());
         this.dir = job.getDir();
@@ -64,7 +76,7 @@ public class DownloadFile extends Task<Integer> {
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
             case YOU_TUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
-            case OTHER -> downloadFile();
+            case OTHER -> splitDownload();
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -87,21 +99,146 @@ public class DownloadFile extends Task<Integer> {
         sendFinalMessage("");
     }
 
+/*
     private String getValueString(double baseValue) {
-        double total = bitConverter.convert(baseValue, BYTE);
+        double total = c.convert(baseValue, BYTE);
         String result = total + " Bytes";
         if (total > 1000) {
-            total = bitConverter.convert(baseValue, KILOBYTE);
-            result = bitConverter.convertToString(baseValue, KILOBYTE);
+            total = c.convert(baseValue, KILOBYTE_B1000);
+            result = c.convertToString(baseValue, KILOBYTE_B1000);
         }
         if (total > 1000) {
-            total = bitConverter.convert(baseValue, MEGABYTE);
-            result = bitConverter.convertToString(baseValue, MEGABYTE);
+            total = c.convert(baseValue, MEGABYTE_B1000);
+            result = c.convertToString(baseValue, MEGABYTE_B1000);
         }
         if (total > 1000) {
-            result = bitConverter.convertToString(baseValue, GIGABYTE);
+            result = c.convertToString(baseValue, GIGABYTE_B1000);
         }
         return result;
+    }
+*/
+
+    private Runnable split(SplitDownloadMetrics sdm) {
+        return () -> {
+            InputStream in = null;
+            HttpURLConnection con;
+            FileOutputStream fos = null;
+            int id = sdm.getId();
+            try {
+                URL url = sdm.getUrl();
+                long start = sdm.getStart();
+                long end = sdm.getEnd();
+                fos = sdm.getFileOutputStream();
+                con = (HttpURLConnection) url.openConnection();
+                con.setRequestProperty("Range", "bytes=" + start + "-" + end); // stating how many bytes of data to be sent by the server.
+                con.connect();
+                in = con.getInputStream();
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                long totalBytesRead = 0;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    fos.write(buffer, 0, bytesRead);
+                    totalTransferred.addAndGet(bytesRead);
+                    totalSpeedValue.addAndGet(bytesRead);
+                    if (sdm.stop()) {
+                        sdm.setFailed();
+                        break;
+                    }
+                }
+                sdm.setSuccess();
+            } catch (IOException ignored) {
+                sdm.setFailed();
+            } finally {
+                try {
+                    fos.close();
+                    in.close();
+                } catch (IOException ignored) {
+                }
+            }
+        };
+    }
+
+    private void splitDownload() {
+        try {
+            long numParts = 3L;
+            URL url = new URI(link).toURL();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            long fileSize = con.getHeaderFieldLong("Content-Length", -1);
+            long partSize = fileSize / numParts;
+
+            LinkedList<SplitDownloadMetrics> list = new LinkedList<>();
+            for (int x = 0; x < numParts; x++) {
+                long startByte = (x == 0) ? 0 : (x * partSize) + 1;
+                long endByte = ((numParts - 1) == x) ? fileSize : ((x * partSize) + partSize);
+                SplitDownloadMetrics sdm = new SplitDownloadMetrics(x, startByte, endByte, filename, url);
+                list.addLast(sdm);
+                new Thread(split(sdm)).start();
+            }
+            String totalSize = Unit.format(fileSize, 2);
+            boolean loop = true;
+            boolean stopThreads = false;
+            long start = System.currentTimeMillis();
+            long end;
+            while (loop) {
+                boolean allDone = true;
+                for (SplitDownloadMetrics sdm : list) {
+                    if (sdm.failed())
+                        stopThreads = true;
+                    if (sdm.running())
+                        allDone = false;
+                }
+                if (stopThreads) {
+                    for (SplitDownloadMetrics sdm : list) {
+                        sdm.setStop();
+                    }
+                }
+                double progress = (double) (totalTransferred.get()) / fileSize;
+                updateProgress(progress, 1.0);
+                end = System.currentTimeMillis();
+                double seconds = (end - start) / 1000.0;
+                if (seconds >= 1.5) {
+                    start = end;
+                    long totalBytes = totalTransferred.get();
+                    String totalDownloaded = Unit.format(totalBytes, 2);
+                    double bitsTransferred = (double) totalSpeedValue.get() / seconds;
+                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred, 2) + "/s (Total: " + totalDownloaded + ")";
+                    updateMessage(msg);
+                    totalSpeedValue.set(0);
+                }
+                loop = !allDone;
+            }
+            updateProgress(0.0, 1.0);
+            updateMessage("Merging Files");
+            FileOutputStream fos = new FileOutputStream(job.getFile());
+            long position = 0;
+            for (int i = 0; i < numParts; i++) {
+                File f = list.get(i).getFile();
+                FileInputStream fs = new FileInputStream(f);
+                ReadableByteChannel rbs = Channels.newChannel(fs);
+                fos.getChannel().transferFrom(rbs, position, f.length());
+                position += f.length();
+            }
+            fos.close();
+            exitCode = 0;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void copyFileContents(File sourceFile, OutputStream outputStream) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(sourceFile);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
+            byte[] buffer = new byte[8192]; // Adjust buffer size as needed
+            int bytesRead;
+            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
     }
 
     private void downloadFile() {
@@ -116,11 +253,11 @@ public class DownloadFile extends Task<Integer> {
             con.connect();
 
             long fileLength = con.getHeaderFieldLong("Content-Length", -1);
+            String ff = Unit.format(fileLength, 2);
             String acceptRange = con.getHeaderField("Accept-Ranges");
 
             sendInfoMessage(String.format(DOWNLOADING_F, filename));
-            double baseSize = (double) fileLength / 10;
-            String totalSize = getValueString(baseSize);
+            String totalSize = Unit.format(fileLength, 2);
             in = con.getInputStream();
             out = new FileOutputStream(path.toFile());
             byte[] buffer = new byte[1024];
@@ -139,10 +276,10 @@ public class DownloadFile extends Task<Integer> {
                 double seconds = (end - start) / 1000.0;
                 if (seconds >= 1.5) {
                     start = end;
-                    double totalBytes = (double) totalBytesRead / 10.0;
-                    String totalDownloaded = getValueString(totalBytes);
+                    ;
+                    String totalDownloaded = Unit.format(totalBytesRead, 2);
                     double bitsTransferred = bytesInTime / 10 / seconds;
-                    String msg = "Downloading " + totalSize + " at " + bitConverter.convertToString(bitsTransferred, MEGABIT) + "its/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred * 100, 2) + "its/s (Total: " + totalDownloaded + ")";
                     updateMessage(msg);
                     bytesInTime = 0;
                 }
