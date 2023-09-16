@@ -101,10 +101,9 @@ public class DownloadFile extends Task<Integer> {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.connect();
         long fileSize = con.getHeaderFieldLong("Content-Length", -1);
-        if(Unit.getValue(fileSize, Unit.MB) > 50) {
+        if (Unit.getValue(fileSize, Unit.MB) > 50) {
             splitDownload();
-        }
-        else {
+        } else {
             downloadFile();
         }
     }
@@ -208,7 +207,6 @@ public class DownloadFile extends Task<Integer> {
             FileOutputStream fos = new FileOutputStream(job.getFile());
             long position = 0;
             for (int i = 0; i < numParts; i++) {
-                int v = i + 1;
                 updateMessage(msg);
                 File f = list.get(i).getFile();
                 FileInputStream fs = new FileInputStream(f);
@@ -236,17 +234,6 @@ public class DownloadFile extends Task<Integer> {
             exitCode = 1;
         }
         sendFinalMessage(message);
-    }
-
-    private static void copyFileContents(File sourceFile, OutputStream outputStream) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(sourceFile);
-             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
-            byte[] buffer = new byte[8192]; // Adjust buffer size as needed
-            int bytesRead;
-            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        }
     }
 
     private void downloadFile() {
@@ -286,7 +273,7 @@ public class DownloadFile extends Task<Integer> {
                     start = end;
                     String totalDownloaded = Unit.format(totalBytesRead, 2);
                     double bitsTransferred = bytesInTime / 10 / seconds;
-                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred * 100, 2) + "its/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred * 100, 2) + "/s (Total: " + totalDownloaded + ")";
                     updateMessage(msg);
                     bytesInTime = 0;
                 }
