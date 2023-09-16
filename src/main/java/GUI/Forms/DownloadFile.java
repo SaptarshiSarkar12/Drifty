@@ -1,5 +1,6 @@
 package GUI.Forms;
 
+import Backend.DownloadMetrics;
 import Enums.LinkType;
 import Enums.Program;
 import Enums.Unit;
@@ -153,7 +154,7 @@ public class DownloadFile extends Task<Integer> {
         URL url = null;
         String path = job.getFile().getAbsolutePath();
         try {
-            long numParts = 6L;
+            int numParts = new DownloadMetrics().getThreadCount();
             url = new URI(link).toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
