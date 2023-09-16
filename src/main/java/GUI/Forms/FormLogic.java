@@ -142,6 +142,10 @@ public class FormLogic {
                 removeJobFromList(selectedJob);
                 addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             }
+            else {
+                removeJobFromList(selectedJob);
+                addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
+            }
             clearLink();
             clearFilename();
             updatingBatch.setValue(false);
