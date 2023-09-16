@@ -1,20 +1,17 @@
 package Backend;
 
 import Enums.Mode;
+import Enums.Unit;
 import Utils.Environment;
 import Utils.MessageBroker;
-import com.simtechdata.unitconverter.Converter;
 import javafx.beans.property.DoubleProperty;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static Utils.DriftyConstants.*;
-import static com.simtechdata.unitconverter.Converter.Category.DATA;
-import static com.simtechdata.unitconverter.Converter.UnitDefinition.*;
 
 /**
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
@@ -93,7 +90,7 @@ public class ProgressBarThread extends Thread {
             String downloadSpeedUnit;
             float totalDownloadPercent = downloadMetrics.getProgressPercent();
             if ((int) totalDownloadPercent != 100) {
-                String downloadSpeedWithUnit = convertBytes(downloadSpeed);
+                String downloadSpeedWithUnit = Unit.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
@@ -102,10 +99,10 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedUnit = "bytes";
             }
             bar = bar.substring(0, charAmt / 2 - 2) + (totalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
-            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + convertBytes(totalDownloadedBytes) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
+            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + Unit.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
         } else {
             int numberOfThreads = fileOutputStreams.size();
-            StringBuilder result = new StringBuilder("[" + spinner + "]  " + convertBytes(totalDownloadedBytes));
+            StringBuilder result = new StringBuilder("[" + spinner + "]  " + Unit.format(totalDownloadedBytes, 2));
             float filled;
             totalDownloadedBytes = 0;
             long downloadSpeed = 0;
@@ -141,7 +138,7 @@ public class ProgressBarThread extends Thread {
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             if ((int) totalDownloadPercent != 100) {
-                String downloadSpeedWithUnit = convertBytes(downloadSpeed);
+                String downloadSpeedWithUnit = Unit.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
@@ -154,33 +151,14 @@ public class ProgressBarThread extends Thread {
         }
     }
 
-    private final Converter c = new Converter.Builder(DATA).units(BYTE).decimals(2).locale(Locale.getDefault()).build();
-    private String convertBytes(long bytes) {
-        double base = (double) bytes / 10.0;
-        String sizeWithUnit = base + " bytes";
-        double trackBytes = 0.0;
-        if (base > 1000) {
-            trackBytes = c.convert(base, KILOBYTE);
-            sizeWithUnit = c.convertToString(base, KILOBYTE);
-        }
-        if (trackBytes > 1000) {
-            trackBytes = c.convert(base, MEGABYTE);
-            sizeWithUnit = c.convertToString(base, MEGABYTE);
-        }
-        if (trackBytes > 1000) {
-            sizeWithUnit = c.convertToString(base, GIGABYTE);
-        }
-        return sizeWithUnit;
-    }
-
     private void cleanup() {
         downloadMetrics.setProgressPercent(0f);
         if (isMultiThreadedDownloading) {
-            String sizeWithUnit = convertBytes(totalDownloadedBytes);
+            String sizeWithUnit = Unit.format(totalDownloadedBytes, 2);
             System.out.println();
             M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
         } else if (downloadedBytes == totalDownloadedBytes) {
-            String sizeWithUnit = convertBytes(downloadedBytes);
+            String sizeWithUnit = Unit.format(downloadedBytes, 2);
             System.out.println();
             M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
         } else {
