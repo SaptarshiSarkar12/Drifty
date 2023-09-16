@@ -1,13 +1,9 @@
 package GUI.Support;
 
-import Enums.Program;
-import Utils.Utility;
-import org.apache.commons.io.FileUtils;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class SplitDownloadMetrics {
     private final int id;
@@ -44,16 +40,10 @@ public class SplitDownloadMetrics {
 
     public FileOutputStream getFileOutputStream() {
         FileOutputStream fos;
-        String filename = "temp" + Utility.randomString(10) + "_" + id + ".bin";
         try {
-            Path filePath = Paths.get(Program.get(Program.DRIFTY_PATH), "temp", filename);
-            if(!filePath.toFile().getParentFile().exists()) {
-                FileUtils.createParentDirectories(filePath.toFile());
-            }
-            file = filePath.toFile();
+            file = File.createTempFile(filename.hashCode() + "_" + id, ".tmp");
             file.deleteOnExit();
             fos = new FileOutputStream(file);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
