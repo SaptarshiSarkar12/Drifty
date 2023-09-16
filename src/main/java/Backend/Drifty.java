@@ -1,123 +1,70 @@
 package Backend;
 
-import Utils.DriftyConstants;
-import Utils.Utility;
+import Preferences.AppSettings;
+import Utils.Environment;
 import Utils.MessageBroker;
+import Utils.Utility;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-/**
- * This method is the Backend of Drifty which does the main part of Downloading the file from the website URL.
- * @version 2.0.0
- * @since 2.0.0
- */
 public class Drifty {
-    public static String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
-    private static MessageBroker messageBroker;
+    public static final String projectWebsite = "https://saptarshisarkar12.github.io/Drifty/";
+    private static final MessageBroker M = Environment.getMessageBroker();
     private static String downloadsFolder = null;
     private static String url;
-    private static String fileName;
-    private static String applicationType;
+    private static String filename;
 
-    /**
-     * This is the <b>constructor of Backend of Drifty</b> that configures it to be able to work with <b>Graphical User Interface (GUI) Functionalities</b>.
-     * @param url Link to the website collected from the user through inputs.
-     * @param downloadsDirectory The directory where the file will be downloaded ("./" for Default Downloads Folder).
-     * @param fileNameOfTheDownloadedFile File Name to keep for the file to be downloaded.
-     * @param linkOutputTextArea The Text area in the GUI, where the Backend will give its outputs regarding the link entered.
-     * @param directoryOutputTextArea The Text area in the GUI, where the Backend will give its outputs regarding the directory entered.
-     * @param downloadOutputTextArea The Text area in the GUI, where the Backend will give its outputs regarding the download of the file.
-     * @param fileNameOutputTextArea The Text area in the GUI, where the Backend will give its outputs regarding the file name entered.
-     * @since 2.0.0
-     */
-    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, JLabel linkOutputTextArea, JLabel directoryOutputTextArea, JLabel downloadOutputTextArea, JLabel fileNameOutputTextArea) {
+    public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
-        fileName = fileNameOfTheDownloadedFile;
-        applicationType = "GUI";
-        messageBroker = new MessageBroker(applicationType, linkOutputTextArea, directoryOutputTextArea, downloadOutputTextArea, fileNameOutputTextArea);
+        filename = fileNameOfTheDownloadedFile;
     }
 
-    /**
-     * This is the <b>constructor of Backend of Drifty</b> that configures it to be able to work with <b>Command Line Interface (CLI) Functionalities</b>.
-     * @param url Link to the website collected from the user through inputs.
-     * @param downloadsDirectory The directory where the file will be downloaded ("./" for Default Downloads Folder).
-     * @param fileNameOfTheDownloadedFile File Name to keep for the file to be downloaded.
-     * @param outputStream The Output Stream where the Backend will give its outputs (Usually, in this case - System.out [Standard Output Stream])
-     * @since 2.0.0
-     */
     public Drifty(String url, String downloadsDirectory, String fileNameOfTheDownloadedFile, PrintStream outputStream) {
         Drifty.url = url;
         downloadsFolder = downloadsDirectory;
-        fileName = fileNameOfTheDownloadedFile;
-        applicationType = "CLI";
-        messageBroker = new MessageBroker(applicationType, outputStream);
+        filename = fileNameOfTheDownloadedFile;
     }
 
-    /**
-     * This is the main method where the Drifty Backend starts the backend process of Validating the inputs followed by downloading the file in the required folder.
-     */
     public void start() {
-        Utility utility = new Utility(messageBroker);
-        messageBroker.sendMessage("Validating the link...", DriftyConstants.LOGGER_INFO, "link");
+        Utility utility = new Utility();
+        M.msgLinkInfo("Validating the link...");
         if (url.contains(" ")) {
-            messageBroker.sendMessage("Link should not contain whitespace characters!", DriftyConstants.LOGGER_ERROR, "link");
+            M.msgLinkError("Link should not contain whitespace characters!");
             return;
-        } else if (url.length() == 0) {
-            messageBroker.sendMessage("Link cannot be empty!", DriftyConstants.LOGGER_ERROR, "link");
+        }
+        else if (url.isEmpty()) {
+            M.msgLinkError("Link cannot be empty!");
             return;
-        } else {
-            try {
-                Utility.isURLValid(url);
-                messageBroker.sendMessage("Link is valid!", DriftyConstants.LOGGER_INFO, "link");
-            } catch (Exception e) {
-                messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "link");
+        }
+        else {
+            boolean isUrlValid = Utility.linkValid(url);
+            if (!isUrlValid) {
                 return;
             }
         }
-
-        if (downloadsFolder == null){
-            downloadsFolder = utility.saveToDefault();
-        } else {
-            downloadsFolder = downloadsFolder.replace('\\', '/');
-            if (downloadsFolder.equals(".//") || downloadsFolder.equals("./")) {
-                downloadsFolder = "";
-            } else {
-                try {
-                    new CheckDirectory(downloadsFolder);
-                } catch (IOException e) {
-                    messageBroker.sendMessage(e.getMessage(), DriftyConstants.LOGGER_ERROR, "directory");
-                    return;
-                }
-            }
+        if (downloadsFolder == null || downloadsFolder.equals(".")) {
+            downloadsFolder = Utility.getHomeDownloadFolder();
         }
-
-        if (((fileName == null) || (fileName.length() == 0)) && (!Utility.isYoutubeLink(url) && !Utility.isInstagramLink(url))) {
-            fileName = utility.findFilenameInLink(url);
-            if (fileName == null || fileName.length() == 0) {
-                messageBroker.sendMessage("Filename cannot be empty!", DriftyConstants.LOGGER_ERROR, "Filename");
-                return;
-            }
+        else if (downloadsFolder.toLowerCase().contains("l")) {
+            downloadsFolder = AppSettings.get.lastDownloadFolder();
         }
-
-        new FileDownloader(url, fileName, downloadsFolder).run();
-    }
-
-    /**
-     * This method returns the Application Type.
-     * @return The application type. Possible return values are <b>CLI</b> and <b>GUI</b>.
-     */
-    protected static String getAppType() {
-        return applicationType;
-    }
-
-    /**
-     * This method returns the message broker instance.
-     * @return the message broker instance.
-     */
-    public static MessageBroker getMessageBrokerInstance() {
-        return messageBroker;
+        Path path = Paths.get(downloadsFolder);
+        downloadsFolder = path.toAbsolutePath().toString();
+        AppSettings.get.folders().addFolder(downloadsFolder);
+        if (!path.toFile().exists()) {
+            M.msgDirError("Download folder does not exist!");
+            System.out.println("Specified download folder does not exist!");
+            return;
+        }
+        if (filename == null) {
+            M.msgFilenameError("Filename cannot be null!");
+        }
+        else if (filename.isEmpty()) {
+            M.msgFilenameError("Filename cannot be empty!");
+        }
+        new FileDownloader(url, filename, downloadsFolder).run();
     }
 }

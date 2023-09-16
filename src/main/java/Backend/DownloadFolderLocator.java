@@ -1,17 +1,15 @@
 package Backend;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
-/**
- * This class deals with finding the path of the default downloads folder.
+/*
+This class locates the default Download folder, not the download folder that the user provided.
  */
-public class DefaultDownloadFolderLocationFinder {
+public class DownloadFolderLocator {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
-    /**
-     * This function finds the path of the default downloads folder.
-     * @return The path of the default downloads folder as a String object.
-     */
     public static String findPath() {
         try {
             Process process = new ProcessBuilder("reg", "query", "\"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\"", "/v", "{374DE290-123F-4565-9164-39C4925E467B}").start();
@@ -27,13 +25,12 @@ public class DefaultDownloadFolderLocationFinder {
 
             result = result.substring(p + REG_TOKEN.length()).trim();
             result = result.replace("%USERPROFILE%", System.getProperty("user.home"));
-
             return result;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
+
     static class StreamReader extends Thread {
         private final InputStream is;
         private final StringWriter sw;
@@ -49,11 +46,10 @@ public class DefaultDownloadFolderLocationFinder {
                 int c;
                 while ((c = is.read()) != -1)
                     sw.write(c);
-            }
-            catch (IOException ignored) {
-
+            } catch (IOException ignored) {
             }
         }
+
         public String getResult() {
             return sw.toString();
         }

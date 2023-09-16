@@ -1,13 +1,16 @@
 package Utils;
 
+import Enums.MessageType;
+import Enums.Mode;
+
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import static Utils.DriftyConstants.*;
+import static Utils.DriftyConstants.FAILED_TO_CLEAR_LOG;
+import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
 
 /**
  * This class deals with creating Log files for Drifty.
@@ -15,68 +18,57 @@ import static Utils.DriftyConstants.*;
 public class Logger {
     private static Logger CLILoggerInstance;
     private static Logger GUILoggerInstance;
-    Path filePath;
-    DateFormat dateFormat;
+    private final Path filePath;
+    private final DateFormat dateFormat;
     boolean isLogEmpty;
-    Calendar calendarObject = Calendar.getInstance();
-    String logFilename;
+    private final Calendar calendarObject = Calendar.getInstance();
+    private final String logFilename;
 
-    /**
-     * This is the constructor used to initialise the variables in this class.
-     */
-    private Logger(String applicationType) {
-        if (applicationType.equals("CLI")) {
-            logFilename = "Drifty CLI Log.log";
+    private Logger() {
+        if (Mode.isCLI()) {
+            logFilename = "Drifty CLI.log";
         } else {
-            logFilename = "Drifty GUI Log.log";
+            logFilename = "Drifty GUI.log";
         }
         filePath = FileSystems.getDefault().getPath(logFilename);
-        dateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
-    public static Logger getInstance(String applicationType) {
-        if (applicationType.equals("CLI")){
+    public static Logger getInstance() {
+        if (Mode.isCLI()) {
             if (CLILoggerInstance != null) {
                 return CLILoggerInstance;
             }
-            CLILoggerInstance = new Logger("CLI");
+            CLILoggerInstance = new Logger();
             return CLILoggerInstance;
         } else {
             if (GUILoggerInstance != null) {
                 return GUILoggerInstance;
             }
-            GUILoggerInstance = new Logger("GUI");
+            GUILoggerInstance = new Logger();
             return GUILoggerInstance;
         }
     }
 
-    /**
-     * This function clears the contents of the previous log file.
-     */
     private void clearLog() {
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
             isLogEmpty = true;
-            out.write("");
+            logWriter.write("");
         } catch (IOException e) {
             System.out.println(FAILED_TO_CLEAR_LOG);
         }
     }
 
-    /**
-     * This function actually writes the output messages to the log file.
-     * @param type Type of the Log (acceptable values - INFO, WARN, ERROR).
-     * @param msg  Log message.
-     */
-    public void log(String type, String msg) {
+    public void log(MessageType messageType, String logMessage) {
         String dateAndTime = dateFormat.format(calendarObject.getTime());
         if (!isLogEmpty) {
             clearLog();
         }
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
             isLogEmpty = true;
-            out.println(dateAndTime + " " + type.toUpperCase() + " - " + msg);
+            logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
-            System.out.println(FAILED_TO_CREATE_LOG + msg);
+            System.out.println(FAILED_TO_CREATE_LOG + logMessage);
         }
     }
 }

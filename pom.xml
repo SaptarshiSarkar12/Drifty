@@ -12,9 +12,31 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
+        <javafx.version>20</javafx.version>
+        <gluonfx-maven-plugin.version>1.0.19</gluonfx-maven-plugin.version>
+        <native-maven-plugin.version>0.9.25</native-maven-plugin.version>
+        <guiMain>GUI.Forms.Main</guiMain>
+        <cliMain>CLI.Main</cliMain>
+        <package.type/>
+        <mac.app.store/>
+        <resource-config-file/>
+        <system-native-image-arg/>
+        <system-linker-arg/>
+        <versions-maven-plugin>2.16.0</versions-maven-plugin>
+        <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
+        <javafx-maven-plugin>0.0.8</javafx-maven-plugin>
     </properties>
 
+    <!--
+    To package:
+    mvn clean -Pbuild-drifty-gui-for-macos-latest gluonfx:build gluonfx:package
+    -->
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -32,187 +54,240 @@
             <artifactId>snakeyaml</artifactId>
             <version>2.2</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hildan.fxgson</groupId>
+            <artifactId>fx-gson</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.buildobjects</groupId>
+            <artifactId>jproc</artifactId>
+            <version>2.8.2</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!--Maven Compiler Plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${maven-compiler-plugin}</version>
                 <configuration>
-                    <source>18</source>
-                    <target>18</target>
+                    <source>20</source>
+                    <target>20</target>
                 </configuration>
             </plugin>
+            <!--Maven Versions Plugin-->
             <plugin>
-                <groupId>io.github.fvarrui</groupId>
-                <artifactId>javapackager</artifactId>
-                <version>1.7.4</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin}</version>
+            </plugin>
+            <!--JavaFX Maven Plugin-->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>${javafx-maven-plugin}</version>
                 <configuration>
-                    <name>Drifty</name>
-                    <displayName>Drifty</displayName>
-                    <description>Drifty is an open-source interactive file downloader system</description>
-                    <bundleJre>true</bundleJre>
-                    <generateInstaller>true</generateInstaller>
-                    <licenseFile>LICENSE</licenseFile>
-                    <url>https://saptarshisarkar12.github.io/Drifty/</url>
-                    <assetsDir>./assets</assetsDir>
-                    <organizationName>Drifty</organizationName>
-                    <organizationUrl>https://saptarshisarkar12.github.io/Drifty/</organizationUrl>
-                    <version>${project.version}</version>
-                    <additionalModules>jdk.crypto.cryptoki</additionalModules> <!-- To prevent SSL Handshake Error -->
-                    <linuxConfig>
-                        <generateAppImage>true</generateAppImage>
-                        <generateDeb>true</generateDeb>
-                        <generateRpm>true</generateRpm>
-                    </linuxConfig>
-                    <winConfig>
-                        <!-- general properties -->
-                        <icoFile>./assets.windows.Drifty.ico</icoFile>
-                        <generateSetup>false</generateSetup>
-                        <generateMsi>true</generateMsi>
-                        <!-- exe creation properties -->
-                        <headerType>gui</headerType>
-                        <wrapJar>true</wrapJar>
-                        <companyName>Drifty</companyName>
-                        <fileVersion>${project.version}.0</fileVersion>
-                        <txtFileVersion>${project.version}</txtFileVersion>
-                        <productVersion>${project.version}.0</productVersion>
-                        <txtProductVersion>${project.version}</txtProductVersion>
-                        <fileDescription>Drifty windows executable</fileDescription>
-                        <copyright>Drifty</copyright>
-                        <productName>${project.name}</productName>
-                        <internalName>${project.name}</internalName>
-                        <originalFilename>${project.name}.exe</originalFilename>
-                        <!-- choose EXE creation tool -->
-                        <exeCreationTool>launch4j</exeCreationTool>
-                    </winConfig>
-                    <macConfig>
-                        <!-- general properties -->
-                        <appId>${project.name}</appId>
-                        <icnsFile>./assets.mac.Drifty.icns</icnsFile>
-                        <generateDmg>true</generateDmg>
-                        <generatePkg>true</generatePkg>
-                        <relocateJar>false</relocateJar>
-                        <macStartup>UNIVERSAL</macStartup>
-                        <codesignApp>false</codesignApp>  
-                        <!-- properties used for DMG disk image generation -->
-                        <volumeName>${project.name}</volumeName>
-                        <!-- properties used for Info.plist file generation -->
-                        <infoPlist>
-                            <bundlePackageType>APPL</bundlePackageType>
-                        </infoPlist>
-                    </macConfig>
+                    <mainClass>${guiMain}</mainClass>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>bundling-Drifty-GUI-for-windows-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>windows</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
-                            <outputDirectory>./target/GUI/windows</outputDirectory>
-                            <createZipball>true</createZipball>                            
-                            <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
-                            </additionalResources>                            
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-Drifty-GUI-for-ubuntu-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>linux</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
-                            <outputDirectory>./target/GUI/linux</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-Drifty-GUI-for-macos-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>mac</platform>
-                            <mainClass>GUI.Drifty_GUI</mainClass>
-                            <outputDirectory>./target/GUI/mac</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>
-                              <additionalResource>Drifty Banner.png</additionalResource>
-                              <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-Drifty-CLI-for-windows-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>windows</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
-                            <outputDirectory>./target/CLI/windows</outputDirectory>
-                            <createZipball>true</createZipball>
-                            <additionalResources>
-                                <additionalResource>src/main/resources/yt-dlp.exe</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-Drifty-CLI-for-ubuntu-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>linux</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
-                            <outputDirectory>./target/CLI/linux</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>
-                                <additionalResource>src/main/resources/yt-dlp</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>bundling-Drifty-CLI-for-macos-latest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                        <configuration>
-                            <bundleJre>true</bundleJre>
-                            <platform>mac</platform>
-                            <mainClass>CLI.Drifty_CLI</mainClass>
-                            <outputDirectory>./target/CLI/mac</outputDirectory>
-                            <createTarball>true</createTarball>
-                            <additionalResources>
-                                <additionalResource>src/main/resources/yt-dlp_macos</additionalResource>
-                            </additionalResources>
-                        </configuration>
-                    </execution>
-                </executions>
+            </plugin>
+            <!-- GUI native image builder plugin-->
+            <plugin>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>gluonfx-maven-plugin</artifactId>
+                <version>${gluonfx-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>${guiMain}</mainClass>
+                    <linkerArgs>
+                        <arg>${system-linker-arg}</arg>
+                    </linkerArgs>
+                    <nativeImageArgs>
+                        <arg>--enable-url-protocols=https</arg>
+                        <arg>--enable-url-protocols=http</arg>
+                        <arg>--no-fallback</arg>
+                        <arg>--verbose</arg>
+                        <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</arg>
+                        <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+<!--                        <arg>-o Drifty GUI</arg>-->
+                        <arg>${system-native-image-arg}</arg>
+                    </nativeImageArgs>
+                    <appIdentifier>${guiMain}</appIdentifier>
+                    <releaseConfiguration>
+                        <vendor>Drifty</vendor>
+                        <description>Drifty is an open-source interactive file downloader system</description>
+                        <packageType>${package.type}</packageType>
+                        <bundleShortVersion>${project.version}</bundleShortVersion>
+                        <bundleVersion>${project.version}</bundleVersion>
+                        <!-- for macOS/iOS -->
+                        <skipSigning>true</skipSigning>
+                    </releaseConfiguration>
+                </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- [Windows] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-windows-latest</id>
+            <properties>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/windows</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [Linux] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-ubuntu-latest</id>
+            <properties>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/linux</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [macOS] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-macos-latest</id>
+            <properties>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cliMain}</mainClass>
+                            <outputDirectory>target/CLI/macos</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [macOS] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-macos-latest</id>
+            <properties>
+                <package.type>pkg</package.type>
+                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
+                <mac.app.store>true</mac.app.store>
+            </properties>
+        </profile>
+        <!-- [Linux] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-ubuntu-latest</id>
+            <properties>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
+            </properties>
+        </profile>
+        <!-- [Windows] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-windows-latest</id>
+            <properties>
+                <package.type>msi</package.type>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
+            </properties>
+        </profile>
+    </profiles>
 </project>
