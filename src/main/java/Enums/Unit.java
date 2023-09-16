@@ -8,6 +8,17 @@ public enum Unit {
     private static final DecimalFormat two = new DecimalFormat("#.00");
     private static final DecimalFormat one = new DecimalFormat("#.0");
 
+    public static double getValue(long bytes, Unit unit) {
+        double temp = (double) bytes;
+        return switch(unit) {
+            case B -> bytes;
+            case KB -> temp / 1024;
+            case MB -> temp / 1024 / 1024;
+            case GB -> temp / 1024 / 1024 / 1024;
+            case TB -> temp / 1024 / 1024 / 1024 / 1024;
+        };
+    }
+
     private static Unit findUnit(long bytes) {
         double converted = (double) bytes;
         return findUnit(converted);
