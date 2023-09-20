@@ -11,7 +11,8 @@ export default function MainSection() {
                         Drifty is an Open-Source interactive File Downloader system built
                         with Java. It takes the link of the file to be downloaded and
                         downloads it in the appropriate folder with the appropriate filename
-                        retrieved from the link.
+                        retrieved from the link. It can download files from platforms including
+                        YouTube, Instagram, and many more.
                     </p>
                     <div className="flex space-x-3 justify-start lg:ml-20 lg:mt-3 lg:mb-16">
                         <Link className="inline-block px-6 py-3.5 w-30 h-14 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 text-white font-medium text-lg leading-tight rounded-lg shadow-md  hover:from-pink-500 hover:to-yellow-500 hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition" href="/#contribute" role="button">More Info</Link>
