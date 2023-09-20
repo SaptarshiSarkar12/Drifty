@@ -1,6 +1,6 @@
 <a href="https://saptarshisarkar12.github.io/Drifty/">
     <p align="center">
-        <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332">
+        <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332" alt="Drifty Banner with App Icon">
     </p>
 </a>
 
@@ -8,12 +8,12 @@
 <p align="center">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
-    <a href="http://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
 </p>
 
 <p align="center">
-    <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" /></a> 
-    <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment"></a>
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" alt="Build Workflow Status"/></a> 
+    <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment Status"></a>
 </p>
 
 <p align="center">
@@ -30,13 +30,28 @@
 ## Demo
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
-[Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
+For **Batch Downloading** via **Drifty CLI**, the path to a YAML file has to be provided to it.
+It should have the following structure :
+```yaml
+links: ["", ""] # [REQUIRED] - Links to the files to be downloaded
+# Below parameters are OPTIONAL
+fileNames: [""] # Will be auto-retrieved if not provided
+# If the directory is not provided, the files will be downloaded in the default downloads folder.
+directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
+directories: [""] # Use 'directories' when the download folder is different for each of the files
+```
+### Drifty GUI
 
+https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-a053-d3ee13e67c8e
+
+### Drifty CLI
+
+https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/8a32ca07-1922-4c21-895d-44164bec9d76
 
 ## Tech Stack
 
 The _Application_ **Drifty** is built using the following technologies :
-- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independant applications.
+- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independent applications.
 
 The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
 - [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
@@ -45,12 +60,13 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 ## Quickstart 🚀🚀
 For **Users** :
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/4036db4c-6ac9-4f09-8754-5037b68ff245)
+    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/a91ddf38-6578-4a94-8802-33a14527e7a9)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-    ![Download button of Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/4e55ab0c-b723-4077-a0dd-bb6d62f29d1e)
-3. If you are a Windows User, click on **`Download Now <Windows Icon>`** button and for other users, click on **`Download Now <Apple icon><Linux icon>`**. The file will be downloaded. </p>
-    ![Download page of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/798f7737-ddcc-45b1-ad7c-a04cd61b1ecf)
-4. Go to your Downloads folder and run the file.
+    ![Download button of Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/233e7a0e-17eb-4628-a4dc-421a2e9d8a1d)
+3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, MacOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
+    ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
+4. Go to your Downloads folder and run the file you downloaded.
+   > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
