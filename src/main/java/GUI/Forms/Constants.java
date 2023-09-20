@@ -1,6 +1,5 @@
 package GUI.Forms;
 
-import Utils.DriftyConstants;
 import Utils.Environment;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -11,6 +10,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Objects;
+
+import static Utils.DriftyConstants.GUI_APPLICATION_TERMINATED;
 
 /*
  * These are constants used by Drifty GUI.
@@ -32,7 +34,7 @@ class Constants {
     public static final URL AUTO_PASTE_PNG = Constants.class.getResource("/GUI/Labels/AutoPaste.png");
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/GUI/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/GUI/Labels/Filename.png");
-    public static final URL ICON_1024_PNG = Constants.class.getResource("/GUI/Icons/AppIcon.png");
+    public static final URL DRIFTY_ICON = Constants.class.getResource("/GUI/Icons/AppIcon.png");
 
     /*
     Stylesheets
@@ -70,46 +72,33 @@ class Constants {
     /*
     Methods for obtaining consistent Stages and Scenes
      */
-    public static Stage getStage() {
+    public static Stage getStage(String title, boolean isPrimaryStage) {
         Stage stage = new Stage();
-        stage.centerOnScreen();
-        Image icon;
-        icon = new Image(ICON_1024_PNG.toExternalForm());
+        Image icon = new Image(Objects.requireNonNull(DRIFTY_ICON).toExternalForm());
         stage.getIcons().add(icon);
-        stage.setOnCloseRequest(e -> {
-            Environment.getMessageBroker().msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
-            System.exit(0);
-        });
-        stage.setTitle("Drifty GUI");
-        return stage;
-    }
-
-    public static Stage getStage(Stage stage) {
-        Image icon = new Image(ICON_1024_PNG.toExternalForm());
-        stage.getIcons().add(icon);
-        stage.setOnCloseRequest(e -> {
-            Environment.getMessageBroker().msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
-            System.exit(0);
-        });
-        stage.setResizable(true);
-        stage.setTitle("Drifty GUI");
+        stage.setTitle(title);
+        if (isPrimaryStage) {
+            stage.setOnCloseRequest(e -> {
+                Environment.getMessageBroker().msgLogInfo(GUI_APPLICATION_TERMINATED);
+                System.exit(0);
+            });
+            stage.setResizable(true);
+        } else {
+            stage.centerOnScreen();
+        }
         return stage;
     }
 
     public static Scene getScene(Parent root) {
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(CHECK_BOX_CSS.toExternalForm());
-        scene.getStylesheets().add(CONTEXT_MENU_CSS.toExternalForm());
-        scene.getStylesheets().add(LABEL_CSS.toExternalForm());
-        scene.getStylesheets().add(LIST_VIEW_CSS.toExternalForm());
-        scene.getStylesheets().add(MENU_CSS.toExternalForm());
-        scene.getStylesheets().add(PROGRESS_BAR_CSS.toExternalForm());
-        scene.getStylesheets().add(SCENE_CSS.toExternalForm());
-        scene.getStylesheets().add(SCROLL_PANE_CSS.toExternalForm());
-        scene.getStylesheets().add(TEXT_FIELD_CSS.toExternalForm());
-        scene.getStylesheets().add(V_BOX_CSS.toExternalForm());
-        scene.getStylesheets().add(BUTTON_CSS.toExternalForm());
+        addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS, PROGRESS_BAR_CSS, SCENE_CSS, SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
         return scene;
+    }
+
+    public static void addCSS(Scene scene, URL ...css) {
+        for (URL url : css) {
+            scene.getStylesheets().add(url.toExternalForm());
+        }
     }
 
     public static Font getMonaco(double size) {

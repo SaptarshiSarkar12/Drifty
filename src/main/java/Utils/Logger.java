@@ -4,11 +4,10 @@ import Enums.MessageType;
 import Enums.Mode;
 
 import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import static Utils.DriftyConstants.FAILED_TO_CLEAR_LOG;
 import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
 
@@ -18,7 +17,6 @@ import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
 public class Logger {
     private static Logger CLILoggerInstance;
     private static Logger GUILoggerInstance;
-    private final Path filePath;
     private final DateFormat dateFormat;
     boolean isLogEmpty;
     private final Calendar calendarObject = Calendar.getInstance();
@@ -30,7 +28,6 @@ public class Logger {
         } else {
             logFilename = "Drifty GUI.log";
         }
-        filePath = FileSystems.getDefault().getPath(logFilename);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 

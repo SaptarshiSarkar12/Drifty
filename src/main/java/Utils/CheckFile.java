@@ -19,14 +19,14 @@ public class CheckFile implements Runnable {
     private final List<String> searchList;
     private final Path rootPath;
     public static boolean stopWalk = false;
-    private boolean findOneFile = false;
+    private final boolean findOneFile;
     private FolderWalker folderWalker;
 
     public CheckFile(String rootPath, String searchFile) {
         this.rootPath = Paths.get(rootPath);
         this.searchList = new ArrayList<>();
         this.searchList.add(searchFile);
-        findOneFile = true;
+        this.findOneFile = true;
     }
 
     public boolean fileFound() {
@@ -74,8 +74,7 @@ public class CheckFile implements Runnable {
                     if (findOneFile) {
                         fileFound = true;
                         return FileVisitResult.TERMINATE;
-                    }
-                    else {
+                    } else {
                         if (!fileList.contains(fullPath)) {
                             fileList.addLast(fullPath);
                         }

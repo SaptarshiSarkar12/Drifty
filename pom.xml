@@ -12,9 +12,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
-        <javafx.version>20</javafx.version>
-        <gluonfx-maven-plugin.version>1.0.19</gluonfx-maven-plugin.version>
-        <native-maven-plugin.version>0.9.25</native-maven-plugin.version>
+        <javafx.version>21</javafx.version>
+        <gluonfx-maven-plugin.version>1.0.21</gluonfx-maven-plugin.version>
+        <native-maven-plugin.version>0.9.27</native-maven-plugin.version>
         <guiMain>GUI.Forms.Main</guiMain>
         <cliMain>CLI.Main</cliMain>
         <package.type/>
@@ -22,7 +22,7 @@
         <resource-config-file/>
         <system-native-image-arg/>
         <system-linker-arg/>
-        <versions-maven-plugin>2.16.0</versions-maven-plugin>
+        <versions-maven-plugin>2.16.1</versions-maven-plugin>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <javafx-maven-plugin>0.0.8</javafx-maven-plugin>
     </properties>

@@ -14,8 +14,7 @@ import java.util.Objects;
 
 import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
-import static Utils.Utility.isInstagram;
-import static Utils.Utility.isYoutube;
+import static Utils.Utility.*;
 
 /**
  * This class deals with downloading the file.
@@ -29,7 +28,6 @@ public class FileDownloader implements Runnable {
     private String fileName;
     private String link;
     private URL url;
-    private String yt_dlpProgramName;
 
     public FileDownloader(String link, String fileName, String dir) {
         this.link = link;
@@ -37,9 +35,8 @@ public class FileDownloader implements Runnable {
         this.dir = dir;
         this.downloadMetrics = new DownloadMetrics();
         this.numberOfThreads = downloadMetrics.getThreadCount();
-        this.threadMaxDataSize = downloadMetrics.getMaxFileSplitSize();
+        this.threadMaxDataSize = downloadMetrics.getMultiThreadingThreshold();
         downloadMetrics.setMultithreaded(false);
-        setYt_dlpProgramName(Program.get(Program.EXECUTABLE_NAME));
     }
 
     public String getDir() {
@@ -78,35 +75,28 @@ public class FileDownloader implements Runnable {
                         downloaderThreads.add(downloader);
                         tempFiles.add(file);
                     }
-
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, dir, totalSize, downloadMetrics);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, getDir(), totalSize, downloadMetrics);
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     // check if all the files are downloaded
-                    try {
-                        while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
-                            Thread.sleep(1000);
-                        }
-                        downloadMetrics.setActive(false);
-                        // keep the main thread from closing the IO for short amt. of time so UI thread can finish and output
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ignored) {}
-                    } catch (InterruptedException ignored) {}
+                    while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
+                        sleep(500);
+                    }
+                    // keep the main thread from closing the IO for a short amount of time so UI thread can finish and output
                 } else {
                     InputStream urlStream = url.openStream();
                     readableByteChannel = Channels.newChannel(urlStream);
                     FileOutputStream fos = new FileOutputStream(getDir() + fileName);
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, downloadMetrics);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, getDir(), downloadMetrics);
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    downloadMetrics.setActive(false);
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException ignored) {}
                 }
+                downloadMetrics.setActive(false);
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException ignored) {}
             } catch (SecurityException e) {
                 M.msgDownloadError("Write access to \"" + dir + fileName + "\" denied !");
             } catch (FileNotFoundException fileNotFoundException) {
@@ -159,7 +149,9 @@ public class FileDownloader implements Runnable {
             partSize = partSizes.get(i);
             downloaderThread = downloaderThreads.get(i);
             if (fileOutputStream.getChannel().size() < partSize) {
-                if (!downloaderThread.isAlive()) throw new IOException(THREAD_ERROR_ENCOUNTERED);
+                if (!downloaderThread.isAlive()) {
+                    M.msgDownloadError("Error encountered while downloading the file! Please try again.");
+                }
             } else if (!downloaderThread.isAlive()) {
                 completed++;
             }
@@ -179,10 +171,6 @@ public class FileDownloader implements Runnable {
             return true;
         }
         return false;
-    }
-
-    private void setYt_dlpProgramName(String yt_dlpProgramName) {
-        this.yt_dlpProgramName = yt_dlpProgramName;
     }
 
     @Override

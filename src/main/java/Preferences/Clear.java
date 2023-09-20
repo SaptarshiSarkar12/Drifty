@@ -1,14 +1,10 @@
 package Preferences;
 
-import Utils.Environment;
-import Utils.MessageBroker;
-
 import java.util.prefs.Preferences;
 
 import static Preferences.Labels.*;
 
 public class Clear { // This class is used to clear the user preferences
-    private static final MessageBroker M = Environment.getMessageBroker();
     private static final Clear INSTANCE = new Clear();
     private final Preferences preferences = Labels.PREFERENCES;
 

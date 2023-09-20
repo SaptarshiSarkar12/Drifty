@@ -3,11 +3,11 @@ package Enums;
 import Utils.Utility;
 
 public enum LinkType {
-    YOU_TUBE, INSTAGRAM, OTHER;
+    YOUTUBE, INSTAGRAM, OTHER;
 
-    public static LinkType fromLink(String link) {
+    public static LinkType getLinkType(String link) {
         if (Utility.isYoutube(link)) {
-            return YOU_TUBE;
+            return YOUTUBE;
         }
         else if (Utility.isInstagram(link)) {
             return INSTAGRAM;
@@ -19,7 +19,7 @@ public enum LinkType {
 
     public String get() {
         return switch(this) {
-            case YOU_TUBE -> "YouTube";
+            case YOUTUBE -> "YouTube";
             case INSTAGRAM -> "Instagram";
             case OTHER -> "Other";
         };

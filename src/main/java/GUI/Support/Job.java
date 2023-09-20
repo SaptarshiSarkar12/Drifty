@@ -8,9 +8,9 @@ import java.nio.file.Paths;
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job
  */
 public class Job {
-    private String link;
-    private String dir;
-    private String filename;
+    private final String link;
+    private final String dir;
+    private final String filename;
     private boolean repeatDownload = false;
 
     public Job(String link, String dir, String filename, boolean repeatDownload) {
@@ -24,13 +24,6 @@ public class Job {
         this.link = link;
         this.dir = dir;
         this.filename = getName();
-    }
-
-    public Job(Job job) {
-        this.link = job.getLink();
-        this.dir = job.getDir();
-        this.filename = job.getFilename();
-        this.repeatDownload = job.repeatOK();
     }
 
     public boolean matches(Job otherJob) {
@@ -49,16 +42,8 @@ public class Job {
         return link;
     }
 
-    public void setLink(String link) {
-        this.link = link;
-    }
-
     public String getDir() {
         return dir;
-    }
-
-    public void setDir(String dir) {
-        this.dir = dir;
     }
 
     public String getFilename() {
@@ -67,9 +52,6 @@ public class Job {
 
     public File getFile() {
         return Paths.get(dir, filename).toFile();
-    }
-    public void setFilename(String filename) {
-        this.filename = filename;
     }
 
     public boolean fileExists() {

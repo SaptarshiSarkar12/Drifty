@@ -1,15 +1,16 @@
 package CLI;
 
-import Backend.Drifty;
+import Backend.FileDownloader;
 import Enums.MessageType;
 import Enums.OS;
 import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,12 +40,11 @@ public class Main {
 
     public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
-        Environment.setMessageBroker(new MessageBroker(System.out));
-        messageBroker = Environment.getMessageBroker();
+        messageBroker = new MessageBroker(System.out);
+        Environment.setMessageBroker(messageBroker);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
-        messageBroker = Environment.getMessageBroker();
         utility = new Utility();
         printBanner();
         String downloadsFolder;
@@ -70,22 +70,25 @@ public class Main {
                 }
             }
             if (!batchDownloading) {
-                isYoutubeURL = isYoutube(link);
-                isInstagramLink = isInstagram(link);
-                fileName = Objects.requireNonNullElse(name, fileName);
-                messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                fileName = findFilenameInLink(link);
-                renameFilenameIfRequired();
-                downloadsFolder = location;
-                if (downloadsFolder == null) {
-                    downloadsFolder = AppSettings.get.lastDownloadFolder();
+                boolean isUrlValid;
+                if (Utility.isURL(link)) {
+                    isUrlValid = Utility.isLinkValid(link);
                 } else {
-                    if (OS.isWindows()) {
-                        downloadsFolder = downloadsFolder.replace('/', '\\');
-                    }
+                    isUrlValid = false;
+                    messageBroker.msgLinkError("Link is invalid!");
                 }
-                Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
-                backend.start();
+                if (isUrlValid) {
+                    isYoutubeURL = isYoutube(link);
+                    isInstagramLink = isInstagram(link);
+                    fileName = Objects.requireNonNullElse(name, fileName);
+                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                    fileName = findFilenameInLink(link);
+                    renameFilenameIfRequired();
+                    downloadsFolder = location;
+                    downloadsFolder = getProperDownloadsFolder(downloadsFolder);
+                    FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                    downloader.run();
+                }
             }
             logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
             System.exit(0);
@@ -118,19 +121,22 @@ public class Main {
                 System.out.print(ENTER_FILE_LINK);
                 String link = SC.next();
                 SC.nextLine();
-                if (!Utility.isURL(link)) {
+                if (Utility.isURL(link)) {
+                    Utility.isLinkValid(link);
+                } else {
                     messageBroker.msgLinkError("Link is invalid!");
                     continue;
                 }
                 System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.get.lastDownloadFolder() + ") : ");
                 downloadsFolder = SC.next();
+                downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 renameFilenameIfRequired();
-                Drifty backend = new Drifty(link, downloadsFolder, fileName, System.out);
-                backend.start();
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                downloader.run();
             }
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
@@ -198,7 +204,7 @@ public class Main {
             }
             messageBroker.msgBatchInfo("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage);
             for (int i = 0; i < numberOfLinks; i++) {
-                messageBroker.msgStyleInfo("==================================================");
+                messageBroker.msgStyleInfo(BANNER_BORDER);
                 link = data.get("links").get(i);
                 messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
                 isYoutubeURL = isYoutube(link);
@@ -211,6 +217,8 @@ public class Main {
                 }
                 renameFilenameIfRequired();
                 if (directory.equals(".")) {
+                    directory = Utility.getHomeDownloadFolder().toString();
+                } else if (directory.equalsIgnoreCase("L")) {
                     directory = AppSettings.get.lastDownloadFolder();
                 } else if (directory.isEmpty()) {
                     try {
@@ -219,8 +227,8 @@ public class Main {
                         directory = AppSettings.get.lastDownloadFolder();
                     }
                 }
-                Drifty backend = new Drifty(link, directory, fileName, System.out);
-                backend.start();
+                FileDownloader downloader = new FileDownloader(link, fileName, directory);
+                downloader.run();
             }
         } catch (FileNotFoundException e) {
             messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
@@ -244,5 +252,60 @@ public class Main {
                 fileName = SC.nextLine();
             }
         }
+    }
+
+    private static String getProperDownloadsFolder(String downloadsFolder) {
+        if (downloadsFolder == null) {
+            downloadsFolder = Utility.getHomeDownloadFolder().toString();
+        } else if (downloadsFolder.equalsIgnoreCase("L")) {
+            downloadsFolder = AppSettings.get.lastDownloadFolder();
+        } else {
+            downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
+            if (OS.isWindows()) {
+                downloadsFolder = downloadsFolder.replace('/', '\\');
+            }
+            AppSettings.set.lastFolder(downloadsFolder);
+        }
+        if (new File(downloadsFolder).exists()) {
+            messageBroker.msgDirInfo("Download folder exists!");
+        } else {
+            messageBroker.msgDirError("Download folder does not exist!");
+            try {
+                Files.createDirectory(Path.of(downloadsFolder));
+                messageBroker.msgDirInfo("Download folder created successfully!");
+            } catch (IOException e) {
+                messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
+            }
+        }
+        return downloadsFolder;
+    }
+
+    public static void help() {
+        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
+        System.out.println("\033[33;1mOptional parameters:");
+        System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
+        System.out.println("--batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
+        System.out.println("--location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
+        System.out.println("--name       -n            Source                   Filename of the downloaded file.");
+        System.out.println("--help       -h            N/A                      Provides concise information for Drifty CLI.");
+        System.out.println("--version    -v            Current Version          Displays version number of Drifty.");
+        System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
+        System.out.println("For more information visit: ");
+        System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
+        System.out.println("\tProject Website - " + DRIFTY_WEBSITE_URL);
+    }
+
+    public static void printBanner() {
+        System.out.print("\033[H\033[2J");
+        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
+        System.out.println(ANSI_CYAN + "  _____   _____   _____  ______  _______ __     __" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |  | || |__) |  | |  | |__      | |    \\ \\_/ /" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |  | ||  _  /   | |  |  __|     | |     \\   / " + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
+        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 }
