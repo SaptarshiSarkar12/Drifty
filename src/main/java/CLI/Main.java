@@ -52,21 +52,30 @@ public class Main {
             link = args[0];
             String name = null;
             String location = null;
-            for (int i = 0; i < args.length; i++) {
-                if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
-                    help();
-                    System.exit(0);
-                } else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
-                    name = args[i + 1];
-                } else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
-                    location = args[i + 1];
-                } else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
-                    System.out.println(APPLICATION_NAME + " " + VERSION_NUMBER);
-                    System.exit(0);
-                } else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
-                    batchDownloading = true;
-                    batchDownloadingFile = args[i + 1];
-                    batchDownloader();
+            if (args.length > 1) {
+                for (int i = 0; i < args.length; i++) {
+                    if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
+                        help();
+                        System.exit(0);
+                    } else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
+                        name = args[i + 1];
+                    } else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
+                        location = args[i + 1];
+                    } else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
+                        System.out.println(APPLICATION_NAME + " " + VERSION_NUMBER);
+                        System.exit(0);
+                    } else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
+                        batchDownloading = true;
+                        batchDownloadingFile = args[i + 1];
+                        batchDownloader();
+                    } else {
+                        if (isURL(args[i])) {
+                            link = args[i];
+                        } else {
+                            messageBroker.msgInitError("Invalid argument(s) passed!");
+                            System.exit(1);
+                        }
+                    }
                 }
             }
             if (!batchDownloading) {
@@ -80,10 +89,13 @@ public class Main {
                 if (isUrlValid) {
                     isYoutubeURL = isYoutube(link);
                     isInstagramLink = isInstagram(link);
-                    fileName = Objects.requireNonNullElse(name, fileName);
-                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                    fileName = findFilenameInLink(link);
-                    renameFilenameIfRequired();
+                    if (name == null) {
+                        if (fileName == null || fileName.isEmpty()) {
+                            messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                            fileName = findFilenameInLink(link);
+                        }
+                    }
+                    renameFilenameIfRequired(false);
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                     FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
@@ -135,7 +147,7 @@ public class Main {
                 isInstagramLink = isInstagram(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
-                renameFilenameIfRequired();
+                renameFilenameIfRequired(true);
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
                 downloader.run();
             }
@@ -216,7 +228,7 @@ public class Main {
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
                 }
-                renameFilenameIfRequired();
+                renameFilenameIfRequired(false);
                 if (directory.equals(".")) {
                     directory = Utility.getHomeDownloadFolder().toString();
                 } else if (directory.equalsIgnoreCase("L")) {
@@ -236,14 +248,16 @@ public class Main {
         }
     }
 
-    private static void renameFilenameIfRequired() { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
+    private static void renameFilenameIfRequired(boolean removeInputBufferFirst) { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
-            SC.nextLine();
+            if (removeInputBufferFirst) {
+                SC.nextLine();
+            }
             fileName = SC.nextLine();
         } else {
             System.out.print("Would you like to use this filename? (Enter Y for yes and N for no) : ");
-            if (!batchDownloading) {
+            if (removeInputBufferFirst) {
                 SC.nextLine(); // To remove 'whitespace' from input buffer. The whitespace will not be present in the input buffer if the user is using batch downloading because only yml file is parsed but no user input is taken.
             }
             String choiceString = SC.nextLine().toLowerCase();
