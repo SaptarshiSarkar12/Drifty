@@ -34,9 +34,9 @@ export default function Demo(){
                         )}>
                             <div className="flex justify-center">
                                 <video width="90%" muted loop poster={"Video Thumbnails/CLI Thumbnail.jpg"} controls className={"rounded-lg"}>
-                                    <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usage.webm" type='video/webm'/>
-                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
-                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.
+                                    <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Usages/CLI.webm" type='video/webm'/>
+                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usages/CLI.mp4"} type='video/mp4' />
+                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usages/CLI.mp4"}>here</a>.
                                 </video>
                             </div>
                         </Tab.Panel>
@@ -46,9 +46,9 @@ export default function Demo(){
                         )}>
                             <div className="flex justify-center">
                                 <video width="90%" muted loop poster={"Video Thumbnails/GUI Thumbnail.jpg"} controls className={"rounded-lg"}>
-                                    <source src="/Usages/GUI.webm" type='video/webm'/>
-                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usage.mp4"} type='video/mp4' />
-                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usage.mp4"}>here</a>.
+                                    <source src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usages/GUI.webm" type='video/webm'/>
+                                    <source src={"https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty/Website/public/Usages/GUI.mp4"} type='video/mp4' />
+                                    Your browser does not support the video tag. Please watch the video <a href={"https://github.com/SaptarshiSarkar12/Drifty/blob/master/Website/public/Usages/GUI.mp4"}>here</a>.
                                 </video>
                             </div>
                         </Tab.Panel>
