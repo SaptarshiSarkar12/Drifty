@@ -164,7 +164,7 @@ jobs:
       if: ${{ inputs.create_release }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'macos/GUI/Drifty-GUI.app#Drifty-GUI.app' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
