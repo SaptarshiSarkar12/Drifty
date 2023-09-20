@@ -40,9 +40,13 @@ fileNames: [""] # Will be auto-retrieved if not provided
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
 directories: [""] # Use 'directories' when the download folder is different for each of the files
 ```
+### Drifty GUI
 
-[Usage.webm](https://user-images.githubusercontent.com/105960032/197393256-9a1ca98c-1743-4643-a398-15b2eabdbcca.webm)
+https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-a053-d3ee13e67c8e
 
+### Drifty CLI
+
+https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/8a32ca07-1922-4c21-895d-44164bec9d76
 
 ## Tech Stack
 
