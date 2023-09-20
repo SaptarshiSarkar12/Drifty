@@ -6,7 +6,8 @@ export const metadata = {
     title: "Download",
     description: 'Download Drifty',
     themeColor: [
-      { media: '(prefers-color-scheme: dark)', color: '#0000cd' }, // equivalent to 'MediumBlue'
+        { media: '(prefers-color-scheme: dark)', color: '#0000cd' },
+        { media: '(prefers-color-scheme: light)', color: '#26a3f1' },
     ],
     viewport: {
       width: 'device-width',
