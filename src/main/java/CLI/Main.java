@@ -267,7 +267,6 @@ public class Main {
             if (OS.isWindows()) {
                 downloadsFolder = downloadsFolder.replace('/', '\\');
             }
-            AppSettings.set.lastFolder(downloadsFolder);
         }
         if (new File(downloadsFolder).exists()) {
             messageBroker.msgDirInfo("Download folder exists!");
@@ -280,6 +279,7 @@ public class Main {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
+        AppSettings.set.lastFolder(downloadsFolder);
         return downloadsFolder;
     }
 
