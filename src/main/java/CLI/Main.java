@@ -121,6 +121,7 @@ public class Main {
                 System.out.print(ENTER_FILE_LINK);
                 String link = SC.next();
                 SC.nextLine();
+                System.out.println("Validating link...");
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
                 } else {
@@ -259,12 +260,13 @@ public class Main {
             downloadsFolder = Utility.getHomeDownloadFolder().toString();
         } else if (downloadsFolder.equalsIgnoreCase("L")) {
             downloadsFolder = AppSettings.get.lastDownloadFolder();
+        } else if (downloadsFolder.equals(".")) {
+            downloadsFolder = Utility.getHomeDownloadFolder().toString();
         } else {
             downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
             if (OS.isWindows()) {
                 downloadsFolder = downloadsFolder.replace('/', '\\');
             }
-            AppSettings.set.lastFolder(downloadsFolder);
         }
         if (new File(downloadsFolder).exists()) {
             messageBroker.msgDirInfo("Download folder exists!");
@@ -277,6 +279,7 @@ public class Main {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
+        AppSettings.set.lastFolder(downloadsFolder);
         return downloadsFolder;
     }
 
