@@ -14,18 +14,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 
+import java.util.Objects;
+
 import static GUI.Forms.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
     public final ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
     public final ProgressBar pBar = pBar();
-    public final ListView listView = listView();
+    public final ListView<Job> listView = listView();
     public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
     public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
     public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN, .45);
-    public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN, .45);
+    public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN);
+    public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
     private final HBox boxLogo = newHBox(ivLogo);
@@ -102,7 +104,7 @@ public class MainGridPane extends GridPane {
         GridPane.setMargin(pBar, new Insets(0, 0, 25, 0));
     }
 
-    private ListView listView() {
+    private ListView<Job> listView() {
         ListView<Job> listView = new ListView<>();
         listView.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -126,7 +128,7 @@ public class MainGridPane extends GridPane {
 
     private Label newLabel() {
         Label label = new Label("");
-        label.setFont(new Font(MONACO_TTF.toExternalForm(), 20 * .75));
+        label.setFont(new Font(Objects.requireNonNull(MONACO_TTF).toExternalForm(), 20 * .75));
         label.setPrefWidth(Double.MAX_VALUE);
         label.getStyleClass().add("outline");
         return label;
@@ -165,15 +167,15 @@ public class MainGridPane extends GridPane {
         return iv;
     }
 
-    private Button newButton(Image imageUp, Image imageDown, double scale) {
+    private Button newButton(Image imageUp, Image imageDown) {
         Button button = new Button();
         ImageView imageViewUp = new ImageView(imageUp);
         ImageView imageViewDn = new ImageView(imageDown);
         double width = imageUp.getWidth();
         imageViewUp.setPreserveRatio(true);
-        imageViewUp.setFitWidth(width * scale);
+        imageViewUp.setFitWidth(width * 0.45);
         imageViewDn.setPreserveRatio(true);
-        imageViewDn.setFitWidth(width * scale);
+        imageViewDn.setFitWidth(width * 0.45);
         button.setOnMousePressed(e->button.setGraphic(imageViewDn));
         button.setOnMouseReleased(e->button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);

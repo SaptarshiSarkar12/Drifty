@@ -1,7 +1,6 @@
 package GUI.Support;
 
 import Preferences.AppSettings;
-import Utils.Environment;
 
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -12,14 +11,6 @@ public class JobHistory {
     }
 
     private ConcurrentLinkedDeque<Job> jobHistoryList;
-
-    public ConcurrentLinkedDeque<Job> getList() {
-        Environment.getMessageBroker().msgInitInfo("Job History Fetched");
-        if (jobHistoryList == null) {
-            this.jobHistoryList = new ConcurrentLinkedDeque<>();
-        }
-        return new ConcurrentLinkedDeque<>(jobHistoryList);
-    }
 
     public void addJob(Job newJob) {
         for (Job job : jobHistoryList) {
@@ -62,11 +53,11 @@ public class JobHistory {
         for (Job jobSource : jobHistoryList) {
             int dupeCount = 0;
             for (Job job : jobHistoryList) {
-                boolean dupeFound = jobSource.matchesLink(job);
-                if (dupeFound) {
+                boolean duplicateFound = jobSource.matchesLink(job);
+                if (duplicateFound) {
                     dupeCount++;
                 }
-                if (dupeFound && dupeCount > 1) {
+                if (duplicateFound && dupeCount > 1) {
                     removeList.addLast(job);
                 }
             }

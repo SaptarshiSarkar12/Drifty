@@ -14,16 +14,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * This class is called when the user right clicks on any of the GUIs and chooses
+ * This class is called when the user right-clicks on any of the GUIs and chooses
  * 'manage folders'. It is a pop-up form that pulls the list of folders that the
  * user has added, allowing them to remove folders from the list. Folders are
  * scanned each time a download is attempted where the program scours the folders
- * looking for duplicate filenames and if any are found, the user is notified
+ * looking for duplicate filenames, and if any are found, the user is notified
  * and given the option to not download those files again.
  */
 public class ManageFolders {
     private Stage stage;
-    private Scene scene;
     private final double width = 400;
     private final double height = 550;
     private final Folders folders;
@@ -76,8 +75,7 @@ public class ManageFolders {
                     // Make empty cells not selectable
                     setDisable(true);
                     setText("");
-                }
-                else {
+                } else {
                     // Set the text for non-empty cells
                     setDisable(false);
                     setText(item);
@@ -89,24 +87,20 @@ public class ManageFolders {
 
     private void setControls() {
         btnRemove.setOnAction(e -> remove());
-        btnClose.setOnAction(e -> close());
+        btnClose.setOnAction(e -> stage.close());
         BooleanBinding selected = lvFolders.getSelectionModel().selectedIndexProperty().greaterThan(-1);
         btnRemove.visibleProperty().bind(selected);
     }
 
     public void showScene() {
         stage = new Stage();
-        scene = Constants.getScene(vBox);
+        Scene scene = Constants.getScene(vBox);
         stage.setScene(scene);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.showAndWait();
-    }
-
-    private void close() {
-        stage.close();
     }
 
     private void remove() {

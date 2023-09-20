@@ -5,8 +5,6 @@ public class DownloadMetrics {
     private float progressPercent;
     private long totalSize;
     private boolean multithreaded;
-    private final int threadCount = 6;
-    private final long maxFileSplitSize = 52428800; // 50 MB
 
     public boolean isActive() {
         return active;
@@ -41,10 +39,11 @@ public class DownloadMetrics {
     }
 
     public int getThreadCount() {
-        return threadCount;
+        return 6;
     }
 
-    public long getMaxFileSplitSize() {
-        return maxFileSplitSize;
+    public long getMultiThreadingThreshold() {
+        // 50 MB
+        return 52428800;
     }
 }

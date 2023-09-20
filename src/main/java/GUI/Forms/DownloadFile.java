@@ -3,7 +3,7 @@ package GUI.Forms;
 import Backend.DownloadMetrics;
 import Enums.LinkType;
 import Enums.Program;
-import Enums.Unit;
+import Enums.UnitConverter;
 import GUI.Support.Job;
 import GUI.Support.SplitDownloadMetrics;
 import Utils.Environment;
@@ -22,9 +22,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +41,6 @@ public class DownloadFile extends Task<Integer> {
     private int exitCode = 1;
     private boolean done = false;
     private final Job job;
-    private final DecimalFormat format = new DecimalFormat("#.00");
     private final AtomicLong totalTransferred = new AtomicLong();
     private final AtomicLong totalSpeedValue = new AtomicLong();
 
@@ -55,7 +53,7 @@ public class DownloadFile extends Task<Integer> {
         this.link = job.getLink();
         this.filename = Utility.cleanFilename(job.getFilename());
         this.dir = job.getDir();
-        this.type = LinkType.fromLink(link);
+        this.type = LinkType.getLinkType(link);
         setProperties();
         Platform.runLater(() -> {
             linkProperty.setValue(link);
@@ -68,11 +66,11 @@ public class DownloadFile extends Task<Integer> {
     }
 
     @Override
-    protected Integer call() throws IOException, InterruptedException, URISyntaxException {
+    protected Integer call() {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
-            case YOU_TUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
+            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
             case OTHER -> splitDecision();
         }
         updateProgress(0.0, 1.0);
@@ -80,28 +78,61 @@ public class DownloadFile extends Task<Integer> {
         return exitCode;
     }
 
-    private void downloadYoutubeOrInstagram() throws InterruptedException, IOException {
+    private void downloadYoutubeOrInstagram() {
         String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
-        Process process = processBuilder.start();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        Process process = null;
+        try {
+            process = processBuilder.start();
+        } catch (IOException e) {
+            M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            String[] messageArray = msg.split(",");
+            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+            } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube / Instagram video is asked to be downloaded
+                M.msgDownloadError(PERMISSION_DENIED);
+            } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube / Instagram video is unavailable
+                M.msgDownloadError(VIDEO_UNAVAILABLE);
+            } else {
+                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
+            }
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 progressProperty.setValue(line);
-                //System.out.println(line);
             }
+        } catch (IOException e) {
+            M.msgDownloadError("Failed to read download process status for \"" + filename + "\"");
         }
-        exitCode = process.waitFor();
+        try {
+            exitCode = Objects.requireNonNull(process).waitFor();
+        } catch (InterruptedException e) {
+            M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
+        }
         sendFinalMessage("");
     }
 
-    private void splitDecision() throws IOException, URISyntaxException {
-        URL url = new URI(link).toURL();
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.connect();
-        long fileSize = con.getHeaderFieldLong("Content-Length", -1);
-        if (Unit.getValue(fileSize, Unit.MB) > 50) {
+    private void splitDecision() {
+        long fileSize;
+        try {
+            URL url = new URI(link).toURL();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            fileSize = con.getHeaderFieldLong("Content-Length", -1);
+        } catch (MalformedURLException | URISyntaxException e) {
+            M.msgLinkError("Invalid Link !");
+            exitCode = 1;
+            return;
+        } catch (IOException e) {
+            M.msgDownloadError(String.format(FAILED_CONNECTION_F, link));
+            exitCode = 1;
+            return;
+        }
+        if (UnitConverter.getValue(fileSize, UnitConverter.MB) > 50) {
             splitDownload();
         } else {
             downloadFile();
@@ -113,7 +144,6 @@ public class DownloadFile extends Task<Integer> {
             InputStream in = null;
             HttpURLConnection con;
             FileOutputStream fos = null;
-            int id = sdm.getId();
             try {
                 URL url = sdm.getUrl();
                 long start = sdm.getStart();
@@ -125,7 +155,6 @@ public class DownloadFile extends Task<Integer> {
                 in = con.getInputStream();
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                long totalBytesRead = 0;
                 while ((bytesRead = in.read(buffer)) != -1) {
                     fos.write(buffer, 0, bytesRead);
                     totalTransferred.addAndGet(bytesRead);
@@ -140,8 +169,8 @@ public class DownloadFile extends Task<Integer> {
                 sdm.setFailed();
             } finally {
                 try {
-                    fos.close();
-                    in.close();
+                    Objects.requireNonNull(fos).close();
+                    Objects.requireNonNull(in).close();
                 } catch (IOException ignored) {
                 }
             }
@@ -168,7 +197,7 @@ public class DownloadFile extends Task<Integer> {
                 list.addLast(sdm);
                 new Thread(split(sdm)).start();
             }
-            String totalSize = Unit.format(fileSize, 2);
+            String totalSize = UnitConverter.format(fileSize, 2);
             boolean loop = true;
             boolean stopThreads = false;
             long start = System.currentTimeMillis();
@@ -193,9 +222,9 @@ public class DownloadFile extends Task<Integer> {
                 if (seconds >= 1.5) {
                     start = end;
                     long totalBytes = totalTransferred.get();
-                    String totalDownloaded = Unit.format(totalBytes, 2);
+                    String totalDownloaded = UnitConverter.format(totalBytes, 2);
                     double bitsTransferred = (double) totalSpeedValue.get() / seconds;
-                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred, 2) + "/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading " + totalSize + " at " + UnitConverter.format(bitsTransferred, 2) + "/s (Total: " + totalDownloaded + ")";
                     updateMessage(msg);
                     totalSpeedValue.set(0);
                 }
@@ -248,11 +277,8 @@ public class DownloadFile extends Task<Integer> {
             con.connect();
 
             long fileLength = con.getHeaderFieldLong("Content-Length", -1);
-            String ff = Unit.format(fileLength, 2);
-            String acceptRange = con.getHeaderField("Accept-Ranges");
-
             sendInfoMessage(String.format(DOWNLOADING_F, filename));
-            String totalSize = Unit.format(fileLength, 2);
+            String totalSize = UnitConverter.format(fileLength, 2);
             in = con.getInputStream();
             out = new FileOutputStream(path.toFile());
             byte[] buffer = new byte[1024];
@@ -271,9 +297,9 @@ public class DownloadFile extends Task<Integer> {
                 double seconds = (end - start) / 1000.0;
                 if (seconds >= 1.5) {
                     start = end;
-                    String totalDownloaded = Unit.format(totalBytesRead, 2);
+                    String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
                     double bitsTransferred = bytesInTime / 10 / seconds;
-                    String msg = "Downloading " + totalSize + " at " + Unit.format(bitsTransferred * 100, 2) + "/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading " + totalSize + " at " + UnitConverter.format(bitsTransferred * 100, 2) + "/s (Total: " + totalDownloaded + ")";
                     updateMessage(msg);
                     bytesInTime = 0;
                 }
@@ -296,7 +322,7 @@ public class DownloadFile extends Task<Integer> {
             exitCode = 1;
         } finally {
             try {
-                out.close();
+                Objects.requireNonNull(out).close();
                 in.close();
             } catch (IOException ignored) {
             }
@@ -387,13 +413,5 @@ public class DownloadFile extends Task<Integer> {
 
     public int getExitCode() {
         return exitCode;
-    }
-
-    private void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
