@@ -12,7 +12,6 @@ public class SplitDownloadMetrics {
     private final String filename;
     private File file;
     private final URL url;
-    private long bytesRead;
     private boolean failed = false;
     private boolean success = false;
     private boolean stop = false;

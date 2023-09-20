@@ -92,10 +92,6 @@ public class Get { // This class is used to get the user preferences
         return new JobHistory();
     }
 
-    public boolean menuBarAsSystem() {
-        return preferences.getBoolean(MENU_BAR_SYSTEM.toString(), true);
-    }
-
     public boolean alwaysAutoPaste() {
         return preferences.getBoolean(ALWAYS_AUTO_PASTE.toString(), false);
     }

@@ -45,9 +45,10 @@ import java.util.stream.Collectors;
 import static Enums.Colors.*;
 import static GUI.Forms.Constants.MONACO_TTF;
 import static GUI.Forms.Constants.getStage;
+import static Utils.Utility.sleep;
 
-public class FormLogic {
-    public static final FormLogic INSTANCE = new FormLogic();
+public class GUI_Logic {
+    public static final GUI_Logic INSTANCE = new GUI_Logic();
     public static MainGridPane form;
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
@@ -63,7 +64,7 @@ public class FormLogic {
     /*
     Single instance model only constructor
      */
-    private FormLogic() {
+    private GUI_Logic() {
         folders = AppSettings.get.folders();
     }
 
@@ -84,7 +85,6 @@ public class FormLogic {
 
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(processingBatch).or(directoryExists.not()).or(verifyingLinks);
         BooleanBinding disableInputs = processingBatch.or(verifyingLinks);
-        BooleanBinding hasText = form.tfLink.textProperty().isEmpty().not().and(form.tfDir.textProperty().isEmpty().not().and(form.tfFilename.textProperty().isEmpty().not()));
 
         form.btnSave.visibleProperty().bind(updatingBatch);
         form.btnStart.disableProperty().bind(disableStartButton);
@@ -99,7 +99,7 @@ public class FormLogic {
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
         form.listView.setOnMouseClicked(e -> {
-            Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+            Job job = form.listView.getSelectionModel().getSelectedItem();
             setLink(job.getLink());
             setDir(job.getDir());
             setFilename(job.getFilename());
@@ -135,17 +135,13 @@ public class FormLogic {
             String filename = getFilename();
             String dir = getDir();
             if (Paths.get(dir, filename).toFile().exists()) {
-                AskYesNo ask = new AskYesNo("This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
+                AskYesNo ask = new AskYesNo("Overwrite Existing File", "This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
                 if (ask.getResponse().isNo()) {
                     filename = renameFile(filename, dir);
                 }
-                removeJobFromList(selectedJob);
-                addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             }
-            else {
-                removeJobFromList(selectedJob);
-                addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
-            }
+            removeJobFromList(selectedJob);
+            addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             clearLink();
             clearFilename();
             updatingBatch.setValue(false);
@@ -165,7 +161,7 @@ public class FormLogic {
         form.tfLink.setOnKeyTyped(e -> processLink());
         form.listView.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                Job job = form.listView.getSelectionModel().getSelectedItem();
                 if (job != null) {
                     selectJob(job);
                     setLink(job.getLink());
@@ -176,7 +172,7 @@ public class FormLogic {
         });
         form.listView.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.DELETE) {
-                Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+                Job job = form.listView.getSelectionModel().getSelectedItem();
                 if (job != null) {
                     removeJobFromList(job);
                     clearControls();
@@ -248,7 +244,7 @@ public class FormLogic {
             String dir;
             if (!linkInJobList(link)) {
                 M.msgLinkInfo("Validating link...");
-                if (Utility.linkValid(link)) {
+                if (Utility.isLinkValid(link)) {
                     if (getHistory().exists(link)) {
                         Job job = getHistory().getJob(link);
                         filename = job.getFilename();
@@ -301,17 +297,16 @@ public class FormLogic {
         return () -> {
             // Using a Worker Task, this method gets the filename(s) from the link.
             Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
-            Worker<ConcurrentLinkedDeque<Job>> worker = task;
             Platform.runLater(() -> {
             /*
-            These bindings allow the Worker thread to post relevant information to the UI including the progress bar which
+            These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
             accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
             to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
             The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
             will be thrown and possibly the program execution halted.
             */
-                form.lblDownloadInfo.textProperty().bind(worker.messageProperty());
-                form.pBar.progressProperty().bind(worker.progressProperty());
+                form.lblDownloadInfo.textProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).messageProperty());
+                form.pBar.progressProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).progressProperty());
             });
 
             /*
@@ -320,7 +315,7 @@ public class FormLogic {
             We use the checkHistoryAddJobs method to look for discovered filenames. If we didn't do it this way, then we would need
             to wait until all filenames are discovered then add the jobs to the batch list in one action. Doing it this way
             gives the user more consistent feedback of the process while it is happening. This matters when a link contains
-            a lot of files because each file discovered takes a while and when there are even hundreds of files, this process
+            a lot of files because each file discovered takes a while, and when there are even hundreds of files, this process
             can appear to take a long time, so constant feedback for the user becomes relevant.
              */
 
@@ -331,11 +326,11 @@ public class FormLogic {
             sleep(2000);
             form.lblDownloadInfo.setTextFill(GREEN);
             while (!getFilenameThread.getState().equals(Thread.State.TERMINATED) && !getFilenameThread.getState().equals(Thread.State.BLOCKED)) {
-                checkHistoryAddJobs(worker);
+                checkHistoryAddJobs(task);
                 sleep(50);
             }
             sleep(500);
-            checkHistoryAddJobs(worker); // Check one last time
+            checkHistoryAddJobs(task); // Check one last time
             clearControls();
         };
     }
@@ -347,10 +342,10 @@ public class FormLogic {
             form.lblDownloadInfo.setTextFill(GREEN);
             IntegerProperty speedValueProperty = new SimpleIntegerProperty();
             speedValueProperty.addListener(((observable, oldValue, newValue) -> {
-                if(!oldValue.equals(newValue)) {
+                if (!oldValue.equals(newValue)) {
                     speedValue += (int) newValue;
                     speedValueUpdateCount++;
-                    if(speedValueUpdateCount == 5) {
+                    if (speedValueUpdateCount == 5) {
                         int speed = speedValue / 5;
                         speedValueUpdateCount = 0;
                         speedValue = 0;
@@ -365,21 +360,14 @@ public class FormLogic {
                 for (Job job : tempJobList) {
                     fileCount++;
                     M.msgBatchInfo("Processing file " + fileCount + " of " + totalFiles + ": " + job);
-                    DownloadFile downloadFile = new DownloadFile(job,
-                                                                 form.tfLink.textProperty(),
-                                                                 form.tfDir.textProperty(),
-                                                                 form.tfFilename.textProperty(),
-                                                                 form.lblDownloadInfo.textProperty(),
-                                                                 speedValueProperty,
-                                                                 form.pBar.progressProperty());
-                    Task<Integer> task = downloadFile;
+                    DownloadFile downloadFile = new DownloadFile(job, form.tfLink.textProperty(), form.tfDir.textProperty(), form.tfFilename.textProperty(), form.lblDownloadInfo.textProperty(), speedValueProperty, form.pBar.progressProperty());
                     try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
-                        Future<Integer> future = (Future<Integer>) executor.submit(task);
-                        while(downloadFile.notDone()) {
+                        executor.submit(downloadFile);
+                        while (downloadFile.notDone()) {
                             sleep(500);
                         }
                         int exitCode = downloadFile.getExitCode();
-                        if(exitCode == 0) { //Success
+                        if (exitCode == 0) { //Success
                             removeJobFromList(job);
                             getHistory().addJob(job);
                         }
@@ -410,8 +398,9 @@ public class FormLogic {
 
     private boolean linkInJobList(String link) {
         for (Job job : getJobs().jobList()) {
-            if (job.getLink().equals(link))
+            if (job.getLink().equals(link)) {
                 return true;
+            }
         }
         return false;
     }
@@ -471,7 +460,7 @@ public class FormLogic {
                 "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
         Platform.runLater(() -> {
             String message;
-            AskYesNo ask = new AskYesNo("");
+            AskYesNo ask = new AskYesNo("", "");
             boolean addJob;
             if (worker.valueProperty().get() != null) {
                 for (Job job : worker.valueProperty().get()) {
@@ -483,15 +472,13 @@ public class FormLogic {
                     if (!getJobs().jobList().contains(job)) {
                         if (existsHasHistory) {
                             message = String.format(pastJobFileExists, job.getFilename());
-                            ask = new AskYesNo(message, renameFile(job.getFilename(), job.getDir()));
-                        }
-                        else if (existsNoHistory) {
+                            ask = new AskYesNo("File Already Downloaded and Exists", message, renameFile(job.getFilename(), job.getDir()));
+                        } else if (existsNoHistory) {
                             message = String.format(fileExistsString, job.getFilename());
-                            ask = new AskYesNo(message, false);
-                        }
-                        else if (fileHasHistory) {
+                            ask = new AskYesNo("File Already Exists", message, false);
+                        } else if (fileHasHistory) {
                             message = String.format(pastJobNoFile, job.getFilename());
-                            ask = new AskYesNo(message, false);
+                            ask = new AskYesNo("File Already Downloaded", message, false);
                         }
                         if (fileHasHistory || existsHasHistory || existsNoHistory) {
                             addJob = ask.getResponse().isYes();
@@ -503,8 +490,9 @@ public class FormLogic {
                                     addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
                                 }
                             }
-                        } else
+                        } else {
                             addJob(job);
+                        }
                     }
                 }
             }
@@ -533,7 +521,7 @@ public class FormLogic {
         MenuItem miInfo = new MenuItem("Information");
         SeparatorMenuItem separator = new SeparatorMenuItem();
         miDel.setOnAction(e -> {
-            Job job = (Job) form.listView.getSelectionModel().getSelectedItem();
+            Job job = form.listView.getSelectionModel().getSelectedItem();
             if (job != null) {
                 removeJobFromList(job);
                 clearControls();
@@ -568,11 +556,6 @@ public class FormLogic {
         form.tfDir.setContextMenu(cm);
     }
 
-    /*
-    These are all public static methods and are grouped together because they represent the code that is
-    accessible from anywhere in the entire code base.
-     */
-
     public static void initLogic(MainGridPane pane) {
         INSTANCE.start(pane);
     }
@@ -589,7 +572,7 @@ public class FormLogic {
         return form.cbAutoPaste.isSelected() || AppSettings.get.alwaysAutoPaste();
     }
 
-    public static void addJob(@NotNull ConcurrentLinkedDeque<Job> list) {
+    public static void addJob(ConcurrentLinkedDeque<Job> list) {
         /*
         This takes the list passed in as argument and compares it against the jobs in the current jobList
         then it only adds jobs that do not exist.
@@ -613,11 +596,6 @@ public class FormLogic {
         INSTANCE.setLink(text);
         INSTANCE.processLink();
     }
-
-    /*
-    These methods are used to set or clear the TextFields themselves. setDir is public static because it is
-    called by class Main.
-     */
 
     private void setLink(String link) {
         Platform.runLater(() -> form.tfLink.setText(link));
@@ -650,7 +628,7 @@ public class FormLogic {
     These methods control the labels under the TextFields (arranged in the order they appear on the form)
      */
 
-    public void setLinkOutput(@NotNull Color color, String message) {
+    public void setLinkOutput(Color color, String message) {
         if (color.equals(Colors.GREEN) || color.equals(Colors.PURPLE) || color.equals(Colors.HOTPINK)) {
             form.lblLinkOut.getStyleClass().add("outline");
         }
@@ -714,7 +692,7 @@ public class FormLogic {
     }
 
     public void setDownloadOutput(Color color, String message) {
-        if(processingBatch.getValue().equals(false)) {
+        if (processingBatch.getValue().equals(false)) {
             Platform.runLater(() -> {
                 form.lblDownloadInfo.getStyleClass().clear();
                 if (color.equals(Colors.GREEN) || color.equals(Colors.PURPLE) || color.equals(Colors.HOTPINK)) {
@@ -756,17 +734,12 @@ public class FormLogic {
         return form.tfFilename.getText();
     }
 
-    /*
-    These methods are for general form flow
-     */
-
     private void commitJobListToListView() {
         Platform.runLater(() -> {
             if (getJobs().notNull()) {
                 if (getJobs().isEmpty()) {
                     form.listView.getItems().clear();
-                }
-                else {
+                } else {
                     // Remove duplicate jobs if any
                     Set<String> encounteredLinks = new HashSet<>();
                     ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
@@ -817,7 +790,7 @@ public class FormLogic {
         double width = 500;
         double height = 700;
         Button btnOK = new Button("OK");
-        Stage stage = getStage();
+        Stage stage = getStage("Help", false);
         stage.setWidth(width);
         stage.setHeight(height + 100);
         VBox vox = new VBox(20, tf);
@@ -848,7 +821,7 @@ public class FormLogic {
     private @NotNull Text text(String string, boolean bold, Color color, double size) {
         // This is used by the help() method for custom text formatting
         Text text = new Text(string);
-        text.setFont(new Font(MONACO_TTF.toExternalForm(), size));
+        text.setFont(new Font(Objects.requireNonNull(MONACO_TTF).toExternalForm(), size));
         text.setFill(color);
         if (bold) text.setStyle("-fx-font-weight: bold;");
         text.setWrappingWidth(710);
@@ -856,7 +829,7 @@ public class FormLogic {
         return text;
     }
 
-    private void getDirectory() {
+    static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = AppSettings.get.folders().getDownloadFolder();
         String initFolder = lastFolder.isEmpty() ? System.getProperty("user.home") : lastFolder;
@@ -878,13 +851,5 @@ public class FormLogic {
     private void selectJob(Job job) {
         selectedJob = job;
         updatingBatch.setValue(true);
-    }
-
-    private void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

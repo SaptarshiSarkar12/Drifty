@@ -1,8 +1,7 @@
 package GUI.Forms;
 
-import java.util.concurrent.TimeUnit;
-
 import static GUI.Forms.GetResponse.State.*;
+import static Utils.Utility.sleep;
 
 class GetResponse {
     enum State {
@@ -13,14 +12,14 @@ class GetResponse {
 
     public boolean isYes() {
         while(answer.equals(LIMBO)) {
-            sleep();
+            sleep(200);
         }
         return answer.equals(YES);
     }
 
     public boolean isNo() {
         while(answer.equals(LIMBO)) {
-            sleep();
+            sleep(200);
         }
         return answer.equals(NO);
     }
@@ -32,13 +31,4 @@ class GetResponse {
     public void setAnswer(boolean answer) {
         this.answer = answer ? YES : NO;
     }
-
-    private void sleep() {
-        try {
-            TimeUnit.MILLISECONDS.sleep(200);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

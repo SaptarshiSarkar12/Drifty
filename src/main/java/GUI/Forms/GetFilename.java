@@ -57,7 +57,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             progTimer.cancel();
             updateProgress(0, 1);
             progTimer = null;
-            AskYesNo ask = new AskYesNo("There are " + fileCount + " files in this list. Proceed and get all filenames?");
+            AskYesNo ask = new AskYesNo("Confirmation", "There are " + fileCount + " files in this list. Proceed and get all filenames?");
             proceed = ask.getResponse().isYes();
         }
         if (proceed) {
@@ -74,7 +74,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 filename = baseName + ".mp4";
                 jobList.addLast(new Job(fileLink, dir, filename, false));
             }
-            FormLogic.setDownloadInfoColor(Colors.GREEN);
+            GUI_Logic.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) progTimer.cancel();
 
@@ -106,7 +106,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);
                             }
-                            FormLogic.addJob(jobList);
+                            GUI_Logic.addJob(jobList);
                             deleteList.addLast(file);
                         }
                     } catch (IOException ignored) {

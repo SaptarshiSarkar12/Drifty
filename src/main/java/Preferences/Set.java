@@ -75,14 +75,4 @@ public class Set { // This class is used to set the user preferences
             throw new RuntimeException(e);
         }
     }
-
-    public void menuBarAsSystem(boolean value) {
-        AppSettings.clear.menuBarAsSystem();
-        preferences.putBoolean(MENU_BAR_SYSTEM.toString(), value);
-    }
-
-    public void alwaysAutoPaste(boolean value) {
-        AppSettings.clear.alwaysAutoPaste();
-        preferences.putBoolean(ALWAYS_AUTO_PASTE.toString(), value);
-    }
 }

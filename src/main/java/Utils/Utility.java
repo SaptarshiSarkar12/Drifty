@@ -1,7 +1,6 @@
 package Utils;
 
 import Backend.DownloadFolderLocator;
-import Backend.Drifty;
 import Enums.OS;
 import Enums.Program;
 import com.google.gson.Gson;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -32,13 +32,10 @@ public final class Utility {
     private static final Random random = new Random(System.currentTimeMillis());
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
-    private static Thread linkThread;
     private static boolean interrupted;
-    private static long startTime;
 
 
     public static void setStartTime() {
-        startTime = System.currentTimeMillis();
     }
 
     public Utility() {
@@ -58,7 +55,7 @@ public final class Utility {
         return isYoutube(link) || isInstagram(link);
     }
 
-    public static boolean linkValid(String link) {
+    public static boolean isLinkValid(String link) {
         try {
             URL url = URI.create(link).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -70,7 +67,7 @@ public final class Utility {
             M.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
         } catch (UnknownHostException unknownHost) {
             try {
-                URL projectWebsite = URI.create(Drifty.projectWebsite).toURL();
+                URL projectWebsite = URI.create(DRIFTY_WEBSITE_URL).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
                 M.msgLinkError("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
@@ -97,7 +94,7 @@ public final class Utility {
         String filename = "";
         if (isInstagram(link) || isYoutube(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-            for (String json : linkMetadataList) {
+            for (String json : Objects.requireNonNull(linkMetadataList)) {
                 filename = Utility.getFilenameFromJson(json);
             }
         } else {
@@ -135,7 +132,6 @@ public final class Utility {
         } else {
             downloadsFolder = DownloadFolderLocator.findPath() + System.getProperty("file.separator");
         }
-
         if (downloadsFolder.equals(System.getProperty("file.separator"))) {
             M.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
         } else {
@@ -167,36 +163,6 @@ public final class Utility {
         return false;
     }
 
-    public static void help() {
-        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
-        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
-        System.out.println("\033[33;1mOptional parameters:");
-        System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
-        System.out.println("-batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
-        System.out.println("-location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
-        System.out.println("-name       -n            Source                   Filename of the downloaded file.");
-        System.out.println("-help       -h            N/A                      Provides concise information for Drifty CLI.");
-        System.out.println("-version    -v            Current Version          Displays version number of Drifty.");
-        System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
-        System.out.println("\033[97;1mExample:" + ANSI_RESET + " \n> \033[37;1mjava DriftyCLI https://example.com/object.png -n obj.png -l C:/Users/example" + ANSI_RESET);
-        System.out.println("For more information visit: ");
-        System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
-        System.out.println("\tProject Website - " + Drifty.projectWebsite);
-    }
-
-    public static void printBanner() {
-        System.out.print("\033[H\033[2J");
-        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
-        System.out.println(ANSI_CYAN + "  _____   _____   _____  ______  _______ __     __" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |  | || |__) |  | |  | |__      | |    \\ \\_/ /" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |  | ||  _  /   | |  |  __|     | |     \\   / " + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
-        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
-    }
-
     public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();
@@ -204,8 +170,11 @@ public final class Utility {
             if (driftyJsonFolder.exists() && driftyJsonFolder.isDirectory()) {
                 FileUtils.forceDelete(driftyJsonFolder); // Deletes the previously generated temporary directory for Drifty
             }
-            driftyJsonFolder.mkdir();
-            linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
+            if (!driftyJsonFolder.mkdir()) {
+                M.msgLinkError("Failed to create temporary directory for Drifty to get link metadata!");
+                return null;
+            }
+            Thread linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             linkThread.start();
             while (!linkThread.getState().equals(Thread.State.TERMINATED) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -260,7 +229,6 @@ public final class Utility {
         String json = makePretty(jsonString);
         String filename;
         String regexFilename = "(\"title\": \")(.+)(\",)";
-        String regexFileSize = "";
         Pattern p = Pattern.compile(regexFilename);
         Matcher m = p.matcher(json);
         if (m.find()) {

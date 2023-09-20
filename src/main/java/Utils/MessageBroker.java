@@ -3,7 +3,7 @@ package Utils;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
-import GUI.Forms.FormLogic;
+import GUI.Forms.GUI_Logic;
 import javafx.scene.paint.Color;
 
 import java.io.PrintStream;
@@ -22,11 +22,6 @@ public class MessageBroker {
 
     public MessageBroker() {
         logger = Logger.getInstance();
-    }
-
-    public void logOnly(String message, MessageType messageType) {
-        output.println(message);
-        logger.log(messageType, message);
     }
 
     public void msgDownloadInfo(String message) {
@@ -97,11 +92,10 @@ public class MessageBroker {
                 output.println(message);
             }
             logger.log(messageType, message);
-        }
-        else if (Mode.isGUI()) {
-            FormLogic ui;
+        } else if (Mode.isGUI()) {
+            GUI_Logic ui;
             if (!messageCategory.equals(LOG)) {
-                ui = FormLogic.INSTANCE;
+                ui = GUI_Logic.INSTANCE;
             } else {
                 ui = null;
             }

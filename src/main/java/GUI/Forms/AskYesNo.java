@@ -15,9 +15,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import java.util.concurrent.TimeUnit;
-
 import static GUI.Forms.AskYesNo.State.*;
+import static Utils.Utility.sleep;
 
 /**
  * This class is meant to be used as a quick and dirty means of interacting with the
@@ -41,25 +40,28 @@ class AskYesNo {
     private VBox vbox;
     private TextField tfFilename;
     public static boolean answerYes = false;
+    private final String windowTitle;
     private final String msg;
     private String filename = "";
-    private static boolean waiting = true;
     private final GetResponse answer = new GetResponse();
 
-    public AskYesNo(String message, boolean okOnly) {
+    public AskYesNo(String windowTitle, String message, boolean okOnly) {
+        this.windowTitle = windowTitle;
         this.msg = message;
         this.state = okOnly ? OK : YES_NO;
         finish();
     }
 
-    public AskYesNo(String message, String filename) {
+    public AskYesNo(String windowTitle, String message, String filename) {
+        this.windowTitle = windowTitle;
         this.msg = message;
         this.filename = filename;
         this.state = FILENAME;
         finish();
     }
 
-    public AskYesNo(String message) {
+    public AskYesNo(String windowTitle, String message) {
+        this.windowTitle = windowTitle;
         this.msg = message;
         this.state = OK;
         finish();
@@ -111,13 +113,13 @@ class AskYesNo {
         }
         btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
-            close();
+            stage.close();
         });
         btnNo = newButton("No", e -> {
             answer.setAnswer(false);
-            close();
+            stage.close();
         });
-        btnOk = newButton("OK", e -> close());
+        btnOk = newButton("OK", e -> stage.close());
         tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
         tfFilename.setMaxWidth(width * .8);
@@ -139,17 +141,13 @@ class AskYesNo {
         vbox.getChildren().add(hbox);
     }
 
-    private void close() {
-        waiting = false;
-        stage.close();
-    }
     public GetResponse getResponse() {
         if (Platform.isFxApplicationThread()) {
             showScene();
         } else {
             Platform.runLater(this::showScene);
             while(answer.inLimbo())
-                sleep();
+                sleep(50);
         }
         return answer;
     }
@@ -159,8 +157,7 @@ class AskYesNo {
     }
 
     private void showScene() {
-        waiting = true;
-        stage = Constants.getStage();
+        stage = Constants.getStage(windowTitle, false);
         Scene scene = Constants.getScene(vbox);
         stage.setWidth(width);
         stage.setHeight(height);
@@ -168,7 +165,6 @@ class AskYesNo {
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
         stage.setOnCloseRequest(e-> {
-            waiting = false;
             answer.setAnswer(false);
             stage.close();
         });
@@ -178,13 +174,5 @@ class AskYesNo {
 
     public String getFilename() {
         return filename;
-    }
-
-    private void sleep() {
-        try {
-            TimeUnit.MILLISECONDS.sleep(50);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

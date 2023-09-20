@@ -1,10 +1,9 @@
 package Backend;
 
-import Enums.Mode;
-import Enums.Unit;
+import Enums.UnitConverter;
 import Utils.Environment;
 import Utils.MessageBroker;
-import javafx.beans.property.DoubleProperty;
+import Utils.Utility;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import static Utils.DriftyConstants.*;
 public class ProgressBarThread extends Thread {
     private final static MessageBroker M = Environment.getMessageBroker();
     private final float charPercent;
-    private final List<Long> partSizes;
     private final String fileName;
     private final FileOutputStream fos;
     private final int charAmt;
@@ -33,13 +31,11 @@ public class ProgressBarThread extends Thread {
     private long downloadSpeed;
     private List<Long> downloadSpeeds;
     private long totalDownloadedBytes;
-    private DoubleProperty progress;
-    private String dir;
+    private final String dir;
     private final String[] spinBars = new String[]{"/", "-", "\\", "|"};
     private int spinBarIndex = -1;
 
     public ProgressBarThread(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, String fileName, String dir, Long totalSize, DownloadMetrics downloadMetrics) {
-        this.partSizes = partSizes;
         this.fileName = fileName;
         this.dir = dir;
         this.fileOutputStreams = fileOutputStreams;
@@ -59,7 +55,7 @@ public class ProgressBarThread extends Thread {
         }
     }
 
-    public ProgressBarThread(FileOutputStream fos, long totalDownloadedBytes, String fileName, DownloadMetrics downloadMetrics) {
+    public ProgressBarThread(FileOutputStream fos, long totalDownloadedBytes, String fileName, String dir, DownloadMetrics downloadMetrics) {
         this.downloadMetrics = downloadMetrics;
         downloadMetrics.setActive(true);
         this.charAmt = 20; // value to determine length of terminal progressbar
@@ -67,10 +63,10 @@ public class ProgressBarThread extends Thread {
         this.downloadedBytes = 0;
         this.totalDownloadedBytes = totalDownloadedBytes;
         this.fileName = fileName;
+        this.dir = dir;
         this.fos = fos;
         this.charPercent = (int) (this.totalDownloadedBytes / charAmt);
         fileOutputStreams = null;
-        partSizes = null;
         isMultiThreadedDownloading = false;
         charPercents = null;
     }
@@ -90,7 +86,7 @@ public class ProgressBarThread extends Thread {
             String downloadSpeedUnit;
             float totalDownloadPercent = downloadMetrics.getProgressPercent();
             if ((int) totalDownloadPercent != 100) {
-                String downloadSpeedWithUnit = Unit.format(downloadSpeed, 2);
+                String downloadSpeedWithUnit = UnitConverter.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
@@ -99,10 +95,10 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedUnit = "bytes";
             }
             bar = bar.substring(0, charAmt / 2 - 2) + (totalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
-            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + Unit.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
+            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
         } else {
             int numberOfThreads = fileOutputStreams.size();
-            StringBuilder result = new StringBuilder("[" + spinner + "]  " + Unit.format(totalDownloadedBytes, 2));
+            StringBuilder result = new StringBuilder("[" + spinner + "]  " + UnitConverter.format(totalDownloadedBytes, 2));
             float filled;
             totalDownloadedBytes = 0;
             long downloadSpeed = 0;
@@ -138,7 +134,7 @@ public class ProgressBarThread extends Thread {
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             if ((int) totalDownloadPercent != 100) {
-                String downloadSpeedWithUnit = Unit.format(downloadSpeed, 2);
+                String downloadSpeedWithUnit = UnitConverter.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
@@ -154,13 +150,13 @@ public class ProgressBarThread extends Thread {
     private void cleanup() {
         downloadMetrics.setProgressPercent(0f);
         if (isMultiThreadedDownloading) {
-            String sizeWithUnit = Unit.format(totalDownloadedBytes, 2);
+            String sizeWithUnit = UnitConverter.format(totalDownloadedBytes, 2);
             System.out.println();
-            M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
+            M.msgDownloadInfo(SUCCESSFULLY_DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName);
         } else if (downloadedBytes == totalDownloadedBytes) {
-            String sizeWithUnit = Unit.format(downloadedBytes, 2);
+            String sizeWithUnit = UnitConverter.format(downloadedBytes, 2);
             System.out.println();
-            M.msgDownloadInfo(DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName + SUCCESSFULLY);
+            M.msgDownloadInfo(SUCCESSFULLY_DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName);
         } else {
             System.out.println();
             M.msgDownloadError(DOWNLOAD_FAILED);
@@ -178,37 +174,29 @@ public class ProgressBarThread extends Thread {
                 if (!isMultiThreadedDownloading) {
                     for (int i = 0; i <= downloadMetrics.getThreadCount(); i++) {
                         initialMeasurement = fos.getChannel().size();
-                        Thread.sleep(250);
+                        Utility.sleep(250);
                         downloadedBytes = fos.getChannel().size();
                         downloadSpeed = (downloadedBytes - initialMeasurement) * 4;
-                        if (Mode.isCLI()) {
-                            System.out.print("\033[2K");
-                            System.out.print("\r" + generateProgressBar());
-                        } else {
-                            generateProgressBar();
-                        }
+                        System.out.print("\033[2K");
+                        System.out.print("\r" + generateProgressBar());
                     }
                 } else {
                     for (int i = 0; i <= fileOutputStreams.size(); i++) {
                         for (int j = 0; j < fileOutputStreams.size(); j++) {
                             initialMeasurements.add(j, fileOutputStreams.get(j).getChannel().size());
                         }
-                        Thread.sleep(300);
+                        Utility.sleep(250);
                         long downloadedPartBytes;
                         for (int j = 0; j < fileOutputStreams.size(); j++) {
                             downloadedPartBytes = fileOutputStreams.get(j).getChannel().size();
                             downloadedBytesPerPart.add(j, downloadedPartBytes);
                             downloadSpeeds.add(j, (downloadedPartBytes - initialMeasurements.get(j)) * 4);
                         }
-                        if (Mode.isCLI()) {
-                            System.out.print("\033[2K");
-                            System.out.print("\r" + generateProgressBar());
-                        } else {
-                            generateProgressBar();
-                        }
+                        System.out.print("\033[2K");
+                        System.out.print("\r" + generateProgressBar());
                     }
                 }
-            } catch (InterruptedException | IOException ignored) {}
+            } catch (IOException ignored) {}
             finally {
                 downloading = downloadMetrics.isActive();
             }

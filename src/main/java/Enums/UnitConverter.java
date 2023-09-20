@@ -1,10 +1,10 @@
 package Enums;
 import java.text.DecimalFormat;
 
-public enum Unit {
+public enum UnitConverter {
     B, KB, MB, GB, TB;
 
-    public static double getValue(long bytes, Unit unit) {
+    public static double getValue(long bytes, UnitConverter unit) {
         double temp = (double) bytes;
         return switch(unit) {
             case B -> bytes;
@@ -15,8 +15,8 @@ public enum Unit {
         };
     }
 
-    private static Unit findUnit(double bytes) {
-        Unit unit = B;
+    private static UnitConverter findUnit(double bytes) {
+        UnitConverter unit = B;
         double finalBytes = bytes;
         if (bytes > 1000) {
             unit = KB;
@@ -37,7 +37,7 @@ public enum Unit {
     }
 
     public static String format(double bytes, int decimalPlaces) {
-        Unit unit = findUnit(bytes);
+        UnitConverter unit = findUnit(bytes);
         DecimalFormat format = new DecimalFormat(decimalPlaces == 2 ? "#.00" : "#.0");
         return switch (unit) {
             case B -> format.format(bytes) + " B";

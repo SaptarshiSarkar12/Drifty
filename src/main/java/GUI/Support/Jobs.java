@@ -35,7 +35,7 @@ public class Jobs {
 
     public void remove(Job oldJob) {
         Job removeJob = oldJob;
-        for(Job job : jobList) {
+        for (Job job : jobList) {
             if(job.matchesLink(oldJob)) {
                 removeJob = job;
                 break;

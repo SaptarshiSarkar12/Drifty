@@ -1,8 +1,6 @@
 package GUI.Forms;
 
-import Backend.Drifty;
 import Enums.Mode;
-import Preferences.AppSettings;
 import Utils.DriftyConstants;
 import Utils.Environment;
 import Utils.MessageBroker;
@@ -16,12 +14,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-
+import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
 import static javafx.scene.layout.AnchorPane.*;
 
 public class Main extends Application {
@@ -31,11 +26,11 @@ public class Main extends Application {
     private Scene scene;
     private boolean firstRun = true;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
-        Environment.setMessageBroker(new MessageBroker());
-        M = Environment.getMessageBroker();
+        M = new MessageBroker();
+        Environment.setMessageBroker(M);
         M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
         Utility.setStartTime();
@@ -44,8 +39,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage = Constants.getStage("Drifty GUI", true);
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Drifty");
         createScene();
         INSTANCE = this;
     }
@@ -58,18 +53,18 @@ public class Main extends Application {
         ap.getChildren().add(menu);
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
-        primaryStage = Constants.getStage(primaryStage);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (firstRun) {
                 firstRun = false;
                 return;
             }
-            if (FormLogic.isAutoPaste()) {
+            if (GUI_Logic.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
-                    if (Utility.isURL(clipboardText))
-                        FormLogic.pasteFromClipboard(clipboardText);
+                    if (Utility.isURL(clipboardText)) {
+                        GUI_Logic.pasteFromClipboard(clipboardText);
+                    }
                 }
             }
         }));
@@ -78,7 +73,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         menu.setUseSystemMenuBar(true);
-        FormLogic.initLogic(gridPane);
+        GUI_Logic.initLogic(gridPane);
     }
 
     private void placeControl(Node node, double left, double right, double top, double bottom) {
@@ -99,7 +94,7 @@ public class Main extends Application {
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
-        website.setOnAction(e -> openWebsite(Drifty.projectWebsite, "project website"));
+        website.setOnAction(e -> openWebsite(DRIFTY_WEBSITE_URL));
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
             M.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
@@ -110,8 +105,7 @@ public class Main extends Application {
     }
 
     private MenuBar menuBar(Menu... menus) {
-        MenuBar menuBar = new MenuBar(menus);
-        return menuBar;
+        return new MenuBar(menus);
     }
 
     private Menu getWindowMenu() {
@@ -129,11 +123,11 @@ public class Main extends Application {
         MenuItem bug = new MenuItem("Report a Bug");
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
-        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html", "contact us webpage"));
-        contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty", "repository website for contribution"));
-        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+", "issue webpage to file a Bug"));
-        securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new", "Security Vulnerability webpage"));
-        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+", "issue webpage to suggest feature"));
+        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html"));
+        contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
+        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
+        securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
+        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature);
         return menu;
     }
@@ -141,44 +135,31 @@ public class Main extends Application {
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(e -> new Settings().show());
         wipeHistory.setOnAction(e -> {
-            AskYesNo ask = new AskYesNo("Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
+            AskYesNo ask = new AskYesNo("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
-                FormLogic.clearJobHistory();
+                GUI_Logic.clearJobHistory();
             }
         });
-        menu.getItems().addAll(wipeHistory, settings);
+        menu.getItems().addAll(wipeHistory);
         return menu;
     }
 
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> getDirectory());
+        miAdd.setOnAction(e -> GUI_Logic.getDirectory());
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            FormLogic.resetDownloadFoldersToActiveList();
+            GUI_Logic.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
         return contextMenu;
     }
 
-    private void getDirectory() {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.get.folders().getDownloadFolder();
-        String initFolder = lastFolder.isEmpty() ? System.getProperty("user.home") : lastFolder;
-        directoryChooser.setInitialDirectory(new File(initFolder));
-        File directory = directoryChooser.showDialog(null);
-        if (directory != null) {
-            FormLogic.setDir(directory.getAbsolutePath());
-        }
-    }
-
-    protected static void openWebsite(String websiteURL, String websiteType) {
+    protected static void openWebsite(String websiteURL) {
         INSTANCE.getHostServices().showDocument(websiteURL);
     }
 
