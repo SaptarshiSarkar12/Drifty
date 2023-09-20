@@ -16,7 +16,11 @@ on:
       - "*.txt"
       - "qodana.yaml"
   workflow_dispatch:
-  workflow_call:
+     inputs:
+        create_release:
+          description: 'True to create release, else false'
+          required: true
+          type: boolean
 
 concurrency:
   group: ${{ github.ref }}
@@ -157,7 +161,7 @@ jobs:
           echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
         fi
     - name: Create Release with automated release notes
-      if: ${{ github.event_name == 'workflow_call' }}
+      if: ${{ inputs.create_release }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
         gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'macos/GUI/Drifty-GUI.app#Drifty-GUI.app' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
