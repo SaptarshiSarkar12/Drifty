@@ -3,6 +3,7 @@ package Backend;
 import Enums.Program;
 import Utils.Environment;
 import Utils.MessageBroker;
+import Utils.Utility;
 
 import java.io.*;
 import java.net.*;
@@ -94,9 +95,7 @@ public class FileDownloader implements Runnable {
                     // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                 }
                 downloadMetrics.setActive(false);
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException ignored) {}
+                Utility.sleep(1800);
             } catch (SecurityException e) {
                 M.msgDownloadError("Write access to \"" + dir + fileName + "\" denied !");
             } catch (FileNotFoundException fileNotFoundException) {

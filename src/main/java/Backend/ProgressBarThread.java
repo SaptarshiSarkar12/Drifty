@@ -85,6 +85,7 @@ public class ProgressBarThread extends Thread {
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             float totalDownloadPercent = downloadMetrics.getProgressPercent();
+            float formattedTotalDownloadPercent = Float.parseFloat(String.format("%.2f", totalDownloadPercent));
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = UnitConverter.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
@@ -94,7 +95,7 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
-            bar = bar.substring(0, charAmt / 2 - 2) + (totalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
+            bar = bar.substring(0, charAmt / 2 - 2) + (formattedTotalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
             return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
         } else {
             int numberOfThreads = fileOutputStreams.size();
