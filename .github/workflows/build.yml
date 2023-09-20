@@ -38,10 +38,10 @@ jobs:
       run: |
         sudo apt-get install libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libfreetype6-dev
         sudo apt-get install libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev
-    - name: Set up GraalVM JDK 21
+    - name: Set up GraalVM JDK 20.0.1
       uses: graalvm/setup-graalvm@v1
       with:
-        java-version: '21'
+        java-version: '20.0.1'
         distribution: 'graalvm-community'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
