@@ -121,6 +121,7 @@ public class Main {
                 System.out.print(ENTER_FILE_LINK);
                 String link = SC.next();
                 SC.nextLine();
+                System.out.println("Validating link...");
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
                 } else {
