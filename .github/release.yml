@@ -31,6 +31,16 @@ changelog:
     - title: Documentation 📝 Changes
       labels:
         - documentation
+      exclude:
+        labels:
+          - App
+          - Website
     - title: Dependency ⬆️ Changes
       labels:
         - dependencies
+        - maven
+        - npm
+      exclude:
+        labels:
+          - App
+          - documentation
