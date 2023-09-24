@@ -48,7 +48,7 @@ Pull requests are a great way to contribute code changes to Drifty. If you want 
 
     Replace `YourGitHubUsername` with your actual GitHub username.
 
-    ![Clone Drifty](https://user-images.githubusercontent.com/105960032/194497334-856c61...)
+    ![Clone Drifty](https://user-images.githubusercontent.com/105960032/194497334-856c610e-39cd-4538-a998-18afb10dac04.gif) </p>
     
 3. **Open an Issue**: Before making any changes, open an [issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) to describe the changes or improvements you plan to make. This helps in discussing and coordinating the work with project maintainers.
 
