@@ -67,7 +67,7 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 
 ### Contributing
 
-- [Contributing](contributing.md)
+- [Contributing](CONTRIBUTING.md)
 
 ### FAQ
 
