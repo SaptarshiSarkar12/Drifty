@@ -11,7 +11,7 @@ function Features() {
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 text-black w-60">
           <i
-            className="fa fa-unlock-alt self-center mb-5"
+            className="fa fa-unlock-alt self-center mb-5 hover:text-lime-700"
             aria-hidden="true"
             style={{ fontSize: "3rem" }}
           ></i>
@@ -26,7 +26,7 @@ function Features() {
 
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <i
-            className="fa fa-download self-center mb-5"
+            className="fa fa-download self-center mb-5 hover:text-sky-400"
             aria-hidden="true"
             style={{ fontSize: "3rem" }}
           ></i>
@@ -38,9 +38,9 @@ function Features() {
             Drifty supports parallel downloading using multiple threads
           </p>
         </div>
-        <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
+        <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 text-black w-60">
           <i
-            className="fa fa-youtube-play self-center mb-5"
+            className="fa fa-youtube-play self-center mb-5 hover:text-red-600"
             aria-hidden="true"
             style={{ fontSize: "3rem" }}
           ></i>
@@ -55,7 +55,7 @@ function Features() {
         </div>
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <i
-            className="fa fa-desktop self-center mb-5"
+            className="fa fa-desktop self-center mb-5 hover:text-gray-400"
             aria-hidden="true"
             style={{ fontSize: "3rem" }}
           ></i>
