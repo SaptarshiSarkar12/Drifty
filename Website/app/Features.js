@@ -1,21 +1,20 @@
 import React from "react";
 import Image from "next/image";
+import "font-awesome/css/font-awesome.min.css";
 
 function Features() {
   return (
     <div className="sectionWrapper py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans select-none">
       <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
-        Features:
+        Features
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
-        <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
-          <Image
-            src="./features-images/open-source.png"
-            width={100}
-            height={100}
-            alt="Open Source Icon"
-            className="self-center mb-5"
-          />
+        <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 text-black w-60">
+          <i
+            className="fa fa-unlock-alt self-center mb-5"
+            aria-hidden="true"
+            style={{ fontSize: "3rem" }}
+          ></i>
           <h3 className="feature--title text-lg mb-1">
             It&apos;s Free and Open-Source
           </h3>
@@ -26,13 +25,12 @@ function Features() {
         </div>
 
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
-          <Image
-            src="./features-images/download.png"
-            width={100}
-            height={100}
-            alt="Faster Downloading Icon"
-            className="self-center mb-5"
-          />
+          <i
+            className="fa fa-download self-center mb-5"
+            aria-hidden="true"
+            style={{ fontSize: "3rem" }}
+          ></i>
+
           <h3 className="feature--title text-lg  mb-1">
             Faster Downloading of files
           </h3>
@@ -41,13 +39,12 @@ function Features() {
           </p>
         </div>
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
-          <Image
-            src="./features-images/youtube.png"
-            width={100}
-            height={100}
-            alt="Support for Youtube, Instagram Icon"
-            className="self-center mb-5"
-          />
+          <i
+            className="fa fa-youtube-play self-center mb-5"
+            aria-hidden="true"
+            style={{ fontSize: "3rem" }}
+          ></i>
+
           <h3 className="feature--title text-lg  mb-1">
             Support for downloading videos from YouTube, Instagram, etc.
           </h3>
@@ -57,13 +54,11 @@ function Features() {
           </p>
         </div>
         <div className="feature m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
-          <Image
-            src="./features-images/user-interface.png"
-            width={100}
-            height={100}
-            alt="Gui and Cli Icon"
-            className="self-center mb-5"
-          />
+          <i
+            className="fa fa-desktop self-center mb-5"
+            aria-hidden="true"
+            style={{ fontSize: "3rem" }}
+          ></i>
           <h3 className="feature--title text-lg mb-1">
             Available both in GUI and CLI mode
           </h3>
