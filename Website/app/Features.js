@@ -3,8 +3,8 @@ import Image from "next/image";
 
 function Features() {
   return (
-    <div className="sectionWrapper py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans">
-      <h1 className="text-center mb-6 font-extrabold text-4xl pt-6 select-none">
+    <div className="sectionWrapper py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans select-none">
+      <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
         Features:
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
@@ -65,7 +65,7 @@ function Features() {
             className="self-center mb-5"
           />
           <h3 className="feature--title text-lg mb-1">
-            Available both in GUI and CLI mod
+            Available both in GUI and CLI mode
           </h3>
           <p className="feature--description font-normal leading-normal">
             Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI
