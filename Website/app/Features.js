@@ -2,12 +2,12 @@ import React from "react";
 
 function Features() {
   return (
-    <div className="sectionWrapper py-6 px-12 background bg-top text-white font-sans">
+    <div className="sectionWrapper py-6 px-12 background bg-var text-white font-sans">
       <h1 className="text-center mb-6 font-extrabold text-4xl pt-6 select-none">
         What we are offering:
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg">
+        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
           <img
             src="./features-images/open-source.png"
             alt="Open Source Icon"
@@ -22,7 +22,7 @@ function Features() {
           </p>
         </div>
 
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg">
+        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
           <img
             src="./features-images/download.png"
             alt="Faster Downloading Icon"
@@ -35,7 +35,7 @@ function Features() {
             Parallel downloading of files' part makes the download faster
           </p>
         </div>
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg">
+        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
           <img
             src="./features-images/youtube.png"
             alt="Support for Youtube, Instagram Icon"
@@ -49,7 +49,7 @@ function Features() {
             and Instagram with ease.
           </p>
         </div>
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg">
+        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
           <img
             src="./features-images/user-interface.png"
             alt="Gui and Cli Icon"
@@ -63,6 +63,9 @@ function Features() {
             or as GUI according to the requirements of the user.
           </p>
         </div>
+      </div>
+      <div class="text-2xl font-bold flex justify-center my-4">
+        ....and many more!
       </div>
     </div>
   );
