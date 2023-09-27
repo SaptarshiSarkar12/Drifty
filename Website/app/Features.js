@@ -3,9 +3,9 @@ import Image from "next/image";
 
 function Features() {
   return (
-    <div className="sectionWrapper py-6 px-12 background bg-var text-white font-sans">
+    <div className="sectionWrapper py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans">
       <h1 className="text-center mb-6 font-extrabold text-4xl pt-6 select-none">
-        What we are offering:
+        Features:
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
@@ -20,8 +20,8 @@ function Features() {
             It&apos;s Free and Open-Source
           </h3>
           <p className="feature--description font-normal leading-normal">
-            Drifty is both free and open-source, giving you the liberty to use,
-            modify, and share it with the world.
+            Drifty is both free and open-source, so, you can bring new features
+            that you wish to have 🎉
           </p>
         </div>
 
@@ -37,7 +37,7 @@ function Features() {
             Faster Downloading of files
           </h3>
           <p className="feature--description font-normal leading-normal">
-            Parallel downloading of files&apos; part makes the download faster
+            Drifty supports parallel downloading using multiple threads
           </p>
         </div>
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">

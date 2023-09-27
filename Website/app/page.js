@@ -12,8 +12,9 @@ export default async function Home() {
       <Header props={"bg-top"} />
       <MainSection />
       <Contribute props={data} />
-      <Demo />
       <Features />
+
+      <Demo />
       <Footer />
     </>
   );
