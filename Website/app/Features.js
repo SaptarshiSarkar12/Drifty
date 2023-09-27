@@ -8,7 +8,7 @@ function Features() {
         Features:
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
+        <div className="feature m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <Image
             src="./features-images/open-source.png"
             width={100}
@@ -25,7 +25,7 @@ function Features() {
           </p>
         </div>
 
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
+        <div className="feature m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <Image
             src="./features-images/download.png"
             width={100}
@@ -40,7 +40,7 @@ function Features() {
             Drifty supports parallel downloading using multiple threads
           </p>
         </div>
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
+        <div className="feature m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <Image
             src="./features-images/youtube.png"
             width={100}
@@ -56,7 +56,7 @@ function Features() {
             and Instagram with ease.
           </p>
         </div>
-        <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
+        <div className="feature m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black w-60">
           <Image
             src="./features-images/user-interface.png"
             width={100}
