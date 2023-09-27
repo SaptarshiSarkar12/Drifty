@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 function Features() {
   return (
@@ -8,10 +9,12 @@ function Features() {
       </h1>
       <div className="featuresContainer column-1 flex flex-wrap justify-center">
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
-          <img
+          <Image
             src="./features-images/open-source.png"
+            width={100}
+            height={100}
             alt="Open Source Icon"
-            className="w-1/4 self-center mb-5"
+            className="self-center mb-5"
           />
           <h3 className="feature--title text-lg mb-1">
             It's Free and Open-Source
@@ -23,10 +26,12 @@ function Features() {
         </div>
 
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
-          <img
+          <Image
             src="./features-images/download.png"
+            width={100}
+            height={100}
             alt="Faster Downloading Icon"
-            className="w-1/4 self-center mb-5"
+            className="self-center mb-5"
           />
           <h3 className="feature--title text-lg  mb-1">
             Faster Downloading of files
@@ -36,10 +41,12 @@ function Features() {
           </p>
         </div>
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
-          <img
+          <Image
             src="./features-images/youtube.png"
+            width={100}
+            height={100}
             alt="Support for Youtube, Instagram Icon"
-            className="w-1/4 self-center mb-5"
+            className="self-center mb-5"
           />
           <h3 className="feature--title text-lg  mb-1">
             Support for downloading videos from YouTube, Instagram, etc.
@@ -50,10 +57,12 @@ function Features() {
           </p>
         </div>
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
-          <img
+          <Image
             src="./features-images/user-interface.png"
+            width={100}
+            height={100}
             alt="Gui and Cli Icon"
-            className="w-1/4 self-center mb-5"
+            className="self-center mb-5"
           />
           <h3 className="feature--title text-lg mb-1">
             Available both in GUI and CLI mod
