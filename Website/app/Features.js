@@ -17,7 +17,7 @@ function Features() {
             className="self-center mb-5"
           />
           <h3 className="feature--title text-lg mb-1">
-            It's Free and Open-Source
+            It&apos;s Free and Open-Source
           </h3>
           <p className="feature--description font-normal leading-normal">
             Drifty is both free and open-source, giving you the liberty to use,
@@ -37,7 +37,7 @@ function Features() {
             Faster Downloading of files
           </h3>
           <p className="feature--description font-normal leading-normal">
-            Parallel downloading of files' part makes the download faster
+            Parallel downloading of files&apos; part makes the download faster
           </p>
         </div>
         <div className="feature w-1/4 m-2 p-4 rounded-md h-auto flex flex-col justify-center shadow-lg bg-slate-100	 text-black">
