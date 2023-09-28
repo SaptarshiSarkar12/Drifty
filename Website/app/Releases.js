@@ -187,11 +187,7 @@ export default function Releases({ props }) {
               <button className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition" onClick={() => downloadLatestRelease("Windows exe", applicationType)}>
                 Download Now <i className="fab fa-brands fa-windows"></i>
               </button>
-              {applicationType === "GUI" && (
-                <div className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-0.5 hover:scale-110">
-                  Prefer the msi?
-                </div>
-              )}
+              {applicationType === "GUI" && <div><button className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-0.5 hover:scale-110" onClick={() => downloadLatestRelease("Windows msi")}>Prefer the msi?</button></div>}
             </div>
           </div>
         </div>
