@@ -13,7 +13,6 @@ export default async function Home() {
       <MainSection />
       <Contribute props={data} />
       <Features />
-
       <Demo />
       <Footer />
     </>
