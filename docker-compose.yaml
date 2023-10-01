@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+
+  base:
+    build:
+      context: .
+      dockerfile: ./Docker/base.Dockerfile
+    container_name: drifty-base
+
+  runner:
+    build:
+      context: .
+      dockerfile: ./Docker/runner.Dockerfile
+    container_name: drifty-runner
+  
+  cli:
+    depends_on: 
+      - base
+    build:
+      context: .
+      dockerfile: ./Docker/dev.cli.Dockerfile
+    container_name: drifty-cli
+    volumes:
+      - ${VOLUME_PATH:-.}:/root/Downloads
+      - ./.drifty:/root/.config
+  gui:
+    depends_on: 
+      - base
+      - runner
+    build:
+      context: .
+      dockerfile: ./Docker/dev.gui.Dockerfile
+    container_name: drifty-gui
+    network_mode: host
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY:-":0"}
+    volumes:
+      - ${VOLUME_PATH:-.}:/root/Downloads
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./.drifty:/root/.config
+
