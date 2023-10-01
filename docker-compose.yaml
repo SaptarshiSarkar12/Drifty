@@ -22,7 +22,7 @@ services:
       dockerfile: ./Docker/dev.cli.Dockerfile
     container_name: drifty-cli
     volumes:
-      - ${VOLUME_PATH:-.}:/root/Downloads
+      - ${DOWNLOAD_PATH:-.}:/root/Downloads
       - ./.drifty:/root/.config
   gui:
     depends_on: 
@@ -37,7 +37,7 @@ services:
     environment:
       - DISPLAY=${DISPLAY:-":0"}
     volumes:
-      - ${VOLUME_PATH:-.}:/root/Downloads
+      - ${DOWNLOAD_PATH:-.}:/root/Downloads
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./.drifty:/root/.config
 
