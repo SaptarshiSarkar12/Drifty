@@ -22,20 +22,6 @@ function MobileNav({ open }) {
         !open && "-translate-x-full"
       } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
-      <div className="flex items-start justify-center filter bg-top h-30 m-4">
-        {" "}
-        {/*logo container*/}
-        <Link className="" href="/">
-          <Image
-            className="pt-8 "
-            src="Drifty1024Thinner1Px.png"
-            width={80}
-            height={80}
-            alt="Logo of Drifty"
-          />
-        </Link>
-      </div>
-
       {/* Mobile Nav */}
       <div className="flex flex-col pt-12 justify-items-center items-center">
         <NavLink
@@ -100,8 +86,17 @@ export default function Header({ props }) {
     <header className={`md:sticky top-0 ${hcolor} z-40 select-none `}>
       <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center">
         <MobileNav open={open} setOpen={setOpen} />
-        <div className="flex items-center justify-between w-full"> </div>
-
+        <div className="w-4/12 flex items-center lg:pl-20 mb-3 xs:hidden sm:hidden">
+          <Link className="font-semibold" href="/">
+            <Image
+              className="w-16"
+              src="Drifty1024Thinner1Px.png"
+              alt="Logo Of Drifty"
+              width={300}
+              height={300}
+            />
+          </Link>
+        </div>
         <div
           className="z-40 flex relative w-8 h-8 flex-col justify-between items-center md:hidden"
           onClick={() => {
