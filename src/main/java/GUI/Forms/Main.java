@@ -48,7 +48,7 @@ public class Main extends Application {
     private void createScene() {
         AnchorPane ap = new AnchorPane();
         MainGridPane gridPane = new MainGridPane();
-        MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
+        MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu(), getAboutMenu());
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
         placeControl(gridPane, 40, 40, 40, 40);
@@ -142,6 +142,21 @@ public class Main extends Application {
             }
         });
         menu.getItems().addAll(wipeHistory);
+        return menu;
+    }
+
+    private  Menu getAboutMenu(){
+        Menu menu = new Menu("About");
+        MenuItem aboutDrifty = new MenuItem("About Drifty");
+        aboutDrifty.setOnAction(event -> {
+            Stage aboutStage = Constants.getStage("Drifty GUI", false);
+            AnchorPane ap = new AnchorPane();
+            Scene aboutScene = Constants.getScene(ap);
+            aboutScene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(aboutScene.getWindow(), e.getScreenX(), e.getScreenY()));
+            aboutStage.setScene(aboutScene);
+            aboutStage.show();
+        });
+        menu.getItems().addAll(aboutDrifty);
         return menu;
     }
 
