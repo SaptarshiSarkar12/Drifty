@@ -1,18 +1,15 @@
 package Utils;
 
-import Backend.CopyYtDLP;
-import Backend.CopySpotdl;
+import Backend.CopyExecutables;
 import Enums.OS;
 import Enums.Program;
 import Preferences.AppSettings;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static Enums.Program.SPOTDL;
 import static Enums.Program.YT_DLP;
 
 public class Environment {
@@ -27,25 +24,20 @@ public class Environment {
     public static void initializeEnvironment() {
         M.msgLogInfo("OS : " + OS.getOSName());
         String ytDLP = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
-        String spotdl = OS.isWindows() ? "spotdl_win.exe" : OS.isMac() ? "spotdl_macos" :"spotdl";
+        String spotdl = OS.isWindows() ? "spotdl_win.exe" : OS.isMac() ? "spotdl_macos" : "spotdl_linux";
         String appUseFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".config", "Drifty").toAbsolutePath().toString();
-        Program.setExecutableName(ytDLP);
+        Program.setYt_DlpExecutableName(ytDLP);
         Program.setSpotdlExecutableName(spotdl);
         Program.setDriftyPath(appUseFolderPath);
-        InputStream ytDLPStream = ClassLoader.getSystemResourceAsStream(ytDLP);
-        InputStream spotdlStream = ClassLoader.getSystemResourceAsStream(spotdl);
-        CopyYtDLP copyYtDlp = new CopyYtDLP();
-        CopySpotdl copySpotdl = new CopySpotdl();
-        boolean ytDLPExists = false;
-        boolean spotdlExists = false;
+        CopyExecutables copyExecutables = new CopyExecutables();
+        boolean executableExists = false;
         try {
-            ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
-            spotdlExists = copySpotdl.copySpotdl(spotdlStream);
+            executableExists = copyExecutables.copyExecutables(new String[]{ytDLP, spotdl});
         } catch (IOException e) {
             M.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
-            M.msgInitError("Failed to copy spotdl! " + e.getMessage());
+            M.msgInitError("Failed to copy spotDL! " + e.getMessage());
         }
-        if (ytDLPExists && isYtDLPUpdated()) {
+        if (executableExists && isYtDLPUpdated()) {
             updateYt_dlp();
         }
         File folder = new File(appUseFolderPath);

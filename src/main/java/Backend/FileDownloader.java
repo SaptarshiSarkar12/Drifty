@@ -269,13 +269,13 @@ public class FileDownloader implements Runnable {
             String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
             String fileDownloadMessage;
             if (outputFileName.equals(DEFAULT_FILENAME)) {
-                fileDownloadMessage = "the Spotify File";
+                fileDownloadMessage = "the Spotify song(s)";
             } else {
                 fileDownloadMessage = outputFileName;
             }
             M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
 
-            String[] fullCommand = new String[]{Program.getSpotdl(SPOTDL), "download", link};
+            String[] fullCommand = new String[]{Program.get(SPOTDL), "download", link};
             ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
             processBuilder.inheritIO();
 
