@@ -86,14 +86,16 @@ export default function Header({ props }) {
     <header className={`md:sticky top-0 ${hcolor} z-40 select-none `}>
       <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center">
         <MobileNav open={open} setOpen={setOpen} />
-        <div className="flex items-center justify-between w-full pl-[160px]">
-          <img
-            className="shadow-sm xs:hidden md:block"
-            width={80}
-            height={80}
-            src="Drifty1024.png"
-            alt="Drifty Logo"
-          />
+        <div className="flex items-center lg:pl-20 mb-3 w-full">
+          <Link className="font-semibold" href="/">
+            <Image
+              className="w-16 xs:hidden md:block"
+              src="Drifty1024Thinner1Px.png"
+              alt="Logo Of Drifty"
+              width={300}
+              height={300}
+            />
+          </Link>
         </div>
 
         <div
