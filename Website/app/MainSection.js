@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export default function MainSection() {
   return (
-    <div className="flex flex-col bg-top space-y-6 lg:flex-row h-screen lg:space-y-0 lg:space-evenly py-[5rem] lg:justify-start xs:justify-start select-none">
+    <div className="flex flex-col bg-top space-y-6 lg:flex-row lg:space-y-0 lg:space-evenly py-[2rem] lg:justify-start xs:justify-start select-none">
       <div className="lg:w-1/2">
         <div className="lg:flex lg:flex-col text-white px-4 py-4 sm:pl-[5rem] md:text">
           <div className="flex lg:ml-4 lg:items-center border-b-4 pb-3 gap-2 ">
             <h1 className="lg:text-8xl xs:text-7xl font-bold">Drifty</h1>
           </div>
-          <p className="text-lg lg:text-2xl lg:ml-4 md:pr-20 font-sans my-4 xs:pb-4">
+          <p className="text-lg lg:text-2xl lg:ml-4 md:pr-20 font-sans my-4 xs:pb-2">
             Drifty is an Open-Source interactive File Downloader system built
             with Java. It takes the link of the file to be downloaded and
             downloads it in the appropriate folder with the appropriate filename
