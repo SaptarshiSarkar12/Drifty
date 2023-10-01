@@ -225,7 +225,7 @@
         </profile>
         <!-- [macOS] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-latest</id>
+            <id>build-drifty-cli-for-macos-13</id>
             <properties>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
             </properties>
@@ -264,11 +264,11 @@
         </profile>
         <!-- [macOS] GUI native image builder profile -->
         <profile>
-            <id>build-drifty-gui-for-macos-latest</id>
+            <id>build-drifty-gui-for-macos-13</id>
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
-                <system-linker-arg>${pom.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
+                <system-linker-arg>${pom.basedir}/config/missing_symbols-macos-13.o</system-linker-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <mac.app.store>true</mac.app.store>
             </properties>
