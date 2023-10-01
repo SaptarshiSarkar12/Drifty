@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Enums.Program.YT_DLP;
+import static Utils.Utility.isSpotify;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
@@ -69,6 +70,9 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             jobList.clear();
             for (String json : jsonList) {
                 String filename = Utility.getFilenameFromJson(json);
+                if(isSpotify(link)){
+                    filename = Utility.extractSpotdlFilename(json);
+                }
                 String fileLink = Utility.getURLFromJson(json);
                 String baseName = FilenameUtils.getBaseName(filename);
                 filename = baseName + ".mp4";
@@ -94,9 +98,12 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 for (File file : files) {
                     try {
                         String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                        if (ext.equalsIgnoreCase("json")) {
+                        if (ext.equalsIgnoreCase("json")||ext.equalsIgnoreCase("spotdl")) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename = Utility.getFilenameFromJson(jsonString);
+                            if(isSpotify(link)){
+                                filename = Utility.extractSpotdlFilename(jsonString);
+                            }
                             String baseName = FilenameUtils.getBaseName(filename);
                             filename = baseName + ".mp4";
                             updateMessage("Found file: " + filename);
@@ -117,7 +124,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         if (file.exists()) {
                             FileUtils.forceDelete(file);
                         }
-                    } catch (IOException ignored) {}
+                    } catch (IOException ignored) {
+                    }
                 }
             }
         };

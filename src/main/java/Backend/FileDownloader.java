@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static Enums.Program.SPOTDL;
 import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
@@ -185,13 +186,17 @@ public class FileDownloader implements Runnable {
         }
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
+        boolean isSpotifyLink = isSpotify(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
-            if (isYouTubeLink || isInstagramLink) {
+            if (isYouTubeLink || isInstagramLink || isSpotifyLink) {
                 try {
                     if (isYouTubeLink) {
                         downloadFromYouTube();
-                    } else {
+                    } else if(isSpotifyLink){
+                        downloadFromSpotify();
+                    }
+                    else{
                         downloadFromInstagram();
                     }
                 } catch (InterruptedException e) {
@@ -199,7 +204,9 @@ public class FileDownloader implements Runnable {
                 } catch (Exception e) {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
-                    } else {
+                    }else if(isSpotifyLink){
+                        M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
+                    }else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }
                     String msg = e.getMessage();
@@ -257,4 +264,38 @@ public class FileDownloader implements Runnable {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
     }
-}
+
+        public void downloadFromSpotify() throws InterruptedException, IOException{
+            String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
+            String fileDownloadMessage;
+            if (outputFileName.equals(DEFAULT_FILENAME)) {
+                fileDownloadMessage = "the Spotify File";
+            } else {
+                fileDownloadMessage = outputFileName;
+            }
+            M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
+
+            String[] fullCommand = new String[]{Program.getSpotdl(SPOTDL), "download", link};
+            ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
+            processBuilder.inheritIO();
+
+            M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
+            int exitValueOfSpotdl = -1;
+            try {
+                Process spotdlProcess = processBuilder.start();
+                spotdlProcess.waitFor();
+                exitValueOfSpotdl = spotdlProcess.exitValue();
+            } catch (IOException e) {
+                M.msgDownloadError("An I/O error occurred while initializing Spotify downloader! " + e.getMessage());
+            } catch (InterruptedException e) {
+                M.msgDownloadError("The Spotify download process was interrupted by the user! " + e.getMessage());
+            }
+
+            if (exitValueOfSpotdl == 0) {
+                M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
+            } else {
+                M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
+            }
+        }
+
+    }

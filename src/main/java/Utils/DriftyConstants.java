@@ -50,6 +50,7 @@ public final class DriftyConstants {
     public static final String FAILED_READING_STREAM = "Failed to get I/O operations channel to read from the data stream !";
     public static final String YOUTUBE_DOWNLOAD_FAILED = "Failed to download YouTube video!";
     public static final String INSTAGRAM_DOWNLOAD_FAILED = "Failed to download Instagram video!";
+    public static final String SPOTIFY_DOWNLOAD_FAILED = "Failed to download Spotify audio!";
     public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";

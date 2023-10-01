@@ -28,11 +28,13 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Enums.Program.SPOTDL;
 import static Utils.DriftyConstants.*;
 
 public class DownloadFile extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
     private final String YT_DLP = Program.get(Program.YT_DLP);
+    private final String SPOTDL = Program.get(Program.SPOTDL);
     private final StringProperty progressProperty = new SimpleStringProperty();
     private final String link;
     private final String filename;
@@ -71,6 +73,7 @@ public class DownloadFile extends Task<Integer> {
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
             case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
+            case SPOTIFY -> downloadSpotify();
             case OTHER -> splitDecision();
         }
         updateProgress(0.0, 1.0);
@@ -95,6 +98,43 @@ public class DownloadFile extends Task<Integer> {
             } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube / Instagram video is asked to be downloaded
                 M.msgDownloadError(PERMISSION_DENIED);
             } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube / Instagram video is unavailable
+                M.msgDownloadError(VIDEO_UNAVAILABLE);
+            } else {
+                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
+            }
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                progressProperty.setValue(line);
+            }
+        } catch (IOException e) {
+            M.msgDownloadError("Failed to read download process status for \"" + filename + "\"");
+        }
+        try {
+            exitCode = Objects.requireNonNull(process).waitFor();
+        } catch (InterruptedException e) {
+            M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
+        }
+        sendFinalMessage("");
+    }
+    private void downloadSpotify() {
+        String[] fullCommand = new String[]{SPOTDL, "--output", "{title}", link};
+        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
+        sendInfoMessage(String.format(DOWNLOADING_F, filename));
+        Process process = null;
+        try {
+            process = processBuilder.start();
+        } catch (IOException e) {
+            M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            String[] messageArray = msg.split(",");
+            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) {
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+            } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) {
+                M.msgDownloadError(PERMISSION_DENIED);
+            } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) {
                 M.msgDownloadError(VIDEO_UNAVAILABLE);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());

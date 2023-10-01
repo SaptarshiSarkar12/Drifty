@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Enums.Program.SPOTDL;
 import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
@@ -50,9 +51,13 @@ public final class Utility {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
+    public static boolean isSpotify(String url) {
+        String pattern = "(https?://(open.spotify\\.com|play\\.spotify\\.com)/(track|album|playlist)/[a-zA-Z0-9]+).*";
+        return url.matches(pattern);
+    }
 
     public static boolean isExtractableLink(String link) {
-        return isYoutube(link) || isInstagram(link);
+        return isYoutube(link) || isInstagram(link)||isSpotify(link);
     }
 
     public static boolean isLinkValid(String link) {
@@ -92,7 +97,7 @@ public final class Utility {
 
     public static String findFilenameInLink(String link) {
         String filename = "";
-        if (isInstagram(link) || isYoutube(link)) {
+        if (isInstagram(link) || isYoutube(link) || isSpotify(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
             for (String json : Objects.requireNonNull(linkMetadataList)) {
                 filename = Utility.getFilenameFromJson(json);
@@ -174,7 +179,14 @@ public final class Utility {
                 M.msgLinkError("Failed to create temporary directory for Drifty to get link metadata!");
                 return null;
             }
-            Thread linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
+            Thread linkThread;
+            if(isSpotify(link)){
+                driftyJsonFolder = Program.getSpotdlDataPath().toFile();
+                linkThread = new Thread(spotdlJsonData(driftyJsonFolder.getAbsolutePath(), link));
+            }
+            else {
+                linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
+            }
             linkThread.start();
             while (!linkThread.getState().equals(Thread.State.TERMINATED) && !linkThread.isInterrupted()) {
                 sleep(100);
@@ -190,7 +202,7 @@ public final class Utility {
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                    if (ext.toLowerCase().contains("json")) {
+                    if (ext.toLowerCase().contains("json")||ext.toLowerCase().contains("spotdl")) {
                         String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
                         list.addLast(linkMetadata);
                     }
@@ -240,6 +252,22 @@ public final class Utility {
         }
         return filename;
     }
+    public static String extractSpotdlFilename(String spotdlData) {
+        String json = makePretty(spotdlData);
+        String filename;
+        String regex = "(\"name\": \")(.+)(\",)";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(spotdlData);
+
+        if (m.find()) {
+            filename = cleanFilename(m.group(2));
+            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
+        } else {
+            filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
+            M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
+        }
+        return filename;
+    }
 
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
@@ -258,6 +286,17 @@ public final class Utility {
         };
     }
 
+    private static Runnable spotdlJsonData(String folderPath, String link) {
+        return () -> {
+            String command = Program.get(SPOTDL);
+            String[] args = new String[]{"save", link, "--save-file", folderPath};
+            new ProcBuilder(command)
+                    .withArgs(args)
+                    .withErrorStream(System.err)
+                    .withNoTimeout()
+                    .run();
+        };
+    }
     public static boolean isURL(String text) {
         String regex = "^(http(s)?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
