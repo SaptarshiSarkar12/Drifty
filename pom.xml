@@ -114,6 +114,7 @@
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
+                    <enableSWRendering>true</enableSWRendering>
                     <mainClass>${guiMain}</mainClass>
                     <linkerArgs>
                         <arg>${system-linker-arg}</arg>
