@@ -83,13 +83,13 @@ export default function Header({ props }) {
     // remove event on unmounting to prevent Linkmemory leak with the cleanup
   });
   return (
-    <header className={`md:sticky top-0 ${hcolor} z-40 select-none `}>
-      <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center">
+    <header className={`md:sticky top-0 ${hcolor} z-40 select-none`}>
+      <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center ">
         <MobileNav open={open} setOpen={setOpen} />
         <div className="flex items-center lg:pl-20 mb-3 w-full">
           <Link className="font-semibold" href="/">
             <Image
-              className="w-16 xs:hidden md:block"
+              className="w-16"
               src="Drifty1024Thinner1Px.png"
               alt="Logo Of Drifty"
               width={300}

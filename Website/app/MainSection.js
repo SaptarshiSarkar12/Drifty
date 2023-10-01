@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function MainSection() {
   return (
-    <div className="flex flex-col bg-top space-y-6 lg:flex-row lg:space-y-0 lg:space-evenly py-[5rem] lg:justify-start xs:justify-start select-none">
+    <div className="flex flex-col bg-top space-y-6 lg:flex-row h-screen lg:space-y-0 lg:space-evenly py-[5rem] lg:justify-start xs:justify-start select-none">
       <div className="lg:w-1/2">
         <div className="lg:flex lg:flex-col text-white px-4 py-4 sm:pl-[5rem] md:text">
           <div className="flex lg:ml-4 lg:items-center border-b-4 pb-3 gap-2 ">
@@ -78,8 +78,6 @@ export default function MainSection() {
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/7.webp"
           alt="..."
         />
-
-        {/* Add similar Image components for the remaining images */}
       </div>
     </div>
   );
