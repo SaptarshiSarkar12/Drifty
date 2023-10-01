@@ -22,6 +22,18 @@ function MobileNav({ open }) {
         !open && "-translate-x-full"
       } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
+      <div className="flex items-start justify-center filter bg-top h-30 m-4">
+        {" "}
+        {/*logo container*/}
+        <Link className="text-xl font-semibold" href="/">
+          <Image
+            src="Drifty1024Thinner1Px.png"
+            width={80}
+            height={80}
+            alt="Logo of Drifty"
+          />
+        </Link>
+      </div>
       {/* Mobile Nav */}
       <div className="flex flex-col pt-12 justify-items-center items-center">
         <NavLink
