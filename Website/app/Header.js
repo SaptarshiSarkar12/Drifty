@@ -76,7 +76,7 @@ export default function Header({ props }) {
     // remove event on unmounting to prevent Linkmemory leak with the cleanup
   });
   return (
-    <header className={`md:sticky top-0 bg-[#288FE6] z-40 select-none `}>
+    <header className={`md:sticky top-0 ${hcolor} z-40 select-none `}>
       <nav className="flex filter drop-shadow-md  px-4 py-4 h-20 items-center">
         <MobileNav open={open} setOpen={setOpen} />
         <div className="flex items-center justify-between w-full"> </div>

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function MainSection() {
   return (
-    <div className="flex flex-row-1 bg-top space-evenly lg:justify-start xs:justify-start  select-none">
+    <div className="flex flex-row-1 bg-top space-evenly lg:justify-start xs:justify-start select-none">
       <div className="lg:flex lg:w-1/2">
         <div className=" lg:flex lg:flex-col text-white py-20 px-6 md:text">
           <div className="flex lg:ml-20 border-b-4 pb-3 gap-5">
@@ -50,42 +50,42 @@ export default function MainSection() {
         id="ImgLayer"
       >
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/2.webp"
           alt="..."
         />
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img hover:bg-black"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/3.webp"
           alt="..."
         />
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/4.webp"
           alt="..."
         />
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/5.webp"
           alt="..."
         />
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/6.webp"
           alt="..."
         />
         <Image
-          width={500}
+          width={450}
           height={0}
           className="absolute animate-img"
           src="https://cdn.jsdelivr.net/gh/SaptarshiSarkar12/Drifty@master/Website/public/Layers/7.webp"
