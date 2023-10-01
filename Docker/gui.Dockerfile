@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apt-get update --no-install-recommends && apt-get install ffmpeg libsm6 libxext6 libgtk-3-0 wget -y --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    wget https://github.com/SaptarshiSarkar12/Drifty/releases/download/VERSIONDrifty-GUI_linux -O Drifty_GUI &&\
+    wget https://github.com/SaptarshiSarkar12/Drifty/releases/download/VERSION/Drifty-GUI_linux -O Drifty_GUI &&\
     chmod +x ./Drifty_GUI
 
 CMD /app/Drifty_GUI
