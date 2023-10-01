@@ -56,6 +56,27 @@ function MobileNav({ open }) {
         >
           <button className="">Contact</button>
         </NavLink>
+        <div className="flex justify-center items-center pt-10">
+          <a href="https://discord.gg/kP4ecaR4" target="_blank">
+            <img
+              className="mx-8 hover:scale-110 duration-500"
+              height={35}
+              width={30}
+              src="discord-logo.png"
+              alt="discord logo"
+            />
+          </a>
+
+          <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
+            <img
+              className="mx-8 hover:scale-110 duration-500"
+              height={30}
+              width={35}
+              src="github-logo.png"
+              alt="github logo"
+            />
+          </a>
+        </div>
       </div>
     </div>
   );
