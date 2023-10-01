@@ -63,7 +63,7 @@ function MobileNav({ open }) {
 
 export default function Header({ props }) {
   const [open, setOpen] = useState(false);
-  const [hcolor, setHcolor] = useState(props + "pt-7");
+  const [hcolor, setHcolor] = useState(props + " pt-7");
   const onScroll = useCallback(() => {
     const { scrollY } = window;
     if (scrollY === 0) setHcolor(props + " pt-7");
@@ -77,7 +77,7 @@ export default function Header({ props }) {
   });
   return (
     <header className={`md:sticky top-0 ${hcolor} z-40 select-none `}>
-      <nav className="flex filter drop-shadow-md  px-4 py-4 h-20 items-center">
+      <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center">
         <MobileNav open={open} setOpen={setOpen} />
         <div className="flex items-center justify-between w-full"> </div>
 
