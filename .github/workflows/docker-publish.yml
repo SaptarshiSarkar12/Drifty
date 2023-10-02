@@ -82,6 +82,13 @@ jobs:
           flavor: |
             latest=auto
 
+      - name: Get Drifty version from .version file
+        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
+      - name: Set Version in Dockerfiles
+        run: |
+          sed -i "s/\bVERSION\b/${{ env.VERSION }}/g" Docker/cli.Dockerfile
+          sed -i "s/\bVERSION\b/${{ env.VERSION }}/g" Docker/gui.Dockerfile
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
