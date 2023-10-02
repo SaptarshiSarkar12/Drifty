@@ -20,14 +20,14 @@ export default function MainSection() {
           <div className="flex space-x-2 justify-start lg:ml-4 lg:mt-2 lg:mb-8">
             <Link
               className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
-              href="/download"
+              href={"/download"}
               role="button"
             >
               Download
             </Link>
             <Link
               className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
-              href="/#demo"
+              href={"/#demo"}
               role="button"
             >
               View Demo

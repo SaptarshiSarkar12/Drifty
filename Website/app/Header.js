@@ -23,7 +23,6 @@ function MobileNav({ open }) {
       } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
       <div className="flex items-start justify-center filter bg-top h-30 m-4">
-        {" "}
         {/*logo container*/}
         <Link className="text-xl font-semibold" href="/">
           <Image
@@ -38,41 +37,29 @@ function MobileNav({ open }) {
       <div className="flex flex-col pt-12 justify-items-center items-center">
         <NavLink
           to="/about"
-          cn="text-2xl font-normal my-6 text-white hover:text-[#191B33] hover:scale-105 duration-500"
+          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <button className="">About</button>
         </NavLink>
         <NavLink
           to="/download"
-          cn="text-2xl font-normal my-6 text-white hover:text-[#191B33] hover:scale-105 duration-500"
+          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <button className="">Download</button>
         </NavLink>
         <NavLink
           to="/contact"
-          cn="text-2xl font-normal my-6 text-white hover:text-[#191B33] hover:scale-105 duration-500"
+          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
         >
           <button className="">Contact</button>
         </NavLink>
         <div className="flex justify-center items-center pt-10">
-          <a href="https://discord.gg/kP4ecaR4" target="_blank">
-            <img
-              className="mx-8 hover:scale-110 duration-500"
-              height={35}
-              width={30}
-              src="discord-logo.png"
-              alt="discord logo"
-            />
+          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+            <i className={"fab fa-discord text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-violet-600"}></i>
           </a>
 
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
-            <img
-              className="mx-8 hover:scale-110 duration-500"
-              height={30}
-              width={35}
-              src="github-logo.png"
-              alt="github logo"
-            />
+            <i className={"fab fa-github text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-black"}></i>
           </a>
         </div>
       </div>
@@ -138,43 +125,31 @@ export default function Header({ props }) {
         {/* NAVBAR BUTTONS */}
         <div className="hidden md:flex mr-20 ">
           <NavLink to="/#" cn="mx-4 flex">
-            <button className="text-white hover:text-[white] hover:scale-110 duration-500 font-bold">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               HOME
             </button>
           </NavLink>
           <NavLink to="/about" cn="mx-4 flex">
-            <button className="text-white hover:text-[white] hover:scale-110 duration-500 font-bold">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               ABOUT
             </button>
           </NavLink>
           <NavLink to="/download" cn="mx-4 flex">
-            <button className="text-white hover:text-[white] hover:scale-110 duration-500 font-bold">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               DOWNLOAD
             </button>
           </NavLink>
           <NavLink to="/contact" cn="mx-4 flex">
-            <button className="text-white hover:text-[white] hover:scale-110 duration-500 font-bold">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               CONTACT
             </button>
           </NavLink>
-          <a href="https://discord.gg/kP4ecaR4" target="_blank">
-            <img
-              className="mx-8 hover:scale-110 duration-500"
-              height={35}
-              width={30}
-              src="discord-logo.png"
-              alt="discord logo"
-            />
+          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+            <i className={"fab fa-discord text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-violet-700"}></i>
           </a>
 
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
-            <img
-              className="mx-8 hover:scale-110 duration-500"
-              height={30}
-              width={35}
-              src="github-logo.png"
-              alt="github logo"
-            />
+            <i className={"fab fa-github text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-black"}></i>
           </a>
         </div>
       </nav>
