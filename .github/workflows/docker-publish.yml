@@ -78,8 +78,7 @@ jobs:
             ${{ env.REGISTRY }}/drifty-gui
           tags: |
             type=semver,pattern=v*.*.*
-            type=latest,enable=${{ github.event_name != 'pull_request' }}
-            type=
+            type=sha
           flavor: |
             latest=auto
 
