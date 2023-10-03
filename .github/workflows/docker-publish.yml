@@ -49,7 +49,7 @@ jobs:
         uses: sigstore/cosign-installer@v3.1.2
 
       - name: Set up QEMU
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os != 'windows-latest'
         uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
