@@ -48,7 +48,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.2
       - name: Install Docker
-        if: matrix.os == "macos-latest"
+        if: matrix.os == 'macos-latest'
         run: |
          brew install docker
          colima start
