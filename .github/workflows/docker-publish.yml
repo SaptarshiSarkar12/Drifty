@@ -47,9 +47,10 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.2
-      - name: Install Docker
+      - name: Install Docker and GNU sed
         if: matrix.os == 'macos-latest'
         run: |
+          brew install gnu-sed
           brew install docker
           colima start
       - name: Set up QEMU
@@ -91,8 +92,8 @@ jobs:
         run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
       - name: Set Version in Dockerfiles
         run: |
-          sed -i'' "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
-          sed -i'' "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
+          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
+          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
