@@ -101,6 +101,10 @@ jobs:
           gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
           gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
 
+      - name: Start colima
+        if: matrix.os == 'macos-latest'
+        run: colima start
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
