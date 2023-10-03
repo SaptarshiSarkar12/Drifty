@@ -31,6 +31,7 @@ jobs:
             arch: amd64
           - os: windows-latest
             arch: amd64
+      fail-fast: false
     permissions:
       contents: read
       packages: write
