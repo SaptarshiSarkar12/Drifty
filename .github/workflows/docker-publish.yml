@@ -52,7 +52,6 @@ jobs:
         run: |
           brew install gnu-sed
           brew install docker
-          colima start
       - name: Set up QEMU
         if: matrix.os != 'windows-latest'
         uses: docker/setup-qemu-action@v3
@@ -90,7 +89,13 @@ jobs:
 
       - name: Get Drifty version from .version file
         run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
-      - name: Set Version in Dockerfiles
+      - name: Set Version in Dockerfiles for Linux or Windows
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
+        run: |
+          sed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
+          sed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
+      - name: Set Version in Dockerfiles for MacOS
+        if: matrix.os == 'macos-latest'
         run: |
           gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
           gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
