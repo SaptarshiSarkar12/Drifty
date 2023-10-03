@@ -17,14 +17,10 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
         filename: [ cli.Dockerfile, gui.Dockerfile ]
-        exclude:
-        - os: macos-latest
-          filename: gui.Dockerfile
       fail-fast: false
     permissions:
       contents: read
@@ -41,14 +37,8 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.2
-      - name: Install Docker and GNU sed
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew install docker
-          brew install gnu-sed
-          colima start
+
       - name: Set up QEMU
-        if: matrix.os != 'windows-latest'
         uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
@@ -56,8 +46,6 @@ jobs:
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.0.0
-        with:
-          buildkitd-flags: --allow-insecure-entitlement security.insecure
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
@@ -85,119 +73,11 @@ jobs:
             latest=auto
 
       - name: Get Drifty version from .version file
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
         run: echo "VERSION=$(jq .version version.json | sed 's/"//g')" >> $GITHUB_ENV
-      - name: Get Drifty version from .version file for Windows
-        if: matrix.os == 'windows-latest'
-        run: echo "VERSION=$(jq .version version.json | select-string -pattern '"')" >> $GITHUB_ENV
-      - name: Set Version in Dockerfiles for Linux or Windows
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
+      - name: Set Version in Dockerfiles
         run: |
           sed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
           sed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
-      - name: Set Version in Dockerfiles for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
-          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
-
-      - name: Start colima
-        if: matrix.os == 'macos-latest'
-        run: colima start
-
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@v5.0.0
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          file: Docker/${{ matrix.filename }}
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-          TAGS: ${{ steps.meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
-
-  build-for-macOS-gui:
-    needs: build
-    runs-on: "macos-latest"
-    permissions:
-      contents: read
-      packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside PRs.
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3.1.2
-      - name: Install Docker and GNU sed
-        run: |
-          brew install docker
-          brew install gnu-sed
-          colima start
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      # Set up BuildKit Docker container builder to be able to build
-      # multi-platform images and export cache
-      # https://github.com/docker/setup-buildx-action
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.0.0
-
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      - name: Log into registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3.0.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5.0.0
-        with:
-          images: |
-            ${{ env.REGISTRY }}/drifty-gui
-          tags: |
-            type=semver,pattern=v*.*.*
-            type=sha
-          flavor: |
-            latest=auto
-
-      - name: Get Drifty version from .version file
-        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
-      - name: Set Version in Dockerfiles for MacOS
-        if: matrix.os == 'macos-latest'
-        run: |
-          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/cli.Dockerfile
-          gsed -i "s/\bVERSION\b/v${{ env.VERSION }}/g" Docker/gui.Dockerfile
-
-      - name: Start colima
-        run: colima start
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
