@@ -47,14 +47,11 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.2
-      - name: Install Docker and GNU sed
+      - name: Install GNU sed for macOS
         if: matrix.os == 'macos-latest'
-        run: |
-          brew install gnu-sed
-          brew install docker docker-machine
-          brew services start docker
+        run: brew install gnu-sed
       - name: Set up QEMU
-        if: matrix.os != 'windows-latest'
+        if: matrix.os == 'ubuntu-latest'
         uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
