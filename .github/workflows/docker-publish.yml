@@ -47,18 +47,20 @@ jobs:
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.1.2
-      - name: Install GNU sed
+      - name: Install Docker and GNU sed
         if: matrix.os == 'macos-latest'
-        run: brew install gnu-sed
+        run: |
+          brew install docker
+          brew install gnu-sed
+          colima start
       - name: Set up QEMU
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
+        if: matrix.os != 'windows-latest'
         uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
         uses: docker/setup-buildx-action@v3.0.0
 
       # Login against a Docker registry except on PR
