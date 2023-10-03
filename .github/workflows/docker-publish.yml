@@ -52,12 +52,7 @@ jobs:
         run: |
           brew install gnu-sed
           brew install docker
-          plutil -lint registry/recipes/osx/com.docker.registry.plist
-          cp registry/recipes/osx/com.docker.registry.plist ~/Library/LaunchAgents/
-          chmod 644 ~/Library/LaunchAgents/com.docker.registry.plist
-          launchctl load ~/Library/LaunchAgents/com.docker.registry.plist
-          launchctl stop com.docker.registry
-          launchctl start com.docker.registry
+          open --background -a Docker
       - name: Set up QEMU
         if: matrix.os != 'windows-latest'
         uses: docker/setup-qemu-action@v3
