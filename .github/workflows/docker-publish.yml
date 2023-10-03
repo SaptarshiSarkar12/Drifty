@@ -50,7 +50,7 @@ jobs:
       - name: Install Docker and GNU sed for macOS
         if: matrix.os == 'macos-latest'
         run: |
-          brew install gnu-sed --with-default-names
+          brew install gnu-sed
           brew install docker
           colima start
       - name: Set up QEMU
