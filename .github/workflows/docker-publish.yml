@@ -87,7 +87,7 @@ jobs:
         run: echo "VERSION=$(jq .version version.json | sed 's/"//g')" >> $GITHUB_ENV
       - name: Get Drifty version from .version file for Windows
         if: matrix.os == 'windows-latest'
-        run: echo "VERSION=$(jq .version version.json | select-string -pattern "\"")" >> $GITHUB_ENV
+        run: echo "VERSION=$(jq .version version.json | select-string -pattern '"')" >> $GITHUB_ENV
       - name: Set Version in Dockerfiles for Linux or Windows
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'windows-latest'
         run: |
