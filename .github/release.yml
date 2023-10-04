@@ -44,3 +44,10 @@ changelog:
         labels:
           - App
           - documentation
+    - title: Docker 🐳 Changes
+      labels:
+        - docker
+      exclude:
+        labels:
+          - App
+          - documentation
