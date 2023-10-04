@@ -45,6 +45,8 @@
   }, {
     "pattern":"GUI/Labels/Link.png"
   }, {
+    "pattern":"GUI/Splash.png"
+  }, {
     "pattern":"GUI/Backgrounds/DriftyMain.png"
   }, {
     "pattern":"GUI/Buttons/Save/SaveDown.png"
