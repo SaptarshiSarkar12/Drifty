@@ -24,3 +24,6 @@ maven:
 npm:
 - Website/package.json
 - Website/package-lock.json
+
+docker:
+- Docker/**
