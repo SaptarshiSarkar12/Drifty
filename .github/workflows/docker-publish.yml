@@ -21,6 +21,7 @@ on:
       - "*.md"
       - "*.txt"
       - "qodana.yaml"
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
