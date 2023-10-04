@@ -85,6 +85,7 @@ jobs:
       - name: Categorise build artifacts for GUI
         if: matrix.filename == 'gui.Dockerfile'
         run: |
+          mkdir GUI
           mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty_GUI"
           mv "target/gluonfx/x86_64-linux/Drifty_GUI" -t GUI
 
