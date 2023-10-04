@@ -33,11 +33,20 @@ jobs:
       matrix:
         filename: [ cli.Dockerfile, gui.Dockerfile ]
         docker_context: [CLI, GUI]
+        image_name: [ drifty-cli, drifty-gui ]
         exclude:
           - filename: gui.Dockerfile
             docker_context: CLI
+            image_name: drifty-cli
+          - filename: gui.Dockerfile
+            docker_context: GUI
+            image_name: drifty-cli
           - filename: cli.Dockerfile
             docker_context: GUI
+            image_name: drifty-gui
+          - filename: cli.Dockerfile
+            docker_context: CLI
+            image_name: drifty-gui
       fail-fast: false
     permissions:
       contents: read
@@ -120,8 +129,7 @@ jobs:
         uses: docker/metadata-action@v5.0.0
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/drifty-cli
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/drifty-gui
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
