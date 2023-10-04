@@ -41,12 +41,18 @@ jobs:
           - filename: gui.Dockerfile
             docker_context: GUI
             image_name: drifty-cli
+          - filename: gui.Dockerfile
+            docker_context: CLI
+            image_name: drifty-gui
           - filename: cli.Dockerfile
             docker_context: GUI
             image_name: drifty-gui
           - filename: cli.Dockerfile
             docker_context: CLI
             image_name: drifty-gui
+          - filename: cli.Dockerfile
+            docker_context: GUI
+            image_name: drifty-cli
       fail-fast: false
     permissions:
       contents: read
