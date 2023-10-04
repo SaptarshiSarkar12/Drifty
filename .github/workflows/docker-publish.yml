@@ -75,7 +75,7 @@ jobs:
         run: gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
       - name: Package Drifty GUI with GraalVM
         if: matrix.filename == 'gui.Dockerfile'
-        run: mvn -Pbuild-drifty-gui-for-ubuntu-latest package
+        run: mvn -Pbuild-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package
       - name: Categorise build artifacts for CLI
         if: matrix.filename == 'cli.Dockerfile'
         run: |
