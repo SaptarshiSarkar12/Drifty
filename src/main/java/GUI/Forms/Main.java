@@ -13,11 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
-import javafx.scene.layout.*;
-import javafx.scene.paint.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
@@ -127,54 +127,47 @@ public class Main extends Application {
         MenuItem bug = new MenuItem("Report a Bug");
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
-        MenuItem aboutDrifty = new MenuItem("About Drifty");
+        MenuItem about = new MenuItem("About Drifty");
         contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html"));
         contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        aboutDrifty.setOnAction(event -> {
-            Stage aboutStage = Constants.getStage("About Drifty", false);
+        about.setOnAction(event -> {
+            Stage stage = Constants.getStage("About Drifty", false);
             VBox root = new VBox(10);
             root.setPadding(new Insets(10));
             root.setAlignment(Pos.TOP_CENTER);
-            root.setBackground(new Background(
-                    new BackgroundFill(
-                            new LinearGradient(
-                                    0, 0, 0, 1, true,
-                                    CycleMethod.NO_CYCLE,
-                                    new Stop(0, Color.web("#0061ff")),
-                                    new Stop(1, Color.web("#60efff"))),
-                            CornerRadii.EMPTY, Insets.EMPTY
-                    )
-            ));
-            ImageView logo = new ImageView(String.valueOf(Constants.class.getResource("/GUI/Splash.png")));
-            logo.setFitWidth(Screen.getPrimary().getBounds().getWidth()*.2);
-            logo.setFitHeight(Screen.getPrimary().getBounds().getHeight()*.2);
-            logo.setPreserveRatio(true);
-            Label nameLabel = new Label("An Open-Source Interactive File Downloader System");
-            nameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-            Label versionLabel = new Label(DriftyConstants.VERSION_NUMBER);
-            versionLabel.setFont(Font.font("Arial",FontWeight.BOLD, 20));
-            versionLabel.setTextFill(Color.web("#FFFFFF"));
+            ImageView appIcon = new ImageView(String.valueOf(Constants.class.getResource("/GUI/Splash.png")));
+            appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
+            appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
+            appIcon.setPreserveRatio(true);
+            Label lblDescription = new Label("An Open-Source Interactive File Downloader System");
+            lblDescription.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+            lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
+            Label lblVersion = new Label(DriftyConstants.VERSION_NUMBER);
+            lblVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            lblVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             Hyperlink websiteLink = new Hyperlink("Website");
-            websiteLink.setFont(Font.font("Arial",FontWeight.BOLD, 18));
-            websiteLink.setTextFill(Color.web("#1211EA"));
+            websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
             websiteLink.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty"));
             Hyperlink discordLink = new Hyperlink("Join Discord");
-            discordLink.setFont(Font.font("Arial",FontWeight.BOLD, 18));
-            discordLink.setTextFill(Color.web("#5B11EA"));
-            discordLink.setOnAction(e -> openWebsite("https://discord.gg/YVGpXtNM"));
+            discordLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            discordLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"));
+            discordLink.setOnAction(e -> openWebsite("https://discord.gg/DeT4jXPfkG"));
             Hyperlink githubLink = new Hyperlink("Contribute to Drifty");
-            githubLink.setFont(Font.font("Arial",FontWeight.BOLD, 18));
-            githubLink.setTextFill(Color.BLACK);
+            githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            root.getChildren().addAll(logo, nameLabel, versionLabel, websiteLink, discordLink, githubLink);
-            Scene aboutScene = new Scene(root, Screen.getPrimary().getBounds().getWidth() * .5, Screen.getPrimary().getBounds().getHeight() * .5);
-            aboutStage.setScene(aboutScene);
-            aboutStage.show();
+            root.getChildren().addAll(appIcon, lblDescription, lblVersion, websiteLink, discordLink, githubLink);
+            Scene aboutScene = Constants.getScene(root);
+            stage.setMinHeight(Constants.SCREEN_HEIGHT * .5);
+            stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
+            stage.setScene(aboutScene);
+            stage.show();
         });
-        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, aboutDrifty);
+        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
 
