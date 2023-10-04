@@ -1,0 +1,14 @@
+.git/
+.github/
+.idea/
+Website/
+target/
+.mvn/
+*.md
+*.txt
+*.log
+LICENSE
+version.json
+.gitignore
+*.yaml
+*.yml
