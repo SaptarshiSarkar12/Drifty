@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
+import { useRouter } from 'next/router'
+
 function NavLink({ to, children, cn }) {
   return (
     <Link
@@ -53,6 +55,12 @@ function MobileNav({ open }) {
         >
           <button className="">Contact</button>
         </NavLink>
+        <NavLink
+          to="/docs"
+          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
+        >
+          <button className="">Docs</button>
+        </NavLink>
         <div className="flex justify-center items-center pt-10">
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i className={"fab fa-discord text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-violet-600"}></i>
@@ -70,6 +78,12 @@ function MobileNav({ open }) {
 export default function Header({ props }) {
   const [open, setOpen] = useState(false);
   const [hcolor, setHcolor] = useState(props + " pt-7");
+
+  const router = useRouter()
+  
+  //this will access the component
+  const { name } = router.query
+
   const onScroll = useCallback(() => {
     const { scrollY } = window;
     if (scrollY === 0) setHcolor(props + " pt-7");

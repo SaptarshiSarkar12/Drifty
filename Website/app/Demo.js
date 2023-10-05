@@ -1,11 +1,17 @@
 "use client";
 import { Tab } from "@headlessui/react"
+import { useRouter } from 'next/router'
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function Demo(){
+    const router = useRouter()
+  
+    //this will access the components
+    const { name } = router.query
+
     const tabs = ["Drifty CLI", "Drifty GUI"];
     return(
         <div id="demo" className="bg-bottom">
