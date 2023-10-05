@@ -2,7 +2,7 @@
 
 import Head from 'next/head'
 import Markdown from 'react-markdown'
-import { getAllComponents, getComponentHtml } from '../../lib/api'
+import { getAllComponents, getComponentHtml } from 'lib/api'
 
 export default function Docs({ headerHtml, quickstartHtml, gettingStartedHtml, faqHtml, troubleshootingHtml }) {
   return (
@@ -14,10 +14,10 @@ export default function Docs({ headerHtml, quickstartHtml, gettingStartedHtml, f
       <ReactMarkdown children={headerHtml} />
       <main>
         <h1>Documentation</h1>
-        <ReactMarkdown children={quickstartHtml} />
-        <ReactMarkdown children={gettingStartedHtml} />
-        <ReactMarkdown children={faqHtml} />
-        <ReactMarkdown children={troubleshootingHtml} />
+        <Markdown children={quickstartHtml} />
+        <Markdown children={gettingStartedHtml} />
+        <Markdown children={faqHtml} />
+        <Markdown children={troubleshootingHtml} />
       </main>
     </>
   )
