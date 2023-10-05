@@ -1,7 +1,7 @@
 // renders documentation with components
 
 import Head from 'next/head'
-import ReactMarkdown from 'react-markdown'
+import Markdown from 'react-markdown'
 import { getAllComponents, getComponentHtml } from '../../lib/api'
 
 export default function Docs({ headerHtml, quickstartHtml, gettingStartedHtml, faqHtml, troubleshootingHtml }) {
