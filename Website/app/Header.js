@@ -152,6 +152,11 @@ export default function Header({ props }) {
               CONTACT
             </button>
           </NavLink>
+          <NavLink to="/docs" cn="mx-4 flex">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              DOCS
+            </button>
+          </NavLink>
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i className={"fab fa-discord text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-violet-700"}></i>
           </a>

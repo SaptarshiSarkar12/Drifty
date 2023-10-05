@@ -23,7 +23,7 @@ export default function Docs({ headerHtml, quickstartHtml, gettingStartedHtml, f
   )
 }
 
-export async function getStaticProps() {
+export async function docs() {
   const headerHtml = await getComponentHtml('header')
   const quickstartHtml = await getComponentHtml('quickstart')
   const gettingStartedHtml = await getComponentHtml('getting-started')
