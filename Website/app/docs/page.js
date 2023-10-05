@@ -3,7 +3,7 @@
 import Head from 'next/head'
 import ReactMarkdown from 'react-markdown'
 import { getAllComponents, getComponentHtml } from '../../lib/api'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 export default function Docs({ headerHtml, quickstartHtml, gettingStartedHtml, faqHtml, troubleshootingHtml }) {
     const router = useRouter()
