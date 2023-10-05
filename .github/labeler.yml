@@ -1,29 +1,26 @@
-Website:
+"Website 🌐":
 - Website/**
 
-App:
+"App 💻":
 - src/**
 
 Workflows:
 - .github/workflows/**
 
-dependencies:
+"dependencies 📦️":
 - Website/package.json
 - Website/package-lock.json
 - pom.xml
 
-documentation:
+"documentation 📝":
 - '**/*.md'
 
-assets:
-- assets/**
-
-maven:
+"maven 📦️":
 - pom.xml
 
-npm:
+"npm 📦️":
 - Website/package.json
 - Website/package-lock.json
 
-docker:
+"docker 🐋":
 - Docker/**
