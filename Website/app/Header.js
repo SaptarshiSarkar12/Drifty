@@ -79,11 +79,6 @@ export default function Header({ props }) {
   const [open, setOpen] = useState(false);
   const [hcolor, setHcolor] = useState(props + " pt-7");
 
-  const router = useRouter()
-  
-  //this will access the component
-  const { name } = router.query
-
   const onScroll = useCallback(() => {
     const { scrollY } = window;
     if (scrollY === 0) setHcolor(props + " pt-7");

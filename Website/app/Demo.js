@@ -7,10 +7,6 @@ function classNames(...classes) {
 }
 
 export default function Demo(){
-    const router = useRouter()
-  
-    //this will access the components
-    const { name } = router.query
 
     const tabs = ["Drifty CLI", "Drifty GUI"];
     return(
