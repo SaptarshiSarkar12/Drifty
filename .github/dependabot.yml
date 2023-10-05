@@ -13,8 +13,8 @@ updates:
       prefix: '[npm] '
       include: 'scope'
     labels:
-      - 'dependencies'
-      - 'npm'
+      - 'dependencies 📦️'
+      - 'npm 📦️'
     reviewers:
       - SaptarshiSarkar12
       
@@ -26,8 +26,8 @@ updates:
       prefix: '[maven] '
       include: 'scope'
     labels:
-      - 'dependencies'
-      - 'maven'
+      - 'dependencies 📦️'
+      - 'maven 📦️'
     reviewers:
       - SaptarshiSarkar12
       
@@ -40,7 +40,7 @@ updates:
       prefix: '[ci] '
       include: 'scope'
     labels:
-      - 'dependencies'
+      - 'dependencies 📦️'
       - 'Workflows'
     reviewers:
       - SaptarshiSarkar12
