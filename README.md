@@ -25,7 +25,7 @@
 ## About 🔥
 
 - [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-- It is currently available in **Command Line Interface** (_CLI_) mode and the **Graphical User Interface** (_GUI_) version is under active development. 
+- It is both available in **Command Line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
 
 ## Demo
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
@@ -59,20 +59,51 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 
 ## Quickstart 🚀🚀
 For **Users** :
+### Using Drifty Application executable
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
-    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/a91ddf38-6578-4a94-8802-33a14527e7a9)
+    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-    ![Download button of Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/233e7a0e-17eb-4628-a4dc-421a2e9d8a1d)
-3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, MacOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
+    ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
+4. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, MacOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
     ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
-4. Go to your Downloads folder and run the file you downloaded.
+5. Go to your Downloads folder and run the file you downloaded.
+   > [!NOTE]   
    > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
-5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
-6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
-7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
+6. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
+7. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+8. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
+
+### Using Drifty Application via Docker 🐋
+
+> [!IMPORTANT]   
+> To download files in your local directory, you need to pass that directory as a volume to Drifty.   
+> Suppose, you want to download the file in your `home/username/Downloads` directory, then, the volume flag that you need to pass to docker will be `-v /home/username/Downloads:/root/Downloads`.   
+> You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+
+1. Pull the Docker image for Drifty using the below command -   
+    **For Drifty CLI**,
+    ```bash
+    docker pull ghcr.io/saptarshisarkar12/drifty-cli:master
+    ```
+    **For Drifty GUI**,
+    ```bash
+    docker pull ghcr.io/saptarshisarkar12/drifty-gui:master
+    ```
+2. Run the docker image using the below command -   
+    **For Drifty CLI**,
+    ```bash
+    docker run ghcr.io/saptarshisarkar12/drifty-cli:master
+    ```
+    **For Drifty GUI**,
+    ```bash
+    docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
+    ```
+    > [!IMPORTANT]  
+    > Please run `xhost +local:docker` before running the GUI docker image.
+3. Drifty will open and you can now use it 🎉!
 
 For **Contributors** : 
-1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone it into your local directory by running this command in your terminal.
+1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone your fork into your local directory by running this command in your terminal.
     ```bash
     git clone git@github.com:SaptarshiSarkar12/Drifty.git
     ```
@@ -82,6 +113,12 @@ For **Contributors** :
 4. The Pull Request will be reviewed by the maintainers and merged if approved. ✔ </p>
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) ⭐ on GitHub if you liked the project. </br>
 6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
+
+### Using Docker 🐋 for Development
+1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
+    > [!IMPORTANT]   
+    > Please run `xhost +local:docker` before running the GUI docker image.
+2. Drifty app will appear on the screen and you can test it 🎉!
 
 ## Safety warning ⚠ while Downloading ⬇
 
