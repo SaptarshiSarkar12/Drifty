@@ -151,7 +151,7 @@ jobs:
         uses: docker/build-push-action@v5.0.0
         with:
           context: ${{ matrix.docker_context }}
-          push: ${{ github.event_name != 'pull_request' }} && ${{ github.repository == 'SaptarshiSarkar12/Drifty' }}
+          push: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
