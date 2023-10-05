@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
-import { useRouter } from 'next/router'
 
 function NavLink({ to, children, cn }) {
   return (
