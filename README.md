@@ -25,7 +25,7 @@
 ## About 🔥
 
 - [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-- It is currently available in **Command Line Interface** (_CLI_) mode and the **Graphical User Interface** (_GUI_) version is under active development. 
+- It is both available in **Command Line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
 
 ## Demo
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
