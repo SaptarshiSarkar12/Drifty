@@ -1,7 +1,7 @@
 name: 🐞 Bug Report for Website 🌐
 description: File a bug for the website
 title: "[BUG] "
-labels: [bug, Website]
+labels: ["bug 🐛", "Website 🌐"]
 body:
   - type: textarea
     id: bug-description
@@ -35,17 +35,17 @@ body:
       label: Operating System
       description: Please select the operating system that you have used.
       options:
-        - Windows
-        - MacOS
-        - Linux
+        - Windows 🪟
+        - MacOS 🍏
+        - Linux 🐧
         - Other
     validations:
       required: true
   - type: dropdown
-    id: app-ver
+    id: browser
     attributes:
       label: Browser
-      description: Please select the brower you are using
+      description: Please select the browser you are using
       options:
         - Microsoft Edge
         - Google Chrome
@@ -62,7 +62,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: extrainfo
+    id: extra-info
     attributes:
       label: Additional information
       description: Add any other context about the problem here.

@@ -35,18 +35,19 @@ changelog:
         labels:
           - "App 💻"
           - "Website 🌐"
+    - title: Docker 🐋 Changes
+      labels:
+        - "docker 🐋"
+      exclude:
+        labels:
+          - "App 💻"
+          - "documentation 📝"
+          - "Website 🌐"
     - title: Dependency 📦️ Changes
       labels:
         - "dependencies 📦️"
         - "maven 📦️"
         - "npm 📦️"
-      exclude:
-        labels:
-          - "App 💻"
-          - "documentation 📝"
-    - title: Docker 🐋 Changes
-      labels:
-        - "docker 🐋"
       exclude:
         labels:
           - "App 💻"
