@@ -1,7 +1,7 @@
 name: 💡 Feature Request for Website 🌐
 description: Suggest a new feature for Drifty Website
 title: "[FEATURE] "
-labels: [enhancement, Website]
+labels: ["feature ✨", "Website 🌐"]
 body:
   - type: textarea
     id: related-problem-for-feature-request

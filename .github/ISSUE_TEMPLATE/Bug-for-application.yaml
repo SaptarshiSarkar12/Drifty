@@ -1,7 +1,7 @@
 name: 🐞 Bug Report for Application
 description: File a bug for the Application
 title: "[BUG] "
-labels: [bug, App]
+labels: ["bug 🐛", "App 💻"]
 body:
   - type: textarea
     id: bug-description
@@ -30,14 +30,15 @@ body:
     validations:
       required: false
   - type: dropdown
-    id: os
+    id: os-env
     attributes:
-      label: Operating System
-      description: Please select the operating system that you have used.
+      label: Operating System / Environment
+      description: Please select the operating system / Environment you are using.
       options:
-        - Windows
-        - MacOS
-        - Linux
+        - Windows 🪟
+        - MacOS 🍏
+        - Linux 🐧
+        - Docker 🐋
         - Other
     validations:
       required: true
