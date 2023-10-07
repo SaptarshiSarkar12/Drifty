@@ -1,7 +1,7 @@
 name: 💡 Feature Request for Drifty Application
 description: Suggest a new feature for the Application
 title: "[FEATURE] "
-labels: [enhancement, App]
+labels: ["feature ✨", "App 💻"]
 body:
   - type: textarea
     id: related-problem-for-feature-request
