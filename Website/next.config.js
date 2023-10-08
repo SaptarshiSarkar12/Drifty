@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    pageExtensions: ['js', 'jsx', 'md', 'mdx'],
     basePath: process.env.BASE_PATH,
     output: 'export',
     images: {
@@ -23,4 +24,7 @@ const nextConfig = {
     },
 }
 
-module.exports = nextConfig
+const withMDX = require('@next/mdx')({
+    extension: /\.mdx?$/
+})
+module.exports = withMDX(nextConfig)
