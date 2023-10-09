@@ -30,7 +30,7 @@ jobs:
   build-Drifty:
     strategy:
       matrix:
-        os: ["windows-latest", "macos-13", "ubuntu-latest"]
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:

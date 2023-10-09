@@ -21,6 +21,7 @@
         <mac.app.store/>
         <resource-config-file/>
         <system-native-image-arg/>
+        <compatibility-arg/>
         <system-linker-arg/>
         <versions-maven-plugin>2.16.1</versions-maven-plugin>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
@@ -57,7 +58,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.13.0</version>
+            <version>2.14.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -114,6 +115,7 @@
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
+                    <enableSWRendering>true</enableSWRendering>
                     <mainClass>${guiMain}</mainClass>
                     <linkerArgs>
                         <arg>${system-linker-arg}</arg>
@@ -127,6 +129,7 @@
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
 <!--                        <arg>-o Drifty GUI</arg>-->
                         <arg>${system-native-image-arg}</arg>
+                        <arg>${compatibility-arg}</arg>
                     </nativeImageArgs>
                     <appIdentifier>${guiMain}</appIdentifier>
                     <releaseConfiguration>
@@ -205,6 +208,7 @@
                                 <buildArg>--enable-url-protocols=http</buildArg>
                                 <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
                             </buildArgs>
@@ -224,7 +228,7 @@
         </profile>
         <!-- [macOS] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-13</id>
+            <id>build-drifty-cli-for-macos-latest</id>
             <properties>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
             </properties>
@@ -244,6 +248,7 @@
                                 <buildArg>--enable-url-protocols=http</buildArg>
                                 <buildArg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
                             </buildArgs>
@@ -263,7 +268,7 @@
         </profile>
         <!-- [macOS] GUI native image builder profile -->
         <profile>
-            <id>build-drifty-gui-for-macos-13</id>
+            <id>build-drifty-gui-for-macos-latest</id>
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
@@ -278,6 +283,7 @@
             <properties>
                 <system-linker-arg>${pom.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-linux.json</resource-config-file>
+                <compatibility-arg>-march=compatibility</compatibility-arg>
             </properties>
         </profile>
         <!-- [Windows] GUI native image builder profile -->
