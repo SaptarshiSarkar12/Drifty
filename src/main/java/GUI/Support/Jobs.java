@@ -11,11 +11,12 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * loops that run the jobs.
  */
 public class Jobs {
+    private ConcurrentLinkedDeque<Job> jobList;
     public Jobs() {
         this.jobList = new ConcurrentLinkedDeque<>();
     }
 
-    private ConcurrentLinkedDeque<Job> jobList;
+
 
     public ConcurrentLinkedDeque<Job> jobList() {
         if (jobList == null) {
@@ -32,6 +33,8 @@ public class Jobs {
         jobList.addLast(newJob);
         save();
     }
+
+
 
     public void remove(Job oldJob) {
         Job removeJob = oldJob;
@@ -66,6 +69,7 @@ public class Jobs {
         jobList.clear();
         save();
     }
+
 
     private void save() {
         AppSettings.set.Jobs(this);

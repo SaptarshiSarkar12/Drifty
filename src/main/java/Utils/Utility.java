@@ -42,6 +42,7 @@ public final class Utility {
     }
 
     public static boolean isYoutube(String url) {
+
         String pattern = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
         return url.matches(pattern);
     }
@@ -264,6 +265,8 @@ public final class Utility {
         Matcher m = p.matcher(text);
         return m.matches();
     }
+
+
 
     public static void sleep(long time) {
         try {

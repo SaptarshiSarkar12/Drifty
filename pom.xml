@@ -89,8 +89,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin}</version>
                 <configuration>
-                    <source>20</source>
-                    <target>20</target>
+                    <source>19</source>
+                    <target>19</target>
                 </configuration>
             </plugin>
             <!--Maven Versions Plugin-->

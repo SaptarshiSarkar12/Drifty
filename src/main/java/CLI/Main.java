@@ -3,6 +3,8 @@ package CLI;
 import Backend.FileDownloader;
 import Enums.MessageType;
 import Enums.OS;
+import GUI.Support.Job;
+import GUI.Support.JobHistory;
 import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
@@ -27,6 +31,7 @@ import static Utils.Utility.*;
 public class Main {
     public static final Logger logger = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
+    protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
     protected static boolean isInstagramImage;
@@ -46,10 +51,12 @@ public class Main {
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
+        jobHistory = new JobHistory();
         printBanner();
         String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
+
             String name = null;
             String location = null;
             if (args.length > 1) {
@@ -71,6 +78,7 @@ public class Main {
                     } else {
                         if (isURL(args[i])) {
                             link = args[i];
+
                         } else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
                             System.exit(1);
@@ -82,6 +90,7 @@ public class Main {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
                     isUrlValid = Utility.isLinkValid(link);
+
                 } else {
                     isUrlValid = false;
                     messageBroker.msgLinkError("Link is invalid!");
@@ -143,10 +152,33 @@ public class Main {
                 System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.get.lastDownloadFolder() + ") : ");
                 downloadsFolder = SC.next();
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
+
+
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                link = removeSI_Parameter(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
+                Job job = new Job(link,downloadsFolder,fileName,false);
+                if(jobHistory.exists(link)) {
+                    System.out.print("\""+fileName +"\"" +  " already exists . Do you want to download it again ? ");
+                    String choiceString = SC.nextLine().toLowerCase();
+                    boolean choice = utility.yesNoValidation(choiceString, "");
+                    if(!choice) {
+                        logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                        return;
+                    } else {
+
+                            fileName = jobHistory.generateUniqueFileName(job); //generate new file name
+                            Job new_job = new Job(link,downloadsFolder,fileName,false);
+                            jobHistory.addJob(new_job,true);
+                    }
+                } else {
+                    jobHistory.addJob(job,true);
+                }
+
+
+
                 renameFilenameIfRequired(true);
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
                 downloader.run();
@@ -222,6 +254,7 @@ public class Main {
                 messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                link = removeSI_Parameter(link);
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
                 } else {
@@ -240,6 +273,22 @@ public class Main {
                         directory = AppSettings.get.lastDownloadFolder();
                     }
                 }
+                Job job = new Job(link,directory,fileName,false);
+                if(jobHistory.exists(link)) {
+                    System.out.print("\""+fileName+"\"" +" already exits. Do you want to download it again ? ");
+                    boolean choice = utility.yesNoValidation("", "");
+                    if(!choice) {
+                        logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                        continue;
+                    } else {
+                        fileName = jobHistory.generateUniqueFileName(job); //generate new file name
+                        Job new_job = new Job(link,directory,fileName,false);
+                        jobHistory.addJob(new_job,true);
+                    }
+                } else {
+                    jobHistory.addJob(job,true);
+                }
+
                 FileDownloader downloader = new FileDownloader(link, fileName, directory);
                 downloader.run();
             }
@@ -325,4 +374,15 @@ public class Main {
         System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
+    public static String removeSI_Parameter(String url) {
+        String pattern = "([?&])si=[^&]*";
+        // Compile the pattern
+        Pattern r = Pattern.compile(pattern);
+        // Create a matcher with the input URL
+        Matcher m = r.matcher(url);
+        // Replace any matches with an empty string
+        return m.replaceAll("");
+
+    }
+
 }
