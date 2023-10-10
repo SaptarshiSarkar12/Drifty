@@ -16,8 +16,6 @@ public class Jobs {
         this.jobList = new ConcurrentLinkedDeque<>();
     }
 
-
-
     public ConcurrentLinkedDeque<Job> jobList() {
         if (jobList == null) {
             return new ConcurrentLinkedDeque<>();
@@ -33,8 +31,6 @@ public class Jobs {
         jobList.addLast(newJob);
         save();
     }
-
-
 
     public void remove(Job oldJob) {
         Job removeJob = oldJob;
@@ -69,7 +65,6 @@ public class Jobs {
         jobList.clear();
         save();
     }
-
 
     private void save() {
         AppSettings.set.Jobs(this);

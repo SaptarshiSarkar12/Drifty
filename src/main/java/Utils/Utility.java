@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Random;
@@ -226,6 +228,20 @@ public final class Utility {
         return gson.toJson(element);
     }
 
+    public static String renameFile(String filename, String dir) {
+        Path path = Paths.get(dir, filename);
+        String newFilename = filename;
+        int fileNum = -1;
+        String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
+        String ext = "." + FilenameUtils.getExtension(filename);
+        while (path.toFile().exists()) {
+            fileNum += 1;
+            newFilename = baseName + " (" + fileNum + ")" + ext;
+            path = Paths.get(dir, newFilename);
+        }
+        return newFilename;
+    }
+
     public static String getFilenameFromJson(String jsonString) {
         String json = makePretty(jsonString);
         String filename;
@@ -244,7 +260,7 @@ public final class Utility {
 
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
-        return fn.replaceAll("[^a-zA-Z0-9-._)<(> ]+", "");
+        return fn.replaceAll("[^a-zA-Z0-9-._)<(> ]+", "").strip();
     }
 
     private static Runnable ytDLPJsonData(String folderPath, String link) {

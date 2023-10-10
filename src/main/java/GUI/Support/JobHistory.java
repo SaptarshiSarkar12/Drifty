@@ -6,49 +6,24 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
+    private ConcurrentLinkedDeque<Job> jobHistoryList;
+
     public JobHistory() {
         this.jobHistoryList = new ConcurrentLinkedDeque<>();
     }
 
-    private ConcurrentLinkedDeque<Job> jobHistoryList;
-
-    public void addJob(Job newJob) {
-        for (Job job : jobHistoryList) {
-            if (job.matchesLink(newJob))
-                return;
-        }
-        jobHistoryList.addLast(newJob);
-        save();
-    }
-    public void addJob(Job newJob,boolean isCLI) {
-        if(isCLI) {
+    public void addJob(Job newJob, boolean isCLI) {
+        if (isCLI) {
             jobHistoryList.addLast(newJob);
             AppSettings.set.jobHistory(this);
+        } else {
+            for (Job job : jobHistoryList) {
+                if (job.matchesLink(newJob))
+                    return;
+            }
+            jobHistoryList.addLast(newJob);
+            save();
         }
-    }
-
-
-    public String generateUniqueFileName(Job job) {
-            int counter = 1;
-            String baseName = job.getFilename().substring(0,job.getFilename().lastIndexOf("."));
-            String extension = job.getFilename().substring(job.getFilename().lastIndexOf("."));
-            String filename = job.getFilename();
-            LinkedList<Job> sameFile = new LinkedList<>();
-            for(Job prevJob : jobHistoryList) {
-                if(prevJob.getLink().equals(job.getLink()) && prevJob.getDir().equals(job.getDir())) {
-                   sameFile.addLast(prevJob);
-                }
-            }
-           for(Job prevJob : sameFile) {
-            if(prevJob.getFilename().equals(filename) ) {
-                filename = baseName + "(" + counter+ ")" + extension;
-                counter++;
-
-            }
-           }
-
-            return filename;
-
     }
 
     public void clear() {
