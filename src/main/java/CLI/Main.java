@@ -345,13 +345,14 @@ public class Main {
             FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
             downloader.run();
         } else if (fileExists_HasHistory) {
-            System.out.printf(msg_FileExists_HasHistory + "\n", job.getFilename(), job.getDir());
+            System.out.printf(msg_FileExists_HasHistory, job.getFilename(), job.getDir());
+            SC.nextLine(); // to remove whitespace from input buffer
             String choiceString = SC.nextLine().toLowerCase();
-            boolean choice = utility.yesNoValidation(choiceString, String.format(msg_FileExists_HasHistory + "\n", job.getFilename(), job.getDir()));
+            boolean choice = utility.yesNoValidation(choiceString, String.format(msg_FileExists_HasHistory, job.getFilename(), job.getDir()));
             if (choice) {
                 fileName = Utility.renameFile(fileName, downloadsFolder);
                 System.out.println("New file name : " + fileName);
-                renameFilenameIfRequired(true);
+                renameFilenameIfRequired(false);
                 job = new Job(link, downloadsFolder, fileName, false);
                 jobHistory.addJob(job,true);
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
