@@ -76,9 +76,10 @@ For **Users** :
 ### Using Drifty Application via Docker 🐋
 
 > [!IMPORTANT]   
-> To download files in your local directory, you need to pass that directory as a volume to Drifty.   
+> - To download files in your local directory, you need to pass that directory as a volume to Drifty.   
 > Suppose, you want to download the file in your `home/username/Downloads` directory, then, the volume flag that you need to pass to docker will be `-v /home/username/Downloads:/root/Downloads`.   
-> You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+> - You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+> - For **Linux**, it is advisable to use **Docker Engine** directly instead of running images using **Docker Desktop**. You can do the same by adding **_`sudo`_** before the docker commands.
 
 1. Pull the Docker image for Drifty using the below command -   
     **For Drifty CLI**,
@@ -99,8 +100,9 @@ For **Users** :
     docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
     ```
     > [!IMPORTANT]  
-    > Please run `xhost +local:docker` before running the GUI docker image.
-3. Drifty will open and you can now use it 🎉!
+    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+    > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
+3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone your fork into your local directory by running this command in your terminal.
@@ -124,7 +126,7 @@ For **Contributors** :
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
-It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed by following steps:
+It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed with the following steps:
 - Click on the three dots. 
 - Click on keep.
 
@@ -162,6 +164,5 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 Please **leave a star ⭐** on this project to _support us_.
 
 ## Thanks to all the contributors ❤️
-<a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
-   <img src = "https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty"/>
-</a>
+
+[![Contributors' gallery at a glance](https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty&max=200)](https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors)
