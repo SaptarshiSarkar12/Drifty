@@ -5,9 +5,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>GUI.Forms.Main</string>
 	<key>CFBundleVersion</key>
-	<string>2.0.0</string>
+	<string>2.1.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.0</string>
+	<string>2.1.0</string>
 	<key>CFBundleExecutable</key>
 	<string>Drifty</string>
 	<key>CFBundleIconFile</key>
