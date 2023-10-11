@@ -1,8 +1,0 @@
-name: Release Drifty
-
-on:
-  workflow_dispatch:
-
-jobs:
-  prepare-build-and-release-Drifty:
-    uses: ./.github/workflows/build.yml
