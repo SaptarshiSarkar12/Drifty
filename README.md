@@ -123,7 +123,7 @@ For **Contributors** :
    > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
 2. Drifty app will appear on the screen and you can test it 🎉!
 
-## Safety warning ⚠ while Downloading ⬇
+## Safety warning ⚠️ while Downloading ⬇️
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
@@ -149,6 +149,15 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 ![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
 
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
+
+## Safety warning ⚠️ while Installing
+- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below :
+    |||
+    |--|--|
+    | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
+- For macOS, click on **Ok** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
+    <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
+
 
 ## Contributing to the project
 - Please feel free to contribute to this open-source project. 
