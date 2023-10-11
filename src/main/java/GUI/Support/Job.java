@@ -47,7 +47,7 @@ public class Job {
     }
 
     public String getFilename() {
-        return filename;
+        return this.filename;
     }
 
     public File getFile() {

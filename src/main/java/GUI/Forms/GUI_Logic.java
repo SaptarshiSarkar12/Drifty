@@ -1,6 +1,6 @@
 package GUI.Forms;
 
-import Enums.*;
+import Enums.Colors;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.JobHistory;
@@ -32,19 +32,20 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
 import static GUI.Forms.Constants.MONACO_TTF;
 import static GUI.Forms.Constants.getStage;
+import static Utils.Utility.renameFile;
 import static Utils.Utility.sleep;
 
 public class GUI_Logic {
@@ -369,7 +370,7 @@ public class GUI_Logic {
                         int exitCode = downloadFile.getExitCode();
                         if (exitCode == 0) { //Success
                             removeJobFromList(job);
-                            getHistory().addJob(job);
+                            getHistory().addJob(job, false);
                         }
                     }
                 }
@@ -434,20 +435,6 @@ public class GUI_Logic {
             addJob(job);
         }
         selectedJob = null;
-    }
-
-    private String renameFile(String filename, String dir) {
-        Path path = Paths.get(dir, filename);
-        String newFilename = filename;
-        int fileNum = -1;
-        String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
-        String ext = "." + FilenameUtils.getExtension(filename);
-        while (path.toFile().exists()) {
-            fileNum += 1;
-            newFilename = baseName + " (" + fileNum + ")" + ext;
-            path = Paths.get(dir, newFilename);
-        }
-        return newFilename;
     }
 
     private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {

@@ -6,19 +6,24 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
+    private ConcurrentLinkedDeque<Job> jobHistoryList;
+
     public JobHistory() {
         this.jobHistoryList = new ConcurrentLinkedDeque<>();
     }
 
-    private ConcurrentLinkedDeque<Job> jobHistoryList;
-
-    public void addJob(Job newJob) {
-        for (Job job : jobHistoryList) {
-            if (job.matchesLink(newJob))
-                return;
+    public void addJob(Job newJob, boolean isCLI) {
+        if (isCLI) {
+            jobHistoryList.addLast(newJob);
+            AppSettings.set.jobHistory(this);
+        } else {
+            for (Job job : jobHistoryList) {
+                if (job.matchesLink(newJob))
+                    return;
+            }
+            jobHistoryList.addLast(newJob);
+            save();
         }
-        jobHistoryList.addLast(newJob);
-        save();
     }
 
     public void clear() {
@@ -48,6 +53,7 @@ public class JobHistory {
         AppSettings.set.jobHistory(this);
     }
 
+
     private void removeDuplicates() {
         LinkedList<Job> removeList = new LinkedList<>();
         for (Job jobSource : jobHistoryList) {
@@ -66,4 +72,5 @@ public class JobHistory {
             jobHistoryList.remove(job);
         }
     }
+
 }

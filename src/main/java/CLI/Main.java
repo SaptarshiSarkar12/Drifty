@@ -3,6 +3,8 @@ package CLI;
 import Backend.FileDownloader;
 import Enums.MessageType;
 import Enums.OS;
+import GUI.Support.Job;
+import GUI.Support.JobHistory;
 import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
@@ -27,16 +29,19 @@ import static Utils.Utility.*;
 public class Main {
     public static final Logger logger = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
+    protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
     protected static boolean isInstagramImage;
     private static MessageBroker messageBroker;
     private static String link;
+    private static String downloadsFolder;
     private static Utility utility;
-    private static String directory;
     private static String fileName = null;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
+    private static final String msg_FileExists_NoHistory = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
+    private static final String msg_FileExists_HasHistory = "You have previously downloaded \"%s\" and it exists in \"%s\" folder. Do you want to download it again? ";
 
     public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
@@ -46,8 +51,8 @@ public class Main {
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
+        jobHistory = AppSettings.get.jobHistory();
         printBanner();
-        String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
             String name = null;
@@ -71,6 +76,7 @@ public class Main {
                     } else {
                         if (isURL(args[i])) {
                             link = args[i];
+
                         } else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
                             System.exit(1);
@@ -82,6 +88,7 @@ public class Main {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
                     isUrlValid = Utility.isLinkValid(link);
+
                 } else {
                     isUrlValid = false;
                     messageBroker.msgLinkError("Link is invalid!");
@@ -95,11 +102,10 @@ public class Main {
                             fileName = findFilenameInLink(link);
                         }
                     }
-                    renameFilenameIfRequired(false);
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                    FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
-                    downloader.run();
+                    Job job = new Job(link, downloadsFolder, fileName, false);
+                    checkHistoryAddJobsAndDownload(job);
                 }
             }
             logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
@@ -131,7 +137,7 @@ public class Main {
             }
             if (!batchDownloading) {
                 System.out.print(ENTER_FILE_LINK);
-                String link = SC.next();
+                link = SC.next();
                 SC.nextLine();
                 System.out.println("Validating link...");
                 if (Utility.isURL(link)) {
@@ -147,9 +153,8 @@ public class Main {
                 isInstagramLink = isInstagram(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
-                renameFilenameIfRequired(true);
-                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
-                downloader.run();
+                Job job = new Job(link, downloadsFolder, fileName, false);
+                checkHistoryAddJobsAndDownload(job);
             }
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
@@ -186,16 +191,16 @@ public class Main {
             if (data.containsKey("directory")) {
                 numberOfDirectories = 1;
                 if (data.get("directory").get(0).isEmpty()) {
-                    directory = ".";
+                    downloadsFolder = ".";
                 } else {
-                    directory = data.get("directory").get(0);
+                    downloadsFolder = data.get("directory").get(0);
                 }
             } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
             } else {
                 messageBroker.msgDirInfo("No directory specified. Default downloads folder will be used.");
                 numberOfDirectories = 0;
-                directory = ".";
+                downloadsFolder = ".";
             }
             String linkMessage;
             if (numberOfLinks == 1) {
@@ -229,19 +234,19 @@ public class Main {
                     fileName = findFilenameInLink(link);
                 }
                 renameFilenameIfRequired(false);
-                if (directory.equals(".")) {
-                    directory = Utility.getHomeDownloadFolder().toString();
-                } else if (directory.equalsIgnoreCase("L")) {
-                    directory = AppSettings.get.lastDownloadFolder();
-                } else if (directory.isEmpty()) {
+                if (downloadsFolder.equals(".")) {
+                    downloadsFolder = Utility.getHomeDownloadFolder().toString();
+                } else if (downloadsFolder.equalsIgnoreCase("L")) {
+                    downloadsFolder = AppSettings.get.lastDownloadFolder();
+                } else if (downloadsFolder.isEmpty()) {
                     try {
-                        directory = data.get("directories").get(i);
+                        downloadsFolder = data.get("directories").get(i);
                     } catch (Exception e) {
-                        directory = AppSettings.get.lastDownloadFolder();
+                        downloadsFolder = AppSettings.get.lastDownloadFolder();
                     }
                 }
-                FileDownloader downloader = new FileDownloader(link, fileName, directory);
-                downloader.run();
+                Job job = new Job(link, downloadsFolder, fileName, false);
+                checkHistoryAddJobsAndDownload(job);
             }
         } catch (FileNotFoundException e) {
             messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
@@ -324,5 +329,40 @@ public class Main {
         System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
         System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
+    }
+
+    private static void checkHistoryAddJobsAndDownload(Job job) {
+        boolean doesFileExist = job.fileExists();
+        boolean hasHistory = jobHistory.exists(link);
+        boolean fileExists_HasHistory = doesFileExist && hasHistory;
+        boolean fileExists_NoHistory = doesFileExist && !hasHistory;
+        if (fileExists_NoHistory) {
+            fileName = Utility.renameFile(fileName, downloadsFolder);
+            System.out.printf(msg_FileExists_NoHistory + "\n", job.getFilename(), job.getDir(), fileName);
+            renameFilenameIfRequired(true);
+            job = new Job(link, downloadsFolder, fileName, false);
+            jobHistory.addJob(job,true);
+            FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+            downloader.run();
+        } else if (fileExists_HasHistory) {
+            System.out.printf(msg_FileExists_HasHistory, job.getFilename(), job.getDir());
+            SC.nextLine(); // to remove whitespace from input buffer
+            String choiceString = SC.nextLine().toLowerCase();
+            boolean choice = utility.yesNoValidation(choiceString, String.format(msg_FileExists_HasHistory, job.getFilename(), job.getDir()));
+            if (choice) {
+                fileName = Utility.renameFile(fileName, downloadsFolder);
+                System.out.println("New file name : " + fileName);
+                renameFilenameIfRequired(false);
+                job = new Job(link, downloadsFolder, fileName, false);
+                jobHistory.addJob(job,true);
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                downloader.run();
+            }
+        } else {
+            jobHistory.addJob(job, true);
+            renameFilenameIfRequired(true);
+            FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+            downloader.run();
+        }
     }
 }
