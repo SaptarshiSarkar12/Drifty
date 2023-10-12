@@ -4,11 +4,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"main","parameterTypes":["java.lang.String[]"] }]
 },
 {
-  "name":"GUI.Support.FileExtensions",
-  "allDeclaredFields":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"GUI.Support.Folders",
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
@@ -36,10 +31,6 @@
 },
 {
   "name":"[Lsun.security.pkcs.SignerInfo;"
-},
-{
-  "name":"apple.security.AppleProvider",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"com.sun.crypto.provider.AESCipher$General",
@@ -80,29 +71,6 @@
 {
   "name":"com.sun.crypto.provider.TlsMasterSecretGenerator",
   "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.glass.ui.Application"
-},
-{
-  "name":"com.sun.glass.ui.Menu"
-},
-{
-  "name":"com.sun.glass.ui.MenuItem$Callback"
-},
-{
-  "name":"com.sun.glass.ui.Size"
-},
-{
-  "name":"com.sun.glass.ui.View"
-},
-{
-  "name":"com.sun.javafx.collections.ObservableListWrapper",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.javafx.font.coretext.CTFactory",
-  "methods":[{"name":"getFactory","parameterTypes":[] }]
 },
 {
   "name":"com.sun.javafx.font.freetype.FTFactory",
@@ -184,10 +152,6 @@
   "methods":[{"name":"createRenderer","parameterTypes":["com.sun.scenario.effect.FilterContext"] }]
 },
 {
-  "name":"com.sun.scenario.effect.impl.prism.ps.PPSBlend_SRC_INPeer",
-  "methods":[{"name":"<init>","parameterTypes":["com.sun.scenario.effect.FilterContext","com.sun.scenario.effect.impl.Renderer","java.lang.String"] }]
-},
-{
   "name":"com.sun.scenario.effect.impl.prism.ps.PPSLinearConvolveShadowPeer",
   "methods":[{"name":"<init>","parameterTypes":["com.sun.scenario.effect.FilterContext","com.sun.scenario.effect.impl.Renderer","java.lang.String"] }]
 },
@@ -210,9 +174,6 @@
 {
   "name":"java.lang.ModuleLayer",
   "methods":[{"name":"boot","parameterTypes":[] }, {"name":"findModule","parameterTypes":["java.lang.String"] }]
-},
-{
-  "name":"java.lang.Runnable"
 },
 {
   "name":"java.lang.String"
@@ -369,9 +330,6 @@
 },
 {
   "name":"jdk.internal.misc.Unsafe"
-},
-{
-  "name":"org.eclipse.swt.internal.gtk.OS"
 },
 {
   "name":"sun.misc.Unsafe",

@@ -118,7 +118,7 @@ public class FileDownloader implements Runnable {
             fileDownloadMessage = outputFileName;
         }
         M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
+        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", "mp4");
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
         int exitValueOfYt_Dlp = -1;

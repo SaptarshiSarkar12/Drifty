@@ -82,7 +82,7 @@ public class DownloadFile extends Task<Integer> {
     }
 
     private void downloadYoutubeOrInstagram() {
-        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename};
+        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", "mp4"};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
