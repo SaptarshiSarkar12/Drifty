@@ -76,9 +76,10 @@ For **Users** :
 ### Using Drifty Application via Docker 🐋
 
 > [!IMPORTANT]   
-> To download files in your local directory, you need to pass that directory as a volume to Drifty.   
+> - To download files in your local directory, you need to pass that directory as a volume to Drifty.   
 > Suppose, you want to download the file in your `home/username/Downloads` directory, then, the volume flag that you need to pass to docker will be `-v /home/username/Downloads:/root/Downloads`.   
-> You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+> - You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+> - For **Linux**, it is advisable to use **Docker Engine** directly instead of running images using **Docker Desktop**. You can do the same by adding **_`sudo`_** before the docker commands.
 
 1. Pull the Docker image for Drifty using the below command -   
     **For Drifty CLI**,
@@ -99,8 +100,9 @@ For **Users** :
     docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
     ```
     > [!IMPORTANT]  
-    > Please run `xhost +local:docker` before running the GUI docker image.
-3. Drifty will open and you can now use it 🎉!
+    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+    > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
+3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone your fork into your local directory by running this command in your terminal.
@@ -116,15 +118,16 @@ For **Contributors** :
 
 ### Using Docker 🐋 for Development
 1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
-    > [!IMPORTANT]   
-    > Please run `xhost +local:docker` before running the GUI docker image.
+   > [!IMPORTANT]  
+   > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+   > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
 2. Drifty app will appear on the screen and you can test it 🎉!
 
-## Safety warning ⚠ while Downloading ⬇
+## Safety warning ⚠️ while Downloading ⬇️
 
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
-It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed by following steps:
+It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed with the following steps:
 - Click on the three dots. 
 - Click on keep.
 
@@ -147,6 +150,15 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
+## Safety warning ⚠️ while Installing
+- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below :
+    |||
+    |--|--|
+    | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
+- For macOS, click on **Ok** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
+    <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
+
+
 ## Contributing to the project
 - Please feel free to contribute to this open-source project. 
 - See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [**`Projects`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
@@ -162,6 +174,5 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 Please **leave a star ⭐** on this project to _support us_.
 
 ## Thanks to all the contributors ❤️
-<a href = "https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors">
-   <img src = "https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty"/>
-</a>
+
+[![Contributors' gallery at a glance](https://contrib.rocks/image?repo=SaptarshiSarkar12/Drifty&max=200)](https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors)

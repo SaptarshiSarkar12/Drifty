@@ -156,7 +156,7 @@ jobs:
         echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
     
-        if [ ${{ github.event_name != 'workflow_call' }} ]; then
+        if [ ${{ !inputs.create_release }} ]; then
           echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
           echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
         fi
