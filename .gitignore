@@ -3,7 +3,6 @@
 target/
 Website/.next
 Website/node_modules
-Website/package-lock.json
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
