@@ -1,4 +1,5 @@
-import Head from 'next/head'
+import Header from '../Header'
+import Footer from '../Footer'
 import Markdown from 'react-markdown'
 import { getAllComponents, getComponentHtml } from './api'
 
@@ -20,6 +21,7 @@ export default async function Docs() {
     const troubleshootingHtml = await getComponentHtml('troubleshooting.md')
     return (
         <div>
+            <Header props={'bg-top'} />
             <main>
                 <h1>Documentation</h1>
                 <Markdown children={quickstartHtml} />
@@ -27,6 +29,7 @@ export default async function Docs() {
                 <Markdown children={faqHtml} />
                 <Markdown children={troubleshootingHtml} />
             </main>
+            <Footer />
         </div>
     )
 }
