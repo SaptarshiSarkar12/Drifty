@@ -101,7 +101,7 @@ For **Users** :
     ```
     > [!IMPORTANT]  
     > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-    > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
+    > For **macOS**, please follow [these instructions](Docker/MacOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
@@ -120,8 +120,8 @@ For **Contributors** :
 1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
    > [!IMPORTANT]  
    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-   > For **macOS**, please follow [this article](https://cntnr.io/running-guis-with-docker-on-mac-os-x-a14df6a76efc) to run GUI docker images.
-2. Drifty app will appear on the screen and you can test it 🎉!
+   > For **macOS**, please follow [these instructions](Docker/MacOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+2. Drifty app will appear on the screen, and you can test it 🎉!
 
 ## Safety warning ⚠️ while Downloading ⬇️
 
