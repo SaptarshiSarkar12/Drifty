@@ -1,4 +1,4 @@
-name: Docker
+name: Build and publish Docker images
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -31,26 +31,26 @@ jobs:
     runs-on: "ubuntu-latest"
     strategy:
       matrix:
-        filename: [ cli.Dockerfile, gui.Dockerfile ]
+        filename: [ CLI/Dockerfile, GUI/Dockerfile ]
         docker_context: [CLI, GUI]
         image_name: [ drifty-cli, drifty-gui ]
         exclude:
-          - filename: gui.Dockerfile
+          - filename: GUI/Dockerfile
             docker_context: CLI
             image_name: drifty-cli
-          - filename: gui.Dockerfile
+          - filename: GUI/Dockerfile
             docker_context: GUI
             image_name: drifty-cli
-          - filename: gui.Dockerfile
+          - filename: GUI/Dockerfile
             docker_context: CLI
             image_name: drifty-gui
-          - filename: cli.Dockerfile
+          - filename: CLI/Dockerfile
             docker_context: GUI
             image_name: drifty-gui
-          - filename: cli.Dockerfile
+          - filename: CLI/Dockerfile
             docker_context: CLI
             image_name: drifty-gui
-          - filename: cli.Dockerfile
+          - filename: CLI/Dockerfile
             docker_context: GUI
             image_name: drifty-cli
       fail-fast: false
@@ -77,27 +77,27 @@ jobs:
           cache: 'maven'
           components: 'native-image'
       - name: Package Drifty CLI with GraalVM
-        if: matrix.filename == 'cli.Dockerfile'
+        if: matrix.filename == 'CLI/Dockerfile'
         run: mvn -Pbuild-drifty-cli-for-ubuntu-latest package
       - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
-        if: matrix.filename == 'gui.Dockerfile'
+        if: matrix.filename == 'GUI/Dockerfile'
         uses: stCarolas/setup-maven@v4.5
         with:
           maven-version: 3.8.8
       - name: Build platform-specific C object for missing jdk libraries
-        if: matrix.filename == 'gui.Dockerfile'
+        if: matrix.filename == 'GUI/Dockerfile'
         run: gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
       - name: Package Drifty GUI with GraalVM
-        if: matrix.filename == 'gui.Dockerfile'
+        if: matrix.filename == 'GUI/Dockerfile'
         run: mvn -Pbuild-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package
       - name: Categorise build artifacts for CLI
-        if: matrix.filename == 'cli.Dockerfile'
+        if: matrix.filename == 'CLI/Dockerfile'
         run: |
           mkdir CLI
           mv "target/CLI/linux/Drifty CLI" "target/CLI/linux/Drifty_CLI"
           mv "target/CLI/linux/Drifty_CLI" -t CLI
       - name: Categorise build artifacts for GUI
-        if: matrix.filename == 'gui.Dockerfile'
+        if: matrix.filename == 'GUI/Dockerfile'
         run: |
           mkdir GUI
           mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty_GUI"
@@ -156,7 +156,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          file: Docker/${{ matrix.filename }}
+          file: Docker/prod/${{ matrix.filename }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       # Sign the resulting Docker image digest except on PRs.
