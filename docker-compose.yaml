@@ -5,13 +5,13 @@ services:
   base:
     build:
       context: .
-      dockerfile: ./Docker/base.Dockerfile
+      dockerfile: ./Docker/dev/commons/base/Dockerfile
     container_name: drifty-base
 
   runner:
     build:
       context: .
-      dockerfile: ./Docker/runner.Dockerfile
+      dockerfile: ./Docker/dev/commons/runner/Dockerfile
     container_name: drifty-runner
   
   cli:
@@ -19,7 +19,7 @@ services:
       - base
     build:
       context: .
-      dockerfile: ./Docker/dev.cli.Dockerfile
+      dockerfile: ./Docker/dev/CLI/Dockerfile
     container_name: drifty-cli
     volumes:
       - ${DOWNLOAD_FOLDER:-.}:/root/Downloads
@@ -30,7 +30,7 @@ services:
       - runner
     build:
       context: .
-      dockerfile: ./Docker/dev.gui.Dockerfile
+      dockerfile: ./Docker/dev/GUI/Dockerfile
     container_name: drifty-gui
     network_mode: host
     privileged: true
@@ -40,4 +40,3 @@ services:
       - ${DOWNLOAD_FOLDER:-.}:/root/Downloads
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./.drifty:/root/.config
-
