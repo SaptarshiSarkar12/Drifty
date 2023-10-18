@@ -36,7 +36,7 @@ public class Environment {
         } catch (IOException e) {
             M.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
         }
-        if (ytDLPExists && isYtDLPUpdated()) {
+        if (ytDLPExists && !isYtDLPUpdated()) {
             updateYt_dlp();
         }
         File folder = new File(appUseFolderPath);
@@ -75,7 +75,7 @@ public class Environment {
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime();
-        return timeSinceLastUpdate >= oneDay;
+        return timeSinceLastUpdate <= oneDay;
     }
 
     public static MessageBroker getMessageBroker() {

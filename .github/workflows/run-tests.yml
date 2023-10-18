@@ -1,0 +1,47 @@
+name: Drifty Tests
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+      - "*.txt"
+      - "qodana.yaml"
+  pull_request:
+    branches: [ "master" ]
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+      - "*.txt"
+      - "qodana.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-drifty:
+    strategy:
+      matrix:
+        os: [ "windows-latest", "macos-latest", "ubuntu-latest" ]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Java 20.0.2
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '20.0.2'
+          cache: 'maven'
+      - name: Run tests
+        run: mvn test
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: target/surefire-reports
