@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public class CopyExecutables {
     private static final MessageBroker M = Environment.getMessageBroker();
 
-    public boolean copyExecutables(String[] executableNames) throws IOException {
+    public void copyExecutables(String[] executableNames) throws IOException {
         for (String executableName : executableNames) {
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(executableName);
             Path executablePath = Program.getExecutablesPath(executableName);
@@ -46,6 +46,8 @@ public class CopyExecutables {
                 }
             }
         }
-        return Files.exists(Program.getExecutablesPath(executableNames[0])) && Files.exists(Program.getExecutablesPath(executableNames[1]));
+        if (Files.exists(Program.getExecutablesPath(executableNames[0]))) {
+            Files.exists(Program.getExecutablesPath(executableNames[1]));
+        }
     }
 }

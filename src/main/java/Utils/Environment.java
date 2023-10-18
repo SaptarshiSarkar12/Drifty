@@ -30,9 +30,9 @@ public class Environment {
         Program.setSpotdlExecutableName(spotdl);
         Program.setDriftyPath(appUseFolderPath);
         CopyExecutables copyExecutables = new CopyExecutables();
-        boolean executableExists = false;
+        boolean ytDLPExists = false;
         try {
-            executableExists = copyExecutables.copyExecutables(new String[]{ytDLP, spotdl});
+            copyExecutables.copyExecutables(new String[]{ytDLP, spotdl});
         } catch (IOException e) {
             M.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
             M.msgInitError("Failed to copy spotDL! " + e.getMessage());
