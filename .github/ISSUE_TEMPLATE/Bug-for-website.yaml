@@ -1,0 +1,70 @@
+name: 🐞 Bug Report for Website 🌐
+description: File a bug for the website
+title: "[BUG] "
+labels: ["bug 🐛", "Website 🌐"]
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      description: Please select the operating system that you have used.
+      options:
+        - Windows 🪟
+        - MacOS 🍏
+        - Linux 🐧
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Please select the browser you are using
+      options:
+        - Microsoft Edge
+        - Google Chrome
+        - Safari
+        - Brave
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Please add relevant screenshots for the bug.
+    validations:
+      required: false
+  - type: textarea
+    id: extra-info
+    attributes:
+      label: Additional information
+      description: Add any other context about the problem here.
+    validations:
+      required: false

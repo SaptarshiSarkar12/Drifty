@@ -1,0 +1,15 @@
+.git/
+.github/
+.idea/
+.mvn/
+Website/
+target/
+.gitignore
+LICENSE
+version.json
+docker-compose.yaml
+*.md
+*.txt
+*.log
+*.yaml
+*.yml
