@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -28,8 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static Enums.Program.SPOTDL;
 import static Utils.DriftyConstants.*;
+import static Utils.Utility.getURLforDownload;
 
 public class DownloadFile extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -80,7 +81,6 @@ public class DownloadFile extends Task<Integer> {
         done = true;
         return exitCode;
     }
-
     private void downloadYoutubeOrInstagram() {
         String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", "mp4"};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
@@ -118,11 +118,11 @@ public class DownloadFile extends Task<Integer> {
         }
         sendFinalMessage("");
     }
+
     private void downloadSpotify() {
-        String[] fullCommand = new String[]{SPOTDL, "--output", "{title}", link};
-        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
-        sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
+        String[] fullCommand = new String[]{SPOTDL, "--output", dir, link};
+        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         try {
             process = processBuilder.start();
         } catch (IOException e) {
@@ -140,6 +140,61 @@ public class DownloadFile extends Task<Integer> {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
         }
+        String fileUrl= getURLforDownload(link);
+        sendInfoMessage(String.format(DOWNLOADING_F, filename));
+        String clen = "";
+        try {
+            URI uri = new URI(fileUrl);
+            String query = uri.getQuery();
+            // Split the query string into individual parameters
+            String[] params = query.split("&");
+
+            for (String param : params) {
+                String[] keyValue = param.split("=");
+                if (keyValue.length == 2 && keyValue[0].equals("clen")) {
+                    clen = keyValue[1];
+                    break; // Exit loop after finding clen
+                }
+            }
+        URL url = null;
+        FileOutputStream out = null;
+        InputStream in = null;
+        Path path = Paths.get(dir, filename);
+            url = new URI(link).toURL();
+            URLConnection con = url.openConnection();
+            con.connect();
+            long fileLength = Long.parseLong(clen);
+            String totalSize = UnitConverter.format(fileLength, 2);
+            in = con.getInputStream();
+            out = new FileOutputStream(path.toFile());
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            long totalBytesRead = 0;
+            long start = System.currentTimeMillis();
+            long end;
+            double bytesInTime = 0.0;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+                totalBytesRead += bytesRead;
+                Thread.sleep(500); // Simulate some delay
+                double percentage = (totalBytesRead * 100.0) / fileLength;
+                updateProgress(percentage, 1);
+                bytesInTime += bytesRead;
+                end = System.currentTimeMillis();
+                double seconds = (end - start) / 1000.0;
+                if (seconds >= 1.5) {
+                    start = end;
+                    String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
+                    double bitsTransferred = bytesInTime / 10 / seconds;
+                    bytesInTime = 0;
+                }
+            }
+            exitCode = 0;
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            M.msgLinkError(INVALID_LINK);
+            exitCode = 1;
+        }
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {

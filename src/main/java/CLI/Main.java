@@ -32,6 +32,7 @@ public class Main {
     protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
+    protected static boolean isSpotifyLink;
     protected static boolean isInstagramImage;
     private static MessageBroker messageBroker;
     private static String link;
@@ -94,8 +95,9 @@ public class Main {
                     messageBroker.msgLinkError("Link is invalid!");
                 }
                 if (isUrlValid) {
-                    isYoutubeURL = isYoutube(link);
-                    isInstagramLink = isInstagram(link);
+//                    isYoutubeURL = isYoutube(link);
+//                    isInstagramLink = isInstagram(link);
+//                    isSpotifyLink = isSpotify(link);
                     if (name == null) {
                         if (fileName == null || fileName.isEmpty()) {
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
@@ -151,6 +153,7 @@ public class Main {
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 Job job = new Job(link, downloadsFolder, fileName, false);
@@ -227,6 +230,7 @@ public class Main {
                 messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
                 } else {
@@ -254,7 +258,7 @@ public class Main {
     }
 
     private static void renameFilenameIfRequired(boolean removeInputBufferFirst) { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
-        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
+        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink && !isSpotifyLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             if (removeInputBufferFirst) {
                 SC.nextLine();

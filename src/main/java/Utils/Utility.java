@@ -13,16 +13,16 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
 import org.hildan.fxgson.FxGson;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Scanner;
+import java.text.ParseException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,12 +100,22 @@ public final class Utility {
 
     public static String findFilenameInLink(String link) {
         String filename = "";
-        if (isInstagram(link) || isYoutube(link) || isSpotify(link)) {
+        if (isInstagram(link) || isYoutube(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
             for (String json : Objects.requireNonNull(linkMetadataList)) {
-                filename = Utility.getFilenameFromJson(json);
+                    filename =  Utility.getFilenameFromJson(json);
             }
-        } else {
+        } else if(isSpotify(link)){
+            File file = Program.getSpotdlDataPath().toFile();
+            try
+                {
+                   String json = FileUtils.readFileToString(file, Charset.defaultCharset());
+                   filename = Utility.extractSpotdlFilename(json);
+            }
+            catch(IOException e){
+                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
+            }
+        }else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
             // example.com/file.json -> file.json
             String file = link.substring(link.lastIndexOf("/") + 1);
@@ -184,8 +194,8 @@ public final class Utility {
             }
             Thread linkThread;
             if(isSpotify(link)){
-                driftyJsonFolder = Program.getSpotdlDataPath().toFile();
-                linkThread = new Thread(spotdlJsonData(driftyJsonFolder.getAbsolutePath(), link));
+                  driftyJsonFolder = Program.getSpotdlDataPath().toFile();
+                  linkThread = new Thread(spotdlJsonData(driftyJsonFolder.getAbsolutePath(), link));
             }
             else {
                 linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
@@ -232,6 +242,62 @@ public final class Utility {
         return extractedUrl;
     }
 
+    public static String getURLFromSpotdl(String spotdlData) {
+        String json = makePretty(spotdlData);
+        String regexLink = "(\"url\": \")(.+)(\")";
+        String extractedUrl = "";
+        Pattern p = Pattern.compile(regexLink);
+        Matcher m = p.matcher(spotdlData);
+
+        if (m.find()) {
+            extractedUrl = m.group(2).trim();
+        }
+        return extractedUrl;
+    }
+
+    public static String getURLforDownload(String url){
+        final String SPOTDL = Program.get(Program.SPOTDL);
+        String[] command  =  new String[]{SPOTDL,"url",url};
+
+        StringBuilder output = new StringBuilder();
+        try {
+            Process process = new ProcessBuilder(command).start();
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+            }
+
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+
+                String resultUrl = extractURLforDownload(output.toString());
+                return resultUrl;
+
+            } else {
+                // Handle the case when the command fails
+                System.err.println(output);
+                return null;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static String extractURLforDownload(String output) {
+        String[] lines = output.split("\n");
+
+        for (String line : lines) {
+            if (line.startsWith("https://rr")) {
+                return line;
+            }
+        }
+
+        return null; // URL not found in the output
+    }
     public static String makePretty(String json) {
         // The regex strings won't match unless the json string is converted to pretty format
         GsonBuilder g = new GsonBuilder();
@@ -271,13 +337,13 @@ public final class Utility {
     }
     public static String extractSpotdlFilename(String spotdlData) {
         String json = makePretty(spotdlData);
-        String filename;
+        String filename = "";
         String regex = "(\"name\": \")(.+)(\",)";
         Pattern p = Pattern.compile(regex);
-        Matcher m = p.matcher(spotdlData);
+        Matcher m = p.matcher(json);
 
         if (m.find()) {
-            filename = cleanFilename(m.group(2));
+            filename = cleanFilename(m.group(2)) + ".mp4";
             M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         } else {
             filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";

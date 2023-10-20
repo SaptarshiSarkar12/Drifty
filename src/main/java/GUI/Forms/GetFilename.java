@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Enums.Program.YT_DLP;
-import static Utils.Utility.isSpotify;
+import static Utils.Utility.*;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
@@ -70,10 +70,11 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             jobList.clear();
             for (String json : jsonList) {
                 String filename = Utility.getFilenameFromJson(json);
-                if(isSpotify(link)){
-                    filename = Utility.extractSpotdlFilename(json);
-                }
                 String fileLink = Utility.getURLFromJson(json);
+                if(isSpotify(link)) {
+                    filename = Utility.extractSpotdlFilename(json);
+                    fileLink = Utility.getURLFromSpotdl(json);
+                }
                 String baseName = FilenameUtils.getBaseName(filename);
                 filename = baseName + ".mp4";
                 jobList.addLast(new Job(fileLink, dir, filename, false));
@@ -107,7 +108,13 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             String baseName = FilenameUtils.getBaseName(filename);
                             filename = baseName + ".mp4";
                             updateMessage("Found file: " + filename);
-                            String link = Utility.getURLFromJson(jsonString);
+                            if(isYoutube(link)||isInstagram(link)) {
+                                String link = Utility.getURLFromJson(jsonString);
+                            }
+                            else{
+                                String link = getURLFromSpotdl(jsonString);
+                            }
+
                             jobList.addLast(new Job(link, dir, filename, false));
                             if (fileCount > 1) {
                                 filesProcessed++;

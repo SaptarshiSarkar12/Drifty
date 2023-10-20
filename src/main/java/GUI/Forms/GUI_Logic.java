@@ -225,11 +225,11 @@ public class GUI_Logic {
 
     private Runnable verifyLink(String link) {
         /*
-        When adding links to the jobList, only YouTube and Instagram links will be put through the process of
+        When adding links to the jobList, only YouTube, Instagram and Spotify links will be put through the process of
         searching the link for more than one download, in case the link happens to be a link to a playlist. This
         will probably be far more common with YouTube links.
 
-        If the link does not test positive for YouTube or Instagram, then it is merely added to the jobList as a job
+        If the link does not test positive for YouTube, Instagram or Spotify, then it is merely added to the jobList as a job
         with only the link and the download folder given to the Job class. However, the Job class will take all
         the text after the last forward slash in the link and set it as the filename for that job.
 
