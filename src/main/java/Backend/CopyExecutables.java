@@ -46,8 +46,5 @@ public class CopyExecutables {
                 }
             }
         }
-        if (Files.exists(Program.getExecutablesPath(executableNames[0]))) {
-            Files.exists(Program.getExecutablesPath(executableNames[1]));
-        }
     }
 }

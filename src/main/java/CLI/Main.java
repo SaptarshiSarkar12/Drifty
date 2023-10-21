@@ -42,7 +42,7 @@ public class Main {
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
     private static final String msg_FileExists_NoHistory = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
-    private static final String msg_FileExists_HasHistory = "You have previously downloaded \"%s\" and it exists in \"%s\" folder. Do you want to download it again? ";
+    private static final String msg_FileExists_HasHistory = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
 
     public static void main(String[] args) {
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
@@ -77,7 +77,6 @@ public class Main {
                     } else {
                         if (isURL(args[i])) {
                             link = args[i];
-
                         } else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
                             System.exit(1);
@@ -89,15 +88,11 @@ public class Main {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
                     isUrlValid = Utility.isLinkValid(link);
-
                 } else {
                     isUrlValid = false;
                     messageBroker.msgLinkError("Link is invalid!");
                 }
                 if (isUrlValid) {
-//                    isYoutubeURL = isYoutube(link);
-//                    isInstagramLink = isInstagram(link);
-//                    isSpotifyLink = isSpotify(link);
                     if (name == null) {
                         if (fileName == null || fileName.isEmpty()) {
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
@@ -344,19 +339,24 @@ public class Main {
             fileName = Utility.renameFile(fileName, downloadsFolder);
             System.out.printf(msg_FileExists_NoHistory + "\n", job.getFilename(), job.getDir(), fileName);
             renameFilenameIfRequired(true);
+            if (isSpotifyLink) {
+                link = Utility.getSpotifyDownloadLink(link);
+            }
             job = new Job(link, downloadsFolder, fileName, false);
             jobHistory.addJob(job,true);
             FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
             downloader.run();
         } else if (fileExists_HasHistory) {
             System.out.printf(msg_FileExists_HasHistory, job.getFilename(), job.getDir());
-            SC.nextLine(); // to remove whitespace from input buffer
             String choiceString = SC.nextLine().toLowerCase();
             boolean choice = utility.yesNoValidation(choiceString, String.format(msg_FileExists_HasHistory, job.getFilename(), job.getDir()));
             if (choice) {
                 fileName = Utility.renameFile(fileName, downloadsFolder);
                 System.out.println("New file name : " + fileName);
                 renameFilenameIfRequired(false);
+                if (isSpotifyLink) {
+                    link = Utility.getSpotifyDownloadLink(link);
+                }
                 job = new Job(link, downloadsFolder, fileName, false);
                 jobHistory.addJob(job,true);
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
@@ -365,6 +365,9 @@ public class Main {
         } else {
             jobHistory.addJob(job, true);
             renameFilenameIfRequired(true);
+            if (isSpotifyLink) {
+                link = Utility.getSpotifyDownloadLink(link);
+            }
             FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
             downloader.run();
         }

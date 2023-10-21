@@ -250,35 +250,35 @@ public class GUI_Logic {
                         Job job = getHistory().getJob(link);
                         filename = job.getFilename();
                         dir = getDir();
-                        if(dir == null) {
-                            System.err.println("dir is null");
+                        if (dir == null) {
+                            M.msgDirError("Download folder is not set!");
                             System.exit(0);
                         }
                         String intro = "You have downloaded this link before. The filename is:" + nl + filename + nl.repeat(2);
                         String folder = fileExists(filename);
+                        String windowTitle;
                         if (!folder.isEmpty()) {
                             message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) +
                                     "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) +
                                     "YES will add the job to the list with new filename. NO will do nothing.";
-                        }
-                        else {
+                            windowTitle = "File Already Exists";
+                        } else {
                             message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) +
                                     "Do you still wish to download this file?";
+                            windowTitle = "File Already Downloaded";
                         }
-                        AskYesNo ask = new AskYesNo(message, renameFile(filename, dir));
+                        AskYesNo ask = new AskYesNo(windowTitle, message, renameFile(filename, dir));
                         if (ask.getResponse().isYes()) {
                             filename = ask.getFilename();
                             addJob(new Job(link, dir, filename, true));
                         }
-                    }
-                    else if (Utility.isExtractableLink(link)) {
+                    } else if (Utility.isExtractableLink(link)) {
                         Thread getNames = new Thread(getFilenames(link));
                         getNames.start();
                         while (!getNames.getState().equals(Thread.State.TERMINATED)) {
                             sleep(150);
                         }
-                    }
-                    else {
+                    } else {
                         addJob(new Job(link, getDir()));
                     }
                 }

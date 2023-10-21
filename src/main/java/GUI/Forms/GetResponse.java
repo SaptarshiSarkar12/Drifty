@@ -11,7 +11,7 @@ class GetResponse {
     private State answer = LIMBO;
 
     public boolean isYes() {
-        while(answer.equals(LIMBO)) {
+        while (answer.equals(LIMBO)) {
             sleep(200);
         }
         return answer.equals(YES);
