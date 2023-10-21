@@ -131,10 +131,10 @@ class AskYesNo {
         vbox = new VBox(30, text);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
-        if(state.equals(FILENAME)) {
+        if (state.equals(FILENAME)) {
             vbox.getChildren().add(tfFilename);
         }
-        switch(state) {
+        switch (state) {
             case OK -> hbox.getChildren().add(btnOk);
             case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
         }
