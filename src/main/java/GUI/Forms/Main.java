@@ -37,7 +37,6 @@ public class Main extends Application {
         Environment.setMessageBroker(M);
         M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
-        Utility.setStartTime();
         launch(args);
     }
 
@@ -128,11 +127,11 @@ public class Main extends Application {
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
         MenuItem about = new MenuItem("About Drifty");
-        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html"));
+        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
         contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
+        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
             Stage stage = Constants.getStage("About Drifty", false);
             VBox root = new VBox(10);

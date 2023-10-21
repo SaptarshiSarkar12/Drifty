@@ -27,7 +27,7 @@ public class FileDownloader implements Runnable {
     private final long threadMaxDataSize;
     private final String dir;
     private String fileName;
-    private final String link;
+    private String link;
     private URL url;
 
     public FileDownloader(String link, String fileName, String dir) {
@@ -55,14 +55,6 @@ public class FileDownloader implements Runnable {
         } else {
             return dir + File.separator;
         }
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getFileName() {
-        return fileName;
     }
 
     private void downloadFile() {
@@ -134,7 +126,7 @@ public class FileDownloader implements Runnable {
             fileDownloadMessage = outputFileName;
         }
         M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", "mp4");
+        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
         int exitValueOfYt_Dlp = -1;
@@ -191,8 +183,18 @@ public class FileDownloader implements Runnable {
 
     @Override
     public void run() {
+        link = link.replace('\\', '/');
+        if (!(link.startsWith("http://") || link.startsWith("https://"))) {
+            link = "https://" + link;
+        }
+        if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
+            if (!(link.endsWith("?raw=true"))) {
+                link = link + "?raw=true";
+            }
+        }
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
+        boolean isSpotifyLink = isSpotify(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYouTubeLink || isInstagramLink) {
@@ -207,6 +209,8 @@ public class FileDownloader implements Runnable {
                 } catch (Exception e) {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
+                    } else if (isSpotifyLink) {
+                        M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
                     } else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }

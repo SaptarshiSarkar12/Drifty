@@ -1,7 +1,8 @@
 {
   "resources": {
     "includes": [
-      {"pattern": "yt-dlp"}
+      {"pattern": "yt-dlp"},
+      {"pattern": "spotdl_linux"}
     ]
   }
 }

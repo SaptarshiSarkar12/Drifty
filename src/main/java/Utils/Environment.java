@@ -1,13 +1,12 @@
 package Utils;
 
-import Backend.CopyYtDLP;
+import Backend.CopyExecutables;
 import Enums.OS;
 import Enums.Program;
 import Preferences.AppSettings;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -25,16 +24,18 @@ public class Environment {
     public static void initializeEnvironment() {
         M.msgLogInfo("OS : " + OS.getOSName());
         String ytDLP = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
+        String spotdl = OS.isWindows() ? "spotdl_win.exe" : OS.isMac() ? "spotdl_macos" : "spotdl_linux";
         String appUseFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".config", "Drifty").toAbsolutePath().toString();
-        Program.setExecutableName(ytDLP);
+        Program.setYt_DlpExecutableName(ytDLP);
+        Program.setSpotdlExecutableName(spotdl);
         Program.setDriftyPath(appUseFolderPath);
-        InputStream ytDLPStream = ClassLoader.getSystemResourceAsStream(ytDLP);
-        CopyYtDLP copyYtDlp = new CopyYtDLP();
+        CopyExecutables copyExecutables = new CopyExecutables();
         boolean ytDLPExists = false;
         try {
-            ytDLPExists = copyYtDlp.copyYtDLP(ytDLPStream);
+            copyExecutables.copyExecutables(new String[]{ytDLP, spotdl});
         } catch (IOException e) {
             M.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
+            M.msgInitError("Failed to copy spotDL! " + e.getMessage());
         }
         if (ytDLPExists && !isYtDLPUpdated()) {
             updateYt_dlp();
@@ -71,13 +72,11 @@ public class Environment {
             M.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
         }
     }
-
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.get.lastDLPUpdateTime();
         return timeSinceLastUpdate <= oneDay;
     }
-
     public static MessageBroker getMessageBroker() {
         return M;
     }
