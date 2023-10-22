@@ -5,7 +5,7 @@ import html from "remark-html";
 
 function downloadLatestRelease(OSName, applicationType) {
   if (applicationType === "CLI") {
-    if (OSName === "Windows") {
+    if (OSName === "Windows exe") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe"
       );
