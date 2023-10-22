@@ -7,7 +7,7 @@ public final class DriftyConstants {
      * This is a private constructor of this class.
      */
     private DriftyConstants() {}
-    public static final String VERSION_NUMBER = "v2.0.0";
+    public static final String VERSION_NUMBER = "v1.3.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_WEBSITE_URL = "https://saptarshisarkar12.github.io/Drifty/";
     public static final String ANSI_RESET = "\u001B[0m";

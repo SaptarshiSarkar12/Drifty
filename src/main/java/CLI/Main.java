@@ -2,12 +2,15 @@ package CLI;
 
 import Backend.FileDownloader;
 import Enums.MessageType;
+import Enums.Mode;
 import Enums.OS;
 import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,9 +42,11 @@ public class Main {
     private static String batchDownloadingFile;
 
     public static void main(String[] args) {
+
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
+        checkUpdate();
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -325,4 +330,83 @@ public class Main {
         System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
+
+    public static void checkUpdate(){
+        String latestVersion = getLatestVersion();
+        if(isNewerVersion(latestVersion , VERSION_NUMBER)){
+                // Download Latest GUI
+                String Link = "";
+                String fileName = "Drifty_CLI";
+                String dirPath = "G:\\New folder";
+                String OS_NAME = OS.getOSName();
+                if (OS_NAME.contains("win")) {
+                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe";
+                    FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
+                    downloader.run();
+                } else if (OS_NAME.contains("mac")) {
+                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos";
+                    FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
+                    downloader.run();
+                } else if (OS_NAME.contains("linux")) {
+                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux";
+                    FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
+                    downloader.run();
+                }
+
+                replaceUpdate();
+        }
+    }
+
+    private static String getLatestVersion() {
+        try {
+            URL url = new URL("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            reader.close();
+
+            // Parse JSON response to get the "tag_name"
+            // For simplicity, we're assuming the tag_name is a string enclosed in double quotes
+            int start = response.indexOf("\"tag_name\":\"") + 12;
+            int end = response.indexOf("\"", start);
+            System.out.println( response.substring(start, end));
+            return response.substring(start, end);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private static boolean isNewerVersion(String newVersion, String currentVersion) {
+        // Split version strings into arrays of integers
+        String[] newVersionParts = newVersion.replaceAll("[^\\d.]", "").split("\\.");
+        String[] currentVersionParts = currentVersion.replaceAll("[^\\d.]", "").split("\\.");
+
+        // Convert parts to integers
+        int[] newVersionNumbers = new int[newVersionParts.length];
+        int[] currentVersionNumbers = new int[currentVersionParts.length];
+
+        for (int i = 0; i < newVersionParts.length; i++) {
+            newVersionNumbers[i] = Integer.parseInt(newVersionParts[i]);
+        }
+
+        for (int i = 0; i < currentVersionParts.length; i++) {
+            currentVersionNumbers[i] = Integer.parseInt(currentVersionParts[i]);
+        }
+
+        // Compare version numbers
+        for (int i = 0; i < Math.min(newVersionNumbers.length, currentVersionNumbers.length); i++) {
+            if (newVersionNumbers[i] > currentVersionNumbers[i]) {
+                return true; // New version is greater
+            } else if (newVersionNumbers[i] < currentVersionNumbers[i]) {
+                return false; // Current version is greater
+            }
+        }
+
+        // If all compared parts are equal, consider the longer version as newer
+        return newVersionNumbers.length > currentVersionNumbers.length;
+    }
+
 }
