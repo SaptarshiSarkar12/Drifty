@@ -2,45 +2,53 @@ changelog:
   categories:
     - title: New Features ✨ in Application
       labels:
-        - enhancement
+        - "feature ✨"
       exclude:
         labels:
-          - Website
-          - documentation
+          - "Website 🌐"
+          - "documentation 📝"
     - title: Bug 🪲 Fixes in Application
       labels:
-        - bug
+        - "bug 🐛"
       exclude:
         labels:
-          - Website
-          - documentation
+          - "Website 🌐"
+          - "documentation 📝"
     - title: New Features ✨ in Website
       labels:
-        - enhancement
+        - "feature ✨"
       exclude:
         labels:
-          - App
-          - documentation
+          - "App 💻"
+          - "documentation 📝"
     - title: Bug 🪲 Fixes in Website
       labels:
-        - bug
+        - "bug 🐛"
       exclude:
         labels:
-          - App
-          - documentation
+          - "App 💻"
+          - "documentation 📝"
     - title: Documentation 📝 Changes
       labels:
-        - documentation
+        - "documentation 📝"
       exclude:
         labels:
-          - App
-          - Website
-    - title: Dependency ⬆️ Changes
+          - "App 💻"
+          - "Website 🌐"
+    - title: Docker 🐋 Changes
       labels:
-        - dependencies
-        - maven
-        - npm
+        - "docker 🐋"
       exclude:
         labels:
-          - App
-          - documentation
+          - "App 💻"
+          - "documentation 📝"
+          - "Website 🌐"
+    - title: Dependency 📦️ Changes
+      labels:
+        - "dependencies 📦️"
+        - "maven 📦️"
+        - "npm 📦️"
+      exclude:
+        labels:
+          - "App 💻"
+          - "documentation 📝"

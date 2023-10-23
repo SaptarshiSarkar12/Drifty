@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 export default function Footer() {
+    // Get the current year dynamically
+    const currentYear = new Date().getFullYear();
     return (
         <div className={"select-none"}>
             <footer className="p-4 bg-bottom sm:p-6">
@@ -39,7 +41,7 @@ export default function Footer() {
                 </div>
                 <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-600 lg:my-8" />
                 <div className="sm:flex sm:items-center sm:justify-between">
-                    <span className="text-sm text-gray-600 sm:text-center dark:text-gray-500">© 2023 <Link href="/" className="hover:text-[#122ffa]">Drifty</Link>. All Rights Reserved.
+                    <span className="text-sm text-gray-600 sm:text-center dark:text-gray-500">© {currentYear} <Link href="/" className="hover:text-[#122ffa]">Drifty</Link>. All Rights Reserved.
                     </span>
                     <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
                         <a href="https://www.twitter.com/SSarkar2007" className="text-gray-500 hover:text-black hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110">

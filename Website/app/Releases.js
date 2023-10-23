@@ -5,7 +5,7 @@ import html from "remark-html";
 
 function downloadLatestRelease(OSName, applicationType) {
   if (applicationType === "CLI") {
-    if (OSName === "Windows") {
+    if (OSName === "Windows exe") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe"
       );
@@ -153,7 +153,10 @@ export default function Releases({ props }) {
   };
 
   return (
-    <div id="download" className="bg-gradient-to-b from-top from-8% via-cyan-300 to-bottom to-12% -mt-2">
+    <div
+      id="download"
+      className="bg-gradient-to-b from-top from-8% via-cyan-300 to-bottom to-12% -mt-2"
+    >
       <h2 className="select-none text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5">
         Download Drifty
       </h2>
@@ -179,34 +182,52 @@ export default function Releases({ props }) {
 
       {/* Download Buttons */}
       <div className="flex flex-col items-center md:flex-row md:items-start justify-center space-y-4 md:space-y-0 gap-5 pt-10">
-
         {/* First Download Now Button */}
         <div className="xs:mr-0 xs:mb-4">
           <div className="">
             <div className="text-center">
-              <button className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition" onClick={() => downloadLatestRelease("Windows exe", applicationType)}>
+              <button
+                className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+                onClick={() =>
+                  downloadLatestRelease("Windows exe", applicationType)
+                }
+              >
                 Download Now <i className="fab fa-brands fa-windows"></i>
               </button>
-              {applicationType === "GUI" && <div><button className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-0.5 hover:scale-110" onClick={() => downloadLatestRelease("Windows msi")}>Prefer the msi?</button></div>}
+              {applicationType === "GUI" && (
+                <div>
+                  <button
+                    className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                    onClick={() => downloadLatestRelease("Windows msi")}
+                  >
+                    Prefer the msi?
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Second Download Now Button */}
         <div className="md:ml-4 xs:ml-0">
-          <button className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition" onClick={() => downloadLatestRelease("Linux", applicationType)}>
+          <button
+            className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+            onClick={() => downloadLatestRelease("Linux", applicationType)}
+          >
             Download Now <i className="fab fa-brands fa-linux"></i>
           </button>
         </div>
 
         {/* Third Download Now Button */}
         <div className="md:ml-4 xs:ml-0">
-          <button className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition" onClick={() => downloadLatestRelease("MacOS", applicationType)}>
+          <button
+            className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+            onClick={() => downloadLatestRelease("MacOS", applicationType)}
+          >
             Download Now <i className="fab fa-brands fa-apple"></i>
           </button>
         </div>
       </div>
-
 
       <div>
         <h1 className="select-none text-center font-bold text-2xl pt-10">
@@ -242,7 +263,7 @@ export default function Releases({ props }) {
               <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
                 <div className={"grid grid-cols-1 justify-items-center"}>
                   <button
-                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                     onClick={() =>
                       downloadOlderReleases(
                         "Windows exe",
@@ -256,7 +277,7 @@ export default function Releases({ props }) {
                   {applicationType === "GUI" && (
                     <button
                       className={
-                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-0.5 hover:scale-110"
+                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
                       }
                       onClick={() =>
                         downloadOlderReleases(
@@ -271,7 +292,7 @@ export default function Releases({ props }) {
                   )}
                 </div>
                 <button
-                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                   onClick={() =>
                     downloadOlderReleases(
                       "Linux",
@@ -283,7 +304,7 @@ export default function Releases({ props }) {
                   Download <i className="fab fa-brands fa-linux"></i>
                 </button>
                 <button
-                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                   onClick={() =>
                     downloadOlderReleases(
                       "MacOS",
@@ -327,7 +348,7 @@ export default function Releases({ props }) {
                 )}
                 <div className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
                   <button
-                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                     onClick={() =>
                       window.open(item.assets[1].browser_download_url)
                     }
@@ -335,7 +356,7 @@ export default function Releases({ props }) {
                     Download <i className="fab fa-brands fa-windows"></i>
                   </button>
                   <button
-                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                     onClick={() =>
                       window.open(item.assets[0].browser_download_url)
                     }

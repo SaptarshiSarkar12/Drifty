@@ -1,6 +1,6 @@
 package GUI.Forms;
 
-import Enums.*;
+import Enums.Colors;
 import GUI.Support.Folders;
 import GUI.Support.Job;
 import GUI.Support.JobHistory;
@@ -32,19 +32,20 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
 import static GUI.Forms.Constants.MONACO_TTF;
 import static GUI.Forms.Constants.getStage;
+import static Utils.Utility.renameFile;
 import static Utils.Utility.sleep;
 
 public class GUI_Logic {
@@ -224,11 +225,11 @@ public class GUI_Logic {
 
     private Runnable verifyLink(String link) {
         /*
-        When adding links to the jobList, only YouTube and Instagram links will be put through the process of
+        When adding links to the jobList, only YouTube, Instagram and Spotify links will be put through the process of
         searching the link for more than one download, in case the link happens to be a link to a playlist. This
         will probably be far more common with YouTube links.
 
-        If the link does not test positive for YouTube or Instagram, then it is merely added to the jobList as a job
+        If the link does not test positive for YouTube, Instagram or Spotify, then it is merely added to the jobList as a job
         with only the link and the download folder given to the Job class. However, the Job class will take all
         the text after the last forward slash in the link and set it as the filename for that job.
 
@@ -249,35 +250,35 @@ public class GUI_Logic {
                         Job job = getHistory().getJob(link);
                         filename = job.getFilename();
                         dir = getDir();
-                        if(dir == null) {
-                            System.err.println("dir is null");
+                        if (dir == null) {
+                            M.msgDirError("Download folder is not set!");
                             System.exit(0);
                         }
                         String intro = "You have downloaded this link before. The filename is:" + nl + filename + nl.repeat(2);
                         String folder = fileExists(filename);
+                        String windowTitle;
                         if (!folder.isEmpty()) {
                             message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) +
                                     "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) +
                                     "YES will add the job to the list with new filename. NO will do nothing.";
-                        }
-                        else {
+                            windowTitle = "File Already Exists";
+                        } else {
                             message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) +
                                     "Do you still wish to download this file?";
+                            windowTitle = "File Already Downloaded";
                         }
-                        AskYesNo ask = new AskYesNo(message, renameFile(filename, dir));
+                        AskYesNo ask = new AskYesNo(windowTitle, message, renameFile(filename, dir));
                         if (ask.getResponse().isYes()) {
                             filename = ask.getFilename();
                             addJob(new Job(link, dir, filename, true));
                         }
-                    }
-                    else if (Utility.isExtractableLink(link)) {
+                    } else if (Utility.isExtractableLink(link)) {
                         Thread getNames = new Thread(getFilenames(link));
                         getNames.start();
                         while (!getNames.getState().equals(Thread.State.TERMINATED)) {
                             sleep(150);
                         }
-                    }
-                    else {
+                    } else {
                         addJob(new Job(link, getDir()));
                     }
                 }
@@ -369,7 +370,7 @@ public class GUI_Logic {
                         int exitCode = downloadFile.getExitCode();
                         if (exitCode == 0) { //Success
                             removeJobFromList(job);
-                            getHistory().addJob(job);
+                            getHistory().addJob(job, false);
                         }
                     }
                 }
@@ -434,20 +435,6 @@ public class GUI_Logic {
             addJob(job);
         }
         selectedJob = null;
-    }
-
-    private String renameFile(String filename, String dir) {
-        Path path = Paths.get(dir, filename);
-        String newFilename = filename;
-        int fileNum = -1;
-        String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
-        String ext = "." + FilenameUtils.getExtension(filename);
-        while (path.toFile().exists()) {
-            fileNum += 1;
-            newFilename = baseName + " (" + fileNum + ")" + ext;
-            path = Paths.get(dir, newFilename);
-        }
-        return newFilename;
     }
 
     private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {

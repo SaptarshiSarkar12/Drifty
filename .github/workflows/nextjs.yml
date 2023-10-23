@@ -4,13 +4,13 @@
 #
 name: Deploy Next.js site to GitHub Pages
 defaults:
-    run:
-        working-directory: "./Website"
+  run:
+    working-directory: "./Website"
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["master"]    
+    branches: ["master"]
     paths:
       - "Website/**"
 
@@ -32,6 +32,7 @@ concurrency:
 jobs:
   # Build job
   build:
+    if: github.repository == 'SaptarshiSarkar12/Drifty'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -56,7 +57,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "latest"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: "./Website/package-lock.json"
       - name: Setup Pages
@@ -82,6 +83,7 @@ jobs:
 
   # Deployment job
   deploy:
+    if: github.repository == 'SaptarshiSarkar12/Drifty'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

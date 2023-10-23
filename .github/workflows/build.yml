@@ -30,7 +30,7 @@ jobs:
   build-Drifty:
     strategy:
       matrix:
-        os: ["windows-latest", "macos-13", "ubuntu-latest"]
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -84,7 +84,7 @@ jobs:
         move "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
         move "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
     - name: Categorise build artifacts for macOS
-      if: ${{ matrix.os == 'macos-13' }}
+      if: ${{ matrix.os == 'macos-latest' }}
       run: |
         mv "target/CLI/macos/Drifty CLI" "target/CLI/macos/Drifty-CLI_macos"
         mv "target/CLI/macos/Drifty-CLI_macos" CLI
@@ -119,7 +119,7 @@ jobs:
     - name: Extract build files from tar
       run: |
         tar -xvf ubuntu-latest-Build-Files/ubuntu-latest.tar -C linux
-        tar -xvf macos-13-Build-Files/macos-13.tar -C macos
+        tar -xvf macos-latest-Build-Files/macos-latest.tar -C macos
         tar -xvf windows-latest-Build-Files/windows-latest.tar -C windows
     - name: Get Size of Build Artifacts
       run: |
@@ -156,7 +156,7 @@ jobs:
         echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
     
-        if [ ${{ github.event_name != 'workflow_call' }} ]; then
+        if [ ${{ !inputs.create_release }} ]; then
           echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
           echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
         fi

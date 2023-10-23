@@ -31,6 +31,15 @@ public class FileDownloader implements Runnable {
     private URL url;
 
     public FileDownloader(String link, String fileName, String dir) {
+        link = link.replace('\\', '/');
+        if (!(link.startsWith("http://") || link.startsWith("https://"))) {
+            link = "https://" + link;
+        }
+        if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
+            if (!(link.endsWith("?raw=true"))) {
+                link = link + "?raw=true";
+            }
+        }
         this.link = link;
         this.fileName = fileName;
         this.dir = dir;
@@ -185,6 +194,7 @@ public class FileDownloader implements Runnable {
         }
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
+        boolean isSpotifyLink = isSpotify(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYouTubeLink || isInstagramLink) {
@@ -199,6 +209,8 @@ public class FileDownloader implements Runnable {
                 } catch (Exception e) {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
+                    } else if (isSpotifyLink) {
+                        M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
                     } else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }

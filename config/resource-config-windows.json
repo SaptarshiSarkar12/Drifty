@@ -1,7 +1,8 @@
 {
   "resources": {
     "includes": [
-      {"pattern": "yt-dlp.exe"}
+      {"pattern": "yt-dlp.exe"},
+      {"pattern": "spotdl_win.exe"}
     ]
   }
 }

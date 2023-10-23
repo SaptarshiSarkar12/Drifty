@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -33,8 +34,9 @@ import static Utils.DriftyConstants.*;
 public class DownloadFile extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
     private final String YT_DLP = Program.get(Program.YT_DLP);
+    private final String SPOTDL = Program.get(Program.SPOTDL);
     private final StringProperty progressProperty = new SimpleStringProperty();
-    private final String link;
+    private String link;
     private final String filename;
     private final String dir;
     private final LinkType type;
@@ -43,6 +45,13 @@ public class DownloadFile extends Task<Integer> {
     private final Job job;
     private final AtomicLong totalTransferred = new AtomicLong();
     private final AtomicLong totalSpeedValue = new AtomicLong();
+    private static final String regex1 = "([0-9.]+)%";
+    private static final Pattern p1 = Pattern.compile(regex1);
+    private static final String regex2 = "(\\d+\\.\\d+)([a-zA-Z/]+) ETA ([0-9:]+)";
+    private static final Pattern p2 = Pattern.compile(regex2);
+    private int updateCount = 0;
+    private double speedSum = 0.0;
+    private double lastProgress;
 
     public DownloadFile(Job job,
                         StringProperty linkProperty, StringProperty dirProperty, StringProperty filenameProperty,
@@ -71,6 +80,10 @@ public class DownloadFile extends Task<Integer> {
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
             case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
+            case SPOTIFY -> {
+                link = getSpotifyDownloadLink(link);
+                splitDecision();
+            }
             case OTHER -> splitDecision();
         }
         updateProgress(0.0, 1.0);
@@ -79,7 +92,7 @@ public class DownloadFile extends Task<Integer> {
     }
 
     private void downloadYoutubeOrInstagram() {
-        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename};
+        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", "mp4"};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
@@ -224,7 +237,7 @@ public class DownloadFile extends Task<Integer> {
                     long totalBytes = totalTransferred.get();
                     String totalDownloaded = UnitConverter.format(totalBytes, 2);
                     double bitsTransferred = (double) totalSpeedValue.get() / seconds;
-                    String msg = "Downloading " + totalSize + " at " + UnitConverter.format(bitsTransferred, 2) + "/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading at " + UnitConverter.format(bitsTransferred, 2) + "/s (Downloaded " + totalDownloaded + " out of " + totalSize + ")";
                     updateMessage(msg);
                     totalSpeedValue.set(0);
                 }
@@ -232,7 +245,7 @@ public class DownloadFile extends Task<Integer> {
             }
             updateProgress(0.0, 1.0);
             updateMessage("Merging Files");
-            String msg = "Saving file to download folder .";
+            String msg = "Saving file to download folder";
             FileOutputStream fos = new FileOutputStream(job.getFile());
             long position = 0;
             for (int i = 0; i < numParts; i++) {
@@ -299,7 +312,7 @@ public class DownloadFile extends Task<Integer> {
                     start = end;
                     String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
                     double bitsTransferred = bytesInTime / 10 / seconds;
-                    String msg = "Downloading " + totalSize + " at " + UnitConverter.format(bitsTransferred * 100, 2) + "/s (Total: " + totalDownloaded + ")";
+                    String msg = "Downloading at " + UnitConverter.format(bitsTransferred, 2) + "/s (Downloaded " + totalDownloaded + " out of " + totalSize + ")";
                     updateMessage(msg);
                     bytesInTime = 0;
                 }
@@ -330,14 +343,6 @@ public class DownloadFile extends Task<Integer> {
         sendFinalMessage(message);
     }
 
-    private static final String regex1 = "([0-9.]+)%";
-    private static final Pattern p1 = Pattern.compile(regex1);
-    private static final String regex2 = "(\\d+\\.\\d+)([a-zA-Z/]+) ETA ([0-9:]+)";
-    private static final Pattern p2 = Pattern.compile(regex2);
-    private int updateCount = 0;
-    private double speedSum = 0.0;
-    private double lastProgress;
-
     private void setProperties() {
         progressProperty.addListener(((observable, oldValue, newValue) -> {
             Matcher m1 = p1.matcher(newValue);
@@ -346,9 +351,9 @@ public class DownloadFile extends Task<Integer> {
             double progress = 0.0;
             if (m1.find()) {
                 /*
-                Because yt-dlp throws its progress numbers all over the place to where
+                As yt-dlp throws its progress numbers all over the place to where
                 sometimes it's lower than it was the previous time, causing the
-                progress bar bounce forward and backward during the download, which
+                progress bar to bounce forward and backward during the download, which
                 did not look proper since progress bars are only supposed to go up.
 
                 In order to minimize this as much as possible, I used the
@@ -357,7 +362,7 @@ public class DownloadFile extends Task<Integer> {
                 stick at that max number.
 
                 So I put a check in the second regex match (m2.find()) because if
-                we are still matching then the file is still downloading, and it
+                we are still matching, then the file is still downloading, and it
                 checks the value of progress and if it's too high, then it sets the
                 lastProgress back to the number that makes sense.
                  */
@@ -382,8 +387,9 @@ public class DownloadFile extends Task<Integer> {
                     int seconds = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
                     String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
                     updateMessage(speed + " " + units + " ETA " + time);
-                    if (progress > 99)
+                    if (progress > 99) {
                         lastProgress = value;
+                    }
                 }
             }
         }));
@@ -399,8 +405,7 @@ public class DownloadFile extends Task<Integer> {
         if (exitCode == 0) {
             msg = message.isEmpty() ? String.format(SUCCESSFULLY_DOWNLOADED_F, filename) : message;
             M.msgDownloadInfo(msg);
-        }
-        else {
+        } else {
             msg = message.isEmpty() ? String.format(FAILED_TO_DOWNLOAD_F, filename) : message;
             M.msgDownloadError(msg);
         }
@@ -413,5 +418,34 @@ public class DownloadFile extends Task<Integer> {
 
     public int getExitCode() {
         return exitCode;
+    }
+
+    public String getSpotifyDownloadLink(String link){
+        sendInfoMessage("Trying to get download link for \"" + link + "\"");
+        String spotDLPath = Program.get(Program.SPOTDL);
+        ProcessBuilder processBuilder = new ProcessBuilder(spotDLPath, "url", link);
+        Process process;
+        try {
+            process = processBuilder.start();
+        } catch (IOException e) {
+            exitCode = 1;
+            sendFinalMessage("Failed to get download link for \"" + link + "\"!");
+            return null;
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.contains("Processing query:") && line.startsWith("http")) {
+                    sendInfoMessage("Download link retrieved successfully!");
+                    exitCode = 0;
+                    return line;
+                }
+            }
+        } catch (IOException e) {
+            exitCode = 1;
+            sendFinalMessage("Failed to get download link for \"" + link + "\"!");
+            return null;
+        }
+        return null;
     }
 }

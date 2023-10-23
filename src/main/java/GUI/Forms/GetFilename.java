@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Enums.Program.YT_DLP;
+import static Utils.Utility.*;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
@@ -29,16 +30,17 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String regex = "(\\[download] Downloading item \\d+ of )(\\d+)";
     private final Pattern pattern = Pattern.compile(regex);
     private final String lineFeed = System.lineSeparator();
-
+    private int result = -1;
     private int fileCount = 0;
     private int filesProcessed = 0;
+
 
     public GetFilename(String link, String dir) {
         this.link = link;
         this.dir = dir;
     }
-
     private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
+
 
     @Override
     protected ConcurrentLinkedDeque<Job> call() {
@@ -68,10 +70,19 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             sleep(500); //give timerTask enough time to do its last run
             jobList.clear();
             for (String json : jsonList) {
-                String filename = Utility.getFilenameFromJson(json);
-                String fileLink = Utility.getURLFromJson(json);
-                String baseName = FilenameUtils.getBaseName(filename);
-                filename = baseName + ".mp4";
+                String filename;
+                String fileLink;
+                if (isSpotify(link)) {
+                    filename = Utility.extractSpotifyFilename(json);
+                    fileLink = Utility.getSpotifyDownloadLink(link);
+                    String baseName = FilenameUtils.getBaseName(filename);
+                    filename = baseName + ".mp3";
+                } else {
+                    filename = Utility.getFilenameFromJson(json);
+                    fileLink = Utility.getSpotifyDownloadLink(link);
+                    String baseName = FilenameUtils.getBaseName(filename);
+                    filename = baseName + ".mp4";
+                }
                 jobList.addLast(new Job(fileLink, dir, filename, false));
             }
             GUI_Logic.setDownloadInfoColor(Colors.GREEN);
@@ -94,13 +105,19 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 for (File file : files) {
                     try {
                         String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                        if (ext.equalsIgnoreCase("json")) {
+                        if (ext.equalsIgnoreCase("json") || ext.equalsIgnoreCase("spotdl")) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
-                            String filename = Utility.getFilenameFromJson(jsonString);
-                            String baseName = FilenameUtils.getBaseName(filename);
-                            filename = baseName + ".mp4";
+                            String filename;
+                            if (isSpotify(link)) {
+                                filename = Utility.extractSpotifyFilename(jsonString);
+                                String baseName = FilenameUtils.getBaseName(filename);
+                                filename = baseName + ".mp3";
+                            } else {
+                                filename = Utility.getFilenameFromJson(jsonString);
+                                String baseName = FilenameUtils.getBaseName(filename);
+                                filename = baseName + ".mp4";
+                            }
                             updateMessage("Found file: " + filename);
-                            String link = Utility.getURLFromJson(jsonString);
                             jobList.addLast(new Job(link, dir, filename, false));
                             if (fileCount > 1) {
                                 filesProcessed++;
@@ -109,8 +126,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             GUI_Logic.addJob(jobList);
                             deleteList.addLast(file);
                         }
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                 }
                 for (File file : deleteList) {
                     try {
@@ -122,8 +138,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-
     boolean dirUp = true;
+
 
     private TimerTask runProgress() {
         return new TimerTask() {
@@ -145,8 +161,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-
     private final StringProperty feedback = new SimpleStringProperty();
+
 
     private Runnable getFileCount() {
         return () -> {
@@ -192,8 +208,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-
-    private int result = -1;
 
     private void sleep(long time) {
         try {
