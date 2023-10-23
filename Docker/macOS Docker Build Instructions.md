@@ -1,7 +1,9 @@
 # Using the Drifty GUI Docker image on macOS
+
 There are some steps to follow if you're going to run the Drifty GUI Docker image in macOS. At the end of these instructions, we will have a single command that we can run to start the Docker image.
 
 ## Prerequisites
+
 You will need these programs to follow these instructions:
 - [**Docker**](https://docs.docker.com/desktop/install/mac-install)
 - [**HomeBrew**](https://brew.sh/)
@@ -9,6 +11,7 @@ You will need these programs to follow these instructions:
 - **XQuartz** (will be installed later in the instructions)
 
 ## Installing necessary programs and building/pulling the Docker image
+
 Once you have Docker installed **(and running)**, open the terminal and follow these steps:
 
 - Update the local Homebrew repository and upgrade any outdated installations. This ensures that any libraries that might be needed will be up-to-date.
@@ -32,6 +35,7 @@ Once you have Docker installed **(and running)**, open the terminal and follow t
   Remember to change the tag to the version/branch you want to use.
 
 ## Running the Docker image of Drifty GUI
+
 After the Docker image of Drifty GUI has been built/pulled, we need to provide a pathway for the Docker instance to access the display. This can be done by providing it the IP address of your Mac. For simplicity and ease of use, manually (or statically) assigning an IP address to your Mac is suggested.
 
 > [!NOTE]
@@ -53,6 +57,7 @@ After the Docker image of Drifty GUI has been built/pulled, we need to provide a
 > </details>
 
 ### Manually assigning an IP address to your Mac
+
 We first need to know the IP address that the router has assigned to your Mac. Most of the routers will use an IP address that starts with `192.168` so let's see if we have that kind of address assigned to our Mac, by running this command:
 ```bash
 ifconfig | grep 192.168
@@ -74,6 +79,7 @@ If you are not running at **_least macOS version 13 (Ventura)_**, then refer to 
 - Click `OK` and then go back to your Terminal.
 
 ### Change the XQuartz settings
+
 A small change in XQuartz is necessary for running **Drifty GUI** via _Docker_. Follow these steps:
 
 - Open **XQuartz** by running this command:
@@ -86,6 +92,7 @@ A small change in XQuartz is necessary for running **Drifty GUI** via _Docker_. 
   ![XQuartz Security window](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/691ee7f2-cf3e-4ac5-a00b-9a81ffa642b8)
 
 ### Commands to run the Docker image
+
 We have finally set up everything required to run the Docker image of **Drifty GUI**. Now, we need to run the following commands in the Terminal:
 
 - If you want to run the **pre-built** docker image, then run these commands:
