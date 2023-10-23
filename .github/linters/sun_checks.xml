@@ -13,12 +13,6 @@
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
-        <module name="ImportOrder">
-            <property name="sortImportsInGroupAlphabetically" value="true"/>
-            <property name="separateStaticAndRegularImports" value="true"/>
-            <property name="ordered" value="true"/>
-            <property name="groups" value="java,javax,javafx,org,com"/>
-        </module>
         <module name="EmptyBlock">
             <property name="tokens" value="LITERAL_DEFAULT"/>
         </module>
