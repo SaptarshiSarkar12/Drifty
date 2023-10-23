@@ -190,7 +190,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                     try (
                         InputStream inputStream = process.getInputStream();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))
-                    ) {
+                    )
+                    {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (this.isCancelled()) {
