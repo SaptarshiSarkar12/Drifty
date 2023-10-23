@@ -25,8 +25,9 @@ public class Jobs {
 
     public void add(Job newJob) {
         for (Job job : jobList) {
-            if (job.matches(newJob))
+            if (job.matches(newJob)) {
                 return;
+            }
         }
         jobList.addLast(newJob);
         save();
@@ -35,7 +36,7 @@ public class Jobs {
     public void remove(Job oldJob) {
         Job removeJob = oldJob;
         for (Job job : jobList) {
-            if(job.matchesLink(oldJob)) {
+            if (job.matchesLink(oldJob)) {
                 removeJob = job;
                 break;
             }
@@ -67,6 +68,6 @@ public class Jobs {
     }
 
     private void save() {
-        AppSettings.set.Jobs(this);
+        AppSettings.SET.jobs(this);
     }
 }

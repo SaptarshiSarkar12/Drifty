@@ -16,7 +16,7 @@ import static Utils.DriftyConstants.*;
  * This is the class responsible for showing the progress bar in the CLI (Command Line Interface) and enables progress bar values to be updated in the GUI (Graphical User Interface).
  */
 public class ProgressBarThread extends Thread {
-    private final static MessageBroker M = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private final float charPercent;
     private final String fileName;
     private final FileOutputStream fos;
@@ -72,9 +72,10 @@ public class ProgressBarThread extends Thread {
     }
 
     private String generateProgressBar() {
-        spinBarIndex ++;
-        if (spinBarIndex == 3)
+        spinBarIndex++;
+        if (spinBarIndex == 3) {
             spinBarIndex = 0;
+        }
         String spinner = spinBars[spinBarIndex];
         if (!isMultiThreadedDownloading) {
             float filled = downloadedBytes / charPercent;
@@ -197,8 +198,8 @@ public class ProgressBarThread extends Thread {
                         System.out.print("\r" + generateProgressBar());
                     }
                 }
-            } catch (IOException ignored) {}
-            finally {
+            } catch (IOException ignored) {
+            } finally {
                 downloading = downloadMetrics.isActive();
             }
         }

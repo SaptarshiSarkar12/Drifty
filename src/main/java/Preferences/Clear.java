@@ -4,14 +4,13 @@ import java.util.prefs.Preferences;
 
 import static Preferences.Labels.*;
 
-public class Clear { // This class is used to clear the user preferences
+public final class Clear { // This class is used to clear the user preferences
     private static final Clear INSTANCE = new Clear();
     private final Preferences preferences = Labels.PREFERENCES;
 
-    private Clear() {
-    }
+    private Clear() {}
 
-    protected static Clear getInstance() {
+    static Clear getInstance() {
         return INSTANCE;
     }
 

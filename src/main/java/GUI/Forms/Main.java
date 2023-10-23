@@ -24,8 +24,8 @@ import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
 import static javafx.scene.layout.AnchorPane.*;
 
 public class Main extends Application {
-    private static Main INSTANCE;
-    private static MessageBroker M;
+    private static Main guiInstance;
+    private static MessageBroker msgBroker;
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
@@ -33,19 +33,18 @@ public class Main extends Application {
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
-        M = new MessageBroker();
-        Environment.setMessageBroker(M);
-        M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
+        msgBroker = new MessageBroker();
+        Environment.setMessageBroker(msgBroker);
+        msgBroker.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage = Constants.getStage("Drifty GUI", true);
-        this.primaryStage = primaryStage;
+        this.primaryStage = Constants.getStage("Drifty GUI", true);
         createScene();
-        INSTANCE = this;
+        guiInstance = this;
     }
 
     private void createScene() {
@@ -61,12 +60,12 @@ public class Main extends Application {
                 firstRun = false;
                 return;
             }
-            if (GUI_Logic.isAutoPaste()) {
+            if (FormsController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if (Utility.isURL(clipboardText)) {
-                        GUI_Logic.pasteFromClipboard(clipboardText);
+                        FormsController.pasteFromClipboard(clipboardText);
                     }
                 }
             }
@@ -76,7 +75,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         menu.setUseSystemMenuBar(true);
-        GUI_Logic.initLogic(gridPane);
+        FormsController.initLogic(gridPane);
     }
 
     private void placeControl(Node node, double left, double right, double top, double bottom) {
@@ -100,7 +99,7 @@ public class Main extends Application {
         website.setOnAction(e -> openWebsite(DRIFTY_WEBSITE_URL));
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
-            M.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
+            msgBroker.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         menu.getItems().setAll(website, exit);
@@ -176,7 +175,7 @@ public class Main extends Application {
         wipeHistory.setOnAction(e -> {
             AskYesNo ask = new AskYesNo("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
-                GUI_Logic.clearJobHistory();
+                FormsController.clearJobHistory();
             }
         });
         menu.getItems().addAll(wipeHistory);
@@ -186,11 +185,11 @@ public class Main extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> GUI_Logic.getDirectory());
+        miAdd.setOnAction(e -> FormsController.getDirectory());
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            GUI_Logic.resetDownloadFoldersToActiveList();
+            FormsController.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -198,10 +197,10 @@ public class Main extends Application {
     }
 
     protected static void openWebsite(String websiteURL) {
-        INSTANCE.getHostServices().showDocument(websiteURL);
+        guiInstance.getHostServices().showDocument(websiteURL);
     }
 
     public static void toggleFullScreen() {
-        INSTANCE.primaryStage.setFullScreen(!INSTANCE.primaryStage.isFullScreen());
+        guiInstance.primaryStage.setFullScreen(!guiInstance.primaryStage.isFullScreen());
     }
 }

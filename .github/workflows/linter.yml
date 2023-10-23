@@ -32,3 +32,5 @@ jobs:
           VALIDATE_JAVASCRIPT_STANDARD: false
           VALIDATE_CLANG_FORMAT: false
           VALIDATE_CSHARP: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_YAML: false
