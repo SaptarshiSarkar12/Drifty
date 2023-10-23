@@ -68,14 +68,14 @@ For **Users** :
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-4. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
+3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
     ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
-5. Go to your Downloads folder and run the file you downloaded.
+4. Go to your Downloads folder and run the file you downloaded.
    > [!NOTE]   
    > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
-6. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
-7. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
-8. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
+5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
+6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
 
 ### Using Drifty Application via Docker 🐋
 
@@ -160,7 +160,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - For Windows, click on **More Info** and then **Run Anyway** as present in the screen below:
     |||
     |--|--|
-    | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
+    | ![Windows Defender - More Info screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![Windows Defender - Run Anyway screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
 - For macOS, click on **OK** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
     <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
 
