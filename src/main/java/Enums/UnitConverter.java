@@ -1,4 +1,5 @@
 package Enums;
+
 import java.text.DecimalFormat;
 
 public enum UnitConverter {
@@ -6,7 +7,7 @@ public enum UnitConverter {
 
     public static double getValue(long bytes, UnitConverter unit) {
         double temp = (double) bytes;
-        return switch(unit) {
+        return switch (unit) {
             case B -> bytes;
             case KB -> temp / 1024;
             case MB -> temp / 1024 / 1024;

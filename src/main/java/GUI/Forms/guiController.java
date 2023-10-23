@@ -48,14 +48,14 @@ import static GUI.Forms.Constants.getStage;
 import static Utils.Utility.renameFile;
 import static Utils.Utility.sleep;
 
-public class GUI_Logic {
-    public static final GUI_Logic INSTANCE = new GUI_Logic();
+public final class guiController {
+    public static final guiController INSTANCE = new guiController();
     public static MainGridPane form;
     private static final MessageBroker M = Environment.getMessageBroker();
-    private static final BooleanProperty directoryExists = new SimpleBooleanProperty(false);
-    private static final BooleanProperty processingBatch = new SimpleBooleanProperty(false);
-    private static final BooleanProperty updatingBatch = new SimpleBooleanProperty(false);
-    private static final BooleanProperty verifyingLinks = new SimpleBooleanProperty(false);
+    private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
+    private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
+    private static final BooleanProperty UPDATING_BATCH = new SimpleBooleanProperty(false);
+    private static final BooleanProperty VERIFYING_LINKS = new SimpleBooleanProperty(false);
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount = 0;
     private int speedValue = 0;
@@ -65,8 +65,8 @@ public class GUI_Logic {
     /*
     Single instance model only constructor
      */
-    private GUI_Logic() {
-        folders = AppSettings.get.folders();
+    private guiController() {
+        folders = AppSettings.GET.folders();
     }
 
     /*
@@ -82,12 +82,12 @@ public class GUI_Logic {
 
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
-        directoryExists.setValue(new File(getDir()).exists());
+        DIRECTORY_EXISTS.setValue(new File(getDir()).exists());
 
-        BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(processingBatch).or(directoryExists.not()).or(verifyingLinks);
-        BooleanBinding disableInputs = processingBatch.or(verifyingLinks);
+        BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
+        BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
 
-        form.btnSave.visibleProperty().bind(updatingBatch);
+        form.btnSave.visibleProperty().bind(UPDATING_BATCH);
         form.btnStart.disableProperty().bind(disableStartButton);
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
@@ -106,22 +106,20 @@ public class GUI_Logic {
             setFilename(job.getFilename());
             selectJob(job);
         });
-        form.cbAutoPaste.setSelected(AppSettings.get.mainAutoPaste());
-        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.set.mainAutoPaste(newValue)));
+        form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
+        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
-                directoryExists.setValue(false);
+                DIRECTORY_EXISTS.setValue(false);
                 if (newValue.isEmpty()) {
                     M.msgDirError("Directory cannot be empty!");
-                }
-                else {
+                } else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
                         M.msgDirInfo("Directory exists!");
-                        directoryExists.setValue(true);
-                    }
-                    else {
+                        DIRECTORY_EXISTS.setValue(true);
+                    } else {
                         M.msgDirError("Directory does not exist or is not a directory!");
                     }
                 }
@@ -145,12 +143,13 @@ public class GUI_Logic {
             addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
             clearLink();
             clearFilename();
-            updatingBatch.setValue(false);
+            UPDATING_BATCH.setValue(false);
         }).start());
         form.btnStart.setOnAction(e -> new Thread(() -> {
-            if (processingBatch.getValue().equals(true))
+            if (PROCESSING_BATCH.getValue().equals(true)) {
                 return;
-            if (!form.listView.getItems().isEmpty() && processingBatch.getValue().equals(false)) {
+            }
+            if (!form.listView.getItems().isEmpty() && PROCESSING_BATCH.getValue().equals(false)) {
                 clearLink();
                 clearFilename();
                 clearFilenameOutput();
@@ -196,11 +195,10 @@ public class GUI_Logic {
                 String[] links;
                 if (userText.contains(" ")) {
                     links = userText.trim().split(" ");
-                }
-                else {
+                } else {
                     links = new String[]{userText};
                 }
-                verifyingLinks.setValue(true);
+                VERIFYING_LINKS.setValue(true);
                 for (String link : links) {
                     Thread verify = new Thread(verifyLink(link));
                     verify.start();
@@ -208,7 +206,7 @@ public class GUI_Logic {
                         sleep(500);
                     }
                 }
-                verifyingLinks.setValue(false);
+                VERIFYING_LINKS.setValue(false);
                 clearLink();
                 clearFilename();
             }
@@ -286,8 +284,7 @@ public class GUI_Logic {
                 clearLink();
                 clearLinkOutput();
                 clearFilenameOutput();
-            }
-            else {
+            } else {
                 M.msgLinkError("Link already in job list");
                 clearLink();
             }
@@ -299,13 +296,13 @@ public class GUI_Logic {
             // Using a Worker Task, this method gets the filename(s) from the link.
             Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
             Platform.runLater(() -> {
-            /*
-            These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
-            accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
-            to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
-            The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
-            will be thrown and possibly the program execution halted.
-            */
+                /*
+                These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
+                accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
+                to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
+                The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
+                will be thrown and possibly the program execution halted.
+                */
                 form.lblDownloadInfo.textProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).messageProperty());
                 form.pBar.progressProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).progressProperty());
             });
@@ -338,8 +335,8 @@ public class GUI_Logic {
 
     private Runnable batchDownloader() {
         return () -> {
-            processingBatch.setValue(true);
-            updatingBatch.setValue(false);
+            PROCESSING_BATCH.setValue(true);
+            UPDATING_BATCH.setValue(false);
             form.lblDownloadInfo.setTextFill(GREEN);
             IntegerProperty speedValueProperty = new SimpleIntegerProperty();
             speedValueProperty.addListener(((observable, oldValue, newValue) -> {
@@ -350,7 +347,7 @@ public class GUI_Logic {
                         int speed = speedValue / 5;
                         speedValueUpdateCount = 0;
                         speedValue = 0;
-                        setFilenameOutput(GREEN,speed + " /s");
+                        setFilenameOutput(GREEN, speed + " /s");
                     }
                 }
             }));
@@ -368,7 +365,7 @@ public class GUI_Logic {
                             sleep(500);
                         }
                         int exitCode = downloadFile.getExitCode();
-                        if (exitCode == 0) { //Success
+                        if (exitCode == 0) { // Success
                             removeJobFromList(job);
                             getHistory().addJob(job, false);
                         }
@@ -379,20 +376,21 @@ public class GUI_Logic {
             clearLinkOutput();
             clearFilename();
             clearFilenameOutput();
-            processingBatch.setValue(false);
+            PROCESSING_BATCH.setValue(false);
         };
     }
 
     private String fileExists(String filename) {
-        for (String folder : AppSettings.get.folders().getFolders()) {
+        for (String folder : AppSettings.GET.folders().getFolders()) {
             CheckFile checkFile = new CheckFile(folder, filename);
             Thread thread = new Thread(checkFile);
             thread.start();
             while (!thread.getState().equals(Thread.State.TERMINATED)) {
                 sleep(100);
             }
-            if (checkFile.fileFound())
+            if (checkFile.fileFound()) {
                 return folder;
+            }
         }
         return "";
     }
@@ -421,6 +419,19 @@ public class GUI_Logic {
         commitJobListToListView();
     }
 
+    public static void addJob(ConcurrentLinkedDeque<Job> list) {
+        /*
+        This takes the list passed in as argument and compares it against the jobs in the current jobList
+        then it only adds jobs that do not exist.
+         */
+        for (Job job : list) {
+            boolean hasJob = INSTANCE.getJobs().jobList().stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
+            if (!hasJob) {
+                INSTANCE.addJob(job);
+            }
+        }
+    }
+
     private void removeJobFromList(Job oldJob) {
         getJobs().remove(oldJob);
         commitJobListToListView();
@@ -428,7 +439,7 @@ public class GUI_Logic {
     }
 
     private void updateBatch() {
-        updatingBatch.setValue(false);
+        UPDATING_BATCH.setValue(false);
         if (selectedJob != null) {
             Job job = new Job(getLink(), getDir(), getFilename(), selectedJob.repeatOK());
             removeJobFromList(selectedJob);
@@ -529,7 +540,7 @@ public class GUI_Logic {
     }
 
     private void setDirContextMenu() {
-        Folders folders = AppSettings.get.folders();
+        Folders folders = AppSettings.GET.folders();
         ContextMenu cm = new ContextMenu();
         for (String folder : folders.getFolders()) {
             MenuItem mi = new MenuItem(folder);
@@ -552,24 +563,11 @@ public class GUI_Logic {
     }
 
     public static void resetDownloadFoldersToActiveList() {
-        INSTANCE.folders = AppSettings.get.folders();
+        INSTANCE.folders = AppSettings.GET.folders();
     }
 
     public static boolean isAutoPaste() {
-        return form.cbAutoPaste.isSelected() || AppSettings.get.alwaysAutoPaste();
-    }
-
-    public static void addJob(ConcurrentLinkedDeque<Job> list) {
-        /*
-        This takes the list passed in as argument and compares it against the jobs in the current jobList
-        then it only adds jobs that do not exist.
-         */
-        for (Job job : list) {
-            boolean hasJob = INSTANCE.getJobs().jobList().stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
-            if (!hasJob) {
-                INSTANCE.addJob(job);
-            }
-        }
+        return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste();
     }
 
     public static void clearJobHistory() {
@@ -679,7 +677,7 @@ public class GUI_Logic {
     }
 
     public void setDownloadOutput(Color color, String message) {
-        if (processingBatch.getValue().equals(false)) {
+        if (PROCESSING_BATCH.getValue().equals(false)) {
             Platform.runLater(() -> {
                 form.lblDownloadInfo.getStyleClass().clear();
                 if (color.equals(Colors.GREEN) || color.equals(Colors.PURPLE) || color.equals(Colors.HOTPINK)) {
@@ -810,7 +808,9 @@ public class GUI_Logic {
         Text text = new Text(string);
         text.setFont(new Font(Objects.requireNonNull(MONACO_TTF).toExternalForm(), size));
         text.setFill(color);
-        if (bold) text.setStyle("-fx-font-weight: bold;");
+        if (bold) {
+            text.setStyle("-fx-font-weight: bold;");
+        }
         text.setWrappingWidth(710);
         text.setLineSpacing(.5);
         return text;
@@ -818,7 +818,7 @@ public class GUI_Logic {
 
     static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.get.folders().getDownloadFolder();
+        String lastFolder = AppSettings.GET.folders().getDownloadFolder();
         String initFolder = lastFolder.isEmpty() ? System.getProperty("user.home") : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);
@@ -828,15 +828,15 @@ public class GUI_Logic {
     }
 
     private Jobs getJobs() {
-        return AppSettings.get.jobs();
+        return AppSettings.GET.jobs();
     }
 
     private JobHistory getHistory() {
-        return AppSettings.get.jobHistory();
+        return AppSettings.GET.jobHistory();
     }
 
     private void selectJob(Job job) {
         selectedJob = job;
-        updatingBatch.setValue(true);
+        UPDATING_BATCH.setValue(true);
     }
 }

@@ -85,10 +85,11 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 }
                 jobList.addLast(new Job(fileLink, dir, filename, false));
             }
-            GUI_Logic.setDownloadInfoColor(Colors.GREEN);
+            guiController.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
-            if (progTimer != null) progTimer.cancel();
-
+            if (progTimer != null) {
+                progTimer.cancel();
+            }
             updateProgress(0, 1);
         }
         return jobList;
@@ -123,7 +124,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);
                             }
-                            GUI_Logic.addJob(jobList);
+                            guiController.addJob(jobList);
                             deleteList.addLast(file);
                         }
                     } catch (IOException ignored) {}
@@ -171,7 +172,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 if (list.length > 3) {
                     for (String line : list) {
                         Matcher m = pattern.matcher(line);
-                        int value;
                         if (m.find()) {
                             fileCount = Integer.parseInt(m.group(2));
                             break;
@@ -187,8 +187,10 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 Process process = pb.start();
                 StringBuilder sbOutput = new StringBuilder();
                 try {
-                    try (InputStream inputStream = process.getInputStream();
-                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    try (
+                        InputStream inputStream = process.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))
+                    ) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (this.isCancelled()) {

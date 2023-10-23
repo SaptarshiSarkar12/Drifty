@@ -27,7 +27,7 @@ import static Utils.Utility.*;
  * @version 2.0.0
  */
 public class Main {
-    public static final Logger logger = Logger.getInstance();
+    public static final Logger LOGGER = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
@@ -41,18 +41,18 @@ public class Main {
     private static String fileName = null;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
-    private static final String msg_FileExists_NoHistory = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
-    private static final String msg_FileExists_HasHistory = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
+    private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
+    private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
 
     public static void main(String[] args) {
-        logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
+        LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
-        jobHistory = AppSettings.get.jobHistory();
+        jobHistory = AppSettings.GET.jobHistory();
         printBanner();
         if (args.length > 0) {
             link = args[0];
@@ -102,10 +102,10 @@ public class Main {
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                     Job job = new Job(link, downloadsFolder, fileName, false);
-                    checkHistoryAddJobsAndDownload(job);
+                    checkHistoryAddJobsAndDownload(job, false);
                 }
             }
-            logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+            LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
             System.exit(0);
         }
         while (true) {
@@ -143,7 +143,7 @@ public class Main {
                     messageBroker.msgLinkError("Link is invalid!");
                     continue;
                 }
-                System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.get.lastDownloadFolder() + ") : ");
+                System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ");
                 downloadsFolder = SC.next();
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
@@ -152,12 +152,12 @@ public class Main {
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAddJobsAndDownload(job);
+                checkHistoryAddJobsAndDownload(job, true);
             }
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
             if (choice.equals("q")) {
-                logger.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }
             printBanner();
@@ -236,16 +236,16 @@ public class Main {
                 if (downloadsFolder.equals(".")) {
                     downloadsFolder = Utility.getHomeDownloadFolder().toString();
                 } else if (downloadsFolder.equalsIgnoreCase("L")) {
-                    downloadsFolder = AppSettings.get.lastDownloadFolder();
+                    downloadsFolder = AppSettings.GET.lastDownloadFolder();
                 } else if (downloadsFolder.isEmpty()) {
                     try {
                         downloadsFolder = data.get("directories").get(i);
                     } catch (Exception e) {
-                        downloadsFolder = AppSettings.get.lastDownloadFolder();
+                        downloadsFolder = AppSettings.GET.lastDownloadFolder();
                     }
                 }
                 Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAddJobsAndDownload(job);
+                checkHistoryAddJobsAndDownload(job, false);
             }
         } catch (FileNotFoundException e) {
             messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
@@ -277,7 +277,7 @@ public class Main {
         if (downloadsFolder == null) {
             downloadsFolder = Utility.getHomeDownloadFolder().toString();
         } else if (downloadsFolder.equalsIgnoreCase("L")) {
-            downloadsFolder = AppSettings.get.lastDownloadFolder();
+            downloadsFolder = AppSettings.GET.lastDownloadFolder();
         } else if (downloadsFolder.equals(".")) {
             downloadsFolder = Utility.getHomeDownloadFolder().toString();
         } else {
@@ -297,7 +297,7 @@ public class Main {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
-        AppSettings.set.lastFolder(downloadsFolder);
+        AppSettings.SET.lastFolder(downloadsFolder);
         return downloadsFolder;
     }
 
@@ -330,26 +330,29 @@ public class Main {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    private static void checkHistoryAddJobsAndDownload(Job job) {
+    private static void checkHistoryAddJobsAndDownload(Job job, boolean removeInputBufferFirst) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
-        boolean fileExists_HasHistory = doesFileExist && hasHistory;
-        boolean fileExists_NoHistory = doesFileExist && !hasHistory;
-        if (fileExists_NoHistory) {
+        boolean fileExistsHasHistory = doesFileExist && hasHistory;
+        boolean fileExistsNoHistory = doesFileExist && !hasHistory;
+        if (fileExistsNoHistory) {
             fileName = Utility.renameFile(fileName, downloadsFolder);
-            System.out.printf(msg_FileExists_NoHistory + "\n", job.getFilename(), job.getDir(), fileName);
+            System.out.printf(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName);
             renameFilenameIfRequired(true);
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }
             job = new Job(link, downloadsFolder, fileName, false);
-            jobHistory.addJob(job,true);
+            jobHistory.addJob(job, true);
             FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
             downloader.run();
-        } else if (fileExists_HasHistory) {
-            System.out.printf(msg_FileExists_HasHistory, job.getFilename(), job.getDir());
+        } else if (fileExistsHasHistory) {
+            System.out.printf(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir());
+            if (removeInputBufferFirst) {
+                SC.nextLine();
+            }
             String choiceString = SC.nextLine().toLowerCase();
-            boolean choice = utility.yesNoValidation(choiceString, String.format(msg_FileExists_HasHistory, job.getFilename(), job.getDir()));
+            boolean choice = utility.yesNoValidation(choiceString, String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()));
             if (choice) {
                 fileName = Utility.renameFile(fileName, downloadsFolder);
                 System.out.println("New file name : " + fileName);
@@ -358,7 +361,7 @@ public class Main {
                     link = Utility.getSpotifyDownloadLink(link);
                 }
                 job = new Job(link, downloadsFolder, fileName, false);
-                jobHistory.addJob(job,true);
+                jobHistory.addJob(job, true);
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
                 downloader.run();
             }

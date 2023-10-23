@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class CheckFile implements Runnable {
     private static final MessageBroker M = Environment.getMessageBroker();
+    public static boolean stopWalk = false;
     private final List<String> searchList;
     private final Path rootPath;
-    public static boolean stopWalk = false;
     private final boolean findOneFile;
     private FolderWalker folderWalker;
 
@@ -60,13 +60,17 @@ public class CheckFile implements Runnable {
 
         @Override
         public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attrs) {
-            if (stopWalk) return FileVisitResult.TERMINATE;
+            if (stopWalk) {
+                return FileVisitResult.TERMINATE;
+            }
             return FileVisitResult.CONTINUE;
         }
 
         @Override
         public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
-            if (stopWalk) return FileVisitResult.TERMINATE;
+            if (stopWalk) {
+                return FileVisitResult.TERMINATE;
+            }
             if (attrs.isRegularFile()) {
                 String filename = FilenameUtils.getName(path.toAbsolutePath().toString());
                 String fullPath = path.toAbsolutePath().toString();
@@ -89,13 +93,17 @@ public class CheckFile implements Runnable {
 
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
-            if (stopWalk) return FileVisitResult.TERMINATE;
+            if (stopWalk) {
+                return FileVisitResult.TERMINATE;
+            }
             return FileVisitResult.CONTINUE;
         }
 
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException e) {
-            if (stopWalk) return FileVisitResult.TERMINATE;
+            if (stopWalk) {
+                return FileVisitResult.TERMINATE;
+            }
             return FileVisitResult.CONTINUE;
         }
 
