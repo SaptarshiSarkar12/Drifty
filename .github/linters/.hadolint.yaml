@@ -1,0 +1,4 @@
+failure-threshold: warning
+ignored:
+  - DL3000
+  - DL3029
