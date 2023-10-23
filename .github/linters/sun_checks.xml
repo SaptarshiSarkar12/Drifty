@@ -15,14 +15,7 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
     <!-- Checks for Naming Conventions -->
-    <module name="ConstantName"/>
-    <module name="LocalFinalVariableName"/>
-    <module name="LocalVariableName"/>
-    <module name="MemberName"/>
-    <module name="MethodName"/>
     <module name="PackageName"/>
-    <module name="ParameterName"/>
-    <module name="StaticVariableName"/>
     <module name="TypeName"/>
     <!-- Checks for Import statements -->
     <module name="IllegalImport"/>
@@ -86,7 +79,15 @@
         <module name="ModifierOrder"/>
         <module name="AbbreviationAsWordInName"/>
         <module name="CatchParameterName"/>
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="ParameterName"/>
         <module name="PatternVariableName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
         <module name="EmptyForInitializerPad"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EmptyLineSeparator">
