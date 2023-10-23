@@ -14,7 +14,7 @@ First, please refer to the [issues](https://github.com/SaptarshiSarkar12/Drifty/
 Then, please [create a new issue in the GitHub repository](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) describing the enhancement you would like to have.
 Be sure to include as much detail as possible including step-by-step descriptions, specific examples, screenshots or mockups, and providing a reason why the enhancement might be worthwhile.
 
-## Here is some quick guide of some common ways to contribute :
+## Quick guide of some common ways to contribute
 
 ### Issues
 
