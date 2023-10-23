@@ -78,7 +78,7 @@ For **Users** :
 > [!IMPORTANT]   
 > - To download files in your local directory, you need to pass that directory as a volume to Drifty.   
 > Suppose, you want to download the file in your `home/username/Downloads` directory, then, the volume flag that you need to pass to docker will be `-v /home/username/Downloads:/root/Downloads`.   
-> - You can pass `-v /home/username/.drifty:/root/.config` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
+> - You can pass `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
 > - For **Linux**, it is advisable to use **Docker Engine** directly instead of running images using **Docker Desktop**. You can do the same by adding **_`sudo`_** before the docker commands.
 
 1. Pull the Docker image for Drifty using the below command -   
