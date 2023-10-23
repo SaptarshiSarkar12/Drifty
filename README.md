@@ -40,6 +40,7 @@ fileNames: [""] # Will be auto-retrieved if not provided
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
 directories: [""] # Use 'directories' when the download folder is different for each of the files
 ```
+
 ### Drifty GUI
 
 https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-a053-d3ee13e67c8e
@@ -60,7 +61,9 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 ## Quickstart 🚀🚀
 
 For **Users** :
+
 ### Using Drifty Application executable
+
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
