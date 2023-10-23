@@ -5,7 +5,8 @@ Fixes #
 ## Changes proposed
 <!-- List all the proposed changes in your PR -->
 
-## Check List (Check all the applicable boxes) 
+## Check List (Check all the applicable boxes)
+
 - [ ] My code follows the code style of this project.
 - [ ] My change requires changes to the documentation.
 - [ ] I have updated the documentation accordingly.

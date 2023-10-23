@@ -183,15 +183,6 @@ public class FileDownloader implements Runnable {
 
     @Override
     public void run() {
-        link = link.replace('\\', '/');
-        if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-            link = "https://" + link;
-        }
-        if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
-            if (!(link.endsWith("?raw=true"))) {
-                link = link + "?raw=true";
-            }
-        }
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
         boolean isSpotifyLink = isSpotify(link);

@@ -1,4 +1,3 @@
-default: true
 MD001: true # Header levels should only increment by one level at a time
 MD003:
   style: consistent # Header style
