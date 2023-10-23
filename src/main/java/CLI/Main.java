@@ -3,13 +3,16 @@ package CLI;
 import Backend.FileDownloader;
 import Enums.MessageType;
 import Enums.OS;
+import GUI.Support.Job;
+import GUI.Support.JobHistory;
 import Preferences.AppSettings;
+import Updater.Updater;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
-import Updater.Updater;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,13 +34,15 @@ import static Utils.Utility.*;
 public class Main {
     public static final Logger LOGGER = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
+    protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
+    protected static boolean isSpotifyLink;
     protected static boolean isInstagramImage;
     private static MessageBroker messageBroker;
     private static String link;
+    private static String downloadsFolder;
     private static Utility utility;
-    private static String directory;
     private static String fileName = null;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
@@ -48,16 +53,19 @@ public class Main {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
-        if (checkUpdate()){
-            return;
-        };
+        try {
+            if (checkUpdate()){
+                return;
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
         jobHistory = AppSettings.GET.jobHistory();
         printBanner();
-        String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
             String name = null;
@@ -97,15 +105,12 @@ public class Main {
                     messageBroker.msgLinkError("Link is invalid!");
                 }
                 if (isUrlValid) {
-                    isYoutubeURL = isYoutube(link);
-                    isInstagramLink = isInstagram(link);
                     if (name == null) {
                         if (fileName == null || fileName.isEmpty()) {
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
                             fileName = findFilenameInLink(link);
                         }
                     }
-                    renameFilenameIfRequired(false);
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                     Job job = new Job(link, downloadsFolder, fileName, false);
@@ -141,7 +146,7 @@ public class Main {
             }
             if (!batchDownloading) {
                 System.out.print(ENTER_FILE_LINK);
-                String link = SC.next();
+                link = SC.next();
                 SC.nextLine();
                 System.out.println("Validating link...");
                 if (Utility.isURL(link)) {
@@ -155,6 +160,7 @@ public class Main {
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 Job job = new Job(link, downloadsFolder, fileName, false);
@@ -195,16 +201,16 @@ public class Main {
             if (data.containsKey("directory")) {
                 numberOfDirectories = 1;
                 if (data.get("directory").get(0).isEmpty()) {
-                    directory = ".";
+                    downloadsFolder = ".";
                 } else {
-                    directory = data.get("directory").get(0);
+                    downloadsFolder = data.get("directory").get(0);
                 }
             } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
             } else {
                 messageBroker.msgDirInfo("No directory specified. Default downloads folder will be used.");
                 numberOfDirectories = 0;
-                directory = ".";
+                downloadsFolder = ".";
             }
             String linkMessage;
             if (numberOfLinks == 1) {
@@ -231,6 +237,7 @@ public class Main {
                 messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
                 } else {
@@ -244,7 +251,7 @@ public class Main {
                     downloadsFolder = AppSettings.GET.lastDownloadFolder();
                 } else if (downloadsFolder.isEmpty()) {
                     try {
-                        directory = data.get("directories").get(i);
+                        downloadsFolder = data.get("directories").get(i);
                     } catch (Exception e) {
                         downloadsFolder = AppSettings.GET.lastDownloadFolder();
                     }
@@ -258,7 +265,7 @@ public class Main {
     }
 
     private static void renameFilenameIfRequired(boolean removeInputBufferFirst) { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
-        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink)) {
+        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink && !isSpotifyLink)) {
             System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
             if (removeInputBufferFirst) {
                 SC.nextLine();
@@ -335,94 +342,7 @@ public class Main {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    public static boolean checkUpdate() throws URISyntaxException {
-        String latestVersion = getLatestVersion();
-        if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-                String Link = "";
-                String oldFilePath = String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                String newFilePath = "";
-                String OS_NAME = OS.getOSName();
-                if (OS_NAME.contains("win")) {
-                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe";
-                    String fileName = "Drifty_CLI.exe";
-                    String dirPath = String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates"));
-                    FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
-                    downloader.run();
-                    newFilePath = dirPath +'\\' + fileName;
-                } else if (OS_NAME.contains("mac")) {
-                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos";
-                    String fileName = "Drifty-CLI_macos";
-                    String dirPath = ".drifty/updates";
-                    FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
-                    downloader.run();
-                    newFilePath = dirPath +'\\' + fileName;
-                } else if (OS_NAME.contains("linux")) {
-                    Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux";
-                    String fileName = "Drifty-CLI_linux";
-                    String dirPath = ".drifty/updates";
-                    FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
-                    downloader.run();
-                    newFilePath = dirPath +'\\' + fileName;
-                }
-                Updater.replaceUpdate(oldFilePath , newFilePath);
-                return true;
-        }
-        return false;
-    }
-
-    private static String getLatestVersion() {
-        try {
-            URL url = new URL("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = reader.readLine();
-            reader.close();
-
-            // Parse JSON response to get the "tag_name"
-            // For simplicity, we're assuming the tag_name is a string enclosed in double quotes
-            int start = response.indexOf("\"tag_name\":\"") + 12;
-            int end = response.indexOf("\"", start);
-            System.out.println( response.substring(start, end));
-            return response.substring(start, end);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-  
-    private static boolean isNewerVersion(String newVersion, String currentVersion) {
-        // Split version strings into arrays of integers
-        String[] newVersionParts = newVersion.replaceAll("[^\\d.]", "").split("\\.");
-        String[] currentVersionParts = currentVersion.replaceAll("[^\\d.]", "").split("\\.");
-
-        // Convert parts to integers
-        int[] newVersionNumbers = new int[newVersionParts.length];
-        int[] currentVersionNumbers = new int[currentVersionParts.length];
-
-        for (int i = 0; i < newVersionParts.length; i++) {
-            newVersionNumbers[i] = Integer.parseInt(newVersionParts[i]);
-        }
-
-        for (int i = 0; i < currentVersionParts.length; i++) {
-            currentVersionNumbers[i] = Integer.parseInt(currentVersionParts[i]);
-        }
-
-        // Compare version numbers
-        for (int i = 0; i < Math.min(newVersionNumbers.length, currentVersionNumbers.length); i++) {
-            if (newVersionNumbers[i] > currentVersionNumbers[i]) {
-                return true; // New version is greater
-            } else if (newVersionNumbers[i] < currentVersionNumbers[i]) {
-                return false; // Current version is greater
-            }
-        }
-
-        // If all compared parts are equal, consider the longer version as newer
-        return newVersionNumbers.length > currentVersionNumbers.length;
-    }
-  
-  private static void checkHistoryAddJobsAndDownload(Job job, boolean removeInputBufferFirst) {
+    private static void checkHistoryAddJobsAndDownload(Job job, boolean removeInputBufferFirst) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
         boolean fileExistsHasHistory = doesFileExist && hasHistory;
@@ -463,7 +383,95 @@ public class Main {
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }
+            FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+            downloader.run();
         }
-  }
+    }
 
+    public static boolean checkUpdate() throws URISyntaxException {
+        String latestVersion = getLatestVersion();
+        if (isNewerVersion(latestVersion , VERSION_NUMBER)) {
+            String Link;
+            String oldFilePath = String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            String newFilePath = "";
+            String OS_NAME = OS.getOSName();
+            if (OS_NAME.contains("win")) {
+                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe";
+                String fileName = "Drifty_CLI.exe";
+                String dirPath = String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates"));
+                FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
+                downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
+            } else if (OS_NAME.contains("mac")) {
+                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos";
+                String fileName = "Drifty-CLI_macos";
+                String dirPath = ".drifty/updates";
+                FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
+                downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
+            } else if (OS_NAME.contains("linux")) {
+                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux";
+                String fileName = "Drifty-CLI_linux";
+                String dirPath = ".drifty/updates";
+                FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
+                downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
+            }
+            Updater.replaceUpdate(oldFilePath , newFilePath);
+            return true;
+        }
+        return false;
+    }
+
+    private static String getLatestVersion() {
+        try {
+            URL url = new URI("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest").toURL();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            reader.close();
+
+            // Parse JSON response to get the "tag_name"
+            // For simplicity, we're assuming the tag_name is a string enclosed in double quotes
+            int start = response.indexOf("\"tag_name\":\"") + 12;
+            int end = response.indexOf("\"", start);
+            System.out.println( response.substring(start, end));
+            return response.substring(start, end);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static boolean isNewerVersion(String newVersion, String currentVersion) {
+        // Split version strings into arrays of integers
+        String[] newVersionParts = newVersion.replaceAll("[^\\d.]", "").split("\\.");
+        String[] currentVersionParts = currentVersion.replaceAll("[^\\d.]", "").split("\\.");
+
+        // Convert parts to integers
+        int[] newVersionNumbers = new int[newVersionParts.length];
+        int[] currentVersionNumbers = new int[currentVersionParts.length];
+
+        for (int i = 0; i < newVersionParts.length; i++) {
+            newVersionNumbers[i] = Integer.parseInt(newVersionParts[i]);
+        }
+
+        for (int i = 0; i < currentVersionParts.length; i++) {
+            currentVersionNumbers[i] = Integer.parseInt(currentVersionParts[i]);
+        }
+
+        // Compare version numbers
+        for (int i = 0; i < Math.min(newVersionNumbers.length, currentVersionNumbers.length); i++) {
+            if (newVersionNumbers[i] > currentVersionNumbers[i]) {
+                return true; // New version is greater
+            } else if (newVersionNumbers[i] < currentVersionNumbers[i]) {
+                return false; // Current version is greater
+            }
+        }
+
+        // If all compared parts are equal, consider the longer version as newer
+        return newVersionNumbers.length > currentVersionNumbers.length;
+    }
 }

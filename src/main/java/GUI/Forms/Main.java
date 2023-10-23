@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -44,10 +45,9 @@ public class Main extends Application {
         Environment.setMessageBroker(msgBroker);
         msgBroker.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
-        if(checkUpdate()){
+        if (checkUpdate()) {
             return;
         }
-        Utility.setStartTime();
         launch(args);
     }
 
@@ -183,7 +183,7 @@ public class Main extends Application {
     public static boolean checkUpdate() throws URISyntaxException {
         String latestVersion = getLatestVersion();
         if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-            String Link = "";
+            String Link;
             String oldFilePath = String.valueOf(CLI.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             String newFilePath = "";
             String OS_NAME = OS.getOSName();
@@ -217,7 +217,7 @@ public class Main extends Application {
 
     private static String getLatestVersion() {
         try {
-            URL url = new URL("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest");
+            URL url = new URI("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest").toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 

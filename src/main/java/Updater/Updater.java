@@ -1,14 +1,14 @@
 package Updater;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.awt.Desktop;
-public class Updater {
 
+public class Updater {
 
     public static void main(String[] args) {
         String oldFilePath = "";
         String newFilePath = "";
-
         replaceUpdate(oldFilePath , newFilePath);
     }
 
