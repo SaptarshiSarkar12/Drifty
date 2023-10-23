@@ -6,4 +6,4 @@ RUN apt-get update --no-install-recommends && apt-get install ffmpeg libsm6 libx
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN chmod +x ./Drifty_GUI
 
-CMD /app/Drifty_GUI
+CMD [ "/app/Drifty_GUI" ]
