@@ -20,7 +20,7 @@ jobs:
           # list of changed files within `super-linter`
           fetch-depth: 0
       - name: Lint Code Base
-        uses: super-linter/super-linter@v5
+        uses: super-linter/super-linter/slim@v5
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,3 +30,5 @@ jobs:
           VALIDATE_GITHUB_ACTIONS: false
           VALIDATE_GOOGLE_JAVA_FORMAT: false
           VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_CLANG_FORMAT: false
+          VALIDATE_CSHARP: false
