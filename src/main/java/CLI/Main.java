@@ -10,11 +10,11 @@ import Updater.Updater;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,12 +42,14 @@ public class Main {
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
 
         logger.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
-        checkUpdate();
+        if(checkUpdate()){
+            return;
+        };
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -332,36 +334,39 @@ public class Main {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    public static void checkUpdate(){
+    public static boolean checkUpdate() throws URISyntaxException {
         String latestVersion = getLatestVersion();
         if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-                // Download Latest CLI
                 String Link = "";
-                String oldFilePath = "";
+                String oldFilePath = String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
                 String newFilePath = "";
                 String OS_NAME = OS.getOSName();
                 if (OS_NAME.contains("win")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe";
                     String fileName = "Drifty_CLI.exe";
-                    String dirPath = "";
+                    String dirPath = String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates"));
                     FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                     downloader.run();
+                    newFilePath = dirPath +'\\' + fileName;
                 } else if (OS_NAME.contains("mac")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos";
                     String fileName = "Drifty-CLI_macos";
-                    String dirPath = "";
+                    String dirPath = ".drifty/updates";
                     FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                     downloader.run();
+                    newFilePath = dirPath +'\\' + fileName;
                 } else if (OS_NAME.contains("linux")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux";
                     String fileName = "Drifty-CLI_linux";
-                    String dirPath = "";
+                    String dirPath = ".drifty/updates";
                     FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
                     downloader.run();
+                    newFilePath = dirPath +'\\' + fileName;
                 }
                 Updater.replaceUpdate(oldFilePath , newFilePath);
-
+                return true;
         }
+        return false;
     }
 
     private static String getLatestVersion() {

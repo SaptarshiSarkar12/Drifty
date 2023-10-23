@@ -22,7 +22,9 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
 import static Utils.DriftyConstants.VERSION_NUMBER;
@@ -35,7 +37,7 @@ public class Main extends Application {
     private Scene scene;
     private boolean firstRun = true;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         M = new MessageBroker();
@@ -179,33 +181,38 @@ public class Main extends Application {
         INSTANCE.primaryStage.setFullScreen(!INSTANCE.primaryStage.isFullScreen());
     }
 
-    public static boolean checkUpdate(){
+    public static boolean checkUpdate() throws URISyntaxException {
         String latestVersion = getLatestVersion();
         if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-            // Download Latest GUI
             String Link = "";
-            String fileName = "Drifty_GUI.exe";
-            String dirPath = "config/Updates";
+            String oldFilePath = String.valueOf(CLI.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            String newFilePath = "";
             String OS_NAME = OS.getOSName();
             if (OS_NAME.contains("win")) {
                 Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe";
+                String fileName = "Drifty_GUI.exe";
+                String dirPath = String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates"));
                 FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                 downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
             } else if (OS_NAME.contains("mac")) {
                 Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg";
+                String fileName = "Drifty-GUI.pkg";
+                String dirPath = ".drifty/updates";
                 FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                 downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
             } else if (OS_NAME.contains("linux")) {
                 Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux";
+                String fileName = "Drifty-GUI_linux";
+                String dirPath = ".drifty/updates";
                 FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
                 downloader.run();
+                newFilePath = dirPath +'\\' + fileName;
             }
-            String oldFilePath = "G:\\Newfolder2\\Drifty_GUI.exe";
-            String newFilePath = "config/Updates/Drifty_GUI.exe";
             Updater.replaceUpdate(oldFilePath , newFilePath);
             return true;
         }
-
         return false;
     }
 
