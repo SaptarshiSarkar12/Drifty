@@ -19,14 +19,13 @@ import static Enums.Program.JOB_FILE;
 import static Enums.Program.JOB_HISTORY_FILE;
 import static Preferences.Labels.*;
 
-public class Get { // This class is used to get the user preferences
-    private final Preferences preferences = Labels.PREFERENCES;
+public final class Get { // This class is used to get the user preferences
     private static final Get INSTANCE = new Get();
+    private final Preferences preferences = Labels.PREFERENCES;
 
-    private Get() {
-    }
+    private Get() {}
 
-    protected static Get getInstance() {
+    static Get getInstance() {
         return INSTANCE;
     }
 

@@ -176,8 +176,8 @@ public class MainGridPane extends GridPane {
         imageViewUp.setFitWidth(width * 0.45);
         imageViewDn.setPreserveRatio(true);
         imageViewDn.setFitWidth(width * 0.45);
-        button.setOnMousePressed(e->button.setGraphic(imageViewDn));
-        button.setOnMouseReleased(e->button.setGraphic(imageViewUp));
+        button.setOnMousePressed(e -> button.setGraphic(imageViewDn));
+        button.setOnMouseReleased(e -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);
         button.getStyleClass().add("glassButton");
         return button;

@@ -9,5 +9,5 @@ public class Colors {
     public static final Color HOTPINK = Color.rgb(255, 0, 175);
     public static final Color BLACK = Color.rgb(0, 0, 0);
     public static final Color YELLOW = Color.rgb(255, 255, 0);
-    public static final Color BLUE = Color.rgb(0,100,255);
+    public static final Color BLUE = Color.rgb(0, 100, 255);
 }

@@ -33,8 +33,7 @@ import static Utils.DriftyConstants.*;
 
 public class DownloadFile extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
-    private final String YT_DLP = Program.get(Program.YT_DLP);
-    private final String SPOTDL = Program.get(Program.SPOTDL);
+    private static final String YT_DLP = Program.get(Program.YT_DLP);
     private final StringProperty progressProperty = new SimpleStringProperty();
     private String link;
     private final String filename;
@@ -45,10 +44,10 @@ public class DownloadFile extends Task<Integer> {
     private final Job job;
     private final AtomicLong totalTransferred = new AtomicLong();
     private final AtomicLong totalSpeedValue = new AtomicLong();
-    private static final String regex1 = "([0-9.]+)%";
-    private static final Pattern p1 = Pattern.compile(regex1);
-    private static final String regex2 = "(\\d+\\.\\d+)([a-zA-Z/]+) ETA ([0-9:]+)";
-    private static final Pattern p2 = Pattern.compile(regex2);
+    private static final String PERCENTAGE_REGEX = "([0-9.]+)%";
+    private static final Pattern PERCENTAGE_PATTERN = Pattern.compile(PERCENTAGE_REGEX);
+    private static final String ETA_REGEX = "(\\d+\\.\\d+)([a-zA-Z/]+) ETA ([0-9:]+)";
+    private static final Pattern ETA_PATTERN = Pattern.compile(ETA_REGEX);
     private int updateCount = 0;
     private double speedSum = 0.0;
     private double lastProgress;
@@ -85,6 +84,7 @@ public class DownloadFile extends Task<Integer> {
                 splitDecision();
             }
             case OTHER -> splitDecision();
+            default -> M.msgDownloadError("Invalid Link !");
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -218,10 +218,12 @@ public class DownloadFile extends Task<Integer> {
             while (loop) {
                 boolean allDone = true;
                 for (SplitDownloadMetrics sdm : list) {
-                    if (sdm.failed())
+                    if (sdm.failed()) {
                         stopThreads = true;
-                    if (sdm.running())
+                    }
+                    if (sdm.running()) {
                         allDone = false;
+                    }
                 }
                 if (stopThreads) {
                     for (SplitDownloadMetrics sdm : list) {
@@ -345,8 +347,8 @@ public class DownloadFile extends Task<Integer> {
 
     private void setProperties() {
         progressProperty.addListener(((observable, oldValue, newValue) -> {
-            Matcher m1 = p1.matcher(newValue);
-            Matcher m2 = p2.matcher(newValue);
+            Matcher m1 = PERCENTAGE_PATTERN.matcher(newValue);
+            Matcher m2 = ETA_PATTERN.matcher(newValue);
             double value = 0.0;
             double progress = 0.0;
             if (m1.find()) {

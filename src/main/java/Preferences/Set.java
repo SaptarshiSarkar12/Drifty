@@ -31,30 +31,30 @@ public class Set { // This class is used to set the user preferences
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(folders);
-        AppSettings.clear.folders();
+        AppSettings.CLEAR.folders();
         preferences.put(FOLDERS.toString(), value);
     }
 
     public void mainAutoPaste(boolean isMainAutoPasteEnabled) {
-        AppSettings.clear.mainAutoPaste();
+        AppSettings.CLEAR.mainAutoPaste();
         preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
 
     public void lastDLPUpdateTime(long value) {
-        AppSettings.clear.lastDLPUpdateTime();
+        AppSettings.CLEAR.lastDLPUpdateTime();
         preferences.putLong(LAST_DLP_UPDATE_TIME.toString(), value);
     }
 
     public void lastFolder(String lastFolderPath) {
-        AppSettings.clear.lastFolder();
+        AppSettings.CLEAR.lastFolder();
         preferences.put(LAST_FOLDER.toString(), lastFolderPath);
     }
 
-    public void Jobs(Jobs jobs) {
+    public void jobs(Jobs jobs) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String value = gson.toJson(jobs);
-        AppSettings.clear.jobs();
+        AppSettings.CLEAR.jobs();
         Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
         try {
             FileUtils.writeStringToFile(jobBatchFile.toFile(), value, Charset.defaultCharset());

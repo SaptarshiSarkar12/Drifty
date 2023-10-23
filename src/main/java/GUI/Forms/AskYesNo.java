@@ -137,6 +137,7 @@ class AskYesNo {
         switch (state) {
             case OK -> hbox.getChildren().add(btnOk);
             case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
+            default -> System.out.println("AskYesNo: Unknown state: " + state);
         }
         vbox.getChildren().add(hbox);
     }
@@ -146,8 +147,9 @@ class AskYesNo {
             showScene();
         } else {
             Platform.runLater(this::showScene);
-            while(answer.inLimbo())
+            while (answer.inLimbo()) {
                 sleep(50);
+            }
         }
         return answer;
     }
@@ -164,7 +166,7 @@ class AskYesNo {
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
         stage.centerOnScreen();
-        stage.setOnCloseRequest(e-> {
+        stage.setOnCloseRequest(e -> {
             answer.setAnswer(false);
             stage.close();
         });

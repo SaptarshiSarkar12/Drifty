@@ -32,7 +32,7 @@ public class ManageFolders {
     private javafx.scene.control.Button btnClose;
 
     public ManageFolders() {
-        this.folders = AppSettings.get.folders();
+        this.folders = AppSettings.GET.folders();
         createControls();
         setControls();
     }

@@ -34,7 +34,7 @@ import static Enums.Program.YT_DLP;
 import static Utils.DriftyConstants.*;
 
 public final class Utility {
-    private static final Random random = new Random(System.currentTimeMillis());
+    private static final Random RANDOM_GENERATOR = new Random(System.currentTimeMillis());
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final Scanner SC = ScannerFactory.getInstance();
     private static boolean interrupted;
@@ -97,16 +97,12 @@ public final class Utility {
         if (isInstagram(link) || isYoutube(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
             for (String json : Objects.requireNonNull(linkMetadataList)) {
-                    filename =  Utility.getFilenameFromJson(json);
+                filename = Utility.getFilenameFromJson(json);
             }
         } else if (isSpotify(link)) {
             LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-            File file = Program.getSpotdlDataPath().toFile();
-            try {
-                String json = FileUtils.readFileToString(file, Charset.defaultCharset());
+            for (String json : Objects.requireNonNull(linkMetadataList)) {
                 filename = Utility.extractSpotifyFilename(json);
-            } catch(IOException e){
-                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
             }
         } else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
@@ -186,8 +182,7 @@ public final class Utility {
             }
             Thread linkThread;
             if (isSpotify(link)){
-                  driftyJsonFolder = Program.getSpotdlDataPath().toFile();
-                  linkThread = new Thread(spotdlJsonData(driftyJsonFolder.getAbsolutePath(), link));
+                linkThread = new Thread(spotdlJsonData(Program.getSpotdlDataPath().toFile().getAbsolutePath(), link));
             } else {
                 linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             }
@@ -204,7 +199,7 @@ public final class Utility {
             if (files != null) {
                 for (File file : files) {
                     String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                    if (ext.toLowerCase().contains("json")||ext.toLowerCase().contains("spotdl")) {
+                    if (ext.toLowerCase().contains("json") || ext.toLowerCase().contains("spotdl")) {
                         String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
                         list.addLast(linkMetadata);
                     }
@@ -320,7 +315,7 @@ public final class Utility {
         int count = source.length();
         StringBuilder sb = new StringBuilder();
         for (int x = 0; x < characterCount; x++) {
-            int index = random.nextInt(count);
+            int index = RANDOM_GENERATOR.nextInt(count);
             sb.append(source.charAt(index));
         }
         return sb.toString();

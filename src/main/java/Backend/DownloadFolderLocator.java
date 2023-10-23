@@ -44,10 +44,10 @@ public class DownloadFolderLocator {
         public void run() {
             try {
                 int c;
-                while ((c = is.read()) != -1)
+                while ((c = is.read()) != -1) {
                     sw.write(c);
-            } catch (IOException ignored) {
-            }
+                }
+            } catch (IOException ignored) {}
         }
 
         public String getResult() {
