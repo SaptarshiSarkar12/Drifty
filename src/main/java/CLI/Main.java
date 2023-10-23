@@ -2,11 +2,11 @@ package CLI;
 
 import Backend.FileDownloader;
 import Enums.MessageType;
-import Enums.Mode;
 import Enums.OS;
 import Preferences.AppSettings;
 import Utils.*;
 import org.yaml.snakeyaml.Yaml;
+import Updater.Updater;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,6 +14,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -334,26 +335,32 @@ public class Main {
     public static void checkUpdate(){
         String latestVersion = getLatestVersion();
         if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-                // Download Latest GUI
+                // Download Latest CLI
                 String Link = "";
-                String fileName = "Drifty_CLI";
-                String dirPath = "G:\\New folder";
+                String oldFilePath = "";
+                String newFilePath = "";
                 String OS_NAME = OS.getOSName();
                 if (OS_NAME.contains("win")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe";
+                    String fileName = "Drifty_CLI.exe";
+                    String dirPath = "";
                     FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                     downloader.run();
                 } else if (OS_NAME.contains("mac")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos";
+                    String fileName = "Drifty-CLI_macos";
+                    String dirPath = "";
                     FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
                     downloader.run();
                 } else if (OS_NAME.contains("linux")) {
                     Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux";
+                    String fileName = "Drifty-CLI_linux";
+                    String dirPath = "";
                     FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
                     downloader.run();
                 }
+                Updater.replaceUpdate(oldFilePath , newFilePath);
 
-                replaceUpdate();
         }
     }
 
