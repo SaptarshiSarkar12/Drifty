@@ -11,7 +11,7 @@ public class DownloaderThread extends Thread {
     private final long end;
     private final FileOutputStream file;
 
-    public DownloaderThread(URL url, FileOutputStream file, long start, long end) {
+    public DownloaderThread(final URL url, FileOutputStream file, long start, long end) {
         this.url = url;
         this.file = file;
         this.start = start;

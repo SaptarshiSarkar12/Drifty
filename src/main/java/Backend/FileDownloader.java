@@ -21,13 +21,13 @@ import static Utils.Utility.*;
  * This class deals with downloading the file.
  */
 public class FileDownloader implements Runnable {
-    private final MessageBroker M = Environment.getMessageBroker();
+    private static final MessageBroker M = Environment.getMessageBroker();
     private final DownloadMetrics downloadMetrics;
     private final int numberOfThreads;
     private final long threadMaxDataSize;
     private final String dir;
     private String fileName;
-    private String link;
+    private final String link;
     private URL url;
 
     public FileDownloader(String link, String fileName, String dir) {
@@ -69,7 +69,8 @@ public class FileDownloader implements Runnable {
                     List<File> tempFiles = new ArrayList<>(numberOfThreads);
                     List<DownloaderThread> downloaderThreads = new ArrayList<>(numberOfThreads);
                     long partSize = Math.floorDiv(totalSize, numberOfThreads);
-                    long start, end;
+                    long start;
+                    long end;
                     FileOutputStream fileOut;
                     File file;
                     for (int i = 0; i < numberOfThreads; i++) {
@@ -129,19 +130,19 @@ public class FileDownloader implements Runnable {
         ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
-        int exitValueOfYt_Dlp = -1;
+        int exitValueOfYtDlp = -1;
         try {
-            Process yt_dlp = processBuilder.start();
-            yt_dlp.waitFor();
-            exitValueOfYt_Dlp = yt_dlp.exitValue();
+            Process ytDlp = processBuilder.start();
+            ytDlp.waitFor();
+            exitValueOfYtDlp = ytDlp.exitValue();
         } catch (IOException e) {
             M.msgDownloadError("An I/O error occurred while initialising YouTube video downloader! " + e.getMessage());
         } catch (InterruptedException e) {
             M.msgDownloadError("The YouTube video download process was interrupted by user! " + e.getMessage());
         }
-        if (exitValueOfYt_Dlp == 0) {
+        if (exitValueOfYtDlp == 0) {
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
-        } else if (exitValueOfYt_Dlp == 1) {
+        } else if (exitValueOfYtDlp == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
     }
@@ -183,15 +184,6 @@ public class FileDownloader implements Runnable {
 
     @Override
     public void run() {
-        link = link.replace('\\', '/');
-        if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-            link = "https://" + link;
-        }
-        if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
-            if (!(link.endsWith("?raw=true"))) {
-                link = link + "?raw=true";
-            }
-        }
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
         boolean isSpotifyLink = isSpotify(link);
@@ -260,12 +252,12 @@ public class FileDownloader implements Runnable {
         ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
-        Process yt_dlp = processBuilder.start(); // Starts the download process
-        yt_dlp.waitFor();
-        int exitValueOfYt_Dlp = yt_dlp.exitValue();
-        if (exitValueOfYt_Dlp == 0) {
+        Process instagramDownloadProcess = processBuilder.start(); // Starts the download process
+        instagramDownloadProcess.waitFor();
+        int exitStatus = instagramDownloadProcess.exitValue();
+        if (exitStatus == 0) {
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
-        } else if (exitValueOfYt_Dlp == 1) {
+        } else if (exitStatus == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
     }

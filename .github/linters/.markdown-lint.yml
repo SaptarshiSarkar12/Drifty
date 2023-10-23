@@ -1,0 +1,33 @@
+default: false
+MD001: true # Header levels should only increment by one level at a time
+MD003:
+  style: consistent # Header style
+MD004:
+  style: consistent # Unordered list style
+MD005: true # Inconsistent indentation for list items at the same level
+MD022: true # Headers should be surrounded by blank lines
+MD023: true # Headers must start at the beginning of the line
+MD024: true # Multiple headers with the same content
+MD026:
+  punctuation: ".,;:!" # Trailing punctuation in header
+MD027: true # Multiple spaces after blockquote symbol
+MD028: true # Blank line inside blockquote
+MD029: true # Ordered list item prefix
+MD036:
+  punctuation: ".,;:!?。，；：！？" # Emphasis used instead of a header
+MD037: true # Spaces inside emphasis markers
+MD038: true # Spaces inside code span elements
+MD039: true # Spaces inside link text
+MD040: true # Fenced code blocks should have a language specified
+MD042: true # No empty links
+MD044: true # Proper names should have the correct capitalization
+MD045: true # Images should have an alternate text (alt text)
+MD046:
+  style: fenced # Code block style
+MD048:
+  style: backtick # Code block fence style
+MD049:
+  style: consistent # Emphasis style should be consistent
+MD050:
+  style: consistent # Strong style should be consistent
+MD051: true # Link Fragments should be valid

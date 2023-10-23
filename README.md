@@ -4,7 +4,6 @@
     </p>
 </a>
 
-
 <p align="center">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
@@ -25,9 +24,10 @@
 ## About 🔥
 
 - [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-- It is both available in **Command Line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
+- It is both available in **Command-line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
 
 ## Demo
+
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
 For **Batch Downloading** via **Drifty CLI**, the path to a YAML file has to be provided to it.
@@ -40,6 +40,7 @@ fileNames: [""] # Will be auto-retrieved if not provided
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
 directories: [""] # Use 'directories' when the download folder is different for each of the files
 ```
+
 ### Drifty GUI
 
 https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-a053-d3ee13e67c8e
@@ -58,20 +59,23 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
 
 ## Quickstart 🚀🚀
+
 For **Users** :
+
 ### Using Drifty Application executable
+
 1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-4. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, MacOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
+3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
     ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
-5. Go to your Downloads folder and run the file you downloaded.
+4. Go to your Downloads folder and run the file you downloaded.
    > [!NOTE]   
    > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
-6. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
-7. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
-8. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
+5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
+6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
+7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
 
 ### Using Drifty Application via Docker 🐋
 
@@ -101,7 +105,7 @@ For **Users** :
     ```
     > [!IMPORTANT]  
     > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-    > For **macOS**, please follow [these instructions](Docker/MacOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+    > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
@@ -117,10 +121,11 @@ For **Contributors** :
 6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
 ### Using Docker 🐋 for Development
+
 1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
    > [!IMPORTANT]  
    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-   > For **macOS**, please follow [these instructions](Docker/MacOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+   > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 2. Drifty app will appear on the screen, and you can test it 🎉!
 
 ## Safety warning ⚠️ while Downloading ⬇️
@@ -138,11 +143,11 @@ It is because Microsoft Defender could not verify it is safe as it is not common
 
 ![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
 
-- Now its downloaded, you can proceed.🎉
+- Now it is downloaded, you can proceed.🎉
 
 ### Report the file as safe ✔️
 
-You can also provide your feedback to Microsoft Defender by reporting it to be Safe, by following following steps:
+You can also provide your feedback to Microsoft Defender by reporting it to be Safe, by following the below steps:
 - Click on three dots.
 - Click on **`Report this file as safe`** instead of clicking on **`Keep`**.
 
@@ -151,15 +156,17 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
 ## Safety warning ⚠️ while Installing
-- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below :
+
+- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below:
     |||
     |--|--|
-    | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
-- For macOS, click on **Ok** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
+    | ![Windows Defender - More Info screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![Windows Defender - Run Anyway screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
+- For macOS, click on **OK** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
     <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
 
 
 ## Contributing to the project
+
 - Please feel free to contribute to this open-source project. 
 - See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [**`Projects`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
 - **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
@@ -168,9 +175,11 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
 
 ## Stats 📊
+
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
 
 ## Support 🙏
+
 Please **leave a star ⭐** on this project to _support us_.
 
 ## Thanks to all the contributors ❤️

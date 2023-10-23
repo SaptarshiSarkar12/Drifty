@@ -85,7 +85,7 @@ Usage Data
 
 Usage Data is collected automatically when using the Service.
 
-Usage Data may include information such as Your Device's Internet Protocol
+Usage Data may include information such as Your Device's internet Protocol
 address (e.g. IP address), browser type, browser version, the pages of our
 Service that You visit, the time and date of Your visit, the time spent on
 those pages, unique device identifiers and other diagnostic data.
@@ -93,7 +93,7 @@ those pages, unique device identifiers and other diagnostic data.
 When You access the Service by or through a mobile device, We may collect
 certain information automatically, including, but not limited to, the type of
 mobile device You use, Your mobile device unique ID, the IP address of Your
-mobile device, Your mobile operating system, the type of mobile Internet
+mobile device, Your mobile operating system, the type of mobile internet
 browser You use, unique device identifiers and other diagnostic data.
 
 We may also collect information that Your browser sends whenever You visit our
@@ -250,7 +250,7 @@ Security of Your Personal Data
 ------------------------------
 
 The security of Your Personal Data is important to Us, but remember that no
-method of transmission over the Internet, or method of electronic storage is
+method of transmission over the internet, or method of electronic storage is
 100% secure. While We strive to use commercially acceptable means to protect
 Your Personal Data, We cannot guarantee its absolute security.
 
@@ -269,10 +269,10 @@ If We need to rely on consent as a legal basis for processing Your information
 and Your country requires consent from a parent, We may require Your parent's
 consent before We collect and use that information.
 
-Links to Other Websites
+Links to Other sites
 =======================
 
-Our Service may contain links to other websites that are not operated by Us.
+Our Service may contain links to other sites that are not operated by Us.
 If You click on a third party link, You will be directed to that third party's
 site. We strongly advise You to review the Privacy Policy of every site You
 visit.

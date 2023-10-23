@@ -55,7 +55,7 @@ public class Job {
     }
 
     public boolean fileExists() {
-        Path path = Paths.get(dir,filename);
+        Path path = Paths.get(dir, filename);
         return path.toFile().exists();
     }
 
