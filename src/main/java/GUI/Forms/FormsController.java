@@ -48,8 +48,8 @@ import static GUI.Forms.Constants.getStage;
 import static Utils.Utility.renameFile;
 import static Utils.Utility.sleep;
 
-public final class guiController {
-    public static final guiController INSTANCE = new guiController();
+public final class FormsController {
+    public static final FormsController INSTANCE = new FormsController();
     public static MainGridPane form;
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
@@ -65,7 +65,7 @@ public final class guiController {
     /*
     Single instance model only constructor
      */
-    private guiController() {
+    private FormsController() {
         folders = AppSettings.GET.folders();
     }
 

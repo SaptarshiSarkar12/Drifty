@@ -52,11 +52,7 @@ public class DownloadFile extends Task<Integer> {
     private double speedSum = 0.0;
     private double lastProgress;
 
-    public DownloadFile(Job job,
-                        StringProperty linkProperty, StringProperty dirProperty, StringProperty filenameProperty,
-                        StringProperty downloadMessage,
-                        IntegerProperty transferSpeedProperty,
-                        DoubleProperty progressProperty) {
+    public DownloadFile(Job job, StringProperty linkProperty, StringProperty dirProperty, StringProperty filenameProperty, StringProperty downloadMessage, IntegerProperty transferSpeedProperty, DoubleProperty progressProperty) {
         this.job = job;
         this.link = job.getLink();
         this.filename = Utility.cleanFilename(job.getFilename());

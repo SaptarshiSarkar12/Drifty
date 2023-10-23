@@ -252,12 +252,12 @@ public class FileDownloader implements Runnable {
         ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
-        Process yt_dlp = processBuilder.start(); // Starts the download process
-        yt_dlp.waitFor();
-        int exitValueOfYt_Dlp = yt_dlp.exitValue();
-        if (exitValueOfYt_Dlp == 0) {
+        Process instagramDownloadProcess = processBuilder.start(); // Starts the download process
+        instagramDownloadProcess.waitFor();
+        int exitStatus = instagramDownloadProcess.exitValue();
+        if (exitStatus == 0) {
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
-        } else if (exitValueOfYt_Dlp == 1) {
+        } else if (exitStatus == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
     }
