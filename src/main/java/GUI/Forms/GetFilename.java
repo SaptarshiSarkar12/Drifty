@@ -85,7 +85,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 }
                 jobList.addLast(new Job(fileLink, dir, filename, false));
             }
-            guiController.setDownloadInfoColor(Colors.GREEN);
+            FormsController.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) {
                 progTimer.cancel();
@@ -124,7 +124,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);
                             }
-                            guiController.addJob(jobList);
+                            FormsController.addJob(jobList);
                             deleteList.addLast(file);
                         }
                     } catch (IOException ignored) {}

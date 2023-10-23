@@ -60,12 +60,12 @@ public class Main extends Application {
                 firstRun = false;
                 return;
             }
-            if (guiController.isAutoPaste()) {
+            if (FormsController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if (Utility.isURL(clipboardText)) {
-                        guiController.pasteFromClipboard(clipboardText);
+                        FormsController.pasteFromClipboard(clipboardText);
                     }
                 }
             }
@@ -75,7 +75,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         menu.setUseSystemMenuBar(true);
-        guiController.initLogic(gridPane);
+        FormsController.initLogic(gridPane);
     }
 
     private void placeControl(Node node, double left, double right, double top, double bottom) {
@@ -175,7 +175,7 @@ public class Main extends Application {
         wipeHistory.setOnAction(e -> {
             AskYesNo ask = new AskYesNo("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
-                guiController.clearJobHistory();
+                FormsController.clearJobHistory();
             }
         });
         menu.getItems().addAll(wipeHistory);
@@ -185,11 +185,11 @@ public class Main extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> guiController.getDirectory());
+        miAdd.setOnAction(e -> FormsController.getDirectory());
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            guiController.resetDownloadFoldersToActiveList();
+            FormsController.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");

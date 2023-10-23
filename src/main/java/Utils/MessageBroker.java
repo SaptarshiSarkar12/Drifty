@@ -3,7 +3,7 @@ package Utils;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
-import GUI.Forms.guiController;
+import GUI.Forms.FormsController;
 import javafx.scene.paint.Color;
 
 import java.io.PrintStream;
@@ -95,9 +95,9 @@ public class MessageBroker {
             }
             logger.log(messageType, message);
         } else if (Mode.isGUI()) {
-            guiController ui;
+            FormsController ui;
             if (!messageCategory.equals(LOG)) {
-                ui = guiController.INSTANCE;
+                ui = FormsController.INSTANCE;
             } else {
                 ui = null;
             }
