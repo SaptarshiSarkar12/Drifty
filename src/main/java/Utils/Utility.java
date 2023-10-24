@@ -323,6 +323,8 @@ public final class Utility {
 
     public static String getSpotifyDownloadLink(String link){
         M.msgDownloadInfo("Trying to get download link for \"" + link + "\"");
+        // Remove si parameter from the link
+        link = link.replaceAll("\\?si=.*", "");
         String spotDLPath = Program.get(Program.SPOTDL);
         ProcessBuilder processBuilder = new ProcessBuilder(spotDLPath, "url", link);
         Process process;
