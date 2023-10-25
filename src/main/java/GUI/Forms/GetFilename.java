@@ -17,12 +17,12 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Enums.Program.YT_DLP;
-import static Utils.Utility.*;
+import static Utils.Utility.isSpotify;
+import static Utils.Utility.sleep;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
@@ -33,14 +33,14 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private int result = -1;
     private int fileCount = 0;
     private int filesProcessed = 0;
-
+    private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
+    private final StringProperty feedback = new SimpleStringProperty();
+    boolean dirUp = true;
 
     public GetFilename(String link, String dir) {
         this.link = link;
         this.dir = dir;
     }
-    private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
-
 
     @Override
     protected ConcurrentLinkedDeque<Job> call() {
@@ -139,7 +139,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-    boolean dirUp = true;
 
 
     private TimerTask runProgress() {
@@ -162,7 +161,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-    private final StringProperty feedback = new SimpleStringProperty();
 
 
     private Runnable getFileCount() {
@@ -210,13 +208,5 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 throw new RuntimeException(e);
             }
         };
-    }
-
-    private void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
