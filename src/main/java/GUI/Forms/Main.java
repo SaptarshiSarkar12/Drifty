@@ -8,6 +8,8 @@ import Utils.DriftyConstants;
 import Utils.Environment;
 import Utils.MessageBroker;
 import Utils.Utility;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -20,10 +22,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
@@ -44,10 +48,10 @@ public class Main extends Application {
         Environment.setMessageBroker(M);
         M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
-        if(checkUpdate()){
+        if(isUpdateAvailable()){
             return;
         }
-        Utility.setStartTime();
+        //Utility.setStartTime();
         launch(args);
     }
 
@@ -181,36 +185,50 @@ public class Main extends Application {
         INSTANCE.primaryStage.setFullScreen(!INSTANCE.primaryStage.isFullScreen());
     }
 
-    public static boolean checkUpdate() throws URISyntaxException {
+    public static boolean isUpdateAvailable() throws URISyntaxException {
         String latestVersion = getLatestVersion();
         if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-            String Link = "";
-            String oldFilePath = String.valueOf(CLI.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            String newFilePath = "";
-            String OS_NAME = OS.getOSName();
-            if (OS_NAME.contains("win")) {
-                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe";
-                String fileName = "Drifty_GUI.exe";
-                String dirPath = String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates"));
-                FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
-                downloader.run();
-                newFilePath = dirPath +'\\' + fileName;
-            } else if (OS_NAME.contains("mac")) {
-                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg";
-                String fileName = "Drifty-GUI.pkg";
-                String dirPath = ".drifty/updates";
-                FileDownloader downloader =  new FileDownloader(Link , fileName , dirPath);
-                downloader.run();
-                newFilePath = dirPath +'\\' + fileName;
-            } else if (OS_NAME.contains("linux")) {
-                Link = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux";
-                String fileName = "Drifty-GUI_linux";
-                String dirPath = ".drifty/updates";
-                FileDownloader downloader = new FileDownloader(Link, fileName, dirPath);
-                downloader.run();
-                newFilePath = dirPath +'\\' + fileName;
+            String[] osNames = {"win" , "mac", "linux"};
+            String[] executableNames = {"Drifty-GUI.exe" , "Drifty-GUI.pkg" , "Drifty-GUI_linux"};
+            String[] updaterNames = {"updater.exe", "updater_macos" , "updater_linux"};
+            String[] dirPaths = {String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates")), ".drifty/updates", ".drifty/updates"};
+            String oldFilePath = "";
+            try {
+                oldFilePath = String.valueOf(CLI.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            } catch (URISyntaxException e) {
+                System.out.println("Unable to fetch OldFlePath");
             }
-            Updater.replaceUpdate(oldFilePath , newFilePath);
+            String decodedOldFilePath = URLDecoder.decode(oldFilePath, StandardCharsets.UTF_8);
+            String currentOSName = OS.getOSName();
+            String newFilePath = "";
+            String updaterExecutablePath = "";
+            for (int i = 0; i < osNames.length; i++) {
+                if (currentOSName.contains(osNames[i])) {
+                    String executableUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[i];
+                    String updaterUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + updaterNames[i];
+                    String fileName = executableNames[i];
+                    String dirPath = dirPaths[i];
+                    String updaterName = updaterNames[i];
+                    FileDownloader executableDownloader = new FileDownloader(executableUrl, fileName, dirPath);
+                    executableDownloader.run();
+                    FileDownloader updaterDownloader = new FileDownloader(updaterUrl, updaterName, dirPath);
+                    updaterDownloader.run();
+                    newFilePath = Path.of(dirPath, fileName).toString();
+                    updaterExecutablePath = Path.of(dirPath, updaterName).toString();
+                    break;
+                }
+            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            ProcessBuilder processBuilder = new ProcessBuilder(updaterExecutablePath, decodedOldFilePath, newFilePath , "GUI");
+            try {
+                processBuilder.start();
+            } catch (IOException e) {
+                System.out.println("Failed to run Updater !");
+            }
             return true;
         }
         return false;
@@ -218,20 +236,18 @@ public class Main extends Application {
 
     private static String getLatestVersion() {
         try {
-            URL url = new URL("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest");
+            URL url = new URI("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest").toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response = reader.readLine();
             reader.close();
-
-            // Parse JSON response to get the "tag_name"
-            // For simplicity, we're assuming the tag_name is a string enclosed in double quotes
-            int start = response.indexOf("\"tag_name\":\"") + 12;
-            int end = response.indexOf("\"", start);
-            System.out.println( response.substring(start, end));
-            return response.substring(start, end);
+            JsonParser jsonParser = new JsonParser();
+            JsonObject jsonObject = jsonParser.parse(response).getAsJsonObject();
+            String tagValue = jsonObject.get("tag_name").getAsString();
+            System.out.println(tagValue);
+            return tagValue;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,33 +255,23 @@ public class Main extends Application {
         }
     }
     private static boolean isNewerVersion(String newVersion, String currentVersion) {
-        // Split version strings into arrays of integers
-        String[] newVersionParts = newVersion.replaceAll("[^\\d.]", "").split("\\.");
-        String[] currentVersionParts = currentVersion.replaceAll("[^\\d.]", "").split("\\.");
-
-        // Convert parts to integers
-        int[] newVersionNumbers = new int[newVersionParts.length];
-        int[] currentVersionNumbers = new int[currentVersionParts.length];
-
-        for (int i = 0; i < newVersionParts.length; i++) {
-            newVersionNumbers[i] = Integer.parseInt(newVersionParts[i]);
-        }
-
-        for (int i = 0; i < currentVersionParts.length; i++) {
-            currentVersionNumbers[i] = Integer.parseInt(currentVersionParts[i]);
-        }
-
-        // Compare version numbers
-        for (int i = 0; i < Math.min(newVersionNumbers.length, currentVersionNumbers.length); i++) {
-            if (newVersionNumbers[i] > currentVersionNumbers[i]) {
+        newVersion = newVersion.replaceFirst("^v", "");
+        currentVersion = currentVersion.replaceFirst("^v", "");
+        String[] newVersionParts = newVersion.split("\\.");
+        String[] currentVersionParts = currentVersion.split("\\.");
+        int minLength = Math.min(newVersionParts.length, currentVersionParts.length);
+        for (int i = 0; i < minLength; i++) {
+            int newPart = Integer.parseInt(newVersionParts[i]);
+            int currentPart = Integer.parseInt(currentVersionParts[i]);
+            if (newPart > currentPart) {
                 return true; // New version is greater
-            } else if (newVersionNumbers[i] < currentVersionNumbers[i]) {
+            } else if (newPart < currentPart) {
                 return false; // Current version is greater
             }
         }
-
         // If all compared parts are equal, consider the longer version as newer
-        return newVersionNumbers.length > currentVersionNumbers.length;
+        return newVersionParts.length > currentVersionParts.length;
     }
+
 
 }

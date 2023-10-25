@@ -210,7 +210,7 @@ public class FileDownloader implements Runnable {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
                     } else if (isSpotifyLink) {
-                        M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
+                        //M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
                     } else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }

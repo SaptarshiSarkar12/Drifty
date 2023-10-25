@@ -1,38 +1,38 @@
 package Updater;
-import java.io.IOException;
+import static Enums.MessageType.INFO;
+import Utils.Logger;
+import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
+import java.io.*;
 import java.nio.file.*;
-import java.awt.Desktop;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 public class Updater {
-
-
+    private static DateFormat dateFormat;
+    private static Calendar calendarObject = Calendar.getInstance();
     public static void main(String[] args) {
-        String oldFilePath = "";
-        String newFilePath = "";
+        String oldFilePath = args[0];
+        String newFilePath = args[1];
+        String applicationType = args[2];
+        // args[2] == CLI/GUI
 
-        replaceUpdate(oldFilePath , newFilePath);
-    }
-
-    public static void replaceUpdate(String oldFilePath ,String newFilePath){
         try {
-            //Replacing new files
             Path oldPath = Path.of(oldFilePath);
             Path newPath = Path.of(newFilePath);
             Path copy = Files.copy(newPath, oldPath, StandardCopyOption.REPLACE_EXISTING);
-
-            if (Desktop.isDesktopSupported()) {
-                Desktop desktop = Desktop.getDesktop();
-                if (desktop.isSupported(Desktop.Action.OPEN)) {
-                    // Open the new file with the default application
-                    desktop.open(oldPath.toFile());
-                } else {
-                    System.out.println("Desktop doesn't support OPEN action.");
-                }
-            } else {
-                System.out.println("Desktop is not supported.");
+            String logFilename = "Drifty " + applicationType + ".log";
+            String dateAndTime = dateFormat.format(calendarObject.getTime());
+            try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+                logWriter.println(dateAndTime + " " + INFO + " - " + "Drifty Updated Sucessfully!");
+            } catch (IOException e) {
+                System.out.println(FAILED_TO_CREATE_LOG + "Drifty Updated Sucessfully!");
             }
 
+            ProcessBuilder processBuilder = new ProcessBuilder(oldPath.toString());
+            processBuilder.start();
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
