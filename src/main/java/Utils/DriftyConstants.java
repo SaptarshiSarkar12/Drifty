@@ -7,7 +7,7 @@ public final class DriftyConstants {
      * This is a private constructor of this class.
      */
     private DriftyConstants() {}
-    public static final String VERSION_NUMBER = "v1.3.0";
+    public static final String VERSION_NUMBER = "v2.1.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_WEBSITE_URL = "https://saptarshisarkar12.github.io/Drifty/";
     public static final String ANSI_RESET = "\u001B[0m";
@@ -33,7 +33,7 @@ public final class DriftyConstants {
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
     public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (filename.extension) : ";
-    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/filename.extension) or a YouTube/Instagram Video link : ";
+    public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/filename.extension) or a YouTube/Instagram Video link or Spotify link : ";
     public static final String USER_HOME_PROPERTY = "user.home";
     public static final String QUIT_OR_CONTINUE = "Enter Q to Quit Or any other key to Continue";
     public static final String FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER = "Failed to retrieve default download folder!";
@@ -50,6 +50,7 @@ public final class DriftyConstants {
     public static final String FAILED_READING_STREAM = "Failed to get I/O operations channel to read from the data stream !";
     public static final String YOUTUBE_DOWNLOAD_FAILED = "Failed to download YouTube video!";
     public static final String INSTAGRAM_DOWNLOAD_FAILED = "Failed to download Instagram video!";
+    public static final String SPOTIFY_DOWNLOAD_FAILED = "Failed to download Spotify audio!";
     public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";

@@ -1,4 +1,4 @@
-FROM drifty-base as build
+FROM drifty-base:latest AS build
 
 WORKDIR /app
 

@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public class CopyExecutables {
     private static final MessageBroker M = Environment.getMessageBroker();
 
-    public void copyExecutables(String[] executableNames) throws IOException {
+    public final void copyExecutables(final String[] executableNames) throws IOException {
         for (String executableName : executableNames) {
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(executableName);
             Path executablePath = Program.getExecutablesPath(executableName);

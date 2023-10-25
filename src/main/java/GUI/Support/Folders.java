@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * This class manages the folders that the user adds as locations to
  * download files to. it stores itself in JSON format via the
- * Preferences class through the '{@link AppSettings#set}' class.
+ * Preferences class through the '{@link AppSettings#SET}' class.
  */
 public class Folders {
     private final LinkedList<String> folders = new LinkedList<>();
@@ -21,17 +21,17 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        AppSettings.set.folders(this);
-        AppSettings.set.lastFolder(folder);
+        AppSettings.SET.folders(this);
+        AppSettings.SET.lastFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        AppSettings.set.folders(this);
+        AppSettings.SET.folders(this);
     }
 
     public String getDownloadFolder() {
-        return AppSettings.get.lastDownloadFolder();
+        return AppSettings.GET.lastDownloadFolder();
     }
 
     public void checkFolders() {
@@ -49,7 +49,7 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        AppSettings.set.folders(this);
+        AppSettings.SET.folders(this);
     }
 
     public ObservableList<String> getFolders() {

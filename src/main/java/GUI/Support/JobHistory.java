@@ -15,11 +15,12 @@ public class JobHistory {
     public void addJob(Job newJob, boolean isCLI) {
         if (isCLI) {
             jobHistoryList.addLast(newJob);
-            AppSettings.set.jobHistory(this);
+            AppSettings.SET.jobHistory(this);
         } else {
             for (Job job : jobHistoryList) {
-                if (job.matchesLink(newJob))
+                if (job.matchesLink(newJob)) {
                     return;
+                }
             }
             jobHistoryList.addLast(newJob);
             save();
@@ -42,17 +43,17 @@ public class JobHistory {
 
     public Job getJob(String link) {
         for (Job job : jobHistoryList) {
-            if (job.matchesLink(link))
+            if (job.matchesLink(link)) {
                 return job;
+            }
         }
         return null;
     }
 
     private void save() {
         removeDuplicates();
-        AppSettings.set.jobHistory(this);
+        AppSettings.SET.jobHistory(this);
     }
-
 
     private void removeDuplicates() {
         LinkedList<Job> removeList = new LinkedList<>();

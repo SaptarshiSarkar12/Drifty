@@ -1,9 +1,10 @@
 package Preferences;
 /**
- * This is the main class that is used to control all the user Preferences that remains consistent and intact even after Drifty reloads.
+ * This is the main class used to control all the user Preferences
+ * that remains consistent and intact even after Drifty restarts.
  */
 public class AppSettings {
-    public static final Get get = Get.getInstance();
-    public static final Set set = Set.getInstance();
-    public static final Clear clear = Clear.getInstance();
+    public static final Get GET = Get.getInstance();
+    public static final Set SET = Set.getInstance();
+    public static final Clear CLEAR = Clear.getInstance();
 }

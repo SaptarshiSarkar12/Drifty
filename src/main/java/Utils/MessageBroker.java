@@ -3,7 +3,7 @@ package Utils;
 import Enums.MessageCategory;
 import Enums.MessageType;
 import Enums.Mode;
-import GUI.Forms.GUI_Logic;
+import GUI.Forms.FormsController;
 import javafx.scene.paint.Color;
 
 import java.io.PrintStream;
@@ -56,7 +56,9 @@ public class MessageBroker {
         sendMessage(message, MessageType.INFO, MessageCategory.INITIALIZATION);
     }
 
-    public void msgInitError(String message) {sendMessage(message, MessageType.ERROR, MessageCategory.INITIALIZATION);}
+    public void msgInitError(String message) {
+        sendMessage(message, MessageType.ERROR, MessageCategory.INITIALIZATION);
+    }
 
     public void msgDirInfo(String message) {
         sendMessage(message, MessageType.INFO, MessageCategory.DIRECTORY);
@@ -93,9 +95,9 @@ public class MessageBroker {
             }
             logger.log(messageType, message);
         } else if (Mode.isGUI()) {
-            GUI_Logic ui;
+            FormsController ui;
             if (!messageCategory.equals(LOG)) {
-                ui = GUI_Logic.INSTANCE;
+                ui = FormsController.INSTANCE;
             } else {
                 ui = null;
             }
@@ -112,6 +114,7 @@ public class MessageBroker {
                 case FILENAME -> ui.setFilenameOutput(color, message);
                 case DIRECTORY -> ui.setDirOutput(color, message);
                 case DOWNLOAD -> ui.setDownloadOutput(color, message);
+                default -> logger.log(messageType, message);
             }
         }
     }

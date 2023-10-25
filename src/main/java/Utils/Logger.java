@@ -14,11 +14,11 @@ import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
 /**
  * This class deals with creating Log files for Drifty.
  */
-public class Logger {
-    private static Logger CLILoggerInstance;
-    private static Logger GUILoggerInstance;
-    private final DateFormat dateFormat;
+public final class Logger {
     boolean isLogEmpty;
+    private static Logger cliLoggerInstance;
+    private static Logger guiLoggerInstance;
+    private final DateFormat dateFormat;
     private final Calendar calendarObject = Calendar.getInstance();
     private final String logFilename;
 
@@ -33,17 +33,17 @@ public class Logger {
 
     public static Logger getInstance() {
         if (Mode.isCLI()) {
-            if (CLILoggerInstance != null) {
-                return CLILoggerInstance;
+            if (cliLoggerInstance != null) {
+                return cliLoggerInstance;
             }
-            CLILoggerInstance = new Logger();
-            return CLILoggerInstance;
+            cliLoggerInstance = new Logger();
+            return cliLoggerInstance;
         } else {
-            if (GUILoggerInstance != null) {
-                return GUILoggerInstance;
+            if (guiLoggerInstance != null) {
+                return guiLoggerInstance;
             }
-            GUILoggerInstance = new Logger();
-            return GUILoggerInstance;
+            guiLoggerInstance = new Logger();
+            return guiLoggerInstance;
         }
     }
 
