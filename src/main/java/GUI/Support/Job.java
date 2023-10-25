@@ -4,13 +4,16 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static Utils.Utility.cleanFilename;
+import static Utils.Utility.randomString;
+
 /**
  * This is a data structure class for batch jobs. It holds the relevant information for a batch job
  */
 public class Job {
     private final String link;
     private final String dir;
-    private final String filename;
+    private String filename;
     private boolean repeatDownload = false;
 
     public Job(String link, String dir, String filename, boolean repeatDownload) {
@@ -60,8 +63,13 @@ public class Job {
     }
 
     private String getName() {
-        String[] nameParts = link.split("/");
-        return nameParts[nameParts.length - 1];
+        String file = link.substring(link.lastIndexOf("/") + 1);
+        if (file.isEmpty()) {
+            return cleanFilename("Unknown_Filename_") + randomString(15);
+        }
+        // file.png?width=200 -> file.png
+        filename = file.split("([?])")[0];
+        return filename;
     }
 
     public boolean repeatOK() {

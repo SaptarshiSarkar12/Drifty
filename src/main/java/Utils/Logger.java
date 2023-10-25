@@ -18,7 +18,7 @@ public final class Logger {
     boolean isLogEmpty;
     private static Logger cliLoggerInstance;
     private static Logger guiLoggerInstance;
-    private final DateFormat dateFormat;
+    private static final DateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final Calendar calendarObject = Calendar.getInstance();
     private final String logFilename;
 
@@ -28,7 +28,6 @@ public final class Logger {
         } else {
             logFilename = "Drifty GUI.log";
         }
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     public static Logger getInstance() {
@@ -57,7 +56,7 @@ public final class Logger {
     }
 
     public void log(MessageType messageType, String logMessage) {
-        String dateAndTime = dateFormat.format(calendarObject.getTime());
+        String dateAndTime = TIMESTAMP_FORMAT.format(calendarObject.getTime());
         if (!isLogEmpty) {
             clearLog();
         }
@@ -65,7 +64,7 @@ public final class Logger {
             isLogEmpty = true;
             logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
-            System.out.println(FAILED_TO_CREATE_LOG + logMessage);
+            System.out.println(FAILED_TO_CREATE_LOG + "\" " + logMessage + " \"");
         }
     }
 }

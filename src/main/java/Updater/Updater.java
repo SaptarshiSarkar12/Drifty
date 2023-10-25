@@ -1,38 +1,61 @@
 package Updater;
-import static Enums.MessageType.INFO;
-import Utils.Logger;
-import static Utils.DriftyConstants.FAILED_TO_CREATE_LOG;
+
 import java.io.*;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static Enums.MessageType.INFO;
+
 public class Updater {
-    private static DateFormat dateFormat;
-    private static Calendar calendarObject = Calendar.getInstance();
+    private static final DateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final Calendar calendarObject = Calendar.getInstance();
+    private static final String dateAndTime = TIMESTAMP_FORMAT.format(calendarObject.getTime());
+    private static String logFilename;
+    private static String applicationType;
+
     public static void main(String[] args) {
-        String oldFilePath = args[0];
-        String newFilePath = args[1];
-        String applicationType = args[2];
-        // args[2] == CLI/GUI
-
+        String oldExecLocation = args[0];
+        String latestExecLocation = args[1];
+        applicationType = args[2]; // CLI or GUI
+        Path originalExecPath = Paths.get(oldExecLocation);
+        Path latestExecPath = Paths.get(latestExecLocation);
         try {
-            Path oldPath = Path.of(oldFilePath);
-            Path newPath = Path.of(newFilePath);
-            Path copy = Files.copy(newPath, oldPath, StandardCopyOption.REPLACE_EXISTING);
-            String logFilename = "Drifty " + applicationType + ".log";
-            String dateAndTime = dateFormat.format(calendarObject.getTime());
-            try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
-                logWriter.println(dateAndTime + " " + INFO + " - " + "Drifty Updated Sucessfully!");
-            } catch (IOException e) {
-                System.out.println(FAILED_TO_CREATE_LOG + "Drifty Updated Sucessfully!");
+            TimeUnit.MILLISECONDS.sleep(2000);
+            Files.copy(latestExecPath, originalExecPath, StandardCopyOption.REPLACE_EXISTING);
+            if (Files.exists(originalExecPath)) {
+                if (!Files.isExecutable(originalExecPath)) {
+                    Files.setPosixFilePermissions(originalExecPath, Set.of(PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+                }
+                log("Drifty updated successfully!");
+            } else {
+                log("Drifty failed to update!");
             }
-
-            ProcessBuilder processBuilder = new ProcessBuilder(oldPath.toString());
+            ProcessBuilder processBuilder = new ProcessBuilder(oldExecLocation); // Run the updated Drifty
             processBuilder.start();
+        } catch (IOException | InterruptedException e) {
+            log("Drifty failed to update!");
+        } finally {
+            try {
+                Files.delete(latestExecPath);
+            } catch (IOException e) {
+                log("Failed to delete the latest Drifty executable!");
+            }
+        }
+    }
 
+    private static void log(String message) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+            logWriter.println(dateAndTime + " " + INFO + " - " + message);
         } catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Failed to create log : " + "\"" + message + "\"");
         }
     }
 }

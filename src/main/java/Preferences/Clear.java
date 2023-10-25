@@ -18,12 +18,16 @@ public final class Clear { // This class is used to clear the user preferences
         preferences.remove(FOLDERS.toString());
     }
 
-    public void mainAutoPaste() {
-        preferences.remove(MAIN_AUTO_PASTE.toString());
+    public void autoPaste() {
+        preferences.remove(AUTO_PASTE.toString());
     }
 
     public void lastDLPUpdateTime() {
-        preferences.remove(LAST_DLP_UPDATE_TIME.toString());
+        preferences.remove(LAST_YTDLP_UPDATE_TIME.toString());
+    }
+
+    public void lastDriftyUpdateTime() {
+        preferences.remove(LAST_DRIFTY_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {

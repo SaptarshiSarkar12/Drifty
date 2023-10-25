@@ -201,8 +201,6 @@ public class FileDownloader implements Runnable {
                 } catch (Exception e) {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
-                    } else if (isSpotifyLink) {
-                        //M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
                     } else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }
@@ -230,7 +228,7 @@ public class FileDownloader implements Runnable {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];
                 }
-                M.msgDownloadInfo("Trying to download \"" + fileName + "\" ...");
+                M.msgLogInfo("Trying to download \"" + fileName + "\" ...");
                 downloadFile();
             }
         } catch (MalformedURLException | URISyntaxException e) {

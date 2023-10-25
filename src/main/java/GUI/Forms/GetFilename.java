@@ -17,30 +17,30 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static Enums.Program.YT_DLP;
-import static Utils.Utility.*;
+import static Utils.Utility.isSpotify;
+import static Utils.Utility.sleep;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
+    private final String regex = "(\\[download] Downloading item \\d+ of )(\\d+)";
+    private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
     private final String link;
     private final String dir;
-    private final String regex = "(\\[download] Downloading item \\d+ of )(\\d+)";
     private final Pattern pattern = Pattern.compile(regex);
     private final String lineFeed = System.lineSeparator();
+    private final StringProperty feedback = new SimpleStringProperty();
     private int result = -1;
     private int fileCount = 0;
     private int filesProcessed = 0;
-
+    boolean dirUp = true;
 
     public GetFilename(String link, String dir) {
         this.link = link;
         this.dir = dir;
     }
-    private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
-
 
     @Override
     protected ConcurrentLinkedDeque<Job> call() {
@@ -67,24 +67,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             timer.scheduleAtFixedRate(getJson(), 1000, 150);
             LinkedList<String> jsonList = Utility.getLinkMetadata(link);
             timer.cancel();
-            sleep(500); //give timerTask enough time to do its last run
+            sleep(500); // give timerTask enough time to do its last run
             jobList.clear();
-            for (String json : jsonList) {
-                String filename;
-                String fileLink;
-                if (isSpotify(link)) {
-                    filename = Utility.extractSpotifyFilename(json);
-                    fileLink = Utility.getSpotifyDownloadLink(link);
-                    String baseName = FilenameUtils.getBaseName(filename);
-                    filename = baseName + ".mp3";
-                } else {
-                    filename = Utility.getFilenameFromJson(json);
-                    fileLink = Utility.getSpotifyDownloadLink(link);
-                    String baseName = FilenameUtils.getBaseName(filename);
-                    filename = baseName + ".mp4";
-                }
-                jobList.addLast(new Job(fileLink, dir, filename, false));
-            }
             FormsController.setDownloadInfoColor(Colors.GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) {
@@ -139,8 +123,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-    boolean dirUp = true;
-
 
     private TimerTask runProgress() {
         return new TimerTask() {
@@ -162,8 +144,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             }
         };
     }
-    private final StringProperty feedback = new SimpleStringProperty();
-
 
     private Runnable getFileCount() {
         return () -> {
@@ -210,13 +190,5 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 throw new RuntimeException(e);
             }
         };
-    }
-
-    private void sleep(long time) {
-        try {
-            TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

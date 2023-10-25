@@ -88,6 +88,14 @@ public class MessageBroker {
         sendMessage(message, MessageType.INFO, MessageCategory.STYLE);
     }
 
+    public void msgUpdateInfo(String message) {
+        sendMessage(message, MessageType.INFO, MessageCategory.UPDATE);
+    }
+
+    public void msgUpdateError(String message) {
+        sendMessage(message, MessageType.ERROR, MessageCategory.UPDATE);
+    }
+
     private void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         if (Mode.isCLI()) {
             if (!messageCategory.equals(LOG)) {
@@ -116,6 +124,11 @@ public class MessageBroker {
                 case DOWNLOAD -> ui.setDownloadOutput(color, message);
                 default -> logger.log(messageType, message);
             }
+        } else if (Mode.isUpdating()) {
+            if (!messageCategory.equals(LOG)) {
+                System.out.println(message);
+            }
+            logger.log(messageType, message);
         }
     }
 }

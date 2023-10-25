@@ -42,11 +42,15 @@ public final class Get { // This class is used to get the user preferences
     }
 
     public boolean mainAutoPaste() {
-        return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
+        return preferences.getBoolean(AUTO_PASTE.toString(), false);
     }
 
     public long lastDLPUpdateTime() {
-        return preferences.getLong(LAST_DLP_UPDATE_TIME.toString(), 1000L);
+        return preferences.getLong(LAST_YTDLP_UPDATE_TIME.toString(), 1000L);
+    }
+
+    public long lastDriftyUpdateTime() {
+        return preferences.getLong(LAST_DRIFTY_UPDATE_TIME.toString(), 1000L);
     }
 
     public String lastDownloadFolder() {

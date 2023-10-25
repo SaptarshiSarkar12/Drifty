@@ -7,10 +7,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
 
 public class CopyExecutables {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -23,26 +23,9 @@ public class CopyExecutables {
                 if (!executablePath.toFile().getParentFile().exists()) {
                     FileUtils.createParentDirectories(executablePath.toFile());
                 }
-                try (OutputStream outputStream = Files.newOutputStream(executablePath)) {
-                    if (inputStream != null) {
-                        byte[] buffer = new byte[4096];
-                        int bytesRead;
-                        while ((bytesRead = inputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
-                        }
-                    }
-                    if (!Files.isExecutable(executablePath)) {
-                        ProcessBuilder makeExecutable = new ProcessBuilder("chmod", "+x", executablePath.toString());
-                        makeExecutable.inheritIO();
-                        Process chmod = makeExecutable.start();
-                        chmod.waitFor();
-                    }
-                } catch (FileAlreadyExistsException e) {
-                    M.msgLogWarning(executableName + " not copied to " + Program.get(Program.DRIFTY_PATH) + " because it already exists!");
-                } catch (InterruptedException e) {
-                    M.msgLogWarning("Failed to make " + executableName + " executable: " + e.getMessage());
-                } catch (IOException e) {
-                    M.msgInitError("Failed to copy " + executableName + " executable: " + e.getMessage());
+                Files.copy(inputStream, executablePath);
+                if (!Files.isExecutable(executablePath)) {
+                    Files.setPosixFilePermissions(executablePath, Set.of(PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
                 }
             }
         }

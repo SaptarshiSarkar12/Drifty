@@ -1,42 +1,33 @@
 package GUI.Forms;
 
-import Backend.FileDownloader;
 import Enums.Mode;
-import Enums.OS;
-import Updater.Updater;
 import Utils.DriftyConstants;
 import Utils.Environment;
 import Utils.MessageBroker;
 import Utils.Utility;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
 
 import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
-import static Utils.DriftyConstants.VERSION_NUMBER;
 import static javafx.scene.layout.AnchorPane.*;
 
 public class Main extends Application {
-    private static Main INSTANCE;
-    private static MessageBroker M;
+    private static Main guiInstance;
+    private static MessageBroker msgBroker;
     private Stage primaryStage;
     private Scene scene;
     private boolean firstRun = true;
@@ -44,23 +35,18 @@ public class Main extends Application {
     public static void main(String[] args) throws URISyntaxException {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
-        M = new MessageBroker();
-        Environment.setMessageBroker(M);
-        M.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
+        msgBroker = new MessageBroker();
+        Environment.setMessageBroker(msgBroker);
+        msgBroker.msgLogInfo(DriftyConstants.GUI_APPLICATION_STARTED);
         Environment.initializeEnvironment();
-        if(isUpdateAvailable()){
-            return;
-        }
-        //Utility.setStartTime();
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage = Constants.getStage("Drifty GUI", true);
-        this.primaryStage = primaryStage;
+        this.primaryStage = Constants.getStage("Drifty GUI", true);
         createScene();
-        INSTANCE = this;
+        guiInstance = this;
     }
 
     private void createScene() {
@@ -76,12 +62,12 @@ public class Main extends Application {
                 firstRun = false;
                 return;
             }
-            if (GUI_Logic.isAutoPaste()) {
+            if (FormsController.isAutoPasteEnabled()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if (Utility.isURL(clipboardText)) {
-                        GUI_Logic.pasteFromClipboard(clipboardText);
+                        FormsController.pasteFromClipboard(clipboardText);
                     }
                 }
             }
@@ -91,7 +77,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         menu.setUseSystemMenuBar(true);
-        GUI_Logic.initLogic(gridPane);
+        FormsController.initLogic(gridPane);
     }
 
     private void placeControl(Node node, double left, double right, double top, double bottom) {
@@ -115,14 +101,14 @@ public class Main extends Application {
         website.setOnAction(e -> openWebsite(DRIFTY_WEBSITE_URL));
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
-            M.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
+            msgBroker.msgLogInfo(DriftyConstants.GUI_APPLICATION_TERMINATED);
             System.exit(0);
         });
         menu.getItems().setAll(website, exit);
         return menu;
     }
 
-    private MenuBar menuBar(Menu... menus) {
+    private MenuBar menuBar(Menu ...menus) {
         return new MenuBar(menus);
     }
 
@@ -141,12 +127,47 @@ public class Main extends Application {
         MenuItem bug = new MenuItem("Report a Bug");
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
-        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact.html"));
+        MenuItem about = new MenuItem("About Drifty");
+        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
         contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug%2CApp&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
+        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=enhancement%2CApp&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature);
+        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        about.setOnAction(event -> {
+            Stage stage = Constants.getStage("About Drifty", false);
+            VBox root = new VBox(10);
+            root.setPadding(new Insets(10));
+            root.setAlignment(Pos.TOP_CENTER);
+            ImageView appIcon = new ImageView(String.valueOf(Constants.class.getResource("/GUI/Splash.png")));
+            appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
+            appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
+            appIcon.setPreserveRatio(true);
+            Label lblDescription = new Label("An Open-Source Interactive File Downloader System");
+            lblDescription.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+            lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
+            Label lblVersion = new Label(DriftyConstants.VERSION_NUMBER);
+            lblVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            lblVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            Hyperlink websiteLink = new Hyperlink("Website");
+            websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
+            websiteLink.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty"));
+            Hyperlink discordLink = new Hyperlink("Join Discord");
+            discordLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            discordLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"));
+            discordLink.setOnAction(e -> openWebsite("https://discord.gg/DeT4jXPfkG"));
+            Hyperlink githubLink = new Hyperlink("Contribute to Drifty");
+            githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+            githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
+            githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
+            root.getChildren().addAll(appIcon, lblDescription, lblVersion, websiteLink, discordLink, githubLink);
+            Scene aboutScene = Constants.getScene(root);
+            stage.setMinHeight(Constants.SCREEN_HEIGHT * .5);
+            stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
+            stage.setScene(aboutScene);
+            stage.show();
+        });
+        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
 
@@ -156,7 +177,7 @@ public class Main extends Application {
         wipeHistory.setOnAction(e -> {
             AskYesNo ask = new AskYesNo("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
-                GUI_Logic.clearJobHistory();
+                FormsController.clearJobHistory();
             }
         });
         menu.getItems().addAll(wipeHistory);
@@ -166,11 +187,11 @@ public class Main extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> GUI_Logic.getDirectory());
+        miAdd.setOnAction(e -> FormsController.getDirectory());
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            GUI_Logic.resetDownloadFoldersToActiveList();
+            FormsController.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -178,100 +199,10 @@ public class Main extends Application {
     }
 
     protected static void openWebsite(String websiteURL) {
-        INSTANCE.getHostServices().showDocument(websiteURL);
+        guiInstance.getHostServices().showDocument(websiteURL);
     }
 
     public static void toggleFullScreen() {
-        INSTANCE.primaryStage.setFullScreen(!INSTANCE.primaryStage.isFullScreen());
+        guiInstance.primaryStage.setFullScreen(!guiInstance.primaryStage.isFullScreen());
     }
-
-    public static boolean isUpdateAvailable() throws URISyntaxException {
-        String latestVersion = getLatestVersion();
-        if(isNewerVersion(latestVersion , VERSION_NUMBER)){
-            String[] osNames = {"win" , "mac", "linux"};
-            String[] executableNames = {"Drifty-GUI.exe" , "Drifty-GUI.pkg" , "Drifty-GUI_linux"};
-            String[] updaterNames = {"updater.exe", "updater_macos" , "updater_linux"};
-            String[] dirPaths = {String.valueOf(Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates")), ".drifty/updates", ".drifty/updates"};
-            String oldFilePath = "";
-            try {
-                oldFilePath = String.valueOf(CLI.Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            } catch (URISyntaxException e) {
-                System.out.println("Unable to fetch OldFlePath");
-            }
-            String decodedOldFilePath = URLDecoder.decode(oldFilePath, StandardCharsets.UTF_8);
-            String currentOSName = OS.getOSName();
-            String newFilePath = "";
-            String updaterExecutablePath = "";
-            for (int i = 0; i < osNames.length; i++) {
-                if (currentOSName.contains(osNames[i])) {
-                    String executableUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[i];
-                    String updaterUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + updaterNames[i];
-                    String fileName = executableNames[i];
-                    String dirPath = dirPaths[i];
-                    String updaterName = updaterNames[i];
-                    FileDownloader executableDownloader = new FileDownloader(executableUrl, fileName, dirPath);
-                    executableDownloader.run();
-                    FileDownloader updaterDownloader = new FileDownloader(updaterUrl, updaterName, dirPath);
-                    updaterDownloader.run();
-                    newFilePath = Path.of(dirPath, fileName).toString();
-                    updaterExecutablePath = Path.of(dirPath, updaterName).toString();
-                    break;
-                }
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            ProcessBuilder processBuilder = new ProcessBuilder(updaterExecutablePath, decodedOldFilePath, newFilePath , "GUI");
-            try {
-                processBuilder.start();
-            } catch (IOException e) {
-                System.out.println("Failed to run Updater !");
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private static String getLatestVersion() {
-        try {
-            URL url = new URI("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest").toURL();
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = reader.readLine();
-            reader.close();
-            JsonParser jsonParser = new JsonParser();
-            JsonObject jsonObject = jsonParser.parse(response).getAsJsonObject();
-            String tagValue = jsonObject.get("tag_name").getAsString();
-            System.out.println(tagValue);
-            return tagValue;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    private static boolean isNewerVersion(String newVersion, String currentVersion) {
-        newVersion = newVersion.replaceFirst("^v", "");
-        currentVersion = currentVersion.replaceFirst("^v", "");
-        String[] newVersionParts = newVersion.split("\\.");
-        String[] currentVersionParts = currentVersion.split("\\.");
-        int minLength = Math.min(newVersionParts.length, currentVersionParts.length);
-        for (int i = 0; i < minLength; i++) {
-            int newPart = Integer.parseInt(newVersionParts[i]);
-            int currentPart = Integer.parseInt(currentVersionParts[i]);
-            if (newPart > currentPart) {
-                return true; // New version is greater
-            } else if (newPart < currentPart) {
-                return false; // Current version is greater
-            }
-        }
-        // If all compared parts are equal, consider the longer version as newer
-        return newVersionParts.length > currentVersionParts.length;
-    }
-
-
 }

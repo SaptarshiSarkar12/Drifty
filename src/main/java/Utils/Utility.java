@@ -1,12 +1,13 @@
 package Utils;
 
 import Backend.DownloadFolderLocator;
+import Backend.FileDownloader;
+import CLI.Main;
+import Enums.Mode;
 import Enums.OS;
 import Enums.Program;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import Preferences.AppSettings;
+import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -19,12 +20,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -295,6 +295,7 @@ public final class Utility {
                     .run();
         };
     }
+
     public static boolean isURL(String text) {
         String regex = "^(http(s)?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);
@@ -347,5 +348,117 @@ public final class Utility {
             return null;
         }
         return null;
+    }
+
+    public static boolean isUpdateAvailable()  {
+        M.msgUpdateInfo("Checking for Drifty updates...");
+        M.msgLogInfo("Current version : " + VERSION_NUMBER);
+        String latestVersion = getLatestVersion();
+        if (latestVersion.isEmpty()) {
+            M.msgUpdateError("Failed to check for updates!");
+            return false;
+        }
+        boolean isUpdateAvailable = compareVersions(latestVersion, VERSION_NUMBER);
+        if (isUpdateAvailable) {
+            M.msgUpdateInfo("Update available!");
+        } else {
+            M.msgUpdateInfo("Drifty is up to date!");
+        }
+        AppSettings.SET.lastDriftyUpdateTime(System.currentTimeMillis());
+        return isUpdateAvailable;
+    }
+
+    public static void updateDrifty() {
+        ArrayList<OS> osNames = new ArrayList<>(Arrays.asList(OS.values()));
+        String[] executableNames = {"Drifty-CLI.exe" , "Drifty-CLI_macos" , "Drifty-CLI_linux"};
+        String[] updaterNames = {"updater.exe", "updater_macos" , "updater_linux"};
+        String currentExecPath = "";
+        try {
+            currentExecPath = String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            currentExecPath = URLDecoder.decode(currentExecPath, StandardCharsets.UTF_8);
+        } catch (URISyntaxException e) {
+            M.msgUpdateError("Failed to get current Drifty executable path!");
+        }
+        OS currentOS = OS.getOSType();
+        int index = osNames.indexOf(currentOS);
+        String executableUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[index];
+        String updaterUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + updaterNames[index];
+        String fileName = executableNames[index];
+        String dirPath = switch (osNames.get(index)) {
+            case WIN -> Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates").toAbsolutePath().toString();
+            case MAC, LINUX -> Paths.get(System.getProperty("user.home"), ".drifty", "updates").toAbsolutePath().toString();
+            default -> {
+                M.msgUpdateError("Update not available for this OS (" + OS.getOSName() + ")!");
+                M.msgUpdateError("Update cancelled!");
+                yield null;
+            }
+        };
+        if (dirPath == null) {
+            return;
+        }
+        String updaterName = updaterNames[index];
+        try {
+            final Path updateFolderPath = Paths.get(dirPath);
+            if (!Files.exists(updateFolderPath) && !Files.isDirectory(updateFolderPath)) {
+                Files.createDirectory(updateFolderPath);
+            }
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to create temporary directory for Drifty updates! " + e.getMessage());
+            return;
+        }
+        M.msgUpdateInfo("Downloading Drifty updater...");
+        FileDownloader downloadUpdater = new FileDownloader(updaterUrl, updaterName, dirPath);
+        downloadUpdater.run();
+        M.msgUpdateInfo("Downloading latest Drifty executable...");
+        FileDownloader downloadLatestExec = new FileDownloader(executableUrl, fileName, dirPath);
+        downloadLatestExec.run();
+        String updatedExecFilePath = Paths.get(dirPath, fileName).toString();
+        String updaterExecPath = Paths.get(dirPath, updaterName).toString();
+        M.msgLogInfo("Calling updater to update Drifty...");
+        ProcessBuilder processBuilder = new ProcessBuilder(updaterExecPath, currentExecPath, updatedExecFilePath , Mode.getMode().toString());
+        try {
+            processBuilder.start();
+            M.msgLogInfo("Called updater to update Drifty!");
+            System.exit(0);
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to update Drifty! " + e.getMessage());
+        } finally {
+            try {
+                FileUtils.forceDelete(new File(dirPath));
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to delete temporary directory for Drifty updates! " + e.getMessage());
+            }
+        }
+    }
+
+    private static String getLatestVersion() {
+        try {
+            URL url = new URI("https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest").toURL();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                String response = reader.readLine();
+                JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+                String tagValue = jsonObject.get("tag_name").getAsString();
+                M.msgLogInfo("Latest version : " + tagValue);
+                return tagValue;
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to fetch latest version !");
+            return "";
+        }
+    }
+
+    private static boolean compareVersions(String newVersion, String currentVersion) {
+        newVersion = newVersion.replaceFirst("^v", "");
+        currentVersion = currentVersion.replaceFirst("^v", "");
+        String[] newVersionParts = newVersion.split("\\.");
+        String[] currentVersionParts = currentVersion.split("\\.");
+        for (int i = 0; i < 3; i++) {
+            if (Integer.parseInt(newVersionParts[i]) > Integer.parseInt(currentVersionParts[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,4 +1,5 @@
 package Preferences;
+
 /**
  * This is the main class used to control all the user Preferences
  * that remains consistent and intact even after Drifty restarts.

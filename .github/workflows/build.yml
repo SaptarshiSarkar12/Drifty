@@ -63,10 +63,19 @@ jobs:
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
+    - name: Delete native image configuration files for Linux or macOS
+      if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
+      run: rm -rf "src/main/resources/META-INF"
+    - name: Delete native image configuration files for Windows
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: Remove-Item -Recurse -Force "src/main/resources/META-INF"
+    - name: Package Drifty Updater for ${{ matrix.os }} with GraalVM
+      run: mvn -Pbuild-drifty-updater-for-${{ matrix.os }} package
     - name: Create Application Type specific folders
       run: |
         mkdir CLI
         mkdir GUI
+        mkdir Updater
     - name: Categorise build artifacts for linux
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
@@ -74,6 +83,8 @@ jobs:
         mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
         mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty-GUI_linux"
         mv "target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t GUI
+        mv "target/updater/linux/Drifty Updater" "target/updater/linux/updater_linux"
+        mv "target/updater/linux/updater_linux" -t Updater
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
@@ -83,6 +94,8 @@ jobs:
         Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty-GUI.exe"
         move "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
         move "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
+        Rename-Item "target/updater/windows/Drifty Updater.exe" updater.exe
+        move "target/updater/windows/updater.exe" Updater
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
@@ -92,8 +105,10 @@ jobs:
         mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty-GUI.app"
         mv "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" GUI
         mv "target/gluonfx/x86_64-darwin/Drifty-GUI.app" GUI
+        mv "target/updater/macos/Drifty Updater" "target/updater/macos/updater_macos"
+        mv "target/updater/macos/updater_macos" Updater
     - name: Tar build files # To prevent file permission loss
-      run: tar -cvf ${{ matrix.os }}.tar CLI GUI
+      run: tar -cvf ${{ matrix.os }}.tar CLI GUI Updater
     - name: Push generated artifacts for ${{ matrix.os }}
       uses: actions/upload-artifact@v3
       with:
@@ -131,6 +146,9 @@ jobs:
         echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
         echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
         echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "UPDATER_LINUX_SIZE=$(echo `du -h 'linux/Updater/updater_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "UPDATER_MACOS_SIZE=$(echo `du -h 'macos/Updater/updater_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "UPDATER_WINDOWS_SIZE=$(echo `du -h 'windows/Updater/updater.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
         echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
@@ -141,6 +159,7 @@ jobs:
         echo "|------------------|---------------|------|" >> $GITHUB_STEP_SUMMARY
         echo "| CLI | Drifty-CLI_linux | $CLI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI_linux | $GUI_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| Updater | updater_linux | $UPDATER_LINUX_SIZE |" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts :package: Generated for macOS :apple:" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
@@ -148,6 +167,7 @@ jobs:
         echo "| CLI | Drifty-CLI_macos | $CLI_MACOS_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.pkg | $GUI_MACOS_PKG_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.app | $GUI_MACOS_APP_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| Updater | updater_macos | $UPDATER_MACOS_SIZE |" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts :package: Generated for Windows :window:" >> $GITHUB_STEP_SUMMARY
         echo "| Application Type | Artifact Name | Size |" >> $GITHUB_STEP_SUMMARY
@@ -155,6 +175,7 @@ jobs:
         echo "| CLI | Drifty-CLI.exe | $CLI_WINDOWS_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
+        echo "| Updater | updater.exe | $UPDATER_WINDOWS_SIZE |" >> $GITHUB_STEP_SUMMARY
     
         if [ ${{ !inputs.create_release }} ]; then
           echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
@@ -164,7 +185,7 @@ jobs:
       if: ${{ inputs.create_release }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe' 'linux/Updater/updater_linux#updater_linux' 'macos/Updater/updater_macos#updater_macos' 'windows/Updater/updater.exe#updater.exe'
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

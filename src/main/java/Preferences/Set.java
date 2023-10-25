@@ -35,14 +35,19 @@ public class Set { // This class is used to set the user preferences
         preferences.put(FOLDERS.toString(), value);
     }
 
-    public void mainAutoPaste(boolean isMainAutoPasteEnabled) {
-        AppSettings.CLEAR.mainAutoPaste();
-        preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
+    public void autoPaste(boolean isMainAutoPasteEnabled) {
+        AppSettings.CLEAR.autoPaste();
+        preferences.putBoolean(AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
 
     public void lastDLPUpdateTime(long value) {
         AppSettings.CLEAR.lastDLPUpdateTime();
-        preferences.putLong(LAST_DLP_UPDATE_TIME.toString(), value);
+        preferences.putLong(LAST_YTDLP_UPDATE_TIME.toString(), value);
+    }
+
+    public void lastDriftyUpdateTime(long value) {
+        AppSettings.CLEAR.lastDriftyUpdateTime();
+        preferences.putLong(LAST_DRIFTY_UPDATE_TIME.toString(), value);
     }
 
     public void lastFolder(String lastFolderPath) {

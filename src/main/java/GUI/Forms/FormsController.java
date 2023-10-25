@@ -107,7 +107,7 @@ public final class FormsController {
             selectJob(job);
         });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
-        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
+        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.autoPaste(newValue)));
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
@@ -566,7 +566,7 @@ public final class FormsController {
         INSTANCE.folders = AppSettings.GET.folders();
     }
 
-    public static boolean isAutoPaste() {
+    public static boolean isAutoPasteEnabled() {
         return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste();
     }
 

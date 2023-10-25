@@ -1,6 +1,7 @@
 package Utils;
 
 import Backend.CopyExecutables;
+import Enums.Mode;
 import Enums.OS;
 import Enums.Program;
 import Preferences.AppSettings;
@@ -15,12 +16,6 @@ import static Enums.Program.YT_DLP;
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
 
-    /*
-    This method is called by both CLI.Main and GUI.Forms.Main classes.
-    It first determines which yt-dlp program to copy out of resources based on the OS.
-    Next, it figures out which path to use to store yt-dlp and the users batch list.
-    Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
-    */
     public static void initializeEnvironment() {
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         String ytDlpExecName = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
@@ -30,16 +25,25 @@ public class Environment {
         Program.setSpotdlExecutableName(spotDLExecName);
         Program.setDriftyPath(driftyFolderPath);
         CopyExecutables copyExecutables = new CopyExecutables();
-        boolean ytDLPExists = false;
         try {
             copyExecutables.copyExecutables(new String[]{ytDlpExecName, spotDLExecName});
         } catch (IOException e) {
             msgBroker.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
             msgBroker.msgInitError("Failed to copy spotDL! " + e.getMessage());
         }
+        boolean ytDLPExists = Files.exists(Paths.get(driftyFolderPath, ytDlpExecName));
+        Mode previousMode = Mode.getMode();
+        Mode.setUpdateMode();
+        if (!isDriftyUpdated()) {
+            if (Utility.isUpdateAvailable()) {
+                msgBroker.msgUpdateInfo("Updating Drifty...");
+                Utility.updateDrifty();
+            }
+        }
         if (ytDLPExists && !isYtDLPUpdated()) {
             checkAndUpdateYtDlp();
         }
+        Mode.setMode(previousMode);
         File folder = new File(driftyFolderPath);
         if (!folder.exists()) {
             try {
@@ -72,9 +76,16 @@ public class Environment {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
         }
     }
+
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDLPUpdateTime();
+        return timeSinceLastUpdate <= oneDay;
+    }
+    
+    public static boolean isDriftyUpdated() {
+        final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
         return timeSinceLastUpdate <= oneDay;
     }
 

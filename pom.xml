@@ -271,6 +271,107 @@
                 </plugins>
             </build>
         </profile>
+        <!-- [Linux] Updater native image builder profile -->
+        <profile>
+            <id>build-drifty-updater-for-ubuntu-latest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>updater</imageName>
+                            <mainClass>Updater.Updater</mainClass>
+                            <outputDirectory>target/Updater/linux</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [macOS] Updater native image builder profile -->
+        <profile>
+            <id>build-drifty-updater-for-macos-latest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>updater</imageName>
+                            <mainClass>Updater.Updater</mainClass>
+                            <outputDirectory>target/Updater/macos</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [Windows] Updater native image builder profile -->
+        <profile>
+            <id>build-drifty-updater-for-windows-latest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>updater</imageName>
+                            <mainClass>Updater.Updater</mainClass>
+                            <outputDirectory>target/Updater/windows</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!-- [macOS] GUI native image builder profile -->
         <profile>
             <id>build-drifty-gui-for-macos-latest</id>
