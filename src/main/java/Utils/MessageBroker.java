@@ -109,9 +109,6 @@ public class MessageBroker {
             } else {
                 ui = null;
             }
-            if (!message.isEmpty()) {
-                logger.log(messageType, message);
-            }
             Color color = switch (messageType) {
                 case ERROR -> RED;
                 case INFO -> GREEN;
@@ -122,7 +119,11 @@ public class MessageBroker {
                 case FILENAME -> ui.setFilenameOutput(color, message);
                 case DIRECTORY -> ui.setDirOutput(color, message);
                 case DOWNLOAD -> ui.setDownloadOutput(color, message);
-                default -> logger.log(messageType, message);
+                default -> {
+                    if (!message.isEmpty()) {
+                        logger.log(messageType, message);
+                    }
+                }
             }
         } else if (Mode.isUpdating()) {
             if (!messageCategory.equals(LOG)) {
