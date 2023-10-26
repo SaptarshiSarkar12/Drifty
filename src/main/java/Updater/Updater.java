@@ -1,6 +1,5 @@
 package Updater;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,11 +42,9 @@ public class Updater {
             } else {
                 log("Drifty failed to update!");
             }
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().open(originalExecPath.toFile());
-            } else {
-                Files.createFile(Paths.get(System.getProperty("user.dir"), "Drifty Update " + applicationType + ".log"));
-            }
+            ProcessBuilder processBuilder = new ProcessBuilder(originalExecPath.toString());
+            Process process = processBuilder.start();
+            process.waitFor();
         } catch (IOException | InterruptedException e) {
             log("Drifty failed to update!");
         } finally {
