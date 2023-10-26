@@ -83,8 +83,8 @@ jobs:
         mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
         mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty-GUI_linux"
         mv "target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t GUI
-        mv "target/updater/linux/updater" "target/updater/linux/updater_linux"
-        mv "target/updater/linux/updater_linux" -t Updater
+        mv "target/Updater/linux/updater" "target/updater/linux/updater_linux"
+        mv "target/Updater/linux/updater_linux" -t Updater
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
@@ -94,7 +94,7 @@ jobs:
         Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty-GUI.exe"
         move "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
         move "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
-        move "target/updater/windows/updater.exe" Updater
+        move "target/Updater/windows/updater.exe" Updater
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
@@ -104,8 +104,8 @@ jobs:
         mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty-GUI.app"
         mv "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" GUI
         mv "target/gluonfx/x86_64-darwin/Drifty-GUI.app" GUI
-        mv "target/updater/macos/updater" "target/updater/macos/updater_macos"
-        mv "target/updater/macos/updater_macos" Updater
+        mv "target/Updater/macos/updater" "target/Updater/macos/updater_macos"
+        mv "target/Updater/macos/updater_macos" Updater
     - name: Tar build files # To prevent file permission loss
       run: tar -cvf ${{ matrix.os }}.tar CLI GUI Updater
     - name: Push generated artifacts for ${{ matrix.os }}
