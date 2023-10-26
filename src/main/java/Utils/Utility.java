@@ -437,11 +437,10 @@ public final class Utility {
             System.exit(0);
         } catch (IOException e) {
             M.msgUpdateError("Failed to update Drifty! " + e.getMessage());
-        } finally {
             try {
                 FileUtils.forceDelete(new File(dirPath));
-            } catch (IOException e) {
-                M.msgUpdateError("Failed to delete temporary directory for Drifty updates! " + e.getMessage());
+            } catch (IOException ex) {
+                M.msgUpdateError("Failed to delete temporary directory for Drifty updates! " + ex.getMessage());
             }
         }
     }

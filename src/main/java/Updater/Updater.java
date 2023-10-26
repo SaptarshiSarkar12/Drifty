@@ -1,10 +1,10 @@
 package Updater;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermission;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,7 +31,10 @@ public class Updater {
         Path latestExecPath = Paths.get(latestExecLocation);
         try {
             TimeUnit.MILLISECONDS.sleep(2000);
-            Files.copy(latestExecPath, originalExecPath, StandardCopyOption.REPLACE_EXISTING);
+            Files.delete(originalExecPath);
+            try (InputStream inputStream = Files.newInputStream(latestExecPath)) {
+                Files.copy(inputStream, originalExecPath);
+            }
             if (Files.exists(originalExecPath)) {
                 if (!Files.isExecutable(originalExecPath)) {
                     Files.setPosixFilePermissions(originalExecPath, Set.of(PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
@@ -40,8 +43,11 @@ public class Updater {
             } else {
                 log("Drifty failed to update!");
             }
-            ProcessBuilder processBuilder = new ProcessBuilder(oldExecLocation); // Run the updated Drifty
-            processBuilder.start();
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(originalExecPath.toFile());
+            } else {
+                Files.createFile(Paths.get(System.getProperty("user.dir"), "Drifty Update " + applicationType + ".log"));
+            }
         } catch (IOException | InterruptedException e) {
             log("Drifty failed to update!");
         } finally {
