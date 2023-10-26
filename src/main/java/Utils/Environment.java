@@ -37,7 +37,7 @@ public class Environment {
         if (!isDriftyUpdated()) {
             if (Utility.isUpdateAvailable()) {
                 msgBroker.msgUpdateInfo("Updating Drifty...");
-                Utility.updateDrifty();
+                Utility.updateDrifty(previousMode);
             }
         }
         if (ytDLPExists && !isYtDLPUpdated()) {

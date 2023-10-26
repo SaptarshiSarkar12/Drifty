@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -368,9 +369,9 @@ public final class Utility {
         return isUpdateAvailable;
     }
 
-    public static void updateDrifty() {
+    public static void updateDrifty(Mode currentAppMode) {
         ArrayList<OS> osNames = new ArrayList<>(Arrays.asList(OS.values()));
-        String[] executableNames = {"Drifty-CLI.exe" , "Drifty-CLI_macos" , "Drifty-CLI_linux"};
+        String[] executableNames = {"Drifty-" + currentAppMode + ".exe" , "Drifty-" + currentAppMode + "_macos" , "Drifty-" + currentAppMode + "_linux"};
         String[] updaterNames = {"updater.exe", "updater_macos" , "updater_linux"};
         String currentExecPath = "";
         try {
@@ -409,13 +410,27 @@ public final class Utility {
         M.msgUpdateInfo("Downloading Drifty updater...");
         FileDownloader downloadUpdater = new FileDownloader(updaterUrl, updaterName, dirPath);
         downloadUpdater.run();
+        final Path updaterExecutablePath = Paths.get(dirPath, updaterName);
+        if (Files.exists(updaterExecutablePath)) {
+            if (!Files.isExecutable(updaterExecutablePath)) {
+                try {
+                    Files.setPosixFilePermissions(updaterExecutablePath, Set.of(PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+                } catch (IOException e) {
+                    M.msgUpdateError("Failed to mark Drifty updater as executable! " + e.getMessage());
+                    return;
+                }
+            }
+        } else {
+            M.msgUpdateError("Failed to download Drifty updater!");
+            return;
+        }
         M.msgUpdateInfo("Downloading latest Drifty executable...");
         FileDownloader downloadLatestExec = new FileDownloader(executableUrl, fileName, dirPath);
         downloadLatestExec.run();
         String updatedExecFilePath = Paths.get(dirPath, fileName).toString();
-        String updaterExecPath = Paths.get(dirPath, updaterName).toString();
+        String updaterExecPath = updaterExecutablePath.toString();
         M.msgLogInfo("Calling updater to update Drifty...");
-        ProcessBuilder processBuilder = new ProcessBuilder(updaterExecPath, currentExecPath, updatedExecFilePath , Mode.getMode().toString());
+        ProcessBuilder processBuilder = new ProcessBuilder(updaterExecPath, currentExecPath, updatedExecFilePath , currentAppMode.toString());
         try {
             processBuilder.start();
             M.msgLogInfo("Called updater to update Drifty!");

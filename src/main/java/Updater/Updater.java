@@ -22,9 +22,11 @@ public class Updater {
     private static String applicationType;
 
     public static void main(String[] args) {
-        String oldExecLocation = args[0];
-        String latestExecLocation = args[1];
-        applicationType = args[2]; // CLI or GUI
+        String oldExecLocation = "/home/saptarshi-sarkar/Drifty/Drifty";
+        String latestExecLocation = "/home/saptarshi-sarkar/Downloads/Drifty-GUI_linux";
+        applicationType = "GUI";
+        String parentDirectory = oldExecLocation.substring(0, oldExecLocation.lastIndexOf(File.separator));
+        logFilename = Paths.get(parentDirectory, "Drifty " + applicationType + ".log").toAbsolutePath().toString();
         Path originalExecPath = Paths.get(oldExecLocation);
         Path latestExecPath = Paths.get(latestExecLocation);
         try {
