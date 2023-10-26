@@ -20,8 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.net.URISyntaxException;
-
 import static Utils.DriftyConstants.DRIFTY_WEBSITE_URL;
 import static javafx.scene.layout.AnchorPane.*;
 
@@ -32,7 +30,7 @@ public class Main extends Application {
     private Scene scene;
     private boolean firstRun = true;
 
-    public static void main(String[] args) throws URISyntaxException {
+    public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         msgBroker = new MessageBroker();

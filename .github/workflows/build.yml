@@ -83,7 +83,7 @@ jobs:
         mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
         mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty-GUI_linux"
         mv "target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t GUI
-        mv "target/Updater/linux/updater" "target/updater/linux/updater_linux"
+        mv "target/Updater/linux/updater" "target/Updater/linux/updater_linux"
         mv "target/Updater/linux/updater_linux" -t Updater
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}

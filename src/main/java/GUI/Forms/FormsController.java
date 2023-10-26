@@ -106,7 +106,7 @@ public final class FormsController {
             setFilename(job.getFilename());
             selectJob(job);
         });
-        form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
+        form.cbAutoPaste.setSelected(AppSettings.GET.autoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.autoPaste(newValue)));
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {

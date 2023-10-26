@@ -35,9 +35,9 @@ public class Set { // This class is used to set the user preferences
         preferences.put(FOLDERS.toString(), value);
     }
 
-    public void autoPaste(boolean isMainAutoPasteEnabled) {
+    public void autoPaste(boolean value) {
         AppSettings.CLEAR.autoPaste();
-        preferences.putBoolean(AUTO_PASTE.toString(), isMainAutoPasteEnabled);
+        preferences.putBoolean(AUTO_PASTE.toString(), value);
     }
 
     public void lastDLPUpdateTime(long value) {

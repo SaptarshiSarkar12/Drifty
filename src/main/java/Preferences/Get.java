@@ -41,7 +41,7 @@ public final class Get { // This class is used to get the user preferences
         return folders;
     }
 
-    public boolean mainAutoPaste() {
+    public boolean autoPaste() {
         return preferences.getBoolean(AUTO_PASTE.toString(), false);
     }
 
