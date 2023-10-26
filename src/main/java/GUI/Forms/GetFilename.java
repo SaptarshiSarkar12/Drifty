@@ -13,7 +13,6 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -65,7 +64,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         if (proceed) {
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(getJson(), 1000, 150);
-            LinkedList<String> jsonList = Utility.getLinkMetadata(link);
+            Utility.getLinkMetadata(link);
             timer.cancel();
             sleep(500); // give timerTask enough time to do its last run
             jobList.clear();

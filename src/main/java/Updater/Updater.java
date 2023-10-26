@@ -16,8 +16,8 @@ import static Enums.MessageType.INFO;
 
 public class Updater {
     private static final DateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final Calendar calendarObject = Calendar.getInstance();
-    private static final String dateAndTime = TIMESTAMP_FORMAT.format(calendarObject.getTime());
+    private static final Calendar DEFAULT_CALENDAR = Calendar.getInstance();
+    private static final String TIMESTAMP = TIMESTAMP_FORMAT.format(DEFAULT_CALENDAR.getTime());
     private static String logFilename;
     private static String applicationType;
 
@@ -53,7 +53,7 @@ public class Updater {
 
     private static void log(String message) {
         try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
-            logWriter.println(dateAndTime + " " + INFO + " - " + message);
+            logWriter.println(TIMESTAMP + " " + INFO + " - " + message);
         } catch (IOException e) {
             System.out.println("Failed to create log : " + "\"" + message + "\"");
         }

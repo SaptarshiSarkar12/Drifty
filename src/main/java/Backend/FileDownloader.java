@@ -186,7 +186,6 @@ public class FileDownloader implements Runnable {
     public void run() {
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
-        boolean isSpotifyLink = isSpotify(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYouTubeLink || isInstagramLink) {

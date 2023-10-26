@@ -56,13 +56,13 @@ public final class Logger {
     }
 
     public void log(MessageType messageType, String logMessage) {
-        String dateAndTime = TIMESTAMP_FORMAT.format(calendarObject.getTime());
+        String currentTimeStamp = TIMESTAMP_FORMAT.format(calendarObject.getTime());
         if (!isLogEmpty) {
             clearLog();
         }
         try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
             isLogEmpty = true;
-            logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
+            logWriter.println(currentTimeStamp + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
             System.out.println(FAILED_TO_CREATE_LOG + "\" " + logMessage + " \"");
         }

@@ -350,12 +350,12 @@ public final class Utility {
         return null;
     }
 
-    public static boolean isUpdateAvailable()  {
+    public static boolean isUpdateAvailable() {
         M.msgUpdateInfo("Checking for Drifty updates...");
         M.msgLogInfo("Current version : " + VERSION_NUMBER);
         String latestVersion = getLatestVersion();
         if (latestVersion.isEmpty()) {
-            M.msgUpdateError("Failed to check for updates!");
+            M.msgUpdateError("Failed to check for Drifty updates!");
             return false;
         }
         boolean isUpdateAvailable = compareVersions(latestVersion, VERSION_NUMBER);
