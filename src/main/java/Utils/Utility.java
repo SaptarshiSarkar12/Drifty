@@ -400,7 +400,6 @@ public final class Utility {
         File currentExecFile = new File(currentExecPath.toString());
         File latestExecFile = new File(latestExecFilePath.toString());
         String currentExecFileName = currentExecFile.getName();
-        String latestExecFileName = latestExecFile.getName();
         String parentDir = currentExecPath.toString().substring(0, currentExecPath.toString().lastIndexOf(File.separator));
         Path oldPath = Paths.get(parentDir, currentExecFileName + ".old").toAbsolutePath();
         currentExecFile.renameTo(new File(oldPath.toString()));
