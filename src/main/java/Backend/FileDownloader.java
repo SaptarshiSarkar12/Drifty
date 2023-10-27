@@ -1,5 +1,6 @@
 package Backend;
 
+import Enums.Mode;
 import Enums.Program;
 import Utils.Environment;
 import Utils.MessageBroker;
@@ -88,7 +89,9 @@ public class FileDownloader implements Runnable {
                     }
                     ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, getDir(), totalSize, downloadMetrics);
                     progressBarThread.start();
-                    M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+                    if (!Mode.isUpdating()) {
+                        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+                    }
                     // check if all the files are downloaded
                     while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                         sleep(500);

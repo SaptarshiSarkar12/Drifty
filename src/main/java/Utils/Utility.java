@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -110,17 +109,6 @@ public final class Utility {
             // example.com/file.json -> file.json
             String file = link.substring(link.lastIndexOf("/") + 1);
             if (file.isEmpty()) {
-                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
-                return null;
-            }
-            int index = file.lastIndexOf(".");
-            if (index < 0) {
-                M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
-                return null;
-            }
-            String extension = file.substring(index);
-            // edge case 1: "example.com/."
-            if (extension.length() == 1) {
                 M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED);
                 return null;
             }
@@ -227,7 +215,13 @@ public final class Utility {
         String newFilename = filename;
         int fileNum = -1;
         String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
-        String ext = "." + FilenameUtils.getExtension(filename);
+        String ext;
+        if (filename.contains(".")) {
+            ext = ".";
+        } else {
+            ext = "";
+        }
+        ext += FilenameUtils.getExtension(filename);
         while (path.toFile().exists()) {
             fileNum += 1;
             newFilename = baseName + " (" + fileNum + ")" + ext;
@@ -372,18 +366,11 @@ public final class Utility {
     public static void updateDrifty(Mode currentAppMode) {
         ArrayList<OS> osNames = new ArrayList<>(Arrays.asList(OS.values()));
         String[] executableNames = {"Drifty-" + currentAppMode + ".exe" , "Drifty-" + currentAppMode + "_macos" , "Drifty-" + currentAppMode + "_linux"};
-        String[] updaterNames = {"updater.exe", "updater_macos" , "updater_linux"};
-        String currentExecPath = "";
-        try {
-            currentExecPath = String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            currentExecPath = URLDecoder.decode(currentExecPath, StandardCharsets.UTF_8);
-        } catch (URISyntaxException e) {
-            M.msgUpdateError("Failed to get current Drifty executable path!");
-        }
+        Path currentExecPath = Paths.get(String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
+        currentExecPath = Paths.get(URLDecoder.decode(currentExecPath.toString(), StandardCharsets.UTF_8)).toAbsolutePath();
         OS currentOS = OS.getOSType();
         int index = osNames.indexOf(currentOS);
         String executableUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[index];
-        String updaterUrl = "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + updaterNames[index];
         String fileName = executableNames[index];
         String dirPath = switch (osNames.get(index)) {
             case WIN -> Paths.get(System.getenv("LOCALAPPDATA"), "Drifty", "updates").toAbsolutePath().toString();
@@ -397,7 +384,6 @@ public final class Utility {
         if (dirPath == null) {
             return;
         }
-        String updaterName = updaterNames[index];
         try {
             final Path updateFolderPath = Paths.get(dirPath);
             if (!Files.exists(updateFolderPath) && !Files.isDirectory(updateFolderPath)) {
@@ -407,42 +393,29 @@ public final class Utility {
             M.msgUpdateError("Failed to create temporary directory for Drifty updates! " + e.getMessage());
             return;
         }
-        M.msgUpdateInfo("Downloading Drifty updater...");
-        FileDownloader downloadUpdater = new FileDownloader(updaterUrl, updaterName, dirPath);
-        downloadUpdater.run();
-        final Path updaterExecutablePath = Paths.get(dirPath, updaterName);
-        if (Files.exists(updaterExecutablePath)) {
-            if (!Files.isExecutable(updaterExecutablePath)) {
-                try {
-                    Files.setPosixFilePermissions(updaterExecutablePath, Set.of(PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
-                } catch (IOException e) {
-                    M.msgUpdateError("Failed to mark Drifty updater as executable! " + e.getMessage());
-                    return;
-                }
-            }
-        } else {
-            M.msgUpdateError("Failed to download Drifty updater!");
-            return;
-        }
         M.msgUpdateInfo("Downloading latest Drifty executable...");
         FileDownloader downloadLatestExec = new FileDownloader(executableUrl, fileName, dirPath);
         downloadLatestExec.run();
-        String updatedExecFilePath = Paths.get(dirPath, fileName).toString();
-        String updaterExecPath = updaterExecutablePath.toString();
-        M.msgLogInfo("Calling updater to update Drifty...");
-        ProcessBuilder processBuilder = new ProcessBuilder(updaterExecPath, currentExecPath, updatedExecFilePath , currentAppMode.toString());
+        Path latestExecFilePath = Paths.get(dirPath, fileName).toAbsolutePath();
+        File currentExecFile = new File(currentExecPath.toString());
+        File latestExecFile = new File(latestExecFilePath.toString());
+        String currentExecFileName = currentExecFile.getName();
+        String latestExecFileName = latestExecFile.getName();
+        String parentDir = currentExecPath.toString().substring(0, currentExecPath.toString().lastIndexOf(File.separator));
+        Path oldPath = Paths.get(parentDir, currentExecFileName + ".old").toAbsolutePath();
+        currentExecFile.renameTo(new File(oldPath.toString()));
         try {
-            processBuilder.start();
-            M.msgLogInfo("Called updater to update Drifty!");
-            System.exit(0);
+            Files.copy(latestExecFilePath, currentExecPath);
         } catch (IOException e) {
-            M.msgUpdateError("Failed to update Drifty! " + e.getMessage());
-            try {
-                FileUtils.forceDelete(new File(dirPath));
-            } catch (IOException ex) {
-                M.msgUpdateError("Failed to delete temporary directory for Drifty updates! " + ex.getMessage());
-            }
+            M.msgUpdateError("Failed to copy latest Drifty executable to the current directory! " + e.getMessage());
         }
+        try {
+            FileUtils.forceDelete(oldPath.toFile());
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to delete old Drifty executable! " + e.getMessage());
+        }
+        currentExecFile.setExecutable(true);
+        M.msgUpdateInfo("Drifty " + currentAppMode.toString() + " updated successfully!");
     }
 
     private static String getLatestVersion() {

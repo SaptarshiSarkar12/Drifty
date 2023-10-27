@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +23,21 @@ import static Utils.Utility.*;
 
 /**
  * This is the main class for the CLI (Command Line Interface) version of Drifty.
+ *
+ * @version 2.0.0
  */
 public class Main {
     public static final Logger LOGGER = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
+    protected static JobHistory jobHistory;
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
     protected static boolean isSpotifyLink;
-    protected static JobHistory jobHistory;
+    protected static boolean isInstagramImage;
     private static MessageBroker messageBroker;
     private static String link;
-    private static Utility utility;
     private static String downloadsFolder;
+    private static Utility utility;
     private static String fileName = null;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
@@ -48,8 +52,8 @@ public class Main {
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
+        jobHistory = AppSettings.GET.jobHistory();
         printBanner();
-        String downloadsFolder;
         if (args.length > 0) {
             link = args[0];
             String name = null;
@@ -144,6 +148,7 @@ public class Main {
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
                 messageBroker.msgFilenameInfo("Retrieving filename from link...");
                 fileName = findFilenameInLink(link);
                 Job job = new Job(link, downloadsFolder, fileName, false);
@@ -268,6 +273,63 @@ public class Main {
         }
     }
 
+    private static String getProperDownloadsFolder(String downloadsFolder) {
+        if (downloadsFolder == null) {
+            downloadsFolder = Utility.getHomeDownloadFolder().toString();
+        } else if (downloadsFolder.equalsIgnoreCase("L")) {
+            downloadsFolder = AppSettings.GET.lastDownloadFolder();
+        } else if (downloadsFolder.equals(".")) {
+            downloadsFolder = Utility.getHomeDownloadFolder().toString();
+        } else {
+            downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
+            if (OS.isWindows()) {
+                downloadsFolder = downloadsFolder.replace('/', '\\');
+            }
+        }
+        if (new File(downloadsFolder).exists()) {
+            messageBroker.msgDirInfo("Download folder exists!");
+        } else {
+            messageBroker.msgDirError("Download folder does not exist!");
+            try {
+                Files.createDirectory(Path.of(downloadsFolder));
+                messageBroker.msgDirInfo("Download folder created successfully!");
+            } catch (IOException e) {
+                messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
+            }
+        }
+        AppSettings.SET.lastFolder(downloadsFolder);
+        return downloadsFolder;
+    }
+
+    public static void help() {
+        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
+        System.out.println("\033[33;1mOptional parameters:");
+        System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
+        System.out.println("--batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
+        System.out.println("--location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
+        System.out.println("--name       -n            Source                   Filename of the downloaded file.");
+        System.out.println("--help       -h            N/A                      Provides concise information for Drifty CLI.");
+        System.out.println("--version    -v            Current Version          Displays version number of Drifty.");
+        System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
+        System.out.println("For more information visit: ");
+        System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
+        System.out.println("\tProject Website - " + DRIFTY_WEBSITE_URL);
+    }
+
+    public static void printBanner() {
+        System.out.print("\033[H\033[2J");
+        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
+        System.out.println(ANSI_CYAN + "  _____   _____   _____  ______  _______ __     __" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |  | || |__) |  | |  | |__      | |    \\ \\_/ /" + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |  | ||  _  /   | |  |  __|     | |     \\   / " + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
+        System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
+        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
+    }
+
     private static void checkHistoryAddJobsAndDownload(Job job, boolean removeInputBufferFirst) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
@@ -312,62 +374,5 @@ public class Main {
             FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
             downloader.run();
         }
-    }
-
-    private static String getProperDownloadsFolder(String downloadsFolder) {
-        if (downloadsFolder == null) {
-            downloadsFolder = Utility.getHomeDownloadFolder().toString();
-        } else if (downloadsFolder.equalsIgnoreCase("L")) {
-            downloadsFolder = AppSettings.GET.lastDownloadFolder();
-        } else if (downloadsFolder.equals(".")) {
-            downloadsFolder = Utility.getHomeDownloadFolder().toString();
-        } else {
-            downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
-            if (OS.isWindows()) {
-                downloadsFolder = downloadsFolder.replace('/', '\\');
-            }
-        }
-        if (new File(downloadsFolder).exists()) {
-            messageBroker.msgDirInfo("Download folder exists!");
-        } else {
-            messageBroker.msgDirError("Download folder does not exist!");
-            try {
-                Files.createDirectory(Paths.get(downloadsFolder));
-                messageBroker.msgDirInfo("Download folder created successfully!");
-            } catch (IOException e) {
-                messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
-            }
-        }
-        AppSettings.SET.lastFolder(downloadsFolder);
-        return downloadsFolder;
-    }
-
-    public static void help() {
-        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
-        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
-        System.out.println("\033[33;1mOptional parameters:");
-        System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
-        System.out.println("--batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
-        System.out.println("--location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
-        System.out.println("--name       -n            Source                   Filename of the downloaded file.");
-        System.out.println("--help       -h            N/A                      Provides concise information for Drifty CLI.");
-        System.out.println("--version    -v            Current Version          Displays version number of Drifty.");
-        System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
-        System.out.println("For more information visit: ");
-        System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
-        System.out.println("\tProject Website - " + DRIFTY_WEBSITE_URL);
-    }
-
-    public static void printBanner() {
-        System.out.print("\033[H\033[2J");
-        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
-        System.out.println(ANSI_CYAN + "  _____   _____   _____  ______  _______ __     __" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " |  __ \\ |  __ \\ |_   _||  ____||__   __|\\ \\   / /" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |  | || |__) |  | |  | |__      | |    \\ \\_/ /" + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |  | ||  _  /   | |  |  __|     | |     \\   / " + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " | |__| || | \\ \\  _| |_ | |        | |      | |  " + ANSI_RESET);
-        System.out.println(ANSI_CYAN + " |_____/ |_|  \\_\\|_____||_|        |_|      |_|  " + ANSI_RESET);
-        System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 }

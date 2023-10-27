@@ -97,10 +97,10 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedUnit = "bytes";
             }
             bar = bar.substring(0, charAmt / 2 - 2) + (formattedTotalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
-            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
+            return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(downloadedBytes, 2) + "/" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
         } else {
             int numberOfThreads = fileOutputStreams.size();
-            StringBuilder result = new StringBuilder("[" + spinner + "]  " + UnitConverter.format(totalDownloadedBytes, 2));
+            StringBuilder result = new StringBuilder("[" + spinner + "]  " + fileName + "  ");
             float filled;
             totalDownloadedBytes = 0;
             long downloadSpeed = 0;
@@ -144,7 +144,7 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
-            result.append(" [").append(bar).append("] ").append(String.format("%.2f", downloadSpeedWithoutUnit)).append(" ").append(downloadSpeedUnit).append("/s");
+            result.append(" [").append(bar).append("] (").append(UnitConverter.format(totalDownloadedBytes, 2)).append("/").append(UnitConverter.format(totalSizeOfTheFile, 2)).append(") ").append(String.format("%.2f", downloadSpeedWithoutUnit)).append(" ").append(downloadSpeedUnit).append("/s");
             return result.toString();
         }
     }

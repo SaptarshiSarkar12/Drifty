@@ -313,7 +313,7 @@ public final class FormsController {
             We use the checkHistoryAddJobs method to look for discovered filenames. If we didn't do it this way, then we would need
             to wait until all filenames are discovered then add the jobs to the batch list in one action. Doing it this way
             gives the user more consistent feedback of the process while it is happening. This matters when a link contains
-            a lot of files because each file discovered takes a while, and when there are even hundreds of files, this process
+            a lot of files because each file discovered takes a while. When there are even hundreds of files, this process
             can appear to take a long time, so constant feedback for the user becomes relevant.
              */
 
