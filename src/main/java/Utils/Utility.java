@@ -398,7 +398,6 @@ public final class Utility {
         downloadLatestExec.run();
         Path latestExecFilePath = Paths.get(dirPath, fileName).toAbsolutePath();
         File currentExecFile = new File(currentExecPath.toString());
-        File latestExecFile = new File(latestExecFilePath.toString());
         String currentExecFileName = currentExecFile.getName();
         String parentDir = currentExecPath.toString().substring(0, currentExecPath.toString().lastIndexOf(File.separator));
         Path oldPath = Paths.get(parentDir, currentExecFileName + ".old").toAbsolutePath();
