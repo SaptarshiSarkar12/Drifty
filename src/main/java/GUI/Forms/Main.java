@@ -1,6 +1,7 @@
 package GUI.Forms;
 
 import Enums.Mode;
+import Preferences.AppSettings;
 import Utils.DriftyConstants;
 import Utils.Environment;
 import Utils.MessageBroker;
@@ -143,9 +144,15 @@ public class Main extends Application {
             Label lblDescription = new Label("An Open-Source Interactive File Downloader System");
             lblDescription.setFont(Font.font("Arial", FontWeight.BOLD, 24));
             lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
-            Label lblVersion = new Label(DriftyConstants.VERSION_NUMBER);
-            lblVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-            lblVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            Label lblDriftyVersion = new Label("Drifty " + DriftyConstants.VERSION_NUMBER);
+            Label lblYtDlpVersion = new Label("yt-dlp version: " + AppSettings.GET.ytDlpVersion());
+            Label lblSpotDLVersion = new Label("spotDL version: " + AppSettings.GET.spotDLVersion());
+            lblDriftyVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            lblDriftyVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblYtDlpVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            lblYtDlpVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblSpotDLVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            lblSpotDLVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             Hyperlink websiteLink = new Hyperlink("Website");
             websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
@@ -158,9 +165,9 @@ public class Main extends Application {
             githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            root.getChildren().addAll(appIcon, lblDescription, lblVersion, websiteLink, discordLink, githubLink);
+            root.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion, lblSpotDLVersion, websiteLink, discordLink, githubLink);
             Scene aboutScene = Constants.getScene(root);
-            stage.setMinHeight(Constants.SCREEN_HEIGHT * .5);
+            stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
             stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
             stage.setScene(aboutScene);
             stage.show();
