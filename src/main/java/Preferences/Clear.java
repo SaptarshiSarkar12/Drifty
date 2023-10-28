@@ -23,7 +23,7 @@ public final class Clear { // This class is used to clear the user preferences
     }
 
     public void lastDLPUpdateTime() {
-        preferences.remove(LAST_DLP_UPDATE_TIME.toString());
+        preferences.remove(LAST_YT_DLP_UPDATE_TIME.toString());
     }
 
     public void lastFolder() {
@@ -34,11 +34,11 @@ public final class Clear { // This class is used to clear the user preferences
         preferences.remove(JOBS.toString());
     }
 
-    public void menuBarAsSystem() {
-        preferences.remove(MENU_BAR_SYSTEM.toString());
+    public void ytDlpVersion() {
+        preferences.remove(YT_DLP_VERSION.toString());
     }
 
-    public void alwaysAutoPaste() {
-        preferences.remove(ALWAYS_AUTO_PASTE.toString());
+    public void spotDLVersion() {
+        preferences.remove(SPOTDL_VERSION.toString());
     }
 }

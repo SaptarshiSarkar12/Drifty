@@ -40,6 +40,8 @@ public class Environment {
         if (ytDLPExists && !isYtDLPUpdated()) {
             checkAndUpdateYtDlp();
         }
+        new Thread(Utility.setYtDlpVersion()).start();
+        new Thread(Utility.setSpotDLVersion()).start();
         File folder = new File(driftyFolderPath);
         if (!folder.exists()) {
             try {
