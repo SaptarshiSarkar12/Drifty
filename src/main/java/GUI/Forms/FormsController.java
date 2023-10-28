@@ -40,13 +40,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static Enums.Colors.*;
 import static GUI.Forms.Constants.MONACO_TTF;
 import static GUI.Forms.Constants.getStage;
-import static Utils.Utility.renameFile;
-import static Utils.Utility.sleep;
+import static Utils.Utility.*;
 
 public final class FormsController {
     public static final FormsController INSTANCE = new FormsController();
@@ -59,6 +60,7 @@ public final class FormsController {
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount = 0;
     private int speedValue = 0;
+    private String filename = "";
     private Folders folders;
     private Job selectedJob;
 
@@ -200,10 +202,19 @@ public final class FormsController {
                 }
                 VERIFYING_LINKS.setValue(true);
                 for (String link : links) {
-                    Thread verify = new Thread(verifyLink(link));
-                    verify.start();
-                    while (!verify.getState().equals(Thread.State.TERMINATED)) {
-                        sleep(500);
+                    if (isSpotify(link) && link.contains("playlist")) {
+                        M.msgFilenameInfo("Retrieving the songs from the playlist...");
+                        LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+                        String json = makePretty(linkMetadataList.get(0));
+                        String[] songs = getSongLinks(json);
+                        String[] filenames = getSongFilenames(json);
+                        for (int i = 0; i < songs.length; i++) {
+                            String songLink = songs[i];
+                            filename = filenames[i] + ".mp3";
+                            verifyLinksAndWaitFor(songLink);
+                        }
+                    } else {
+                        verifyLinksAndWaitFor(link);
                     }
                 }
                 VERIFYING_LINKS.setValue(false);
@@ -213,6 +224,49 @@ public final class FormsController {
         }).start();
     }
 
+    private void verifyLinksAndWaitFor(String link) {
+        Thread verify = new Thread(verifyLink(link));
+        verify.start();
+        while (!verify.getState().equals(Thread.State.TERMINATED)) {
+            sleep(500);
+        }
+    }
+
+    private String[] getSongLinks(String json) {
+        String playlistLengthRegex = "(\"list_length\": )(.+)";
+        Pattern playlistLengthPattern = Pattern.compile(playlistLengthRegex);
+        Matcher lengthMatcher = playlistLengthPattern.matcher(json);
+        int numberOfSongs;
+        clearFilenameOutput();
+        if (lengthMatcher.find()) {
+            numberOfSongs = Integer.parseInt(lengthMatcher.group(2));
+            M.msgFilenameInfo("Number of tracks in the playlist : " + numberOfSongs);
+        } else {
+            M.msgFilenameError("Failed to retrieve the number of tracks in the playlist!");
+        }
+        ArrayList<String> songLinks = new ArrayList<>();
+        String linkRegex = "(\"url\": \")(.+)(\",)";
+        Pattern linkPattern = Pattern.compile(linkRegex);
+        Matcher linkMatcher = linkPattern.matcher(json);
+        linkMatcher.results().forEach(matchResult -> {
+            String songLink = matchResult.group(2);
+            songLinks.add(songLink);
+        });
+        return songLinks.toArray(String[]::new);
+    }
+
+    private String[] getSongFilenames(String json) {
+        String filenameRegex = "(\"name\": \")(.+)(\",)";
+        Pattern filenamePattern = Pattern.compile(filenameRegex);
+        Matcher filenameMatcher = filenamePattern.matcher(json);
+        ArrayList<String> filenames = new ArrayList<>();
+        filenameMatcher.results().forEach(matchResult -> {
+            String filename = matchResult.group(2);
+            filenames.add(filename);
+        });
+        return filenames.toArray(String[]::new);
+    }
+
     /*
     These methods are the meat of this class. They handle all the various processing that happens when the
     user engages the form and attempts to download links.
@@ -220,7 +274,6 @@ public final class FormsController {
     Runnables are used to prevent the form from pin-wheeling (macs) or hour-glassing(others) so that the appearance
     application freeze never happens. Runnables are assigned to Tasks.
      */
-
     private Runnable verifyLink(String link) {
         /*
         When adding links to the jobList, only YouTube, Instagram and Spotify links will be put through the process of
@@ -239,7 +292,6 @@ public final class FormsController {
                 return;
             }
             String message;
-            String filename;
             String dir;
             if (!linkInJobList(link)) {
                 M.msgLinkInfo("Validating link...");
@@ -271,10 +323,14 @@ public final class FormsController {
                             addJob(new Job(link, dir, filename, true));
                         }
                     } else if (Utility.isExtractableLink(link)) {
-                        Thread getNames = new Thread(getFilenames(link));
-                        getNames.start();
-                        while (!getNames.getState().equals(Thread.State.TERMINATED)) {
-                            sleep(150);
+                        if (isSpotify(link) && !filename.isEmpty()) {
+                            addJob(new Job(link, getDir(), filename, true));
+                        } else {
+                            Thread getNames = new Thread(getFilenames(link));
+                            getNames.start();
+                            while (!getNames.getState().equals(Thread.State.TERMINATED)) {
+                                sleep(150);
+                            }
                         }
                     } else {
                         addJob(new Job(link, getDir()));
