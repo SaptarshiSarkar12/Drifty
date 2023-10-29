@@ -60,7 +60,7 @@ public final class FormsController {
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount = 0;
     private int speedValue = 0;
-    private String filename = "";
+    private String songName = "";
     private Folders folders;
     private Job selectedJob;
 
@@ -210,7 +210,7 @@ public final class FormsController {
                         String[] filenames = getSongFilenames(json);
                         for (int i = 0; i < songs.length; i++) {
                             String songLink = songs[i];
-                            filename = filenames[i] + ".mp3";
+                            songName = filenames[i] + ".mp3";
                             verifyLinksAndWaitFor(songLink);
                         }
                     } else {
@@ -298,7 +298,7 @@ public final class FormsController {
                 if (Utility.isLinkValid(link)) {
                     if (getHistory().exists(link)) {
                         Job job = getHistory().getJob(link);
-                        filename = job.getFilename();
+                        String filename = job.getFilename();
                         dir = getDir();
                         if (dir == null) {
                             M.msgDirError("Download folder is not set!");
@@ -323,8 +323,8 @@ public final class FormsController {
                             addJob(new Job(link, dir, filename, true));
                         }
                     } else if (Utility.isExtractableLink(link)) {
-                        if (isSpotify(link) && !filename.isEmpty()) {
-                            addJob(new Job(link, getDir(), filename, true));
+                        if (isSpotify(link) && !songName.isEmpty()) {
+                            addJob(new Job(link, getDir(), songName, true));
                         } else {
                             Thread getNames = new Thread(getFilenames(link));
                             getNames.start();
@@ -356,7 +356,7 @@ public final class FormsController {
                 These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
                 accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
                 to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
-                The controls that are bound to the thread cannot have their text updated while they ae bound or else an error
+                The controls that are bound to the thread cannot have their text updated while they are bound or else an error
                 will be thrown and possibly the program execution halted.
                 */
                 form.lblDownloadInfo.textProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).messageProperty());
