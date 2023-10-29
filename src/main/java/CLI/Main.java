@@ -97,16 +97,14 @@ public class Main {
                     isSpotifyLink = isSpotify(link);
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                    if (name == null) {
-                        if (fileName == null || fileName.isEmpty()) {
-                            if (isSpotifyLink && link.contains("playlist")) {
-                                handleSpotifyPlaylist();
-                            } else {
-                                messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                                fileName = findFilenameInLink(link);
-                                Job job = new Job(link, downloadsFolder, fileName, false);
-                                checkHistoryAddJobsAndDownload(job, false);
-                            }
+                    if ((name == null) && (fileName == null || fileName.isEmpty())) {
+                        if (isSpotifyLink && link.contains("playlist")) {
+                            handleSpotifyPlaylist();
+                        } else {
+                            messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                            fileName = findFilenameInLink(link);
+                            Job job = new Job(link, downloadsFolder, fileName, false);
+                            checkHistoryAddJobsAndDownload(job, false);
                         }
                     }
                 }
