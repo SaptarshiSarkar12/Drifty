@@ -46,7 +46,7 @@ public final class Get { // This class is used to get the user preferences
     }
 
     public long lastDLPUpdateTime() {
-        return preferences.getLong(LAST_YTDLP_UPDATE_TIME.toString(), 1000L);
+        return preferences.getLong(LAST_YT_DLP_UPDATE_TIME.toString(), 1000L);
     }
 
     public long lastDriftyUpdateTime() {
@@ -97,5 +97,13 @@ public final class Get { // This class is used to get the user preferences
 
     public boolean alwaysAutoPaste() {
         return preferences.getBoolean(ALWAYS_AUTO_PASTE.toString(), false);
+    }
+
+    public String ytDlpVersion() {
+        return preferences.get(YT_DLP_VERSION.toString(), "");
+    }
+
+    public String spotDLVersion() {
+        return preferences.get(SPOTDL_VERSION.toString(), "");
     }
 }

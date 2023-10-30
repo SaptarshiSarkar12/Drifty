@@ -44,6 +44,8 @@ public class Environment {
             checkAndUpdateYtDlp();
         }
         Mode.setMode(previousMode);
+        new Thread(Utility.setYtDlpVersion()).start();
+        new Thread(Utility.setSpotDLVersion()).start();
         File folder = new File(driftyFolderPath);
         if (!folder.exists()) {
             try {

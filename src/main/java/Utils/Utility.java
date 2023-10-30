@@ -7,7 +7,10 @@ import Enums.Mode;
 import Enums.OS;
 import Enums.Program;
 import Preferences.AppSettings;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -241,7 +244,7 @@ public final class Utility {
             M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         } else {
             filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
-            M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
+            M.msgFilenameError(FILENAME_DETECTION_ERROR);
         }
         return filename;
     }
@@ -257,7 +260,7 @@ public final class Utility {
             M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         } else {
             filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp3";
-            M.msgFilenameError(AUTO_FILE_NAME_DETECTION_FAILED_YT_IG);
+            M.msgFilenameError(FILENAME_DETECTION_ERROR);
         }
         return filename;
     }
@@ -445,5 +448,49 @@ public final class Utility {
             }
         }
         return false;
+    }
+
+    public static Runnable setYtDlpVersion() {
+        return () -> {
+            String command = Program.get(YT_DLP);
+            ProcessBuilder getYtDlpVersion = new ProcessBuilder(command, "--version");
+            Process ytDlpVersionTask;
+            try {
+                ytDlpVersionTask = getYtDlpVersion.start();
+            } catch (IOException e) {
+                M.msgInitError("Failed to get yt-dlp version! " + e.getMessage());
+                return;
+            }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(ytDlpVersionTask).getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    AppSettings.SET.ytDlpVersion(line);
+                }
+            } catch (IOException e) {
+                M.msgInitError("Failed to get yt-dlp version! " + e.getMessage());
+            }
+        };
+    }
+
+    public static Runnable setSpotDLVersion() {
+        return () -> {
+            String command = Program.get(SPOTDL);
+            ProcessBuilder getSpotdlVersion = new ProcessBuilder(command, "--version");
+            Process spotdlVersionTask;
+            try {
+                spotdlVersionTask = getSpotdlVersion.start();
+            } catch (IOException e) {
+                M.msgInitError("Failed to get spotDL version! " + e.getMessage());
+                return;
+            }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(spotdlVersionTask).getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    AppSettings.SET.spotDLVersion(line);
+                }
+            } catch (IOException e) {
+                M.msgInitError("Failed to get spotDL version! " + e.getMessage());
+            }
+        };
     }
 }

@@ -34,6 +34,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private int result = -1;
     private int fileCount = 0;
     private int filesProcessed = 0;
+    private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
+    private final StringProperty feedback = new SimpleStringProperty();
     boolean dirUp = true;
 
     public GetFilename(String link, String dir) {

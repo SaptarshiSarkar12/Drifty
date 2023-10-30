@@ -13,10 +13,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static Utils.DriftyConstants.*;
 import static Utils.Utility.*;
@@ -55,10 +54,10 @@ public class Main {
         jobHistory = AppSettings.GET.jobHistory();
         printBanner();
         if (args.length > 0) {
-            link = args[0];
+            link = null;
             String name = null;
             String location = null;
-            if (args.length > 1) {
+            if (args.length > 0) {
                 for (int i = 0; i < args.length; i++) {
                     if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
                         help();
@@ -68,7 +67,7 @@ public class Main {
                     } else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
                         location = args[i + 1];
                     } else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
-                        System.out.println(APPLICATION_NAME + " " + VERSION_NUMBER);
+                        printVersion();
                         System.exit(0);
                     } else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
                         batchDownloading = true;
@@ -93,16 +92,21 @@ public class Main {
                     messageBroker.msgLinkError("Link is invalid!");
                 }
                 if (isUrlValid) {
-                    if (name == null) {
-                        if (fileName == null || fileName.isEmpty()) {
-                            messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                            fileName = findFilenameInLink(link);
-                        }
-                    }
+                    isYoutubeURL = isYoutube(link);
+                    isInstagramLink = isInstagram(link);
+                    isSpotifyLink = isSpotify(link);
                     downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                    Job job = new Job(link, downloadsFolder, fileName, false);
-                    checkHistoryAddJobsAndDownload(job, false);
+                    if ((name == null) && (fileName == null || fileName.isEmpty())) {
+                        if (isSpotifyLink && link.contains("playlist")) {
+                            handleSpotifyPlaylist();
+                        } else {
+                            messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                            fileName = findFilenameInLink(link);
+                            Job job = new Job(link, downloadsFolder, fileName, false);
+                            checkHistoryAddJobsAndDownload(job, false);
+                        }
+                    }
                 }
             }
             LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
@@ -149,10 +153,14 @@ public class Main {
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
-                messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                fileName = findFilenameInLink(link);
-                Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAddJobsAndDownload(job, true);
+                if (isSpotifyLink && link.contains("playlist")) {
+                    handleSpotifyPlaylist();
+                } else {
+                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                    fileName = findFilenameInLink(link);
+                    Job job = new Job(link, downloadsFolder, fileName, false);
+                    checkHistoryAddJobsAndDownload(job, true);
+                }
             }
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
@@ -161,6 +169,61 @@ public class Main {
                 break;
             }
             printBanner();
+        }
+    }
+
+    private static void printVersion() {
+        System.out.println("\033[1m" + APPLICATION_NAME + " " + VERSION_NUMBER + ANSI_RESET);
+        if (AppSettings.GET.ytDlpVersion().isEmpty()) {
+            Utility.setYtDlpVersion().run();
+        }
+        if (AppSettings.GET.spotDLVersion().isEmpty()) {
+            Utility.setSpotDLVersion().run();
+        }
+        System.out.println("yt-dlp version : " + AppSettings.GET.ytDlpVersion());
+        System.out.println("spotDL version : " + AppSettings.GET.spotDLVersion());
+    }
+
+    private static void handleSpotifyPlaylist() {
+        messageBroker.msgFilenameInfo("Retrieving the number of tracks in the playlist...");
+        LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+        String json = makePretty(linkMetadataList.get(0));
+        String playlistLengthRegex = "(\"list_length\": )(.+)";
+        Pattern playlistLengthPattern = Pattern.compile(playlistLengthRegex);
+        Matcher lengthMatcher = playlistLengthPattern.matcher(json);
+        int numberOfSongs = 0;
+        if (lengthMatcher.find()) {
+            numberOfSongs = Integer.parseInt(lengthMatcher.group(2));
+            messageBroker.msgFilenameInfo("Number of tracks in the playlist : " + numberOfSongs);
+        } else {
+            messageBroker.msgFilenameError("Failed to retrieve the number of tracks in the playlist!");
+        }
+        for (int i = 0; i < numberOfSongs; i++) {
+            messageBroker.msgStyleInfo(BANNER_BORDER);
+            String linkRegex = "(\"url\": \")(.+)(\",)";
+            Pattern linkPattern = Pattern.compile(linkRegex);
+            Matcher linkMatcher = linkPattern.matcher(json);
+            if (linkMatcher.find(i)) {
+                link = linkMatcher.group(2);
+            } else {
+                messageBroker.msgLinkError("Failed to retrieve link from playlist!");
+                continue;
+            }
+            messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfSongs + "] " + "Processing link : " + link);
+            if (fileName != null) {
+                String filenameRegex = "(\"name\": \")(.+)(\",)";
+                Pattern filenamePattern = Pattern.compile(filenameRegex);
+                Matcher filenameMatcher = filenamePattern.matcher(json);
+                if (filenameMatcher.find(i)) {
+                    fileName = cleanFilename(filenameMatcher.group(2)) + ".mp3";
+                    messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
+                } else {
+                    fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp3";
+                    messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+                }
+            }
+            Job job = new Job(link, downloadsFolder, fileName, false);
+            checkHistoryAddJobsAndDownload(job, false);
         }
     }
 
@@ -226,13 +289,6 @@ public class Main {
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
-                if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
-                    fileName = data.get("fileNames").get(i);
-                } else {
-                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                    fileName = findFilenameInLink(link);
-                }
-                renameFilenameIfRequired(false);
                 if (downloadsFolder.equals(".")) {
                     downloadsFolder = Utility.getHomeDownloadFolder().toString();
                 } else if (downloadsFolder.equalsIgnoreCase("L")) {
@@ -243,6 +299,20 @@ public class Main {
                     } catch (Exception e) {
                         downloadsFolder = AppSettings.GET.lastDownloadFolder();
                     }
+                }
+                if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
+                    fileName = data.get("fileNames").get(i);
+                } else {
+                    if (isSpotifyLink && link.contains("playlist")) {
+                        fileName = null;
+                    } else {
+                        messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                        fileName = findFilenameInLink(link);
+                        renameFilenameIfRequired(false);
+                    }
+                }
+                if (isSpotifyLink && link.contains("playlist")) {
+                    handleSpotifyPlaylist();
                 }
                 Job job = new Job(link, downloadsFolder, fileName, false);
                 checkHistoryAddJobsAndDownload(job, false);
@@ -302,16 +372,16 @@ public class Main {
     }
 
     public static void help() {
-        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------==| DRIFTY CLI HELP |==------------" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m                    " + VERSION_NUMBER + ANSI_RESET);
-        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET + " \033[3m(This must be the first argument you are passing unless you are using Batch Downloading)" + ANSI_RESET);
+        System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m-----------------------==| DRIFTY CLI HELP |==----------------------" + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m\t\t\t\t\t\t\t\t" + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName        ShortForm     Default                  Description" + ANSI_RESET);
-        System.out.println("--batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments.");
-        System.out.println("--location   -l            Downloads                The location on your computer where content downloaded using Drifty are placed.");
-        System.out.println("--name       -n            Source                   Filename of the downloaded file.");
-        System.out.println("--help       -h            N/A                      Provides concise information for Drifty CLI.");
-        System.out.println("--version    -v            Current Version          Displays version number of Drifty.");
+        System.out.println("--batch      -b            N/A                      The path to the yaml/yml file containing the links and other arguments");
+        System.out.println("--location   -l            Downloads                The location on your computer where file downloaded using Drifty are placed");
+        System.out.println("--name       -n            Source                   Filename of the downloaded file");
+        System.out.println("--help       -h            N/A                      Prints this help menu");
+        System.out.println("--version    -v            Current Version          Displays version number of Drifty");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");

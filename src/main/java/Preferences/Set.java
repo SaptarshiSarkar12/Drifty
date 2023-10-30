@@ -42,7 +42,7 @@ public class Set { // This class is used to set the user preferences
 
     public void lastDLPUpdateTime(long value) {
         AppSettings.CLEAR.lastDLPUpdateTime();
-        preferences.putLong(LAST_YTDLP_UPDATE_TIME.toString(), value);
+        preferences.putLong(LAST_YT_DLP_UPDATE_TIME.toString(), value);
     }
 
     public void lastDriftyUpdateTime(long value) {
@@ -79,5 +79,15 @@ public class Set { // This class is used to set the user preferences
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void ytDlpVersion(String version) {
+        AppSettings.CLEAR.ytDlpVersion();
+        preferences.put(YT_DLP_VERSION.toString(), version);
+    }
+
+    public void spotDLVersion(String version) {
+        AppSettings.CLEAR.spotDLVersion();
+        preferences.put(SPOTDL_VERSION.toString(), version);
     }
 }
