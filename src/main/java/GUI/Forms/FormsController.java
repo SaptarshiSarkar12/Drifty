@@ -225,6 +225,9 @@ public final class FormsController {
     }
 
     private void verifyLinksAndWaitFor(String link) {
+        if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
+            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+        }
         Thread verify = new Thread(verifyLink(link));
         verify.start();
         while (!verify.getState().equals(Thread.State.TERMINATED)) {

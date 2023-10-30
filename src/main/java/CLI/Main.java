@@ -101,6 +101,9 @@ public class Main {
                         if (isSpotifyLink && link.contains("playlist")) {
                             handleSpotifyPlaylist();
                         } else {
+                            if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
+                                link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                            }
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
                             fileName = findFilenameInLink(link);
                             Job job = new Job(link, downloadsFolder, fileName, false);
@@ -156,6 +159,9 @@ public class Main {
                 if (isSpotifyLink && link.contains("playlist")) {
                     handleSpotifyPlaylist();
                 } else {
+                    if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
+                        link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                    }
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
                     Job job = new Job(link, downloadsFolder, fileName, false);
@@ -306,6 +312,9 @@ public class Main {
                     if (isSpotifyLink && link.contains("playlist")) {
                         fileName = null;
                     } else {
+                        if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
+                            link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                        }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
                         renameFilenameIfRequired(false);
