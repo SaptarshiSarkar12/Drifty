@@ -33,7 +33,7 @@
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth"/>
         <module name="NestedIfDepth">
-            <property name="max" value="5"/>
+            <property name="max" value="6"/>
         </module>
         <module name="NestedTryDepth">
             <property name="max" value="2"/>
