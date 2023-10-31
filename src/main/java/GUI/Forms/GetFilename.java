@@ -79,7 +79,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                     filename = baseName + ".mp3";
                 } else {
                     filename = Utility.getFilenameFromJson(json);
-                    fileLink = Utility.getSpotifyDownloadLink(link);
+                    fileLink = link;
                     String baseName = FilenameUtils.getBaseName(filename);
                     filename = baseName + ".mp4";
                 }

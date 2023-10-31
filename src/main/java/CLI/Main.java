@@ -101,13 +101,19 @@ public class Main {
                         if (isSpotifyLink && link.contains("playlist")) {
                             handleSpotifyPlaylist();
                         } else {
-                            if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
-                                link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                            if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
+                                if (link.contains("?")) {
+                                    link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+                                } else {
+                                    link = link + "?utm_source=ig_embed";
+                                }
                             }
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
                             fileName = findFilenameInLink(link);
-                            Job job = new Job(link, downloadsFolder, fileName, false);
-                            checkHistoryAddJobsAndDownload(job, false);
+                            if (!fileName.isEmpty()) {
+                                Job job = new Job(link, downloadsFolder, fileName, false);
+                                checkHistoryAddJobsAndDownload(job, false);
+                            }
                         }
                     }
                 }
@@ -159,13 +165,19 @@ public class Main {
                 if (isSpotifyLink && link.contains("playlist")) {
                     handleSpotifyPlaylist();
                 } else {
-                    if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
-                        link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                    if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
+                        if (link.contains("?")) {
+                            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+                        } else {
+                            link = link + "?utm_source=ig_embed";
+                        }
                     }
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
-                    Job job = new Job(link, downloadsFolder, fileName, false);
-                    checkHistoryAddJobsAndDownload(job, true);
+                    if (!fileName.isEmpty()) {
+                        Job job = new Job(link, downloadsFolder, fileName, false);
+                        checkHistoryAddJobsAndDownload(job, true);
+                    }
                 }
             }
             System.out.println(QUIT_OR_CONTINUE);
@@ -312,12 +324,18 @@ public class Main {
                     if (isSpotifyLink && link.contains("playlist")) {
                         fileName = null;
                     } else {
-                        if (isInstagramLink && !link.contains("?utm_source=ig_embed")) {
-                            link = link.substring(0, link.indexOf("?")) + "utm_source=ig_embed";
+                        if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
+                            if (link.contains("?")) {
+                                link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+                            } else {
+                                link = link + "?utm_source=ig_embed";
+                            }
                         }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
-                        renameFilenameIfRequired(false);
+                        if (!fileName.isEmpty()) {
+                            renameFilenameIfRequired(false);
+                        }
                     }
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
@@ -421,10 +439,12 @@ public class Main {
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }
-            job = new Job(link, downloadsFolder, fileName, false);
-            jobHistory.addJob(job, true);
-            FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
-            downloader.run();
+            if (link != null) {
+                job = new Job(link, downloadsFolder, fileName, false);
+                jobHistory.addJob(job, true);
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                downloader.run();
+            }
         } else if (fileExistsHasHistory) {
             System.out.printf(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir());
             if (removeInputBufferFirst) {
@@ -439,10 +459,12 @@ public class Main {
                 if (isSpotifyLink) {
                     link = Utility.getSpotifyDownloadLink(link);
                 }
-                job = new Job(link, downloadsFolder, fileName, false);
-                jobHistory.addJob(job, true);
-                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
-                downloader.run();
+                if (link != null) {
+                    job = new Job(link, downloadsFolder, fileName, false);
+                    jobHistory.addJob(job, true);
+                    FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                    downloader.run();
+                }
             }
         } else {
             jobHistory.addJob(job, true);
@@ -450,8 +472,10 @@ public class Main {
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }
-            FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
-            downloader.run();
+            if (link != null) {
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                downloader.run();
+            }
         }
     }
 }
