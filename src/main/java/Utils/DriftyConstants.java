@@ -55,7 +55,7 @@ public final class DriftyConstants {
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
     public static final String FAILED_TO_READ_DATA_STREAM = "Failed to get I/O operations channel to read from the data stream !";
-    public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube Video!";
+    public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube/Instagram Video!";
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
     public static final String DEFAULT_FILENAME = "%(title)s.%(ext)s";
     /*

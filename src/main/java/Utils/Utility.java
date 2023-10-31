@@ -187,7 +187,11 @@ public final class Utility {
             } else {
                 linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             }
-            linkThread.start();
+            try {
+                linkThread.start();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             while (!linkThread.getState().equals(Thread.State.TERMINATED) && !linkThread.isInterrupted()) {
                 sleep(100);
                 interrupted = linkThread.isInterrupted();
@@ -275,13 +279,29 @@ public final class Utility {
 
     private static Runnable ytDLPJsonData(String folderPath, String link) {
         return () -> {
-            String command = Program.get(YT_DLP);
-            String[] args = new String[]{"--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
-            new ProcBuilder(command)
-                    .withArgs(args)
-                    .withErrorStream(System.err)
-                    .withNoTimeout()
-                    .run();
+            String[] command = new String[]{Program.get(YT_DLP), "--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link};
+            try {
+                ProcessBuilder pb = new ProcessBuilder(command);
+                pb.redirectErrorStream(true);
+                Process p = pb.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (line.contains("ERROR") || line.contains("WARNING")) {
+                        if (line.contains("unable to extract username")) {
+                            M.msgLinkError("The Instagram post/reel is private!");
+                            break;
+                        } else if (line.contains("The playlist does not exist")) {
+                            M.msgLinkError("The YouTube playlist does not exist or is private!");
+                            break;
+                        } else {
+                            M.msgLinkError("Failed to retrieve filename!");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                M.msgLinkError("Failed to get link metadata! " + e.getMessage());
+            }
         };
     }
 
@@ -330,22 +350,25 @@ public final class Utility {
         ProcessBuilder processBuilder = new ProcessBuilder(spotDLPath, "url", link);
         Process process;
         try {
+            processBuilder.redirectErrorStream(true);
             process = processBuilder.start();
-        } catch (IOException e) {
-            M.msgDownloadError("Failed to get download link for \"" + link + "\"!");
-            return null;
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains("Processing query:") && line.startsWith("http")) {
-                    M.msgDownloadInfo("Download link retrieved successfully!");
-                    return line;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains("Processing query:") && line.startsWith("http")) {
+                        M.msgDownloadInfo("Download link retrieved successfully!");
+                        return line;
+                    } else if (line.contains("No results found for song")) {
+                        M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                        return null;
+                    }
                 }
+            } catch (IOException e) {
+                M.msgDownloadError("Failed to get download link for \"" + link + "\"!");
+                return null;
             }
         } catch (IOException e) {
             M.msgDownloadError("Failed to get download link for \"" + link + "\"!");
-            return null;
         }
         return null;
     }
