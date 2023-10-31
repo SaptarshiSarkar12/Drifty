@@ -226,7 +226,11 @@ public final class FormsController {
 
     private void verifyLinksAndWaitFor(String link) {
         if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+            if (link.contains("?")) {
+                link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+            } else {
+                link = link + "?utm_source=ig_embed";
+            }
         }
         Thread verify = new Thread(verifyLink(link));
         verify.start();
@@ -424,8 +428,9 @@ public final class FormsController {
                             sleep(500);
                         }
                         int exitCode = downloadFile.getExitCode();
+                        removeJobFromList(job);
+                        setDownloadInfoColor(Color.GREEN);
                         if (exitCode == 0) { // Success
-                            removeJobFromList(job);
                             getHistory().addJob(job, false);
                         }
                     }

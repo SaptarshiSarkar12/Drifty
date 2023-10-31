@@ -1,6 +1,7 @@
 package GUI.Forms;
 
 import Backend.DownloadMetrics;
+import Enums.Colors;
 import Enums.LinkType;
 import Enums.Program;
 import Enums.UnitConverter;
@@ -77,10 +78,13 @@ public class DownloadFile extends Task<Integer> {
             case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
             case SPOTIFY -> {
                 link = getSpotifyDownloadLink(link);
+                if (link == null) {
+                    break;
+                }
                 splitDecision();
             }
             case OTHER -> splitDecision();
-            default -> M.msgDownloadError("Invalid Link !");
+            default -> sendFinalMessage("Invalid Link !");
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -401,9 +405,11 @@ public class DownloadFile extends Task<Integer> {
     private void sendFinalMessage(String message) {
         String msg;
         if (exitCode == 0) {
+            FormsController.setDownloadInfoColor(Colors.GREEN);
             msg = message.isEmpty() ? String.format(SUCCESSFULLY_DOWNLOADED_F, filename) : message;
             M.msgDownloadInfo(msg);
         } else {
+            FormsController.setDownloadInfoColor(Colors.RED);
             msg = message.isEmpty() ? String.format(FAILED_TO_DOWNLOAD_F, filename) : message;
             M.msgDownloadError(msg);
         }
@@ -426,25 +432,29 @@ public class DownloadFile extends Task<Integer> {
         ProcessBuilder processBuilder = new ProcessBuilder(spotDLPath, "url", this.link);
         Process process;
         try {
+            processBuilder.redirectErrorStream(true);
             process = processBuilder.start();
-        } catch (IOException e) {
-            exitCode = 1;
-            sendFinalMessage("Failed to get download link for \"" + link + "\"!");
-            return null;
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains("Processing query:") && line.startsWith("http")) {
-                    sendInfoMessage("Download link retrieved successfully!");
-                    exitCode = 0;
-                    return line;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains("Processing query:") && line.startsWith("http")) {
+                        sendInfoMessage("Download link retrieved successfully!");
+                        exitCode = 0;
+                        return line;
+                    } else if (line.contains("No results found for song")) {
+                        exitCode = 1;
+                        sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
+                        return null;
+                    }
                 }
+            } catch (IOException e) {
+                exitCode = 1;
+                sendFinalMessage("Failed to get download link for \"" + link + "\"!");
+                return null;
             }
         } catch (IOException e) {
             exitCode = 1;
             sendFinalMessage("Failed to get download link for \"" + link + "\"!");
-            return null;
         }
         return null;
     }
