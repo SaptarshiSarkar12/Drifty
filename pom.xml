@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.0</junit.version>
+        <junit.version>5.10.1</junit.version>
         <javafx.version>21.0.1</javafx.version>
         <gluonfx-maven-plugin.version>1.0.21</gluonfx-maven-plugin.version>
         <native-maven-plugin.version>0.9.28</native-maven-plugin.version>
