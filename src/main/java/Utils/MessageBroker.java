@@ -91,18 +91,10 @@ public class MessageBroker {
     private void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         if (Mode.isCLI()) {
             switch (messageType) {
-            case INFO:
-                message = "\033[92m" + message + "\033[0m";
-                break;
-            case ERROR:
-                message = "\033[91m" + message + "\033[0m";
-                break;
-            case WARN:
-                message = "\033[93m" + message + "\033[0m";
-                break;
-            default:
-                output.println(message);
-                break;
+                case INFO -> message = "\033[92m" + message + "\033[0m";
+                case WARN -> message = "\033[93m" + message + "\033[0m";
+                case ERROR -> message = "\033[91m" + message + "\033[0m";
+                default -> message = message;
             }
             if (!messageCategory.equals(LOG)) {
                 output.println(message);
@@ -116,20 +108,20 @@ public class MessageBroker {
                 ui = null;
             }
             Color color = switch (messageType) {
-            case ERROR -> RED;
-            case INFO -> GREEN;
-            default -> YELLOW;
+                case ERROR -> RED;
+                case INFO -> GREEN;
+                default -> YELLOW;
             };
             switch (messageCategory) {
-            case LINK -> ui.setLinkOutput(color, message);
-            case FILENAME -> ui.setFilenameOutput(color, message);
-            case DIRECTORY -> ui.setDirOutput(color, message);
-            case DOWNLOAD -> ui.setDownloadOutput(color, message);
-            default -> {
-                if (!message.isEmpty()) {
-                    logger.log(messageType, message);
+                case LINK -> ui.setLinkOutput(color, message);
+                case FILENAME -> ui.setFilenameOutput(color, message);
+                case DIRECTORY -> ui.setDirOutput(color, message);
+                case DOWNLOAD -> ui.setDownloadOutput(color, message);
+                default -> {
+                    if (!message.isEmpty()) {
+                        logger.log(messageType, message);
+                    }
                 }
-            }
             }
         }
     }
