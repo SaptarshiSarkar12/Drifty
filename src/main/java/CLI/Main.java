@@ -42,19 +42,14 @@ public class Main {
     private static String batchDownloadingFile;
     private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
     private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
-    public static final	String RESET = "\u001B[0m";
-    public static final String BLUE = "\033[0;34m";
-    public static final String YELLOW = "\u001B[33m";
-    public static final String RED = "\u001B[31m";
-    public static final String GREEN = "\u001B[32m";
-    
+
     public static void main(String[] args) {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
-        messageBroker.msgInitInfo(GREEN + "Initializing environment..." + RESET);
+        messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
-        messageBroker.msgInitInfo(GREEN + "Environment initialized successfully!" + RESET);
+        messageBroker.msgInitInfo("Environment initialized successfully!");
         utility = new Utility();
         jobHistory = AppSettings.GET.jobHistory();
         printBanner();
@@ -82,7 +77,7 @@ public class Main {
                         if (isURL(args[i])) {
                             link = args[i];
                         } else {
-                            messageBroker.msgInitError(RED + "Invalid argument(s) passed!" + RESET);
+                            messageBroker.msgInitError("Invalid argument(s) passed!");
                             System.exit(1);
                         }
                     }
@@ -94,7 +89,7 @@ public class Main {
                     isUrlValid = Utility.isLinkValid(link);
                 } else {
                     isUrlValid = false;
-                    messageBroker.msgLinkError(RED + "Link is invalid!" + RESET);
+                    messageBroker.msgLinkError("Link is invalid!");
                 }
                 if (isUrlValid) {
                     isYoutubeURL = isYoutube(link);
@@ -113,7 +108,7 @@ public class Main {
                                     link = link + "?utm_source=ig_embed";
                                 }
                             }
-                            messageBroker.msgFilenameInfo(GREEN + "Retrieving filename from link..." + RESET);
+                            messageBroker.msgFilenameInfo("Retrieving filename from link...");
                             fileName = findFilenameInLink(link);
                             if (!fileName.isEmpty()) {
                                 Job job = new Job(link, downloadsFolder, fileName, false);
@@ -138,7 +133,7 @@ public class Main {
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
-                        messageBroker.msgBatchError(RED + "The data file should be a YAML file!" + RESET);
+                        messageBroker.msgBatchError("The data file should be a YAML file!");
                     } else {
                         batchDownloader();
                         break;
@@ -158,7 +153,7 @@ public class Main {
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
                 } else {
-                    messageBroker.msgLinkError(RED + "Link is invalid!" + RESET);
+                    messageBroker.msgLinkError("Link is invalid!");
                     continue;
                 }
                 System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ");
@@ -177,7 +172,7 @@ public class Main {
                             link = link + "?utm_source=ig_embed";
                         }
                     }
-                    messageBroker.msgFilenameInfo(GREEN + "Retrieving filename from link..." + RESET);
+                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
                     if (!fileName.isEmpty()) {
                         Job job = new Job(link, downloadsFolder, fileName, false);
@@ -208,7 +203,7 @@ public class Main {
     }
 
     private static void handleSpotifyPlaylist() {
-        messageBroker.msgFilenameInfo(GREEN + "Retrieving the number of tracks in the playlist..." + RESET);
+        messageBroker.msgFilenameInfo("Retrieving the number of tracks in the playlist...");
         LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
         String json = makePretty(linkMetadataList.get(0));
         String playlistLengthRegex = "(\"list_length\": )(.+)";
@@ -217,9 +212,9 @@ public class Main {
         int numberOfSongs = 0;
         if (lengthMatcher.find()) {
             numberOfSongs = Integer.parseInt(lengthMatcher.group(2));
-            messageBroker.msgFilenameInfo(GREEN + "Number of tracks in the playlist : " + numberOfSongs+ RESET);
+            messageBroker.msgFilenameInfo("Number of tracks in the playlist : " + numberOfSongs);
         } else {
-            messageBroker.msgFilenameError(GREEN + "Failed to retrieve the number of tracks in the playlist!" + RESET);
+            messageBroker.msgFilenameError("Failed to retrieve the number of tracks in the playlist!");
         }
         for (int i = 0; i < numberOfSongs; i++) {
             messageBroker.msgStyleInfo(BANNER_BORDER);
@@ -229,20 +224,20 @@ public class Main {
             if (linkMatcher.find(i)) {
                 link = linkMatcher.group(2);
             } else {
-                messageBroker.msgLinkError(RED + "Failed to retrieve link from playlist!" + RESET);
+                messageBroker.msgLinkError("Failed to retrieve link from playlist!");
                 continue;
             }
-            messageBroker.msgLinkInfo(GREEN + "[" + (i + 1) + "/" + numberOfSongs + "] " + "Processing link : " + link+ RESET);
+            messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfSongs + "] " + "Processing link : " + link);
             if (fileName != null) {
                 String filenameRegex = "(\"name\": \")(.+)(\",)";
                 Pattern filenamePattern = Pattern.compile(filenameRegex);
                 Matcher filenameMatcher = filenamePattern.matcher(json);
                 if (filenameMatcher.find(i)) {
                     fileName = cleanFilename(filenameMatcher.group(2)) + ".mp3";
-                    messageBroker.msgFilenameInfo(GREEN +FILENAME_DETECTED + "\"" + fileName + "\"" + RESET);
+                    messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
                 } else {
                     fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp3";
-                    messageBroker.msgFilenameError(RED +FILENAME_DETECTION_ERROR+ RESET);
+                    messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                 }
             }
             Job job = new Job(link, downloadsFolder, fileName, false);
@@ -253,22 +248,22 @@ public class Main {
     private static void batchDownloader() {
         Yaml yamlParser = new Yaml();
         try {
-            messageBroker.msgLogInfo(GREEN + "Trying to load YAML data file (" + batchDownloadingFile + ") ..." + RESET);
+            messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
             InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
-            messageBroker.msgLogInfo(GREEN + "YAML data file (" + batchDownloadingFile + ") loaded successfully" + RESET);
+            messageBroker.msgLogInfo("YAML data file (" + batchDownloadingFile + ") loaded successfully");
             int numberOfLinks;
             try {
                 numberOfLinks = data.get("links").size();
             } catch (NullPointerException e) {
-                messageBroker.msgLinkInfo(GREEN + "No links specified. Exiting..." + RESET);
+                messageBroker.msgLinkInfo("No links specified. Exiting...");
                 return;
             }
             int numberOfFileNames;
             if (data.containsKey("fileNames")) {
                 numberOfFileNames = data.get("fileNames").size();
             } else {
-                messageBroker.msgFilenameInfo(GREEN + "No filename specified. Filename will be retrieved from the link." + RESET);
+                messageBroker.msgFilenameInfo("No filename specified. Filename will be retrieved from the link.");
                 numberOfFileNames = 0;
             }
             int numberOfDirectories;
@@ -282,7 +277,7 @@ public class Main {
             } else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
             } else {
-                messageBroker.msgDirInfo(GREEN + "No directory specified. Default downloads folder will be used." + RESET);
+                messageBroker.msgDirInfo("No directory specified. Default downloads folder will be used.");
                 numberOfDirectories = 0;
                 downloadsFolder = ".";
             }
@@ -304,11 +299,11 @@ public class Main {
             } else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
-            messageBroker.msgBatchInfo(GREEN + "You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage+ RESET);
+            messageBroker.msgBatchInfo("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage);
             for (int i = 0; i < numberOfLinks; i++) {
                 messageBroker.msgStyleInfo(BANNER_BORDER);
                 link = data.get("links").get(i);
-                messageBroker.msgLinkInfo(GREEN + "[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link+ RESET);
+                messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
@@ -336,7 +331,7 @@ public class Main {
                                 link = link + "?utm_source=ig_embed";
                             }
                         }
-                        messageBroker.msgFilenameInfo(GREEN + "Retrieving filename from link..." + RESET);
+                        messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
                         if (!fileName.isEmpty()) {
                             renameFilenameIfRequired(false);
@@ -350,7 +345,7 @@ public class Main {
                 checkHistoryAddJobsAndDownload(job, false);
             }
         } catch (FileNotFoundException e) {
-            messageBroker.msgDownloadError(RED + "YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage() + RESET);
+            messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
         }
     }
 
@@ -389,14 +384,14 @@ public class Main {
             }
         }
         if (new File(downloadsFolder).exists()) {
-            messageBroker.msgDirInfo(GREEN + "Download folder exists!" + RESET);
+            messageBroker.msgDirInfo("Download folder exists!");
         } else {
-            messageBroker.msgDirError(RED + "Download folder does not exist!" + RESET);
+            messageBroker.msgDirError("Download folder does not exist!");
             try {
                 Files.createDirectory(Path.of(downloadsFolder));
-                messageBroker.msgDirInfo(GREEN + "Download folder created successfully!" + RESET);
+                messageBroker.msgDirInfo("Download folder created successfully!");
             } catch (IOException e) {
-                messageBroker.msgDirError(RED + "Failed to create download folder! " + e.getMessage() + RESET);
+                messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
         AppSettings.SET.lastFolder(downloadsFolder);
