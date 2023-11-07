@@ -116,20 +116,20 @@ public class MessageBroker {
                 ui = null;
             }
             Color color = switch (messageType) {
-                case ERROR -> RED;
-                case INFO -> GREEN;
-                default -> YELLOW;
+            case ERROR -> RED;
+            case INFO -> GREEN;
+            default -> YELLOW;
             };
             switch (messageCategory) {
-                case LINK -> ui.setLinkOutput(color, message);
-                case FILENAME -> ui.setFilenameOutput(color, message);
-                case DIRECTORY -> ui.setDirOutput(color, message);
-                case DOWNLOAD -> ui.setDownloadOutput(color, message);
-                default -> {
-                    if (!message.isEmpty()) {
-                        logger.log(messageType, message);
-                    }
+            case LINK -> ui.setLinkOutput(color, message);
+            case FILENAME -> ui.setFilenameOutput(color, message);
+            case DIRECTORY -> ui.setDirOutput(color, message);
+            case DOWNLOAD -> ui.setDownloadOutput(color, message);
+            default -> {
+                if (!message.isEmpty()) {
+                    logger.log(messageType, message);
                 }
+            }
             }
         }
     }
