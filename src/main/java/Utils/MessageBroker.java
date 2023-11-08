@@ -92,7 +92,7 @@ public class MessageBroker {
         if (Mode.isCLI()) {
             message = switch (messageType) {
                 case INFO -> "\033[92m" + message + "\033[0m";
-                case WARN -> message = "\033[93m" + message + "\033[0m";
+                case WARN -> "\033[93m" + message + "\033[0m";
                 case ERROR -> message = "\033[91m" + message + "\033[0m";
                 default -> message = message;
             };
