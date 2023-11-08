@@ -90,12 +90,12 @@ public class MessageBroker {
 
     private void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         if (Mode.isCLI()) {
-            switch (messageType) {
+            message = switch (messageType) {
                 case INFO -> message = "\033[92m" + message + "\033[0m";
                 case WARN -> message = "\033[93m" + message + "\033[0m";
                 case ERROR -> message = "\033[91m" + message + "\033[0m";
                 default -> message = message;
-            }
+            };
             if (!messageCategory.equals(LOG)) {
                 output.println(message);
             }
