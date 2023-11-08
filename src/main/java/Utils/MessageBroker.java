@@ -93,7 +93,7 @@ public class MessageBroker {
             message = switch (messageType) {
                 case INFO -> "\033[92m" + message + "\033[0m";
                 case WARN -> "\033[93m" + message + "\033[0m";
-                case ERROR -> message = "\033[91m" + message + "\033[0m";
+                case ERROR -> "\033[91m" + message + "\033[0m";
                 default -> message;
             };
             if (!messageCategory.equals(LOG)) {
