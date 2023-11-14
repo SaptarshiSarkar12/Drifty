@@ -55,11 +55,19 @@ function MobileNav({ open }) {
         </NavLink>
         <div className="flex justify-center items-center pt-10">
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
-            <i className={"fab fa-discord text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-violet-600"}></i>
+            <i
+              className={
+                "fab fa-discord text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-violet-600"
+              }
+            ></i>
           </a>
 
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
-            <i className={"fab fa-github text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-black"}></i>
+            <i
+              className={
+                "fab fa-github text-4xl text-white mx-8 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 hover:text-black"
+              }
+            ></i>
           </a>
         </div>
       </div>
@@ -82,7 +90,9 @@ export default function Header({ props }) {
     // remove event on unmounting to prevent Linkmemory leak with the cleanup
   });
   return (
-    <header className={`md:sticky top-0 ${hcolor} z-40 select-none`}>
+    <header
+      className={`md:sticky top-0 ${hcolor} z-40 select-none overflow-hidden`}
+    >
       <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center ">
         <MobileNav open={open} setOpen={setOpen} />
         <div className="flex items-center lg:pl-20 mb-3 w-full">
@@ -145,11 +155,19 @@ export default function Header({ props }) {
             </button>
           </NavLink>
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
-            <i className={"fab fa-discord text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-violet-700"}></i>
+            <i
+              className={
+                "fab fa-discord text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-violet-700"
+              }
+            ></i>
           </a>
 
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
-            <i className={"fab fa-github text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-black"}></i>
+            <i
+              className={
+                "fab fa-github text-4xl text-white mx-8 hover:scale-110 duration-100 hover:text-black"
+              }
+            ></i>
           </a>
         </div>
       </nav>
