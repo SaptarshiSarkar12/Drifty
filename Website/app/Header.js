@@ -80,18 +80,21 @@ export default function Header({ props }) {
   const [hcolor, setHcolor] = useState(props + " pt-7");
   const onScroll = useCallback(() => {
     const { scrollY } = window;
-    if (scrollY === 0) setHcolor(props + " pt-7");
-    else setHcolor("bg-var shadow-lg pt-4");
+    if (window.innerWidth > 760) {
+      if (scrollY === 0) setHcolor(props + " pt-7");
+      else setHcolor("bg-var shadow-lg pt-4");
+    }
   }, [props]);
 
   useEffect(() => {
     //add event listener to window
     window.addEventListener("scroll", onScroll, { passive: true });
     // remove event on unmounting to prevent Linkmemory leak with the cleanup
-  });
+  }, []);
+
   return (
     <header
-      className={`md:sticky top-0 ${hcolor} z-40 select-none overflow-hidden`}
+      className={`md:sticky top-0 ${hcolor} z-40 select-none md:overflow-hidden`}
     >
       <nav className="flex filter drop-shadow-md px-4 py-4 h-20 items-center ">
         <MobileNav open={open} setOpen={setOpen} />

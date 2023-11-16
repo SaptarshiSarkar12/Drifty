@@ -54,7 +54,7 @@ export default function contact() {
             placeholder="Phone Number"
           />
           <textarea
-            className="bg-white focus:outline-blue-600 outline:none caret-blue-600 md:w-6/12 sm:w-1/2 h-64  col-span-2 mt-10 p-6 bg-input text-blue-600"
+            className="focus:outline-blue-600 outline:none caret-blue-600 md:w-6/12 sm:w-1/2 h-64 col-span-2 mt-10 p-6  text-blue-600 resize-none"
             inputMode="text"
             pattern="text"
             name="message"
