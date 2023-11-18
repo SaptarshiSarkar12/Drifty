@@ -37,13 +37,6 @@ public enum OS {
         return osName;
     }
 
-    public static OS getOSType() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType;
-    }
-
     public static boolean isWindows() {
         return getOSType().equals(OS.WIN);
     }
@@ -53,9 +46,6 @@ public enum OS {
     }
 
     public static boolean isLinux() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.LINUX);
+        return getOSType().equals(OS.LINUX);
     }
 }
