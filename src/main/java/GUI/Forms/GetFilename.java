@@ -3,6 +3,7 @@ package GUI.Forms;
 import Enums.Colors;
 import Enums.Program;
 import GUI.Support.Job;
+import Utils.Environment;
 import Utils.Utility;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -145,7 +146,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         };
     }
 
-
     private Runnable getFileCount() {
         return () -> {
             feedback.addListener(((observable, oldValue, newValue) -> {
@@ -184,11 +184,11 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                         }
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
                 }
                 result = process.waitFor();
             } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
+                Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
             }
         };
     }
