@@ -28,11 +28,11 @@ public enum Mode {
         return mode.equals(Mode.UPDATE);
     }
 
-    public static void setMode(Mode mode) { // This method is used to set the mode (CLI or GUI) in which Drifty is running
+    public static void setMode(Mode mode) { // This method is used to set the mode (CLI, GUI, or UPDATE) in which Drifty is running
         Mode.mode = mode;
     }
 
-    public static Mode getMode() { // This method returns the mode (CLI or GUI) in which Drifty is running
+    public static Mode getMode() { // This method returns the mode (CLI, GUI, or UPDATE) in which Drifty is running
         return mode;
     }
 }
