@@ -26,24 +26,22 @@ public enum OS {
         }
     }
 
-    public static String getOSName() {
+    private static OS getOSType() {
         if (osType == null) {
             setOSType();
         }
+        return osType;
+    }
+
+    public static String getOSName() {
         return osName;
     }
 
     public static boolean isWindows() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.WIN);
+        return getOSType().equals(OS.WIN);
     }
 
     public static boolean isMac() {
-        if (osType == null) {
-            setOSType();
-        }
-        return osType.equals(OS.MAC);
+        return getOSType().equals(OS.MAC);
     }
 }
