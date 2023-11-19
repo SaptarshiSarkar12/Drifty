@@ -85,15 +85,16 @@ jobs:
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        if (${{ matrix.mode == 'CLI' }}); then
+        if (${{ matrix.mode == 'CLI' }}) {
             Rename-Item "target/CLI/windows/Drifty CLI.exe" Drifty-CLI.exe
             move "target/CLI/windows/Drifty-CLI.exe" CLI
-        else
+        }
+        else {
             Rename-Item target/gluonfx/x86_64-windows/Drifty-1.0.msi "Drifty-GUI.msi"
             Rename-Item target/gluonfx/x86_64-windows/Drifty.exe "Drifty-GUI.exe"
             move "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
             move "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
-        fi
+        }
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
