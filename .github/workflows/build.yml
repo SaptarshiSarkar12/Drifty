@@ -75,7 +75,7 @@ jobs:
     - name: Categorise build artifacts for linux
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
-        if [ ${{ matrix.mode == 'CLI' }} ]; then
+        if ${{ matrix.mode == 'CLI' }}; then
             mv "target/CLI/linux/Drifty CLI" "target/CLI/linux/Drifty-CLI_linux"
             mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
         else
@@ -85,7 +85,7 @@ jobs:
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        if [ ${{ matrix.mode == 'CLI' }} ]; then
+        if ${{ matrix.mode == 'CLI' }}; then
             Rename-Item "target/CLI/windows/Drifty CLI.exe" Drifty-CLI.exe
             move "target/CLI/windows/Drifty-CLI.exe" CLI
         else
@@ -97,7 +97,7 @@ jobs:
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
-        if [ ${{ matrix.mode == 'CLI' }} ]; then
+        if ${{ matrix.mode == 'CLI' }}; then
             mv "target/CLI/macos/Drifty CLI" "target/CLI/macos/Drifty-CLI_macos"
             mv "target/CLI/macos/Drifty-CLI_macos" CLI
         else
