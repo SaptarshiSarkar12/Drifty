@@ -85,7 +85,7 @@ jobs:
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        if ${{ matrix.mode == 'CLI' }}; then
+        if (${{ matrix.mode == 'CLI' }}); then
             Rename-Item "target/CLI/windows/Drifty CLI.exe" Drifty-CLI.exe
             move "target/CLI/windows/Drifty-CLI.exe" CLI
         else
