@@ -18,7 +18,7 @@ import static Utils.DriftyConstants.GUI_APPLICATION_TERMINATED;
  * These are constants used by Drifty GUI.
  * It contains hooks into the resources folder for relevant files.
  */
-class Constants {
+final class Constants {
     private static final Rectangle2D SCREEN_SIZE = Screen.getPrimary().getBounds();
     public static final double SCREEN_WIDTH = SCREEN_SIZE.getWidth();
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
@@ -103,5 +103,8 @@ class Constants {
 
     public static Font getMonaco(double size) {
         return new Font(MONACO_TTF.toExternalForm(), size);
+    }
+
+    private Constants() {
     }
 }

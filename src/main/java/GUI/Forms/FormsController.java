@@ -58,8 +58,8 @@ public final class FormsController {
     private static final BooleanProperty UPDATING_BATCH = new SimpleBooleanProperty(false);
     private static final BooleanProperty VERIFYING_LINKS = new SimpleBooleanProperty(false);
     private final String nl = System.lineSeparator();
-    private int speedValueUpdateCount = 0;
-    private int speedValue = 0;
+    private int speedValueUpdateCount;
+    private int speedValue;
     private String songName = "";
     private Folders folders;
     private Job selectedJob;
