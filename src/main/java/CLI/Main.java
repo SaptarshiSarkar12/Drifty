@@ -37,7 +37,7 @@ public class Main {
     private static String link;
     private static String downloadsFolder;
     private static Utility utility;
-    private static String fileName = null;
+    private static String fileName;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
     private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
@@ -182,7 +182,7 @@ public class Main {
             }
             System.out.println(QUIT_OR_CONTINUE);
             String choice = SC.next().toLowerCase();
-            if (choice.equals("q")) {
+            if ("q".equals(choice)) {
                 LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }
@@ -307,9 +307,9 @@ public class Main {
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
-                if (downloadsFolder.equals(".")) {
-                    downloadsFolder = Utility.getHomeDownloadFolder().toString();
-                } else if (downloadsFolder.equalsIgnoreCase("L")) {
+                if (".".equals(downloadsFolder)) {
+                    downloadsFolder = Utility.getHomeDownloadFolder();
+                } else if ("L".equalsIgnoreCase(downloadsFolder)) {
                     downloadsFolder = AppSettings.GET.lastDownloadFolder();
                 } else if (downloadsFolder.isEmpty()) {
                     try {
@@ -372,11 +372,11 @@ public class Main {
 
     private static String getProperDownloadsFolder(String downloadsFolder) {
         if (downloadsFolder == null) {
-            downloadsFolder = Utility.getHomeDownloadFolder().toString();
-        } else if (downloadsFolder.equalsIgnoreCase("L")) {
+            downloadsFolder = Utility.getHomeDownloadFolder();
+        } else if ("L".equalsIgnoreCase(downloadsFolder)) {
             downloadsFolder = AppSettings.GET.lastDownloadFolder();
-        } else if (downloadsFolder.equals(".")) {
-            downloadsFolder = Utility.getHomeDownloadFolder().toString();
+        } else if (".".equals(downloadsFolder)) {
+            downloadsFolder = Utility.getHomeDownloadFolder();
         } else {
             downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
             if (OS.isWindows()) {

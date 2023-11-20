@@ -337,7 +337,7 @@ public final class Utility {
         return sb.toString();
     }
 
-    public static String getSpotifyDownloadLink(String link){
+    public static String getSpotifyDownloadLink(String link) {
         M.msgDownloadInfo("Trying to get download link for \"" + link + "\"");
         // Remove si parameter from the link
         link = link.replaceAll("\\?si=.*", "");

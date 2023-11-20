@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CheckFile implements Runnable {
     private static final MessageBroker M = Environment.getMessageBroker();
-    public static boolean stopWalk = false;
+    public static boolean stopWalk;
     private final List<String> searchList;
     private final Path rootPath;
     private final boolean findOneFile;
@@ -47,7 +47,7 @@ public class CheckFile implements Runnable {
         private final LinkedList<String> fileList = new LinkedList<>();
         private final List<String> fileNameSearch;
         private final boolean findOneFile;
-        private boolean fileFound = false;
+        private boolean fileFound;
 
         public FolderWalker(List<String> fileNameSearch, boolean findOneFile) {
             this.findOneFile = findOneFile;

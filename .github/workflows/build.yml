@@ -51,9 +51,7 @@ jobs:
         distribution: 'graalvm-community'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
-        native-image-job-reports: 'true'
         cache: 'maven'
-        native-image-pr-reports: true
         components: 'native-image'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}

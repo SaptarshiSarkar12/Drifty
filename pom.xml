@@ -23,7 +23,7 @@
         <system-native-image-arg/>
         <compatibility-arg/>
         <system-linker-arg/>
-        <versions-maven-plugin>2.16.1</versions-maven-plugin>
+        <versions-maven-plugin>2.16.2</versions-maven-plugin>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <javafx-maven-plugin>0.0.8</javafx-maven-plugin>
     </properties>
@@ -94,6 +94,36 @@
                     <target>20</target>
                 </configuration>
             </plugin>
+            <!-- Formatter Maven Plugin-->
+            <plugin>
+                <groupId>org.openrewrite.maven</groupId>
+                <artifactId>rewrite-maven-plugin</artifactId>
+                <version>5.11.0</version>
+                <configuration>
+                    <activeRecipes>
+                        <recipe>org.openrewrite.staticanalysis.CodeCleanup</recipe>
+                        <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
+                        <recipe>org.openrewrite.recommendations.CodeHealth</recipe>
+                        <recipe>org.openrewrite.maven.BestPractices</recipe>
+                    </activeRecipes>
+                    <checkstyleConfigFile>.github/linters/sun_checks.xml</checkstyleConfigFile>
+                    <exclusions>
+                        <exclusion>**/module-info.java</exclusion>
+                    </exclusions>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-static-analysis</artifactId>
+                        <version>1.1.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.openrewrite.recipe</groupId>
+                        <artifactId>rewrite-recommendations</artifactId>
+                        <version>1.0.5</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <!--Maven Versions Plugin-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -132,7 +162,7 @@
                         <arg>--verbose</arg>
                         <arg>-H:ResourceConfigurationFiles=${pom.basedir}/config/${resource-config-file}</arg>
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
-<!--                        <arg>-o Drifty GUI</arg>-->
+                        <!--                        <arg>-o Drifty GUI</arg>-->
                         <arg>${system-native-image-arg}</arg>
                         <arg>${compatibility-arg}</arg>
                     </nativeImageArgs>
