@@ -23,7 +23,7 @@
         <system-native-image-arg/>
         <compatibility-arg/>
         <system-linker-arg/>
-        <versions-maven-plugin>2.16.1</versions-maven-plugin>
+        <versions-maven-plugin>2.16.2</versions-maven-plugin>
         <maven-compiler-plugin>3.11.0</maven-compiler-plugin>
         <javafx-maven-plugin>0.0.8</javafx-maven-plugin>
     </properties>
