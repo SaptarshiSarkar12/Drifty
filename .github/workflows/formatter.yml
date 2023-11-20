@@ -24,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.head_ref }}
       - name: Setup JDK 20
         uses: actions/setup-java@v3
         with:
@@ -42,4 +42,6 @@ jobs:
              git commit -m "style: Formatted Java files"
           fi
       - name: Push changes
-        run: git push
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.head_ref }}
