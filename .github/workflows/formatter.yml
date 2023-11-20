@@ -40,4 +40,4 @@ jobs:
           if [[ $(git status --porcelain) ]]; then
             git commit -a -m "Commit message"
           fi
-          git push
+          git push origin ${{ github.event.pull_request.head.ref }}
