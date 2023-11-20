@@ -31,8 +31,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final Pattern pattern = Pattern.compile(regex);
     private final String lineFeed = System.lineSeparator();
     private int result = -1;
-    private int fileCount = 0;
-    private int filesProcessed = 0;
+    private int fileCount;
+    private int filesProcessed;
     private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
     private final StringProperty feedback = new SimpleStringProperty();
     boolean dirUp = true;
@@ -90,7 +90,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 for (File file : files) {
                     try {
                         String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                        if (ext.equalsIgnoreCase("json") || ext.equalsIgnoreCase("spotdl")) {
+                        if ("json".equalsIgnoreCase(ext) || "spotdl".equalsIgnoreCase(ext)) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename;
                             if (isSpotify(link)) {

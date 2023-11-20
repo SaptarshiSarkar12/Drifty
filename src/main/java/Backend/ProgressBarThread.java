@@ -96,7 +96,7 @@ public class ProgressBarThread extends Thread {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
-            bar = bar.substring(0, charAmt / 2 - 2) + (formattedTotalDownloadPercent) + "%" + bar.substring(charAmt / 2 + 1);
+            bar = bar.substring(0, charAmt / 2 - 2) + formattedTotalDownloadPercent + "%" + bar.substring(charAmt / 2 + 1);
             return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
         } else {
             int numberOfThreads = fileOutputStreams.size();

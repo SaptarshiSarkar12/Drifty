@@ -77,8 +77,8 @@ public class FileDownloader implements Runnable {
                         file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
-                        start = (i == 0) ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
-                        end = ((numberOfThreads - 1) == i) ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
+                        start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
+                        end = (numberOfThreads - 1) == i ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
                         DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
                         downloader.start();
                         fileOutputStreams.add(fileOut);
@@ -210,9 +210,9 @@ public class FileDownloader implements Runnable {
                     String[] messageArray = msg.split(",");
                     if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                         M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
-                    } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube / Instagram video is asked to be downloaded
+                    } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                         M.msgDownloadError(PERMISSION_DENIED);
-                    } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube / Instagram video is unavailable
+                    } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
                         M.msgDownloadError(VIDEO_UNAVAILABLE);
                     } else {
                         M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
@@ -225,7 +225,7 @@ public class FileDownloader implements Runnable {
                 long totalSize = openConnection.getHeaderFieldLong("Content-Length", -1);
                 downloadMetrics.setTotalSize(totalSize);
                 String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                downloadMetrics.setMultithreaded((totalSize > threadMaxDataSize) && (acceptRange != null) && (acceptRange.equalsIgnoreCase("bytes")));
+                downloadMetrics.setMultithreaded((totalSize > threadMaxDataSize) && (acceptRange != null) && ("bytes".equalsIgnoreCase(acceptRange)));
                 if (fileName.isEmpty()) {
                     String[] webPaths = url.getFile().trim().split("/");
                     fileName = webPaths[webPaths.length - 1];

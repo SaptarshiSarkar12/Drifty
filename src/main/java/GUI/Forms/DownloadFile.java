@@ -41,7 +41,7 @@ public class DownloadFile extends Task<Integer> {
     private final String dir;
     private final LinkType type;
     private int exitCode = 1;
-    private boolean done = false;
+    private boolean done;
     private final Job job;
     private final AtomicLong totalTransferred = new AtomicLong();
     private final AtomicLong totalSpeedValue = new AtomicLong();
@@ -49,7 +49,7 @@ public class DownloadFile extends Task<Integer> {
     private static final Pattern PERCENTAGE_PATTERN = Pattern.compile(PERCENTAGE_REGEX);
     private static final String ETA_REGEX = "(\\d+\\.\\d+)([a-zA-Z/]+) ETA ([0-9:]+)";
     private static final Pattern ETA_PATTERN = Pattern.compile(ETA_REGEX);
-    private int updateCount = 0;
+    private int updateCount;
     private double speedSum = 0.0;
     private double lastProgress;
 
@@ -105,9 +105,9 @@ public class DownloadFile extends Task<Integer> {
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                 M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
-            } else if (messageArray.length >= 1 && messageArray[1].toLowerCase().trim().replaceAll(" ", "").equals("permissiondenied")) { // If a private YouTube / Instagram video is asked to be downloaded
+            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                 M.msgDownloadError(PERMISSION_DENIED);
-            } else if (messageArray[0].toLowerCase().trim().replaceAll(" ", "").equals("videounavailable")) { // If YouTube / Instagram video is unavailable
+            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
                 M.msgDownloadError(VIDEO_UNAVAILABLE);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
@@ -204,8 +204,8 @@ public class DownloadFile extends Task<Integer> {
 
             LinkedList<SplitDownloadMetrics> list = new LinkedList<>();
             for (int x = 0; x < numParts; x++) {
-                long startByte = (x == 0) ? 0 : (x * partSize) + 1;
-                long endByte = ((numParts - 1) == x) ? fileSize : ((x * partSize) + partSize);
+                long startByte = x == 0 ? 0 : (x * partSize) + 1;
+                long endByte = (numParts - 1) == x ? fileSize : ((x * partSize) + partSize);
                 SplitDownloadMetrics sdm = new SplitDownloadMetrics(x, startByte, endByte, filename, url);
                 list.addLast(sdm);
                 new Thread(split(sdm)).start();
@@ -305,7 +305,7 @@ public class DownloadFile extends Task<Integer> {
             while ((bytesRead = in.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
                 totalBytesRead += bytesRead;
-                double progressValue = ((double) totalBytesRead / fileLength);
+                double progressValue = (double) totalBytesRead / fileLength;
                 updateProgress(progressValue, 1.0);
                 bytesInTime += bytesRead;
                 end = System.currentTimeMillis();
@@ -424,7 +424,7 @@ public class DownloadFile extends Task<Integer> {
         return exitCode;
     }
 
-    public String getSpotifyDownloadLink(String link){
+    public String getSpotifyDownloadLink(String link) {
         sendInfoMessage("Trying to get download link for \"" + link + "\"");
         // Remove si parameter from the link
         this.link = link.replaceAll("\\?si=.*", "");

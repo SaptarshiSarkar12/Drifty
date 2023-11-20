@@ -7,7 +7,7 @@ import java.io.StringWriter;
 /*
 This class locates the default Download folder, not the download folder that the user provided.
  */
-public class DownloadFolderLocator {
+public final class DownloadFolderLocator {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
     public static String findPath() {
@@ -53,5 +53,8 @@ public class DownloadFolderLocator {
         public String getResult() {
             return sw.toString();
         }
+    }
+
+    private DownloadFolderLocator() {
     }
 }
