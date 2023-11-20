@@ -38,6 +38,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git add .
           if [[ $(git status --porcelain) ]]; then
-            git commit -a -m "Commit message"
+            git commit -m "style: Formatted Java files"
           fi
           git push
