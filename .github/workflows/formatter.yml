@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'oracle'
-          java-version: 20
+          java-version: 20.0.1
       - name: Format Java files
         run: mvn rewrite:run
       - name: Commit and push changes
