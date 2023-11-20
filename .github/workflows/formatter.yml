@@ -26,6 +26,8 @@ jobs:
       - name: Checkout pull request
         if: github.event_name == 'pull_request'
         run: gh pr checkout ${{ github.event.number }}
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Setup JDK 20
         uses: actions/setup-java@v3
         with:
