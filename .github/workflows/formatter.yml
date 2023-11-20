@@ -1,0 +1,24 @@
+name: Format
+
+on:
+  push:
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+      - "*.txt"
+      - "qodana.yaml"
+  pull_request:
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+      - "*.txt"
+      - "qodana.yaml"
+  workflow_dispatch:
+
+jobs:
+  formatting:
+    name: Format Java files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: axel-op/googlejavaformat-action@v3
