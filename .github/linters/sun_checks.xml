@@ -23,7 +23,6 @@
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
         <module name="FinalClass"/>
-        <module name="InnerTypeLast"/>
         <module name="MissingSwitchDefault"/>
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>

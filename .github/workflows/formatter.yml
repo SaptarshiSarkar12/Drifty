@@ -40,4 +40,4 @@ jobs:
           if [[ $(git status --porcelain) ]]; then
             git commit -m "style: Formatted Java files"
           fi
-          git push
+          git push origin ${{ github.event.pull_request.head.ref }}
