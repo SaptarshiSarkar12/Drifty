@@ -24,8 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup JDK 20
         uses: actions/setup-java@v3
         with:
@@ -35,16 +34,12 @@ jobs:
         run: mvn rewrite:run
       - name: Commit changes
         run: |
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add .
           if [[ $(git status --porcelain) ]]; then
              git commit -m "style: Formatted Java files"
           fi
       - name: Push changes
-        run: |
-           if ${{ github.event_name == 'pull_request' }}; then
-              	git push ${{ github.event.pull_request.head.repo.clone_url }} HEAD:${{ github.event.pull_request.head.ref }}
-           else
-           	    git push
-           fi
+        run: git push
