@@ -13,7 +13,7 @@ import static Utils.Utility.randomString;
 public class Job {
     private final String link;
     private final String dir;
-    private final String filename;
+    private String filename;
     private boolean repeatDownload;
 
     public Job(String link, String dir, String filename, boolean repeatDownload) {
