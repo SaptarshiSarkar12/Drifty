@@ -39,7 +39,7 @@ class AskYesNo {
     private Label message;
     private VBox vbox;
     private TextField tfFilename;
-    public static boolean answerYes = false;
+    public static boolean answerYes;
     private final String windowTitle;
     private final String msg;
     private String filename = "";

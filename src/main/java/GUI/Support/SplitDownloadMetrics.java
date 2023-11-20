@@ -12,9 +12,9 @@ public class SplitDownloadMetrics {
     private final String filename;
     private File file;
     private final URL url;
-    private boolean failed = false;
-    private boolean success = false;
-    private boolean stop = false;
+    private boolean failed;
+    private boolean success;
+    private boolean stop;
 
 
     public SplitDownloadMetrics(int id, long start, long end, String filename, URL url) {
