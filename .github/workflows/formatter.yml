@@ -22,7 +22,7 @@ jobs:
     permissions: write-all
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup JDK 20
@@ -36,10 +36,13 @@ jobs:
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add .
           if [[ $(git status --porcelain) ]]; then
              git commit -m "style: Formatted Java files"
           fi
       - name: Push changes
-        run: git push
+        run: |
+          git branch tmp
+          git checkout ${{ github.head_ref }}
+          git merge tmp
+          git push origin ${{ github.head_ref }}
