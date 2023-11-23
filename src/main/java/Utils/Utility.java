@@ -388,8 +388,8 @@ public final class Utility {
 
     public static void updateDrifty(Mode currentAppMode) {
         ArrayList<OS> osNames = new ArrayList<>(Arrays.asList(OS.values()));
-        String[] executableNames = {"Drifty-" + currentAppMode + ".exe", "Drifty-" + currentAppMode + "_macos", "Drifty-" + currentAppMode + "_linux"};
-        Path currentExecPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        String[] executableNames = {"Drifty-" + currentAppMode + ".exe" , "Drifty-" + currentAppMode + "_macos" , "Drifty-" + currentAppMode + "_linux"};
+        Path currentExecPath = Paths.get(String.valueOf(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
         currentExecPath = Paths.get(URLDecoder.decode(currentExecPath.toString(), StandardCharsets.UTF_8)).toAbsolutePath();
         OS currentOS = OS.getOSType();
         int index = osNames.indexOf(currentOS);
