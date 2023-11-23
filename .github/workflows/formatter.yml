@@ -43,6 +43,7 @@ jobs:
       - name: Push changes
         run: |
           git branch tmp
+          git fetch origin ${{ github.head_ref }}
           git checkout ${{ github.head_ref }}
           git merge tmp
           git push origin ${{ github.head_ref }}
