@@ -42,6 +42,8 @@ jobs:
           fi
       - name: Push changes
         run: |
+          echo "List of remotes:"
+          git remote -v
           git branch tmp
           git fetch origin ${{ github.head_ref }}
           git checkout ${{ github.head_ref }}
