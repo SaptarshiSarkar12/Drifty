@@ -106,6 +106,7 @@ For **Users** :
     > [!IMPORTANT]  
     > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
     > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+
 3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
@@ -126,6 +127,7 @@ For **Contributors** :
    > [!IMPORTANT]  
    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
    > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+
 2. Drifty app will appear on the screen, and you can test it 🎉!
 
 ## Safety warning ⚠️ while Downloading ⬇️
