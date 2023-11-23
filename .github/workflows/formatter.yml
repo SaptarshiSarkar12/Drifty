@@ -41,11 +41,5 @@ jobs:
              git commit -m "style: Formatted Java files"
           fi
       - name: Push changes
-        run: |
-          git remote remove origin
-          git remote add origin git@github.com:${{ github.event.pull_request.head.repo.full_name }}.git
-          git branch tmp
-          git fetch origin ${{ github.head_ref }}
-          git checkout ${{ github.head_ref }}
-          git merge tmp
-          git push origin ${{ github.head_ref }}
+        if: github.event_name != 'pull_request'
+        run: git push
