@@ -84,7 +84,7 @@ public final class Environment {
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDLPUpdateTime();
         return timeSinceLastUpdate <= oneDay;
     }
-    
+
     public static boolean isDriftyUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
