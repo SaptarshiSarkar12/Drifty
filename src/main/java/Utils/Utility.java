@@ -49,6 +49,7 @@ public final class Utility {
         String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
+
     public static boolean isSpotify(String url) {
         String pattern = "(https?://(open.spotify\\.com|play\\.spotify\\.com)/(track|album|playlist)/[a-zA-Z0-9]+).*";
         return url.matches(pattern);
@@ -182,7 +183,7 @@ public final class Utility {
                 return null;
             }
             Thread linkThread;
-            if (isSpotify(link)){
+            if (isSpotify(link)) {
                 linkThread = new Thread(spotdlJsonData(Program.getSpotdlDataPath().toFile().getAbsolutePath(), link));
             } else {
                 linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
@@ -316,6 +317,7 @@ public final class Utility {
                     .run();
         };
     }
+
     public static boolean isURL(String text) {
         String regex = "^(http(s)?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern p = Pattern.compile(regex);

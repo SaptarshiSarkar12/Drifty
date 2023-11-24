@@ -74,6 +74,7 @@ public final class Environment {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
         }
     }
+
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDLPUpdateTime();
