@@ -1,10 +1,12 @@
 package Backend;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+
 public class DownloaderThread extends Thread {
     private final URL url;
     private final long start;

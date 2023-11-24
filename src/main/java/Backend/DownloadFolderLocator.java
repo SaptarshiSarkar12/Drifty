@@ -47,7 +47,8 @@ public final class DownloadFolderLocator {
                 while ((c = is.read()) != -1) {
                     sw.write(c);
                 }
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
         }
 
         public String getResult() {

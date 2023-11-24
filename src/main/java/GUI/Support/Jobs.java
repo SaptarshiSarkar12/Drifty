@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class Jobs {
     private ConcurrentLinkedDeque<Job> jobList;
+
     public Jobs() {
         this.jobList = new ConcurrentLinkedDeque<>();
     }

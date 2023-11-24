@@ -21,7 +21,8 @@ public class Set { // This class is used to set the user preferences
     private static final Set INSTANCE = new Set();
     private final Preferences preferences = Labels.PREFERENCES;
 
-    public Set() {}
+    public Set() {
+    }
 
     protected static Set getInstance() {
         return INSTANCE;
