@@ -71,8 +71,8 @@ For **Users** :
 3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
     ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
 4. Go to your Downloads folder and run the file you downloaded.
-   > [!NOTE]   
-   > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
+  > [!NOTE]   
+  > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
 5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
 6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
 7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
@@ -103,10 +103,9 @@ For **Users** :
     ```bash
     docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
     ```
-    > [!IMPORTANT]  
-    > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-    > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
-
+  > [!IMPORTANT]  
+  > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+  > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
@@ -124,10 +123,9 @@ For **Contributors** :
 ### Using Docker 🐋 for Development
 
 1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
-   > [!IMPORTANT]  
-   > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-   > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
-
+  > [!IMPORTANT]  
+  > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+  > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 2. Drifty app will appear on the screen, and you can test it 🎉!
 
 ## Safety warning ⚠️ while Downloading ⬇️
