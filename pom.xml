@@ -105,6 +105,7 @@
                         <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
                         <recipe>org.openrewrite.recommendations.CodeHealth</recipe>
                         <recipe>org.openrewrite.maven.BestPractices</recipe>
+                        <recipe>org.openrewrite.java.format.AutoFormat</recipe>
                     </activeRecipes>
                     <checkstyleConfigFile>.github/linters/sun_checks.xml</checkstyleConfigFile>
                     <exclusions>
