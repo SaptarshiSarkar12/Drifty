@@ -64,26 +64,27 @@ For **Users** :
 
 ### Using Drifty Application executable
 
-1. Open the [`website of Drifty`](https://saptarshisarkar12.github.io/Drifty/) </p>
+1. Visit the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) </p>
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-3. At first, select the **Application Type** from the Dropdown menu (_By default, it is GUI_). For downloading _Drifty CLI_, select **CLI** and for _Drifty GUI_, select **GUI** from the dropdown menu. Click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, a MSI file is available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text and it will download the latest MSI file for you 🎉!.</p>
+3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file. 🎉</p>
     ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
-4. Go to your Downloads folder and run the file you downloaded.
-  > [!NOTE]   
-  > Follow the on-screen instructions (For PKG and MSI files) for setting up Drifty GUI.
-5. See [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) for demonstrations on how to use the application.
-6. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub if you liked the project.
-7. For any issues or feature requests, you may discuss that on our [`Discord Server`](https://discord.gg/DeT4jXPfkG).
+4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen.
+5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application.
+6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub.
+7. For any issues or feature requests, you can join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) and share your feedback.
 
 ### Using Drifty Application via Docker 🐋
 
 > [!IMPORTANT]   
-> - To download files in your local directory, you need to pass that directory as a volume to Drifty.   
-> Suppose, you want to download the file in your `home/username/Downloads` directory, then, the volume flag that you need to pass to docker will be `-v /home/username/Downloads:/root/Downloads`.   
-> - You can pass `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store the Drifty's data in your local directory, making initialization of Drifty much faster 🚀.
-> - For **Linux**, it is advisable to use **Docker Engine** directly instead of running images using **Docker Desktop**. You can do the same by adding **_`sudo`_** before the docker commands.
+> - To download files to a specific local directory, you need to mount that directory as a volume for Drifty.
+> For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
+> - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
+> - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
+> - To run Drifty GUI docker image, you need to do the following 👇
+>     - For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.
+>     - For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md).
 
 1. Pull the Docker image for Drifty using the below command -   
     **For Drifty CLI**,
@@ -103,9 +104,6 @@ For **Users** :
     ```bash
     docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
     ```
-  > [!IMPORTANT]  
-  > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-  > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 3. Drifty will open, and you can now use it 🎉!
 
 For **Contributors** : 
@@ -122,11 +120,12 @@ For **Contributors** :
 
 ### Using Docker 🐋 for Development
 
-1. Run `docker compose run gui` to start **Drifty GUI** and `docker compose run cli` to start **Drifty CLI**. The CLI and GUI will be built using your changed source code.
-  > [!IMPORTANT]  
-  > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
-  > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
-2. Drifty app will appear on the screen, and you can test it 🎉!
+> [!IMPORTANT]  
+> For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+> For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
+
+1. To start **Drifty GUI** and **Drifty CLI** with your modified source code, run `docker compose run gui` and `docker compose run cli` respectively.
+2. The Drifty app will show up on the screen, and you can test it 🎉!
 
 ## Safety warning ⚠️ while Downloading ⬇️
 
@@ -167,12 +166,12 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 ## Contributing to the project
 
-- Please feel free to contribute to this open-source project. 
-- See [**`Contribuing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and [**`Projects`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to contribute. 
-- **Feel free to open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)**. 
-- Please adhere to this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md). 
-- Remember, this project follows [**`Semantic Versioning`**](https://semver.org/) for the releases. 
-- Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to get updates on this project and discuss verbosely on the changes that you want to make.
+- We welcome 🤝 your contributions to this Open-Source project.
+- Please check the [**`Contributing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and the [**`Roadmaps`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to get involved.
+- **You can also open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose)** to report a bug 🐛, request a feature 💡, or suggest an improvement 📈.
+- Please follow this project's [**`Code Of Conduct`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md) to maintain a respectful and inclusive environment.
+- Please note that this project uses [**`Semantic Versioning`**](https://semver.org/) for its releases.
+- Join our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG) to stay updated on this project and chat 💬 with the maintainer and the other contributors.
 
 ## Stats 📊
 
