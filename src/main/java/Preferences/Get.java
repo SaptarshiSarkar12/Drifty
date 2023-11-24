@@ -23,7 +23,8 @@ public final class Get { // This class is used to get the user preferences
     private static final Get INSTANCE = new Get();
     private final Preferences preferences = Labels.PREFERENCES;
 
-    private Get() {}
+    private Get() {
+    }
 
     static Get getInstance() {
         return INSTANCE;

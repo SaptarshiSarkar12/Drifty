@@ -1,4 +1,5 @@
 package Utils;
+
 /**
  * This file contains some String constants which are repeatedly used in the whole project.
  */
@@ -6,7 +7,8 @@ public final class DriftyConstants {
     /**
      * This is a private constructor of this class.
      */
-    private DriftyConstants() {}
+    private DriftyConstants() {
+    }
     public static final String VERSION_NUMBER = "v2.1.0";
     public static final String APPLICATION_NAME = "Drifty";
     public static final String DRIFTY_WEBSITE_URL = "https://saptarshisarkar12.github.io/Drifty/";

@@ -13,11 +13,14 @@ public enum Program {
     public static void setYtDlpExecutableName(String name) {
         Program.ytDLP = name;
     }
+
     public static void setSpotdlExecutableName(String name) {
         Program.spotdl = name;
     }
 
-    public static void setDriftyPath(String path) { Program.driftyPath = path; }
+    public static void setDriftyPath(String path) {
+        Program.driftyPath = path;
+    }
 
     public static String get(Program program) {
         return switch (program) {
