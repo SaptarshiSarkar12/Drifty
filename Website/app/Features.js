@@ -35,11 +35,11 @@ function Features() {
       <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
         Features
       </h1>
-      <div className="column-1 flex flex-wrap justify-center gap-1">
+      <div className="column-1 flex flex-wrap justify-center gap-2">
         {features.map((feature, index) => (
           <div
             key={index}
-            className="m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 font-bold text-black w-60 hover:-translate-y-1 hover:scale-110 duration-300"
+            className="m-2 p-4 rounded-md h-72 items-center flex flex-col justify-center shadow-lg bg-slate-100 font-bold text-black w-60 hover:-translate-y-1 hover:scale-110 duration-300"
           >
             <i
               className={feature.icon + " self-center mb-5 " + feature.color}
