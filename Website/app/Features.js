@@ -30,29 +30,38 @@ function Features() {
       color: "text-gray-700",
     },
   ];
+
   return (
     <div className="py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans select-none">
       <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
         Features
       </h1>
-      <div className="column-1 flex flex-wrap justify-center gap-1">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 font-bold text-black w-60 hover:-translate-y-1 hover:scale-110 duration-300"
-          >
-            <i
-              className={feature.icon + " self-center mb-5 " + feature.color}
-              aria-hidden="true"
-              style={{ fontSize: "3rem" }}
-            ></i>
-            <h3 className="text-lg mb-1">{feature.title}</h3>
-            <p className="font-normal leading-normal">{feature.description}</p>
+      <div className="padding-x padding-y max-width">
+        <section>
+          <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-16 max-w-[1110px] mx-auto;">
+            {features.map((card) => (
+              <div className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;">
+                <div
+                  className="absolute w-full h-[3px] top-0 left-0"
+                  style={{ backgroundColor: `${card.color}` }}
+                ></div>
+                <h2 className="font-semibold text-neutral-800">{card.title}</h2>
+                <p className="mt-1 text-sm leading-[22px]">
+                  {card.description}
+                </p>
+                <div className="relative mt-8 w-14 lg:w-16 h-14 lg:h-16 self-end">
+                  <Image
+                    src={card.icon}
+                    alt="card logo"
+                    fill
+                    priority
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="text-2xl font-bold flex justify-center my-4">
-        ....and many more!
+        </section>
       </div>
     </div>
   );
