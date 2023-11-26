@@ -39,7 +39,7 @@ function Features() {
 
   return (
     <main>
-      <section className="lg:p-6 p-5">
+      <section className="lg:px-[5.5rem] p-5">
         <div className="text-center text-4xl font-semibold">Features</div>
         <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5 max-w-[1110px] mx-auto;">
           {features.map((card) => (
