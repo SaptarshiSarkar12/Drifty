@@ -5,9 +5,10 @@ import Download from "./img/download.svg";
 import YouTube from "./img/youtube.svg";
 import Desktop from "./img/desktop.svg";
 
-function Features() {
+export default function Home() {
   const features = [
     {
+      id: 1,
       title: "It's Free and Open-Source",
       description:
         "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
@@ -15,6 +16,7 @@ function Features() {
       color: "#65a30d",
     },
     {
+      id: 2,
       title: "Faster Downloading of files",
       description:
         "Drifty supports parallel downloading using multiple threads",
@@ -22,6 +24,7 @@ function Features() {
       color: "#38bdf8",
     },
     {
+      id: 3,
       title: "Support for downloading videos from YouTube, Instagram, etc.",
       description:
         "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
@@ -29,6 +32,7 @@ function Features() {
       color: "#dc2626",
     },
     {
+      id: 4,
       title: "Available both in GUI and CLI mode",
       description:
         "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
@@ -39,11 +43,14 @@ function Features() {
 
   return (
     <main>
-      <section className="lg:px-[5.5rem] p-5">
+      <section className="p-5">
         <div className="text-center text-4xl font-semibold">Features</div>
-        <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5 max-w-[1110px] mx-auto;">
+        <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
           {features.map((card) => (
-            <div className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;">
+            <divauto
+              key={card.id}
+              className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;"
+            >
               <div
                 className="absolute w-full h-[3px] top-0 left-0"
                 style={{ backgroundColor: `${card.color}` }}
@@ -52,24 +59,25 @@ function Features() {
                 {card.title}
               </h2>
 
-              <div className="flex mt-2 h-auto">
+              <div className="flex mt-2">
                 <p className="text-sm leading-[24px] text-center">
                   {card.description}
                 </p>
                 <Image
                   src={card.icon}
                   alt="card logo"
-                  priority
                   width={90}
-                  style={{ position: "relative" }}
-                  className="object-contain"
+                  height={90}
+                  style={{
+                    position: "relative",
+                  }}
                 />
               </div>
-            </div>
+            </divauto>
           ))}
         </div>
       </section>
     </main>
   );
 }
-export default Features;
+
