@@ -46,7 +46,7 @@ const Features = () => {
       <div className="text-center text-4xl font-semibold">Features</div>
       <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
         {features.map((card) => (
-          <divauto
+          <div
             key={card.id}
             className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;"
           >
@@ -72,7 +72,7 @@ const Features = () => {
                 }}
               />
             </div>
-          </divauto>
+          </div>
         ))}
       </div>
     </section>
