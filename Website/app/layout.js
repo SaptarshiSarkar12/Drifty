@@ -10,12 +10,13 @@ export const metadata = {
     default: "Drifty",
   },
   description: "An Open-Source Interactive File Downloader System",
-  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "Medium Blue" }],
-  viewport: {
+};
+
+export const viewport = {
     width: "device-width",
     initialScale: 1,
-  },
-};
+    themeColor: [{ media: "(prefers-color-scheme: dark)", color: "Medium Blue" }],
+}
 
 export default function RootLayout({ children }) {
   return (
