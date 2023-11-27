@@ -1,60 +1,82 @@
 import React from "react";
-function Features() {
+import Image from "next/image";
+import Osi from "./img/osi.svg";
+import Download from "./img/download.svg";
+import YouTube from "./img/youtube.svg";
+import Desktop from "./img/desktop.svg";
+
+const Features = () => {
   const features = [
     {
+      id: 1,
       title: "It's Free and Open-Source",
       description:
         "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
-      icon: "fa-brands fa-osi",
-      color: "text-lime-600",
+      icon: Osi,
+      color: "#65a30d",
     },
     {
+      id: 2,
       title: "Faster Downloading of files",
       description:
         "Drifty supports parallel downloading using multiple threads",
-      icon: "fa fa-download",
-      color: "text-sky-400",
+      icon: Download,
+      color: "#38bdf8",
     },
     {
+      id: 3,
       title: "Support for downloading videos from YouTube, Instagram, etc.",
       description:
         "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
-      icon: "fa fa-youtube-play",
-      color: "text-red-600",
+      icon: YouTube,
+      color: "#dc2626",
     },
     {
+      id: 4,
       title: "Available both in GUI and CLI mode",
       description:
         "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
-      icon: "fa fa-desktop",
-      color: "text-gray-700",
+      icon: Desktop,
+      color: "#374151",
     },
   ];
+
   return (
-    <div className="py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans select-none">
-      <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
-        Features
-      </h1>
-      <div className="column-1 flex flex-wrap justify-center gap-1">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 font-bold text-black w-60 hover:-translate-y-1 hover:scale-110 duration-300"
+    <section className="p-5">
+      <div className="text-center text-4xl font-semibold">Features</div>
+      <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
+        {features.map((card) => (
+          <divauto
+            key={card.id}
+            className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;"
           >
-            <i
-              className={feature.icon + " self-center mb-5 " + feature.color}
-              aria-hidden="true"
-              style={{ fontSize: "3rem" }}
-            ></i>
-            <h3 className="text-lg mb-1">{feature.title}</h3>
-            <p className="font-normal leading-normal">{feature.description}</p>
-          </div>
+            <div
+              className="absolute w-full h-[3px] top-0 left-0"
+              style={{ backgroundColor: `${card.color}` }}
+            ></div>
+            <h2 className="text-xl font-semibold text-neutral-800">
+              {card.title}
+            </h2>
+
+            <div className="flex mt-2">
+              <p className="text-sm leading-[24px] text-center">
+                {card.description}
+              </p>
+              <Image
+                src={card.icon}
+                alt="card logo"
+                width={90}
+                height={90}
+                style={{
+                  position: "relative",
+                }}
+              />
+            </div>
+          </divauto>
         ))}
       </div>
-      <div className="text-2xl font-bold flex justify-center my-4">
-        ....and many more!
-      </div>
-    </div>
+    </section>
   );
-}
+};
+
 export default Features;
