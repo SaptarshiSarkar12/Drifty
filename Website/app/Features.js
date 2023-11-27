@@ -1,46 +1,35 @@
 import React from "react";
-import Image from "next/image";
-import Osi from "./img/osi.svg";
-import Download from "./img/download.svg";
-import YouTube from "./img/youtube.svg";
-import Desktop from "./img/desktop.svg";
-
-const Features = () => {
+function Features() {
   const features = [
     {
-      id: 1,
       title: "It's Free and Open-Source",
       description:
-        "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
-      icon: Osi,
-      color: "#65a30d",
+          "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
+      icon: "fa-brands fa-osi",
+      color: "text-lime-600",
     },
     {
-      id: 2,
       title: "Faster Downloading of files",
       description:
-        "Drifty supports parallel downloading using multiple threads",
-      icon: Download,
-      color: "#38bdf8",
+          "Drifty supports parallel downloading using multiple threads",
+      icon: "fa fa-download",
+      color: "text-sky-400",
     },
     {
-      id: 3,
       title: "Support for downloading videos from YouTube, Instagram, etc.",
       description:
-        "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
-      icon: YouTube,
-      color: "#dc2626",
+          "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
+      icon: "fa fa-youtube-play",
+      color: "text-red-600",
     },
     {
-      id: 4,
       title: "Available both in GUI and CLI mode",
       description:
-        "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
-      icon: Desktop,
-      color: "#374151",
+          "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
+      icon: "fa fa-desktop",
+      color: "text-gray-700",
     },
   ];
-
   return (
     <section className="p-5">
       <div className="text-center text-4xl font-semibold">Features</div>
@@ -75,8 +64,6 @@ const Features = () => {
           </div>
         ))}
       </div>
-    </section>
   );
-};
-
+}
 export default Features;
