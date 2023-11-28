@@ -59,26 +59,29 @@ public class Main {
             String location = null;
             if (args.length > 0) {
                 for (int i = 0; i < args.length; i++) {
-                    if (Objects.equals(args[i], HELP_FLAG) || Objects.equals(args[i], HELP_FLAG_SHORT)) {
-                        help();
-                        System.exit(0);
-                    } else if (Objects.equals(args[i], NAME_FLAG) || (Objects.equals(args[i], NAME_FLAG_SHORT))) {
-                        name = args[i + 1];
-                    } else if (Objects.equals(args[i], LOCATION_FLAG) || (Objects.equals(args[i], LOCATION_FLAG_SHORT))) {
-                        location = args[i + 1];
-                    } else if (Objects.equals(args[i], VERSION_FLAG) || (Objects.equals(args[i], VERSION_FLAG_SHORT))) {
-                        printVersion();
-                        System.exit(0);
-                    } else if ((Objects.equals(args[i], BATCH_FLAG)) || (Objects.equals(args[i], BATCH_FLAG_SHORT))) {
-                        batchDownloading = true;
-                        batchDownloadingFile = args[i + 1];
-                        batchDownloader();
-                    } else {
-                        if (isURL(args[i])) {
-                            link = args[i];
-                        } else {
-                            messageBroker.msgInitError("Invalid argument(s) passed!");
-                            System.exit(1);
+                    switch (args[i]) {
+                        case HELP_FLAG, HELP_FLAG_SHORT -> {
+                            help();
+                            System.exit(0);
+                        }
+                        case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
+                        case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
+                        case VERSION_FLAG, VERSION_FLAG_SHORT -> {
+                            printVersion();
+                            System.exit(0);
+                        }
+                        case BATCH_FLAG, BATCH_FLAG_SHORT -> {
+                            batchDownloading = true;
+                            batchDownloadingFile = args[i + 1];
+                            batchDownloader();
+                        }
+                        default -> {
+                            if (isURL(args[i])) {
+                                link = args[i];
+                            } else {
+                                messageBroker.msgInitError("Invalid argument(s) passed!");
+                                System.exit(1);
+                            }
                         }
                     }
                 }
@@ -112,7 +115,7 @@ public class Main {
                             fileName = findFilenameInLink(link);
                             if (!fileName.isEmpty()) {
                                 Job job = new Job(link, downloadsFolder, fileName, false);
-                                checkHistoryAddJobsAndDownload(job, false);
+                                checkHistoryAndDownload(job, false);
                             }
                         }
                     }
@@ -123,13 +126,13 @@ public class Main {
         }
         while (true) {
             while (true) {
-                System.out.println("Select download option :");
-                System.out.println("\t1. Batch Download (Download Multiple files)");
-                System.out.println("\t2. Single File Download (Download One file at a time)");
+                messageBroker.msgInputInfo("Select download option :", true);
+                messageBroker.msgInputInfo("\t1. Batch Download (Download Multiple files)", true);
+                messageBroker.msgInputInfo("\t2. Single File Download (Download One file at a time)", true);
                 int choice = SC.nextInt();
                 if (choice == 1) {
                     batchDownloading = true;
-                    System.out.print("Enter the path to the YAML data file : ");
+                    messageBroker.msgInputInfo("Enter the path to the YAML data file : ", false);
                     batchDownloadingFile = SC.next();
                     SC.nextLine();
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
@@ -142,21 +145,21 @@ public class Main {
                     batchDownloading = false;
                     break;
                 } else {
-                    System.out.println("Invalid Input!");
+                    messageBroker.msgInputError("Invalid Input!", true);
                 }
             }
             if (!batchDownloading) {
-                System.out.print(ENTER_FILE_LINK);
+                messageBroker.msgInputInfo(ENTER_FILE_LINK, false);
                 link = SC.next();
                 SC.nextLine();
-                System.out.println("Validating link...");
+                messageBroker.msgInputInfo("Validating link...", true);
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
                 } else {
                     messageBroker.msgLinkError("Link is invalid!");
                     continue;
                 }
-                System.out.print("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ");
+                messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
                 downloadsFolder = SC.next();
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
@@ -176,11 +179,11 @@ public class Main {
                     fileName = findFilenameInLink(link);
                     if (!fileName.isEmpty()) {
                         Job job = new Job(link, downloadsFolder, fileName, false);
-                        checkHistoryAddJobsAndDownload(job, true);
+                        checkHistoryAndDownload(job, true);
                     }
                 }
             }
-            System.out.println(QUIT_OR_CONTINUE);
+            messageBroker.msgInputInfo(QUIT_OR_CONTINUE, true);
             String choice = SC.next().toLowerCase();
             if ("q".equals(choice)) {
                 LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
@@ -241,7 +244,7 @@ public class Main {
                 }
             }
             Job job = new Job(link, downloadsFolder, fileName, false);
-            checkHistoryAddJobsAndDownload(job, false);
+            checkHistoryAndDownload(job, false);
         }
     }
 
@@ -342,7 +345,7 @@ public class Main {
                     handleSpotifyPlaylist();
                 }
                 Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAddJobsAndDownload(job, false);
+                checkHistoryAndDownload(job, false);
             }
         } catch (FileNotFoundException e) {
             messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
@@ -351,20 +354,20 @@ public class Main {
 
     private static void renameFilenameIfRequired(boolean removeInputBufferFirst) { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
         if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink && !isSpotifyLink)) {
-            System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+            messageBroker.msgInputInfo(ENTER_FILE_NAME_WITH_EXTENSION, false);
             if (removeInputBufferFirst) {
                 SC.nextLine();
             }
             fileName = SC.nextLine();
         } else {
-            System.out.print("Would you like to use this filename? (Enter Y for yes and N for no) : ");
+            messageBroker.msgInputInfo("Would you like to use this filename? (Enter Y for yes and N for no) : ", false);
             if (removeInputBufferFirst) {
                 SC.nextLine(); // To remove 'whitespace' from input buffer. The whitespace will not be present in the input buffer if the user is using batch downloading because only yml file is parsed but no user input is taken.
             }
             String choiceString = SC.nextLine().toLowerCase();
             boolean choice = utility.yesNoValidation(choiceString, "Would you like to use this filename? (Enter Y for yes and N for no) : ");
             if (!choice) {
-                System.out.print(ENTER_FILE_NAME_WITH_EXTENSION);
+                messageBroker.msgInputInfo(ENTER_FILE_NAME_WITH_EXTENSION, false);
                 fileName = SC.nextLine();
             }
         }
@@ -427,14 +430,14 @@ public class Main {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
-    private static void checkHistoryAddJobsAndDownload(Job job, boolean removeInputBufferFirst) {
+    private static void checkHistoryAndDownload(Job job, boolean removeInputBufferFirst) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
         boolean fileExistsHasHistory = doesFileExist && hasHistory;
         boolean fileExistsNoHistory = doesFileExist && !hasHistory;
         if (fileExistsNoHistory) {
             fileName = Utility.renameFile(fileName, downloadsFolder);
-            System.out.printf(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName);
+            messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName), true);
             renameFilenameIfRequired(true);
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
@@ -446,7 +449,7 @@ public class Main {
                 downloader.run();
             }
         } else if (fileExistsHasHistory) {
-            System.out.printf(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir());
+            messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()), false);
             if (removeInputBufferFirst) {
                 SC.nextLine();
             }
@@ -454,7 +457,7 @@ public class Main {
             boolean choice = utility.yesNoValidation(choiceString, String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()));
             if (choice) {
                 fileName = Utility.renameFile(fileName, downloadsFolder);
-                System.out.println("New file name : " + fileName);
+                messageBroker.msgFilenameInfo("New file name : " + fileName);
                 renameFilenameIfRequired(false);
                 if (isSpotifyLink) {
                     link = Utility.getSpotifyDownloadLink(link);
