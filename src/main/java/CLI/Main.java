@@ -59,29 +59,26 @@ public class Main {
             String location = null;
             if (args.length > 0) {
                 for (int i = 0; i < args.length; i++) {
-                    switch (args[i]) {
-                        case HELP_FLAG, HELP_FLAG_SHORT -> {
-                            help();
-                            System.exit(0);
-                        }
-                        case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
-                        case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
-                        case VERSION_FLAG, VERSION_FLAG_SHORT -> {
-                            printVersion();
-                            System.exit(0);
-                        }
-                        case BATCH_FLAG, BATCH_FLAG_SHORT -> {
-                            batchDownloading = true;
-                            batchDownloadingFile = args[i + 1];
-                            batchDownloader();
-                        }
-                        default -> {
-                            if (isURL(args[i])) {
-                                link = args[i];
-                            } else {
-                                messageBroker.msgInitError("Invalid argument(s) passed!");
-                                System.exit(1);
-                            }
+                    if (args[i].equals(HELP_FLAG) || args[i].equals(HELP_FLAG_SHORT)) {
+                        help();
+                        System.exit(0);
+                    } else if (args[i].equals(NAME_FLAG) || args[i].equals(NAME_FLAG_SHORT)) {
+                        name = args[i + 1];
+                    } else if (args[i].equals(LOCATION_FLAG) || args[i].equals(LOCATION_FLAG_SHORT)) {
+                        location = args[i + 1];
+                    } else if (args[i].equals(VERSION_FLAG) || args[i].equals(VERSION_FLAG_SHORT)) {
+                        printVersion();
+                        System.exit(0);
+                    } else if (args[i].equals(BATCH_FLAG) || args[i].equals(BATCH_FLAG_SHORT)) {
+                        batchDownloading = true;
+                        batchDownloadingFile = args[i + 1];
+                        batchDownloader();
+                    } else {
+                        if (isURL(args[i])) {
+                            link = args[i];
+                        } else {
+                            messageBroker.msgInitError("Invalid argument(s) passed!");
+                            System.exit(1);
                         }
                     }
                 }
