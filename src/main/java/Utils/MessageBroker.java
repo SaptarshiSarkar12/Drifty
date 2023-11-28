@@ -14,6 +14,7 @@ import static Enums.Colors.*;
 public class MessageBroker {
     private final Logger logger;
     private PrintStream output = new PrintStream(System.out);
+    private boolean endWithNewLine = true;
 
     public MessageBroker(PrintStream consoleOutput) {
         output = consoleOutput;
@@ -88,18 +89,37 @@ public class MessageBroker {
         sendMessage(message, MessageType.INFO, MessageCategory.STYLE);
     }
 
+    public void msgInputError(String message, boolean endWithNewLine) {
+        this.endWithNewLine = endWithNewLine;
+        sendMessage(message, MessageType.ERROR, MessageCategory.INPUT);
+    }
+
+    public void msgInputInfo(String message, boolean endWithNewLine) {
+        this.endWithNewLine = endWithNewLine;
+        sendMessage(message, MessageType.INFO, MessageCategory.INPUT);
+    }
+
+    public void msgHistoryWarning(String message, boolean endWithNewLine) {
+        this.endWithNewLine = endWithNewLine;
+        sendMessage(message, MessageType.WARN, MessageCategory.HISTORY);
+    }
+
     private void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         if (Mode.isCLI()) {
+            logger.log(messageType, message);
             message = switch (messageType) {
-                case INFO -> "\033[92m" + message + "\033[0m";
+                case INFO -> messageCategory == MessageCategory.INPUT ? "\033[94m" + message + "\033[0m" : "\033[92m" + message + "\033[0m";
                 case WARN -> "\033[93m" + message + "\033[0m";
                 case ERROR -> "\033[91m" + message + "\033[0m";
-                default -> message;
             };
             if (!messageCategory.equals(LOG)) {
-                output.println(message);
+                if (endWithNewLine) {
+                    output.println(message);
+                } else {
+                    output.print(message);
+                    this.endWithNewLine = true; // Reset to default
+                }
             }
-            logger.log(messageType, message);
         } else if (Mode.isGUI()) {
             FormsController ui;
             if (!messageCategory.equals(LOG)) {
