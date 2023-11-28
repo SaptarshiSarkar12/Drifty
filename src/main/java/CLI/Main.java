@@ -75,7 +75,7 @@ public class Main {
                             batchDownloadingFile = args[i + 1];
                             batchDownloader();
                         }
-                        case null, default -> {
+                        default -> {
                             if (isURL(args[i])) {
                                 link = args[i];
                             } else {
