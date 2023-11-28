@@ -1,60 +1,70 @@
 import React from "react";
-function Features() {
+
+const Features = () => {
   const features = [
     {
       title: "It's Free and Open-Source",
       description:
-          "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
-      icon: "fa-brands fa-osi",
+        "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
+      icon: "fa-brands fa-osi fa-xl",
       color: "text-lime-600",
+      colorHex: "#65a30d",
     },
     {
       title: "Faster Downloading of files",
       description:
-          "Drifty supports parallel downloading using multiple threads",
-      icon: "fa fa-download",
+        "Drifty supports parallel downloading using multiple threads",
+      icon: "fa-solid fa-download fa-xl",
       color: "text-sky-400",
+      colorHex: "#38bdf8",
     },
     {
       title: "Support for downloading videos from YouTube, Instagram, etc.",
       description:
-          "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
-      icon: "fa fa-youtube-play",
-      color: "text-red-600",
+        "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
+      icon: "fa-brands fa-youtube fa-xl",
+      colorHex: "#dc2626",
     },
     {
       title: "Available both in GUI and CLI mode",
       description:
-          "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
-      icon: "fa fa-desktop",
-      color: "text-gray-700",
+        "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
+      icon: "fa-regular fa-display fa-xl",
+      colorHex: "#374151",
     },
   ];
+
   return (
-      <div className="py-6 px-12 background bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-sans select-none">
-        <h1 className="text-center mb-6 font-extrabold text-4xl pt-6">
-          Features
-        </h1>
-        <div className="column-1 flex flex-wrap justify-center gap-1">
-          {features.map((feature, index) => (
-              <div
-                  key={index}
-                  className="m-2 p-4 rounded-md h-max flex flex-col justify-center shadow-lg bg-slate-100 font-bold text-black w-60 hover:-translate-y-1 hover:scale-110 duration-300"
-              >
+    <section className="p-5 xl:p-8 2xl:p-10 ">
+      <div className="text-center text-4xl font-semibold">Features</div>
+      <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
+        {features.map((feature, index) => (
+          <div
+            key={index}
+            className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;"
+          >
+            <div
+              className="absolute w-full h-[3px] top-0 left-0"
+              style={{ backgroundColor: `${feature.colorHex}` }}
+            ></div>
+            <h2 className="text-xl font-semibold text-neutral-800">
+              {feature.title}
+            </h2>
+
+            <div className="flex mt-2">
+              <p className="text-sm text-center">{feature.description}</p>
+              <div className={"text-6xl"}>
                 <i
-                    className={feature.icon + " self-center mb-5 " + feature.color}
-                    aria-hidden="true"
-                    style={{ fontSize: "3rem" }}
+                  className={feature.icon}
+                  style={{ color: `${feature.colorHex}` }}
                 ></i>
-                <h3 className="text-lg mb-1">{feature.title}</h3>
-                <p className="font-normal leading-normal">{feature.description}</p>
               </div>
-          ))}
-        </div>
-        <div className="text-2xl font-bold flex justify-center my-4">
-          ....and many more!
-        </div>
+            </div>
+          </div>
+        ))}
       </div>
+    </section>
   );
-}
+};
+
 export default Features;
