@@ -5,7 +5,7 @@ const Features = () => {
     {
       title: "It's Free and Open-Source",
       description:
-        "Drifty is both free and open-source, so, you can bring new features that you wish to have 🎉",
+        "Drifty — a free and Open-Source tool, is open for suggestions. Share the features you want to have and help us improve",
       icon: "fa-brands fa-osi fa-xl",
       color: "text-lime-600",
       colorHex: "#65a30d",
@@ -13,7 +13,7 @@ const Features = () => {
     {
       title: "Faster Downloading of files",
       description:
-        "Drifty supports parallel downloading using multiple threads",
+        "Drifty is designed to leverage concurrent threads for efficient parallel downloading with accelerated speeds",
       icon: "fa-solid fa-download fa-xl",
       color: "text-sky-400",
       colorHex: "#38bdf8",
@@ -21,27 +21,27 @@ const Features = () => {
     {
       title: "Support for downloading videos from YouTube, Instagram, etc.",
       description:
-        "Drifty allows downloading videos from popular platforms like YouTube and Instagram with ease.",
+        "Drifty provides an efficient solution to effortlessly download videos from leading platforms, such as YouTube and Instagram",
       icon: "fa-brands fa-youtube fa-xl",
       colorHex: "#dc2626",
     },
     {
       title: "Available both in GUI and CLI mode",
       description:
-        "Drifty has both CLI and GUI mode. So, it can be used anywhere as CLI or as GUI according to the requirements of the user.",
-      icon: "fa-regular fa-display fa-xl",
+        "Drifty's CLI and GUI modes provide adaptable, streamlined user experiences across diverse scenarios",
+      icon: "fa-solid fa-display fa-xl",
       colorHex: "#374151",
     },
   ];
 
   return (
-    <section className="p-5 xl:p-8 2xl:p-10 ">
+    <section className="p-5 xl:p-8 2xl:p-10">
       <div className="text-center text-4xl font-semibold">Features</div>
       <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
         {features.map((feature, index) => (
           <div
-            key={index}
-            className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-xl shadow-slate-300 rounded-md overflow-hidden;"
+            key={feature.title}
+            className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-2xl shadow-slate-400 rounded-lg overflow-hidden"
           >
             <div
               className="absolute w-full h-[3px] top-0 left-0"
@@ -52,8 +52,8 @@ const Features = () => {
             </h2>
 
             <div className="flex mt-2">
-              <p className="text-sm text-center">{feature.description}</p>
-              <div className={"text-6xl"}>
+              <p className="text-sm text-center text-gray-600">{feature.description}</p>
+              <div className={"text-6xl p-2"}>
                 <i
                   className={feature.icon}
                   style={{ color: `${feature.colorHex}` }}
