@@ -1,26 +1,32 @@
 "Website 🌐":
-- Website/**
+- changed-files:
+  - any-glob-to-any-file: ['Website/**']
 
 "App 💻":
-- src/**
+- changed-files:
+  - any-glob-to-any-file: ['src/**']
 
-Workflows:
-- .github/workflows/**
+"Workflows":
+- changed-files:
+  - any-glob-to-any-file: ['.github/workflows/**']
 
 "dependencies 📦️":
-- Website/package.json
-- Website/package-lock.json
-- pom.xml
+- changed-files:
+  - any-glob-to-any-file: ['Website/package.json', 'Website/package-lock.json', 'pom.xml', '.github/workflows/**']
+- head-branch: ['^dependabot']
 
 "documentation 📝":
-- '**/*.md'
+- changed-files:
+  - any-glob-to-any-file: ['**/*.md']
 
 "maven 📦️":
-- pom.xml
+- changed-files:
+  - any-glob-to-any-file: ['pom.xml']
 
 "npm 📦️":
-- Website/package.json
-- Website/package-lock.json
+- changed-files:
+  - any-glob-to-any-file: ['Website/package.json', 'Website/package-lock.json']
 
 "docker 🐋":
-- Docker/**
+- changed-files:
+  - any-glob-to-any-file: ['Docker/**']
