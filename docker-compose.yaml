@@ -24,6 +24,7 @@ services:
     volumes:
       - ${DOWNLOAD_FOLDER:-.}:/root/Downloads
       - ./.drifty:/root/.drifty
+
   gui:
     depends_on: 
       - base
