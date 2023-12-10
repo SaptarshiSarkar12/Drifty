@@ -51,7 +51,7 @@ function Features() {
           </div>
         ))}
       </div>
-      <div className="text-2xl font-bold flex justify-center my-4">
+      <div className="text-xl font-bold flex justify-end">
         ....and many more!
       </div>
     </div>

@@ -23,10 +23,12 @@
         }
       }
       .img-layer {
-        width: 500px;
+        width: 50%;
+        margin: 0 auto;
         pointer-events: none;
         display: inherit;
         align-items: center;
+        justify-content: center;
         transform: rotateX(0deg) rotateY(335deg);
         transform-style: preserve-3d;
       }

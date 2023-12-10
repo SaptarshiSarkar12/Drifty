@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function MainSection() {
   return (
-    <div className="flex flex-col bg-top space-y-6 lg:flex-row lg:space-y-0 lg:space-evenly py-[2rem] lg:justify-start xs:justify-start select-none">
+    <div className="flex flex-col bg-top space-y-6 lg:flex-row lg:space-y-0 lg:space-evenly py-[2rem] lg:justify-start xs:justify-start select-none h-screen">
       <div className="lg:w-1/2">
         <div className="lg:flex lg:flex-col text-white px-4 py-4 sm:pl-[5rem] md:text">
           <div className="flex lg:ml-4 lg:items-center border-b-4 pb-3 gap-2 ">
