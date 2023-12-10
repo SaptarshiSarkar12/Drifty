@@ -132,7 +132,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5.0.0
+        uses: docker/metadata-action@v5.3.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
@@ -158,18 +158,3 @@ jobs:
           cache-to: type=gha,mode=max
           file: Docker/prod/${{ matrix.filename }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-
-      # Sign the resulting Docker image digest except on PRs.
-      # This will only write to the public Rekor transparency log when the Docker
-      # repository is public to avoid leaking data.  If you would like to publish
-      # transparency data even for private images, pass --force to cosign below.
-      # https://github.com/sigstore/cosign
-      - name: Sign the published Docker image
-        if: github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty'
-        env:
-          # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-          TAGS: ${{ steps.meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        # This step uses the identity token to provision an ephemeral certificate
-        # against the sigstore community Fulcio instance.
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
