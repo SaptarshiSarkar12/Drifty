@@ -66,7 +66,6 @@ const Features = () => {
       <div className="text-xl font-bold flex justify-end">
         ....and many more!
       </div>
-    </div>
     </section>
   );
 };
