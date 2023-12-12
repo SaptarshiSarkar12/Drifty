@@ -5,6 +5,7 @@ Dirfty is an open source Interactive file downloader software built using Java a
 With the help of Dirfty, you can download files and videos from various sources such as YouTube, Instagram etc.. You can also download files by providing the link address if it's downloading way too slowly inside your browser.
 
 ## Main Features of Drifty
+
 - Free and Open Source forever
 - Faster downloading of files, just like IDM 
 - Youtube, Instagram, Twitter/X etc.. Platforms supported
