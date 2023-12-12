@@ -37,11 +37,11 @@ const Features = () => {
   return (
     <section className="p-5 xl:p-8 2xl:p-10">
       <div className="text-center text-4xl font-semibold">Features</div>
-      <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-4 sm:grid-rows-2 mt-5  mx-auto;">
+      <div className="grid grid-flow-row lg:grid-flow-col lg:[&>*:nth-of-type(1)]:row-span-2 lg:[&>*:nth-of-type(4)]:row-span-2 lg:items-center gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:grid-rows-2 mt-5  mx-auto;">
         {features.map((feature, index) => (
           <div
             key={feature.title}
-            className="relative flex flex-col p-6 justify-center items-start text-neutral-400 bg-white shadow-2xl shadow-slate-400 rounded-lg overflow-hidden"
+            className="relative flex flex-col p-6 xs:h-fit justify-center items-start text-neutral-400 bg-white shadow-2xl shadow-slate-400 rounded-lg"
           >
             <div
               className="absolute w-full h-[3px] top-0 left-0"
@@ -62,6 +62,9 @@ const Features = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="text-xl text-slate-600 font-bold flex justify-end">
+        ....and many more!
       </div>
     </section>
   );
