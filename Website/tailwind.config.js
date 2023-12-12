@@ -17,7 +17,7 @@ module.exports = {
         'linkedin-color': '#0A66C2'
       },
       screens:{
-        'xs':'350px'
+        'xs':'280px'
       }
     },
   },
