@@ -103,12 +103,6 @@ jobs:
           mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty_GUI"
           mv "target/gluonfx/x86_64-linux/Drifty_GUI" -t GUI
 
-      # Install the cosign tool except on PR
-      # https://github.com/sigstore/cosign-installer
-      - name: Install cosign
-        if: github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty'
-        uses: sigstore/cosign-installer@v3.2.0
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
