@@ -29,7 +29,6 @@ public class Main extends Application {
     private static MessageBroker msgBroker;
     private Stage primaryStage;
     private Scene scene;
-    private boolean firstRun = true;
 
     public static void main(String[] args) {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
@@ -56,11 +55,13 @@ public class Main extends Application {
         ap.getChildren().add(menu);
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
+        scene = Constants.getScene(ap);
+        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        menu.setUseSystemMenuBar(true);
+        FormsController.initLogic(gridPane);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (firstRun) {
-                firstRun = false;
-                return;
-            }
             if (FormsController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
@@ -71,12 +72,6 @@ public class Main extends Application {
                 }
             }
         }));
-        scene = Constants.getScene(ap);
-        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        menu.setUseSystemMenuBar(true);
-        FormsController.initLogic(gridPane);
     }
 
     private void placeControl(Node node, double left, double right, double top, double bottom) {
