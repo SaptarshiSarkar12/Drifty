@@ -63,7 +63,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Update system packages
+        if: matrix.filename == 'GUI/Dockerfile'
+        run: sudo apt-get update
       - name: Install build dependencies
+        if: matrix.filename == 'GUI/Dockerfile'
         run: |
           sudo apt-get install libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libfreetype6-dev
           sudo apt-get install libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev
