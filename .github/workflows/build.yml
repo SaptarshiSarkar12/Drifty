@@ -39,6 +39,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha }}
+    - name: Update system packages
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.mode == 'GUI' }}
+      run: sudo apt-get update
     - name: Install required build dependencies for Linux
       if: ${{ matrix.os == 'ubuntu-latest' && matrix.mode == 'GUI' }}
       run: |
