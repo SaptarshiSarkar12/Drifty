@@ -1,7 +1,0 @@
-.text-field {
-    -fx-background-color: transparent;
-    -fx-text-fill: black;
-    -fx-background-image: url('TextFieldBorder.png');
-    -fx-background-repeat: stretch;
-    -fx-background-size: 100% 100%;
-}

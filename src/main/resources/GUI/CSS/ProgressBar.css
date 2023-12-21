@@ -1,8 +1,0 @@
-.progress-bar .track {
-    -fx-background-color: transparent;
-}
-.progress-bar .bar {
-    -fx-background-color: #0046e5;
-    -fx-border-color: black;
-    -fx-border-width: 1.5px;
-}
