@@ -62,7 +62,6 @@
         <module name="ParameterName"/>
         <module name="PatternVariableName"/>
         <module name="StaticVariableName"/>
-        <module name="TypeName"/>
         <module name="EmptyForInitializerPad"/>
         <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad"/>
