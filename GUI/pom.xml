@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.SaptarshiSarkar12</groupId>
+        <artifactId>Drifty</artifactId>
+        <version>2.1.0</version>
+    </parent>
+    <artifactId>GUI</artifactId>
+    <name>GUI</name>
+    <description>GUI module of Drifty</description>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gui.main-class>main.Drifty_GUI</gui.main-class>
+        <system-linker-arg/>
+        <resource-config-file/>
+        <system-native-image-arg/>
+        <compatibility-arg/>
+        <package.type/>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.SaptarshiSarkar12</groupId>
+            <artifactId>Core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>${gui.main-class}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>gluonfx-maven-plugin</artifactId>
+                <version>1.0.22</version>
+                <configuration>
+                    <enableSWRendering>true</enableSWRendering>
+                    <mainClass>${gui.main-class}</mainClass>
+                    <linkerArgs>
+                        <arg>${system-linker-arg}</arg>
+                    </linkerArgs>
+                    <nativeImageArgs>
+                        <arg>--enable-url-protocols=https</arg>
+                        <arg>--enable-url-protocols=http</arg>
+                        <arg>--no-fallback</arg>
+                        <arg>--verbose</arg>
+                        <arg>-H:ResourceConfigurationFiles=${pom.parent.basedir}/config/${resource-config-file}</arg>
+                        <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+                        <arg>${system-native-image-arg}</arg>
+                        <arg>${compatibility-arg}</arg>
+                    </nativeImageArgs>
+                    <appIdentifier>${gui.main-class}</appIdentifier>
+                    <releaseConfiguration>
+                        <vendor>Drifty</vendor>
+                        <description>Drifty is an open-source interactive file downloader system</description>
+                        <packageType>${package.type}</packageType>
+                        <bundleShortVersion>${project.version}</bundleShortVersion>
+                        <bundleVersion>${project.version}</bundleVersion>
+                        <!-- for macOS/iOS -->
+                        <skipSigning>true</skipSigning>
+                    </releaseConfiguration>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- [macOS] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-macos-latest</id>
+            <properties>
+                <package.type>pkg</package.type>
+                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
+                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
+                <mac.app.store>true</mac.app.store>
+            </properties>
+        </profile>
+        <!-- [Linux] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-ubuntu-latest</id>
+            <properties>
+                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
+                <compatibility-arg>-march=compatibility</compatibility-arg>
+            </properties>
+        </profile>
+        <!-- [Windows] GUI native image builder profile -->
+        <profile>
+            <id>build-drifty-gui-for-windows-latest</id>
+            <properties>
+                <package.type>msi</package.type>
+                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
+            </properties>
+        </profile>
+    </profiles>
+</project>

@@ -4,7 +4,7 @@
 
 "App 💻":
 - changed-files:
-  - any-glob-to-any-file: ['src/**']
+  - any-glob-to-any-file: ['CLI/src/**', 'GUI/src/**', 'Core/src/*']
 
 "Workflows":
 - changed-files:
@@ -12,7 +12,7 @@
 
 "dependencies 📦️":
 - changed-files:
-  - any-glob-to-any-file: ['Website/package.json', 'Website/package-lock.json', 'pom.xml', '.github/workflows/**']
+  - any-glob-to-any-file: ['Website/package.json', 'Website/package-lock.json', 'pom.xml', '.github/workflows/**', 'CLI/pom.xml', 'GUI/pom.xml', 'Core/pom.xml']
 - head-branch: ['^dependabot']
 
 "documentation 📝":
@@ -21,7 +21,7 @@
 
 "maven 📦️":
 - changed-files:
-  - any-glob-to-any-file: ['pom.xml']
+  - any-glob-to-any-file: ['pom.xml', 'CLI/pom.xml', 'GUI/pom.xml', 'Core/pom.xml']
 
 "npm 📦️":
 - changed-files:
