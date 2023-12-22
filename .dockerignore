@@ -3,7 +3,7 @@
 .idea/
 .mvn/
 Website/
-target/
+**/target/
 .gitignore
 LICENSE
 version.json
