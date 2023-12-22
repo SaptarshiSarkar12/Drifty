@@ -10,7 +10,7 @@ You will need these programs to follow these instructions:
 - **Socat** (will be installed later in the instructions)
 - **XQuartz** (will be installed later in the instructions)
 
-## Installing necessary programs and building/pulling the Docker image
+## Installing the necessary programs and building/pulling the Docker image
 
 Once you have Docker installed **(and running)**, open the terminal and follow these steps:
 
@@ -72,9 +72,9 @@ If you are not running at **_least macOS version 13 (Ventura)_**, then refer to 
 - Go to `System Settings` by clicking on the Apple logo in the top left corner of your screen.
 - Click on `Network` then click on your network adapter.
   ![Network Settings' screenshot](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f0a5f45e-4467-4b49-b35f-fb068bb928b2)
-- Click on `Details`
+- Click on `Details`   
   ![Details of Network Adapter](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/21fd8165-82b7-4ef0-9ff3-996589cb1814)
-- Now you need to change `Configure IPv4` to `Manually` and then type your **static IP address**, **subnet mask** and **gateway**. The subnet mask will look exactly like I have it here, regardless of your ip address and your router will always be `.1` (in most cases) as shown here.
+- Now you need to change `Configure IPv4` to `Manually` and then type your **static IP address**, **subnet mask** and **gateway**. The subnet mask will look exactly like I have it here, regardless of your ip address and your router will always be `.1` (in most cases) as shown here.   
   ![Configuring IPv4 manually](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/23cbe0aa-d744-4bee-b980-3dcc0ff38f66)
 - Click `OK` and then go back to your Terminal.
 

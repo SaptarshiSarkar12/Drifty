@@ -2,19 +2,15 @@ name: Build and Package Drifty
 
 on:
   push:
-    branches: [ "master" ]
     paths-ignore:
       - "Website/**"
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   pull_request:
-    branches: [ "master" ]
     paths-ignore:
       - "Website/**"      
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   workflow_dispatch:
      inputs:
         create_release:
@@ -47,18 +43,17 @@ jobs:
       run: |
         sudo apt-get install libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libfreetype6-dev
         sudo apt-get install libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev
-    - name: Set up GraalVM JDK 20.0.1
+    - name: Set up GraalVM JDK 21
       uses: graalvm/setup-graalvm@v1
       with:
-        java-version: '20.0.1'
+        java-version: '21'
         distribution: 'graalvm-community'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
         cache: 'maven'
-        components: 'native-image'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
-      run: mvn -Pbuild-drifty-cli-for-${{ matrix.os }} package
+      run: mvn -P build-drifty-cli-for-${{ matrix.os }} package
     - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
       if: ${{ matrix.mode == 'GUI' }}
       uses: stCarolas/setup-maven@v4.5
@@ -67,50 +62,54 @@ jobs:
     - name: Build platform-specific C object for missing jdk libraries
       if: ${{ matrix.mode == 'GUI' }}
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
+    - name: Install dependency modules for GUI
+      if: ${{ matrix.mode == 'GUI' }}
+      run: mvn -U clean install
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       if: ${{ matrix.mode == 'GUI' }}
-      run: mvn -Pbuild-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package
+      run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI
     - name: Create Application Type specific folders
       run: |
-        mkdir ${{ matrix.mode }}
+        mkdir build
+        mkdir build/${{ matrix.mode }}
     - name: Categorise build artifacts for linux
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
-            mv "target/CLI/linux/Drifty CLI" "target/CLI/linux/Drifty-CLI_linux"
-            mv "target/CLI/linux/Drifty-CLI_linux" -t CLI
+            mv "CLI/target/CLI/linux/Drifty CLI" "CLI/target/CLI/linux/Drifty-CLI_linux"
+            mv "CLI/target/CLI/linux/Drifty-CLI_linux" -t build/CLI
         else
-            mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty-GUI_linux"
-            mv "target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t GUI
+            mv GUI/target/gluonfx/x86_64-linux/GUI "GUI/target/gluonfx/x86_64-linux/Drifty-GUI_linux"
+            mv "GUI/target/gluonfx/x86_64-linux/Drifty-GUI_linux" -t build/GUI
         fi
     - name: Categorise build artifacts for windows
       if: ${{ matrix.os == 'windows-latest' }}
       shell: bash
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
-            mv "target/CLI/windows/Drifty CLI.exe" "target/CLI/windows/Drifty-CLI.exe"
-            mv "target/CLI/windows/Drifty-CLI.exe" CLI
+            mv "CLI/target/CLI/windows/Drifty CLI.exe" "CLI/target/CLI/windows/Drifty-CLI.exe"
+            mv "CLI/target/CLI/windows/Drifty-CLI.exe" build/CLI
         else
-            mv target/gluonfx/x86_64-windows/Drifty-1.0.msi "target/gluonfx/x86_64-windows/Drifty-GUI.msi"
-            mv target/gluonfx/x86_64-windows/Drifty.exe "target/gluonfx/x86_64-windows/Drifty-GUI.exe"
-            mv "target/gluonfx/x86_64-windows/Drifty-GUI.msi" GUI
-            mv "target/gluonfx/x86_64-windows/Drifty-GUI.exe" GUI
+            mv GUI/target/gluonfx/x86_64-windows/GUI-1.0.msi "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
+            mv GUI/target/gluonfx/x86_64-windows/GUI.exe "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe"
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi" build/GUI
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
         fi
     - name: Categorise build artifacts for macOS
       if: ${{ matrix.os == 'macos-latest' }}
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
-            mv "target/CLI/macos/Drifty CLI" "target/CLI/macos/Drifty-CLI_macos"
-            mv "target/CLI/macos/Drifty-CLI_macos" CLI
+            mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos"
+            mv "CLI/target/CLI/macos/Drifty-CLI_macos" build/CLI
         else
-            mv target/gluonfx/x86_64-darwin/Drifty-1.0.0.pkg "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
-            mv target/gluonfx/x86_64-darwin/Drifty.app "target/gluonfx/x86_64-darwin/Drifty-GUI.app"
-            mv "target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" GUI
-            mv "target/gluonfx/x86_64-darwin/Drifty-GUI.app" GUI
+            mv GUI/target/gluonfx/x86_64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
+            mv GUI/target/gluonfx/x86_64-darwin/GUI.app "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app"
+            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" build/GUI
+            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app" build/GUI
         fi
     - name: Tar build files # To prevent file permission loss
       run: |
-        tar -cvf ${{ matrix.os }}-${{ matrix.mode }}.tar ${{ matrix.mode }}
+        tar -cvf ${{ matrix.os }}-${{ matrix.mode }}.tar build/${{ matrix.mode }}
     - name: Push generated artifacts for ${{ matrix.os }} for ${{ matrix.mode }}
       uses: actions/upload-artifact@v4
       with:
@@ -144,14 +143,14 @@ jobs:
         tar -xvf windows-latest-GUI-Build-Files/windows-latest-GUI.tar -C windows
     - name: Get Size of Build Artifacts
       run: |
-        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/CLI/Drifty-CLI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/GUI/Drifty-GUI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/CLI/Drifty-CLI_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/build/CLI/Drifty-CLI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/build/GUI/Drifty-GUI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/build/CLI/Drifty-CLI_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/build/GUI/Drifty-GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/build/GUI/Drifty-GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/build/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
         echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
@@ -185,7 +184,7 @@ jobs:
       if: ${{ inputs.create_release }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
