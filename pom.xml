@@ -43,7 +43,6 @@
                 <version>5.17.1</version>
                 <configuration>
                     <activeRecipes>
-                        <recipe>org.openrewrite.staticanalysis.CodeCleanup</recipe>
                         <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
                         <recipe>org.openrewrite.recommendations.CodeHealth</recipe>
                         <recipe>org.openrewrite.maven.BestPractices</recipe>
