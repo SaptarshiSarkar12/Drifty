@@ -143,14 +143,14 @@ jobs:
         tar -xvf windows-latest-GUI-Build-Files/windows-latest-GUI.tar -C windows
     - name: Get Size of Build Artifacts
       run: |
-        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/CLI/Drifty-CLI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/GUI/Drifty-GUI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/CLI/Drifty-CLI_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/GUI/Drifty-GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
-        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_LINUX_SIZE=$(echo `du -h 'linux/build/CLI/Drifty-CLI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_LINUX_SIZE=$(echo `du -h 'linux/build/GUI/Drifty-GUI_linux'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_MACOS_SIZE=$(echo `du -h 'macos/build/CLI/Drifty-CLI_macos'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_PKG_SIZE=$(echo `du -h 'macos/build/GUI/Drifty-GUI.pkg'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_MACOS_APP_SIZE=$(echo `du -h 'macos/build/GUI/Drifty-GUI.app'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "CLI_WINDOWS_SIZE=$(echo `du -h 'windows/build/CLI/Drifty-CLI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_MSI_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.msi'` | sed 's/ .*//')" >> "$GITHUB_ENV"
+        echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
         echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
@@ -184,7 +184,7 @@ jobs:
       if: ${{ inputs.create_release }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
