@@ -6,13 +6,11 @@ on:
       - "Website/**"
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   pull_request:
     paths-ignore:
       - "Website/**"
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   workflow_dispatch:
 
 jobs:

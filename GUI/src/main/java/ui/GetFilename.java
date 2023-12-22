@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static gui_support.Constants.GREEN;
+import static gui_support.Colors.GREEN;
 import static properties.Program.YT_DLP;
 import static utils.Utility.isSpotify;
 import static utils.Utility.sleep;
@@ -70,7 +70,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
             timer.cancel();
             sleep(500); //give timerTask enough time to do its last run
             jobList.clear();
-            FormsController.setDownloadInfoColor(GREEN);
+            UIController.setDownloadInfoColor(GREEN);
             updateMessage("File(s) added to batch.");
             if (progTimer != null) {
                 progTimer.cancel();
@@ -109,7 +109,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                                 filesProcessed++;
                                 updateProgress(filesProcessed, fileCount);
                             }
-                            FormsController.addJob(jobList);
+                            UIController.addJob(jobList);
                             deleteList.addLast(file);
                         }
                     } catch (IOException ignored) {

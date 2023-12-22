@@ -13,7 +13,7 @@ import properties.LinkType;
 import properties.Program;
 import support.DownloadMetrics;
 import support.Job;
-import ui.FormsController;
+import ui.UIController;
 import utils.UnitConverter;
 import utils.Utility;
 
@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static gui_support.Colors.GREEN;
+import static gui_support.Colors.RED;
 import static gui_support.Constants.*;
 
 public class FileDownloader extends Task<Integer> {
@@ -404,11 +406,11 @@ public class FileDownloader extends Task<Integer> {
     private void sendFinalMessage(String message) {
         String msg;
         if (exitCode == 0) {
-            FormsController.setDownloadInfoColor(GREEN);
+            UIController.setDownloadInfoColor(GREEN);
             msg = message.isEmpty() ? String.format(SUCCESSFULLY_DOWNLOADED_F, filename) : message;
             M.msgDownloadInfo(msg);
         } else {
-            FormsController.setDownloadInfoColor(RED);
+            UIController.setDownloadInfoColor(RED);
             msg = message.isEmpty() ? String.format(FAILED_TO_DOWNLOAD_F, filename) : message;
             M.msgDownloadError(msg);
         }

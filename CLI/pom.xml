@@ -11,11 +11,13 @@
     <artifactId>CLI</artifactId>
     <name>CLI</name>
     <description>CLI module of Drifty</description>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <cli.main-class>main.Drifty_CLI</cli.main-class>
     </properties>
 
     <dependencies>
@@ -30,4 +32,126 @@
             <version>2.2</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <!-- [Windows] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-windows-latest</id>
+            <properties>
+                <resource-config-file>resource-config-windows.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.9.28</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cli.main-class}</mainClass>
+                            <outputDirectory>target/CLI/windows</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${project.parent.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [Linux] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-ubuntu-latest</id>
+            <properties>
+                <resource-config-file>resource-config-linux.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.9.28</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cli.main-class}</mainClass>
+                            <outputDirectory>target/CLI/linux</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${project.parent.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- [macOS] CLI native image builder profile -->
+        <profile>
+            <id>build-drifty-cli-for-macos-latest</id>
+            <properties>
+                <resource-config-file>resource-config-mac.json</resource-config-file>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>0.9.28</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <imageName>Drifty CLI</imageName>
+                            <mainClass>${cli.main-class}</mainClass>
+                            <outputDirectory>target/CLI/macos</outputDirectory>
+                            <buildArgs>
+                                <buildArg>--enable-url-protocols=https</buildArg>
+                                <buildArg>--enable-url-protocols=http</buildArg>
+                                <buildArg>-H:ResourceConfigurationFiles=${project.parent.basedir}/config/${resource-config-file}</buildArg>
+                                <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
+                                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                                <buildArg>--verbose</buildArg>
+                            </buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

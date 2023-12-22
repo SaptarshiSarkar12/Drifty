@@ -3,11 +3,13 @@ package gui_utils;
 import javafx.scene.paint.Color;
 import properties.MessageCategory;
 import properties.MessageType;
-import ui.FormsController;
+import ui.UIController;
 
 import java.util.Objects;
 
-import static gui_support.Constants.*;
+import static gui_support.Colors.RED;
+import static gui_support.Colors.GREEN;
+import static gui_support.Colors.YELLOW;
 import static properties.MessageCategory.LOG;
 
 public class MessageBroker extends utils.MessageBroker {
@@ -17,9 +19,9 @@ public class MessageBroker extends utils.MessageBroker {
 
     @Override
     protected void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
-        FormsController ui;
+        UIController ui;
         if (!messageCategory.equals(LOG)) {
-            ui = FormsController.INSTANCE;
+            ui = UIController.INSTANCE;
         } else {
             ui = null;
         }

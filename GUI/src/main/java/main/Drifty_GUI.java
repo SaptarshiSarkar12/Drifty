@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import preferences.AppSettings;
 import properties.Mode;
 import ui.ConfirmationDialog;
-import ui.FormsController;
+import ui.UIController;
 import ui.MainGridPane;
 import ui.ManageFolders;
 import utils.Utility;
@@ -41,7 +41,7 @@ public class Drifty_GUI extends Application {
         Mode.setGUIMode();
         msgBroker = new MessageBroker();
         Environment.setMessageBroker(msgBroker);
-        msgBroker.msgLogInfo(Constants.GUI_APPLICATION_STARTED);
+        msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
         Environment.initializeEnvironment();
         launch(args);
     }
@@ -65,14 +65,14 @@ public class Drifty_GUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         menu.setUseSystemMenuBar(true);
-        FormsController.initLogic(gridPane);
+        UIController.initLogic(gridPane);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
-            if (FormsController.isAutoPaste()) {
+            if (UIController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
                     String clipboardText = clipboard.getString();
                     if (Utility.isURL(clipboardText)) {
-                        FormsController.pasteFromClipboard(clipboardText);
+                        UIController.pasteFromClipboard(clipboardText);
                     }
                 }
             }
@@ -137,7 +137,7 @@ public class Drifty_GUI extends Application {
             VBox root = new VBox(10);
             root.setPadding(new Insets(10));
             root.setAlignment(Pos.TOP_CENTER);
-            ImageView appIcon = new ImageView(String.valueOf(Constants.class.getResource("/GUI/Splash.png")));
+            ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
             appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
             appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
             appIcon.setPreserveRatio(true);
@@ -182,7 +182,7 @@ public class Drifty_GUI extends Application {
         wipeHistory.setOnAction(e -> {
             ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
-                FormsController.clearJobHistory();
+                UIController.clearJobHistory();
             }
         });
         menu.getItems().addAll(wipeHistory);
@@ -192,11 +192,11 @@ public class Drifty_GUI extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> FormsController.getDirectory());
+        miAdd.setOnAction(e -> UIController.getDirectory());
         miDir.setOnAction(e -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
-            FormsController.resetDownloadFoldersToActiveList();
+            UIController.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");

@@ -31,6 +31,9 @@ public enum OS {
     }
 
     public static String getOSName() {
+        if (osName == null) {
+            setOSType();
+        }
         return osName;
     }
 
