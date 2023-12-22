@@ -12,18 +12,18 @@ public class Clear {
     }
 
     public void lastYtDlpUpdateTime() {
-        preferences.remove(LAST_YT_DLP_UPDATE_TIME.toString());
+        preferences.remove(LAST_YT_DLP_UPDATE_TIME);
     }
 
     public void lastFolder() {
-        preferences.remove(LAST_FOLDER.toString());
+        preferences.remove(LAST_FOLDER);
     }
 
     public void ytDlpVersion() {
-        preferences.remove(YT_DLP_VERSION.toString());
+        preferences.remove(YT_DLP_VERSION);
     }
 
     public void spotDLVersion() {
-        preferences.remove(SPOTDL_VERSION.toString());
+        preferences.remove(SPOTDL_VERSION);
     }
 }

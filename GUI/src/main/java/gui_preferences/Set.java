@@ -18,11 +18,12 @@ import static gui_preferences.Labels.FOLDERS;
 import static gui_preferences.Labels.MAIN_AUTO_PASTE;
 import static properties.Program.JOB_FILE;
 
-public class Set extends preferences.Set {
+public final class Set extends preferences.Set {
     private static final Set INSTANCE = new Set();
     private final Preferences preferences = Labels.PREFERENCES;
 
-    private Set() {}
+    private Set() {
+    }
 
     protected static Set getInstance() {
         return INSTANCE;

@@ -5,7 +5,8 @@ import java.util.Scanner;
 public final class ScannerFactory {
     private static Scanner scanner;
 
-    private ScannerFactory() {}
+    private ScannerFactory() {
+    }
 
     public static Scanner getInstance() {
         if (scanner == null) {
