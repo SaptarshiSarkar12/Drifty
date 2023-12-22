@@ -25,7 +25,7 @@ public class GetConfirmationDialogResponse {
         return answer.equals(NO);
     }
 
-    public boolean inLimbo() {
+    public boolean isUnanswered() {
         return answer.equals(State.UNANSWERED);
     }
 

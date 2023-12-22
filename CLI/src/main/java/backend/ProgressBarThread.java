@@ -124,7 +124,7 @@ public class ProgressBarThread extends Thread {
                 totalDownloadedBytes += downloadedBytesPerPart.get(i);
                 downloadSpeed += downloadSpeeds.get(i);
             }
-            filled = totalDownloadedBytes / ((float) (numberOfThreads * charPercents.get(0)));
+            filled = totalDownloadedBytes / ((float) (numberOfThreads * charPercents.getFirst()));
             String a = new String(new char[(int) filled]).replace("\0", "=");
             String b = new String(new char[charAmt - (int) filled]).replace("\0", ".");
             String bar = a + b;
@@ -196,7 +196,8 @@ public class ProgressBarThread extends Thread {
                         System.out.print("\r" + generateProgressBar());
                     }
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                M.msgDownloadError("Error while downloading " + fileName + " : " + e.getMessage());
             } finally {
                 downloading = downloadMetrics.isActive();
             }

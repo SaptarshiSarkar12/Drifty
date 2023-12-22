@@ -88,7 +88,7 @@ public class Drifty_CLI {
                     isUrlValid = Utility.isLinkValid(link);
                 } else {
                     isUrlValid = false;
-                    messageBroker.msgLinkError("Link is invalid!");
+                    messageBroker.msgLinkError(INVALID_LINK);
                 }
                 if (isUrlValid) {
                     isYoutubeURL = isYoutube(link);
@@ -152,7 +152,7 @@ public class Drifty_CLI {
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
                 } else {
-                    messageBroker.msgLinkError("Link is invalid!");
+                    messageBroker.msgLinkError(INVALID_LINK);
                     continue;
                 }
                 messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);

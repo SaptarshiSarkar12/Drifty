@@ -232,7 +232,7 @@ public class FileDownloader implements Runnable {
                 downloadFile();
             }
         } catch (MalformedURLException | URISyntaxException e) {
-            M.msgLinkError("Invalid Link!");
+            M.msgLinkError(INVALID_LINK);
         } catch (IOException e) {
             M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
         }

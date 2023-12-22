@@ -35,6 +35,7 @@ public class Environment {
         boolean ytDLPExists = false;
         try {
             copyExecutables.copyExecutables(new String[]{ytDlpExecName, spotDLExecName});
+            ytDLPExists = true;
         } catch (IOException e) {
             msgBroker.msgInitError("Failed to copy yt-dlp! " + e.getMessage());
             msgBroker.msgInitError("Failed to copy spotDL! " + e.getMessage());

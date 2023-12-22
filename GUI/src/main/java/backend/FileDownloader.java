@@ -85,7 +85,7 @@ public class FileDownloader extends Task<Integer> {
                 splitDecision();
             }
             case OTHER -> splitDecision();
-            default -> sendFinalMessage("Invalid Link !");
+            default -> sendFinalMessage(INVALID_LINK);
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -138,7 +138,7 @@ public class FileDownloader extends Task<Integer> {
             con.connect();
             fileSize = con.getHeaderFieldLong("Content-Length", -1);
         } catch (MalformedURLException | URISyntaxException e) {
-            M.msgLinkError("Invalid Link !");
+            M.msgLinkError(INVALID_LINK);
             exitCode = 1;
             return;
         } catch (IOException e) {
@@ -263,7 +263,7 @@ public class FileDownloader extends Task<Integer> {
             fos.close();
             exitCode = 0;
         } catch (MalformedURLException | URISyntaxException e) {
-            M.msgLinkError("Invalid Link !");
+            M.msgLinkError(INVALID_LINK);
             exitCode = 1;
         } catch (SecurityException e) {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
@@ -322,7 +322,7 @@ public class FileDownloader extends Task<Integer> {
             }
             exitCode = 0;
         } catch (MalformedURLException | URISyntaxException e) {
-            M.msgLinkError("Invalid Link !");
+            M.msgLinkError(INVALID_LINK);
             exitCode = 1;
         } catch (SecurityException e) {
             message = String.format(WRITE_ACCESS_DENIED_F, path);

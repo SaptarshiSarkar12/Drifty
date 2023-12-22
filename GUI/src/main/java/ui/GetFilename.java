@@ -14,6 +14,7 @@ import utils.Utility;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -112,7 +113,9 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             UIController.addJob(jobList);
                             deleteList.addLast(file);
                         }
-                    } catch (IOException ignored) {
+                    } catch (IOException e) {
+                        Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
+                        Environment.getMessageBroker().msgLogError(e.getMessage());
                     }
                 }
                 for (File file : deleteList) {
@@ -169,7 +172,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 ProcessBuilder pb = new ProcessBuilder(args);
                 pb.redirectErrorStream(true);
                 Process process = pb.start();
-                StringBuilder sbOutput = new StringBuilder();
+                StringJoiner joiner = new StringJoiner(lineFeed);
                 try {
                     try (
                         InputStream inputStream = process.getInputStream();
@@ -181,8 +184,8 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                             if (this.isCancelled()) {
                                 break;
                             }
-                            sbOutput.append(line).append(lineFeed);
-                            feedback.setValue(sbOutput.toString());
+                            joiner.add(line);
+                            feedback.setValue(joiner.toString());
                         }
                     }
                 } catch (IOException e) {

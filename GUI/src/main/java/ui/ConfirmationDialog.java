@@ -1,5 +1,6 @@
 package ui;
 
+import gui_init.Environment;
 import gui_support.Constants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,13 +29,7 @@ public class ConfirmationDialog {
     private double width = 200;
     private double height = 150;
     private Stage stage;
-    private Button btnYes;
-    private Button btnNo;
-    private Button btnOk;
-    private Label message;
     private VBox vbox;
-    private TextField tfFilename;
-    public static boolean answerYes;
     private final String windowTitle;
     private final String msg;
     private String filename = "";
@@ -99,23 +94,23 @@ public class ConfirmationDialog {
         text.setFont(Constants.getMonaco(16));
         text.setTextAlignment(TextAlignment.LEFT);
         text.setWrappingWidth(width * .85);
-        message = new Label("Are you sure?");
+        Label message = new Label("Are you sure?");
         message.setFont(Constants.getMonaco(17));
         if (!msg.isEmpty()) {
             message.setText(msg);
             message.setWrapText(true);
             message.setTextAlignment(TextAlignment.CENTER);
         }
-        btnYes = newButton("Yes", e -> {
+        Button btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
             stage.close();
         });
-        btnNo = newButton("No", e -> {
+        Button btnNo = newButton("No", e -> {
             answer.setAnswer(false);
             stage.close();
         });
-        btnOk = newButton("OK", e -> stage.close());
-        tfFilename = new TextField(filename);
+        Button btnOk = newButton("OK", e -> stage.close());
+        TextField tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
         tfFilename.setMaxWidth(width * .8);
         tfFilename.setPrefWidth(width * .8);
@@ -132,7 +127,7 @@ public class ConfirmationDialog {
         switch (state) {
             case OK -> hbox.getChildren().add(btnOk);
             case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
-            default -> System.out.println("AskYesNo: Unknown state: " + state);
+            default -> Environment.getMessageBroker().msgLogError("Unknown state in ConfirmationDialog : " + state);
         }
         vbox.getChildren().add(hbox);
     }
@@ -142,15 +137,11 @@ public class ConfirmationDialog {
             showScene();
         } else {
             Platform.runLater(this::showScene);
-            while (answer.inLimbo()) {
+            while (answer.isUnanswered()) {
                 sleep(50);
             }
         }
         return answer;
-    }
-
-    public void showOK() {
-        Platform.runLater(this::showScene);
     }
 
     private void showScene() {

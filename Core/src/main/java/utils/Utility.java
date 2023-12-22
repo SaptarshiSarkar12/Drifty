@@ -73,7 +73,7 @@ public class Utility {
                 URL projectWebsite = URI.create(DRIFTY_WEBSITE_URL).toURL();
                 HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
                 connectProjectWebsite.connect();
-                M.msgLinkError("Link is invalid!"); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
+                M.msgLinkError(INVALID_LINK); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
             } catch (UnknownHostException e) {
                 M.msgLinkError("You are not connected to the Internet!");
             } catch (MalformedURLException e) {

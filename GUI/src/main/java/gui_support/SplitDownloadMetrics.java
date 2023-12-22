@@ -25,10 +25,6 @@ public class SplitDownloadMetrics {
         this.url = url;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public long getStart() {
         return start;
     }
