@@ -9,9 +9,9 @@
         <version>2.1.0</version>
     </parent>
     <artifactId>CLI</artifactId>
+    <packaging>jar</packaging>
     <name>CLI</name>
     <description>CLI module of Drifty</description>
-    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
