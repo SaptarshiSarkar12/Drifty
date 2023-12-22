@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-public class DownloadFolderLocator {
+public final class DownloadFolderLocator {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
     public static String findPath() {

@@ -2,7 +2,7 @@ package cli_utils;
 
 import java.util.Scanner;
 
-public class ScannerFactory {
+public final class ScannerFactory {
     private static Scanner scanner;
 
     private ScannerFactory() {}

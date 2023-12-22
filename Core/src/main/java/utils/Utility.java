@@ -26,7 +26,6 @@ import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

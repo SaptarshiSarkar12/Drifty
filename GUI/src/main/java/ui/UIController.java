@@ -48,7 +48,7 @@ import static gui_support.Colors.*;
 import static gui_support.Constants.*;
 import static utils.Utility.*;
 
-public class UIController {
+public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
     private static final MessageBroker M = Environment.getMessageBroker();

@@ -51,7 +51,6 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
         cache: 'maven'
-        components: 'native-image'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
       run: mvn -P build-drifty-cli-for-${{ matrix.os }} package
@@ -63,11 +62,15 @@ jobs:
     - name: Build platform-specific C object for missing jdk libraries
       if: ${{ matrix.mode == 'GUI' }}
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
+    - name: Install dependency modules for GUI
+      if: ${{ matrix.mode == 'GUI' }}
+      run: mvn -U clean install
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       if: ${{ matrix.mode == 'GUI' }}
       run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI
     - name: Create Application Type specific folders
       run: |
+        mkdir build
         mkdir build/${{ matrix.mode }}
     - name: Categorise build artifacts for linux
       if: ${{ matrix.os == 'ubuntu-latest' }}

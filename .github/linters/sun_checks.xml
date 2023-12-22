@@ -7,7 +7,6 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
     <module name="TreeWalker">
-        <module name="TypeName"/>
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
@@ -22,11 +21,9 @@
         </module>
         <module name="NeedBraces"/>
         <module name="RightCurly"/>
-        <module name="FinalClass"/>
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>
         <module name="FallThrough"/>
-        <module name="InnerAssignment"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="NestedForDepth"/>

@@ -77,7 +77,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: true
           cache: 'maven'
-          components: 'native-image'
       - name: Package Drifty CLI with GraalVM
         if: matrix.filename == 'CLI/Dockerfile'
         run: mvn -P build-drifty-cli-for-ubuntu-latest package
@@ -89,18 +88,23 @@ jobs:
       - name: Build platform-specific C object for missing jdk libraries
         if: matrix.filename == 'GUI/Dockerfile'
         run: gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
+      - name: Install dependency modules for GUI
+        if: matrix.filename == 'GUI/Dockerfile'
+        run: mvn -U clean install
       - name: Package Drifty GUI with GraalVM
         if: matrix.filename == 'GUI/Dockerfile'
         run: mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI
       - name: Categorise build artifacts for CLI
         if: matrix.filename == 'CLI/Dockerfile'
         run: |
+          mkdir build
           mkdir build/CLI
           mv "CLI/target/CLI/linux/Drifty CLI" "CLI/target/CLI/linux/Drifty_CLI"
           mv "CLI/target/CLI/linux/Drifty_CLI" -t build/CLI
       - name: Categorise build artifacts for GUI
         if: matrix.filename == 'GUI/Dockerfile'
         run: |
+          mkdir build
           mkdir build/GUI
           mv GUI/target/gluonfx/x86_64-linux/GUI "GUI/target/gluonfx/x86_64-linux/Drifty_GUI"
           mv "GUI/target/gluonfx/x86_64-linux/Drifty_GUI" -t build/GUI
@@ -146,7 +150,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ${{ matrix.docker_context }}
+          context: build/${{ matrix.docker_context }}
           push: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
