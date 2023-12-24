@@ -116,7 +116,7 @@ class EnvironmentTest {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (!line.isEmpty()) {
-                            Assertions.assertEquals(line, versions[i]);
+                            Assertions.assertEquals(versions[i], line);
                         }
                     }
                 } catch (IOException e) {
