@@ -64,7 +64,7 @@ jobs:
            ./spotdl_macos --download-ffmpeg
         elif [ ${{ matrix.os }} == 'windows-latest' ]; then
            cd Core/src/main/resources
-           chmod +x spotdl_windows.exe
+           chmod +x spotdl_win.exe
            ./spotdl_win.exe --download-ffmpeg
         fi
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
