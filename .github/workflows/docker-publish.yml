@@ -77,9 +77,25 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: true
           cache: 'maven'
+      - name: Install ffmpeg
+        shell: bash
+        run: |
+          if [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
+             cd Core/src/main/resources
+             chmod +x spotdl_linux
+             ./spotdl_linux --download-ffmpeg
+          elif [ ${{ matrix.os }} == 'macos-latest' ]; then
+             cd Core/src/main/resources
+             chmod +x spotdl_macos
+             ./spotdl_macos --download-ffmpeg
+          elif [ ${{ matrix.os }} == 'windows-latest' ]; then
+             cd Core/src/main/resources
+             chmod +x spotdl_windows.exe
+             ./spotdl_win.exe --download-ffmpeg
+          fi
       - name: Package Drifty CLI with GraalVM
         if: matrix.filename == 'CLI/Dockerfile'
-        run: mvn -P build-drifty-cli-for-ubuntu-latest package
+        run: mvn -P build-drifty-cli-for-ubuntu-latest package -D skipTests=true
       - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
         if: matrix.filename == 'GUI/Dockerfile'
         uses: stCarolas/setup-maven@v4.5
