@@ -16,13 +16,4 @@ public enum LinkType {
             return OTHER;
         }
     }
-
-    public String get() {
-        return switch (this) {
-            case YOUTUBE -> "YouTube";
-            case INSTAGRAM -> "Instagram";
-            case SPOTIFY -> "Spotify";
-            case OTHER -> "Other";
-        };
-    }
 }
