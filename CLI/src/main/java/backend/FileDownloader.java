@@ -184,7 +184,6 @@ public class FileDownloader implements Runnable {
     public void run() {
         boolean isYouTubeLink = isYoutube(link);
         boolean isInstagramLink = isInstagram(link);
-        boolean isSpotifyLink = isSpotify(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
             if (isYouTubeLink || isInstagramLink) {
@@ -199,8 +198,6 @@ public class FileDownloader implements Runnable {
                 } catch (Exception e) {
                     if (isYouTubeLink) {
                         M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
-                    } else if (isSpotifyLink) {
-                        M.msgDownloadError(SPOTIFY_DOWNLOAD_FAILED);
                     } else {
                         M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
                     }
