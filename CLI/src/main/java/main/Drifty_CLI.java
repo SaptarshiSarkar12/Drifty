@@ -433,8 +433,8 @@ public class Drifty_CLI {
         boolean fileExistsNoHistory = doesFileExist && !hasHistory;
         if (fileExistsNoHistory) {
             fileName = Utility.renameFile(fileName, downloadsFolder);
-            messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName), true);
-            renameFilenameIfRequired(false);
+            messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName), false);
+            renameFilenameIfRequired(true);
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }

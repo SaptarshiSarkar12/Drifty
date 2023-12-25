@@ -23,7 +23,7 @@ public enum OS {
         }
     }
 
-    private static OS getOSType() {
+    public static OS getOSType() {
         if (osType == null) {
             setOSType();
         }

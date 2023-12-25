@@ -45,7 +45,7 @@ public class Utility {
     }
 
     public static boolean isInstagram(String url) {
-        String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?/(p|reel)/([^/?#&]+)).*";
+        String pattern = "(https?://(?:www\\.)?instagr(am|.am)?(\\.com)?(/|.*)/(p|reel)/([^/?#&]+)).*";
         return url.matches(pattern);
     }
 
@@ -241,6 +241,7 @@ public class Utility {
                         } else {
                             M.msgLinkError("Failed to retrieve filename!");
                         }
+                        break;
                     }
                 }
             } catch (Exception e) {
