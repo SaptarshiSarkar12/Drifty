@@ -77,6 +77,7 @@ public class FileDownloaderTest {
     void testSpotifyFileDownload() {
         String link = "https://open.spotify.com/track/0IGXY47K2ha3AHfX57wY1O";
         String filename = Utility.findFilenameInLink(link);
+        link = Utility.getSpotifyDownloadLink(link);
         FileDownloader fileDownloader = new FileDownloader(link, filename, Paths.get(System.getProperty("user.dir"), "target", "test", "data", "spotify").toAbsolutePath().toString());
         fileDownloader.run();
         File file = Paths.get(System.getProperty("user.dir"), "target", "test", "data", "spotify", filename).toAbsolutePath().toFile();
