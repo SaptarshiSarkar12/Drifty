@@ -61,7 +61,7 @@ public class FileDownloaderTest {
     @Test
     @DisplayName("Test Instagram File Download")
     void testInstagramFileDownload() {
-        String link = "https://www.instagram.com/p/BDin77DxtAH/";
+        String link = "https://www.instagram.com/p/BDin77DxtAH/?utm_source=ig_embed";
         String filename = Utility.findFilenameInLink(link);
         FileDownloader fileDownloader = new FileDownloader(link, filename, Paths.get(System.getProperty("user.dir"), "target", "test", "data", "instagram").toAbsolutePath().toString());
         fileDownloader.run();
