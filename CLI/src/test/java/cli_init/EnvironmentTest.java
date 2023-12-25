@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("Test CLI Environment")
 class EnvironmentTest {
-    private static final MessageBroker msgBroker = new MessageBroker(System.out);
+    private static final MessageBroker M = new MessageBroker(System.out);
 
     @Test
     @DisplayName("Test MessageBroker instance sent to Environment")
     void testMessageBrokerInstance() {
-        Environment.setMessageBroker(msgBroker);
-        Assertions.assertEquals(msgBroker, Environment.getMessageBroker());
+        Environment.setMessageBroker(M);
+        Assertions.assertEquals(M, Environment.getMessageBroker());
         Assertions.assertInstanceOf(MessageBroker.class, Environment.getMessageBroker());
     }
 }

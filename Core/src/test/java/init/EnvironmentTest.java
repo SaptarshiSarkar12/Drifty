@@ -21,12 +21,12 @@ import static properties.Program.YT_DLP;
 @DisplayName("Test Environment")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EnvironmentTest {
-    private static final MessageBroker msgBroker = new MessageBroker();
+    private static final MessageBroker M = new MessageBroker();
 
     @BeforeAll
     @DisplayName("Initialize Test Environment")
     static void initAll() {
-        Environment.setMessageBroker(msgBroker);
+        Environment.setMessageBroker(M);
         Environment.initializeEnvironment();
     }
 
@@ -34,7 +34,7 @@ class EnvironmentTest {
     @Order(1)
     @DisplayName("Test MessageBroker instance sent to Environment")
     void testMessageBrokerInstance() {
-        Assertions.assertEquals(msgBroker, Environment.getMessageBroker());
+        Assertions.assertEquals(M, Environment.getMessageBroker());
     }
 
     @Test
@@ -115,9 +115,7 @@ class EnvironmentTest {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(getExecutableVersionProcess.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        if (!line.isEmpty()) {
-                            Assertions.assertEquals(versions[i], line);
-                        }
+                        Assertions.assertEquals(versions[i], line);
                     }
                 } catch (IOException e) {
                     Assertions.fail("Failed to match " + executableNames[i] + " version! " + e.getMessage());
