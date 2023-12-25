@@ -5,6 +5,7 @@ import preferences.AppSettings;
 import properties.OS;
 import properties.Program;
 import utils.MessageBroker;
+import utils.Utility;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -105,6 +106,13 @@ class EnvironmentTest {
     @Order(6)
     @DisplayName("Test version of Executables in App Settings")
     void testExecutableVersions() {
+        Thread ytDlpVersionThread = new Thread(Utility.setYtDlpVersion());
+        ytDlpVersionThread.start();
+        Thread spotDLVersionThread = new Thread(Utility.setSpotDLVersion());
+        spotDLVersionThread.start();
+        while (ytDlpVersionThread.isAlive() || spotDLVersionThread.isAlive()) {
+            Utility.sleep(100);
+        }
         String[] executablePaths = {Program.get(YT_DLP), Program.get(SPOTDL)};
         String[] versions = {AppSettings.GET.ytDlpVersion(), AppSettings.GET.spotDLVersion()};
         String[] executableNames = {"yt-dlp", "spotDL"};
