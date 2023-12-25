@@ -1,6 +1,6 @@
 name: Build and publish Docker images
 
-# This workflow uses actions that are not certified by GitHub.
+# This workflow uses actions that GitHub does not certify.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
@@ -14,13 +14,11 @@ on:
       - "Website/**"
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   pull_request:
     paths-ignore:
       - "Website/**"
       - "*.md"
       - "*.txt"
-      - "qodana.yaml"
   workflow_dispatch:
 
 env:
@@ -63,22 +61,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Update system packages
+        if: matrix.filename == 'GUI/Dockerfile'
+        run: sudo apt-get update
       - name: Install build dependencies
+        if: matrix.filename == 'GUI/Dockerfile'
         run: |
           sudo apt-get install libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libfreetype6-dev
           sudo apt-get install libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev
-      - name: Set up GraalVM JDK 20.0.1
+      - name: Set up GraalVM JDK 21
         uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '20.0.1'
+          java-version: '21'
           distribution: 'graalvm-community'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: true
           cache: 'maven'
-          components: 'native-image'
       - name: Package Drifty CLI with GraalVM
         if: matrix.filename == 'CLI/Dockerfile'
-        run: mvn -Pbuild-drifty-cli-for-ubuntu-latest package
+        run: mvn -P build-drifty-cli-for-ubuntu-latest package
       - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
         if: matrix.filename == 'GUI/Dockerfile'
         uses: stCarolas/setup-maven@v4.5
@@ -87,21 +88,26 @@ jobs:
       - name: Build platform-specific C object for missing jdk libraries
         if: matrix.filename == 'GUI/Dockerfile'
         run: gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
+      - name: Install dependency modules for GUI
+        if: matrix.filename == 'GUI/Dockerfile'
+        run: mvn -U clean install
       - name: Package Drifty GUI with GraalVM
         if: matrix.filename == 'GUI/Dockerfile'
-        run: mvn -Pbuild-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package
+        run: mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI
       - name: Categorise build artifacts for CLI
         if: matrix.filename == 'CLI/Dockerfile'
         run: |
-          mkdir CLI
-          mv "target/CLI/linux/Drifty CLI" "target/CLI/linux/Drifty_CLI"
-          mv "target/CLI/linux/Drifty_CLI" -t CLI
+          mkdir build
+          mkdir build/CLI
+          mv "CLI/target/CLI/linux/Drifty CLI" "CLI/target/CLI/linux/Drifty_CLI"
+          mv "CLI/target/CLI/linux/Drifty_CLI" -t build/CLI
       - name: Categorise build artifacts for GUI
         if: matrix.filename == 'GUI/Dockerfile'
         run: |
-          mkdir GUI
-          mv target/gluonfx/x86_64-linux/Drifty "target/gluonfx/x86_64-linux/Drifty_GUI"
-          mv "target/gluonfx/x86_64-linux/Drifty_GUI" -t GUI
+          mkdir build
+          mkdir build/GUI
+          mv GUI/target/gluonfx/x86_64-linux/GUI "GUI/target/gluonfx/x86_64-linux/Drifty_GUI"
+          mv "GUI/target/gluonfx/x86_64-linux/Drifty_GUI" -t build/GUI
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -126,7 +132,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5.3.0
+        uses: docker/metadata-action@v5.4.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
@@ -144,7 +150,7 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v5.1.0
         with:
-          context: ${{ matrix.docker_context }}
+          context: build/${{ matrix.docker_context }}
           push: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
