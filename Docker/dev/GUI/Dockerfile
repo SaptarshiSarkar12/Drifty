@@ -13,7 +13,7 @@ WORKDIR /app
 COPY . .
 
 RUN gcc -c /app/config/missing_symbols.c -o /app/config/missing_symbols-ubuntu-latest.o
-
+RUN mvn clean install
 RUN mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI
 
 FROM drifty-runner:latest
