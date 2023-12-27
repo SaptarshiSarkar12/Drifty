@@ -79,7 +79,7 @@ jobs:
           cache: 'maven'
       - name: Package Drifty CLI with GraalVM
         if: matrix.filename == 'CLI/Dockerfile'
-        run: mvn -P build-drifty-cli-for-ubuntu-latest package -D skipTests=true
+        run: mvn -P build-drifty-cli-for-ubuntu-latest package
       - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
         if: matrix.filename == 'GUI/Dockerfile'
         uses: stCarolas/setup-maven@v4.5
