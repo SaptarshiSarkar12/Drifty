@@ -5,7 +5,6 @@ import javafx.animation.PauseTransition;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -20,7 +19,6 @@ import java.util.Objects;
 public class Splash extends Preloader {
     private Stage stage;
     private Scene scene;
-    private ProgressBar pBar;
 
     @Override
     public void init() {
@@ -29,9 +27,6 @@ public class Splash extends Preloader {
         double fitWidth = Constants.SCREEN_WIDTH * .45;
         ivSplash.setPreserveRatio(true);
         ivSplash.setFitWidth(fitWidth);
-        pBar = new ProgressBar(0.0);
-        pBar.setPrefWidth(fitWidth);
-        pBar.setPrefHeight(Constants.SCREEN_HEIGHT * .01);
         VBox vBox = new VBox();
         vBox.getChildren().addAll(ivSplash);
         vBox.setAlignment(Pos.CENTER);
@@ -47,14 +42,6 @@ public class Splash extends Preloader {
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
         stage.show();
-    }
-
-    @Override
-    public void handleApplicationNotification(PreloaderNotification info) {
-        if (info instanceof ProgressNotification) {
-            double progress = ((ProgressNotification) info).getProgress();
-            pBar.setProgress(progress);
-        }
     }
 
     @Override
