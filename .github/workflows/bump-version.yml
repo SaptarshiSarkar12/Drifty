@@ -1,0 +1,20 @@
+name: Bump Project Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: 'New version to bump to'
+        required: true
+        type: string
+
+jobs:
+    bump-version:
+      name: Bump Project Version
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Project
+          uses: actions/checkout@v4
+        - name: Bump Project Version
+          run: |
+            mvn versions:set -D newVersion=${{ inputs.new_version }} -D generateBackupPoms=false
