@@ -18,3 +18,14 @@ jobs:
         - name: Bump Project Version
           run: |
             mvn versions:set -D newVersion=${{ inputs.new_version }} -D generateBackupPoms=false
+            sed -i 's/"version": "[0-9].[0-9].[0-9]"/"version": "${{ inputs.new_version }}"/g' version.json
+        - name: Commit Version Bump
+          run: |
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git config --global user.name "github-actions[bot]"
+            git add .
+            if [[ $(git status --porcelain) ]]; then
+               git commit -m "chore: Bump project version to ${{ inputs.new_version }}"
+            fi
+        - name: Push new version
+          run: git push
