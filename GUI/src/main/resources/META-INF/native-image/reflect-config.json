@@ -489,5 +489,9 @@
   "name":"support.JobHistory",
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ui.Splash",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 }
 ]

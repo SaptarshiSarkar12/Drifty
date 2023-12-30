@@ -26,4 +26,8 @@ public class Clear {
     public void spotDLVersion() {
         preferences.remove(SPOTDL_VERSION);
     }
+
+    public void ytDlpUpdating() {
+        preferences.remove(YT_DLP_UPDATING);
+    }
 }

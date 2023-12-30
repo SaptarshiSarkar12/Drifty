@@ -61,4 +61,8 @@ public class Get {
     public String spotDLVersion() {
         return preferences.get(SPOTDL_VERSION, "");
     }
+
+    public boolean ytDlpUpdating() {
+        return preferences.getBoolean(YT_DLP_UPDATING, false);
+    }
 }

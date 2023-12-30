@@ -63,6 +63,7 @@ public class Environment {
     }
 
     public static void checkAndUpdateYtDlp() {
+        AppSettings.SET.ytDlpUpdating(true);
         msgBroker.msgInitInfo("Checking for component (yt-dlp) update ...");
         String command = Program.get(YT_DLP);
         ProcessBuilder ytDlpUpdateProcess = new ProcessBuilder(command, "-U");
@@ -75,6 +76,8 @@ public class Environment {
             msgBroker.msgInitError("Failed to update yt-dlp! " + e.getMessage());
         } catch (InterruptedException e) {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
+        } finally {
+            AppSettings.SET.ytDlpUpdating(false);
         }
     }
 

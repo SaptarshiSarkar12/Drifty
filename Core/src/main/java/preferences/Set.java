@@ -58,4 +58,9 @@ public class Set {
         AppSettings.CLEAR.spotDLVersion();
         preferences.put(SPOTDL_VERSION, version);
     }
+
+    public void ytDlpUpdating(boolean isInitializing) {
+        AppSettings.CLEAR.ytDlpUpdating();
+        preferences.putBoolean(YT_DLP_UPDATING, isInitializing);
+    }
 }
