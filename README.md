@@ -102,7 +102,7 @@ For **Users** :
     ```
     **For Drifty GUI**,
     ```bash
-    docker run -e DISPLAY=$DISPLAY --net=host ghcr.io/saptarshisarkar12/drifty-gui:master
+    docker run -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:master
     ```
 3. Drifty will open, and you can now use it 🎉!
 

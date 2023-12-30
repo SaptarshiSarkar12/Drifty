@@ -62,7 +62,7 @@
                         <arg>${system-native-image-arg}</arg>
                         <arg>${compatibility-arg}</arg>
                     </nativeImageArgs>
-                    <appIdentifier>${gui.main-class}</appIdentifier>
+                    <appIdentifier>Drifty GUI</appIdentifier>
                     <releaseConfiguration>
                         <vendor>Drifty</vendor>
                         <description>Drifty is an open-source interactive file downloader system</description>

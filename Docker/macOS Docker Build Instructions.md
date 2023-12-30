@@ -108,4 +108,3 @@ We have finally set up everything required to run the Docker image of **Drifty G
   open -a Xquartz
   docker compose run -e DISPLAY=192.168.1.10:0 gui
   ```
-  Remember to change the tag to the version/branch you want to use.
