@@ -24,4 +24,4 @@ RUN wget https://apache.osuosl.org/maven/maven-${MAVEN_MAJOR}/${MAVEN_VERSION}/b
 ENV PATH="/opt/maven/bin:$PATH"
 ENV GRAALVM_HOME="/opt/graalvm"
 ENV JAVA_HOME="/opt/graalvm"
-ENV PATH="/opt/graalvm/bin:$PATH"
+ENV PATH="/opt/graalvm/bin:/opt/maven/bin:$PATH"
