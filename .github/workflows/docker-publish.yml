@@ -13,12 +13,10 @@ on:
     paths-ignore:
       - "Website/**"
       - "*.md"
-      - "*.txt"
   pull_request:
     paths-ignore:
       - "Website/**"
       - "*.md"
-      - "*.txt"
   workflow_dispatch:
 
 env:
