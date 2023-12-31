@@ -11,6 +11,10 @@ RUN apt-get install gcc build-essential -y && \
     libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev -y --no-install-recommends &&\
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+ARG GRAAL_VERSION
+ARG MAVEN_MAJOR
+ARG MAVEN_VERSION
+
 RUN wget https://apache.osuosl.org/maven/maven-${MAVEN_MAJOR}/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
     wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${GRAAL_VERSION}/graalvm-community-jdk-${GRAAL_VERSION}_linux-x64_bin.tar.gz && \
     tar -xzf apache-maven*.tar.gz -C /opt && \
