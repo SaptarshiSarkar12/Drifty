@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build the base image
         run: docker compose build base
+      - name: Build the runner image
+        run: docker compose build runner
       - name: Build the CLI image
         run: docker compose build cli
       - name: Build the GUI image
