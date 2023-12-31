@@ -6,16 +6,16 @@ services:
     build:
       context: .
       dockerfile: ./Docker/dev/commons/base/Dockerfile
+    environment:
+      - GRAAL_VERSION=21.0.1
+      - MAVEN_MAJOR=3
+      - MAVEN_VERSION=3.8.8
     container_name: drifty-base
 
   runner:
     build:
       context: .
       dockerfile: ./Docker/dev/commons/runner/Dockerfile
-    environment:
-      - GRAAL_VERSION=21.0.1
-      - MAVEN_MAJOR=3
-      - MAVEN_VERSION=3.8.8
     container_name: drifty-runner
   
   cli:
