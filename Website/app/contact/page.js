@@ -4,11 +4,6 @@ import Header from "../Header";
 export const metadata = {
   title: "Contact Us",
   description: "Contact the Drifty team for feedback or issues",
-  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "Medium Blue" }],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-  },
 };
 
 export default function contact() {
