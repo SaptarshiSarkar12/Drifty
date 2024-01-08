@@ -1,8 +1,10 @@
 "use client";
+
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
+
 function NavLink({ to, children, cn }) {
   return (
     <Link
@@ -90,7 +92,7 @@ export default function Header({ props }) {
     //add event listener to window
     window.addEventListener("scroll", onScroll, { passive: true });
     // remove event on unmounting to prevent Linkmemory leak with the cleanup
-  }, []);
+  }, [onScroll]);
 
   return (
     <header
