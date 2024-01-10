@@ -86,7 +86,7 @@ public class Constants extends support.Constants {
         return scene;
     }
 
-    public static void addCSS(Scene scene, URL ...css) {
+    public static void addCSS(Scene scene, URL... css) {
         for (URL url : css) {
             scene.getStylesheets().add(url.toExternalForm());
         }

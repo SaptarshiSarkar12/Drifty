@@ -34,7 +34,7 @@ public class FileDownloader implements Runnable {
             link = "https://" + link;
         }
         if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
-            if (!(link.endsWith("?raw=true"))) {
+            if (!link.endsWith("?raw=true")) {
                 link = link + "?raw=true";
             }
         }
