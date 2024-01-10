@@ -7,7 +7,7 @@ body:
     attributes:
       label: Category of documentation update
       description: |
-        What category does this change fall under? For example, Typo error, New category addition, Rephrasing the sentences, fixing broken links, etc. 
+        What category does this change fall under? For example, Typo, New category addition, Rephrasing the sentences, fixing broken links, etc.
     validations:
       required: true
   - type: textarea
@@ -23,3 +23,18 @@ body:
       description: Add any other context about the change in the documentation here.
     validations:
       required: false
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: Do you want to work on this issue?
+      multiple: false
+      options:
+        - "Yes"
+        - "No"
+      default: 0
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        You can also join our [Discord community](https://discord.gg/DeT4jXPfkG) for any help or support.

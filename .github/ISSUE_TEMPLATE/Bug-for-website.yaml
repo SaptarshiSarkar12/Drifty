@@ -33,25 +33,27 @@ body:
     id: os
     attributes:
       label: Operating System
-      description: Please select the operating system that you have used.
+      description: Please select the operating system that you are using.
+      multiple: true
       options:
-        - Windows 🪟
-        - MacOS 🍏
-        - Linux 🐧
-        - Other
+        - "Windows 🪟"
+        - "MacOS 🍏"
+        - "Linux 🐧"
+        - "Other"
     validations:
       required: true
   - type: dropdown
     id: browser
     attributes:
       label: Browser
-      description: Please select the browser you are using
+      description: Please select the browser that you are using.
+      multiple: true
       options:
-        - Microsoft Edge
-        - Google Chrome
-        - Safari
-        - Brave
-        - Other
+        - "Microsoft Edge"
+        - "Google Chrome"
+        - "Safari"
+        - "Brave"
+        - "Other"
     validations:
       required: true
   - type: textarea
@@ -68,3 +70,18 @@ body:
       description: Add any other context about the problem here.
     validations:
       required: false
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: Do you want to work on this issue?
+      multiple: false
+      options:
+        - "Yes"
+        - "No"
+      default: 0
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        You can also join our [Discord community](https://discord.gg/DeT4jXPfkG) for any help or support.

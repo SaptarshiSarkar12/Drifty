@@ -6,7 +6,7 @@
 - changed-files:
   - any-glob-to-any-file: ['CLI/src/**', 'GUI/src/**', 'Core/src/*']
 
-"Workflows":
+"CI/CD 🔁":
 - changed-files:
   - any-glob-to-any-file: ['.github/workflows/**']
 
@@ -29,4 +29,4 @@
 
 "docker 🐋":
 - changed-files:
-  - any-glob-to-any-file: ['Docker/**']
+  - any-glob-to-any-file: ['Docker/**', 'docker-compose.yml']
