@@ -34,12 +34,13 @@ body:
     attributes:
       label: Operating System / Environment
       description: Please select the operating system / Environment you are using.
+      multiple: true
       options:
-        - Windows 🪟
-        - MacOS 🍏
-        - Linux 🐧
-        - Docker 🐋
-        - Other
+        - "Windows 🪟"
+        - "MacOS 🍏"
+        - "Linux 🐧"
+        - "Docker 🐋"
+        - "Other"
     validations:
       required: true
   - type: textarea
@@ -56,3 +57,18 @@ body:
       description: Add any other context about the problem here.
     validations:
       required: false
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: Do you want to work on this issue?
+      multiple: false
+      options:
+        - "Yes"
+        - "No"
+      default: 0
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        You can also join our [Discord community](https://discord.gg/DeT4jXPfkG) for any help or support.

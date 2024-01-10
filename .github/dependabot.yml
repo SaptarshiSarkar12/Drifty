@@ -10,8 +10,7 @@ updates:
     schedule:
       interval: 'daily'
     commit-message:
-      prefix: '[npm] '
-      include: 'scope'
+      prefix: 'chore(npm)'
     labels:
       - 'dependencies 📦️'
       - 'npm 📦️'
@@ -23,8 +22,7 @@ updates:
     schedule:
       interval: 'daily'
     commit-message:
-      prefix: '[maven] '
-      include: 'scope'
+      prefix: 'chore(maven)'
     labels:
       - 'dependencies 📦️'
       - 'maven 📦️'
@@ -37,10 +35,22 @@ updates:
       # Check for updates to GitHub Actions every weekday
       interval: 'daily'
     commit-message:
-      prefix: '[ci] '
-      include: 'scope'
+      prefix: 'chore(ci)'
     labels:
       - 'dependencies 📦️'
-      - 'Workflows'
+      - 'CI/CD 🔁'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋️'
     reviewers:
       - SaptarshiSarkar12
