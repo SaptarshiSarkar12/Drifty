@@ -7,6 +7,7 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
     </module>
     <module name="TreeWalker">
+        <module name="PackageName"/>
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
@@ -42,6 +43,7 @@
         <module name="SimplifyBooleanReturn"/>
         <module name="StringLiteralEquality"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessarySemicolonInTryWithResources"/>
         <module name="UnusedLocalVariable"/>
         <module name="ArrayTypeStyle"/>
         <module name="CommentsIndentation"/>
