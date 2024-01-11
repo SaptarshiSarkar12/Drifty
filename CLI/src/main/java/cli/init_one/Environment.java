@@ -1,4 +1,4 @@
-package cli.init;
+package cli.init_one;
 
 import cli.utils.MessageBroker;
 
