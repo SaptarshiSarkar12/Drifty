@@ -1,6 +1,6 @@
 package main;
 
-import backend_cli.FileDownloader;
+import backend.FileDownloader;
 import cli.utils.MessageBroker;
 import cli.init.Environment;
 import org.yaml.snakeyaml.Yaml;
@@ -332,9 +332,6 @@ public class Drifty_CLI {
                         }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
-//                        if (!Objects.requireNonNull(fileName).isEmpty()) {
-//                            messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
-//                        }
                     }
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
