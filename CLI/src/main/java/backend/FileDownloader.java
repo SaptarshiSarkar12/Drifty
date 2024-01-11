@@ -1,6 +1,6 @@
 package backend;
 
-import cli_utils.Utility;
+import cli.utils.Utility;
 import init.Environment;
 import properties.Program;
 import support.DownloadMetrics;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static cli_support.Constants.*;
+import static cli.support.Constants.*;
 import static properties.Program.YT_DLP;
 import static utils.Utility.*;
 

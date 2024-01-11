@@ -1,9 +1,9 @@
 package main;
 
-import gui_init.Environment;
-import gui_preferences.AppSettings;
-import gui_support.Constants;
-import gui_utils.MessageBroker;
+import gui.init.Environment;
+import gui.preferences.AppSettings;
+import gui.support.Constants;
+import gui.utils.MessageBroker;
 import javafx.application.Application;
 import javafx.application.Preloader;
 import javafx.geometry.Insets;
@@ -23,7 +23,7 @@ import properties.Mode;
 import ui.*;
 import utils.Utility;
 
-import static gui_support.Constants.GUI_APPLICATION_TERMINATED;
+import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
 import static support.Constants.DRIFTY_WEBSITE_URL;
 import static support.Constants.VERSION_NUMBER;

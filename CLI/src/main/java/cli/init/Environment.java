@@ -1,6 +1,6 @@
-package cli_init;
+package cli.init;
 
-import cli_utils.MessageBroker;
+import cli.utils.MessageBroker;
 
 public class Environment extends init.Environment {
     private static MessageBroker msgBroker;

@@ -1,4 +1,4 @@
-package gui_support;
+package gui.support;
 
 import javafx.scene.paint.Color;
 

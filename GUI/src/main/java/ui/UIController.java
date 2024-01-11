@@ -1,12 +1,12 @@
 package ui;
 
 import backend.FileDownloader;
-import gui_init.Environment;
-import gui_support.Constants;
-import gui_support.Folders;
-import gui_support.Jobs;
-import gui_utils.CheckFile;
-import gui_utils.MessageBroker;
+import gui.init.Environment;
+import gui.support.Constants;
+import gui.support.Folders;
+import gui.support.Jobs;
+import gui.utils.CheckFile;
+import gui.utils.MessageBroker;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -29,7 +29,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import gui_preferences.AppSettings;
+import gui.preferences.AppSettings;
 import support.Job;
 import support.JobHistory;
 import utils.Utility;
@@ -44,8 +44,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static gui_support.Colors.*;
-import static gui_support.Constants.*;
+import static gui.support.Colors.*;
+import static gui.support.Constants.*;
 import static utils.Utility.*;
 
 public final class UIController {

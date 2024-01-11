@@ -1,6 +1,6 @@
 package ui;
 
-import gui_support.Constants;
+import gui.support.Constants;
 import javafx.animation.PauseTransition;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;

@@ -1,9 +1,9 @@
-package gui_preferences;
+package gui.preferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import gui_support.Folders;
-import gui_support.Jobs;
+import gui.support.Folders;
+import gui.support.Jobs;
 import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
 import properties.Program;
@@ -14,8 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
-import static gui_preferences.Labels.FOLDERS;
-import static gui_preferences.Labels.MAIN_AUTO_PASTE;
+import static gui.preferences.Labels.FOLDERS;
+import static gui.preferences.Labels.MAIN_AUTO_PASTE;
 import static properties.Program.JOB_FILE;
 
 public final class Set extends preferences.Set {

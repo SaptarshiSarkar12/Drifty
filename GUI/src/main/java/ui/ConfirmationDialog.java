@@ -1,7 +1,7 @@
 package ui;
 
-import gui_init.Environment;
-import gui_support.Constants;
+import gui.init.Environment;
+import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

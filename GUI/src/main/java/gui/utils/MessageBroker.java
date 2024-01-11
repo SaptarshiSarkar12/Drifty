@@ -1,4 +1,4 @@
-package gui_utils;
+package gui.utils;
 
 import javafx.scene.paint.Color;
 import properties.MessageCategory;
@@ -7,9 +7,9 @@ import ui.UIController;
 
 import java.util.Objects;
 
-import static gui_support.Colors.RED;
-import static gui_support.Colors.GREEN;
-import static gui_support.Colors.YELLOW;
+import static gui.support.Colors.RED;
+import static gui.support.Colors.GREEN;
+import static gui.support.Colors.YELLOW;
 import static properties.MessageCategory.LOG;
 
 public class MessageBroker extends utils.MessageBroker {

@@ -1,14 +1,14 @@
-package cli_utils;
+package cli.utils;
 
-import cli_init.Environment;
+import cli.init.Environment;
 
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static cli_support.Constants.FILENAME_DETECTED;
-import static cli_support.Constants.FILENAME_DETECTION_ERROR;
-import static cli_support.Constants.ENTER_Y_OR_N;
+import static cli.support.Constants.FILENAME_DETECTED;
+import static cli.support.Constants.FILENAME_DETECTION_ERROR;
+import static cli.support.Constants.ENTER_Y_OR_N;
 
 public class Utility extends utils.Utility {
     private static final Scanner SC = ScannerFactory.getInstance();

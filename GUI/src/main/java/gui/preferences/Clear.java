@@ -1,8 +1,8 @@
-package gui_preferences;
+package gui.preferences;
 
 import java.util.prefs.Preferences;
 
-import static gui_preferences.Labels.*;
+import static gui.preferences.Labels.*;
 
 public class Clear extends preferences.Clear {
     private static final Clear INSTANCE = new Clear();

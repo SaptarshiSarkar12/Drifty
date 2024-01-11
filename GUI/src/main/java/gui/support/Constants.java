@@ -1,6 +1,6 @@
-package gui_support;
+package gui.support;
 
-import gui_init.Environment;
+import gui.init.Environment;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
