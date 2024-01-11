@@ -1,6 +1,6 @@
 package ui;
 
-import gui_init.Environment;
+import gui.init.Environment;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static gui_support.Colors.GREEN;
+import static gui.support.Colors.GREEN;
 import static properties.Program.YT_DLP;
 import static utils.Utility.isSpotify;
 import static utils.Utility.sleep;

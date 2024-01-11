@@ -1,6 +1,6 @@
-package gui_support;
+package gui.support;
 
-import gui_preferences.AppSettings;
+import gui.preferences.AppSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

@@ -1,4 +1,4 @@
-package gui_preferences;
+package gui.preferences;
 
 public class AppSettings extends preferences.AppSettings {
     public static final Get GET = Get.getInstance();

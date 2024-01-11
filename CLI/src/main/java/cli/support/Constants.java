@@ -1,4 +1,4 @@
-package cli_support;
+package cli.support;
 
 public class Constants extends support.Constants {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -30,6 +30,5 @@ public class Constants extends support.Constants {
     public static final String USER_INTERRUPTION = "User interrupted while downloading the YouTube/Instagram Video!";
     public static final String YOUTUBE_DOWNLOAD_FAILED = "Failed to download YouTube video!";
     public static final String INSTAGRAM_DOWNLOAD_FAILED = "Failed to download Instagram video!";
-    public static final String SPOTIFY_DOWNLOAD_FAILED = "Failed to download Spotify audio!";
     public static final String ENTER_Y_OR_N = "Please enter Y for yes and N for no!";
 }

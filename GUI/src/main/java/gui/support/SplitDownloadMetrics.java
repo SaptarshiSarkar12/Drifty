@@ -1,4 +1,4 @@
-package gui_support;
+package gui.support;
 
 import java.io.File;
 import java.io.FileOutputStream;

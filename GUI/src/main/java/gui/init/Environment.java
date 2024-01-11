@@ -1,6 +1,6 @@
-package gui_init;
+package gui.init;
 
-import gui_utils.MessageBroker;
+import gui.utils.MessageBroker;
 
 public class Environment extends init.Environment {
     private static MessageBroker msgBroker;

@@ -1,6 +1,6 @@
-package gui_utils;
+package gui.utils;
 
-import gui_init.Environment;
+import gui.init.Environment;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
