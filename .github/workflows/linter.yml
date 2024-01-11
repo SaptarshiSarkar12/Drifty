@@ -24,6 +24,7 @@ jobs:
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CREATE_LOG_FILE: true
           VALIDATE_BASH: false
           VALIDATE_CPP: false
           VALIDATE_CSS: false
@@ -34,3 +35,8 @@ jobs:
           VALIDATE_CSHARP: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_YAML: false
+      - name: Upload Lint Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: linter-result
+          path: super-linter.log
