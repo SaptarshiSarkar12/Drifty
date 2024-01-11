@@ -332,9 +332,6 @@ public class Drifty_CLI {
                         }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
-//                        if (!Objects.requireNonNull(fileName).isEmpty()) {
-//                            renameFilenameIfRequired(false);
-//                        }
                     }
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
