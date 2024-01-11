@@ -1,4 +1,4 @@
-package backend;
+package backend_cli;
 
 import cli.utils.Utility;
 import init.Environment;

@@ -1,6 +1,6 @@
 package cli.utils;
 
-import cli.init_one.Environment;
+import cli.init.Environment;
 
 import java.util.LinkedList;
 import java.util.Objects;

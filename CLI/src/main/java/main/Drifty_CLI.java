@@ -1,8 +1,8 @@
 package main;
 
-import backend.FileDownloader;
+import backend_cli.FileDownloader;
 import cli.utils.MessageBroker;
-import cli.init_one.Environment;
+import cli.init.Environment;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;

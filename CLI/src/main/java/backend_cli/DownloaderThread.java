@@ -1,4 +1,4 @@
-package backend;
+package backend_cli;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
