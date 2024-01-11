@@ -46,12 +46,23 @@ jobs:
         if: ${{ steps.lint.outcome == 'success' }}
         run: |
           echo "## :ballot_box_with_check: Kudos! No linting errors found!" >> $GITHUB_STEP_SUMMARY
-      - name: Generate Workflow Summary for failed run
+      - name: Generate Workflow Summary for failed run part 1
+        id: error
         if: ${{ steps.lint.outcome == 'failure' }}
         run: |
           echo "## :negative_squared_cross_mark: Linting errors found!" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' >> $GITHUB_STEP_SUMMARY
+          log=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//')
+          echo "log=$log" >> $GITHUB_ENV
+      - name: Remove ANSI color escape sequences
+        uses: marcransome/remove-ansi-colors@v1
+        id: remove-ansi-colors
+        with:
+          colored: ${{ steps.error.outputs.log }}
+      - name: Generate Workflow Summary for failed run part 2
+        if: ${{ steps.lint.outcome == 'failure' }}
+        run: |
+          echo "${{ steps.remove-ansi-colors.outputs.uncolored }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       - name: Fail Workflow for failure in linting
         if: ${{ steps.lint.outcome == 'failure' }}
