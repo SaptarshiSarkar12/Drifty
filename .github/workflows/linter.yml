@@ -49,19 +49,23 @@ jobs:
       - name: Generate Workflow Summary for failed run
         if: ${{ steps.lint.outcome == 'failure' }}
         run: |
+          echo "COMMENT_BODY=\`cat super-linter.log | grep \"\[ERROR\]\" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR\]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r \"s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g\" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///'\`\n" >> $GITHUB_ENV
           echo "## :negative_squared_cross_mark: Linting errors found!" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///' >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       - name: Comment on PR for failed run
         if: ${{ steps.lint.outcome == 'failure' && github.event_name == 'pull_request' }}
-        run: |
-          export COMMENT_BODY="## :negative_squared_cross_mark: Linting errors found!\n\n\`\`\`\n"
-          export COMMENT_BODY+=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///')
-          export COMMENT_BODY+="\n\`\`\`"
-          gh pr comment ${{ github.event.number }} --body "@${{ github.actor }} $COMMENT_BODY"
-        env:
-          GH_TOKEN: ${{ github.token }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
       - name: Fail Workflow for failure in linting
         if: ${{ steps.lint.outcome == 'failure' }}
         uses: actions/github-script@v7.0.1
