@@ -51,7 +51,7 @@ jobs:
       - name: Generate Workflow Summary for successful run
         if: ${{ steps.lint.outcome == 'success' }}
         run: |
-          echo "## :ballot_box_with_check: Kudos! No linting errors found!" >> $GITHUB_STEP_SUMMARY
+          echo "## :ballot_box_with_check: Linting passed!" >> $GITHUB_STEP_SUMMARY
       - name: Generate Workflow Summary for failed run
         if: ${{ steps.lint.outcome == 'failure' }}
         run: |
