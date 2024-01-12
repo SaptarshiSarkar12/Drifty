@@ -60,7 +60,10 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-            -f body="## :negative_squared_cross_mark: Linting errors found!\n\`\`\`\n${COMMENT_BODY}\n\`\`\`"
+            -f body="## :negative_squared_cross_mark: Linting errors found! \
+            \`\`\` \
+            $COMMENT_BODY \
+            \`\`\`"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Fail Workflow for failure in linting
