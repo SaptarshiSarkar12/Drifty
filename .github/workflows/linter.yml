@@ -54,9 +54,9 @@ jobs:
         if: ${{ steps.lint.outcome == 'failure' && github.event_name == 'pull_request' }}
         shell: bash
         run: |
-          COMMENT_INITIAL=$(echo "## :x: Linting errors found. Please fix the following errors:\n\`\`\`")
+          COMMENT_INITIAL=$(echo "## :x: Linting errors found. Please fix the following errors:<br>\`\`\`")
           COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: 1. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///')
-          COMMENT_END=$(echo "\n\`\`\`")
+          COMMENT_END=$(echo "<br>\`\`\`")
           COMMENT_BODY=$(echo "$COMMENT_INITIAL$COMMENT_MIDDLE$COMMENT_END")
           gh api \
             --method POST \
