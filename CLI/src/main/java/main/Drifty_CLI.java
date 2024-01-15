@@ -14,15 +14,19 @@ import cli.utils.ScannerFactory;
 import cli.utils.Utility;
 
 import java.io.*;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.*;
+import static updater.CheckUpdate.isUpdateAvailable;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();
@@ -45,6 +49,14 @@ public class Drifty_CLI {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
+        messageBroker.msgInitInfo("Checking for updates...");
+        if (isUpdateAvailable()) {
+            messageBroker.msgUpdateInfo("Update available!");
+            messageBroker.msgUpdateInfo("Downloading update...");
+            if (!downloadUpdate()) {
+                messageBroker.msgUpdateError("Failed to download update!");
+            }
+        }
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -187,6 +199,33 @@ public class Drifty_CLI {
             }
             printBanner();
         }
+    }
+
+    private static boolean downloadUpdate() {
+        try {
+            final URL updateURL = getUpdateURL();
+            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8));
+            Path tmpFolder = Files.createTempDirectory("Drifty");
+            FileDownloader downloader = new FileDownloader(updateURL.toString(), currentExecutablePath.getFileName().toString(), tmpFolder.toAbsolutePath().toString());
+            downloader.run();
+            File latestExecutable = new File(tmpFolder.toAbsolutePath().toString(), currentExecutablePath.getFileName().toString());
+            if (latestExecutable.exists()) {
+                messageBroker.msgUpdateInfo("Update downloaded successfully!");
+                messageBroker.msgUpdateInfo("Replacing current executable with the latest one...");
+                Files.move(latestExecutable.toPath(), currentExecutablePath, StandardCopyOption.REPLACE_EXISTING);
+                messageBroker.msgUpdateInfo("Update completed successfully!");
+                return true;
+            } else {
+                messageBroker.msgUpdateError("Failed to download update!");
+            }
+        } catch (URISyntaxException e) {
+            messageBroker.msgUpdateError("Download URL is invalid! " + e.getMessage());
+        } catch (IOException e) {
+            messageBroker.msgUpdateError("Failed to download update! " + e.getMessage());
+        } catch (Exception e) {
+            messageBroker.msgUpdateError("Failed to download update! An unknown error occurred! " + e.getMessage());
+        }
+        return false;
     }
 
     private static void printVersion() {

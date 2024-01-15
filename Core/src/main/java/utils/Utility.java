@@ -93,6 +93,18 @@ public class Utility {
         return false;
     }
 
+    public static URL getUpdateURL() throws MalformedURLException, URISyntaxException {
+        URL updateURL;
+        if (OS.isMac()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos").toURL();
+        } else if (OS.isWindows()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe").toURL();
+        } else {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux").toURL();
+        }
+        return updateURL;
+    }
+
     public static LinkedList<String> getLinkMetadata(String link) {
         try {
             LinkedList<String> list = new LinkedList<>();

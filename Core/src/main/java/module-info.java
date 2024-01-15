@@ -11,4 +11,5 @@ module Core {
     exports support;
     exports utils;
     opens support to com.google.gson;
+    exports updater;
 }
