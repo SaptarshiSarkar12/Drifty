@@ -40,6 +40,7 @@ public class Drifty_CLI {
     private static String batchDownloadingFile;
     private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
     private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
+    private static final String URL_LIST_FILE = "drifty_urls.txt";
 
     public static void main(String[] args) {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
@@ -59,6 +60,53 @@ public class Drifty_CLI {
                 switch (args[i]) {
                     case HELP_FLAG, HELP_FLAG_SHORT -> {
                         help();
+                        System.exit(0);
+                    }
+                    case ADD_FLAG -> {
+                        if (i + 1 < args.length && Utility.isURL(args[i + 1])) {
+                            boolean isUrlValid;
+                            if (Utility.isURL(args[i + 1])) {
+                                isUrlValid = Utility.isLinkValid(args[i + 1]);
+                            } else {
+                                isUrlValid = false;
+                                messageBroker.msgLinkError(INVALID_LINK);
+                            }
+                            if (!isUrlValid) {
+                                LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                                System.exit(0);
+                            }
+                            addUrlToFile(args[i + 1]);
+                            System.out.println("URL added: " + args[i + 1]);
+                            i++;
+                            listUrls();
+                        } else {
+                            messageBroker.msgInitError("No URL provided or invalid URL format.");
+                        }
+                        System.exit(0);
+                    }
+                    case LIST_FLAG -> {
+                        listUrls();
+                        System.exit(0);
+                    }
+                    case REMOVE_FLAG -> {
+                        if (i + 1 < args.length) {
+                            try {
+                                int index = Integer.parseInt(args[i + 1]);
+                                removeUrl(index);
+                                i++;
+                                listUrls();
+                            } catch (NumberFormatException e) {
+                                messageBroker.msgInitError("Invalid format. Please provide a numeric input.");
+                            }
+                        } else {
+                            messageBroker.msgInitError("No line number provided for removal.");
+                        }
+                        System.exit(0);
+                    }
+                    case GET_FLAG -> {
+                        // Logic to download URLs goes here
+                        System.out.println("Downloading URLs...");
+                        batchTextDownloader();
                         System.exit(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
@@ -186,6 +234,129 @@ public class Drifty_CLI {
                 break;
             }
             printBanner();
+        }
+    }
+
+    private static void listUrls() {
+        Path path = Paths.get(URL_LIST_FILE);
+        if (Files.exists(path)) {
+            try {
+                List<String> lines = Files.readAllLines(path);
+                if (lines.isEmpty()) {
+                    System.out.println("No URLs found in the list.");
+                } else {
+                    System.out.println("List of URLs:");
+                    for (int i = 0; i < lines.size(); i++) {
+                        System.out.println((i + 1) + ". " + lines.get(i));
+                    }
+                }
+            } catch (IOException e) {
+                messageBroker.msgInitError("Error reading file: " + e.getMessage());
+            }
+        } else {
+            System.out.println("URL list file does not exist.");
+        }
+    }
+
+    private static void removeUrl(int index) {
+        Path path = Paths.get(URL_LIST_FILE);
+        if (!Files.exists(path)) {
+            System.out.println("URL list file does not exist.");
+            return;
+        }
+
+        try {
+            List<String> lines = new ArrayList<>(Files.readAllLines(path));
+            if (index < 1 || index > lines.size()) {
+                System.out.println("Line number not found. Please provide a valid line number.");
+            } else {
+                // Store the URL before removing it
+                String removedUrl = lines.get(index - 1);
+                // Remove the URL
+                lines.remove(index - 1);
+                // Update the file
+                Files.write(path, lines);
+                // Print the removed URL
+                System.out.println("Removed URL at line number " + index + ": " + removedUrl);
+            }
+        } catch (IOException e) {
+            messageBroker.msgInitError("Error updating file: " + e.getMessage());
+        }
+    }
+
+    private static void addUrlToFile(String url) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(URL_LIST_FILE, true))) {
+            writer.write(url);
+            writer.newLine();
+        } catch (IOException e) {
+            messageBroker.msgInitError("Error writing URL to file: " + e.getMessage());
+        }
+    }
+
+    private static void batchTextDownloader() {
+        Path path = Paths.get(URL_LIST_FILE);
+        if (!Files.exists(path)) {
+            messageBroker.msgDownloadError("Data file (" + URL_LIST_FILE + ") not found!");
+            return;
+        }
+
+        List<String> urls;
+        try {
+            urls = Files.readAllLines(path);
+        } catch (IOException e) {
+            messageBroker.msgDownloadError("Error reading from file: " + e.getMessage());
+            return;
+        }
+        try {
+            if (urls.isEmpty()) {
+                messageBroker.msgLinkInfo("No links specified. Exiting...");
+                return;
+            }
+
+            messageBroker.msgBatchInfo("Processing " + urls.size() + " link(s)");
+            messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
+            downloadsFolder = SC.next();
+            downloadsFolder = getProperDownloadsFolder(downloadsFolder);
+
+            for (int i = 0; i < urls.size(); i++) {
+                String url = urls.get(i);
+                messageBroker.msgStyleInfo(BANNER_BORDER);
+                messageBroker.msgLinkInfo("[" + (i + 1) + "/" + urls.size() + "] Processing link: " + url);
+
+                // Setting global 'link' variable, assuming other methods depend on it
+                link = url;
+                isYoutubeURL = isYoutube(link);
+                isInstagramLink = isInstagram(link);
+                isSpotifyLink = isSpotify(link);
+                if (".".equals(downloadsFolder)) {
+                    downloadsFolder = Utility.getHomeDownloadFolder();
+                } else if ("L".equalsIgnoreCase(downloadsFolder)) {
+                    downloadsFolder = AppSettings.GET.lastDownloadFolder();
+                }
+
+                if (isSpotifyLink && link.contains("playlist")) {
+                    fileName = null;
+                } else {
+                    if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
+                        if (link.contains("?")) {
+                            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+                        } else {
+                            link = link + "?utm_source=ig_embed";
+                        }
+                    }
+                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                    fileName = findFilenameInLink(link);
+
+                }
+
+                if (isSpotifyLink && link.contains("playlist")) {
+                    handleSpotifyPlaylist();
+                }
+                Job job = new Job(link, downloadsFolder, fileName, false);
+                checkHistoryAndDownload(job, false);
+            }
+        } catch (Exception e) {
+            messageBroker.msgDownloadError("Error reading from URL list file (" + URL_LIST_FILE + "): " + e.getMessage());
         }
     }
 
@@ -405,6 +576,10 @@ public class Drifty_CLI {
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
         System.out.println("--version    -v            Current Version          Displays version number of Drifty");
+        System.out.println("add [URL]                  Add URL                  Adds a new URL to the download queue");
+        System.out.println("remove [line number]       Remove URL               Removes a URL from the download queue at the specified line number");
+        System.out.println("list                       List URLs                Lists all URLs currently in the download queue");
+        System.out.println("get                        Download URLs            Downloads all URLs in the download queue");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
