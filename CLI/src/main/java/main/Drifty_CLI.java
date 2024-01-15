@@ -204,20 +204,38 @@ public class Drifty_CLI {
     private static boolean downloadUpdate() {
         try {
             final URL updateURL = getUpdateURL();
-            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8));
-            Path tmpFolder = Files.createTempDirectory("Drifty");
-            FileDownloader downloader = new FileDownloader(updateURL.toString(), currentExecutablePath.getFileName().toString(), tmpFolder.toAbsolutePath().toString());
+            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
+            String currentExecutablePathString = currentExecutablePath.toString();
+            Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
+            FileDownloader downloader = new FileDownloader(updateURL.toString(), currentExecutablePath.getFileName().toString(), tmpFolder.toString());
             downloader.run();
-            File latestExecutable = new File(tmpFolder.toAbsolutePath().toString(), currentExecutablePath.getFileName().toString());
-            if (latestExecutable.exists()) {
-                messageBroker.msgUpdateInfo("Update downloaded successfully!");
-                messageBroker.msgUpdateInfo("Replacing current executable with the latest one...");
-                Files.move(latestExecutable.toPath(), currentExecutablePath, StandardCopyOption.REPLACE_EXISTING);
-                messageBroker.msgUpdateInfo("Update completed successfully!");
-                return true;
-            } else {
-                messageBroker.msgUpdateError("Failed to download update!");
+            File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
+            boolean isPermissionGranted = latestExecutable.setExecutable(true);
+            if (!isPermissionGranted) {
+                messageBroker.msgUpdateError("Failed to set executable permission for the latest executable!");
+                return false;
             }
+            boolean isWritable = latestExecutable.setWritable(true);
+            if (!isWritable) {
+                messageBroker.msgUpdateError("Failed to set write permission for the latest executable!");
+                return false;
+            }
+            boolean isReadable = latestExecutable.setReadable(true);
+            if (!isReadable) {
+                messageBroker.msgUpdateError("Failed to set read permission for the latest executable!");
+                return false;
+            }
+            File currentExecutable = currentExecutablePath.toFile();
+            boolean isCurrentExecutableRenamed = currentExecutable.renameTo(new File(currentExecutable.getName() + ".old"));
+            if (!isCurrentExecutableRenamed) {
+                messageBroker.msgUpdateError("Failed to replace current executable with the latest one!");
+                return false;
+            }
+            Files.move(latestExecutable.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
+            Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+            messageBroker.msgUpdateInfo("Update successful!");
+            messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
+            return true;
         } catch (URISyntaxException e) {
             messageBroker.msgUpdateError("Download URL is invalid! " + e.getMessage());
         } catch (IOException e) {
