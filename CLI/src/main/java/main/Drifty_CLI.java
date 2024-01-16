@@ -49,14 +49,7 @@ public class Drifty_CLI {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
-        messageBroker.msgInitInfo("Checking for updates...");
-        if (isUpdateAvailable()) {
-            messageBroker.msgUpdateInfo("Update available!");
-            messageBroker.msgUpdateInfo("Downloading update...");
-            if (!downloadUpdate()) {
-                messageBroker.msgUpdateError("Failed to download update!");
-            }
-        }
+        checkAndUpdateDrifty(true);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -79,6 +72,7 @@ public class Drifty_CLI {
                         printVersion();
                         System.exit(0);
                     }
+                    case UPDATE_FLAG, UPDATE_FLAG_SHORT -> checkAndUpdateDrifty(false);
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
                         batchDownloadingFile = args[i + 1];
@@ -199,6 +193,34 @@ public class Drifty_CLI {
             }
             printBanner();
         }
+    }
+
+    private static void checkAndUpdateDrifty(boolean askForInstallingUpdate) {
+        messageBroker.msgInitInfo("Checking for updates...");
+        if (!isDriftyUpdateChecked()) {
+            if (isUpdateAvailable()) {
+                messageBroker.msgUpdateInfo("Update available!");
+                boolean choice = true;
+                if (askForInstallingUpdate) {
+                    messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
+                    String choiceString = SC.nextLine().toLowerCase();
+                    choice = utility.yesNoValidation(choiceString, "Do you want to download the update? (Enter Y for yes and N for no) : ");
+                }
+                if (!choice) {
+                    messageBroker.msgUpdateInfo("Drifty update cancelled!");
+                } else {
+                    messageBroker.msgUpdateInfo("Downloading update...");
+                    if (!downloadUpdate()) {
+                        messageBroker.msgUpdateError("Failed to download update!");
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isDriftyUpdateChecked() {
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
+        return timeSinceLastUpdate <= ONE_DAY;
     }
 
     private static boolean downloadUpdate() {
@@ -461,7 +483,8 @@ public class Drifty_CLI {
         System.out.println("--location   -l            Downloads                The location on your computer where file downloaded using Drifty are placed");
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
-        System.out.println("--version    -v            Current Version          Displays version number of Drifty");
+        System.out.println("--version    -v            N/A                      Displays version number of Drifty");
+        System.out.println("--update     -u            N/A                      Updates Drifty CLI to the latest version");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");

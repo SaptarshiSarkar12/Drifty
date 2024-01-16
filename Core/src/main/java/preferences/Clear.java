@@ -11,6 +11,10 @@ public class Clear {
         return INSTANCE;
     }
 
+    public void lastDriftyUpdateTime() {
+        preferences.remove(LAST_DRIFTY_UPDATE_TIME);
+    }
+
     public void lastYtDlpUpdateTime() {
         preferences.remove(LAST_YT_DLP_UPDATE_TIME);
     }

@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static properties.Program.YT_DLP;
+import static support.Constants.ONE_DAY;
 
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
@@ -82,9 +83,8 @@ public class Environment {
     }
 
     public static boolean isYtDLPUpdated() {
-        final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
-        return timeSinceLastUpdate <= oneDay;
+        return timeSinceLastUpdate <= ONE_DAY;
     }
 
     public static MessageBroker getMessageBroker() {

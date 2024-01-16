@@ -24,6 +24,10 @@ public class Get {
         return INSTANCE;
     }
 
+    public long lastDriftyUpdateTime() {
+        return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
+    }
+
     public long lastYtDlpUpdateTime() {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
     }
