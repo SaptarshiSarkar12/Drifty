@@ -34,6 +34,7 @@ public class Drifty_GUI extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        Mode.setGUIMode();
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
         launch(args);
     }
@@ -41,7 +42,6 @@ public class Drifty_GUI extends Application {
     @Override
     public void init() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        Mode.setGUIMode();
         msgBroker = new MessageBroker();
         Environment.setMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");

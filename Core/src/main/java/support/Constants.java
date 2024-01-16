@@ -1,8 +1,15 @@
 package support;
 
+import init.Environment;
+import utils.Utility;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 public class Constants {
     public static final String APPLICATION_NAME = "Drifty";
-    public static final String VERSION_NUMBER = "v2.1.0";
+    public static final String VERSION_NUMBER = "v1.0.0";
     public static final String DRIFTY_WEBSITE_URL = "https://saptarshisarkar12.github.io/Drifty/";
     public static final String INVALID_LINK = "Link is invalid! Please check the link and try again.";
     public static final String FILENAME_DETECTION_ERROR = "Failed to detect the filename! A default name will be used instead.";
@@ -17,6 +24,16 @@ public class Constants {
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
     public static final long ONE_DAY = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
+    public static URL UPDATE_URL;
+
+    static {
+        try {
+            UPDATE_URL = Utility.getUpdateURL();
+        } catch (MalformedURLException | URISyntaxException e) {
+            Environment.getMessageBroker().msgUpdateError("Download URL is invalid! " + e.getMessage());
+            UPDATE_URL = null;
+        }
+    }
 
     /*
     Denoting a Constant with _F indicates that it needs to be used with String.format(), where %s is replaced with the

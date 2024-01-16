@@ -16,12 +16,18 @@ import preferences.AppSettings;
 
 import java.util.Objects;
 
+import static updater.CheckUpdate.isUpdateAvailable;
+
 public class Splash extends Preloader {
     private Stage stage;
     private Scene scene;
 
     @Override
     public void init() {
+        new Thread(() -> {
+            AppSettings.SET.driftyUpdateAvailable(isUpdateAvailable());
+            System.out.println("Update available : " + AppSettings.GET.driftyUpdateAvailable());
+        }).start();
         Image splashImage = new Image(Objects.requireNonNull(Constants.SPLASH).toExternalForm());
         ImageView ivSplash = new ImageView(splashImage);
         double fitWidth = Constants.SCREEN_WIDTH * .45;

@@ -19,6 +19,10 @@ public class Clear {
         preferences.remove(LAST_YT_DLP_UPDATE_TIME);
     }
 
+    public void driftyUpdateAvailable() {
+        preferences.remove(DRIFTY_UPDATE_AVAILABLE);
+    }
+
     public void lastFolder() {
         preferences.remove(LAST_FOLDER);
     }

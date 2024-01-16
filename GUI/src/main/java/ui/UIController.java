@@ -30,12 +30,19 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import gui.preferences.AppSettings;
+import main.Drifty_GUI;
 import support.Job;
 import support.JobHistory;
 import utils.Utility;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
@@ -74,11 +81,70 @@ public final class UIController {
     Methods for initializing the various controls that are on the form - MainGridPane
      */
     private void start(MainGridPane pane) {
+        new Thread(() -> {
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + "Do you want to download it now?", false);
+            if (ask.getResponse().isYes()) {
+                downloadUpdate();
+            }
+        }).start();
         form = pane;
         setControlProperties();
         setControlActions();
         form.tfLink.requestFocus();
         commitJobListToListView();
+    }
+
+    private void downloadUpdate() {
+        try {
+            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
+            String currentExecutablePathString = currentExecutablePath.toString();
+            String customDirectory = getDir();
+            Path tempFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
+            Job updateJob = new Job(Constants.UPDATE_URL.toString(), tempFolder.toString(), currentExecutablePath.getFileName().toString(), false);
+            addJob(updateJob);
+            Thread downloadUpdate = new Thread(batchDownloader());
+            downloadUpdate.start();
+            while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
+                sleep(500);
+            }
+            setDir(customDirectory);
+            File latestExecutable = new File(tempFolder.toString(), currentExecutablePath.getFileName().toString());
+            boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
+            if (!isExecutablePermissionGranted) {
+                M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!" + nl.repeat(2) + "Please try again later.");
+                return;
+            }
+            boolean isWritePermissionGranted = latestExecutable.setWritable(true);
+            if (!isWritePermissionGranted) {
+                M.msgUpdateError("Failed to set write permission for the latest version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to set write permission for the latest version of Drifty!" + nl.repeat(2) + "Please try again later.");
+                return;
+            }
+            boolean isReadPermissionGranted = latestExecutable.setReadable(true);
+            if (!isReadPermissionGranted) {
+                M.msgUpdateError("Failed to set read permission for the latest version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to set read permission for the latest version of Drifty!" + nl.repeat(2) + "Please try again later.");
+                return;
+            }
+            File currentExecutable = currentExecutablePath.toFile();
+            boolean isCurrentExecutableRenamed = currentExecutable.renameTo(new File(currentExecutable.getName() + ".old"));
+            if (!isCurrentExecutableRenamed) {
+                M.msgUpdateError("Failed to replace the current version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to replace the current version of Drifty!" + nl.repeat(2) + "Please try again later.");
+                return;
+            }
+            Files.move(latestExecutable.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
+            Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+            M.msgUpdateInfo("Update successful!");
+            new ConfirmationDialog("Update Successful", "Update was successfully installed!" + nl.repeat(2) + "Please restart Drifty to see the changes.");
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to download update! " + e.getMessage());
+            new ConfirmationDialog("Update Failed", "Failed to download update!" + nl.repeat(2) + "Please try again later." + nl.repeat(2) + "Error: " + e.getMessage());
+        } catch (Exception e) {
+            M.msgUpdateError("Failed to download update! An unknown error occurred! " + e.getMessage());
+            new ConfirmationDialog("Update Failed", "Failed to download update! An unknown error occurred!" + nl.repeat(2) + "Please try again later." + nl.repeat(2) + "Error: " + e.getMessage());
+        }
     }
 
     private void setControlProperties() {

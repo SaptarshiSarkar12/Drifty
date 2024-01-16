@@ -11,6 +11,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.buildobjects.process.ProcBuilder;
 import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
+import properties.Mode;
 import properties.OS;
 import properties.Program;
 
@@ -95,12 +96,18 @@ public class Utility {
 
     public static URL getUpdateURL() throws MalformedURLException, URISyntaxException {
         URL updateURL;
-        if (OS.isMac()) {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos").toURL();
-        } else if (OS.isWindows()) {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe").toURL();
+        String[] executableNames;
+        if (Mode.isGUI()) {
+            executableNames = new String[]{"Drifty-GUI.pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
         } else {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux").toURL();
+            executableNames = new String[]{"Drifty-CLI_macos", "Drifty-CLI.exe", "Drifty-CLI_linux"};
+        }
+        if (OS.isMac()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[0]).toURL();
+        } else if (OS.isWindows()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[1]).toURL();
+        } else {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[2]).toURL();
         }
         return updateURL;
     }

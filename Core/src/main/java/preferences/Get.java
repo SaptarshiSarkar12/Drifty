@@ -32,6 +32,10 @@ public class Get {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
     }
 
+    public boolean driftyUpdateAvailable() {
+        return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
+    }
+
     public String lastDownloadFolder() {
         String defaultPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
         return preferences.get(LAST_FOLDER, defaultPath);
