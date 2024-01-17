@@ -35,8 +35,6 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha }}
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.3.1
     - name: Update system packages
       if: ${{ matrix.os == 'ubuntu-latest' && matrix.mode == 'GUI' }}
       run: sudo apt-get update
