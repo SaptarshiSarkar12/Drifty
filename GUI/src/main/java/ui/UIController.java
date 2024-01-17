@@ -2,6 +2,7 @@ package ui;
 
 import backend.FileDownloader;
 import gui.init.Environment;
+import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.Jobs;
@@ -29,7 +30,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import gui.preferences.AppSettings;
 import main.Drifty_GUI;
 import support.Job;
 import support.JobHistory;
@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static gui.support.Colors.*;
-import static gui.support.Constants.*;
+import static gui.support.Constants.MONACO_TTF;
 import static utils.Utility.*;
 
 public final class UIController {
