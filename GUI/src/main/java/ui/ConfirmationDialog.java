@@ -9,13 +9,22 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import main.Drifty_GUI;
 
 import static utils.Utility.sleep;
 
@@ -28,6 +37,7 @@ public class ConfirmationDialog {
     private final String lf = System.lineSeparator();
     private double width = 200;
     private double height = 150;
+    private boolean isUpdateError = false;
     private Stage stage;
     private VBox vbox;
     private final String windowTitle;
@@ -35,10 +45,15 @@ public class ConfirmationDialog {
     private String filename = "";
     private final GetConfirmationDialogResponse answer = new GetConfirmationDialogResponse();
 
-    public ConfirmationDialog(String windowTitle, String message, boolean okOnly) {
+    public ConfirmationDialog(String windowTitle, String message, boolean okOnly, boolean isUpdateError) {
         this.windowTitle = windowTitle;
-        this.msg = message;
         this.state = okOnly ? State.OK : State.YES_NO;
+        this.isUpdateError = isUpdateError;
+        if (isUpdateError) {
+            this.msg = message + "\n\nPlease try again later or download the latest version from the below link :";
+        } else {
+            this.msg = message;
+        }
         finish();
     }
 
@@ -101,6 +116,15 @@ public class ConfirmationDialog {
             message.setWrapText(true);
             message.setTextAlignment(TextAlignment.CENTER);
         }
+        Hyperlink link = new Hyperlink("Download the Latest Version");
+        link.setFont(Font.font("Verdana", FontWeight.BOLD ,16));
+        link.setBorder(Border.EMPTY);
+        link.setOnAction(e -> {
+            Drifty_GUI driftyGui = new Drifty_GUI();
+            driftyGui.openWebsite("https://saptarshisarkar12.github.io/Drifty/download");
+        });
+        link.setAlignment(Pos.CENTER);
+        link.setTextFill(new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0.25, Color.valueOf("#4158D0")), new Stop(1, Color.valueOf("#C850C0"))));
         Button btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
             stage.close();
@@ -125,7 +149,12 @@ public class ConfirmationDialog {
             vbox.getChildren().add(tfFilename);
         }
         switch (state) {
-            case OK -> hbox.getChildren().add(btnOk);
+            case OK -> {
+                if (isUpdateError) {
+                    vbox.getChildren().add(link);
+                }
+                hbox.getChildren().add(btnOk);
+            }
             case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
             default -> Environment.getMessageBroker().msgLogError("Unknown state in ConfirmationDialog : " + state);
         }
