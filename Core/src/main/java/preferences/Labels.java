@@ -3,7 +3,7 @@ package preferences;
 import java.util.prefs.Preferences;
 
 public interface Labels {
-    Preferences PREFERENCES = Preferences.userNodeForPackage(Labels.class);
+    Preferences PREFERENCES = Preferences.userRoot().node("Drifty");
     String LAST_YT_DLP_UPDATE_TIME = "LAST_YT_DLP_UPDATE_TIME";
     String LAST_DRIFTY_UPDATE_TIME = "LAST_DRIFTY_UPDATE_TIME";
     String DRIFTY_UPDATE_AVAILABLE = "DRIFTY_UPDATE_AVAILABLE";
