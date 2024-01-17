@@ -37,7 +37,7 @@ public class ConfirmationDialog {
     private final String lf = System.lineSeparator();
     private double width = 200;
     private double height = 150;
-    private boolean isUpdateError = false;
+    private boolean isUpdateError;
     private Stage stage;
     private VBox vbox;
     private final String windowTitle;
@@ -117,7 +117,7 @@ public class ConfirmationDialog {
             message.setTextAlignment(TextAlignment.CENTER);
         }
         Hyperlink link = new Hyperlink("Download the Latest Version");
-        link.setFont(Font.font("Verdana", FontWeight.BOLD ,16));
+        link.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
         link.setBorder(Border.EMPTY);
         link.setOnAction(e -> {
             Drifty_GUI driftyGui = new Drifty_GUI();
