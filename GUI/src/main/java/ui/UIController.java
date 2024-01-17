@@ -100,7 +100,7 @@ public final class UIController {
             String currentExecutablePathString = currentExecutablePath.toString();
             String customDirectory = getDir();
             Path tempFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
-            Job updateJob = new Job(Constants.UPDATE_URL.toString(), tempFolder.toString(), currentExecutablePath.getFileName().toString(), false);
+            Job updateJob = new Job(Constants.updateURL.toString(), tempFolder.toString(), currentExecutablePath.getFileName().toString(), false);
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class CheckUpdate {
-    private static final Logger logger = Logger.getInstance();
+    private static final Logger LOGGER = Logger.getInstance();
     private static final String CURRENT_VERSION = Constants.VERSION_NUMBER.replace("v", "");
     private static final MessageBroker M = Environment.getMessageBroker();
 
@@ -34,8 +34,8 @@ public class CheckUpdate {
 
     public static boolean isUpdateAvailable() {
         String latestVersion = getLatestVersion();
-        logger.log(MessageType.INFO, "Latest version : " + latestVersion);
-        logger.log(MessageType.INFO, "Current version : " + CURRENT_VERSION);
+        LOGGER.log(MessageType.INFO, "Latest version : " + latestVersion);
+        LOGGER.log(MessageType.INFO, "Current version : " + CURRENT_VERSION);
         if (latestVersion.isEmpty()) {
             return false;
         }

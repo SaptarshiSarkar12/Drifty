@@ -226,7 +226,7 @@ public class Drifty_CLI {
 
     private static boolean downloadUpdate() {
         try {
-            final URL updateURL = Constants.UPDATE_URL;
+            final URL updateURL = Constants.updateURL;
             Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
             String currentExecutablePathString = currentExecutablePath.toString();
             Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();

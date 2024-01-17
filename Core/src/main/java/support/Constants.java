@@ -24,14 +24,14 @@ public class Constants {
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
     public static final long ONE_DAY = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-    public static URL UPDATE_URL;
+    public static URL updateURL;
 
     static {
         try {
-            UPDATE_URL = Utility.getUpdateURL();
+            updateURL = Utility.getUpdateURL();
         } catch (MalformedURLException | URISyntaxException e) {
             Environment.getMessageBroker().msgUpdateError("Download URL is invalid! " + e.getMessage());
-            UPDATE_URL = null;
+            updateURL = null;
         }
     }
 
