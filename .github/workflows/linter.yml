@@ -15,11 +15,13 @@ jobs:
     permissions: write-all
     steps:
       - name: Checkout Code
+        if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v4
         with:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
         id: lint
         uses: super-linter/super-linter/slim@v5
