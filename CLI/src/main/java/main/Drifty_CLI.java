@@ -77,7 +77,6 @@ public class Drifty_CLI {
                             }
                             addUrlToFile(args[i + 1]);
                             System.out.println("URL added: " + args[i + 1]);
-                            i++;
                             listUrls();
                         } else {
                             messageBroker.msgInitError("No URL provided or invalid URL format.");
@@ -93,7 +92,6 @@ public class Drifty_CLI {
                             try {
                                 int index = Integer.parseInt(args[i + 1]);
                                 removeUrl(index);
-                                i++;
                                 listUrls();
                             } catch (NumberFormatException e) {
                                 messageBroker.msgInitError("Invalid format. Please provide a numeric input.");
