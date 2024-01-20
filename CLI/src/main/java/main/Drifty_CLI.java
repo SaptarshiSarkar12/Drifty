@@ -6,6 +6,7 @@ import cli.init.Environment;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;
+import properties.Program;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -40,7 +41,9 @@ public class Drifty_CLI {
     private static String batchDownloadingFile;
     private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
     private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
-    private static final String URL_LIST_FILE = "drifty_urls.txt";
+    private static final String YAML_FILENAME = "links.yml";
+    private static final String YAML_DIRECTORY = Program.get(Program.DRIFTY_PATH);
+    private static final String YAML_FILE_PATH = YAML_DIRECTORY + File.separator + YAML_FILENAME;
 
     public static void main(String[] args) {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
@@ -104,7 +107,9 @@ public class Drifty_CLI {
                     case GET_FLAG -> {
                         // Logic to download URLs goes here
                         System.out.println("Downloading URLs...");
-                        batchTextDownloader();
+                        batchDownloadingFile = YAML_FILE_PATH;
+                        listUrls();
+                        batchDownloader();
                         System.exit(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
@@ -235,126 +240,110 @@ public class Drifty_CLI {
         }
     }
 
-    private static void listUrls() {
-        Path path = Paths.get(URL_LIST_FILE);
-        if (Files.exists(path)) {
+    private static void ensureYamlFileExists() {
+        // Check if the YAML file exists, create it if it does not
+        File yamlFile = new File(YAML_FILE_PATH);
+        if (!yamlFile.exists()) {
             try {
-                List<String> lines = Files.readAllLines(path);
-                if (lines.isEmpty()) {
-                    System.out.println("No URLs found in the list.");
+                boolean isNewFileCreated = yamlFile.createNewFile();
+                if (isNewFileCreated) {
+                    System.out.println("New YAML file created: " + YAML_FILE_PATH);
                 } else {
-                    System.out.println("List of URLs:");
-                    for (int i = 0; i < lines.size(); i++) {
-                        System.out.println((i + 1) + ". " + lines.get(i));
-                    }
+                    System.err.println("Failed to create new YAML file.");
                 }
             } catch (IOException e) {
-                messageBroker.msgInitError("Error reading file: " + e.getMessage());
+                System.err.println("Error while creating YAML file: " + e.getMessage());
             }
-        } else {
-            System.out.println("URL list file does not exist.");
+        }
+    }
+    private static void listUrls() {
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> data;
+        ensureYamlFileExists();
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(YAML_FILE_PATH))) {
+            data = yaml.load(reader);
+        } catch (IOException e) {
+            System.err.println("Error reading YAML file: " + e.getMessage());
+            return;
+        }
+
+        if (data == null || data.get("links") == null || data.get("links").isEmpty()) {
+            System.out.println("No URLs found in the YAML file.");
+            return;
+        }
+
+        List<String> urls = data.get("links");
+        System.out.println("List of URLs:");
+        for (int i = 0; i < urls.size(); i++) {
+            System.out.println((i + 1) + ". " + urls.get(i));
         }
     }
 
     private static void removeUrl(int index) {
-        Path path = Paths.get(URL_LIST_FILE);
-        if (!Files.exists(path)) {
-            System.out.println("URL list file does not exist.");
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> data;
+        ensureYamlFileExists();
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(YAML_FILE_PATH))) {
+            data = yaml.load(reader);
+        } catch (IOException e) {
+            System.err.println("Error reading YAML file: " + e.getMessage());
             return;
         }
 
-        try {
-            List<String> lines = new ArrayList<>(Files.readAllLines(path));
-            if (index < 1 || index > lines.size()) {
-                System.out.println("Line number not found. Please provide a valid line number.");
-            } else {
-                // Store the URL before removing it
-                String removedUrl = lines.get(index - 1);
-                // Remove the URL
-                lines.remove(index - 1);
-                // Update the file
-                Files.write(path, lines);
-                // Print the removed URL
-                System.out.println("Removed URL at line number " + index + ": " + removedUrl);
-            }
+        if (data == null || data.get("links") == null) {
+            System.out.println("No URLs found in the YAML file.");
+            return;
+        }
+
+        List<String> urls = data.get("links");
+        if (index < 1 || index > urls.size()) {
+            System.out.println("Invalid input. Please provide a valid line number.");
+            return;
+        }
+
+        // Store the URL before removing
+        String removedUrl = urls.remove(index - 1);
+
+        // Update the YAML file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(YAML_FILE_PATH))) {
+            yaml.dump(data, writer);
+            System.out.println("Removed URL: " + removedUrl);
         } catch (IOException e) {
-            messageBroker.msgInitError("Error updating file: " + e.getMessage());
+            System.err.println("Error writing to YAML file: " + e.getMessage());
         }
     }
+
 
     private static void addUrlToFile(String url) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(URL_LIST_FILE, true))) {
-            writer.write(url);
-            writer.newLine();
-        } catch (IOException e) {
-            messageBroker.msgInitError("Error writing URL to file: " + e.getMessage());
-        }
-    }
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> data;
 
-    private static void batchTextDownloader() {
-        Path path = Paths.get(URL_LIST_FILE);
-        if (!Files.exists(path)) {
-            messageBroker.msgDownloadError("Data file (" + URL_LIST_FILE + ") not found!");
+        // Ensure YAML file exists
+        ensureYamlFileExists();
+
+        // Load existing data from the file
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(YAML_FILE_PATH))) {
+            data = yaml.load(reader);
+            if (data == null) {
+                data = new HashMap<>();
+            }
+            // Ensure 'links' key has a list associated with it
+            data.computeIfAbsent("links", k -> new ArrayList<>());
+        } catch (IOException e) {
+            System.err.println("Error reading YAML file: " + e.getMessage());
             return;
         }
 
-        List<String> urls;
-        try {
-            urls = Files.readAllLines(path);
+        // Add URL to the list
+        data.get("links").add(url);
+
+        // Dump updated data back to the YAML file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(YAML_FILE_PATH))) {
+            yaml.dump(data, writer);
         } catch (IOException e) {
-            messageBroker.msgDownloadError("Error reading from file: " + e.getMessage());
-            return;
-        }
-        try {
-            if (urls.isEmpty()) {
-                messageBroker.msgLinkInfo("No links specified. Exiting...");
-                return;
-            }
-
-            messageBroker.msgBatchInfo("Processing " + urls.size() + " link(s)");
-            messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
-            downloadsFolder = SC.next();
-            downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-
-            for (int i = 0; i < urls.size(); i++) {
-                String url = urls.get(i);
-                messageBroker.msgStyleInfo(BANNER_BORDER);
-                messageBroker.msgLinkInfo("[" + (i + 1) + "/" + urls.size() + "] Processing link: " + url);
-
-                // Setting global 'link' variable, assuming other methods depend on it
-                link = url;
-                isYoutubeURL = isYoutube(link);
-                isInstagramLink = isInstagram(link);
-                isSpotifyLink = isSpotify(link);
-                if (".".equals(downloadsFolder)) {
-                    downloadsFolder = Utility.getHomeDownloadFolder();
-                } else if ("L".equalsIgnoreCase(downloadsFolder)) {
-                    downloadsFolder = AppSettings.GET.lastDownloadFolder();
-                }
-
-                if (isSpotifyLink && link.contains("playlist")) {
-                    fileName = null;
-                } else {
-                    if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-                        if (link.contains("?")) {
-                            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
-                        } else {
-                            link = link + "?utm_source=ig_embed";
-                        }
-                    }
-                    messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                    fileName = findFilenameInLink(link);
-
-                }
-
-                if (isSpotifyLink && link.contains("playlist")) {
-                    handleSpotifyPlaylist();
-                }
-                Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAndDownload(job, false);
-            }
-        } catch (Exception e) {
-            messageBroker.msgDownloadError("Error reading from URL list file (" + URL_LIST_FILE + "): " + e.getMessage());
+            System.err.println("Error writing to YAML file: " + e.getMessage());
         }
     }
 
