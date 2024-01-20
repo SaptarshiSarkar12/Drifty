@@ -60,14 +60,9 @@ jobs:
         run: |
           COMMENT_INITIAL=$(echo -e "## :x: Linting errors found!\n")
           COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///')
-          COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.actor }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`")
+          COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.event.pull_request.user.login }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`")
           COMMENT=$(echo "$COMMENT_BODY")
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-            -f body="$COMMENT"
+          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Fail Workflow for failure in linting
