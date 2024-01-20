@@ -15,7 +15,6 @@ jobs:
     permissions: write-all
     steps:
       - name: Checkout Code
-        if: ${{ github.event_name == 'push' }}
         uses: actions/checkout@v4
         with:
           # Full git history is needed to get a proper
