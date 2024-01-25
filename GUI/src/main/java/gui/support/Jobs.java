@@ -1,6 +1,6 @@
-package gui_support;
+package gui.support;
 
-import gui_preferences.AppSettings;
+import gui.preferences.AppSettings;
 import support.Job;
 
 import java.util.concurrent.ConcurrentLinkedDeque;

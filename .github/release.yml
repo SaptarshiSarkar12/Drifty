@@ -7,6 +7,8 @@ changelog:
         labels:
           - "Website 🌐"
           - "documentation 📝"
+          - "dependencies 📦️"
+          - "docker 🐋"
     - title: Bug 🪲 Fixes in Application
       labels:
         - "bug 🐛"
@@ -14,6 +16,8 @@ changelog:
         labels:
           - "Website 🌐"
           - "documentation 📝"
+          - "dependencies 📦️"
+          - "docker 🐋"
     - title: New Features ✨ in Website
       labels:
         - "feature ✨"
@@ -21,6 +25,8 @@ changelog:
         labels:
           - "App 💻"
           - "documentation 📝"
+          - "dependencies 📦️"
+          - "docker 🐋"
     - title: Bug 🪲 Fixes in Website
       labels:
         - "bug 🐛"
@@ -28,6 +34,8 @@ changelog:
         labels:
           - "App 💻"
           - "documentation 📝"
+          - "dependencies 📦️"
+          - "docker 🐋"
     - title: Documentation 📝 Changes
       labels:
         - "documentation 📝"
@@ -35,14 +43,28 @@ changelog:
         labels:
           - "App 💻"
           - "Website 🌐"
-    - title: Docker 🐋 Changes
+          - "dependencies 📦️"
+          - "docker 🐋"
+    - title: New Features ✨ in Docker 🐋
       labels:
         - "docker 🐋"
+        - "feature ✨"
       exclude:
         labels:
           - "App 💻"
           - "documentation 📝"
           - "Website 🌐"
+          - "dependencies 📦️"
+    - title: Bug 🪲 Fixes in Docker 🐋
+      labels:
+          - "docker 🐋"
+          - "bug 🐛"
+      exclude:
+          labels:
+          - "App 💻"
+          - "documentation 📝"
+          - "Website 🌐"
+          - "dependencies 📦️"
     - title: Dependency 📦️ Changes
       labels:
         - "dependencies 📦️"

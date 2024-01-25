@@ -1,9 +1,11 @@
 package main;
 
-import gui_init.Environment;
-import gui_support.Constants;
-import gui_utils.MessageBroker;
+import gui.init.Environment;
+import gui.preferences.AppSettings;
+import gui.support.Constants;
+import gui.utils.MessageBroker;
 import javafx.application.Application;
+import javafx.application.Preloader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,17 +19,12 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import preferences.AppSettings;
 import properties.Mode;
-import ui.ConfirmationDialog;
-import ui.UIController;
-import ui.MainGridPane;
-import ui.ManageFolders;
+import ui.*;
 import utils.Utility;
 
-import static gui_support.Constants.GUI_APPLICATION_TERMINATED;
+import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
-import static javafx.scene.layout.AnchorPane.setRightAnchor;
 import static support.Constants.DRIFTY_WEBSITE_URL;
 import static support.Constants.VERSION_NUMBER;
 
@@ -37,19 +34,29 @@ public class Drifty_GUI extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
+        launch(args);
+    }
+
+    @Override
+    public void init() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         msgBroker = new MessageBroker();
         Environment.setMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
-        Environment.initializeEnvironment();
-        launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) {
+        Environment.initializeEnvironment();
         this.primaryStage = Constants.getStage("Drifty GUI", true);
+        this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
+        this.primaryStage.setMinHeight(Constants.SCREEN_HEIGHT * .8125);
         createScene();
+        this.primaryStage.setScene(scene);
+        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_LOAD));
+        this.primaryStage.show();
     }
 
     private void createScene() {
@@ -62,8 +69,6 @@ public class Drifty_GUI extends Application {
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
-        primaryStage.setScene(scene);
-        primaryStage.show();
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
         primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {

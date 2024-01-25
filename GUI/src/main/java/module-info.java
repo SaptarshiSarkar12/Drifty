@@ -8,11 +8,11 @@ module GUI {
     requires org.hildan.fxgson;
     requires java.prefs;
 
-    exports gui_support;
-    exports gui_utils;
+    exports gui.support;
+    exports gui.utils;
     exports main to javafx.graphics;
     exports ui to javafx.graphics;
 
-    opens gui_support to com.google.gson;
+    opens gui.support to com.google.gson;
     opens ui to com.google.gson;
 }

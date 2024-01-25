@@ -1,6 +1,6 @@
-package gui_support;
+package gui.support;
 
-import gui_init.Environment;
+import gui.init.Environment;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -86,7 +86,7 @@ public class Constants extends support.Constants {
         return scene;
     }
 
-    public static void addCSS(Scene scene, URL ...css) {
+    public static void addCSS(Scene scene, URL... css) {
         for (URL url : css) {
             scene.getStylesheets().add(url.toExternalForm());
         }

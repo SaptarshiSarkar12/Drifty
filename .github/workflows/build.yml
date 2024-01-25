@@ -8,7 +8,7 @@ on:
       - "*.txt"
   pull_request:
     paths-ignore:
-      - "Website/**"      
+      - "Website/**"
       - "*.md"
       - "*.txt"
   workflow_dispatch:
@@ -19,7 +19,7 @@ on:
           type: boolean
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -115,17 +115,17 @@ jobs:
       with:
         name: ${{ matrix.os }}-${{ matrix.mode }}-Build-Files
         path: ${{ matrix.os }}-${{ matrix.mode }}.tar
-        
+
   generate-metadata-and-create-release:
     name: Artifacts Metadata & Release
     runs-on: ubuntu-latest
     needs: build-Drifty
     steps:
     - uses: actions/checkout@v4
-    - name: Get Drifty version from .version file
+    - name: Get Drifty version from version.json file
       run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
     - name: Set Drifty version in pom.xml
-      run: mvn versions:set -DnewVersion=$VERSION
+      run: mvn versions:set -D newVersion=$VERSION -D generateBackupPoms=false
     - name: Download Build artifacts
       uses: actions/download-artifact@v4
     - name: Make OS specific build directories

@@ -13,12 +13,10 @@ on:
     paths-ignore:
       - "Website/**"
       - "*.md"
-      - "*.txt"
   pull_request:
     paths-ignore:
       - "Website/**"
       - "*.md"
-      - "*.txt"
   workflow_dispatch:
 
 env:
@@ -132,7 +130,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5.4.0
+        uses: docker/metadata-action@v5.5.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}

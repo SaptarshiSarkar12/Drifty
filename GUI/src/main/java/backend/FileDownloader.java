@@ -1,8 +1,8 @@
 package backend;
 
-import gui_init.Environment;
-import gui_support.SplitDownloadMetrics;
-import gui_utils.MessageBroker;
+import gui.init.Environment;
+import gui.support.SplitDownloadMetrics;
+import gui.utils.MessageBroker;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -29,9 +29,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static gui_support.Colors.GREEN;
-import static gui_support.Colors.RED;
-import static gui_support.Constants.*;
+import static gui.support.Colors.GREEN;
+import static gui.support.Colors.RED;
+import static gui.support.Constants.*;
 
 public class FileDownloader extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();

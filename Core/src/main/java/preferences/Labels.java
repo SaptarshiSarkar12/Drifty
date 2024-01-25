@@ -8,4 +8,5 @@ public interface Labels {
     String LAST_FOLDER = "LAST_FOLDER";
     String YT_DLP_VERSION = "YT_DLP_VERSION";
     String SPOTDL_VERSION = "SPOTDL_VERSION";
+    String YT_DLP_UPDATING = "YT_DLP_UPDATING";
 }

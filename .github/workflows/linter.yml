@@ -2,16 +2,17 @@ name: Lint Code Base
 
 on:
   push:
-  pull_request:
+  pull_request_target:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     name: Lint Code Base
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      statuses: write
+    permissions: write-all
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,11 +20,15 @@ jobs:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
+        id: lint
         uses: super-linter/super-linter/slim@v5
+        continue-on-error: true
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CREATE_LOG_FILE: true
           VALIDATE_BASH: false
           VALIDATE_CPP: false
           VALIDATE_CSS: false
@@ -34,3 +39,37 @@ jobs:
           VALIDATE_CSHARP: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_YAML: false
+      - name: Upload Lint Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: linter-result
+          path: super-linter.log
+      - name: Generate Workflow Summary for successful run
+        if: ${{ steps.lint.outcome == 'success' }}
+        run: |
+          echo "## :ballot_box_with_check: Linting passed!" >> $GITHUB_STEP_SUMMARY
+      - name: Generate Workflow Summary for failed run
+        if: ${{ steps.lint.outcome == 'failure' }}
+        run: |
+          echo "## :x: Linting errors found!" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`css" >> $GITHUB_STEP_SUMMARY
+          cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///' >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      - name: Comment on PR for failed run
+        if: ${{ steps.lint.outcome == 'failure' && github.event_name == 'pull_request_target' }}
+        shell: bash
+        run: |
+          COMMENT_INITIAL=$(echo -e "## :x: Linting errors found!\n")
+          COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///')
+          COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.event.pull_request.user.login }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`")
+          COMMENT=$(echo "$COMMENT_BODY")
+          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fail Workflow for failure in linting
+        if: ${{ steps.lint.outcome == 'failure' }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            core.setFailed("Linting errors found! Please check workflow summary for details.")

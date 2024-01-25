@@ -1,0 +1,26 @@
+name: Build Development Docker Images
+
+on:
+  push:
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+  pull_request:
+    paths-ignore:
+      - "Website/**"
+      - "*.md"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the base image
+        run: docker compose build base
+      - name: Build the runner image
+        run: docker compose build runner
+      - name: Build the CLI image
+        run: docker compose build cli
+      - name: Build the GUI image
+        run: docker compose build gui

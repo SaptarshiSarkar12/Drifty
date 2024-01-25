@@ -1,5 +1,6 @@
 *.log
 !.mvn/wrapper/maven-wrapper.jar
+config/*.o
 target/
 Website/.next
 Website/node_modules

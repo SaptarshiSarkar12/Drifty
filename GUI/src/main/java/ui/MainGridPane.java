@@ -1,6 +1,6 @@
 package ui;
 
-import gui_support.Constants;
+import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +17,7 @@ import support.Job;
 
 import java.util.Objects;
 
-import static gui_support.Constants.MONACO_TTF;
+import static gui.support.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
     public final ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);

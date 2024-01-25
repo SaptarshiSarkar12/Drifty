@@ -140,12 +140,12 @@
   "methods":[{"name":"createRenderer","parameterTypes":["com.sun.scenario.effect.FilterContext"] }]
 },
 {
-  "name":"gui_support.Folders",
+  "name":"gui.support.Folders",
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"gui_support.Jobs",
+  "name":"gui.support.Jobs",
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -488,6 +488,10 @@
 {
   "name":"support.JobHistory",
   "allDeclaredFields":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ui.Splash",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 }
 ]

@@ -1,8 +1,8 @@
 package main;
 
 import backend.FileDownloader;
-import cli_utils.MessageBroker;
-import cli_init.Environment;
+import cli.utils.MessageBroker;
+import cli.init.Environment;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;
@@ -10,8 +10,8 @@ import properties.OS;
 import support.Job;
 import support.JobHistory;
 import utils.Logger;
-import cli_utils.ScannerFactory;
-import cli_utils.Utility;
+import cli.utils.ScannerFactory;
+import cli.utils.Utility;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -21,8 +21,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static cli_support.Constants.*;
-import static cli_utils.Utility.*;
+import static cli.support.Constants.*;
+import static cli.utils.Utility.*;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();
@@ -31,7 +31,7 @@ public class Drifty_CLI {
     protected static boolean isYoutubeURL;
     protected static boolean isInstagramLink;
     protected static boolean isSpotifyLink;
-    private static cli_utils.MessageBroker messageBroker;
+    private static MessageBroker messageBroker;
     private static String link;
     private static String downloadsFolder;
     private static Utility utility;
@@ -332,9 +332,6 @@ public class Drifty_CLI {
                         }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
                         fileName = findFilenameInLink(link);
-                        if (!Objects.requireNonNull(fileName).isEmpty()) {
-                            renameFilenameIfRequired(false);
-                        }
                     }
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
@@ -467,7 +464,7 @@ public class Drifty_CLI {
             }
         } else {
             jobHistory.addJob(job, true);
-            renameFilenameIfRequired(true);
+            renameFilenameIfRequired(removeInputBufferFirst);
             if (isSpotifyLink) {
                 link = Utility.getSpotifyDownloadLink(link);
             }
