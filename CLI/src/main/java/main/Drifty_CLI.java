@@ -66,7 +66,7 @@ public class Drifty_CLI {
                         System.exit(0);
                     }
                     case ADD_FLAG -> {
-                        if (i + 1 >= args.length)  {
+                        if (i + 1 >= args.length) {
                             messageBroker.msgInitError("No URL provided.");
                             System.exit(1);
                         }
@@ -78,7 +78,7 @@ public class Drifty_CLI {
                         System.exit(0);
                     }
                     case REMOVE_FLAG -> {
-                        if (i + 1 >= args.length)  {
+                        if (i + 1 >= args.length) {
                             messageBroker.msgInitError("No line number provided for removal.");
                             System.exit(1);
                         }
