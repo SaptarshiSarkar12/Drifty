@@ -287,7 +287,8 @@ public class Drifty_CLI {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
             data = yaml.load(reader);
             if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
-                messageBroker.msgLinkInfo("No URLs found or list is empty.");
+                messageBroker.msgLinkError("No URL is present in the links queue!\n" +
+                        "Please run with `add <link>` to add the link to the list.");
                 return;
             }
 
@@ -322,7 +323,8 @@ public class Drifty_CLI {
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
             data = yaml.load(reader);
             if (data == null || !data.containsKey("links")) {
-                messageBroker.msgLinkInfo("No URLs found or list is empty.");
+                messageBroker.msgLinkError("No URL is present in the links queue!\n" +
+                        "Please run with `add <link>` to add the link to the list.");
                 return;
             }
 
