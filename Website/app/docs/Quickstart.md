@@ -8,7 +8,7 @@ With the help of Dirfty, you can download files and videos from various sources 
 
 - Free and Open Source forever
 - Faster downloading of files, just like IDM 
-- Youtube, Instagram, Twitter/X etc.. Platforms supported
+- Popular platforms like YouTube, Instagram, etc. are also supported
 - Both CLI (Command Line Interface) and GUI (Graphical User Interface) are available
 - Multi-threaded downloading is used in Drifty to get accelerated download speeds
 
