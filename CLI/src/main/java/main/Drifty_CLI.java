@@ -58,7 +58,7 @@ public class Drifty_CLI {
             link = null;
             String name = null;
             String location = null;
-            yamlFilePath = Program.get(Program.DRIFTY_PATH) + File.separator + YAML_FILENAME;
+            yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH), YAML_FILENAME).toAbsolutePath().toString();
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
                     case HELP_FLAG, HELP_FLAG_SHORT -> {
@@ -67,10 +67,12 @@ public class Drifty_CLI {
                     }
                     case ADD_FLAG -> {
                         if (i + 1 >= args.length) {
-                            messageBroker.msgInitError("No URL provided.");
+                            messageBroker.msgBatchError("No URL provided.");
                             System.exit(1);
                         }
-                        addUrlToFile(args[i + 1]);
+                        for (int j = i + 1; j < args.length; j++) {
+                            addUrlToFile(args[j]);
+                        }
                         System.exit(0);
                     }
                     case LIST_FLAG -> {
@@ -79,18 +81,24 @@ public class Drifty_CLI {
                     }
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
-                            messageBroker.msgInitError("No line number provided for removal.");
+                            messageBroker.msgBatchError("No line number provided for removal.");
                             System.exit(1);
                         }
-                        removeUrl(args[i + 1]);
+                        for (int j = i + 1; j < args.length; j++) {
+                            if ("all".equalsIgnoreCase(args[j])) {
+                                removeAllUrls();
+                            } else {
+                                removeUrl(args[j]);
+                            }
+                        }
                         System.exit(0);
                     }
                     case GET_FLAG -> {
                         // Logic to download URLs goes here
                         System.out.println("Downloading URLs...");
                         batchDownloadingFile = yamlFilePath;
-                        listUrls();
                         batchDownloader();
+                        removeAllUrls();
                         System.exit(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
@@ -250,8 +258,9 @@ public class Drifty_CLI {
         }
 
         if (data == null || data.get("links") == null || data.get("links").isEmpty()) {
-            messageBroker.msgDownloadInfo("No URLs found in the YAML file.");
-            return;
+            messageBroker.msgDownloadError("No URL is present in the links queue!\n" +
+                    "Please run with `add <link>` to add the link to the list.");
+            System.exit(1);
         }
 
         List<String> urls = data.get("links");
@@ -285,7 +294,7 @@ public class Drifty_CLI {
             List<String> urls = data.get("links");
             // Validate the index
             if (index < 1 || index > urls.size()) {
-                messageBroker.msgInputError("Invalid index. Please provide a number between 1 and " + urls.size() + ".", true);
+                messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
                 return;
             }
 
@@ -296,7 +305,33 @@ public class Drifty_CLI {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
                 yaml.dump(data, writer);
                 messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
-                listUrls();
+            } catch (IOException e) {
+                messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
+            }
+
+        } catch (IOException e) {
+            messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
+        }
+    }
+
+    private static void removeAllUrls() {
+        Yaml yaml = new Yaml();
+        Map<String, List<String>> data;
+        ensureYamlFileExists(); // Make sure this method correctly ensures the YAML file exists
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
+            data = yaml.load(reader);
+            if (data == null || !data.containsKey("links")) {
+                messageBroker.msgLinkInfo("No URLs found or list is empty.");
+                return;
+            }
+
+            data.put("links", new ArrayList<>()); // Clear all URLs
+
+            // Write the updated (empty) list back to the YAML file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
+                yaml.dump(data, writer);
+                messageBroker.msgLinkInfo("All URLs have been removed.");
             } catch (IOException e) {
                 messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
             }
@@ -339,7 +374,6 @@ public class Drifty_CLI {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
             yaml.dump(data, writer);
             messageBroker.msgLinkInfo("URL added: " + urlString);
-            listUrls();
         } catch (IOException e) {
             messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
         }
@@ -560,8 +594,8 @@ public class Drifty_CLI {
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
         System.out.println("--version    -v            Current Version          Displays version number of Drifty");
-        System.out.println("add [URL]                  Add URL                  Adds a new URL to the download queue");
-        System.out.println("remove [line number]       Remove URL               Removes a URL from the download queue at the specified line number");
+        System.out.println("add <URL> <URL> ...        Add URLs                 Adds new URLs to the download queue. Multiple URLs can be added by separating them with spaces.");
+        System.out.println("remove <number(s)/all>     Remove URLs              Removes one or more URLs from the download queue. Specify line numbers separated by spaces or use 'all' to remove all URLs.");
         System.out.println("list                       List URLs                Lists all URLs currently in the download queue");
         System.out.println("get                        Download URLs            Downloads all URLs in the download queue");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
