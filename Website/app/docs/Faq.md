@@ -10,7 +10,7 @@
 
 3. **How can I get updates related to this project?**
     
-    ➡️ You can join our [Discord server](https://discord.com/invite/DeT4jXPfkG) to get updates on this project. You can also watch this repository by clicking on teh watch 👁️ button [here](https://github.com/SaptarshiSarkar12/Drifty) and select notification types to **All Acticity** to get all updates on this project
+    ➡️ You can join our [Discord server](https://discord.com/invite/DeT4jXPfkG) to get updates on this project. You can also watch this repository by clicking on the watch 👁️ button [here](https://github.com/SaptarshiSarkar12/Drifty) and select notification types to **All Activity** to get all updates on this project.
 
 4. **What technologies does Drifty use?**
    
