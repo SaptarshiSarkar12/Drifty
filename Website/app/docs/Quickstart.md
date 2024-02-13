@@ -16,4 +16,4 @@ With the help of Dirfty, you can download files and videos from various sources 
 
 ##  A simple demo on how to get started with the GUI of Drifty
 
-https://github.com/hasnainmakada-99/Drifty/assets/82728823/980cafd3-6e3e-4b56-a890-b96ec47b7593
+https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/5bb21bf6-fb2b-4374-8d0b-14cac3c06908
