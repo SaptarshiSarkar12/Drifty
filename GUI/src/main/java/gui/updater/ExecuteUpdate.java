@@ -57,7 +57,7 @@ public class ExecuteUpdate {
         M.msgUpdateInfo("Update successful!");
         ProcessBuilder processBuilder = new ProcessBuilder(Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath().toString());
         processBuilder.start();
-        new ConfirmationDialog("Update Successful", "Update was successfully installed!" + System.lineSeparator().repeat(2) + "Please restart Drifty to see the changes!").getResponse();
+        new ConfirmationDialog("Update Successful", "Update was successfully installed!" + System.lineSeparator().repeat(2) + "Restarting Drifty...").getResponse();
         Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
     }
 }
