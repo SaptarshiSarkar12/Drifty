@@ -3,6 +3,7 @@ package gui.updater;
 import gui.init.Environment;
 import gui.utils.MessageBroker;
 import main.Drifty_GUI;
+import properties.OS;
 import ui.ConfirmationDialog;
 
 import java.io.File;
@@ -24,11 +25,13 @@ public class ExecuteUpdate {
     }
 
     public boolean setExecutablePermission() {
-        boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
-        if (!isExecutablePermissionGranted) {
-            M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
-            new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
-            return false;
+        if (!OS.isMac()) {
+            boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
+            if (!isExecutablePermissionGranted) {
+                M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
+                return false;
+            }
         }
         boolean isWritePermissionGranted = latestExecutable.setWritable(true);
         if (!isWritePermissionGranted) {
