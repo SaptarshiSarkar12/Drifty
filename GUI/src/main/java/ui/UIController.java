@@ -6,6 +6,7 @@ import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.Jobs;
+import gui.updater.ExecuteUpdate;
 import gui.utils.CheckFile;
 import gui.utils.MessageBroker;
 import javafx.application.Platform;
@@ -31,6 +32,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
+import properties.OS;
 import support.Job;
 import support.JobHistory;
 import utils.Utility;
@@ -42,7 +44,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
@@ -71,7 +72,7 @@ public final class UIController {
     private Job selectedJob;
 
     /*
-    Single instance model only constructor
+    Single instance model-only constructor
      */
     private UIController() {
         folders = AppSettings.GET.folders();
@@ -97,10 +98,10 @@ public final class UIController {
     private void downloadUpdate() {
         try {
             Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
-            String currentExecutablePathString = currentExecutablePath.toString();
+            File currentExecutable = currentExecutablePath.toFile();
             String customDirectory = getDir();
-            Path tempFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
-            Job updateJob = new Job(Constants.updateURL.toString(), tempFolder.toString(), currentExecutablePath.getFileName().toString(), false);
+            Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
+            Job updateJob = new Job(Constants.updateURL.toString(), tmpFolder.toString(), currentExecutablePath.getFileName().toString(), false);
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
@@ -108,38 +109,31 @@ public final class UIController {
                 sleep(500);
             }
             setDir(customDirectory);
-            File latestExecutable = new File(tempFolder.toString(), currentExecutablePath.getFileName().toString());
-            boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
-            if (!isExecutablePermissionGranted) {
-                M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
-                return;
+            if (OS.isMac()) {
+                try {
+                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
+                    Process pkgExtractProcess = extractPkg.start();
+                    pkgExtractProcess.waitFor();
+                    ProcessBuilder extractPayload = new ProcessBuilder("tar", "-xvf", Paths.get(tmpFolder.toString(), "Drifty GUI", "GUI-app.pkg", "Payload").toAbsolutePath().toString(), "-C", Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents").toAbsolutePath().toString());
+                    Process payloadExtractProcess = extractPayload.start();
+                    payloadExtractProcess.waitFor();
+                    File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
+                    ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
+                    updateExecutor.setExecutablePermission();
+                    updateExecutor.executeUpdate();
+                } catch (SecurityException e) {
+                    M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
+                } catch (UnsupportedOperationException e) {
+                    M.msgUpdateError("Failed to extract the latest executable! Extract operation is not supported on this platform! " + e.getMessage());
+                } catch (IOException e) {
+                    M.msgUpdateError("Failed to extract the latest executable! " + e.getMessage());
+                }
+            } else {
+                File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
+                ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
+                updateExecutor.setExecutablePermission();
+                updateExecutor.executeUpdate();
             }
-            boolean isWritePermissionGranted = latestExecutable.setWritable(true);
-            if (!isWritePermissionGranted) {
-                M.msgUpdateError("Failed to set write permission for the latest version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to set write permission for the latest version of Drifty!", true, true).getResponse();
-                return;
-            }
-            boolean isReadPermissionGranted = latestExecutable.setReadable(true);
-            if (!isReadPermissionGranted) {
-                M.msgUpdateError("Failed to set read permission for the latest version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to set read permission for the latest version of Drifty!", true, true).getResponse();
-                return;
-            }
-            File currentExecutable = currentExecutablePath.toFile();
-            boolean isCurrentExecutableRenamed = currentExecutable.renameTo(new File(currentExecutable.getName() + ".old"));
-            if (!isCurrentExecutableRenamed) {
-                M.msgUpdateError("Failed to replace the current version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to replace the current version of Drifty!", true, true).getResponse();
-                return;
-            }
-            Files.move(latestExecutable.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
-            M.msgUpdateInfo("Update successful!");
-            ProcessBuilder processBuilder = new ProcessBuilder(Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath().toString());
-            processBuilder.start();
-            new ConfirmationDialog("Update Successful", "Update was successfully installed!" + nl.repeat(2) + "Restarting Drifty...").getResponse();
-            Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
         } catch (IOException e) {
             M.msgUpdateError("Failed to download update! " + e.getMessage());
             new ConfirmationDialog("Update Failed", "Failed to download update! " + e.getMessage(), true, true).getResponse();
