@@ -23,24 +23,26 @@ public class ExecuteUpdate {
         this.latestExecutable = latestExecutable;
     }
 
-    public void setExecutablePermission() {
+    public boolean setExecutablePermission() {
         boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
         if (!isExecutablePermissionGranted) {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
             new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
-            return;
+            return false;
         }
         boolean isWritePermissionGranted = latestExecutable.setWritable(true);
         if (!isWritePermissionGranted) {
             M.msgUpdateError("Failed to set write permission for the latest version of Drifty!");
             new ConfirmationDialog("Update Failed", "Failed to set write permission for the latest version of Drifty!", true, true).getResponse();
-            return;
+            return false;
         }
         boolean isReadPermissionGranted = latestExecutable.setReadable(true);
         if (!isReadPermissionGranted) {
             M.msgUpdateError("Failed to set read permission for the latest version of Drifty!");
             new ConfirmationDialog("Update Failed", "Failed to set read permission for the latest version of Drifty!", true, true).getResponse();
+            return false;
         }
+        return true;
     }
 
     public void executeUpdate() throws IOException {
@@ -55,7 +57,7 @@ public class ExecuteUpdate {
         M.msgUpdateInfo("Update successful!");
         ProcessBuilder processBuilder = new ProcessBuilder(Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath().toString());
         processBuilder.start();
-        new ConfirmationDialog("Update Successful", "Update was successfully installed!" + System.lineSeparator().repeat(2) + "Restarting Drifty...").getResponse();
+        new ConfirmationDialog("Update Successful", "Update was successfully installed!" + System.lineSeparator().repeat(2) + "Please restart Drifty to see the changes!").getResponse();
         Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
     }
 }

@@ -119,8 +119,9 @@ public final class UIController {
                     payloadExtractProcess.waitFor();
                     File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
                     ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-                    updateExecutor.setExecutablePermission();
-                    updateExecutor.executeUpdate();
+                    if (updateExecutor.setExecutablePermission()) {
+                        updateExecutor.executeUpdate();
+                    }
                 } catch (SecurityException e) {
                     M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
                 } catch (UnsupportedOperationException e) {
@@ -131,8 +132,9 @@ public final class UIController {
             } else {
                 File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
                 ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-                updateExecutor.setExecutablePermission();
-                updateExecutor.executeUpdate();
+                if (updateExecutor.setExecutablePermission()) {
+                    updateExecutor.executeUpdate();
+                }
             }
         } catch (IOException e) {
             M.msgUpdateError("Failed to download update! " + e.getMessage());

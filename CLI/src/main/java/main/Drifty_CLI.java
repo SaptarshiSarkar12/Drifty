@@ -1,8 +1,11 @@
 package main;
 
 import backend.FileDownloader;
-import cli.utils.MessageBroker;
 import cli.init.Environment;
+import cli.updater.ExecuteUpdate;
+import cli.utils.MessageBroker;
+import cli.utils.ScannerFactory;
+import cli.utils.Utility;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;
@@ -11,16 +14,14 @@ import support.Constants;
 import support.Job;
 import support.JobHistory;
 import utils.Logger;
-import cli.utils.ScannerFactory;
-import cli.utils.Utility;
 
 import java.io.*;
-import java.net.*;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -228,38 +229,18 @@ public class Drifty_CLI {
         try {
             final URL updateURL = Constants.updateURL;
             Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
-            String currentExecutablePathString = currentExecutablePath.toString();
             Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
             tmpFolder.toFile().deleteOnExit();
             FileDownloader downloader = new FileDownloader(updateURL.toString(), currentExecutablePath.getFileName().toString(), tmpFolder.toString());
             downloader.run();
             File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
-            boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
-            if (!isExecutablePermissionGranted) {
-                messageBroker.msgUpdateError("Failed to set executable permission for the latest executable!");
-                return false;
-            }
-            boolean isWritablePermissionGranted = latestExecutable.setWritable(true);
-            if (!isWritablePermissionGranted) {
-                messageBroker.msgUpdateError("Failed to set write permission for the latest executable!");
-                return false;
-            }
-            boolean isReadablePermissionGranted = latestExecutable.setReadable(true);
-            if (!isReadablePermissionGranted) {
-                messageBroker.msgUpdateError("Failed to set read permission for the latest executable!");
-                return false;
-            }
             File currentExecutable = currentExecutablePath.toFile();
-            boolean isCurrentExecutableRenamed = currentExecutable.renameTo(new File(currentExecutable.getName() + ".old"));
-            if (!isCurrentExecutableRenamed) {
-                messageBroker.msgUpdateError("Failed to replace current executable with the latest one!");
+            ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
+            if (!updateExecutor.setExecutablePermission()) {
                 return false;
+            } else {
+                return updateExecutor.executeUpdate();
             }
-            Files.move(latestExecutable.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
-            Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
-            messageBroker.msgUpdateInfo("Update successful!");
-            messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
-            return true;
         } catch (IOException e) {
             messageBroker.msgUpdateError("Failed to download update! " + e.getMessage());
         } catch (Exception e) {
