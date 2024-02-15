@@ -112,18 +112,21 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
-                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
-                    Process pkgExtractProcess = extractPkg.start();
-                    pkgExtractProcess.waitFor();
-                    ProcessBuilder extractPayload = new ProcessBuilder("tar", "-xvf", Paths.get(tmpFolder.toString(), "Drifty GUI", "GUI-app.pkg", "Payload").toAbsolutePath().toString(), "-C", Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents").toAbsolutePath().toString());
-                    Process payloadExtractProcess = extractPayload.start();
-                    payloadExtractProcess.waitFor();
-                    File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
-                    ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-                    if (!Mode.isGUI()) {
-                        updateExecutor.setExecutablePermission();
-                    }
-                    updateExecutor.executeUpdate();
+                    ProcessBuilder startPkg = new ProcessBuilder("open", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
+                    startPkg.start();
+                    System.exit(0);
+//                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
+//                    Process pkgExtractProcess = extractPkg.start();
+//                    pkgExtractProcess.waitFor();
+//                    ProcessBuilder extractPayload = new ProcessBuilder("tar", "-xvf", Paths.get(tmpFolder.toString(), "Drifty GUI", "GUI-app.pkg", "Payload").toAbsolutePath().toString(), "-C", Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents").toAbsolutePath().toString());
+//                    Process payloadExtractProcess = extractPayload.start();
+//                    payloadExtractProcess.waitFor();
+//                    File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
+//                    ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
+//                    if (!Mode.isGUI()) {
+//                        updateExecutor.setExecutablePermission();
+//                    }
+//                    updateExecutor.executeUpdate();
                 } catch (SecurityException e) {
                     M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
                 } catch (UnsupportedOperationException e) {
