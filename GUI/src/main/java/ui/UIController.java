@@ -32,7 +32,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
-import properties.Mode;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -112,7 +111,7 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
-                    ProcessBuilder startPkg = new ProcessBuilder("open", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
+                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
                     startPkg.start().waitFor();
                     System.exit(0);
 //                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
