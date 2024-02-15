@@ -52,6 +52,7 @@
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>1.0.22</version>
                 <configuration>
+                    <appIdentifier>Drifty</appIdentifier>
                     <enableSWRendering>true</enableSWRendering>
                     <mainClass>${gui.main-class}</mainClass>
                     <linkerArgs>

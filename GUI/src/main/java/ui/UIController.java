@@ -113,8 +113,8 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
-                    ProcResult result = new ProcBuilder("open").withArgs(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString()).withNoTimeout().ignoreExitStatus().run();
-                    System.out.println(result.getOutputString());
+                    String argument = Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString();
+                    new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus().run();
 //                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
 //                    startPkg.start().waitFor();
                     System.exit(0);
