@@ -32,6 +32,8 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
+import org.buildobjects.process.ProcBuilder;
+import org.buildobjects.process.ProcResult;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -111,8 +113,10 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
-                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
-                    startPkg.start().waitFor();
+                    ProcResult result = new ProcBuilder("open").withArgs(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString()).withNoTimeout().ignoreExitStatus().run();
+                    System.out.println(result.getOutputString());
+//                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
+//                    startPkg.start().waitFor();
                     System.exit(0);
 //                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
 //                    Process pkgExtractProcess = extractPkg.start();
@@ -130,9 +134,10 @@ public final class UIController {
                     M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
                 } catch (UnsupportedOperationException e) {
                     M.msgUpdateError("Failed to extract the latest executable! Extract operation is not supported on this platform! " + e.getMessage());
-                } catch (IOException e) {
-                    M.msgUpdateError("Failed to extract the latest executable! " + e.getMessage());
                 }
+//                catch (IOException e) {
+//                    M.msgUpdateError("Failed to extract the latest executable! " + e.getMessage());
+//                }
             } else {
                 File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
                 ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
