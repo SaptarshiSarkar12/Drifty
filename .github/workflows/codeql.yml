@@ -61,8 +61,15 @@ jobs:
 
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
+    - name: Setup JDK 21
+      if: ${{ matrix.language == 'java-kotlin' }}
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'oracle'
+        java-version: 21
 
     - name: Build with Maven
+      if: ${{ matrix.language == 'java-kotlin' }}
       run: mvn install
 
     - name: Perform CodeQL Analysis
