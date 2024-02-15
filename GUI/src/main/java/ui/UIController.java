@@ -113,7 +113,7 @@ public final class UIController {
             if (OS.isMac()) {
                 try {
                     ProcessBuilder startPkg = new ProcessBuilder("open", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
-                    startPkg.start();
+                    startPkg.start().waitFor();
                     System.exit(0);
 //                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
 //                    Process pkgExtractProcess = extractPkg.start();
