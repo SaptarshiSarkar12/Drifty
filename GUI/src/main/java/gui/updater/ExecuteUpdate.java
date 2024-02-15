@@ -3,7 +3,6 @@ package gui.updater;
 import gui.init.Environment;
 import gui.utils.MessageBroker;
 import main.Drifty_GUI;
-import properties.OS;
 import ui.ConfirmationDialog;
 
 import java.io.File;
