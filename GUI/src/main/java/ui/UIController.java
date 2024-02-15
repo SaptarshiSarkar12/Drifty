@@ -32,6 +32,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
+import properties.Mode;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -119,9 +120,10 @@ public final class UIController {
                     payloadExtractProcess.waitFor();
                     File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
                     ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-                    if (updateExecutor.setExecutablePermission()) {
-                        updateExecutor.executeUpdate();
+                    if (!Mode.isGUI()) {
+                        updateExecutor.setExecutablePermission();
                     }
+                    updateExecutor.executeUpdate();
                 } catch (SecurityException e) {
                     M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
                 } catch (UnsupportedOperationException e) {

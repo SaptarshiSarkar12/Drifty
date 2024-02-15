@@ -25,13 +25,11 @@ public class ExecuteUpdate {
     }
 
     public boolean setExecutablePermission() {
-        if (!OS.isMac()) {
-            boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
-            if (!isExecutablePermissionGranted) {
-                M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
-                return false;
-            }
+        boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
+        if (!isExecutablePermissionGranted) {
+            M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
+            new ConfirmationDialog("Update Failed", "Failed to set executable permission for the latest version of Drifty!", true, true).getResponse();
+            return false;
         }
         boolean isWritePermissionGranted = latestExecutable.setWritable(true);
         if (!isWritePermissionGranted) {
