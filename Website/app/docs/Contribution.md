@@ -8,8 +8,8 @@ In order to report any bugs or any difficulties which you face which you would l
 
 1. Go to the [issues](https://github.com/SaptarshiSarkar12/Drifty/issues) tab of the drifty project on GitHub
 2. Click on the [new issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) button
-3. Choose any of the following types of issue which you would like to raise
-4. Then provide as much information as possible, including screenshots, text output, and both your expected and actual results.
+3. Choose the relevant category of the issue which you would like to raise
+4. Provide as much information as possible, including screenshots, text output, and both your expected and actual results.
 
 ## What does each Issue Category mean?
 
