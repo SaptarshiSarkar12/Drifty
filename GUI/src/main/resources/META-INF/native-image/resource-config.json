@@ -128,7 +128,7 @@
     "locales":["", "und"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":["", "und"]
+    "locales":["und"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
     "locales":["", "und"]

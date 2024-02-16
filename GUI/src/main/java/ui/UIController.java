@@ -33,7 +33,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
 import org.buildobjects.process.ProcBuilder;
-import org.buildobjects.process.ProcResult;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -114,6 +113,8 @@ public final class UIController {
             if (OS.isMac()) {
                 try {
                     String argument = Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString();
+                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
+                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
                     new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus().run();
 //                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
 //                    startPkg.start().waitFor();
