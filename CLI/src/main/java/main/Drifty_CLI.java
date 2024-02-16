@@ -245,6 +245,7 @@ public class Drifty_CLI {
             }
         }
     }
+
     private static void listUrls() {
         Yaml yaml = new Yaml();
         Map<String, List<String>> data;
@@ -380,6 +381,7 @@ public class Drifty_CLI {
             messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
         }
     }
+
     private static void printVersion() {
         System.out.println("\033[1m" + APPLICATION_NAME + " " + VERSION_NUMBER + ANSI_RESET);
         if (AppSettings.GET.ytDlpVersion().isEmpty()) {
