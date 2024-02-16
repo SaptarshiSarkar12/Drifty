@@ -23,7 +23,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
         id: lint
-        uses: super-linter/super-linter/slim@v5
+        uses: super-linter/super-linter/slim@v6
         continue-on-error: true
         env:
           DEFAULT_BRANCH: master
@@ -39,6 +39,10 @@ jobs:
           VALIDATE_CSHARP: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_YAML: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_SHELL_SHFMT: false
+      - name: Set read and write permission in super linter log
+        run: sudo chmod 777 super-linter.log
       - name: Upload Lint Result
         uses: actions/upload-artifact@v4
         with:
