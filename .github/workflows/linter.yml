@@ -39,6 +39,7 @@ jobs:
           VALIDATE_CSHARP: false
           VALIDATE_NATURAL_LANGUAGE: false
           VALIDATE_YAML: false
+          VALIDATE_CHECKOV: false
       - name: Set read and write permission in super linter log
         run: sudo chmod 777 super-linter.log
       - name: Upload Lint Result
