@@ -14,7 +14,7 @@ In order to report any bugs or any difficulties which you face which you would l
 ## What does each issue mean?
 
 1. **Bug Report for Application**
-   You can file the bug report for the application to report any bug related to the applications installation issues, crashes and any bugs which you encounter while using the dirfty app.
+   You can create a **Bug Report for Application** to report any bug related to the application including installation problems and crashes.
 2. **Bug report for Website** 
     You can also raise issues related to the project's official website incase you encounter any bugs or issues.
 3. **Documentation Change Request**
