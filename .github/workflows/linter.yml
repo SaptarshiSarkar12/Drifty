@@ -23,7 +23,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
         id: lint
-        uses: super-linter/super-linter/slim@v5
+        uses: super-linter/super-linter/slim@v6
         continue-on-error: true
         env:
           DEFAULT_BRANCH: master
