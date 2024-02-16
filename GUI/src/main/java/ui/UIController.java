@@ -102,7 +102,8 @@ public final class UIController {
             File currentExecutable = currentExecutablePath.toFile();
             String customDirectory = getDir();
             Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
-            Job updateJob = new Job(Constants.updateURL.toString(), tmpFolder.toString(), currentExecutablePath.getFileName().toString(), false);
+            String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutable.getName();
+            Job updateJob = new Job(Constants.updateURL.toString(), tmpFolder.toString(), latestExecutableName, false);
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
@@ -112,13 +113,13 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
-                    File pkg = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
+                    File pkg = new File(tmpFolder.toString(), latestExecutableName);
                     boolean isExecutable = pkg.setExecutable(true);
                     if (!isExecutable) {
                         M.msgUpdateError("Failed to set the pkg file as executable!");
                         new ConfirmationDialog("Update Failed", "Failed to set the pkg file as executable!", true, true).getResponse();
                     }
-                    String argument = Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString();
+                    String argument = Paths.get(tmpFolder.toString(), latestExecutableName).toAbsolutePath().toString();
 //                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
 //                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
                     new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus().run();
