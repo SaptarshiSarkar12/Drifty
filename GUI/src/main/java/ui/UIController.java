@@ -112,9 +112,15 @@ public final class UIController {
             setDir(customDirectory);
             if (OS.isMac()) {
                 try {
+                    File pkg = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
+                    boolean isExecutable = pkg.setExecutable(true);
+                    if (!isExecutable) {
+                        M.msgUpdateError("Failed to set the pkg file as executable!");
+                        new ConfirmationDialog("Update Failed", "Failed to set the pkg file as executable!", true, true).getResponse();
+                    }
                     String argument = Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString();
-                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
-                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
+//                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
+//                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
                     new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus().run();
 //                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
 //                    startPkg.start().waitFor();
