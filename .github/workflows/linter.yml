@@ -57,14 +57,14 @@ jobs:
         run: |
           echo "## :x: Linting errors found!" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`css" >> $GITHUB_STEP_SUMMARY
-          cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///' >> $GITHUB_STEP_SUMMARY
+          cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | sed 's/Errorsfound//' | sed 's/\/github\/workspace\///' | awk '!x[$1]++ && ! /^[[:blank:]]*$/' | sed 's/Founderrors when linting [A-Za-z.]\+. Exit code: [0-9].//' | sed 's/Super-linterdetected linting errors//' | tr -s '\n' '\n' >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
       - name: Comment on PR for failed run
         if: ${{ steps.lint.outcome == 'failure' && github.event_name == 'pull_request_target' }}
         shell: bash
         run: |
           COMMENT_INITIAL=$(echo -e "## :x: Linting errors found!\n")
-          COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Found errors in \[[A-Za-z]\+\] linter!//' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | tr -s '\n' '\n' | sed 's/\/github\/workspace\///')
+          COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | sed 's/Errorsfound//' | sed 's/\/github\/workspace\///' | awk '!x[$1]++ && ! /^[[:blank:]]*$/' | sed 's/Founderrors when linting [A-Za-z.]\+. Exit code: [0-9].//' | sed 's/Super-linterdetected linting errors//' | tr -s '\n' '\n')
           COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.event.pull_request.user.login }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`")
           COMMENT=$(echo "$COMMENT_BODY")
           gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
