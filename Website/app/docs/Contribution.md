@@ -11,7 +11,7 @@ In order to report any bugs or any difficulties which you face which you would l
 3. Choose any of the following types of issue which you would like to raise
 4. Then provide as much information as possible, including screenshots, text output, and both your expected and actual results.
 
-## What does each issue mean?
+## What does each Issue Category mean?
 
 1. **Bug Report for Application**
    You can create a **Bug Report for Application** to report any bug related to the application including installation problems and crashes.
