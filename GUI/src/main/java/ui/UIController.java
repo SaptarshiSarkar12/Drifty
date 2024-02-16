@@ -107,6 +107,7 @@ public final class UIController {
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
+            Path downloadedFilePath = tmpFolder.resolve(latestExecutableName);
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
                 sleep(500);
             }
@@ -119,10 +120,11 @@ public final class UIController {
                         M.msgUpdateError("Failed to set the pkg file as executable!");
                         new ConfirmationDialog("Update Failed", "Failed to set the pkg file as executable!", true, true).getResponse();
                     }
-                    String argument = Paths.get(tmpFolder.toString(), latestExecutableName).toAbsolutePath().toString();
+                    String argument = downloadedFilePath.toAbsolutePath().toString();
 //                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
 //                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
-                    new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus().run();
+                    ProcBuilder pb = new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus();
+                    pb.run();
 //                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
 //                    startPkg.start().waitFor();
                     System.exit(0);
