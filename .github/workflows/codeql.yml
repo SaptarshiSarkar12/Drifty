@@ -71,9 +71,3 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
-    - name: Upload SARIF result
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-         # Optional category for the results
-         # Used to differentiate multiple results for one commit
-         category: "/language:${{matrix.language}}"
