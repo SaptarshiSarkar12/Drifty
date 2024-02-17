@@ -32,7 +32,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
-import org.buildobjects.process.ProcBuilder;
 import properties.OS;
 import support.Job;
 import support.JobHistory;
@@ -40,10 +39,10 @@ import utils.Utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -97,63 +96,29 @@ public final class UIController {
     }
 
     private void downloadUpdate() {
+        String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
-            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
-            File currentExecutable = currentExecutablePath.toFile();
-            String customDirectory = getDir();
-            Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
-            String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutable.getName();
-            Job updateJob = new Job(Constants.updateURL.toString(), tmpFolder.toString(), latestExecutableName, false);
+            // "Current executable" means the executable currently running i.e., the one that is outdated.
+            URI currentExecutableURI = Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toUri();
+            File currentExecutableFile = new File(currentExecutableURI);
+            // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
+            // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
+            URI tmpFolderURI = Files.createTempDirectory("Drifty").toUri();
+            String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
+            URI latestExecutableURI = Paths.get(tmpFolderURI).resolve(latestExecutableName).toUri();
+            File latestExecutableFile = new File(latestExecutableURI);
+            // Download the latest executable
+            Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableName, false);
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
-            Path downloadedFilePath = tmpFolder.resolve(latestExecutableName);
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
                 sleep(500);
             }
-            setDir(customDirectory);
-            if (OS.isMac()) {
-                try {
-                    File pkg = new File(tmpFolder.toString(), latestExecutableName);
-                    boolean isExecutable = pkg.setExecutable(true);
-                    if (!isExecutable) {
-                        M.msgUpdateError("Failed to set the pkg file as executable!");
-                        new ConfirmationDialog("Update Failed", "Failed to set the pkg file as executable!", true, true).getResponse();
-                    }
-                    String argument = downloadedFilePath.toAbsolutePath().toString();
-//                    new ConfirmationDialog("PKG start command", "The command is " + nl.repeat(2) + "open" + argument).getResponse();
-//                    M.msgUpdateInfo("The command is " + nl.repeat(2) + "open" + argument);
-                    ProcBuilder pb = new ProcBuilder("open").withArgs(argument).withNoTimeout().ignoreExitStatus();
-                    pb.run();
-//                    ProcessBuilder startPkg = new ProcessBuilder(Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString());
-//                    startPkg.start().waitFor();
-                    System.exit(0);
-//                    ProcessBuilder extractPkg = new ProcessBuilder("pkgutil", "--expand", Paths.get(tmpFolder.toString(), currentExecutablePath.getFileName().toString()).toAbsolutePath().toString(), Paths.get(tmpFolder.toString(), "Drifty GUI").toAbsolutePath().toString());
-//                    Process pkgExtractProcess = extractPkg.start();
-//                    pkgExtractProcess.waitFor();
-//                    ProcessBuilder extractPayload = new ProcessBuilder("tar", "-xvf", Paths.get(tmpFolder.toString(), "Drifty GUI", "GUI-app.pkg", "Payload").toAbsolutePath().toString(), "-C", Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents").toAbsolutePath().toString());
-//                    Process payloadExtractProcess = extractPayload.start();
-//                    payloadExtractProcess.waitFor();
-//                    File latestExecutable = Paths.get(tmpFolder.toString(), "Drifty GUI", "Payload_Contents", "GUI.app").toAbsolutePath().toFile();
-//                    ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-//                    if (!Mode.isGUI()) {
-//                        updateExecutor.setExecutablePermission();
-//                    }
-//                    updateExecutor.executeUpdate();
-                } catch (SecurityException e) {
-                    M.msgUpdateError("Failed to extract the latest executable due to security restrictions! " + e.getMessage());
-                } catch (UnsupportedOperationException e) {
-                    M.msgUpdateError("Failed to extract the latest executable! Extract operation is not supported on this platform! " + e.getMessage());
-                }
-//                catch (IOException e) {
-//                    M.msgUpdateError("Failed to extract the latest executable! " + e.getMessage());
-//                }
-            } else {
-                File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
-                ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-                if (updateExecutor.setExecutablePermission()) {
-                    updateExecutor.executeUpdate();
-                }
+            setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutableFile, latestExecutableFile);
+            if (updateExecutor.setExecutablePermission()) {
+                updateExecutor.executeUpdate();
             }
         } catch (IOException e) {
             M.msgUpdateError("Failed to download update! " + e.getMessage());
