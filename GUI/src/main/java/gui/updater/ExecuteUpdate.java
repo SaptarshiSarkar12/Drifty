@@ -77,16 +77,16 @@ public class ExecuteUpdate {
                 M.msgUpdateError("Failed to start the latest version of Drifty!");
                 new ConfirmationDialog("Update Failed", "Failed to start the latest version of Drifty!", true, true).getResponse();
             }
-            try {
-                if (OS.isWindows()) {
-                    new ProcBuilder("timeout", "5", "&&", "del", currentExecutablePathString + ".old").withNoTimeout().ignoreExitStatus().run();
-                } else {
-                    Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
-                }
+            if (OS.isWindows()) {
                 System.exit(0);
-            } catch (IOException e) {
-                M.msgUpdateError("Failed to delete the old version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to delete the old version of Drifty!", true, true).getResponse();
+            } else {
+                try {
+                    Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+                    System.exit(0);
+                } catch (IOException e) {
+                    M.msgUpdateError("Failed to delete the old version of Drifty!");
+                    new ConfirmationDialog("Update Failed", "Failed to delete the old version of Drifty!", true, true).getResponse();
+                }
             }
         }
     }
