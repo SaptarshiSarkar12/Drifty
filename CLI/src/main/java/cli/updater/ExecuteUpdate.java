@@ -11,26 +11,26 @@ import java.nio.file.StandardCopyOption;
 
 public class ExecuteUpdate {
     private static final MessageBroker M = Environment.getMessageBroker();
-    private final File currentExecutable;
-    private final File latestExecutable;
+    private final File currentExecutableFile;
+    private final File latestExecutableFile;
 
-    public ExecuteUpdate(File currentExecutable, File latestExecutable) {
-        this.currentExecutable = currentExecutable;
-        this.latestExecutable = latestExecutable;
+    public ExecuteUpdate(File currentExecutableFile, File latestExecutableFile) {
+        this.currentExecutableFile = currentExecutableFile;
+        this.latestExecutableFile = latestExecutableFile;
     }
 
     public boolean setExecutablePermission() {
-        boolean isExecutablePermissionGranted = latestExecutable.setExecutable(true);
+        boolean isExecutablePermissionGranted = latestExecutableFile.setExecutable(true);
         if (!isExecutablePermissionGranted) {
             M.msgUpdateError("Failed to set executable permission for the latest executable!");
             return false;
         }
-        boolean isWritablePermissionGranted = latestExecutable.setWritable(true);
+        boolean isWritablePermissionGranted = latestExecutableFile.setWritable(true);
         if (!isWritablePermissionGranted) {
             M.msgUpdateError("Failed to set write permission for the latest executable!");
             return false;
         }
-        boolean isReadablePermissionGranted = latestExecutable.setReadable(true);
+        boolean isReadablePermissionGranted = latestExecutableFile.setReadable(true);
         if (!isReadablePermissionGranted) {
             M.msgUpdateError("Failed to set read permission for the latest executable!");
             return false;
@@ -38,17 +38,25 @@ public class ExecuteUpdate {
         return true;
     }
 
-    public boolean executeUpdate() throws IOException {
-        String currentExecutablePath = currentExecutable.toPath().toString();
-        boolean isCurrentExecutableRenamed = currentExecutable.renameTo(new File(currentExecutable.getName() + ".old"));
+    public boolean executeUpdate() {
+        String currentExecutablePath = currentExecutableFile.toPath().toString();
+        boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
         if (!isCurrentExecutableRenamed) {
-            M.msgUpdateError("Failed to replace current executable with the latest one!");
+            M.msgUpdateError("Failed to rename the current executable!");
             return false;
         }
-        Files.move(latestExecutable.toPath(), Paths.get(currentExecutablePath), StandardCopyOption.REPLACE_EXISTING);
-        Files.deleteIfExists(Paths.get(currentExecutablePath + ".old"));
-        M.msgUpdateInfo("Update successful!");
-        M.msgUpdateInfo("Please restart Drifty to see the changes!");
+        try {
+            Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to replace the current executable with the latest version!");
+            return false;
+        }
+        try {
+            Files.deleteIfExists(Paths.get(currentExecutablePath + ".old"));
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to delete the old version of Drifty!");
+            return false;
+        }
         return true;
     }
 }

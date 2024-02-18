@@ -57,10 +57,10 @@ public class ExecuteUpdate {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
-            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(new File(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toString()));
+            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
             if (!isCurrentExecutableRenamed) {
-                M.msgUpdateError("Failed to replace the current version of Drifty!");
-                new ConfirmationDialog("Update Failed", "Failed to replace the current version of Drifty!", true, true).getResponse();
+                M.msgUpdateError("Failed to rename the current version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to rename the current version of Drifty!", true, true).getResponse();
                 return;
             }
             try {

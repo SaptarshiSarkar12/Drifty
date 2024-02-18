@@ -39,9 +39,7 @@ import utils.Utility;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -99,17 +97,17 @@ public final class UIController {
         String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
             // "Current executable" means the executable currently running i.e., the one that is outdated.
-            URI currentExecutableURI = Paths.get(URLDecoder.decode(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toUri();
-            File currentExecutableFile = new File(currentExecutableURI);
+            File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
             // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
-            URI tmpFolderURI = Files.createTempDirectory("Drifty").toUri();
+            File tmpFolder = Files.createTempDirectory("Drifty").toFile();
+            tmpFolder.deleteOnExit();
+            // For Mac, the latest executable is a ".pkg" file as it is the only working way to update the application, i.e., by installing a new version.
+            // For other OS, the latest executable name along with the extension is the same as that of the current executable.
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
-            URI latestExecutableURI = Paths.get(tmpFolderURI).resolve(latestExecutableName).toUri();
-            File latestExecutableFile = new File(latestExecutableURI);
-            latestExecutableFile.getParentFile().deleteOnExit();
+            File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
             // Download the latest executable
-            Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableName, false);
+            Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), false);
             addJob(updateJob);
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
@@ -132,6 +130,9 @@ public final class UIController {
         } catch (IOException e) {
             M.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
             new ConfirmationDialog("Update Failed", "Failed to create temporary folder for downloading update! " + e.getMessage(), true, true).getResponse();
+        } catch (URISyntaxException e) {
+            M.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
+            new ConfirmationDialog("Update Failed", "Failed to get the location of the current executable! " + e.getMessage(), true, true).getResponse();
         } catch (Exception e) {
             M.msgUpdateError("Failed to update! An unknown error occurred! " + e.getMessage());
             new ConfirmationDialog("Update Failed", "Failed to update! An unknown error occurred! " + e.getMessage(), true, true).getResponse();

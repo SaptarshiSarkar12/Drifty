@@ -16,9 +16,7 @@ import support.JobHistory;
 import utils.Logger;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -214,6 +212,10 @@ public class Drifty_CLI {
                     messageBroker.msgUpdateInfo("Downloading update...");
                     if (!downloadUpdate()) {
                         messageBroker.msgUpdateError("Failed to update Drifty!");
+                    } else {
+                        messageBroker.msgUpdateInfo("Update successful!");
+                        messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
+                        System.exit(0);
                     }
                 }
             }
@@ -227,24 +229,33 @@ public class Drifty_CLI {
 
     private static boolean downloadUpdate() {
         try {
-            final URL updateURL = Constants.updateURL;
-            Path currentExecutablePath = Paths.get(URLDecoder.decode(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().getPath(), StandardCharsets.UTF_8)).toAbsolutePath();
-            Path tmpFolder = Files.createTempDirectory("Drifty").toAbsolutePath();
-            tmpFolder.toFile().deleteOnExit();
-            FileDownloader downloader = new FileDownloader(updateURL.toString(), currentExecutablePath.getFileName().toString(), tmpFolder.toString());
+            // "Current executable" means the executable currently running i.e., the one that is outdated.
+            File currentExecutableFile = new File(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
+            // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
+            File tmpFolder = Files.createTempDirectory("Drifty").toFile();
+            tmpFolder.deleteOnExit();
+            File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(currentExecutableFile.getName()).toFile();
+            FileDownloader downloader = new FileDownloader(Constants.updateURL.toString(), currentExecutableFile.getName(), tmpFolder.toString());
             downloader.run();
-            File latestExecutable = new File(tmpFolder.toString(), currentExecutablePath.getFileName().toString());
-            File currentExecutable = currentExecutablePath.toFile();
-            ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutable, latestExecutable);
-            if (!updateExecutor.setExecutablePermission()) {
-                return false;
+            if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
+                // If the latest executable was successfully downloaded, set the executable permission and execute the update.
+                ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutableFile, latestExecutableFile);
+                messageBroker.msgLogInfo("Setting executable permission for the latest version of Drifty...");
+                if (updateExecutor.setExecutablePermission()) {
+                    messageBroker.msgLogInfo("Executing update...");
+                    return updateExecutor.executeUpdate();
+                }
             } else {
-                return updateExecutor.executeUpdate();
+                messageBroker.msgUpdateError("Failed to download update!");
+                return false;
             }
         } catch (IOException e) {
-            messageBroker.msgUpdateError("Failed to download update! " + e.getMessage());
+            messageBroker.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
+        } catch (URISyntaxException e) {
+            messageBroker.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
         } catch (Exception e) {
-            messageBroker.msgUpdateError("Failed to download update! An unknown error occurred! " + e.getMessage());
+            messageBroker.msgUpdateError("Failed to update Drifty! " + e.getMessage());
         }
         return false;
     }
