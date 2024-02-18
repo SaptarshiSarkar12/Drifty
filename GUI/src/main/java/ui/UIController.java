@@ -107,6 +107,7 @@ public final class UIController {
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             URI latestExecutableURI = Paths.get(tmpFolderURI).resolve(latestExecutableName).toUri();
             File latestExecutableFile = new File(latestExecutableURI);
+            latestExecutableFile.getParentFile().deleteOnExit();
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableName, false);
             addJob(updateJob);
@@ -129,11 +130,11 @@ public final class UIController {
                 new ConfirmationDialog("Update Failed", "Failed to download update!", true, true).getResponse();
             }
         } catch (IOException e) {
-            M.msgUpdateError("Failed to download update! " + e.getMessage());
-            new ConfirmationDialog("Update Failed", "Failed to download update! " + e.getMessage(), true, true).getResponse();
+            M.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
+            new ConfirmationDialog("Update Failed", "Failed to create temporary folder for downloading update! " + e.getMessage(), true, true).getResponse();
         } catch (Exception e) {
-            M.msgUpdateError("Failed to download update! An unknown error occurred! " + e.getMessage());
-            new ConfirmationDialog("Update Failed", "Failed to download update! An unknown error occurred! " + e.getMessage(), true, true).getResponse();
+            M.msgUpdateError("Failed to update! An unknown error occurred! " + e.getMessage());
+            new ConfirmationDialog("Update Failed", "Failed to update! An unknown error occurred! " + e.getMessage(), true, true).getResponse();
         }
     }
 
