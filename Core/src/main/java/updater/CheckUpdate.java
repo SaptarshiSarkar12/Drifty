@@ -42,8 +42,12 @@ public class CheckUpdate {
         String[] currentVersionPartsString = CURRENT_VERSION.split("\\.");
         String[] latestVersionPartsString = latestVersion.split("\\.");
         for (int i = 0; i < 3; i++) {
-            if (Integer.parseInt(currentVersionPartsString[i]) < Integer.parseInt(latestVersionPartsString[i])) {
-                return true;
+            try {
+                if (Integer.parseInt(currentVersionPartsString[i]) < Integer.parseInt(latestVersionPartsString[i])) {
+                    return true;
+                }
+            } catch (NumberFormatException e) {
+                M.msgUpdateError("Failed to parse version number! " + e.getMessage());
             }
         }
         return false;
