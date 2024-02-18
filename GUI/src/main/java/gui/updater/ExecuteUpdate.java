@@ -79,8 +79,7 @@ public class ExecuteUpdate {
             }
             try {
                 if (OS.isWindows()) {
-                    ProcessBuilder sleepAndDelete = new ProcessBuilder("sleep", "2", "&&", "del", currentExecutablePathString + ".old");
-                    sleepAndDelete.start();
+                    new ProcBuilder("timeout", "5", "&&", "del", currentExecutablePathString + ".old").withNoTimeout().ignoreExitStatus().run();
                 } else {
                     Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
                 }
