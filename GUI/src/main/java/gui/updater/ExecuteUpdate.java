@@ -2,6 +2,7 @@ package gui.updater;
 
 import gui.init.Environment;
 import gui.utils.MessageBroker;
+import org.apache.commons.io.FileUtils;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
@@ -78,7 +79,7 @@ public class ExecuteUpdate {
                 new ConfirmationDialog("Update Failed", "Failed to start the latest version of Drifty!", true, true).getResponse();
             }
             try {
-                Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+                FileUtils.forceDelete(new File(currentExecutablePathString + ".old"));
                 System.exit(0);
             } catch (IOException e) {
                 M.msgUpdateError("Failed to delete the old version of Drifty!");
