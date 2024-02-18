@@ -116,9 +116,17 @@ public final class UIController {
                 sleep(500);
             }
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
-            ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutableFile, latestExecutableFile);
-            if (updateExecutor.setExecutablePermission()) {
-                updateExecutor.executeUpdate();
+            if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
+                // If the latest executable was successfully downloaded, set the executable permission and execute the update.
+                ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutableFile, latestExecutableFile);
+                M.msgUpdateInfo("Download successful! Setting executable permission...");
+                if (updateExecutor.setExecutablePermission()) {
+                    M.msgUpdateInfo("Executable permission set! Executing update...");
+                    updateExecutor.executeUpdate();
+                }
+            } else {
+                M.msgUpdateError("Failed to download update!");
+                new ConfirmationDialog("Update Failed", "Failed to download update!", true, true).getResponse();
             }
         } catch (IOException e) {
             M.msgUpdateError("Failed to download update! " + e.getMessage());

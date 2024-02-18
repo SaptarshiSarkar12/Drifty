@@ -45,7 +45,7 @@ public class ExecuteUpdate {
         return true;
     }
 
-    public void executeUpdate() throws IOException {
+    public void executeUpdate() {
         if (OS.isMac()) {
             ProcResult executionResult = new ProcBuilder("open").withArgs(latestExecutableFile.getAbsolutePath()).withNoTimeout().ignoreExitStatus().run();
             if (executionResult.getExitValue() != 0) {
@@ -63,11 +63,27 @@ public class ExecuteUpdate {
                 new ConfirmationDialog("Update Failed", "Failed to replace the current version of Drifty!", true, true).getResponse();
                 return;
             }
-            Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
-            M.msgUpdateInfo("Update successful!");
-            runCurrentExecutable.start();
-            new ConfirmationDialog("Update Successful", "Update was successfully installed!" + System.lineSeparator().repeat(2) + "Restarting Drifty...").getResponse();
-            Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+            try {
+                Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
+                M.msgUpdateInfo("Update successful!");
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to replace the current version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to replace the current version of Drifty!", true, true).getResponse();
+                return;
+            }
+            try {
+                runCurrentExecutable.start();
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to start the latest version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to start the latest version of Drifty!", true, true).getResponse();
+            }
+            try {
+                Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+                System.exit(0);
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to delete the old version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to delete the old version of Drifty!", true, true).getResponse();
+            }
         }
     }
 }
