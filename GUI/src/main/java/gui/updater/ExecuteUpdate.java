@@ -10,7 +10,7 @@ import ui.ConfirmationDialog;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class ExecuteUpdate {
@@ -55,12 +55,16 @@ public class ExecuteUpdate {
                 System.exit(0);
             }
         } else {
+            String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
+            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
+            if (!isCurrentExecutableRenamed) {
+                M.msgUpdateError("Failed to rename the current version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to rename the current version of Drifty!", true, true).getResponse();
+                return;
+            }
             try {
-                Path oldTempDriftyPath = Files.createTempFile(currentExecutableFile.getName(), ".old");
-                oldTempDriftyPath.toFile().deleteOnExit();
-                Files.move(currentExecutableFile.toPath(), oldTempDriftyPath, StandardCopyOption.REPLACE_EXISTING);
-                Files.move(latestExecutableFile.toPath(), currentExecutableFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
                 M.msgUpdateInfo("Update successful!");
             } catch (IOException e) {
                 M.msgUpdateError("Failed to replace the current version of Drifty!");
@@ -69,10 +73,21 @@ public class ExecuteUpdate {
             }
             try {
                 runCurrentExecutable.start();
-                System.exit(0);
             } catch (IOException e) {
                 M.msgUpdateError("Failed to start the latest version of Drifty!");
                 new ConfirmationDialog("Update Failed", "Failed to start the latest version of Drifty!", true, true).getResponse();
+            }
+            try {
+                if (OS.isWindows()) {
+                    ProcessBuilder sleepAndDelete = new ProcessBuilder("sleep", "2", "&&", "del", currentExecutablePathString + ".old");
+                    sleepAndDelete.start();
+                } else {
+                    Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+                }
+                System.exit(0);
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to delete the old version of Drifty!");
+                new ConfirmationDialog("Update Failed", "Failed to delete the old version of Drifty!", true, true).getResponse();
             }
         }
     }
