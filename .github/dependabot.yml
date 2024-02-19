@@ -43,7 +43,7 @@ updates:
       - SaptarshiSarkar12
 
   - package-ecosystem: 'docker'
-    directory: '/'
+    directory: '/Docker/dev/CLI'
     schedule:
       # Check for updates to Docker every day
       interval: 'daily'
@@ -51,6 +51,71 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/Docker/dev/GUI'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/Docker/dev/commons/base'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/Docker/dev/commons/runner'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/Docker/prod/CLI'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋'
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: 'docker'
+    directory: '/Docker/prod/GUI'
+    schedule:
+      # Check for updates to Docker every day
+      interval: 'daily'
+    commit-message:
+      prefix: 'chore(docker)'
+    labels:
+        - 'dependencies 📦️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
