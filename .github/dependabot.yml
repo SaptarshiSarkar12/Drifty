@@ -51,7 +51,7 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
 
@@ -64,7 +64,7 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
 
@@ -77,7 +77,7 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
 
@@ -90,7 +90,7 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
 
@@ -103,7 +103,7 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
 
@@ -116,6 +116,6 @@ updates:
       prefix: 'chore(docker)'
     labels:
         - 'dependencies 📦️'
-        - 'docker 🐋️'
+        - 'docker 🐋'
     reviewers:
       - SaptarshiSarkar12
