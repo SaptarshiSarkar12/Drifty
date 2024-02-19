@@ -25,6 +25,7 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
+        cleanUpOldUpdateFiles();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         String ytDlpExecName = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
         String spotDLExecName = OS.isWindows() ? "spotdl_win.exe" : OS.isMac() ? "spotdl_macos" : "spotdl_linux";
@@ -57,6 +58,25 @@ public class Environment {
         } else {
             msgBroker.msgInitInfo("Drifty folder already exists : " + driftyFolderPath);
         }
+    }
+
+    private static void cleanUpOldUpdateFiles() {
+        new Thread(() -> {
+            if (OS.isWindows()) {
+                try {
+                    File oldExecutableFile = new File(Environment.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + ".old");
+                    if (oldExecutableFile.exists()) {
+                        if (oldExecutableFile.delete()) {
+                            msgBroker.msgLogInfo("Old version of Drifty has been deleted successfully!");
+                        } else {
+                            msgBroker.msgUpdateError("Failed to delete the old version of Drifty!");
+                        }
+                    }
+                } catch (Exception e) {
+                    msgBroker.msgUpdateError("Failed to get the current executable path!");
+                }
+            }
+        }).start();
     }
 
     public static void setMessageBroker(MessageBroker messageBroker) {

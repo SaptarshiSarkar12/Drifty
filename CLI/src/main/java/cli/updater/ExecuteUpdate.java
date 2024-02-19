@@ -2,6 +2,7 @@ package cli.updater;
 
 import cli.init.Environment;
 import cli.utils.MessageBroker;
+import properties.OS;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,11 +52,13 @@ public class ExecuteUpdate {
             M.msgUpdateError("Failed to replace the current executable with the latest version!");
             return false;
         }
-        try {
-            Files.deleteIfExists(Paths.get(currentExecutablePath + ".old"));
-        } catch (IOException e) {
-            M.msgUpdateError("Failed to delete the old version of Drifty!");
-            return false;
+        if (!OS.isWindows()) {
+            try {
+                Files.deleteIfExists(Paths.get(currentExecutablePath + ".old"));
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to delete the old version of Drifty!");
+                return false;
+            }
         }
         return true;
     }

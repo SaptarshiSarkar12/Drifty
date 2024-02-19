@@ -21,12 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import properties.Mode;
-import properties.OS;
 import ui.*;
 import utils.Utility;
-
-import java.io.File;
-import java.net.URISyntaxException;
 
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
@@ -50,22 +46,6 @@ public class Drifty_GUI extends Application {
         msgBroker = new MessageBroker();
         Environment.setMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
-        new Thread(() -> {
-            if (OS.isWindows()) {
-                try {
-                    File oldExecutable = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + ".old");
-                    if (oldExecutable.exists()) {
-                        if (oldExecutable.delete()) {
-                            msgBroker.msgLogInfo("Old version of Drifty has been deleted successfully!");
-                        } else {
-                            msgBroker.msgUpdateError("Failed to delete the old version of Drifty!");
-                        }
-                    }
-                } catch (URISyntaxException e) {
-                    msgBroker.msgUpdateError("Failed to get the current executable path!");
-                }
-            }
-        }).start();
     }
 
     @Override
