@@ -24,3 +24,8 @@ jobs:
           output: 'trivy-report.sarif'
           hide-progress: false
           scanners: vuln,secret,config
+
+      - name: Upload Trivy report
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: trivy-report.sarif
