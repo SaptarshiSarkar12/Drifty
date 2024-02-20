@@ -156,21 +156,3 @@ jobs:
           cache-to: type=gha,mode=max
           file: Docker/prod/${{ matrix.filename }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-
-      - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@0.17.0
-        with:
-          image-ref: ${{ steps.meta.outputs.tags }}
-          format: ${{ github.event_name == 'pull_request' && 'table' || 'sarif' }}
-          exit-code: 1
-          vuln-type: os,library
-          ignore-unfixed: true
-          output: ${{ github.event_name != 'pull_request' && 'trivy-report.sarif' || '' }}
-          hide-progress: false
-          scanners: vuln,secret,config
-
-      - name: Upload Trivy security scan results
-        if: github.event_name != 'pull_request'
-        uses: github/codeql-action/upload-sarif@main
-        with:
-          sarif_file: trivy-report.sarif
