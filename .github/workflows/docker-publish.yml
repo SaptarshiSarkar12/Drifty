@@ -25,6 +25,8 @@ env:
 jobs:
   build:
     runs-on: "ubuntu-latest"
+    permissions:
+      security-events: write
     strategy:
       matrix:
         filename: [ CLI/Dockerfile, GUI/Dockerfile ]
