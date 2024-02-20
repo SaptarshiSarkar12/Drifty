@@ -157,10 +157,13 @@ jobs:
           file: Docker/prod/${{ matrix.filename }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
 
+      - name: Generate short commit SHA
+        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}:sha-$(git rev-parse --short ${{ github.sha }}) # Use the short commit SHA as the tag to find the image
+          image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}:sha-${{ env.SHORT_SHA }}
           format: ${{ github.event_name == 'pull_request' && 'table' || 'sarif' }}
           exit-code: 1
           vuln-type: os,library
