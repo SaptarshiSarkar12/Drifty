@@ -86,6 +86,7 @@
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
+                <compatibility-arg>-march=compatibility</compatibility-arg>
                 <mac.app.store>true</mac.app.store>
             </properties>
         </profile>
@@ -105,6 +106,7 @@
                 <package.type>msi</package.type>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-windows.json</resource-config-file>
+                <compatibility-arg>-march=compatibility</compatibility-arg>
             </properties>
         </profile>
     </profiles>
