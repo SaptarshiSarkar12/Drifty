@@ -25,8 +25,6 @@ env:
 jobs:
   build:
     runs-on: "ubuntu-latest"
-    permissions:
-      security-events: write
     strategy:
       matrix:
         filename: [ CLI/Dockerfile, GUI/Dockerfile ]
@@ -55,9 +53,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside PRs.
-      id-token: write
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
