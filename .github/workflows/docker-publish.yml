@@ -163,7 +163,7 @@ jobs:
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@0.17.0
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}:sha-${{ env.SHORT_SHA }}
+          image-ref: ${{ env.REGISTRY }}/saptarshisarkar12/${{ matrix.image_name }}:sha-${{ env.SHORT_SHA }}
           format: ${{ github.event_name == 'pull_request' && 'table' || 'sarif' }}
           exit-code: 1
           vuln-type: os,library
