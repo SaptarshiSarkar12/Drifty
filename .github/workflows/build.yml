@@ -47,7 +47,7 @@ jobs:
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: '21'
-        distribution: 'graalvm-community'
+        distribution: 'graalvm'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
         cache: 'maven'
