@@ -1,0 +1,26 @@
+name: Docker Image Security Scan
+
+on:
+  registry_package:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.registry_package.package_version.container_metadata.tag.name != '' && github.repository == 'SaptarshiSarkar12/Drifty' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        images: ['drifty-cli', 'drifty-gui']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@0.17.0
+        with:
+          image-ref: ghcr.io/${{ github.repository }}/${{ matrix.images }}:${{ github.event.registry_package.package_version.container_metadata.tag.name }}
+          format: 'sarif'
+          exit-code: 1
+          vuln-type: os,library
+          ignore-unfixed: true
+          output: 'trivy-report.sarif'
+          hide-progress: false
+          scanners: vuln,secret,config
