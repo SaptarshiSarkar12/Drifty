@@ -1,10 +1,5 @@
 name: Build and publish Docker images
 
-# This workflow uses actions that GitHub does not certify.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   push:
     branches: [ "**" ]
@@ -13,7 +8,7 @@ on:
     paths-ignore:
       - "Website/**"
       - "*.md"
-  pull_request:
+  pull_request_target:
     paths-ignore:
       - "Website/**"
       - "*.md"
@@ -25,6 +20,7 @@ env:
 jobs:
   build:
     runs-on: "ubuntu-latest"
+    if: github.repository == 'SaptarshiSarkar12/Drifty'
     strategy:
       matrix:
         filename: [ CLI/Dockerfile, GUI/Dockerfile ]
@@ -53,12 +49,12 @@ jobs:
     permissions:
       contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside PRs.
-      id-token: write
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Update system packages
         if: matrix.filename == 'GUI/Dockerfile'
         run: sudo apt-get update
@@ -71,7 +67,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '21'
-          distribution: 'graalvm-community'
+          distribution: 'graalvm'
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: true
           cache: 'maven'
@@ -80,7 +76,7 @@ jobs:
         run: mvn -P build-drifty-cli-for-ubuntu-latest package
       - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
         if: matrix.filename == 'GUI/Dockerfile'
-        uses: stCarolas/setup-maven@v4.5
+        uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.8.8
       - name: Build platform-specific C object for missing jdk libraries
@@ -116,14 +112,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.0.0
 
-      # Login against a Docker registry except on PR
+      # Login to GitHub Container Registry
       # https://github.com/docker/login-action
       - name: Log into registry
-        if: github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty'
         uses: docker/login-action@v3.0.0
+        if: github.event_name != 'pull_request_target'
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Extract metadata (tags, labels) for Docker
@@ -149,10 +145,34 @@ jobs:
         uses: docker/build-push-action@v5.1.0
         with:
           context: build/${{ matrix.docker_context }}
-          push: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
+          push: ${{ github.event_name != 'pull_request_target' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Docker/prod/${{ matrix.filename }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
+
+      - name: Generate short commit SHA
+        if: github.event_name != 'pull_request_target'
+        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@0.17.0
+        if: github.event_name != 'pull_request_target'
+        continue-on-error: true
+        with:
+          image-ref: ${{ env.REGISTRY }}/saptarshisarkar12/${{ matrix.image_name }}:sha-${{ env.SHORT_SHA }}
+          format: 'sarif'
+          exit-code: 1
+          vuln-type: os,library
+          ignore-unfixed: true
+          output: 'trivy-report.sarif'
+          hide-progress: false
+          scanners: vuln,secret,misconfig
+
+      - name: Upload Trivy security scan results
+        if: github.event_name != 'pull_request_target'
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: trivy-report.sarif

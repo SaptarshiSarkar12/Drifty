@@ -41,10 +41,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.sun.crypto.provider.HmacCore$HmacSHA256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"com.sun.crypto.provider.HmacCore$HmacSHA384",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -83,12 +79,6 @@
 },
 {
   "name":"java.security.SecureRandomParameters"
-},
-{
-  "name":"java.security.interfaces.ECPrivateKey"
-},
-{
-  "name":"java.security.interfaces.ECPublicKey"
 },
 {
   "name":"java.security.interfaces.RSAPrivateKey"
@@ -201,10 +191,6 @@
 },
 {
   "name":"sun.security.rsa.RSASignature$SHA256withRSA",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"sun.security.rsa.RSASignature$SHA384withRSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
