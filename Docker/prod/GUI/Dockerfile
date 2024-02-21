@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.11-slim as runner
+FROM --platform=linux/amd64 python:3.12-slim as runner
 
 LABEL org.opencontainers.image.title="Drifty GUI"
 LABEL org.opencontainers.image.description="Drifty is an Open-Source Interactive File Downloader System built with Java"
