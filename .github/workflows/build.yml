@@ -27,7 +27,7 @@ jobs:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
     strategy:
       matrix:
-        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+        os: ["windows-latest", "macos-latest", "ubuntu-latest", "macos-14"] # macos-14 has arm64 architecture, others have amd64
         mode: ["CLI", "GUI"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -53,7 +53,13 @@ jobs:
         cache: 'maven'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
-      run: mvn -P build-drifty-cli-for-${{ matrix.os }} package
+      shell: bash
+      run: |
+        if ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-14' }}; then
+            mvn -P build-drifty-cli-for-macos-latest package -rf :CLI
+        else
+            mvn -P build-drifty-cli-for-${{ matrix.os }} package -rf :CLI
+        fi
     - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
       if: ${{ matrix.mode == 'GUI' }}
       uses: stCarolas/setup-maven@v5
@@ -61,13 +67,24 @@ jobs:
         maven-version: 3.8.8
     - name: Build platform-specific C object for missing jdk libraries
       if: ${{ matrix.mode == 'GUI' }}
-      run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
+      shell: bash
+      run: |
+        if ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-14' }}; then
+            gcc -c config/missing_symbols.c -o config/missing_symbols-macos-latest.o
+        else
+            gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
+        fi
     - name: Install dependency modules for GUI
       if: ${{ matrix.mode == 'GUI' }}
       run: mvn -U clean install
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       if: ${{ matrix.mode == 'GUI' }}
-      run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI
+      run: |
+        if ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-14' }}; then
+            mvn -P build-drifty-gui-for-macos-latest gluonfx:build gluonfx:package -rf :GUI
+        else
+            mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI
+        fi
     - name: Create Application Type specific folders
       run: |
         mkdir build
@@ -96,7 +113,7 @@ jobs:
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
         fi
     - name: Categorise build artifacts for macOS
-      if: ${{ matrix.os == 'macos-latest' }}
+      if: ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-14' }}
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos"
