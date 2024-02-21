@@ -56,9 +56,9 @@ jobs:
       shell: bash
       run: |
         if ${{ matrix.os == 'macos-latest' || matrix.os == 'macos-14' }}; then
-            mvn -P build-drifty-cli-for-macos-latest package -rf :CLI
+            mvn -P build-drifty-cli-for-macos-latest package
         else
-            mvn -P build-drifty-cli-for-${{ matrix.os }} package -rf :CLI
+            mvn -P build-drifty-cli-for-${{ matrix.os }} package
         fi
     - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
       if: ${{ matrix.mode == 'GUI' }}

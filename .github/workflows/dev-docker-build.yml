@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [ 'ubuntu-latest', 'macos-14' ] # ubuntu-latest and macos-14 has amd64 and arm64 architecture respectively.
-        image_name_suffix: [ 'base', 'runner', 'cli', 'gui' ]
+        image_name_suffix: [ 'cli', 'gui' ]
       fail-fast: false
     permissions:
       security-events: write
@@ -29,7 +29,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Build Docker image
-        run: docker compose build ${{ matrix.image_name_suffix }}
+        run: |
+          docker compose build base
+          docker compose build runner
+          docker compose build ${{ matrix.image_name_suffix }}
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@0.17.0
         continue-on-error: true
