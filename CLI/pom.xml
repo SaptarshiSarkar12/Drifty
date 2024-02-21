@@ -45,7 +45,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.0</version>
+                        <version>0.10.1</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -56,6 +56,7 @@
                                 <buildArg>--enable-url-protocols=http</buildArg>
                                 <buildArg>-H:ResourceConfigurationFiles=${project.parent.basedir}/config/${resource-config-file}</buildArg>
                                 <buildArg>--no-fallback</buildArg>
+                                <buildArg>-march=compatibility</buildArg>
                                 <buildArg>-H:+ReportExceptionStackTraces</buildArg>
                                 <buildArg>--verbose</buildArg>
                             </buildArgs>
@@ -64,7 +65,7 @@
                             <execution>
                                 <id>build</id>
                                 <goals>
-                                    <goal>build</goal>
+                                    <goal>compile-no-fork</goal>
                                 </goals>
                                 <phase>package</phase>
                             </execution>
@@ -84,7 +85,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.0</version>
+                        <version>0.10.1</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -104,7 +105,7 @@
                             <execution>
                                 <id>build</id>
                                 <goals>
-                                    <goal>build</goal>
+                                    <goal>compile-no-fork</goal>
                                 </goals>
                                 <phase>package</phase>
                             </execution>
@@ -124,7 +125,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.0</version>
+                        <version>0.10.1</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -144,7 +145,7 @@
                             <execution>
                                 <id>build</id>
                                 <goals>
-                                    <goal>build</goal>
+                                    <goal>compile-no-fork</goal>
                                 </goals>
                                 <phase>package</phase>
                             </execution>
