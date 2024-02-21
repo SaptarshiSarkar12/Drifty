@@ -151,18 +151,16 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Docker/prod/${{ matrix.filename }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6
 
-      - name: Generate short commit SHA
-        if: github.event_name != 'pull_request_target'
-        run: echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+      - name: Build same image with different tag # cached build, so, will be faster
+        run: docker build -t ${{ matrix.image_name }} -f Docker/prod/${{ matrix.filename }} build/${{ matrix.docker_context }}
 
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@0.17.0
-        if: github.event_name != 'pull_request_target'
         continue-on-error: true
         with:
-          image-ref: ${{ env.REGISTRY }}/saptarshisarkar12/${{ matrix.image_name }}:sha-${{ env.SHORT_SHA }}
+          image-ref: ${{ matrix.image_name }}
           format: 'sarif'
           exit-code: 1
           vuln-type: os,library
@@ -172,7 +170,6 @@ jobs:
           scanners: vuln,secret,misconfig
 
       - name: Upload Trivy security scan results
-        if: github.event_name != 'pull_request_target'
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: trivy-report.sarif
