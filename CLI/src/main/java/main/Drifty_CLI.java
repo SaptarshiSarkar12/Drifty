@@ -63,7 +63,6 @@ public class Drifty_CLI {
                 switch (args[i]) {
                     case HELP_FLAG, HELP_FLAG_SHORT -> {
                         help();
-                        System.exit(0);
                     }
                     case ADD_FLAG -> {
                         if (i + 1 >= args.length) {
@@ -73,11 +72,9 @@ public class Drifty_CLI {
                         for (int j = i + 1; j < args.length; j++) {
                             addUrlToFile(args[j]);
                         }
-                        System.exit(0);
                     }
                     case LIST_FLAG -> {
                         listUrls();
-                        System.exit(0);
                     }
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
@@ -91,7 +88,6 @@ public class Drifty_CLI {
                                 removeUrl(args[j]);
                             }
                         }
-                        System.exit(0);
                     }
                     case GET_FLAG -> {
                         // Logic to download URLs goes here
@@ -99,13 +95,11 @@ public class Drifty_CLI {
                         batchDownloadingFile = yamlFilePath;
                         batchDownloader();
                         removeAllUrls();
-                        System.exit(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
                     case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
                     case VERSION_FLAG, VERSION_FLAG_SHORT -> {
                         printVersion();
-                        System.exit(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
@@ -121,7 +115,8 @@ public class Drifty_CLI {
                         }
                     }
                 }
-            }
+                System.exit(0);
+           }
             if (!batchDownloading) {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
@@ -246,141 +241,103 @@ public class Drifty_CLI {
         }
     }
 
-    private static void listUrls() {
-        Yaml yaml = new Yaml();
-        Map<String, List<String>> data;
-        ensureYamlFileExists();
-
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
-            data = yaml.load(reader);
-        } catch (IOException e) {
-            messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
-            return;
-        }
-
-        if (data == null || data.get("links") == null || data.get("links").isEmpty()) {
-            messageBroker.msgDownloadError("No URL is present in the links queue!\n" +
+    private static boolean isEmptyYaml(Map<String, List<String>> data) {
+        if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
+            messageBroker.msgLinkError("No URL is present in the links queue!\n" +
                     "Please run with `add <link>` to add the link to the list.");
-            System.exit(1);
+            return true;
         }
-
-        List<String> urls = data.get("links");
-        messageBroker.msgDownloadInfo("List of URLs:");
-        for (int i = 0; i < urls.size(); i++) {
-            messageBroker.msgLinkInfo((i + 1) + ". " + urls.get(i));
-        }
+        return false;
     }
 
-    private static void removeUrl(String indexStr) {
+    private static Map<String, List<String>> loadYamlData() {
         Yaml yaml = new Yaml();
-        Map<String, List<String>> data;
-        ensureYamlFileExists(); // Make sure this method correctly ensures the YAML file exists
+        Map<String, List<String>> data = null;
+        ensureYamlFileExists(); // Ensure the YAML file exists before trying to read
 
-        // Parse the index string to an integer
-        int index;
-        try {
-            index = Integer.parseInt(indexStr);
-        } catch (NumberFormatException e) {
-            messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
-            return;
-        }
-
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
-            data = yaml.load(reader);
-            if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
-                messageBroker.msgLinkError("No URL is present in the links queue!\n" +
-                        "Please run with `add <link>` to add the link to the list.");
-                return;
-            }
-
-            List<String> urls = data.get("links");
-            // Validate the index
-            if (index < 1 || index > urls.size()) {
-                messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
-                return;
-            }
-
-            // Remove the URL at the given index
-            String removedUrl = urls.remove(index - 1);
-
-            // Write the updated list back to the YAML file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
-                yaml.dump(data, writer);
-                messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
-            } catch (IOException e) {
-                messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
-            }
-
-        } catch (IOException e) {
-            messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
-        }
-    }
-
-    private static void removeAllUrls() {
-        Yaml yaml = new Yaml();
-        Map<String, List<String>> data;
-        ensureYamlFileExists(); // Make sure this method correctly ensures the YAML file exists
-
-        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
-            data = yaml.load(reader);
-            if (data == null || !data.containsKey("links")) {
-                messageBroker.msgLinkError("No URL is present in the links queue!\n" +
-                        "Please run with `add <link>` to add the link to the list.");
-                return;
-            }
-
-            data.put("links", new ArrayList<>()); // Clear all URLs
-
-            // Write the updated (empty) list back to the YAML file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
-                yaml.dump(data, writer);
-                messageBroker.msgLinkInfo("All URLs have been removed.");
-            } catch (IOException e) {
-                messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
-            }
-
-        } catch (IOException e) {
-            messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
-        }
-    }
-
-    private static void addUrlToFile(String urlString) {
-        // Validate the URL before proceeding
-        if (!Utility.isURL(urlString)) {
-            messageBroker.msgInputError("Error: The provided string is not valid URL.", true);
-            return; // Exit the function if the URL is not valid
-        }
-
-        Yaml yaml = new Yaml();
-        Map<String, List<String>> data;
-
-        // Ensure the YAML file exists
-        ensureYamlFileExists();
-
-        // Load existing data from the YAML file
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
             data = yaml.load(reader);
             if (data == null) {
                 data = new HashMap<>();
             }
-            // Ensure 'links' key has a list associated with it
-            data.computeIfAbsent("links", k -> new ArrayList<>());
+            data.computeIfAbsent("links", k -> new ArrayList<>()); // Ensure 'links' list exists
         } catch (IOException e) {
             messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
-            return; // Exit the function if there is an error reading the file
         }
+        return data;
+    }
 
-        // Add the URL to the 'links' list
-        data.get("links").add(urlString);
-
-        // Write the updated data back to the YAML file
+    private static void saveYamlData(Map<String, List<String>> data) {
+        Yaml yaml = new Yaml();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
             yaml.dump(data, writer);
-            messageBroker.msgLinkInfo("URL added: " + urlString);
         } catch (IOException e) {
             messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
         }
     }
+
+    private static void listUrls() {
+        Map<String, List<String>> data = loadYamlData();
+        if (isEmptyYaml(data)) return; // Helper function checks for URL existence
+
+        List<String> urls = data.get("links");
+        messageBroker.msgDownloadInfo("List of URLs:");
+        urls.forEach(url -> messageBroker.msgLinkInfo(url));
+    }
+
+
+    private static void removeUrl(String indexStr) {
+        int index;
+        try {
+            index = Integer.parseInt(indexStr); // Convert indexStr to integer
+        } catch (NumberFormatException e) {
+            messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
+            return;
+        }
+
+        Map<String, List<String>> data = loadYamlData();
+        if (isEmptyYaml(data)) return;
+
+        List<String> urls = data.get("links");
+        if (index < 1 || index > urls.size()) {
+            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+            return;
+        }
+
+        String removedUrl = urls.remove(index - 1);
+        saveYamlData(data); // Save updated YAML data
+        messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
+    }
+
+    private static void removeAllUrls() {
+        Map<String, List<String>> data = loadYamlData();
+        if (data == null || !data.containsKey("links")) return;
+
+        data.put("links", new ArrayList<>()); // Clear all URLs
+        saveYamlData(data); // Save the cleared list back to the YAML file
+        messageBroker.msgLinkInfo("The URL queue is now empty");
+    }
+
+
+    private static void addUrlToFile(String urlString) {
+        if (!Utility.isURL(urlString)) {
+            messageBroker.msgInputError("Error: '" + urlString + "' is not a valid URL.", true);
+            return;
+        }
+
+        Map<String, List<String>> data = loadYamlData();
+        if (data == null) return; // Exit if there was an error loading the data
+
+        List<String> urls = data.get("links");
+        if (!urls.contains(urlString)) {
+            urls.add(urlString); // Add the URL if it doesn't exist
+            saveYamlData(data); // Save the updated data back to the YAML file
+            messageBroker.msgLinkInfo("URL added: " + urlString);
+        } else {
+            messageBroker.msgInputError("URL already exists: " + urlString, true);
+        }
+    }
+
 
     private static void printVersion() {
         System.out.println("\033[1m" + APPLICATION_NAME + " " + VERSION_NUMBER + ANSI_RESET);
