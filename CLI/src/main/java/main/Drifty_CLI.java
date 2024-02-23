@@ -116,7 +116,7 @@ public class Drifty_CLI {
                     }
                 }
                 System.exit(0);
-           }
+            }
             if (!batchDownloading) {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
@@ -278,8 +278,10 @@ public class Drifty_CLI {
 
     private static void listUrls() {
         Map<String, List<String>> data = loadYamlData();
-        if (isEmptyYaml(data)) return; // Helper function checks for URL existence
+        if (isEmptyYaml(data)) {
+            return; // Helper function checks for URL existence
 
+        }
         List<String> urls = data.get("links");
         messageBroker.msgDownloadInfo("List of URLs:");
         urls.forEach(url -> messageBroker.msgLinkInfo(url));
@@ -296,7 +298,9 @@ public class Drifty_CLI {
         }
 
         Map<String, List<String>> data = loadYamlData();
-        if (isEmptyYaml(data)) return;
+        if (isEmptyYaml(data)) {
+            return;
+        }
 
         List<String> urls = data.get("links");
         if (index < 1 || index > urls.size()) {
@@ -311,7 +315,9 @@ public class Drifty_CLI {
 
     private static void removeAllUrls() {
         Map<String, List<String>> data = loadYamlData();
-        if (data == null || !data.containsKey("links")) return;
+        if (data == null || !data.containsKey("links")) {
+            return;
+        }
 
         data.put("links", new ArrayList<>()); // Clear all URLs
         saveYamlData(data); // Save the cleared list back to the YAML file
@@ -326,8 +332,10 @@ public class Drifty_CLI {
         }
 
         Map<String, List<String>> data = loadYamlData();
-        if (data == null) return; // Exit if there was an error loading the data
+        if (data == null) {
+            return; // Exit if there was an error loading the data
 
+        }
         List<String> urls = data.get("links");
         if (!urls.contains(urlString)) {
             urls.add(urlString); // Add the URL if it doesn't exist
