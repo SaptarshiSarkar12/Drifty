@@ -277,47 +277,63 @@ public class Drifty_CLI {
     }
 
     private static void listUrls() {
-        Map<String, List<String>> data = loadYamlData();
-        if (isEmptyYaml(data)) return; // Helper function checks for URL existence
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            if (isEmptyYaml(data)) {
+                return;
+            }
 
-        List<String> urls = data.get("links");
-        messageBroker.msgDownloadInfo("List of URLs:");
-        urls.forEach(url -> messageBroker.msgLinkInfo(url));
+            List<String> urls = data.get("links");
+            messageBroker.msgDownloadInfo("List of URLs:");
+            urls.forEach(url -> messageBroker.msgLinkInfo(url));
+        } catch (Exception e) {
+            messageBroker.msgLogError("An error occurred while listing URLs: " + e.getMessage());
+        }
     }
-
 
     private static void removeUrl(String indexStr) {
         int index;
         try {
-            index = Integer.parseInt(indexStr); // Convert indexStr to integer
+            index = Integer.parseInt(indexStr);
         } catch (NumberFormatException e) {
             messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
             return;
         }
 
-        Map<String, List<String>> data = loadYamlData();
-        if (isEmptyYaml(data)) return;
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            if (isEmptyYaml(data)) {
+                return;
+            }
 
-        List<String> urls = data.get("links");
-        if (index < 1 || index > urls.size()) {
-            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
-            return;
+            List<String> urls = data.get("links");
+            if (index < 1 || index > urls.size()) {
+                messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+                return;
+            }
+
+            String removedUrl = urls.remove(index - 1);
+            saveYamlData(data); // Save updated YAML data
+            messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
+        } catch (Exception e) {
+            messageBroker.msgLogError("An error occurred while removing a URL: " + e.getMessage());
         }
-
-        String removedUrl = urls.remove(index - 1);
-        saveYamlData(data); // Save updated YAML data
-        messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
     }
 
     private static void removeAllUrls() {
-        Map<String, List<String>> data = loadYamlData();
-        if (data == null || !data.containsKey("links")) return;
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            if (isEmptyYaml(data)) {
+                return;
+            }
 
-        data.put("links", new ArrayList<>()); // Clear all URLs
-        saveYamlData(data); // Save the cleared list back to the YAML file
-        messageBroker.msgLinkInfo("The URL queue is now empty");
+            data.put("links", new ArrayList<>()); // Clear all URLs
+            saveYamlData(data); // Save the cleared list back to the YAML file
+            messageBroker.msgLinkInfo("The URL queue is now empty");
+        } catch (Exception e) {
+            messageBroker.msgLogError("An error occurred while removing all URLs: " + e.getMessage());
+        }
     }
-
 
     private static void addUrlToFile(String urlString) {
         if (!Utility.isURL(urlString)) {
@@ -325,19 +341,21 @@ public class Drifty_CLI {
             return;
         }
 
-        Map<String, List<String>> data = loadYamlData();
-        if (data == null) return; // Exit if there was an error loading the data
+        try {
+            Map<String, List<String>> data = loadYamlData();
 
-        List<String> urls = data.get("links");
-        if (!urls.contains(urlString)) {
-            urls.add(urlString); // Add the URL if it doesn't exist
-            saveYamlData(data); // Save the updated data back to the YAML file
-            messageBroker.msgLinkInfo("URL added: " + urlString);
-        } else {
-            messageBroker.msgInputError("URL already exists: " + urlString, true);
+            List<String> urls = data.get("links");
+            if (!urls.contains(urlString)) {
+                urls.add(urlString); // Add the URL if it doesn't exist
+                saveYamlData(data); // Save the updated data back to the YAML file
+                messageBroker.msgLinkInfo("URL added: " + urlString);
+            } else {
+                messageBroker.msgInputError("URL already exists: " + urlString, true);
+            }
+        } catch (Exception e) {
+            messageBroker.msgLogError("An error occurred while adding a URL: " + e.getMessage());
         }
     }
-
 
     private static void printVersion() {
         System.out.println("\033[1m" + APPLICATION_NAME + " " + VERSION_NUMBER + ANSI_RESET);
