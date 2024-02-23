@@ -301,7 +301,6 @@ public class Drifty_CLI {
         }
     }
 
-
     private static void listUrls() {
         try {
             Map<String, List<String>> data = loadYamlData();
