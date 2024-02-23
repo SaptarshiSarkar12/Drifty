@@ -18,6 +18,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,7 +117,7 @@ public class Drifty_CLI {
                     }
                 }
                 System.exit(0);
-           }
+            }
             if (!batchDownloading) {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
@@ -269,12 +270,37 @@ public class Drifty_CLI {
 
     private static void saveYamlData(Map<String, List<String>> data) {
         Yaml yaml = new Yaml();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(yamlFilePath))) {
+        File originalFile = new File(yamlFilePath);
+        File backupFile = new File(yamlFilePath + ".bak");
+
+        // Create a backup of the original file
+        try {
+            Files.copy(originalFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            messageBroker.msgLogError("Failed to create a backup of the YAML file: " + e.getMessage());
+            return; // Abort the operation if backup fails to ensure data integrity
+        }
+
+        // Proceed with writing the updated data to the YAML file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(originalFile))) {
             yaml.dump(data, writer);
         } catch (IOException e) {
             messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
+            // Attempt to restore from backup in case of a write error
+            try {
+                Files.copy(backupFile.toPath(), originalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                messageBroker.msgLogError("Restored the original YAML file from backup due to write error.");
+            } catch (IOException restoreException) {
+                messageBroker.msgLogError("Failed to restore the original YAML file from backup: " + restoreException.getMessage());
+            }
+        } finally {
+            // Clean up: Delete the backup file if everything went smoothly
+            if (!backupFile.delete()) {
+                messageBroker.msgLogError("Failed to delete the backup file: " + backupFile.getName());
+            }
         }
     }
+
 
     private static void listUrls() {
         try {
