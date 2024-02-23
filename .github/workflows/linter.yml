@@ -11,6 +11,7 @@ concurrency:
 jobs:
   build:
     name: Lint Code Base
+    if: github.repository == 'SaptarshiSarkar12/Drifty'
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
