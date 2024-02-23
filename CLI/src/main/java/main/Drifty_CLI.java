@@ -116,7 +116,7 @@ public class Drifty_CLI {
                     }
                 }
                 System.exit(0);
-           }
+            }
             if (!batchDownloading) {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
