@@ -4,6 +4,7 @@ import backend.FileDownloader;
 import cli.utils.MessageBroker;
 import cli.init.Environment;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 import preferences.AppSettings;
 import properties.MessageType;
 import properties.Program;
@@ -262,6 +263,8 @@ public class Drifty_CLI {
                 data = new HashMap<>();
             }
             data.computeIfAbsent("links", k -> new ArrayList<>()); // Ensure 'links' list exists
+        } catch (YAMLException e) {
+            messageBroker.msgLogError("Invalid YAML format in file: " + e.getMessage());
         } catch (IOException e) {
             messageBroker.msgLogError("Error reading YAML file: " + e.getMessage());
         }
