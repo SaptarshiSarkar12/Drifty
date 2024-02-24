@@ -41,6 +41,9 @@ jobs:
       uses: microsoft/setup-msbuild@v2
       with:
         msbuild-architecture: x64
+    - name: Visual Studio shell
+      if: ${{ matrix.os == 'windows-latest' && matrix.mode == 'GUI' }}
+      uses: egor-tensin/vs-shell@v2
     - name: Update system packages
       if: ${{ matrix.os == 'ubuntu-latest' && matrix.mode == 'GUI' }}
       run: sudo apt-get update
