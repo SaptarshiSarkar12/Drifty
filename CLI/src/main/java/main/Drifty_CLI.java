@@ -58,14 +58,10 @@ public class Drifty_CLI {
         printBanner();
         if (args.length > 0) {
             link = null;
-            String name = null;
-            String location = null;
             yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH), YAML_FILENAME).toAbsolutePath().toString();
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
-                    case HELP_FLAG, HELP_FLAG_SHORT -> {
-                        help();
-                    }
+                    case HELP_FLAG, HELP_FLAG_SHORT -> help();
                     case ADD_FLAG -> {
                         if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No URL provided.");
@@ -75,9 +71,7 @@ public class Drifty_CLI {
                             addUrlToFile(args[j]);
                         }
                     }
-                    case LIST_FLAG -> {
-                        listUrls();
-                    }
+                    case LIST_FLAG -> listUrls();
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No line number provided for removal.");
@@ -92,17 +86,16 @@ public class Drifty_CLI {
                         }
                     }
                     case GET_FLAG -> {
+                        batchDownloading = true;
                         // Logic to download URLs goes here
                         System.out.println("Downloading URLs...");
                         batchDownloadingFile = yamlFilePath;
                         batchDownloader();
                         removeAllUrls();
                     }
-                    case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
-                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
-                    case VERSION_FLAG, VERSION_FLAG_SHORT -> {
-                        printVersion();
-                    }
+                    case NAME_FLAG, NAME_FLAG_SHORT -> fileName = args[i + 1];
+                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> downloadsFolder = args[i + 1];
+                    case VERSION_FLAG, VERSION_FLAG_SHORT -> printVersion();
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
                         batchDownloadingFile = args[i + 1];
@@ -111,6 +104,7 @@ public class Drifty_CLI {
                     default -> {
                         if (isURL(args[i])) {
                             link = args[i];
+                            continue;
                         } else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
                             System.exit(1);
@@ -131,9 +125,8 @@ public class Drifty_CLI {
                     isYoutubeURL = isYoutube(link);
                     isInstagramLink = isInstagram(link);
                     isSpotifyLink = isSpotify(link);
-                    downloadsFolder = location;
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                    if ((name == null) && (fileName == null || fileName.isEmpty())) {
+                    if (fileName == null || fileName.isEmpty()) {
                         if (isSpotifyLink && link.contains("playlist")) {
                             handleSpotifyPlaylist();
                         } else {
@@ -350,14 +343,21 @@ public class Drifty_CLI {
 
     private static void removeAllUrls() {
         try {
-            Map<String, List<String>> data = loadYamlData();
-            if (isEmptyYaml(data)) {
-                return;
+            // Delete the YAML file to remove all URLs
+            File yamlFile = new File(yamlFilePath);
+            if (yamlFile.exists()) {
+                if (yamlFile.delete()) {
+                    if (batchDownloading) {
+                        messageBroker.msgLogInfo("All URLs removed successfully from the YAML file.");
+                    } else {
+                        messageBroker.msgLinkInfo("All URLs removed successfully.");
+                    }
+                } else {
+                    messageBroker.msgLinkError("Failed to remove all URLs.");
+                }
+            } else {
+                messageBroker.msgLinkError("No URLs to remove.");
             }
-
-            data.put("links", new ArrayList<>()); // Clear all URLs
-            saveYamlData(data); // Save the cleared list back to the YAML file
-            messageBroker.msgLinkInfo("The URL queue is now empty");
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while removing all URLs: " + e.getMessage());
         }
