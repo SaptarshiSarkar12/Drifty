@@ -226,7 +226,7 @@ public class Drifty_CLI {
             try {
                 boolean isNewFileCreated = yamlFile.createNewFile();
                 if (isNewFileCreated) {
-                    messageBroker.msgFilenameInfo("New YAML file created: " + yamlFilePath);
+                    messageBroker.msgLogInfo("New YAML file created: " + yamlFilePath);
                 } else {
                     messageBroker.msgLogError("Failed to create new YAML file.");
                 }
