@@ -767,4 +767,12 @@ public class Utility {
             return "Failed to convert to mp3! User interrupted the process. " + e.getMessage();
         }
     }
+
+    public static int parseStringToInt(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 }

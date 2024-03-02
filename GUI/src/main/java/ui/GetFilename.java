@@ -162,7 +162,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                     for (String line : list) {
                         Matcher m = pattern.matcher(line);
                         if (m.find()) {
-                            fileCount = parseStringToInt(m.group(2));
+                            fileCount = Utility.parseStringToInt(m.group(2));
                             break;
                         }
                     }
@@ -198,13 +198,5 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
             }
         };
-    }
-
-    private int parseStringToInt(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 }
