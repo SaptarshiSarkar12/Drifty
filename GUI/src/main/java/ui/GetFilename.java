@@ -96,12 +96,12 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 }
                 for (File file : files) {
                     try {
-                        if (file.getName().equals("yt-metadata.info.json")) {
+                        if ("yt-metadata.info.json".equals(file.getName())) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename = Utility.getFilenameFromJson(jsonString);
                             updateMessage("Filename detected: " + filename);
                             jobList.addLast(new Job(link, dir, filename, false));
-                        } else if (file.getName().equals("spotify-metadata.json")) {
+                        } else if ("spotify-metadata.json".equals(file.getName())) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename = Utility.getSpotifyFilename(jsonString);
                             updateMessage("Filename detected: " + filename);

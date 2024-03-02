@@ -118,7 +118,7 @@ public class Utility {
             File[] files = driftyJsonFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    if (file.getName().equals("yt-metadata.info.json")) {
+                    if ("yt-metadata.info.json".equals(file.getName())) {
                         String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
                         list.addLast(linkMetadata);
                     }
@@ -358,7 +358,7 @@ public class Utility {
                 try (
                     InputStreamReader in = new InputStreamReader(p.getInputStream());
                     BufferedReader reader = new BufferedReader(in)
-                ) {
+                        ) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (line.contains("ERROR") || line.contains("WARNING")) {
@@ -429,12 +429,13 @@ public class Utility {
             }
             String[] durationInMinutes = searchResult.get("duration").toString().split(":");
             int videoDurationInMs = Integer.parseInt(durationInMinutes[0]) * 60000 + Integer.parseInt(durationInMinutes[1]) * 1000;
-            if (searchResult.get("category").toString().equalsIgnoreCase("Top result")) {
+            if ("Top result".equalsIgnoreCase(searchResult.get("category").toString())) {
                 if (isDurationMatched(videoDurationInMs, spotifySongDuration, false)) {
                     matchedVideoId = (String) searchResult.get("videoId");
                 }
             }
-            @SuppressWarnings("unchecked") ArrayList<String> artistsFromSearchResult = (ArrayList<String>) searchResult.get("artists");
+            @SuppressWarnings("unchecked")
+            ArrayList<String> artistsFromSearchResult = (ArrayList<String>) searchResult.get("artists");
             for (String artist : artistNames) {
                 if (artistsFromSearchResult.contains(artist)) {
                     noOfMatches++;
@@ -456,9 +457,9 @@ public class Utility {
 
     private static boolean isDurationMatched(int actualDuration, int expectedDuration, boolean strictMatch) {
         if (strictMatch) {
-            return ((double) expectedDuration/actualDuration >= 0.98 && (double) expectedDuration/actualDuration <= 1.01); // 98% - 101% match
+            return (double) expectedDuration / actualDuration >= 0.98 && (double) expectedDuration / actualDuration <= 1.01; // 98% - 101% match
         } else {
-            return ((double) expectedDuration/actualDuration >= 0.9 && (double) expectedDuration/actualDuration <= 1.1); // 90% - 110% match
+            return (double) expectedDuration / actualDuration >= 0.9 && (double) expectedDuration / actualDuration <= 1.1; // 90% - 110% match
         }
     }
 
@@ -505,14 +506,14 @@ public class Utility {
                     if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicCardShelfRenderer")) {
                         JsonObject musicCardShelfRenderer = collectionOfMusicShelfRenderers.get(i).getAsJsonObject().get("musicCardShelfRenderer").getAsJsonObject();
                         String resultType = musicCardShelfRenderer.get("subtitle").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString().toLowerCase();
-                        if (!resultType.equalsIgnoreCase("song") && !resultType.equalsIgnoreCase("video")) {
+                        if (!"song".equalsIgnoreCase(resultType) && !"video".equalsIgnoreCase(resultType)) {
                             continue;
                         }
                         String category = musicCardShelfRenderer.get("header").getAsJsonObject().get("musicCardShelfHeaderBasicRenderer").getAsJsonObject().get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
                         HashMap<String, Object> searchResult = new HashMap<>();
                         searchResult.put("category", category);
                         searchResult.put("resultType", resultType);
-                        if (resultType.equalsIgnoreCase("video")) {
+                        if ("video".equalsIgnoreCase(resultType)) {
                             JsonElement videoId = musicCardShelfRenderer.get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("navigationEndpoint").getAsJsonObject().get("watchEndpoint").getAsJsonObject().get("videoId");
                             if (videoId.isJsonNull()) {
                                 continue;
@@ -535,7 +536,7 @@ public class Utility {
                     } else if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicShelfRenderer")) {
                         JsonObject musicShelfRenderer = collectionOfMusicShelfRenderers.get(i).getAsJsonObject().get("musicShelfRenderer").getAsJsonObject();
                         String category = musicShelfRenderer.get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
-                        if (!category.equalsIgnoreCase("Songs")) {
+                        if (!"Songs".equalsIgnoreCase(category)) {
                             continue;
                         }
                         JsonArray contents = musicShelfRenderer.get("contents").getAsJsonArray();
@@ -550,7 +551,7 @@ public class Utility {
                             searchResult.put("category", category);
                             JsonObject watchEndpoint = musicResponsiveListItemRenderer.get("overlay").getAsJsonObject().get("musicItemThumbnailOverlayRenderer").getAsJsonObject().get("content").getAsJsonObject().get("musicPlayButtonRenderer").getAsJsonObject().get("playNavigationEndpoint").getAsJsonObject().get("watchEndpoint").getAsJsonObject();
                             String videoType = watchEndpoint.get("watchEndpointMusicSupportedConfigs").getAsJsonObject().get("watchEndpointMusicConfig").getAsJsonObject().get("musicVideoType").getAsString();
-                            if (videoType.equalsIgnoreCase("MUSIC_VIDEO_TYPE_ATV")) {
+                            if ("MUSIC_VIDEO_TYPE_ATV".equalsIgnoreCase(videoType)) {
                                 searchResult.put("resultType", "song");
                                 JsonElement videoId = watchEndpoint.get("videoId");
                                 if (videoId.isJsonNull()) {
@@ -576,11 +577,11 @@ public class Utility {
         HashMap<String, Object> artist = new HashMap<>();
         HashMap<String, Object> duration = new HashMap<>();
         ArrayList<String> artists = new ArrayList<>();
-        for (int i = 0; i < runs.size(); i+= 2) { // uneven indices are always the separators
+        for (int i = 0; i < runs.size(); i += 2) { // uneven indices are always the separators
             String text = runs.get(i).getAsJsonObject().get("text").getAsString();
             if (runs.get(i).getAsJsonObject().has("navigationEndpoint")) {
                 String pageType = runs.get(i).getAsJsonObject().get("navigationEndpoint").getAsJsonObject().get("browseEndpoint").getAsJsonObject().get("browseEndpointContextSupportedConfigs").getAsJsonObject().get("browseEndpointContextMusicConfig").getAsJsonObject().get("pageType").getAsString();
-                if (pageType.equalsIgnoreCase("MUSIC_PAGE_TYPE_ARTIST")) {
+                if ("MUSIC_PAGE_TYPE_ARTIST".equalsIgnoreCase(pageType)) {
                     artists.add(text);
                 }
             } else {
@@ -588,10 +589,12 @@ public class Utility {
             }
         }
         artist.put("artists", artists);
-        return new ArrayList<>() {{
-            add(artist);
-            add(duration);
-        }};
+        return new ArrayList<>() {
+            {
+                add(artist);
+                add(duration);
+            }
+        };
     }
 
     private static String getGoogleVisitorId() {
