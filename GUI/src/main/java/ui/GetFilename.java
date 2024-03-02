@@ -6,17 +6,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import properties.Program;
 import support.Job;
 import utils.Utility;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Objects;
-import java.util.StringJoiner;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,10 +62,14 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         }
         if (proceed) {
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(getJson(), 1000, 150);
-            Utility.getLinkMetadata(link);
+            timer.scheduleAtFixedRate(getJson(), 100, 1);
+            if (isSpotify(link)) {
+                Utility.getSpotifySongMetadata(link);
+            } else {
+                Utility.getYtDlpMetadata(link);
+            }
+            sleep(1000); // give timerTask enough time to do its last run
             timer.cancel();
-            sleep(500); //give timerTask enough time to do its last run
             jobList.clear();
             UIController.setDownloadInfoColor(GREEN);
             updateMessage("File(s) added to batch.");
@@ -86,33 +86,33 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         return new TimerTask() {
             @Override
             public void run() {
-                ConcurrentLinkedDeque<File> deleteList = new ConcurrentLinkedDeque<>();
                 ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
+                ConcurrentLinkedDeque<File> deleteList = new ConcurrentLinkedDeque<>();
                 File[] files = appFolder.listFiles();
-                for (File file : Objects.requireNonNull(files)) {
+                if (files == null) {
+                    return;
+                }
+                for (File file : files) {
                     try {
-                        String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-                        if ("json".equalsIgnoreCase(ext) || "spotdl".equalsIgnoreCase(ext)) {
+                        if (file.getName().equals("yt-metadata.info.json")) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
-                            String filename;
-                            if (isSpotify(link)) {
-                                filename = Utility.extractSpotifyFilename(jsonString);
-                                String baseName = FilenameUtils.getBaseName(filename);
-                                filename = baseName + ".mp3";
-                            } else {
-                                filename = Utility.getFilenameFromJson(jsonString);
-                                String baseName = FilenameUtils.getBaseName(filename);
-                                filename = baseName + ".mp4";
-                            }
-                            updateMessage("Found file: " + filename);
+                            String filename = Utility.getFilenameFromJson(jsonString);
+                            updateMessage("Filename detected: " + filename);
                             jobList.addLast(new Job(link, dir, filename, false));
-                            if (fileCount > 1) {
-                                filesProcessed++;
-                                updateProgress(filesProcessed, fileCount);
-                            }
-                            UIController.addJob(jobList);
-                            deleteList.addLast(file);
+                        } else if (file.getName().equals("spotify-metadata.json")) {
+                            String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
+                            String filename = Utility.getSpotifyFilename(jsonString);
+                            updateMessage("Filename detected: " + filename);
+                            jobList.addLast(new Job(link, dir, filename, jsonString, false));
+                        } else {
+                            continue;
                         }
+                        if (fileCount > 1) {
+                            filesProcessed++;
+                            updateProgress(filesProcessed, fileCount);
+                        }
+                        UIController.addJob(jobList);
+                        deleteList.addLast(file);
                     } catch (IOException e) {
                         Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
                         Environment.getMessageBroker().msgLogError(e.getMessage());

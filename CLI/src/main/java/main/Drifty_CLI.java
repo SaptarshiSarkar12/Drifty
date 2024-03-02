@@ -1,25 +1,28 @@
 package main;
 
 import backend.FileDownloader;
-import cli.utils.MessageBroker;
 import cli.init.Environment;
+import cli.utils.MessageBroker;
+import cli.utils.ScannerFactory;
+import cli.utils.Utility;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;
 import properties.OS;
+import properties.Program;
 import support.Job;
 import support.JobHistory;
 import utils.Logger;
-import cli.utils.ScannerFactory;
-import cli.utils.Utility;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.*;
@@ -59,13 +62,13 @@ public class Drifty_CLI {
                 switch (args[i]) {
                     case HELP_FLAG, HELP_FLAG_SHORT -> {
                         help();
-                        System.exit(0);
+                        Environment.terminate(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
                     case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
                     case VERSION_FLAG, VERSION_FLAG_SHORT -> {
                         printVersion();
-                        System.exit(0);
+                        Environment.terminate(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
@@ -77,7 +80,7 @@ public class Drifty_CLI {
                             link = args[i];
                         } else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
-                            System.exit(1);
+                            Environment.terminate(1);
                         }
                     }
                 }
@@ -100,25 +103,31 @@ public class Drifty_CLI {
                         if (isSpotifyLink && link.contains("playlist")) {
                             handleSpotifyPlaylist();
                         } else {
-                            if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-                                if (link.contains("?")) {
-                                    link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
-                                } else {
-                                    link = link + "?utm_source=ig_embed";
-                                }
+                            if (isInstagram(link)) {
+                                link = formatInstagramLink(link);
                             }
                             messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                            fileName = findFilenameInLink(link);
+                            HashMap<String, Object> spotifyMetadata;
+                            if (isSpotifyLink) {
+                                spotifyMetadata = Utility.getSpotifySongMetadata(link);
+                                if (spotifyMetadata != null && !spotifyMetadata.isEmpty()) {
+                                    fileName = spotifyMetadata.get("name").toString() + ".webm";
+                                    messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
+                                } else {
+                                    messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+                                }
+                            } else {
+                                fileName = findFilenameInLink(link);
+                            }
                             if (!Objects.requireNonNull(fileName).isEmpty()) {
-                                Job job = new Job(link, downloadsFolder, fileName, false);
-                                checkHistoryAndDownload(job, false);
+                                verifyJobAndDownload(false);
                             }
                         }
                     }
                 }
             }
             LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
-            System.exit(0);
+            Environment.terminate(0);
         }
         while (true) {
             while (true) {
@@ -146,7 +155,7 @@ public class Drifty_CLI {
             }
             if (!batchDownloading) {
                 messageBroker.msgInputInfo(ENTER_FILE_LINK, false);
-                link = SC.next();
+                link = SC.next().strip();
                 SC.nextLine();
                 messageBroker.msgInputInfo("Validating link...", true);
                 if (Utility.isURL(link)) {
@@ -156,37 +165,47 @@ public class Drifty_CLI {
                     continue;
                 }
                 messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
-                downloadsFolder = SC.next();
+                downloadsFolder = SC.next().strip();
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
-                if (isSpotifyLink && link.contains("playlist")) {
-                    handleSpotifyPlaylist();
-                } else {
-                    if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-                        if (link.contains("?")) {
-                            link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
+                if (isSpotifyLink) {
+                    if (link.contains("playlist")) {
+                        handleSpotifyPlaylist();
+                    } else {
+                        messageBroker.msgFilenameInfo("Retrieving filename from link...");
+                        HashMap<String, Object> spotifyMetadata = Utility.getSpotifySongMetadata(link);
+                        if (spotifyMetadata != null && !spotifyMetadata.isEmpty()) {
+                            fileName = spotifyMetadata.get("songName").toString() + ".webm";
+                            messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
                         } else {
-                            link = link + "?utm_source=ig_embed";
+                            messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                         }
+                        if (!Objects.requireNonNull(fileName).isEmpty()) {
+                            verifyJobAndDownload(true);
+                        }
+                    }
+                } else {
+                    if (isInstagram(link)) {
+                        link = formatInstagramLink(link);
                     }
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
                     if (!Objects.requireNonNull(fileName).isEmpty()) {
-                        Job job = new Job(link, downloadsFolder, fileName, false);
-                        checkHistoryAndDownload(job, true);
+                        verifyJobAndDownload(true);
                     }
                 }
             }
             messageBroker.msgInputInfo(QUIT_OR_CONTINUE, true);
-            String choice = SC.next().toLowerCase();
+            String choice = SC.next().toLowerCase().strip();
             if ("q".equals(choice)) {
                 LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
                 break;
             }
             printBanner();
         }
+        Environment.terminate(0);
     }
 
     private static void printVersion() {
@@ -194,53 +213,39 @@ public class Drifty_CLI {
         if (AppSettings.GET.ytDlpVersion().isEmpty()) {
             Utility.setYtDlpVersion().run();
         }
-        if (AppSettings.GET.spotDLVersion().isEmpty()) {
-            Utility.setSpotDLVersion().run();
-        }
         System.out.println("yt-dlp version : " + AppSettings.GET.ytDlpVersion());
-        System.out.println("spotDL version : " + AppSettings.GET.spotDLVersion());
+        if (AppSettings.GET.isFfmpegWorking()) {
+            if (AppSettings.GET.ffmpegVersion().isEmpty()) {
+                Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
+                ffmpegVersion.start();
+                while (ffmpegVersion.isAlive()) {
+                    sleep(100);
+                }
+            }
+            System.out.println("FFMPEG version : " + AppSettings.GET.ffmpegVersion());
+        }
     }
 
     private static void handleSpotifyPlaylist() {
         messageBroker.msgFilenameInfo("Retrieving the number of tracks in the playlist...");
-        LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-        String json = makePretty(Objects.requireNonNull(linkMetadataList).getFirst());
-        String playlistLengthRegex = "(\"list_length\": )(.+)";
-        Pattern playlistLengthPattern = Pattern.compile(playlistLengthRegex);
-        Matcher lengthMatcher = playlistLengthPattern.matcher(json);
-        int numberOfSongs = 0;
-        if (lengthMatcher.find()) {
-            numberOfSongs = Integer.parseInt(lengthMatcher.group(2));
-            messageBroker.msgFilenameInfo("Number of tracks in the playlist : " + numberOfSongs);
-        } else {
-            messageBroker.msgFilenameError("Failed to retrieve the number of tracks in the playlist!");
+        ArrayList<HashMap<String, Object>> playlistMetadata = Utility.getSpotifyPlaylistMetadata(link);
+        if (!batchDownloading) {
+            SC.nextLine(); // To remove 'whitespace' from input buffer. The whitespace will not be present in the input buffer if the user is using batch downloading because only yml file is parsed but no user input is taken.
         }
-        for (int i = 0; i < numberOfSongs; i++) {
-            messageBroker.msgStyleInfo(BANNER_BORDER);
-            String linkRegex = "(\"url\": \")(.+)(\",)";
-            Pattern linkPattern = Pattern.compile(linkRegex);
-            Matcher linkMatcher = linkPattern.matcher(json);
-            if (linkMatcher.find(i)) {
-                link = linkMatcher.group(2);
-            } else {
-                messageBroker.msgLinkError("Failed to retrieve link from playlist!");
-                continue;
+        if (playlistMetadata != null && !playlistMetadata.isEmpty()) {
+            for (HashMap<String, Object> songMetadata : playlistMetadata) {
+                messageBroker.msgStyleInfo(BANNER_BORDER);
+                messageBroker.msgLinkInfo("[" + (playlistMetadata.indexOf(songMetadata) + 1) + "/" + playlistMetadata.size() + "] " + "Processing link : " + songMetadata.get("link"));
+                link = songMetadata.get("link").toString();
+                fileName = cleanFilename(songMetadata.get("songName").toString()) + ".webm";
+                messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
+                songMetadata.remove("link");
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String songMetadataJson = gson.toJson(songMetadata);
+                checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, songMetadataJson, false), false);
             }
-            messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfSongs + "] " + "Processing link : " + link);
-            if (fileName != null) {
-                String filenameRegex = "(\"name\": \")(.+)(\",)";
-                Pattern filenamePattern = Pattern.compile(filenameRegex);
-                Matcher filenameMatcher = filenamePattern.matcher(json);
-                if (filenameMatcher.find(i)) {
-                    fileName = cleanFilename(filenameMatcher.group(2)) + ".mp3";
-                    messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
-                } else {
-                    fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp3";
-                    messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
-                }
-            }
-            Job job = new Job(link, downloadsFolder, fileName, false);
-            checkHistoryAndDownload(job, false);
+        } else {
+            messageBroker.msgLinkError("Failed to retrieve playlist metadata!");
         }
     }
 
@@ -323,22 +328,29 @@ public class Drifty_CLI {
                     if (isSpotifyLink && link.contains("playlist")) {
                         fileName = null;
                     } else {
-                        if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-                            if (link.contains("?")) {
-                                link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
-                            } else {
-                                link = link + "?utm_source=ig_embed";
-                            }
+                        if (isInstagram(link)) {
+                            link = formatInstagramLink(link);
                         }
                         messageBroker.msgFilenameInfo("Retrieving filename from link...");
-                        fileName = findFilenameInLink(link);
+                        if (isSpotifyLink) {
+                            HashMap<String, Object> spotifyMetadata = Utility.getSpotifySongMetadata(link);
+                            if (spotifyMetadata != null && !spotifyMetadata.isEmpty()) {
+                                fileName = spotifyMetadata.get("songName").toString() + ".webm";
+                                messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
+                            } else {
+                                fileName = cleanFilename("Unknown_Filename_") + randomString(15) + ".webm";
+                                messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+                            }
+                        } else {
+                            fileName = findFilenameInLink(link);
+                        }
                     }
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
                     handleSpotifyPlaylist();
+                } else if (!Objects.requireNonNull(fileName).isEmpty()) {
+                    verifyJobAndDownload(false);
                 }
-                Job job = new Job(link, downloadsFolder, fileName, false);
-                checkHistoryAndDownload(job, false);
             }
         } catch (FileNotFoundException e) {
             messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
@@ -423,6 +435,28 @@ public class Drifty_CLI {
         System.out.println(ANSI_PURPLE + BANNER_BORDER + ANSI_RESET);
     }
 
+    private static void verifyJobAndDownload(boolean removeInputBufferFirst) {
+        Job job;
+        if (isSpotifyLink) {
+            File spotifyMetadataFile = Program.getJsonDataPath().resolve("spotify-metadata.json").toFile();
+            if (spotifyMetadataFile.exists()) {
+                try {
+                    String json = FileUtils.readFileToString(spotifyMetadataFile, Charset.defaultCharset());
+                    job = new Job(link, downloadsFolder, fileName, json, false);
+                } catch (IOException e) {
+                    messageBroker.msgFilenameError("Failed to read Spotify metadata file! " + e.getMessage());
+                    return;
+                }
+            } else {
+                messageBroker.msgFilenameError("Spotify metadata file not found!");
+                return;
+            }
+        } else {
+            job = new Job(link, downloadsFolder, fileName, false);
+        }
+        checkHistoryAndDownload(job, removeInputBufferFirst);
+    }
+
     private static void checkHistoryAndDownload(Job job, boolean removeInputBufferFirst) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
@@ -433,12 +467,13 @@ public class Drifty_CLI {
             messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName), false);
             renameFilenameIfRequired(true);
             if (isSpotifyLink) {
-                link = Utility.getSpotifyDownloadLink(link);
+                messageBroker.msgDownloadInfo("Trying to get download link for \"" + link + "\"");
+                link = Utility.getSpotifyDownloadLink(job.getSpotifyMetadataJson());
             }
             if (link != null) {
                 job = new Job(link, downloadsFolder, fileName, false);
                 jobHistory.addJob(job, true);
-                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder, isSpotifyLink);
                 downloader.run();
             }
         } else if (fileExistsHasHistory) {
@@ -458,7 +493,7 @@ public class Drifty_CLI {
                 if (link != null) {
                     job = new Job(link, downloadsFolder, fileName, false);
                     jobHistory.addJob(job, true);
-                    FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                    FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder, isSpotifyLink);
                     downloader.run();
                 }
             }
@@ -466,10 +501,11 @@ public class Drifty_CLI {
             jobHistory.addJob(job, true);
             renameFilenameIfRequired(removeInputBufferFirst);
             if (isSpotifyLink) {
-                link = Utility.getSpotifyDownloadLink(link);
+                messageBroker.msgDownloadInfo("Trying to get download link for \"" + link + "\"");
+                link = Utility.getSpotifyDownloadLink(job.getSpotifyMetadataJson());
             }
             if (link != null) {
-                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder);
+                FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder, isSpotifyLink);
                 downloader.run();
             }
         }
