@@ -64,15 +64,42 @@ public class Drifty_CLI {
                         help();
                         Environment.terminate(0);
                     }
-                    case NAME_FLAG, NAME_FLAG_SHORT -> name = args[i + 1];
-                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> location = args[i + 1];
+                    case NAME_FLAG, NAME_FLAG_SHORT -> {
+                        try {
+                            name = args[i + 1];
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            messageBroker.msgInitError("No filename specified!");
+                            Environment.terminate(1);
+                        }
+                    }
+                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> {
+                        try {
+                            location = args[i + 1];
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            messageBroker.msgInitError("No download location specified!");
+                            Environment.terminate(1);
+                        }
+                    }
                     case VERSION_FLAG, VERSION_FLAG_SHORT -> {
                         printVersion();
                         Environment.terminate(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
-                        batchDownloadingFile = args[i + 1];
+                        try {
+                            batchDownloadingFile = args[i + 1];
+                            if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
+                                messageBroker.msgBatchError("The data file should be a YAML file!");
+                                Environment.terminate(1);
+                            }
+                            if (!Paths.get(batchDownloadingFile).toFile().exists()) {
+                                messageBroker.msgBatchError("YAML data file \"" + batchDownloadingFile + "\" does not exist!");
+                                Environment.terminate(1);
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            messageBroker.msgInitError("No batch file specified!");
+                            Environment.terminate(1);
+                        }
                         batchDownloader();
                     }
                     default -> {
@@ -143,6 +170,9 @@ public class Drifty_CLI {
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
                         messageBroker.msgBatchError("The data file should be a YAML file!");
                     } else {
+                        if (!Paths.get(batchDownloadingFile).toFile().exists()) {
+                            messageBroker.msgBatchError("YAML data file \"" + batchDownloadingFile + "\" does not exist!");
+                        }
                         batchDownloader();
                         break;
                     }
@@ -251,9 +281,11 @@ public class Drifty_CLI {
 
     private static void batchDownloader() {
         Yaml yamlParser = new Yaml();
-        try {
-            messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
-            InputStreamReader yamlDataFile = new InputStreamReader(new FileInputStream(batchDownloadingFile));
+        messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
+        try (
+                FileInputStream yamlInputStream = new FileInputStream(batchDownloadingFile);
+                InputStreamReader yamlDataFile = new InputStreamReader(yamlInputStream)
+        ) {
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
             messageBroker.msgLogInfo("YAML data file (" + batchDownloadingFile + ") loaded successfully");
             int numberOfLinks;
@@ -352,8 +384,8 @@ public class Drifty_CLI {
                     verifyJobAndDownload(false);
                 }
             }
-        } catch (FileNotFoundException e) {
-            messageBroker.msgDownloadError("YAML Data file (" + batchDownloadingFile + ") not found ! " + e.getMessage());
+        } catch (IOException e) {
+            messageBroker.msgDownloadError("Failed to load YAML data file (" + batchDownloadingFile + ") ! " + e.getMessage());
         }
     }
 

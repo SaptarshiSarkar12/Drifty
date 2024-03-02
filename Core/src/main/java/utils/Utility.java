@@ -355,22 +355,26 @@ public class Utility {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 pb.redirectErrorStream(true);
                 Process p = pb.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.contains("ERROR") || line.contains("WARNING")) {
-                        if (line.contains("unable to extract username")) {
-                            M.msgLinkError("The Instagram post/reel is private!");
+                try (
+                    InputStreamReader in = new InputStreamReader(p.getInputStream());
+                    BufferedReader reader = new BufferedReader(in)
+                ) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (line.contains("ERROR") || line.contains("WARNING")) {
+                            if (line.contains("unable to extract username")) {
+                                M.msgLinkError("The Instagram post/reel is private!");
+                                break;
+                            } else if (line.contains("The playlist does not exist")) {
+                                M.msgLinkError("The YouTube playlist does not exist or is private!");
+                                break;
+                            } else if (line.contains("Video unavailable")) {
+                                M.msgLinkError("The YouTube video is unavailable!");
+                            } else {
+                                M.msgLinkError("Failed to retrieve filename!");
+                            }
                             break;
-                        } else if (line.contains("The playlist does not exist")) {
-                            M.msgLinkError("The YouTube playlist does not exist or is private!");
-                            break;
-                        } else if (line.contains("Video unavailable")) {
-                            M.msgLinkError("The YouTube video is unavailable!");
-                        } else {
-                            M.msgLinkError("Failed to retrieve filename!");
                         }
-                        break;
                     }
                 }
             } catch (Exception e) {

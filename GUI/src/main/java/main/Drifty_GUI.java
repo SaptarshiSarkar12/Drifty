@@ -43,7 +43,7 @@ public class Drifty_GUI extends Application {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         Mode.setGUIMode();
         msgBroker = new MessageBroker();
-        Environment.setMessageBroker(msgBroker);
+        Environment.setGUIMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
     }
 
