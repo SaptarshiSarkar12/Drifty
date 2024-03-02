@@ -64,9 +64,8 @@ public class Utility extends utils.Utility {
             M.msgLogError("Invalid input!");
             Environment.getMessageBroker().msgInputInfo(printMessage, false);
             input = SC.nextLine().toLowerCase();
-            yesNoValidation(input, printMessage);
+            return yesNoValidation(input, printMessage);
         }
-        return false;
     }
 
     public static String getSpotifyDownloadLink(String spotifyMetadataJson) {

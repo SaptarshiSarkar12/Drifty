@@ -280,6 +280,8 @@ public class FileDownloader extends Task<Integer> {
                 fos.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
                 msg = msg + ".";
+                fs.close();
+                rbs.close();
             }
             fos.close();
             exitCode = 0;
@@ -360,8 +362,8 @@ public class FileDownloader extends Task<Integer> {
         } finally {
             try {
                 Objects.requireNonNull(out).close();
-                in.close();
-            } catch (IOException ignored) {
+                Objects.requireNonNull(in).close();
+            } catch (IOException | NullPointerException ignored) {
             }
         }
         sendFinalMessage(message);
@@ -390,14 +392,14 @@ public class FileDownloader extends Task<Integer> {
                 checks the value of progress and if it's too high, then it sets the
                 lastProgress back to the number that makes sense.
                  */
-                value = Double.parseDouble(m1.group(1));
+                value = parseStringToDouble(m1.group(1));
                 progress = Math.max(value, lastProgress);
                 lastProgress = progress;
                 updateProgress(progress / 100, 1.0);
             }
             if (m2.find()) {
                 updateCount++;
-                double spd = Double.parseDouble(m2.group(1));
+                double spd = parseStringToDouble(m2.group(1));
                 speedSum += spd;
                 if (updateCount == 50) {
                     updateCount = 0;
@@ -406,9 +408,9 @@ public class FileDownloader extends Task<Integer> {
                     String speed = String.format("%06.2f", averageSpeed);
                     String units = m2.group(2);
                     String[] parts = m2.group(3).split(":");
-                    int hours = parts.length > 0 ? Integer.parseInt(parts[0]) : 0;
-                    int minutes = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
-                    int seconds = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
+                    int hours = parts.length > 0 ? parseStringToInt(parts[0]) : 0;
+                    int minutes = parts.length > 1 ? parseStringToInt(parts[1]) : 0;
+                    int seconds = parts.length > 2 ? parseStringToInt(parts[2]) : 0;
                     String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
                     updateMessage(speed + " " + units + " ETA " + time);
                     if (progress > 99) {
@@ -489,5 +491,21 @@ public class FileDownloader extends Task<Integer> {
         }
         sendInfoMessage("Download link retrieved successfully!");
         return "https://www.youtube.com/watch?v=" + matchedId;
+    }
+
+    private double parseStringToDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    private int parseStringToInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }

@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fileOut;
                     File file;
                     for (int i = 0; i < numberOfThreads; i++) {
-                        file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
+                        file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
@@ -185,6 +186,8 @@ public class FileDownloader implements Runnable {
                 ReadableByteChannel rbs = Channels.newChannel(fs);
                 fileOutputStream.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
+                fs.close();
+                rbs.close();
             }
             fileOutputStream.close();
             return true;
