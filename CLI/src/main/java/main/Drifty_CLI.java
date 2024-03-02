@@ -47,7 +47,7 @@ public class Drifty_CLI {
     public static void main(String[] args) {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
-        Environment.setMessageBroker(messageBroker);
+        Environment.setCLIMessageBroker(messageBroker);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");

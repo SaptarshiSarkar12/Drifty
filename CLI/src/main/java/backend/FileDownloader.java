@@ -95,7 +95,6 @@ public class FileDownloader implements Runnable {
                     while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                         sleep(500);
                     }
-                    // keep the main thread from closing the IO for a short amount of time so UI thread can finish and output
                 } else {
                     InputStream urlStream = url.openStream();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -104,9 +103,11 @@ public class FileDownloader implements Runnable {
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
+                    fos.close();
+                    urlStream.close();
                 }
                 downloadMetrics.setActive(false);
+                // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                 Utility.sleep(1800);
             } catch (SecurityException e) {
                 M.msgDownloadError("Write access to \"" + dir + fileName + "\" denied !");
