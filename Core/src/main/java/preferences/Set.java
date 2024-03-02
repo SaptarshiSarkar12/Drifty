@@ -27,6 +27,16 @@ public class Set {
         return INSTANCE;
     }
 
+    public void lastDriftyUpdateTime(long value) {
+        AppSettings.CLEAR.lastDriftyUpdateTime();
+        preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
+    }
+
+    public void driftyUpdateAvailable(boolean value) {
+        AppSettings.CLEAR.driftyUpdateAvailable();
+        preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, value);
+    }
+
     public void lastYtDlpUpdateTime(long value) {
         AppSettings.CLEAR.lastYtDlpUpdateTime();
         preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);

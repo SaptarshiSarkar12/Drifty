@@ -1,19 +1,22 @@
 package main;
 
 import backend.FileDownloader;
-import cli.utils.MessageBroker;
 import cli.init.Environment;
+import cli.updater.ExecuteUpdate;
+import cli.utils.MessageBroker;
+import cli.utils.ScannerFactory;
+import cli.utils.Utility;
 import org.yaml.snakeyaml.Yaml;
 import preferences.AppSettings;
 import properties.MessageType;
 import properties.OS;
+import support.Constants;
 import support.Job;
 import support.JobHistory;
 import utils.Logger;
-import cli.utils.ScannerFactory;
-import cli.utils.Utility;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,6 +26,7 @@ import java.util.regex.Pattern;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.*;
+import static updater.CheckUpdate.isUpdateAvailable;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();
@@ -45,6 +49,7 @@ public class Drifty_CLI {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setMessageBroker(messageBroker);
+        checkAndUpdateDrifty(true);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -67,6 +72,7 @@ public class Drifty_CLI {
                         printVersion();
                         System.exit(0);
                     }
+                    case UPDATE_FLAG, UPDATE_FLAG_SHORT -> checkAndUpdateDrifty(false);
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
                         batchDownloadingFile = args[i + 1];
@@ -187,6 +193,71 @@ public class Drifty_CLI {
             }
             printBanner();
         }
+    }
+
+    private static void checkAndUpdateDrifty(boolean askForInstallingUpdate) {
+        messageBroker.msgInitInfo("Checking for updates...");
+        if (!isDriftyUpdateChecked()) {
+            if (isUpdateAvailable()) {
+                messageBroker.msgUpdateInfo("Update available!");
+                boolean choice = true;
+                if (askForInstallingUpdate) {
+                    messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
+                    String choiceString = SC.nextLine().toLowerCase();
+                    choice = utility.yesNoValidation(choiceString, "Do you want to download the update? (Enter Y for yes and N for no) : ");
+                }
+                if (!choice) {
+                    messageBroker.msgUpdateInfo("Drifty update cancelled!");
+                } else {
+                    messageBroker.msgUpdateInfo("Downloading update...");
+                    if (!downloadUpdate()) {
+                        messageBroker.msgUpdateError("Failed to update Drifty!");
+                    } else {
+                        messageBroker.msgUpdateInfo("Update successful!");
+                        messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isDriftyUpdateChecked() {
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
+        return timeSinceLastUpdate <= ONE_DAY;
+    }
+
+    private static boolean downloadUpdate() {
+        try {
+            // "Current executable" means the executable currently running i.e., the one that is outdated.
+            File currentExecutableFile = new File(Drifty_CLI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
+            // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
+            File tmpFolder = Files.createTempDirectory("Drifty").toFile();
+            tmpFolder.deleteOnExit();
+            File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(currentExecutableFile.getName()).toFile();
+            FileDownloader downloader = new FileDownloader(Constants.updateURL.toString(), currentExecutableFile.getName(), tmpFolder.toString());
+            downloader.run();
+            if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
+                // If the latest executable was successfully downloaded, set the executable permission and execute the update.
+                ExecuteUpdate updateExecutor = new ExecuteUpdate(currentExecutableFile, latestExecutableFile);
+                messageBroker.msgLogInfo("Setting executable permission for the latest version of Drifty...");
+                if (updateExecutor.setExecutablePermission()) {
+                    messageBroker.msgLogInfo("Executing update...");
+                    return updateExecutor.executeUpdate();
+                }
+            } else {
+                messageBroker.msgUpdateError("Failed to download update!");
+                return false;
+            }
+        } catch (IOException e) {
+            messageBroker.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
+        } catch (URISyntaxException e) {
+            messageBroker.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
+        } catch (Exception e) {
+            messageBroker.msgUpdateError("Failed to update Drifty! " + e.getMessage());
+        }
+        return false;
     }
 
     private static void printVersion() {
@@ -404,7 +475,8 @@ public class Drifty_CLI {
         System.out.println("--location   -l            Downloads                The location on your computer where file downloaded using Drifty are placed");
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
-        System.out.println("--version    -v            Current Version          Displays version number of Drifty");
+        System.out.println("--version    -v            N/A                      Displays version number of Drifty");
+        System.out.println("--update     -u            N/A                      Updates Drifty CLI to the latest version");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");

@@ -30,6 +30,11 @@
             <artifactId>Core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.buildobjects</groupId>
+            <artifactId>jproc</artifactId>
+            <version>2.8.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -47,6 +52,7 @@
                 <artifactId>gluonfx-maven-plugin</artifactId>
                 <version>1.0.22</version>
                 <configuration>
+                    <appIdentifier>Drifty</appIdentifier>
                     <enableSWRendering>true</enableSWRendering>
                     <mainClass>${gui.main-class}</mainClass>
                     <linkerArgs>
