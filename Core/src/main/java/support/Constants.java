@@ -16,6 +16,7 @@ public class Constants {
     public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
+    public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0";
 
     /*
     Denoting a Constant with _F indicates that it needs to be used with String.format(), where %s is replaced with the

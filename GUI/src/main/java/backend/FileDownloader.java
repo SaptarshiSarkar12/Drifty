@@ -1,5 +1,8 @@
 package backend;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import gui.init.Environment;
 import gui.support.SplitDownloadMetrics;
 import gui.utils.MessageBroker;
@@ -23,6 +26,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,6 +45,7 @@ public class FileDownloader extends Task<Integer> {
     private String link;
     private final String filename;
     private final String dir;
+    private final String spotifySongMetadata;
     private final LinkType type;
     private int exitCode = 1;
     private boolean done;
@@ -60,6 +66,11 @@ public class FileDownloader extends Task<Integer> {
         this.filename = Utility.cleanFilename(job.getFilename());
         this.dir = job.getDir();
         this.type = LinkType.getLinkType(link);
+        if (this.type.equals(LinkType.SPOTIFY)) {
+            this.spotifySongMetadata = job.getSpotifyMetadataJson();
+        } else {
+            this.spotifySongMetadata = null;
+        }
         setProperties();
         Platform.runLater(() -> {
             linkProperty.setValue(link);
@@ -76,13 +87,13 @@ public class FileDownloader extends Task<Integer> {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
-            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram();
+            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(false);
             case SPOTIFY -> {
-                link = getSpotifyDownloadLink(link);
+                link = getSpotifyDownloadLink(spotifySongMetadata);
                 if (link == null) {
                     break;
                 }
-                splitDecision();
+                downloadYoutubeOrInstagram(true);
             }
             case OTHER -> splitDecision();
             default -> sendFinalMessage(INVALID_LINK);
@@ -92,8 +103,8 @@ public class FileDownloader extends Task<Integer> {
         return exitCode;
     }
 
-    private void downloadYoutubeOrInstagram() {
-        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", "mp4"};
+    private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
+        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
@@ -126,6 +137,16 @@ public class FileDownloader extends Task<Integer> {
             exitCode = Objects.requireNonNull(process).waitFor();
         } catch (InterruptedException e) {
             M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
+        }
+        if (isSpotifySong && exitCode == 0) {
+            sendInfoMessage("Converting to mp3 ...");
+            String conversionProcessMessage = Utility.convertToMp3(Paths.get(dir, filename).toAbsolutePath());
+            if (conversionProcessMessage.contains("Failed")) {
+                sendFinalMessage(conversionProcessMessage);
+                exitCode = 1;
+            } else {
+                sendFinalMessage("Successfully converted to mp3!");
+            }
         }
         sendFinalMessage("");
     }
@@ -425,38 +446,48 @@ public class FileDownloader extends Task<Integer> {
         return exitCode;
     }
 
-    public String getSpotifyDownloadLink(String link) {
-        sendInfoMessage("Trying to get download link for \"" + link + "\"");
-        // Remove si parameter from the link
-        this.link = link.replaceAll("\\?si=.*", "");
-        String spotDLPath = Program.get(Program.SPOTDL);
-        ProcessBuilder processBuilder = new ProcessBuilder(spotDLPath, "url", this.link);
-        Process process;
-        try {
-            processBuilder.redirectErrorStream(true);
-            process = processBuilder.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (!line.contains("Processing query:") && line.startsWith("http")) {
-                        sendInfoMessage("Download link retrieved successfully!");
-                        exitCode = 0;
-                        return line;
-                    } else if (line.contains("No results found for song")) {
-                        exitCode = 1;
-                        sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
-                        return null;
-                    }
-                }
-            } catch (IOException e) {
-                exitCode = 1;
-                sendFinalMessage("Failed to get download link for \"" + link + "\"!");
+    public String getSpotifyDownloadLink(String spotifyMetadataJson) {
+        sendInfoMessage("Trying to get download link...");
+        if (spotifyMetadataJson == null) {
+            sendFinalMessage("Song metadata is missing!");
+            return null;
+        }
+        JsonObject jsonObject = JsonParser.parseString(spotifyMetadataJson).getAsJsonObject();
+        String songName = jsonObject.get("songName").getAsString();
+        int duration = jsonObject.get("duration").getAsInt();
+        JsonArray artists = jsonObject.get("artists").getAsJsonArray();
+        ArrayList<String> artistNames = new ArrayList<>(artists.size());
+        for (int i = 0; i < artists.size(); i++) {
+            artistNames.add(artists.get(i).getAsString());
+        }
+        String query = (String.join(", ", artistNames) + " - " + songName).toLowerCase();
+        ArrayList<HashMap<String, Object>> searchResults = Utility.getYoutubeSearchResults(query, true);
+        boolean searchedWithFilters = true;
+        if (searchResults == null) {
+            M.msgLogError("Failed to get search results for the song with filters! Trying without filters ...");
+            searchResults = Utility.getYoutubeSearchResults(query, false);
+            searchedWithFilters = false;
+            if (searchResults == null) {
+                sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
                 return null;
             }
-        } catch (IOException e) {
-            exitCode = 1;
-            sendFinalMessage("Failed to get download link for \"" + link + "\"!");
         }
-        return null;
+        String matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+        if (matchedId.isEmpty()) {
+            if (searchedWithFilters) {
+                M.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
+                searchResults = Utility.getYoutubeSearchResults(query, false);
+                matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+                if (matchedId.isEmpty()) {
+                    sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
+                    return null;
+                }
+            } else {
+                sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
+                return null;
+            }
+        }
+        sendInfoMessage("Download link retrieved successfully!");
+        return "https://www.youtube.com/watch?v=" + matchedId;
     }
 }

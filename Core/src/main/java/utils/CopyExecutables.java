@@ -13,9 +13,18 @@ import java.nio.file.Path;
 
 public class CopyExecutables {
     private static final MessageBroker M = Environment.getMessageBroker();
+    private final String[] executableNames;
 
-    public final void copyExecutables(final String[] executableNames) throws IOException {
+    public CopyExecutables(final String[] executableNames) {
+        this.executableNames = executableNames;
+    }
+
+    public final void start() throws IOException {
         for (String executableName : executableNames) {
+            if (executableName == null || executableName.isEmpty()) {
+                M.msgLogError("Executable name is null or empty!");
+                continue;
+            }
             InputStream inputStream = ClassLoader.getSystemResourceAsStream(executableName);
             Path executablePath = Program.getExecutablesPath(executableName);
             if (!Files.exists(executablePath)) {
@@ -31,15 +40,17 @@ public class CopyExecutables {
                         }
                     }
                     if (!Files.isExecutable(executablePath)) {
-                        ProcessBuilder makeExecutable = new ProcessBuilder("chmod", "+x", executablePath.toString());
-                        makeExecutable.inheritIO();
-                        Process chmod = makeExecutable.start();
-                        chmod.waitFor();
+                        if (executablePath.toFile().setExecutable(true)) {
+                            M.msgLogInfo(executableName + " is now executable!");
+                        } else {
+                            M.msgLogError("Failed to make " + executableName + " executable!");
+                        }
+                    }
+                    if (executableName.startsWith("ffmpeg")) {
+                        new Thread(Utility::setFfmpegVersion).start();
                     }
                 } catch (FileAlreadyExistsException e) {
                     M.msgLogWarning(executableName + " not copied to " + Program.get(Program.DRIFTY_PATH) + " because it already exists!");
-                } catch (InterruptedException e) {
-                    M.msgLogWarning("Failed to make " + executableName + " executable: " + e.getMessage());
                 } catch (IOException e) {
                     M.msgInitError("Failed to copy " + executableName + " executable: " + e.getMessage());
                 }
