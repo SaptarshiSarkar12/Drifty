@@ -360,9 +360,10 @@ public class Utility {
                 pb.redirectErrorStream(true);
                 Process p = pb.start();
                 try (
-                    InputStreamReader in = new InputStreamReader(p.getInputStream());
-                    BufferedReader reader = new BufferedReader(in)
-                        ) {
+                        InputStreamReader in = new InputStreamReader(p.getInputStream());
+                        BufferedReader reader = new BufferedReader(in)
+                        )
+                {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         if (line.contains("ERROR") || line.contains("WARNING")) {
