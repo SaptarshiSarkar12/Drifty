@@ -691,7 +691,7 @@ public class Utility {
         return () -> {
             try {
                 URL url = new URI("https://accounts.spotify.com/api/token").toURL();
-                String encodedCredentials = Base64.getEncoder().encodeToString(new byte[] {53, 102, 53, 55, 51, 99, 57, 54, 50, 48, 52, 57, 52, 98, 97, 101, 56, 55, 56, 57, 48, 99, 48, 102, 48, 56, 97, 54, 48, 50, 57, 51, 58, 50, 49, 50, 52, 55, 54, 100, 57, 98, 48, 102, 51, 52, 55, 50, 101, 97, 97, 55, 54, 50, 100, 57, 48, 98, 49, 57, 98, 48, 98, 97, 56});
+                String encodedCredentials = Base64.getEncoder().encodeToString(new byte[]{53, 102, 53, 55, 51, 99, 57, 54, 50, 48, 52, 57, 52, 98, 97, 101, 56, 55, 56, 57, 48, 99, 48, 102, 48, 56, 97, 54, 48, 50, 57, 51, 58, 50, 49, 50, 52, 55, 54, 100, 57, 98, 48, 102, 51, 52, 55, 50, 101, 97, 97, 55, 54, 50, 100, 57, 48, 98, 49, 57, 98, 48, 98, 97, 56});
                 String data = "grant_type=client_credentials";
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
