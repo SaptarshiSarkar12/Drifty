@@ -188,7 +188,7 @@ public class FileDownloader extends Task<Integer> {
                 con.setRequestProperty("Range", "bytes=" + start + "-" + end); // stating how many bytes of data to be sent by the server.
                 con.connect();
                 in = con.getInputStream();
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[8192]; // 8KB per thread
                 int bytesRead;
                 while ((bytesRead = in.read(buffer)) != -1) {
                     fos.write(buffer, 0, bytesRead);
@@ -308,8 +308,6 @@ public class FileDownloader extends Task<Integer> {
         String message = "";
         Path path = Paths.get(dir, filename);
         URL url = null;
-        FileOutputStream out = null;
-        InputStream in = null;
         try {
             url = new URI(link).toURL();
             URLConnection con = url.openConnection();
@@ -318,32 +316,34 @@ public class FileDownloader extends Task<Integer> {
             long fileLength = con.getHeaderFieldLong("Content-Length", -1);
             sendInfoMessage(String.format(DOWNLOADING_F, filename));
             String totalSize = UnitConverter.format(fileLength, 2);
-            in = con.getInputStream();
-            out = new FileOutputStream(path.toFile());
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            long totalBytesRead = 0;
-            long start = System.currentTimeMillis();
-            long end;
-            double bytesInTime = 0.0;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-                totalBytesRead += bytesRead;
-                double progressValue = (double) totalBytesRead / fileLength;
-                updateProgress(progressValue, 1.0);
-                bytesInTime += bytesRead;
-                end = System.currentTimeMillis();
-                double seconds = (end - start) / 1000.0;
-                if (seconds >= 1.5) {
-                    start = end;
-                    String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
-                    double bitsTransferred = bytesInTime / 10 / seconds;
-                    String msg = "Downloading at " + UnitConverter.format(bitsTransferred, 2) + "/s (Downloaded " + totalDownloaded + " out of " + totalSize + ")";
-                    updateMessage(msg);
-                    bytesInTime = 0;
+            try (
+                    InputStream in = con.getInputStream();
+                    FileOutputStream out = new FileOutputStream(path.toFile())
+                    ) {
+                int bytesRead;
+                long totalBytesRead = 0;
+                long start = System.currentTimeMillis();
+                double bytesInTime = 0.0;
+                byte[] buffer = new byte[8192]; // 8KB
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    double progressValue = (double) totalBytesRead / fileLength;
+                    updateProgress(progressValue, 1.0);
+                    bytesInTime += bytesRead;
+                    long end = System.currentTimeMillis();
+                    double seconds = (end - start) / 1000.0;
+                    if (seconds >= 1.5) {
+                        start = end;
+                        String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
+                        double bytesTransferredPerSecond = bytesInTime / seconds;
+                        String msg = "Downloading at " + UnitConverter.format(bytesTransferredPerSecond, 2) + "/s (Downloaded " + totalDownloaded + " out of " + totalSize + ")";
+                        updateMessage(msg);
+                        bytesInTime = 0;
+                    }
                 }
+                exitCode = 0;
             }
-            exitCode = 0;
         } catch (MalformedURLException | URISyntaxException e) {
             M.msgLinkError(INVALID_LINK);
             exitCode = 1;
@@ -359,12 +359,6 @@ public class FileDownloader extends Task<Integer> {
         } catch (NullPointerException e) {
             message = FAILED_READING_STREAM;
             exitCode = 1;
-        } finally {
-            try {
-                Objects.requireNonNull(out).close();
-                Objects.requireNonNull(in).close();
-            } catch (IOException | NullPointerException ignored) {
-            }
         }
         sendFinalMessage(message);
     }
