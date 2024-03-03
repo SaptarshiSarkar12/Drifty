@@ -134,7 +134,7 @@ public final class UIController {
     private void setControlActions() {
         form.btnSave.setOnAction(e -> new Thread(() -> {
             String link = getLink();
-            String filename = getFilename();
+            filename = getFilename();
             String dir = getDir();
             if (Paths.get(dir, filename).toFile().exists()) {
                 ConfirmationDialog ask = new ConfirmationDialog("Overwrite Existing File", "This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");

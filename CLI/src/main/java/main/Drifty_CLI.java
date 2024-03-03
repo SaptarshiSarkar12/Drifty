@@ -294,7 +294,8 @@ public class Drifty_CLI {
         try (
                 FileInputStream yamlInputStream = new FileInputStream(batchDownloadingFile);
                 InputStreamReader yamlDataFile = new InputStreamReader(yamlInputStream)
-                ) {
+                )
+        {
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
             messageBroker.msgLogInfo("YAML data file (" + batchDownloadingFile + ") loaded successfully");
             int numberOfLinks;
