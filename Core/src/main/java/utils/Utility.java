@@ -335,7 +335,8 @@ public class Utility {
     private static String extractContent(HttpResponse<byte[]> response) {
         StringBuilder content = new StringBuilder();
         try (GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(response.body()));
-             BufferedReader br = new BufferedReader(new InputStreamReader(gis))) {
+             BufferedReader br = new BufferedReader(new InputStreamReader(gis)))
+        {
             String line;
             while ((line = br.readLine()) != null) {
                 content.append(line);

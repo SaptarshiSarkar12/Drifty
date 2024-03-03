@@ -319,7 +319,8 @@ public class FileDownloader extends Task<Integer> {
             try (
                     InputStream in = con.getInputStream();
                     FileOutputStream out = new FileOutputStream(path.toFile())
-                    ) {
+                    )
+            {
                 int bytesRead;
                 long totalBytesRead = 0;
                 long start = System.currentTimeMillis();
