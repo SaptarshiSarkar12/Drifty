@@ -16,6 +16,8 @@ import cli.utils.ScannerFactory;
 import cli.utils.Utility;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,24 +79,38 @@ public class Drifty_CLI {
                             messageBroker.msgBatchError("No line number provided for removal.");
                             System.exit(1);
                         }
-                        for (int j = i + 1; j < args.length; j++) {
-                            if ("all".equalsIgnoreCase(args[j])) {
-                                removeAllUrls();
-                            } else {
-                                removeUrl(args[j]);
-                            }
+
+                        if ("all".equalsIgnoreCase(args[i + 1])) {
+                            removeAllUrls();
+                        } else {
+                            String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
+                            removeUrl(indexStr);
                         }
                     }
                     case GET_FLAG -> {
                         batchDownloading = true;
-                        // Logic to download URLs goes here
-                        System.out.println("Downloading URLs...");
                         batchDownloadingFile = yamlFilePath;
                         batchDownloader();
                         removeAllUrls();
                     }
-                    case NAME_FLAG, NAME_FLAG_SHORT -> fileName = args[i + 1];
-                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> downloadsFolder = args[i + 1];
+                    case NAME_FLAG, NAME_FLAG_SHORT -> {
+                        if (i + 1 < args.length) {
+                            fileName = args[i + 1];
+                            i++; // Skip next argument since it's the value for the current flag
+                        } else {
+                            System.out.println("Error: No file name provided for " + args[i]);
+                            return;
+                        }
+                    }
+                    case LOCATION_FLAG, LOCATION_FLAG_SHORT -> {
+                        if (i + 1 < args.length) {
+                            downloadsFolder = args[i + 1];
+                            i++; // Skip next argument since it's the value for the current flag
+                        } else {
+                            System.out.println("Error: No location provided for " + args[i]);
+                            return;
+                        }
+                    }
                     case VERSION_FLAG, VERSION_FLAG_SHORT -> printVersion();
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
@@ -219,6 +235,49 @@ public class Drifty_CLI {
         }
     }
 
+    private static String normalizeUrl(String urlString) {
+        try {
+            URI uri = new URI(urlString.trim());
+
+            String scheme = uri.getScheme();
+            String authority = uri.getAuthority();
+            String path = uri.getPath();
+            String query = uri.getQuery();
+            String fragment = uri.getFragment();
+
+            // Normalize the scheme to lowercase
+            if (scheme != null) {
+                scheme = scheme.toLowerCase();
+            }
+
+            // Remove default ports
+            if (authority != null) {
+                authority = authority.replaceAll(":80$", "").replaceAll(":443$", "");
+            }
+
+            // Decode path
+            if (path != null) {
+                path = path.replaceAll("%2F", "/");
+            }
+
+            // Remove fragment
+            fragment = null;
+
+            // Reconstruct the URI without the unwanted components
+            URI normalizedUri = new URI(scheme, authority, path, query, fragment);
+
+            // Remove trailing slash from path, except for root '/'
+            String normalizedUrl = normalizedUri.toString();
+            if (!"/".equals(path) && normalizedUrl.endsWith("/")) {
+                normalizedUrl = normalizedUrl.substring(0, normalizedUrl.length() - 1);
+            }
+
+            return normalizedUrl;
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URL: " + urlString, e);
+        }
+    }
+
     private static void ensureYamlFileExists() {
         // Check if the YAML file exists, create it if it does not
         File yamlFile = new File(yamlFilePath);
@@ -238,8 +297,7 @@ public class Drifty_CLI {
 
     private static boolean isEmptyYaml(Map<String, List<String>> data) {
         if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
-            messageBroker.msgLinkError("No URL is present in the links queue!\n" +
-                    "Please run with `add <link>` to add the link to the list.");
+            messageBroker.msgLinkError("No URL is present in the links queue!\n" + "Please run with `add <link>` to add the link to the list.");
             return true;
         }
         return false;
@@ -306,21 +364,15 @@ public class Drifty_CLI {
 
             List<String> urls = data.get("links");
             messageBroker.msgDownloadInfo("List of URLs:");
-            urls.forEach(url -> messageBroker.msgLinkInfo(url));
+            for (int i = 0; i < urls.size(); i++) {
+                System.out.println((i + 1) + ". " + urls.get(i));
+            }
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while listing URLs: " + e.getMessage());
         }
     }
 
-    private static void removeUrl(String indexStr) {
-        int index;
-        try {
-            index = Integer.parseInt(indexStr);
-        } catch (NumberFormatException e) {
-            messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
-            return;
-        }
-
+    private static void removeUrl(String[] args) {
         try {
             Map<String, List<String>> data = loadYamlData();
             if (isEmptyYaml(data)) {
@@ -328,18 +380,33 @@ public class Drifty_CLI {
             }
 
             List<String> urls = data.get("links");
-            if (index < 1 || index > urls.size()) {
-                messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
-                return;
+            Set<Integer> uniqueIndices = new TreeSet<>(Collections.reverseOrder()); // TreeSet to sort in reverse order automatically
+            for (String indexStr : args) {
+                int index;
+                try {
+                    index = Integer.parseInt(indexStr);
+                    if (index < 0 || index > urls.size()) {
+                        messageBroker.msgInputError("Invalid line number '" + (index) + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+                        return;
+                    }
+                    uniqueIndices.add(index);
+                } catch (NumberFormatException e) {
+                    messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
+                    return;
+                }
             }
 
-            String removedUrl = urls.remove(index - 1);
+            for (int index : uniqueIndices) {
+                String removedUrl = urls.remove(index - 1);
+                messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
+            }
+
             saveYamlData(data); // Save updated YAML data
-            messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while removing a URL: " + e.getMessage());
         }
     }
+
 
     private static void removeAllUrls() {
         try {
@@ -371,7 +438,7 @@ public class Drifty_CLI {
 
         try {
             Map<String, List<String>> data = loadYamlData();
-
+            urlString = normalizeUrl(urlString);
             List<String> urls = data.get("links");
             if (!urls.contains(urlString)) {
                 urls.add(urlString); // Add the URL if it doesn't exist
