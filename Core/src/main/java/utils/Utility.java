@@ -163,7 +163,10 @@ public class Utility {
         String newFilename = filename;
         int fileNum = -1;
         String baseName = FilenameUtils.getBaseName(filename.replaceAll(" \\(\\d+\\)\\.", "."));
-        String ext = "." + FilenameUtils.getExtension(filename);
+        String ext = FilenameUtils.getExtension(filename);
+        if (!ext.isEmpty()) {
+            ext = "." + ext;
+        }
         while (path.toFile().exists()) {
             fileNum += 1;
             newFilename = baseName + " (" + fileNum + ")" + ext;
@@ -428,7 +431,7 @@ public class Utility {
                 continue;
             }
             String[] durationInMinutes = searchResult.get("duration").toString().split(":");
-            int videoDurationInMs = Integer.parseInt(durationInMinutes[0]) * 60000 + Integer.parseInt(durationInMinutes[1]) * 1000;
+            int videoDurationInMs = parseStringToInt(durationInMinutes[0]) * 60000 + parseStringToInt(durationInMinutes[1]) * 1000;
             if ("Top result".equalsIgnoreCase(searchResult.get("category").toString())) {
                 if (isDurationMatched(videoDurationInMs, spotifySongDuration, false)) {
                     matchedVideoId = (String) searchResult.get("videoId");
@@ -688,10 +691,7 @@ public class Utility {
         return () -> {
             try {
                 URL url = new URI("https://accounts.spotify.com/api/token").toURL();
-                String clientId = "5f573c9620494bae87890c0f08a60293";
-                String clientSecret = "212476d9b0f3472eaa762d90b19b0ba8";
-                String credentials = clientId + ":" + clientSecret;
-                String encodedCredentials = Base64.getEncoder().encodeToString(credentials.getBytes());
+                String encodedCredentials = Base64.getEncoder().encodeToString(new byte[] {53, 102, 53, 55, 51, 99, 57, 54, 50, 48, 52, 57, 52, 98, 97, 101, 56, 55, 56, 57, 48, 99, 48, 102, 48, 56, 97, 54, 48, 50, 57, 51, 58, 50, 49, 50, 52, 55, 54, 100, 57, 98, 48, 102, 51, 52, 55, 50, 101, 97, 97, 55, 54, 50, 100, 57, 48, 98, 49, 57, 98, 48, 98, 97, 56});
                 String data = "grant_type=client_credentials";
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");

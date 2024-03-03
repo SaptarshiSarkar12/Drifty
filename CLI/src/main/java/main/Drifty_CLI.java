@@ -8,7 +8,9 @@ import cli.utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 import preferences.AppSettings;
 import properties.MessageType;
 import properties.OS;
@@ -17,7 +19,10 @@ import support.Job;
 import support.JobHistory;
 import utils.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -280,7 +285,11 @@ public class Drifty_CLI {
     }
 
     private static void batchDownloader() {
-        Yaml yamlParser = new Yaml();
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setAllowDuplicateKeys(false);
+        loaderOptions.setAllowRecursiveKeys(false);
+        loaderOptions.setProcessComments(false);
+        Yaml yamlParser = new Yaml(new SafeConstructor(loaderOptions));
         messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
         try (
                 FileInputStream yamlInputStream = new FileInputStream(batchDownloadingFile);
