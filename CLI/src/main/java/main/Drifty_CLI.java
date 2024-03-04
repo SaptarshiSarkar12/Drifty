@@ -627,7 +627,7 @@ public class Drifty_CLI {
 
     private static void ensureYamlFileExists() {
         // Check if the YAML file exists, create it if it does not
-         File yamlFile = new File(yamlFilePath);
+        File yamlFile = new File(yamlFilePath);
         if (!yamlFile.exists()) {
             try {
                 boolean isNewFileCreated = yamlFile.createNewFile();
