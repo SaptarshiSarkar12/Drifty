@@ -732,7 +732,7 @@ public class Drifty_CLI {
                 try {
                     index = Integer.parseInt(indexStr);
                     if (index < 0 || index > urls.size()) {
-                        messageBroker.msgInputError("Invalid line number '" + (index) + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+                        messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
                         return;
                     }
                     uniqueIndices.add(index);
