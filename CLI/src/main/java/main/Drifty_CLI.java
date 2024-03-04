@@ -100,17 +100,18 @@ public class Drifty_CLI {
                     case ADD_FLAG -> {
                         if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No URL provided.");
-                            System.exit(1);
+                            Environment.terminate(1);
                         }
                         for (int j = i + 1; j < args.length; j++) {
                             addUrlToFile(args[j]);
                         }
+                        Environment.terminate(0);
                     }
                     case LIST_FLAG -> listUrls();
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No line number provided for removal.");
-                            System.exit(1);
+                            Environment.terminate(1);
                         }
 
                         if ("all".equalsIgnoreCase(args[i + 1])) {
@@ -119,6 +120,7 @@ public class Drifty_CLI {
                             String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
                             removeUrl(indexStr);
                         }
+                        Environment.terminate(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         batchDownloading = true;
@@ -625,6 +627,10 @@ public class Drifty_CLI {
 
     private static void ensureYamlFileExists() {
         // Check if the YAML file exists, create it if it does not
+        LoaderOptions options = new LoaderOptions();
+        options.setAllowDuplicateKeys(false);
+        Yaml yaml = new Yaml(new SafeConstructor(options));
+
         File yamlFile = new File(yamlFilePath);
         if (!yamlFile.exists()) {
             try {
@@ -650,7 +656,9 @@ public class Drifty_CLI {
     }
 
     private static Map<String, List<String>> loadYamlData() {
-        Yaml yaml = new Yaml();
+        LoaderOptions options = new LoaderOptions();
+        options.setAllowDuplicateKeys(false);
+        Yaml yaml = new Yaml(new SafeConstructor(options));
         Map<String, List<String>> data = null;
         ensureYamlFileExists(); // Ensure the YAML file exists before trying to read
 
