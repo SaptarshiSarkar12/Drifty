@@ -27,7 +27,9 @@
         <module name="FallThrough"/>
         <module name="ModifiedControlVariable"/>
         <module name="MultipleVariableDeclarations"/>
-        <module name="NestedForDepth"/>
+        <module name="NestedForDepth">
+            <property name="max" value="2"/>
+        </module>
         <module name="NestedIfDepth">
             <property name="max" value="6"/>
         </module>

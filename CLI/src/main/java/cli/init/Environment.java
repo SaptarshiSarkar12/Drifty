@@ -5,7 +5,7 @@ import cli.utils.MessageBroker;
 public class Environment extends init.Environment {
     private static MessageBroker msgBroker;
 
-    public static void setMessageBroker(MessageBroker messageBroker) {
+    public static void setCLIMessageBroker(MessageBroker messageBroker) {
         msgBroker = messageBroker;
         init.Environment.setMessageBroker(messageBroker);
     }

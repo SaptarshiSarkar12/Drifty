@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,11 +26,12 @@ public class FileDownloader implements Runnable {
     private final int numberOfThreads;
     private final long threadMaxDataSize;
     private final String dir;
+    private final boolean isSpotifySong;
     private String fileName;
     private final String link;
     private URL url;
 
-    public FileDownloader(String link, String fileName, String dir) {
+    public FileDownloader(String link, String fileName, String dir, boolean isSpotifySong) {
         link = link.replace('\\', '/');
         if (!(link.startsWith("http://") || link.startsWith("https://"))) {
             link = "https://" + link;
@@ -38,6 +41,7 @@ public class FileDownloader implements Runnable {
                 link = link + "?raw=true";
             }
         }
+        this.isSpotifySong = isSpotifySong;
         this.link = link;
         this.fileName = fileName;
         this.dir = dir;
@@ -72,7 +76,7 @@ public class FileDownloader implements Runnable {
                     FileOutputStream fileOut;
                     File file;
                     for (int i = 0; i < numberOfThreads; i++) {
-                        file = File.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp");
+                        file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
                         file.deleteOnExit(); // Deletes temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
@@ -91,7 +95,6 @@ public class FileDownloader implements Runnable {
                     while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                         sleep(500);
                     }
-                    // keep the main thread from closing the IO for a short amount of time so UI thread can finish and output
                 } else {
                     InputStream urlStream = url.openStream();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -100,9 +103,11 @@ public class FileDownloader implements Runnable {
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                    // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
+                    fos.close();
+                    urlStream.close();
                 }
                 downloadMetrics.setActive(false);
+                // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
                 Utility.sleep(1800);
             } catch (SecurityException e) {
                 M.msgDownloadError("Write access to \"" + dir + fileName + "\" denied !");
@@ -125,7 +130,7 @@ public class FileDownloader implements Runnable {
             fileDownloadMessage = outputFileName;
         }
         M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName);
+        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", (isSpotifySong ? "bestaudio" : "mp4"));
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
         int exitValueOfYtDlp = -1;
@@ -140,6 +145,15 @@ public class FileDownloader implements Runnable {
         }
         if (exitValueOfYtDlp == 0) {
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
+            if (isSpotifySong) {
+                M.msgDownloadInfo("Converting to mp3...");
+                String conversionProcessMessage = convertToMp3(Paths.get(dir, fileName).toAbsolutePath());
+                if (conversionProcessMessage.contains("Failed")) {
+                    M.msgDownloadError(conversionProcessMessage);
+                } else {
+                    M.msgDownloadInfo(conversionProcessMessage);
+                }
+            }
         } else if (exitValueOfYtDlp == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
@@ -173,6 +187,8 @@ public class FileDownloader implements Runnable {
                 ReadableByteChannel rbs = Channels.newChannel(fs);
                 fileOutputStream.getChannel().transferFrom(rbs, position, f.length());
                 position += f.length();
+                fs.close();
+                rbs.close();
             }
             fileOutputStream.close();
             return true;

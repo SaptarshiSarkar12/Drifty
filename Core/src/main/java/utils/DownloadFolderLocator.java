@@ -3,13 +3,16 @@ package utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class DownloadFolderLocator {
     private static final String REG_TOKEN = "REG_EXPAND_SZ";
 
     public static String findPath() {
         try {
-            Process process = new ProcessBuilder("reg", "query", "\"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\"", "/v", "{374DE290-123F-4565-9164-39C4925E467B}").start();
+            Path regeditPath = Paths.get(System.getenv("windir")).resolve("System32").resolve("reg.exe");
+            Process process = new ProcessBuilder(regeditPath.toString(), "query", "\"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\"", "/v", "{374DE290-123F-4565-9164-39C4925E467B}").start();
             StreamReader reader = new StreamReader(process.getInputStream());
             reader.start();
             process.waitFor();

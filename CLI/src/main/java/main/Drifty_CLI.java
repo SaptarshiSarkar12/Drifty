@@ -36,7 +36,6 @@ import java.util.*;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.*;
-import static utils.Utility.formatInstagramLink;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();

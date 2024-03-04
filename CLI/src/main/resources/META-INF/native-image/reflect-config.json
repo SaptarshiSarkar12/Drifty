@@ -17,6 +17,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.crypto.provider.AESKeyGenerator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.ARCFOURCipher",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -81,6 +85,12 @@
   "name":"java.security.SecureRandomParameters"
 },
 {
+  "name":"java.security.interfaces.ECPrivateKey"
+},
+{
+  "name":"java.security.interfaces.ECPublicKey"
+},
+{
   "name":"java.security.interfaces.RSAPrivateKey"
 },
 {
@@ -97,10 +107,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"java.util.concurrent.ForkJoinTask",
-  "fields":[{"name":"aux"}, {"name":"status"}]
-},
-{
   "name":"java.util.concurrent.atomic.Striped64",
   "fields":[{"name":"base"}, {"name":"cellsBusy"}]
 },
@@ -108,9 +114,6 @@
   "name":"javax.security.auth.x500.X500Principal",
   "fields":[{"name":"thisX500Name"}],
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
-},
-{
-  "name":"jdk.internal.misc.Unsafe"
 },
 {
   "name":"sun.misc.Unsafe",
