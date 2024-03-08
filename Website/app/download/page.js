@@ -20,7 +20,7 @@ export default async function download() {
 
 export async function getData() {
   const res = await fetch(
-    "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases",
+    "https://api.github.com/repos/SaptarshiSarkar12/My-Ubuntu-Setup/releases",
     { method: "GET" }
   );
   const release = await res.json();
