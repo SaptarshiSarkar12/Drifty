@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
      inputs:
         create_release:
-          description: 'True to create release, else false'
+          description: 'Click to create latest release else pre-release will be created'
           required: true
           type: boolean
 
@@ -164,7 +164,13 @@ jobs:
         echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
-        echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        if [ ${{ github.event_name != 'pull_request' && inputs.create_release == false }} ]; then
+            echo "# Drifty v$VERSION Beta Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        elif [ ${{ github.event_name == 'pull_request' }} ]; then
+            echo "# Drifty Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        else
+            echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        fi
         echo "## Build Artifacts :package: Summary :memo:" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts :package: Generated for Linux :penguin:" >> $GITHUB_STEP_SUMMARY
@@ -195,14 +201,14 @@ jobs:
       if: ${{ !github.event_name == 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
       continue-on-error: true
       run: |
-          gh release delete v$VERSION --yes
+          gh release delete v$VERSION-beta --yes --cleanup-tag
 
     - name: Create Pre-Release with automated release notes
       if: ${{ !github.event_name == 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' }}
       run: |
-        echo "## Pre-Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --prerelease --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Beta"
-        echo "[Pre-Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
+        echo "## Release :bookmark: Drifty v$VERSION-beta" >> $GITHUB_STEP_SUMMARY
+        gh release create v$VERSION-beta --prerelease --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Beta"
+        echo "[Released :white_check_mark: Drifty v$VERSION-beta](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION-beta) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
     - name: Create Latest Release with automated release notes
       if: ${{ inputs.create_release == true && github.repository == 'SaptarshiSarkar12/Drifty' && !github.event_name == 'pull_request' }}
       run: |
