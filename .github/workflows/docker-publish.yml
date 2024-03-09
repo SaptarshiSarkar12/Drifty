@@ -143,8 +143,8 @@ jobs:
             type=ref,event=pr
             type=raw,value=latest,enable=${{ inputs.create_latest == true }}
             type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
-            type=raw,value=$VERSION-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
-            type=raw,value=$VERSION,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true }}
+            type=raw,value=${{ env.VERSION }}-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
+            type=raw,value=${{ env.VERSION }},enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true }}
             type=sha
 
       # Build and push Docker image with Buildx (don't push on PR)
