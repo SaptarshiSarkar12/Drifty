@@ -97,26 +97,23 @@ export default function Releases({ props }) {
   const maxReleasesToDisplay = 3;
   const filteredPreReleases = useMemo(() => {
     const releases = [];
-    props.release.map((item, index) => {
-      if (index !== 0) {
-        if (item.prerelease === true) {
-            releases.push(item);
-        }
+    props.release.map((item) => {
+      if (item.prerelease === true) {
+        releases.push(item);
       }
     });
     return releases;
   }, [props.release]);
   const filteredReleases = useMemo(() => { // Starting from v2.0.0, separate executables for windows, linux and macOS are available. So, we need three buttons (in total) in that case.
     const releases = [];
-    props.release.map((item, index) => {
-      if (index !== 0) {
-        if (
+    props.release.map((item) => {
+      if (
           item.tag_name.startsWith("v2") &&
           item.prerelease === false &&
+          item.latest === false &&
           releases.length <= maxReleasesToDisplay
-        ) {
-          releases.push(item);
-        }
+      ) {
+        releases.push(item);
       }
     });
     return releases;
@@ -153,13 +150,16 @@ export default function Releases({ props }) {
     });
   };
   useEffect(() => {
-    filteredReleases.forEach(async (item, index) => {
+    filteredPreReleases.forEach(async (item, index) => {
       await markerToHtml(item.body, index);
     });
-    filterOlderReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index + filteredReleases.length);
+    filteredReleases.forEach(async (item, index) => {
+      await markerToHtml(item.body, index + filteredPreReleases.length);
     });
-  }, [filteredReleases, filterOlderReleases]);
+    filterOlderReleases.forEach(async (item, index) => {
+      await markerToHtml(item.body, index + filteredPreReleases.length + filteredReleases.length);
+    });
+  }, [filteredPreReleases, filteredReleases, filterOlderReleases]);
 
   const handleApplicationTypeChange = (applicationType) => {
     setApplicationType(applicationType.target.value);
@@ -254,7 +254,6 @@ export default function Releases({ props }) {
           </>
         )}
         {filteredPreReleases.map((item, index) => {
-          index = index + filteredReleases.length;
           if (filteredPreReleases.length !== 0) {
             return (
                 <div key={index} className="text-center p-5 text-base font-normal">
@@ -350,6 +349,7 @@ export default function Releases({ props }) {
           Download older releases of Drifty
         </p>
         {filteredReleases.map((item, index) => {
+          index = index + filteredPreReleases.length;
           return (
               <div key={index} className="text-center p-5 text-base font-normal">
                 <span className="font-bold">{item.tag_name} </span>
@@ -436,7 +436,7 @@ export default function Releases({ props }) {
           );
         })}
         {filterOlderReleases.map((item, index) => {
-          index = index + filteredReleases.length;
+          index = index + filteredPreReleases.length + filteredReleases.length;
           if (filterOlderReleases.length !== 0) {
             return (
                 <div
