@@ -13,7 +13,7 @@ export default function contact() {
       <div className="select-none bg-gradient-to-b from-top via-about to-bottom py-5">
         <h1 className=" text-center font-semibold text-7xl">Contact Us</h1>
         <p className="text-center font-normal pt-5 pb-8 text-lg">
-          We'd love to hear from you!
+          We&apos;d love to hear from you!
         </p>
         <form
           className="grid grid-cols-2 justify-items-center"
