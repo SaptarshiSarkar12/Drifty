@@ -4,7 +4,8 @@ on:
   push:
     branches: [ "**" ]
     # Publish semver tags as releases.
-    tags: [ 'v*' ]
+    tags:
+      - "**"
     paths-ignore:
       - "Website/**"
       - "*.md"
@@ -13,6 +14,11 @@ on:
       - "Website/**"
       - "*.md"
   workflow_dispatch:
+    inputs:
+      create_latest:
+        description: "Create a latest tag for the image"
+        required: true
+        type: boolean
 
 env:
   REGISTRY: ghcr.io
@@ -55,6 +61,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Get Drifty version
+        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
       - name: Update system packages
         if: matrix.filename == 'GUI/Dockerfile'
         run: sudo apt-get update
@@ -131,11 +139,12 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
           tags: |
-            type=semver,pattern={{version}}
             type=ref,event=branch
             type=ref,event=pr
-            type=raw,value=latest,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'beta') }}
-            type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && startsWith(github.ref, 'refs/tags/v') && contains(github.ref, 'beta') }}
+            type=raw,value=latest,enable=${{ inputs.create_latest == true }}
+            type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
+            type=raw,value=$VERSION-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
+            type=raw,value=$VERSION,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true }}
             type=sha
 
       # Build and push Docker image with Buildx (don't push on PR)
