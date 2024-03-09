@@ -202,6 +202,8 @@ jobs:
       continue-on-error: true
       run: |
           gh release delete v$VERSION-beta --yes --cleanup-tag
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Pre-Release with automated release notes
       if: ${{ github.event_name != 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' }}
