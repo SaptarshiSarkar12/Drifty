@@ -1,21 +1,21 @@
 <a href="https://saptarshisarkar12.github.io/Drifty/">
-    <p align="center">
+    <p style="text-align: center;">
         <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332" alt="Drifty Banner with App Icon">
     </p>
 </a>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" alt="Build Workflow Status"/></a> 
     <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment Status"></a>
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
     <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow us on Twitter"></a> 
     <a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord Server"></a>
@@ -58,6 +58,10 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 - [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
 
+## Join the Beta Testing Program 🚀
+
+Beta versions of Drifty contain **bug fixes** and **early access to the new features**. We are looking for beta testers to test the application before the stable release and provide feedback to improve the application. If you are interested in joining the beta testing program, download Drifty using the steps given below and provide your feedback in our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG).
+
 ## Quickstart 🚀🚀
 
 For **Users** :
@@ -68,8 +72,12 @@ For **Users** :
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file. 🎉</p>
-    ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/f8eb6151-ac6c-4383-a5d7-d03718f64cab)
+3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉.</p>
+
+    > [!TIP]
+    > If you are a beta testing user, you can click on the download button under the **Beta Release** title to download the latest beta version of Drifty.
+
+   ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/9094cfaf-5283-434b-a154-431b9e699642)
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen.
 5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application.
 6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub.
@@ -77,11 +85,14 @@ For **Users** :
 
 ### Using Drifty Application via Docker 🐋
 
-> [!IMPORTANT]   
+> [!TIP]   
 > - To download files to a specific local directory, you need to mount that directory as a volume for Drifty.
 > For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
 > - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
+> - If you are a beta testing user, you need to use the `ghcr.io/saptarshisarkar12/drifty-cli:beta` and `ghcr.io/saptarshisarkar12/drifty-gui:beta` images.
+
+> [!IMPORTANT]
 > - To run Drifty GUI docker image, you need to do the following 👇
 >     - For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.
 >     - For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md).

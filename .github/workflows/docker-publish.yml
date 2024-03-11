@@ -141,10 +141,10 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=raw,value=latest,enable=${{ inputs.create_latest == true }}
-            type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
-            type=raw,value=${{ env.VERSION }}-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false }}
-            type=raw,value=${{ env.VERSION }},enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true }}
+            type=raw,value=latest,enable=${{ inputs.create_latest == true && github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}
+            type=raw,value=${{ env.VERSION }}-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}
+            type=raw,value=${{ env.VERSION }},enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true && github.ref_name == 'master' }}
             type=sha
 
       # Build and push Docker image with Buildx (don't push on PR)
