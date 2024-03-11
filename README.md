@@ -73,14 +73,13 @@ For **Users** :
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
 3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉.</p>
-
-    > [!TIP]
-    > If you are a beta testing user, you can click on the download button under the **Beta Release** title to download the latest beta version of Drifty.
+> [!TIP]
+> If you are a beta testing user, you can click on the download button under the **Beta Release** title to download the latest beta version of Drifty.
 
    ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/9094cfaf-5283-434b-a154-431b9e699642)
-4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen.
-5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application.
-6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub.
+4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
+5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application. </p>
+6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub. </p>
 7. For any issues or feature requests, you can join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) and share your feedback.
 
 ### Using Drifty Application via Docker 🐋
