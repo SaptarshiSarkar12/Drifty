@@ -198,7 +198,7 @@ jobs:
           echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
         fi
     - name: Remove any existing pre-release with same version
-      if: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' }}
+      if: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
       continue-on-error: true
       run: |
           gh release delete v$VERSION-beta --yes --cleanup-tag
@@ -206,7 +206,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Pre-Release with automated release notes
-      if: ${{ github.event_name != 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' }}
+      if: ${{ github.event_name != 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION-beta" >> $GITHUB_STEP_SUMMARY
         gh release create v$VERSION-beta --prerelease --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Beta"
@@ -214,7 +214,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Latest Release with automated release notes
-      if: ${{ inputs.create_release == true && github.repository == 'SaptarshiSarkar12/Drifty' && github.event_name != 'pull_request' }}
+      if: ${{ inputs.create_release == true && github.repository == 'SaptarshiSarkar12/Drifty' && github.event_name != 'pull_request' && github.ref_name == 'master' }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
         gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION"
