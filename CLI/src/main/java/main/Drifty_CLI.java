@@ -643,7 +643,6 @@ public class Drifty_CLI {
     }
 
     private static boolean isEmptyYaml(Map<String, List<String>> data) {
-
         if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
             messageBroker.msgLinkError("No URL is present in the links queue!\n" + "Please run with `add <link>` to add the link to the list.");
             return true;
