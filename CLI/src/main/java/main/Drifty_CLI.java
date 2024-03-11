@@ -654,6 +654,8 @@ public class Drifty_CLI {
     private static Map<String, List<String>> loadYamlData() {
         LoaderOptions options = new LoaderOptions();
         options.setAllowDuplicateKeys(false);
+        options.setAllowRecursiveKeys(false);
+        options.setProcessComments(false);
         Yaml yaml = new Yaml(new SafeConstructor(options));
         Map<String, List<String>> data = null;
         ensureYamlFileExists(); // Ensure the YAML file exists before trying to read
