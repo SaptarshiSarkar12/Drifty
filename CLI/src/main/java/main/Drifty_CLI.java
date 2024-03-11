@@ -108,6 +108,12 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case LIST_FLAG -> listUrls();
+                    case GET_FLAG -> {
+                        batchDownloading = true;
+                        batchDownloadingFile = yamlFilePath;
+                        batchDownloader();
+                        removeAllUrls();
+                    }
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No line number provided for removal.");
