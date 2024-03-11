@@ -603,10 +603,6 @@ public class Drifty_CLI {
                 scheme = scheme.toLowerCase();
             }
 
-            // Remove default ports
-            if (authority != null) {
-                authority = authority.replaceAll(":80$", "").replaceAll(":443$", "");
-            }
 
             // Decode path
             if (path != null) {
