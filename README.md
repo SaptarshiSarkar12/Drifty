@@ -91,6 +91,7 @@ For **Users** :
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
 > - If you are a beta testing user, you need to use the `ghcr.io/saptarshisarkar12/drifty-cli:beta` and `ghcr.io/saptarshisarkar12/drifty-gui:beta` images to try out the latest beta version of Drifty.
 
+
 > [!IMPORTANT]
 > - To run Drifty GUI docker image, you need to do the following 👇
 >     - For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.
