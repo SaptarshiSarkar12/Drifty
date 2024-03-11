@@ -90,7 +90,7 @@ For **Users** :
 > For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
 > - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
-> - If you are a beta testing user, you need to use the `ghcr.io/saptarshisarkar12/drifty-cli:beta` and `ghcr.io/saptarshisarkar12/drifty-gui:beta` images.
+> - If you are a beta testing user, you need to use the `ghcr.io/saptarshisarkar12/drifty-cli:beta` and `ghcr.io/saptarshisarkar12/drifty-gui:beta` images to try out the latest beta version of Drifty.
 
 > [!IMPORTANT]
 > - To run Drifty GUI docker image, you need to do the following 👇
