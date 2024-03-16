@@ -109,7 +109,6 @@ public class Drifty_CLI {
                     }
                     case LIST_FLAG -> {
                         listUrls();
-                        Environment.terminate(0);
                     }
                     case GET_FLAG -> {
                         batchDownloading = true;
@@ -125,7 +124,12 @@ public class Drifty_CLI {
                         }
 
                         if ("all".equalsIgnoreCase(args[i + 1])) {
-                            removeAllUrls();
+                            messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
+                            String choiceString = SC.nextLine().toLowerCase();
+                            boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
+                            if (choice) {
+                                removeAllUrls();
+                            }
                         } else {
                             String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
                             removeUrl(indexStr);
@@ -715,7 +719,7 @@ public class Drifty_CLI {
         try {
             Map<String, List<String>> data = loadYamlData();
             if (isEmptyYaml(data)) {
-                return;
+                Environment.terminate(1);
             }
 
             List<String> urls = data.get("links");
@@ -723,6 +727,7 @@ public class Drifty_CLI {
             for (int i = 0; i < urls.size(); i++) {
                 System.out.println((i + 1) + ". " + urls.get(i));
             }
+            Environment.terminate(0);
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while listing URLs: " + e.getMessage());
             Environment.terminate(1);

@@ -20,6 +20,7 @@ public class Constants extends support.Constants {
     public static final String VERSION_FLAG_SHORT = "-v";
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
+    public static final String REMOVE_ALL_URL_CONFIRMATION = "Are you sure you wish to delete ALL links? (Y/N): ";
     public static final String ENTER_FILE_NAME_WITH_EXTENSION = "Please enter the filename with file extension (filename.extension) : ";
     public static final String ENTER_FILE_LINK = "Enter the link to the file (in the form of https://www.example.com/filename.extension) or a YouTube/Instagram Video link : ";
     public static final String QUIT_OR_CONTINUE = "Enter Q to Quit Or any other key to Continue";
