@@ -107,12 +107,16 @@ public class Drifty_CLI {
                         }
                         Environment.terminate(0);
                     }
-                    case LIST_FLAG -> listUrls();
+                    case LIST_FLAG -> {
+                        listUrls();
+                        Environment.terminate(0);
+                    }
                     case GET_FLAG -> {
                         batchDownloading = true;
                         batchDownloadingFile = yamlFilePath;
                         batchDownloader();
                         removeAllUrls();
+                        Environment.terminate(0);
                     }
                     case REMOVE_FLAG -> {
                         if (i + 1 >= args.length) {
@@ -603,7 +607,6 @@ public class Drifty_CLI {
                 scheme = scheme.toLowerCase();
             }
 
-
             // Decode path
             if (path != null) {
                 path = path.replaceAll("%2F", "/");
@@ -722,6 +725,7 @@ public class Drifty_CLI {
             }
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while listing URLs: " + e.getMessage());
+            Environment.terminate(1);
         }
     }
 
@@ -757,6 +761,7 @@ public class Drifty_CLI {
             saveYamlData(data); // Save updated YAML data
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while removing a URL: " + e.getMessage());
+            Environment.terminate(1);
         }
     }
 
@@ -780,6 +785,7 @@ public class Drifty_CLI {
             }
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while removing all URLs: " + e.getMessage());
+            Environment.terminate(1);
         }
     }
 
@@ -802,6 +808,7 @@ public class Drifty_CLI {
             }
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while adding a URL: " + e.getMessage());
+            Environment.terminate(1);
         }
     }
 }
