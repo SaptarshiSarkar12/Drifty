@@ -728,12 +728,7 @@ public class Utility {
 
     public static String convertToMp3(Path inputFilePath) {
         String command = Program.get(Program.FFMPEG);
-        Path outputFilePath;
-        if (FilenameUtils.getExtension(inputFilePath.toString()).equalsIgnoreCase("mp3")) {
-            outputFilePath = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + " - converted.mp3").toAbsolutePath();
-        } else {
-            outputFilePath = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + ".mp3").toAbsolutePath();
-        }
+        Path outputFilePath = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + " - converted.mp3").toAbsolutePath();
         String newFilename;
         if (outputFilePath.toFile().exists()) {
             newFilename = renameFile(outputFilePath.getFileName().toString(), outputFilePath.getParent().toString()); // rename the file if it already exists else ffmpeg conversion hangs indefinitely and tries to overwrite the file
@@ -745,7 +740,7 @@ public class Utility {
             process.waitFor();
             if (process.exitValue() == 0 && Files.exists(outputFilePath)) {
                 Files.delete(inputFilePath);
-                File renamedFile = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()).replace(" - converted", "") + ".mp3").toFile();
+                File renamedFile = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + ".mp3").toFile();
                 if (renamedFile.exists()) {
                     newFilename = renameFile(renamedFile.getName(), renamedFile.getParent());
                     renamedFile = renamedFile.getParentFile().toPath().resolve(newFilename).toFile();
