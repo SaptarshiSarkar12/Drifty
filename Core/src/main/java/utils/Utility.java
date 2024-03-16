@@ -256,6 +256,9 @@ public class Utility {
             try (HttpClient client = HttpClient.newHttpClient()) {
                 songMetadataResponse = client.send(getPlaylistMetadata, HttpResponse.BodyHandlers.ofByteArray());
                 return extractContent(songMetadataResponse);
+            } catch (UnknownHostException e) {
+                M.msgLinkError("You are not connected to the Internet!");
+                return null;
             } catch (IOException e) {
                 M.msgLinkError("Failed to send request to Spotify API! " + e.getMessage());
                 return null;
@@ -470,14 +473,11 @@ public class Utility {
 
     public static ArrayList<HashMap<String, Object>> getYoutubeSearchResults(String query, boolean searchWithFilters) {
         query = query.replace(" ", "-"); // make the query URL-friendly
-        long startTime = System.currentTimeMillis();
         String googleVisitorId = getGoogleVisitorId();
         if (googleVisitorId == null) {
             M.msgDownloadError("Failed to get Google Visitor ID!");
             return null;
         }
-        M.msgLogInfo("Google visitor ID response time: " + (System.currentTimeMillis() - startTime) + "ms");
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         String params = "EgWKAQIIAUICCAFqDBAOEAoQAxAEEAkQBQ%3D%3D"; // Parameters for filtering search results to music only
@@ -496,6 +496,9 @@ public class Utility {
             HttpResponse<byte[]> response;
             try (HttpClient client = HttpClient.newHttpClient()) {
                 response = client.send(req, HttpResponse.BodyHandlers.ofByteArray());
+            } catch (UnknownHostException e) {
+                M.msgDownloadError("You are not connected to the Internet!");
+                return null;
             } catch (IOException e) {
                 M.msgDownloadError("Failed to get search results! " + e.getMessage());
                 return null;
@@ -632,6 +635,8 @@ public class Utility {
             if (matcher2.find()) {
                 return matcher2.group(1); // return the visitor ID (aka "X-Goog-Visitor-Id")
             }
+        } catch (UnknownHostException e) {
+            M.msgDownloadError("You are not connected to the Internet!");
         } catch (URISyntaxException | IOException | InterruptedException e) {
             M.msgDownloadError("Failed to get Google Visitor ID! " + e.getMessage());
         }
@@ -712,6 +717,8 @@ public class Utility {
                 }
                 JsonObject jsonObject = JsonParser.parseString(responseContent.toString()).getAsJsonObject();
                 AppSettings.SET.spotifyAccessToken(jsonObject.get("access_token").getAsString());
+            } catch (UnknownHostException e) {
+                M.msgInitError("You are not connected to the Internet!");
             } catch (IOException e) {
                 M.msgInitError("Failed to get Spotify access token! Failed to read response from Spotify API! " + e.getMessage());
             } catch (URISyntaxException e) {
