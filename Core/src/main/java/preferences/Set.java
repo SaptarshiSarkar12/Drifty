@@ -73,7 +73,7 @@ public class Set {
             INSTANCE.secretKey = keyGenerator.generateKey();
             // Encrypt the access token
             Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            cipher.init(Cipher.ENCRYPT_MODE, INSTANCE.secretKey);
             token = Base64.getEncoder().encodeToString(cipher.doFinal(token.getBytes()));
         } catch (NoSuchAlgorithmException e) {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such algorithm exists! " + e.getMessage());
