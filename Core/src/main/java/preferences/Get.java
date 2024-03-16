@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
 import properties.Program;
 import support.JobHistory;
+import utils.Utility;
 
 import javax.crypto.*;
 import java.io.IOException;
@@ -73,6 +74,10 @@ public class Get {
             keyGenerator.init(256);
             Cipher cipher = Cipher.getInstance("AES");
             SecretKey secretKey = Set.getInstance().secretKey;
+            while (secretKey == null) { // Sometimes, the encryption of token takes time and the key doesn't get generated in time
+                Utility.sleep(10);
+                secretKey = Set.getInstance().secretKey;
+            }
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.getDecoder().decode(preferences.get(SPOTIFY_ACCESS_TOKEN, ""))));
         } catch (NoSuchAlgorithmException e) {

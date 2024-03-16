@@ -162,6 +162,10 @@ public class FileDownloader extends Task<Integer> {
             M.msgLinkError(INVALID_LINK);
             exitCode = 1;
             return;
+        } catch (UnknownHostException e) {
+            M.msgDownloadError("You are not connected to the internet!");
+            exitCode = 1;
+            return;
         } catch (IOException e) {
             M.msgDownloadError(String.format(FAILED_CONNECTION_F, link));
             exitCode = 1;
@@ -293,6 +297,9 @@ public class FileDownloader extends Task<Integer> {
             exitCode = 1;
         } catch (FileNotFoundException e) {
             message = FILE_NOT_FOUND;
+            exitCode = 1;
+        } catch (UnknownHostException e) {
+            message = "You are not connected to the internet!";
             exitCode = 1;
         } catch (IOException e) {
             message = String.format(FAILED_CONNECTION_F, url);
