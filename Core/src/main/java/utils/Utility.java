@@ -378,8 +378,16 @@ public class Utility {
                                 break;
                             } else if (line.contains("Video unavailable")) {
                                 M.msgLinkError("The YouTube video is unavailable!");
+                            } else if (line.contains("Skipping player responses from android clients")) {
+                                M.msgLogWarning(line);
+                            } else if (line.contains("Unable to download webpage") && line.contains("Temporary failure in name resolution")) {
+                                M.msgLinkError("You are not connected to the Internet!");
                             } else {
-                                M.msgLinkError("Failed to retrieve filename!");
+                                if (line.contains("ERROR")) {
+                                    M.msgLogError(line);
+                                } else {
+                                    M.msgLogWarning(line);
+                                }
                             }
                             break;
                         }
