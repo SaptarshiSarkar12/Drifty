@@ -164,9 +164,9 @@ jobs:
         echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
-        if [ ${{ github.event_name != 'pull_request' && inputs.create_release == false }} ]; then
+        if ${{ github.event_name != 'pull_request' && inputs.create_release == false }}; then
             echo "# Drifty v$VERSION Beta Built! :rocket:" >> $GITHUB_STEP_SUMMARY
-        elif [ ${{ github.event_name == 'pull_request' }} ]; then
+        elif ${{ github.event_name == 'pull_request' }}; then
             echo "# Drifty Built! :rocket:" >> $GITHUB_STEP_SUMMARY
         else
             echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
