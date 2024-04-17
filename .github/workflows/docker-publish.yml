@@ -136,11 +136,11 @@ jobs:
 
       - name: Set Image Description prefix
         run: |
-          if [ ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true && github.ref_name == 'master' }} ]; then
+          if ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true && github.ref_name == 'master' }}; then
             echo "IMAGE_DESCRIPTION_PREFIX=The Stable" >> $GITHUB_ENV
-          elif [ ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }} ]; then
+          elif ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}; then
             echo "IMAGE_DESCRIPTION_PREFIX=The Beta" >> $GITHUB_ENV
-          elif [ ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name != 'master' }} ]; then
+          elif ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name != 'master' }}; then
             echo "IMAGE_DESCRIPTION_PREFIX=The Branch Preview" >> $GITHUB_ENV
           else
             echo "IMAGE_DESCRIPTION_PREFIX=The" >> $GITHUB_ENV
