@@ -1,0 +1,22 @@
+name: 'Dependency Review'
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    name: Dependency Review
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-scopes: development, runtime
+          comment-summary-in-pr: on-failure
+          retry-on-snapshot-warnings: true
