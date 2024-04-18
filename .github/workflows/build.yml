@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
      inputs:
         create_release:
-          description: 'True to create release, else false'
+          description: 'Click to create latest release else pre-release will be created'
           required: true
           type: boolean
 
@@ -35,6 +35,15 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha }}
+      # Setup the Windows build environment
+    - name: Add msbuild to PATH
+      if: ${{ matrix.os == 'windows-latest' && matrix.mode == 'GUI' }}
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
+    - name: Visual Studio shell
+      if: ${{ matrix.os == 'windows-latest' && matrix.mode == 'GUI' }}
+      uses: egor-tensin/vs-shell@v2
     - name: Update system packages
       if: ${{ matrix.os == 'ubuntu-latest' && matrix.mode == 'GUI' }}
       run: sudo apt-get update
@@ -53,6 +62,7 @@ jobs:
         cache: 'maven'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
+      shell: bash
       run: mvn -P build-drifty-cli-for-${{ matrix.os }} package
     - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
       if: ${{ matrix.mode == 'GUI' }}
@@ -61,6 +71,7 @@ jobs:
         maven-version: 3.8.8
     - name: Build platform-specific C object for missing jdk libraries
       if: ${{ matrix.mode == 'GUI' }}
+      shell: bash
       run: gcc -c config/missing_symbols.c -o config/missing_symbols-${{ matrix.os }}.o
     - name: Install dependency modules for GUI
       if: ${{ matrix.mode == 'GUI' }}
@@ -153,7 +164,13 @@ jobs:
         echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
-        echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        if ${{ github.event_name != 'pull_request' && inputs.create_release == false }}; then
+            echo "# Drifty v$VERSION Beta Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        elif ${{ github.event_name == 'pull_request' }}; then
+            echo "# Drifty Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        else
+            echo "# Drifty v$VERSION Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        fi
         echo "## Build Artifacts :package: Summary :memo:" >> $GITHUB_STEP_SUMMARY
         
         echo "### Artifacts :package: Generated for Linux :penguin:" >> $GITHUB_STEP_SUMMARY
@@ -176,15 +193,31 @@ jobs:
         echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
     
-        if [ ${{ !inputs.create_release }} ]; then
+        if ${{ github.event_name == 'pull_request' }}; then
           echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
           echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
         fi
-    - name: Create Release with automated release notes
-      if: ${{ inputs.create_release }}
+    - name: Remove any existing pre-release with same version
+      if: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+      continue-on-error: true
+      run: |
+          gh release delete v$VERSION-beta --yes --cleanup-tag
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Pre-Release with automated release notes
+      if: ${{ github.event_name != 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+      run: |
+        echo "## Release :bookmark: Drifty v$VERSION-beta" >> $GITHUB_STEP_SUMMARY
+        gh release create v$VERSION-beta --prerelease --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Beta"
+        echo "[Released :white_check_mark: Drifty v$VERSION-beta](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION-beta) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Latest Release with automated release notes
+      if: ${{ inputs.create_release == true && github.repository == 'SaptarshiSarkar12/Drifty' && github.event_name != 'pull_request' && github.ref_name == 'master' }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe'
+        gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION"
         echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

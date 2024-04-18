@@ -44,7 +44,7 @@ public class Drifty_GUI extends Application {
     public void init() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         msgBroker = new MessageBroker();
-        Environment.setMessageBroker(msgBroker);
+        Environment.setGUIMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
     }
 
@@ -107,7 +107,7 @@ public class Drifty_GUI extends Application {
         MenuItem exit = new MenuItem("Exit");
         exit.setOnAction(e -> {
             msgBroker.msgLogInfo(GUI_APPLICATION_TERMINATED);
-            System.exit(0);
+            Environment.terminate(0);
         });
         menu.getItems().setAll(website, exit);
         return menu;
@@ -152,13 +152,10 @@ public class Drifty_GUI extends Application {
             lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
             Label lblDriftyVersion = new Label("Drifty " + VERSION_NUMBER);
             Label lblYtDlpVersion = new Label("yt-dlp version: " + AppSettings.GET.ytDlpVersion());
-            Label lblSpotDLVersion = new Label("spotDL version: " + AppSettings.GET.spotDLVersion());
             lblDriftyVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
             lblDriftyVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             lblYtDlpVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
             lblYtDlpVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            lblSpotDLVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-            lblSpotDLVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             Hyperlink websiteLink = new Hyperlink("Website");
             websiteLink.setBorder(Border.EMPTY);
             websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
@@ -174,7 +171,14 @@ public class Drifty_GUI extends Application {
             githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            root.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion, lblSpotDLVersion, websiteLink, discordLink, githubLink);
+            root.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
+            if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+                Label lblFfmpegVersion = new Label("FFMPEG version: " + AppSettings.GET.ffmpegVersion());
+                lblFfmpegVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+                lblFfmpegVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+                root.getChildren().add(lblFfmpegVersion);
+            }
+            root.getChildren().addAll(websiteLink, discordLink, githubLink);
             Scene aboutScene = Constants.getScene(root);
             stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
             stage.setMinWidth(Constants.SCREEN_WIDTH * .5);

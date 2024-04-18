@@ -17,7 +17,7 @@
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
   }, {
-    "pattern":"\\Qspotdl_linux\\E"
+    "pattern":"\\Qffmpeg\\E"
   }, {
     "pattern":"\\Qyt-dlp\\E"
   }, {

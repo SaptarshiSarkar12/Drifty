@@ -71,7 +71,7 @@ public class Constants extends support.Constants {
         if (isPrimaryStage) {
             stage.setOnCloseRequest(e -> {
                 Environment.getMessageBroker().msgLogInfo(GUI_APPLICATION_TERMINATED);
-                System.exit(0);
+                Environment.terminate(0);
             });
             stage.setResizable(true);
         } else {

@@ -1,10 +1,11 @@
 package cli.utils;
 
 import cli.init.Environment;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static cli.support.Constants.FILENAME_DETECTED;
 import static cli.support.Constants.FILENAME_DETECTION_ERROR;
@@ -16,14 +17,9 @@ public class Utility extends utils.Utility {
     public static String findFilenameInLink(String link) {
         String filename = "";
         if (isInstagram(link) || isYoutube(link)) {
-            LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
+            LinkedList<String> linkMetadataList = Utility.getYtDlpMetadata(link);
             for (String json : Objects.requireNonNull(linkMetadataList)) {
                 filename = Utility.getFilenameFromJson(json);
-            }
-        } else if (isSpotify(link)) {
-            LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-            for (String json : Objects.requireNonNull(linkMetadataList)) {
-                filename = Utility.extractSpotifyFilename(json);
             }
         } else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
@@ -68,8 +64,46 @@ public class Utility extends utils.Utility {
             M.msgLogError("Invalid input!");
             Environment.getMessageBroker().msgInputInfo(printMessage, false);
             input = SC.nextLine().toLowerCase();
-            yesNoValidation(input, printMessage);
+            return yesNoValidation(input, printMessage);
         }
-        return false;
+    }
+
+    public static String getSpotifyDownloadLink(String spotifyMetadataJson) {
+        JsonObject jsonObject = JsonParser.parseString(spotifyMetadataJson).getAsJsonObject();
+        String songName = jsonObject.get("songName").getAsString();
+        int duration = jsonObject.get("duration").getAsInt();
+        JsonArray artists = jsonObject.get("artists").getAsJsonArray();
+        ArrayList<String> artistNames = new ArrayList<>(artists.size());
+        for (int i = 0; i < artists.size(); i++) {
+            artistNames.add(artists.get(i).getAsString());
+        }
+        String query = (String.join(", ", artistNames) + " - " + songName).toLowerCase();
+        ArrayList<HashMap<String, Object>> searchResults = getYoutubeSearchResults(query, true);
+        boolean searchedWithFilters = true;
+        if (searchResults == null) {
+            M.msgLogError("Failed to get search results for the song with filters! Trying without filters ...");
+            searchResults = getYoutubeSearchResults(query, false);
+            searchedWithFilters = false;
+            if (searchResults == null) {
+                M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                return null;
+            }
+        }
+        String matchedId = getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+        if (matchedId.isEmpty()) {
+            if (searchedWithFilters) {
+                M.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
+                searchResults = getYoutubeSearchResults(query, false);
+                matchedId = getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+                if (matchedId.isEmpty()) {
+                    M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                    return null;
+                }
+            } else {
+                M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                return null;
+            }
+        }
+        return "https://www.youtube.com/watch?v=" + matchedId;
     }
 }

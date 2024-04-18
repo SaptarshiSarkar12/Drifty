@@ -23,6 +23,7 @@ public class Constants {
     public static final String VIDEO_UNAVAILABLE = "The requested video is unavailable, it has been deleted from the platform.";
     public static final String PERMISSION_DENIED = "You do not have access to download the video, permission is denied.";
     public static final String DRIFTY_COMPONENT_NOT_EXECUTABLE = "A Drifty component (yt-dlp) is not marked as executable.";
+    public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0";
     public static final long ONE_DAY = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
     public static URL updateURL;
 

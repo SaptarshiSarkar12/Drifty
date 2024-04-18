@@ -8,6 +8,7 @@ public class Job {
     private final String link;
     private final String dir;
     private final String filename;
+    private String spotifyMetadataJson;
     private boolean repeatDownload;
 
     public Job(String link, String dir, String filename, boolean repeatDownload) {
@@ -15,6 +16,14 @@ public class Job {
         this.dir = dir;
         this.filename = filename;
         this.repeatDownload = repeatDownload;
+    }
+
+    public Job(String link, String dir, String filename, String spotifyMetadataJson, boolean repeatDownload) {
+        this.link = link;
+        this.dir = dir;
+        this.filename = filename;
+        this.repeatDownload = repeatDownload;
+        this.spotifyMetadataJson = spotifyMetadataJson;
     }
 
     public Job(String link, String dir) {
@@ -59,6 +68,10 @@ public class Job {
     private String getName() {
         String[] nameParts = link.split("/");
         return nameParts[nameParts.length - 1];
+    }
+
+    public String getSpotifyMetadataJson() {
+        return spotifyMetadataJson;
     }
 
     public boolean repeatOK() {

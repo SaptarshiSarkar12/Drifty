@@ -5,22 +5,48 @@ on:
     paths-ignore:
       - "Website/**"
       - "*.md"
-  pull_request:
+  pull_request_target:
     paths-ignore:
       - "Website/**"
       - "*.md"
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-scan:
+    name: Build and Scan [drifty-${{ matrix.image_name_suffix }}, ${{ matrix.os }}]
     runs-on: ubuntu-latest
+    if: github.repository == 'SaptarshiSarkar12/Drifty'
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest', 'macos-14' ] # ubuntu-latest and macos-14 has amd64 and arm64 architecture respectively.
+        image_name_suffix: [ 'cli', 'gui' ]
+      fail-fast: false
+    permissions:
+      security-events: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Build the base image
-        run: docker compose build base
-      - name: Build the runner image
-        run: docker compose build runner
-      - name: Build the CLI image
-        run: docker compose build cli
-      - name: Build the GUI image
-        run: docker compose build gui
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Build Docker image
+        run: |
+          docker compose build base
+          docker compose build runner
+          docker compose build ${{ matrix.image_name_suffix }}
+      - name: Run Trivy security scan
+        uses: aquasecurity/trivy-action@0.19.0
+        continue-on-error: true
+        with:
+          image-ref: drifty-${{ matrix.image_name_suffix }}
+          format: 'sarif'
+          exit-code: 1
+          vuln-type: os,library
+          ignore-unfixed: true
+          output: 'trivy-report.sarif'
+          hide-progress: false
+          scanners: vuln,secret,misconfig
+      - name: Upload Trivy security scan results
+        if: always()
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: trivy-report.sarif

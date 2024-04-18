@@ -1,6 +1,8 @@
 package ui;
 
 import backend.FileDownloader;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
@@ -46,8 +48,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static gui.support.Colors.*;
@@ -65,7 +65,9 @@ public final class UIController {
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount;
     private int speedValue;
-    private String songName = "";
+    private String songMetadataJson;
+    private String filename;
+    private String songLink;
     private Folders folders;
     private Job selectedJob;
 
@@ -190,7 +192,7 @@ public final class UIController {
     private void setControlActions() {
         form.btnSave.setOnAction(e -> new Thread(() -> {
             String link = getLink();
-            String filename = getFilename();
+            filename = getFilename();
             String dir = getDir();
             if (Paths.get(dir, filename).toFile().exists()) {
                 ConfirmationDialog ask = new ConfirmationDialog("Overwrite Existing File", "This will overwrite the existing file" + nl.repeat(2) + "Is this what you want to do?");
@@ -199,7 +201,7 @@ public final class UIController {
                 }
             }
             removeJobFromList(selectedJob);
-            addJob(new Job(link, dir, filename, selectedJob.repeatOK()));
+            addJob(new Job(link, dir, filename, selectedJob.getSpotifyMetadataJson(), selectedJob.repeatOK()));
             clearLink();
             clearFilename();
             UPDATING_BATCH.setValue(false);
@@ -261,14 +263,17 @@ public final class UIController {
                 for (String link : links) {
                     if (isSpotify(link) && link.contains("playlist")) {
                         M.msgFilenameInfo("Retrieving the songs from the playlist...");
-                        LinkedList<String> linkMetadataList = Utility.getLinkMetadata(link);
-                        String json = makePretty(Objects.requireNonNull(linkMetadataList).getFirst());
-                        String[] songs = getSongLinks(json);
-                        String[] filenames = getSongFilenames(json);
-                        for (int i = 0; i < songs.length; i++) {
-                            String songLink = songs[i];
-                            songName = filenames[i] + ".mp3";
-                            verifyLinksAndWaitFor(songLink);
+                        ArrayList<HashMap<String, Object>> playlistMetadata = Utility.getSpotifyPlaylistMetadata(link);
+                        if (playlistMetadata != null && !playlistMetadata.isEmpty()) {
+                            for (HashMap<String, Object> songMetadata : playlistMetadata) {
+                                songLink = songMetadata.get("link").toString();
+                                String songName = songMetadata.get("songName").toString();
+                                filename = cleanFilename(songName) + ".webm";
+                                songMetadata.remove("link");
+                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                                songMetadataJson = gson.toJson(songMetadata);
+                                verifyLinksAndWaitFor(songLink);
+                            }
                         }
                     } else {
                         verifyLinksAndWaitFor(link);
@@ -282,53 +287,14 @@ public final class UIController {
     }
 
     private void verifyLinksAndWaitFor(String link) {
-        if (isInstagram(link) && !link.contains("?utm_source=ig_embed")) {
-            if (link.contains("?")) {
-                link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
-            } else {
-                link = link + "?utm_source=ig_embed";
-            }
+        if (isInstagram(link)) {
+            link = formatInstagramLink(link);
         }
         Thread verify = new Thread(verifyLink(link));
         verify.start();
         while (!verify.getState().equals(Thread.State.TERMINATED)) {
             sleep(500);
         }
-    }
-
-    private String[] getSongLinks(String json) {
-        String playlistLengthRegex = "(\"list_length\": )(.+)";
-        Pattern playlistLengthPattern = Pattern.compile(playlistLengthRegex);
-        Matcher lengthMatcher = playlistLengthPattern.matcher(json);
-        int numberOfSongs;
-        clearFilenameOutput();
-        if (lengthMatcher.find()) {
-            numberOfSongs = Integer.parseInt(lengthMatcher.group(2));
-            M.msgFilenameInfo("Number of tracks in the playlist : " + numberOfSongs);
-        } else {
-            M.msgFilenameError("Failed to retrieve the number of tracks in the playlist!");
-        }
-        ArrayList<String> songLinks = new ArrayList<>();
-        String linkRegex = "(\"url\": \")(.+)(\",)";
-        Pattern linkPattern = Pattern.compile(linkRegex);
-        Matcher linkMatcher = linkPattern.matcher(json);
-        linkMatcher.results().forEach(matchResult -> {
-            String songLink = matchResult.group(2);
-            songLinks.add(songLink);
-        });
-        return songLinks.toArray(String[]::new);
-    }
-
-    private String[] getSongFilenames(String json) {
-        String filenameRegex = "(\"name\": \")(.+)(\",)";
-        Pattern filenamePattern = Pattern.compile(filenameRegex);
-        Matcher filenameMatcher = filenamePattern.matcher(json);
-        ArrayList<String> filenames = new ArrayList<>();
-        filenameMatcher.results().forEach(matchResult -> {
-            String filename = matchResult.group(2);
-            filenames.add(filename);
-        });
-        return filenames.toArray(String[]::new);
     }
 
     /*
@@ -366,7 +332,7 @@ public final class UIController {
                         dir = getDir();
                         if (dir == null) {
                             M.msgDirError("Download folder is not set!");
-                            System.exit(0);
+                            Environment.terminate(1);
                         }
                         String intro = "You have downloaded this link before. The filename is:" + nl + filename + nl.repeat(2);
                         String folder = fileExists(filename);
@@ -384,11 +350,23 @@ public final class UIController {
                         ConfirmationDialog ask = new ConfirmationDialog(windowTitle, message, renameFile(filename, dir));
                         if (ask.getResponse().isYes()) {
                             filename = ask.getFilename();
-                            addJob(new Job(link, dir, filename, true));
+                            if (isSpotify(link)) {
+                                addJob(new Job(link, dir, filename, job.getSpotifyMetadataJson(), true));
+                            } else {
+                                addJob(new Job(link, dir, filename, true));
+                            }
                         }
                     } else if (Utility.isExtractableLink(link)) {
-                        if (isSpotify(link) && !songName.isEmpty()) {
-                            addJob(new Job(link, getDir(), songName, true));
+                        if (isSpotify(link) && link.contains("playlist")) {
+                            if (!songMetadataJson.isEmpty()) {
+                                addJob(new Job(link, getDir(), filename, songMetadataJson, true));
+                            } else {
+                                Thread getNames = new Thread(getFilenames(songLink));
+                                getNames.start();
+                                while (!getNames.getState().equals(Thread.State.TERMINATED)) {
+                                    sleep(150);
+                                }
+                            }
                         } else {
                             Thread getNames = new Thread(getFilenames(link));
                             getNames.start();
@@ -470,7 +448,7 @@ public final class UIController {
                     }
                 }
             }));
-            if (getJobs().notNull() && getJobs().isNotEmpty()) {
+            if (getJobs().notNull() && !getJobs().isEmpty()) {
                 final int totalFiles = getJobs().jobList().size();
                 int fileCount = 0;
                 LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());

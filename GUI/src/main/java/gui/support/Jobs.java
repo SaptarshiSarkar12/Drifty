@@ -54,10 +54,6 @@ public class Jobs {
         return jobList.isEmpty();
     }
 
-    public boolean isNotEmpty() {
-        return !jobList.isEmpty();
-    }
-
     public void clear() {
         jobList.clear();
         save();

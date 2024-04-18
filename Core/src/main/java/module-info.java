@@ -5,6 +5,7 @@ module Core {
     requires org.apache.commons.io;
     requires jproc;
     requires java.prefs;
+    requires java.net.http;
     exports init;
     exports preferences;
     exports properties;
