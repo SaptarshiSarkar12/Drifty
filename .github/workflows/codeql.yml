@@ -1,0 +1,47 @@
+name: "CodeQL"
+
+on:
+  push: # Run CodeQL analysis on every push to all branches
+  pull_request: # Run CodeQL analysis on every pull request to the repository
+  schedule:
+    - cron: '0 0 * * *' # Run CodeQL analysis at 00:00 UTC every day
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java-kotlin', 'javascript-typescript' ]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-extended,security-and-quality
+
+    - name: Setup JDK 21
+      if: ${{ matrix.language == 'java-kotlin' }}
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'oracle'
+        java-version: 21
+
+    - name: Build with Maven
+      if: ${{ matrix.language == 'java-kotlin' }}
+      run: mvn install
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"

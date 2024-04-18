@@ -26,12 +26,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>21.0.2</version>
+            <version>22</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>21.0.2</version>
+            <version>22</version>
         </dependency>
     </dependencies>
 
@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.openrewrite.maven</groupId>
                 <artifactId>rewrite-maven-plugin</artifactId>
-                <version>5.22.0</version>
+                <version>5.28.0</version>
                 <configuration>
                     <activeRecipes>
                         <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
@@ -57,12 +57,12 @@
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-static-analysis</artifactId>
-                        <version>1.3.0</version>
+                        <version>1.4.2</version>
                     </dependency>
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-recommendations</artifactId>
-                        <version>1.2.0</version>
+                        <version>1.3.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -75,7 +75,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>21</source>
                     <target>21</target>

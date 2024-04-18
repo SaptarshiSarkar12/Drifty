@@ -84,11 +84,12 @@ public class ProgressBarThread extends Thread {
             float downloadSpeedWithoutUnit;
             String downloadSpeedUnit;
             float totalDownloadPercent = downloadMetrics.getProgressPercent();
-            float formattedTotalDownloadPercent = Float.parseFloat(String.format("%.2f", totalDownloadPercent));
+            float formattedTotalDownloadPercent;
+            formattedTotalDownloadPercent = parseStringToFloat(String.format("%.2f", totalDownloadPercent));
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = UnitConverter.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
-                downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
+                downloadSpeedWithoutUnit = parseStringToFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
             } else {
                 downloadSpeedWithoutUnit = 0;
@@ -101,7 +102,7 @@ public class ProgressBarThread extends Thread {
             StringBuilder result = new StringBuilder("[" + spinner + "]  " + UnitConverter.format(totalDownloadedBytes, 2));
             float filled;
             totalDownloadedBytes = 0;
-            long downloadSpeed = 0;
+            downloadSpeed = 0;
             for (int i = 0; i < numberOfThreads; i++) {
                 /*
                 Suppose, charPercents.get(0) = 1357301076 ,and
@@ -136,7 +137,7 @@ public class ProgressBarThread extends Thread {
             if ((int) totalDownloadPercent != 100) {
                 String downloadSpeedWithUnit = UnitConverter.format(downloadSpeed, 2);
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
-                downloadSpeedWithoutUnit = Float.parseFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
+                downloadSpeedWithoutUnit = parseStringToFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
             } else {
                 downloadSpeedWithoutUnit = 0;
@@ -160,6 +161,17 @@ public class ProgressBarThread extends Thread {
         } else {
             System.out.println();
             M.msgDownloadError(DOWNLOAD_FAILED);
+        }
+        try {
+            if (fos != null) {
+                fos.close();
+            } else {
+                for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                    fileOutputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            M.msgLogError("Error while closing the file output stream for " + fileName + " : " + e.getMessage());
         }
     }
 
@@ -203,5 +215,14 @@ public class ProgressBarThread extends Thread {
             }
         }
         cleanup();
+    }
+
+    private float parseStringToFloat(String str) {
+        try {
+            return Float.parseFloat(str);
+        } catch (NumberFormatException e) {
+            M.msgLogError("Error while parsing \"" + str + "\" to float : " + e.getMessage());
+            return 0;
+        }
     }
 }
