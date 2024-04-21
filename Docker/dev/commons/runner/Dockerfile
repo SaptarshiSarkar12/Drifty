@@ -1,4 +1,5 @@
-FROM python:3.12-slim as runner
+FROM oraclelinux:9-slim as runner
 
-RUN apt-get update --no-install-recommends && apt-get install ffmpeg libsm6 libxext6 libgtk-3-0 -y --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN microdnf upgrade -y --nodocs && \
+    microdnf install libSM-1.2.3 libXext-1.3.4 gtk3-3.24.31 -y --nodocs && \
+    microdnf clean all
