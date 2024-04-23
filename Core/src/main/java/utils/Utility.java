@@ -97,13 +97,19 @@ public class Utility {
             executableNames = new String[]{"Drifty-GUI.pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
         } else {
             executableNames = new String[]{"Drifty-CLI_macos", "Drifty-CLI.exe", "Drifty-CLI_linux"};
+        } // https://github.com/SaptarshiSarkar12/Drifty/releases/download/v2.1.0-beta/Drifty-CLI_linux
+        String updateURLMiddle;
+        if (AppSettings.GET.updateChannel().equalsIgnoreCase("stable")) {
+            updateURLMiddle = "latest/download/";
+        } else {
+            updateURLMiddle = "download/v" + AppSettings.GET.updateChannel() + "/";
         }
         if (OS.isMac()) {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[0]).toURL();
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[0]).toURL();
         } else if (OS.isWindows()) {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[1]).toURL();
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[1]).toURL();
         } else {
-            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/" + executableNames[2]).toURL();
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[2]).toURL();
         }
         return updateURL;
     }

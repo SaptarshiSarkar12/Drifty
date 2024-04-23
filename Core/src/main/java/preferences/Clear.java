@@ -46,4 +46,8 @@ public class Clear {
     public void isFfmpegWorking() {
         preferences.remove(IS_FFMPEG_WORKING);
     }
+
+    public void updateChannel() {
+        preferences.remove(UPDATE_CHANNEL);
+    }
 }

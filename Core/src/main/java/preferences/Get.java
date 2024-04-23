@@ -109,4 +109,8 @@ public class Get {
     public boolean isFfmpegWorking() {
         return preferences.getBoolean(IS_FFMPEG_WORKING, false);
     }
+
+    public String updateChannel() {
+        return preferences.get(UPDATE_CHANNEL, "stable");
+    }
 }

@@ -109,4 +109,9 @@ public class Set {
         AppSettings.CLEAR.isFfmpegWorking();
         preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
     }
+
+    public void setUpdateChannel(String channel) {
+        AppSettings.CLEAR.updateChannel();
+        preferences.put(UPDATE_CHANNEL, channel);
+    }
 }

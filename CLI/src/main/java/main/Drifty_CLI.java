@@ -2,6 +2,7 @@ package main;
 
 import backend.FileDownloader;
 import cli.init.Environment;
+import cli.updater.ExecuteUpdate;
 import cli.utils.MessageBroker;
 import cli.utils.ScannerFactory;
 import cli.utils.Utility;
@@ -9,11 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.LoaderOptions;
-import cli.init.Environment;
-import cli.updater.ExecuteUpdate;
-import cli.utils.MessageBroker;
-import cli.utils.ScannerFactory;
-import cli.utils.Utility;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import preferences.AppSettings;
@@ -29,9 +25,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,11 +57,11 @@ public class Drifty_CLI {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setCLIMessageBroker(messageBroker);
+        utility = new Utility();
         checkAndUpdateDrifty(true);
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
-        utility = new Utility();
         jobHistory = AppSettings.GET.jobHistory();
         printBanner();
         if (args.length > 0) {
@@ -295,7 +290,7 @@ public class Drifty_CLI {
             File tmpFolder = Files.createTempDirectory("Drifty").toFile();
             tmpFolder.deleteOnExit();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(currentExecutableFile.getName()).toFile();
-            FileDownloader downloader = new FileDownloader(Constants.updateURL.toString(), currentExecutableFile.getName(), tmpFolder.toString());
+            FileDownloader downloader = new FileDownloader(Constants.updateURL.toString(), currentExecutableFile.getName(), tmpFolder.toString(), false);
             downloader.run();
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
