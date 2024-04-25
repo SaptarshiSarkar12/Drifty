@@ -22,7 +22,7 @@ jobs:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
     strategy:
       matrix:
-        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+        os: ["windows-latest", "macos-13", "ubuntu-latest"]
         mode: ["CLI", "GUI"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
