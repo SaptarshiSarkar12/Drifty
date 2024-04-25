@@ -158,7 +158,11 @@ jobs:
         if ${{ env.RELEASE_STAGE == 'Stable' }}; then
           PREVIOUS_RELEASE_VERSION=$(gh release list --exclude-pre-releases -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*')
         else
-          PREVIOUS_RELEASE_VERSION=$(gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*-[a-z]*[.0-9]*')
+          if (gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*-[a-z]*[.0-9]*'); then
+            PREVIOUS_RELEASE_VERSION=$(gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*-[a-z]*[.0-9]*')
+          else
+            PREVIOUS_RELEASE_VERSION=$(gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*')
+          fi
         fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
