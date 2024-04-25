@@ -28,7 +28,7 @@ export default function Contribute({ props }) {
             </div>
             <div className="ml-2">
                 <h2 className="text-3xl mb-3 sm:text-4xl font-bold lg:mt-16 md:mt-10 sm:pt-10 sm:mb-10 xs:p-5 text-center" >Be a part of Drifty Family!</h2>
-                <div className="flex items-center justify-center gap-[2em] flex-wrap rounded-full space-x-0 gap-y-4 justify-items-center xs:pb-5 ">
+                <div className="flex items-center justify-center gap-[2em] flex-wrap rounded-full space-x-0 gap-y-4 justify-items-center xs:pb-5 pr-1">
                     {props.contrib.map((item, index) => {
                         if (index < 7 && item.type === "User") { // We are using 7 instead of 6 because we are not counting the dependabot
                             return <a href={item.html_url} key={index}><Image
