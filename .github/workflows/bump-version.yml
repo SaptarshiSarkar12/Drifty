@@ -4,9 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       new_version:
-        description: 'New version to bump to'
+        description: 'New version to bump to (X.Y.Z)'
         required: true
         type: string
+      release_stage:
+        description: 'Release stage to bump version for'
+        required: true
+        type: choice
+        options:
+          - 'alpha'
+          - 'beta'
+          - 'rc'
+          - 'stable'
+      revision_number:
+        description: 'Revision number to bump version for'
+        required: true
+        type: number
 
 jobs:
     bump-version:
@@ -15,17 +28,39 @@ jobs:
       steps:
         - name: Checkout Project
           uses: actions/checkout@v4
+        - name: Check release stage
+          run: |
+            if ${{ inputs.release_stage == 'alpha' }}; then
+              echo "RELEASE_STAGE=alpha" >> $GITHUB_ENV
+            elif ${{ inputs.release_stage == 'beta' }}; then
+              echo "RELEASE_STAGE=beta" >> $GITHUB_ENV
+            elif ${{ inputs.release_stage == 'rc' }}; then
+              echo "RELEASE_STAGE=rc" >> $GITHUB_ENV
+            fi
+        - name: Generate New Version
+          run: |
+            if ${{ inputs.release_stage == 'alpha' || inputs.release_stage == 'beta' || inputs.release_stage == 'rc' }}; then
+              echo "NEW_VERSION=${{ inputs.new_version }}-${{ env.RELEASE_STAGE }}.${{ inputs.revision_number }}" >> $GITHUB_ENV
+            else
+              echo "NEW_VERSION=${{ inputs.new_version }}" >> $GITHUB_ENV
+            fi
         - name: Bump Project Version
           run: |
-            mvn versions:set -D newVersion=${{ inputs.new_version }} -D generateBackupPoms=false
-            sed -i 's/"version": "[0-9].[0-9].[0-9]"/"version": "${{ inputs.new_version }}"/g' version.json
+            mvn versions:set -D newVersion=${{ env.NEW_VERSION }} -D generateBackupPoms=false
+            sed -i 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/${{ env.NEW_VERSION }}/g' version.json
+            sed -i 's/v\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/v${{ env.NEW_VERSION }}/g' Core/src/main/java/support/Constants.java
+            sed -i 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/${{ env.NEW_VERSION }}/g' GUI/src/darwin/Info.plist
         - name: Commit Version Bump
           run: |
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git config --global user.name "github-actions[bot]"
             git add .
             if [[ $(git status --porcelain) ]]; then
-               git commit -m "chore: Bump project version to ${{ inputs.new_version }}"
+               if ${{ inputs.release_stage == 'alpha' || inputs.release_stage == 'beta' || inputs.release_stage == 'rc' }}; then
+                 git commit -m "chore: Bump Drifty version to ${{ inputs.new_version }} ${{ env.RELEASE_STAGE }} - Revision ${{ inputs.revision_number }}"
+               else
+                 git commit -m "chore: Bump Drifty version to ${{ inputs.new_version }} Stable"
+               fi
             fi
         - name: Push new version
           run: git push

@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.SaptarshiSarkar12</groupId>
         <artifactId>Drifty</artifactId>
-        <version>2.1.0</version>
+        <version>2.1.0-beta.1</version>
     </parent>
     <artifactId>GUI</artifactId>
     <name>GUI</name>
@@ -21,6 +21,9 @@
         <resource-config-file/>
         <system-native-image-arg/>
         <compatibility-arg/>
+        <capcache-arg1/>
+        <capcache-arg2/>
+        <capcache-arg3/>
         <package.type/>
     </properties>
 
@@ -61,6 +64,9 @@
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
                         <arg>${system-native-image-arg}</arg>
                         <arg>${compatibility-arg}</arg>
+                        <arg>${capcache-arg1}</arg>
+                        <arg>${capcache-arg2}</arg>
+                        <arg>${capcache-arg3}</arg>
                     </nativeImageArgs>
                     <appIdentifier>Drifty GUI</appIdentifier>
                     <releaseConfiguration>
@@ -83,10 +89,12 @@
             <id>build-drifty-gui-for-macos-latest</id>
             <properties>
                 <package.type>pkg</package.type>
-                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
+                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
+                <capcache-arg1>-H:CAPCacheDir=/tmp/cap</capcache-arg1>
+                <capcache-arg3>-H:+NewCAPCache</capcache-arg3>
                 <mac.app.store>true</mac.app.store>
             </properties>
         </profile>
