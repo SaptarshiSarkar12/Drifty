@@ -94,7 +94,6 @@
                 <resource-config-file>resource-config-mac.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
                 <capcache-arg1>-H:CAPCacheDir=/tmp/cap</capcache-arg1>
-                <capcache-arg2>-H:+ExitAfterCAPCache</capcache-arg2>
                 <capcache-arg3>-H:+NewCAPCache</capcache-arg3>
                 <mac.app.store>true</mac.app.store>
             </properties>

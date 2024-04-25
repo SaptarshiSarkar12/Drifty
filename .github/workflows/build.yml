@@ -108,11 +108,10 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos" build/CLI
         else
-            tree GUI/target/gluonfx/
-            mv GUI/target/gluonfx/x86_64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
-            mv GUI/target/gluonfx/x86_64-darwin/GUI.app "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app"
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" build/GUI
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app" build/GUI
+            mv GUI/target/gluonfx/aarch64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.pkg"
+            mv GUI/target/gluonfx/aarch64-darwin/GUI.app "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.app"
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.pkg" build/GUI
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.app" build/GUI
         fi
     - name: Tar build files # To prevent file permission loss
       run: |
