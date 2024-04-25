@@ -98,8 +98,8 @@ export default function Releases({ props }) {
   const filteredPreReleases = useMemo(() => {
     const releases = [];
     props.release.map((item) => {
-      if (item.prerelease === true) {
-        releases.push(item);
+      if (item.prerelease === true && releases.length <= 1) {
+        releases.push(item); // Only one pre-release is collected.
       }
     });
     return releases;
@@ -246,10 +246,26 @@ export default function Releases({ props }) {
         {filteredPreReleases.length !== 0 && (
           <>
             <h1 className="select-none text-center font-bold text-2xl pt-10">
-              Beta Release
+              {filteredPreReleases.map((item) => {
+                if (item.tag_name.includes("alpha")) {
+                  return "Alpha Release";
+                } else if (item.tag_name.includes("beta")) {
+                  return "Beta Release";
+                } else if (item.tag_name.includes("rc")) {
+                  return "RC (Release Candidate) Release";
+                }
+              })}
             </h1>
-            <p className="text-center text-base pt-1 font-semibold text-gray-700">
-              Try out the latest features and improvements before the final release
+            <p className="text-center text-base pt-1 font-semibold text-gray-700 pl-2 pr-2">
+              {filteredPreReleases.map((item) => {
+                if (item.tag_name.includes("alpha")) {
+                  return "Try out the features in the initial phase of development";
+                } else if (item.tag_name.includes("beta")) {
+                  return "Try out the features in the final phase of development";
+                } else if (item.tag_name.includes("rc")) {
+                  return "Try out the latest features before the final release";
+                }
+              })}
             </p>
           </>
         )}
