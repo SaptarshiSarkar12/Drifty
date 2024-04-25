@@ -22,7 +22,7 @@ jobs:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
     strategy:
       matrix:
-        os: ["windows-latest", "macos-13", "ubuntu-latest"]
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
         mode: ["CLI", "GUI"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -108,6 +108,7 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos" build/CLI
         else
+            tree GUI/target/gluonfx/
             mv GUI/target/gluonfx/x86_64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
             mv GUI/target/gluonfx/x86_64-darwin/GUI.app "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app"
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" build/GUI
