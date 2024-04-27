@@ -3,9 +3,6 @@ name: Build and publish Docker images
 on:
   push:
     branches: [ "**" ]
-    # Publish semver tags as releases.
-    tags:
-      - "**"
     paths-ignore:
       - "Website/**"
       - "*.md"
@@ -14,11 +11,6 @@ on:
       - "Website/**"
       - "*.md"
   workflow_dispatch:
-    inputs:
-      create_latest:
-        description: "Create a latest tag for the image"
-        required: true
-        type: boolean
 
 env:
   REGISTRY: ghcr.io
@@ -48,6 +40,27 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get Drifty version
         run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
+      - name: Split up Version into semantic parts
+        run: |
+          echo "VERSION_NUMBER=$(echo $VERSION | cut -d '-' -f1)" >> $GITHUB_ENV
+          if [[ $VERSION == *-* ]]; then
+              RELEASE_STAGE_SHORT=$(echo $VERSION | cut -d '-' -f2 | cut -d '.' -f1)
+              REVISION_NUMBER=$(echo $VERSION | cut -d '-' -f2 | cut -d '.' -f2)
+          else
+              RELEASE_STAGE_SHORT="Stable"
+              REVISION_NUMBER=0
+          fi
+          echo "RELEASE_STAGE_SHORT=$RELEASE_STAGE_SHORT" >> $GITHUB_ENV
+          echo "REVISION_NUMBER=$REVISION_NUMBER" >> $GITHUB_ENV
+          if [[ $RELEASE_STAGE_SHORT == "alpha" ]]; then
+              echo "RELEASE_STAGE=Alpha" >> $GITHUB_ENV
+          elif [[ $RELEASE_STAGE_SHORT == "beta" ]]; then
+              echo "RELEASE_STAGE=Beta" >> $GITHUB_ENV
+          elif [[ $RELEASE_STAGE_SHORT == "rc" ]]; then
+              echo "RELEASE_STAGE=Release Candidate" >> $GITHUB_ENV
+          else
+              echo "RELEASE_STAGE=Stable" >> $GITHUB_ENV
+          fi
       - name: Update system packages
         if: matrix.docker_context == 'GUI'
         run: sudo apt-get update
@@ -126,34 +139,34 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=raw,value=latest,enable=${{ inputs.create_latest == true && github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
-            type=raw,value=beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}
-            type=raw,value=${{ env.VERSION }}-beta,enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}
-            type=raw,value=${{ env.VERSION }},enable=${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true && github.ref_name == 'master' }}
+            type=raw,value=alpha,enable=${{ env.RELEASE_STAGE == 'Alpha' && github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=beta,enable=${{ env.RELEASE_STAGE == 'Beta' && github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=rc,enable=${{ env.RELEASE_STAGE == 'Release Candidate' && github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=latest,enable=${{ env.RELEASE_STAGE == 'Stable' && github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=${{ env.VERSION }},enable=${{ github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+            type=raw,value=${{ env.VERSION_NUMBER }}-${{ env.RELEASE_STAGE_SHORT }},enable=${{ env.RELEASE_STAGE != 'Stable' && github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }} 
             type=sha
           flavor: |
             latest=false
 
       - name: Set Image Description prefix
         run: |
-          if ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == true && github.ref_name == 'master' }}; then
-            echo "IMAGE_DESCRIPTION_PREFIX=The Stable" >> $GITHUB_ENV
-          elif ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name == 'master' }}; then
-            echo "IMAGE_DESCRIPTION_PREFIX=The Beta" >> $GITHUB_ENV
-          elif ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && inputs.create_latest == false && github.ref_name != 'master' }}; then
+          if ${{ github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}; then
+            echo "IMAGE_DESCRIPTION_PREFIX=The ${{ env.RELEASE_STAGE }}" >> $GITHUB_ENV
+          elif ${{ github.event_name == 'push' && github.repository == 'SaptarshiSarkar12/Drifty' }}; then
             echo "IMAGE_DESCRIPTION_PREFIX=The Branch Preview" >> $GITHUB_ENV
           else
             echo "IMAGE_DESCRIPTION_PREFIX=The" >> $GITHUB_ENV
           fi
 
-      # Build and push Docker image with Buildx (don't push on PR)
+      # Build and push Docker image with Buildx (don't push on PR and branches created by Dependabot)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5.3.0
         with:
           context: build/${{ matrix.docker_context }}
-          push: ${{ github.event_name != 'pull_request_target' }}
+          push: ${{ github.event_name != 'pull_request_target' && github.repository == 'SaptarshiSarkar12/Drifty' && !contains(github.ref_name, 'dependabot') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

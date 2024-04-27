@@ -12,11 +12,6 @@ on:
       - "*.md"
       - "*.txt"
   workflow_dispatch:
-     inputs:
-        create_release:
-          description: 'Click to create latest release else pre-release will be created'
-          required: true
-          type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -113,10 +108,10 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos" build/CLI
         else
-            mv GUI/target/gluonfx/x86_64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg"
-            mv GUI/target/gluonfx/x86_64-darwin/GUI.app "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app"
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.pkg" build/GUI
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI.app" build/GUI
+            mv GUI/target/gluonfx/aarch64-darwin/GUI-1.0.0.pkg "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.pkg"
+            mv GUI/target/gluonfx/aarch64-darwin/GUI.app "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.app"
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.pkg" build/GUI
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI.app" build/GUI
         fi
     - name: Tar build files # To prevent file permission loss
       run: |
@@ -133,10 +128,45 @@ jobs:
     needs: build-Drifty
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-tags: true
     - name: Get Drifty version from version.json file
       run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
-    - name: Set Drifty version in pom.xml
-      run: mvn versions:set -D newVersion=$VERSION -D generateBackupPoms=false
+    - name: Split up Version into semantic parts
+      run: |
+        echo "VERSION_NUMBER=$(echo $VERSION | cut -d '-' -f1)" >> $GITHUB_ENV
+        if [[ $VERSION == *-* ]]; then
+            RELEASE_STAGE=$(echo $VERSION | cut -d '-' -f2 | cut -d '.' -f1)
+            REVISION_NUMBER=$(echo $VERSION | cut -d '-' -f2 | cut -d '.' -f2)
+        else
+            RELEASE_STAGE="Stable"
+            REVISION_NUMBER=0
+        fi
+        echo "REVISION_NUMBER=$REVISION_NUMBER" >> $GITHUB_ENV
+        if [[ $RELEASE_STAGE == "alpha" ]]; then
+            echo "RELEASE_STAGE=Alpha" >> $GITHUB_ENV
+        elif [[ $RELEASE_STAGE == "beta" ]]; then
+            echo "RELEASE_STAGE=Beta" >> $GITHUB_ENV
+        elif [[ $RELEASE_STAGE == "rc" ]]; then
+            echo "RELEASE_STAGE=Release Candidate" >> $GITHUB_ENV
+        else
+            echo "RELEASE_STAGE=Stable" >> $GITHUB_ENV
+        fi
+    - name: Fetch Previous Release Version
+      if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'SaptarshiSarkar12/Drifty' }}
+      run: |
+        if ${{ env.RELEASE_STAGE == 'Stable' }}; then
+          PREVIOUS_RELEASE_VERSION=$(gh release list --exclude-pre-releases -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*')
+        else
+          if (gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*-[a-z]*[.0-9]*'); then
+            PREVIOUS_RELEASE_VERSION=$(gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*-[a-z]*[.0-9]*')
+          else
+            PREVIOUS_RELEASE_VERSION=$(gh release list -L 1 --json tagName | grep -o 'v[0-9]*.[0-9]*.[0-9]*')
+          fi
+        fi
+        echo "PREVIOUS_RELEASE_VERSION=$PREVIOUS_RELEASE_VERSION" >> $GITHUB_ENV
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Download Build artifacts
       uses: actions/download-artifact@v4
     - name: Make OS specific build directories
@@ -164,8 +194,12 @@ jobs:
         echo "GUI_WINDOWS_EXE_SIZE=$(echo `du -h 'windows/build/GUI/Drifty-GUI.exe'` | sed 's/ .*//')" >> "$GITHUB_ENV"
     - name: Generate Artifact metadata summary
       run: |
-        if ${{ github.event_name != 'pull_request' && inputs.create_release == false }}; then
-            echo "# Drifty v$VERSION Beta Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+        if ${{ github.event_name == 'workflow_dispatch' }}; then
+            if ${{ env.RELEASE_STAGE == 'Stable' }}; then
+                echo "# Drifty v$VERSION Stable Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "# Drifty v${{ env.VERSION_NUMBER }} ${{ env.RELEASE_STAGE }} - Revision ${{ env.REVISION_NUMBER }} Built! :rocket:" >> $GITHUB_STEP_SUMMARY
+            fi
         elif ${{ github.event_name == 'pull_request' }}; then
             echo "# Drifty Built! :rocket:" >> $GITHUB_STEP_SUMMARY
         else
@@ -192,32 +226,19 @@ jobs:
         echo "| CLI | Drifty-CLI.exe | $CLI_WINDOWS_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.msi | $GUI_WINDOWS_MSI_SIZE |" >> $GITHUB_STEP_SUMMARY
         echo "| GUI | Drifty-GUI.exe | $GUI_WINDOWS_EXE_SIZE |" >> $GITHUB_STEP_SUMMARY
-    
-        if ${{ github.event_name == 'pull_request' }}; then
-          echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-          echo "Release Skipped :no_entry_sign:!" >> $GITHUB_STEP_SUMMARY
-        fi
-    - name: Remove any existing pre-release with same version
-      if: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
-      continue-on-error: true
-      run: |
-          gh release delete v$VERSION-beta --yes --cleanup-tag
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Create Pre-Release with automated release notes
-      if: ${{ github.event_name != 'pull_request' && inputs.create_release == false && github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' }}
+      if: ${{ github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' && github.event_name == 'workflow_dispatch' && env.RELEASE_STAGE != 'Stable' }}
       run: |
-        echo "## Release :bookmark: Drifty v$VERSION-beta" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION-beta --prerelease --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Beta"
-        echo "[Released :white_check_mark: Drifty v$VERSION-beta](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION-beta) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
+        echo "## Release :bookmark: Drifty v${{ env.VERSION_NUMBER }} ${{ env.RELEASE_STAGE }} - Revision ${{ env.REVISION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
+        gh release create v$VERSION --prerelease --generate-notes --notes-start-tag ${{ env.PREVIOUS_RELEASE_VERSION }} 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v${{ env.VERSION_NUMBER }} ${{ env.RELEASE_STAGE }} - Revision ${{ env.REVISION_NUMBER }} Release"
+        echo "[Released :white_check_mark: Drifty v${{ env.VERSION_NUMBER }} ${{ env.RELEASE_STAGE }} - Revision ${{ env.REVISION_NUMBER }}](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Latest Release with automated release notes
-      if: ${{ inputs.create_release == true && github.repository == 'SaptarshiSarkar12/Drifty' && github.event_name != 'pull_request' && github.ref_name == 'master' }}
+      if: ${{ github.repository == 'SaptarshiSarkar12/Drifty' && github.ref_name == 'master' && github.event_name == 'workflow_dispatch' && env.RELEASE_STAGE == 'Stable' }}
       run: |
         echo "## Release :bookmark: Drifty v$VERSION" >> $GITHUB_STEP_SUMMARY
-        gh release create v$VERSION --generate-notes 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION"
-        echo "[Released :white_check_mark: Drifty v$VERSION](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
+        gh release create v$VERSION --generate-notes --notes-start-tag ${{ env.PREVIOUS_RELEASE_VERSION }} 'linux/build/CLI/Drifty-CLI_linux#Drifty-CLI_linux' 'linux/build/GUI/Drifty-GUI_linux#Drifty-GUI_linux' 'macos/build/CLI/Drifty-CLI_macos#Drifty-CLI_macos' 'macos/build/GUI/Drifty-GUI.pkg#Drifty-GUI.pkg' 'windows/build/CLI/Drifty-CLI.exe#Drifty-CLI.exe' 'windows/build/GUI/Drifty-GUI.msi#Drifty-GUI.msi' 'windows/build/GUI/Drifty-GUI.exe#Drifty-GUI.exe' --title "Drifty v$VERSION Stable Release"
+        echo "[Released :white_check_mark: Drifty v$VERSION Stable](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/v$VERSION) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
