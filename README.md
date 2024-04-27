@@ -58,9 +58,10 @@ The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is bu
 - [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
 
-## Join the Beta Testing Program 🚀
+## Join the Drifty Testing Program 🚀
 
-Beta versions of Drifty contain **bug fixes** and **early access to the new features**. We are looking for beta testers to test the application before the stable release and provide feedback to improve the application. If you are interested in joining the beta testing program, download Drifty using the steps given below and provide your feedback in our [**`Discord Server`**](https://discord.gg/DeT4jXPfkG).
+Drifty is released in _4 phases_, namely **Alpha**, **Beta**, **Release Candidate**, and **Stable**. If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can download the executables for the respective phases from the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) or try the Docker images for the respective phases. </br>
+If you find any issues during the testing period, please open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) or join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to share your feedback.
 
 ## Quickstart 🚀🚀
 
@@ -74,7 +75,7 @@ For **Users** :
     ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
 3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉.</p>
 > [!TIP]
-> If you are a beta testing user, you can click on the download button under the **Beta Release** title to download the latest beta version of Drifty.
+> If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase.
 
    ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/9094cfaf-5283-434b-a154-431b9e699642)
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
@@ -89,7 +90,7 @@ For **Users** :
 > For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
 > - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
-> - If you are a beta testing user, you need to use the `ghcr.io/saptarshisarkar12/drifty-cli:beta` and `ghcr.io/saptarshisarkar12/drifty-gui:beta` images to try out the latest beta version of Drifty.
+> - If you want to try unstable (**Alpha** or **Beta**) [**_Alpha releases are not available as of now_**] or the mostly stable versions (**Release Candidate**) [**_Release Candidate releases are not available as of now_**], you need to use the respective docker image tags. For example, to use the **Beta** version of Drifty, you need to use the docker image tag `beta` like `ghcr.io/saptarshisarkar12/drifty-cli:beta` or `ghcr.io/saptarshisarkar12/drifty-gui:beta`.
 
 
 > [!IMPORTANT]
