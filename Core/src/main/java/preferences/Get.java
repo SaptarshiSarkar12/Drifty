@@ -30,8 +30,20 @@ public class Get {
         return INSTANCE;
     }
 
+    public long lastDriftyUpdateTime() {
+        return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
+    }
+
+    public String newDriftyVersionName() {
+        return preferences.get(NEW_DRIFTY_VERSION_NAME, "");
+    }
+
     public long lastYtDlpUpdateTime() {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
+    }
+
+    public boolean driftyUpdateAvailable() {
+        return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
     }
 
     public String lastDownloadFolder() {
@@ -100,5 +112,9 @@ public class Get {
 
     public boolean isFfmpegWorking() {
         return preferences.getBoolean(IS_FFMPEG_WORKING, false);
+    }
+
+    public String updateChannel() {
+        return preferences.get(UPDATE_CHANNEL, "stable");
     }
 }

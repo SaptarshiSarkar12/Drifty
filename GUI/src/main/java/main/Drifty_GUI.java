@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
@@ -34,6 +35,7 @@ public class Drifty_GUI extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        Mode.setGUIMode();
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
         launch(args);
     }
@@ -41,7 +43,6 @@ public class Drifty_GUI extends Application {
     @Override
     public void init() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        Mode.setGUIMode();
         msgBroker = new MessageBroker();
         Environment.setGUIMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
@@ -156,14 +157,17 @@ public class Drifty_GUI extends Application {
             lblYtDlpVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
             lblYtDlpVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             Hyperlink websiteLink = new Hyperlink("Website");
+            websiteLink.setBorder(Border.EMPTY);
             websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
             websiteLink.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty"));
             Hyperlink discordLink = new Hyperlink("Join Discord");
+            discordLink.setBorder(Border.EMPTY);
             discordLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             discordLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"));
             discordLink.setOnAction(e -> openWebsite("https://discord.gg/DeT4jXPfkG"));
             Hyperlink githubLink = new Hyperlink("Contribute to Drifty");
+            githubLink.setBorder(Border.EMPTY);
             githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
@@ -189,7 +193,7 @@ public class Drifty_GUI extends Application {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         wipeHistory.setOnAction(e -> {
-            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
+            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false, false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }
@@ -212,7 +216,7 @@ public class Drifty_GUI extends Application {
         return contextMenu;
     }
 
-    protected void openWebsite(String websiteURL) {
+    public void openWebsite(String websiteURL) {
         getHostServices().showDocument(websiteURL);
     }
 

@@ -11,8 +11,16 @@ public class Clear {
         return INSTANCE;
     }
 
+    public void lastDriftyUpdateTime() {
+        preferences.remove(LAST_DRIFTY_UPDATE_TIME);
+    }
+
     public void lastYtDlpUpdateTime() {
         preferences.remove(LAST_YT_DLP_UPDATE_TIME);
+    }
+
+    public void driftyUpdateAvailable() {
+        preferences.remove(DRIFTY_UPDATE_AVAILABLE);
     }
 
     public void lastFolder() {
@@ -37,5 +45,13 @@ public class Clear {
 
     public void isFfmpegWorking() {
         preferences.remove(IS_FFMPEG_WORKING);
+    }
+
+    public void updateChannel() {
+        preferences.remove(UPDATE_CHANNEL);
+    }
+
+    public void newDriftyVersionName() {
+        preferences.remove(NEW_DRIFTY_VERSION_NAME);
     }
 }

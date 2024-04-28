@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
+import properties.Mode;
 import properties.OS;
 import properties.Program;
 
@@ -87,6 +88,30 @@ public class Utility {
             M.msgLinkError(link + " is not a URL; error: " + e.getMessage());
         }
         return false;
+    }
+
+    public static URL getUpdateURL() throws MalformedURLException, URISyntaxException {
+        URL updateURL;
+        String[] executableNames;
+        if (Mode.isGUI()) {
+            executableNames = new String[]{"Drifty-GUI.pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
+        } else {
+            executableNames = new String[]{"Drifty-CLI_macos", "Drifty-CLI.exe", "Drifty-CLI_linux"};
+        } // https://github.com/SaptarshiSarkar12/Drifty/releases/download/v2.1.0-beta/Drifty-CLI_linux
+        String updateURLMiddle;
+        if ("stable".equalsIgnoreCase(AppSettings.GET.updateChannel())) {
+            updateURLMiddle = "latest/download/";
+        } else {
+            updateURLMiddle = "download/v" + AppSettings.GET.updateChannel() + "/";
+        }
+        if (OS.isMac()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[0]).toURL();
+        } else if (OS.isWindows()) {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[1]).toURL();
+        } else {
+            updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[2]).toURL();
+        }
+        return updateURL;
     }
 
     public static LinkedList<String> getYtDlpMetadata(String link) {

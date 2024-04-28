@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static properties.Program.YT_DLP;
+import static support.Constants.ONE_DAY;
 
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
@@ -26,6 +27,7 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
+        cleanUpOldUpdateFiles();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
@@ -72,6 +74,25 @@ public class Environment {
         System.exit(exitCode);
     }
 
+    private static void cleanUpOldUpdateFiles() {
+        new Thread(() -> {
+            if (OS.isWindows()) {
+                try {
+                    File oldExecutableFile = new File(Environment.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath() + ".old");
+                    if (oldExecutableFile.exists()) {
+                        if (oldExecutableFile.delete()) {
+                            msgBroker.msgLogInfo("Old version of Drifty has been deleted successfully!");
+                        } else {
+                            msgBroker.msgUpdateError("Failed to delete the old version of Drifty!");
+                        }
+                    }
+                } catch (Exception e) {
+                    msgBroker.msgUpdateError("Failed to get the current executable path!");
+                }
+            }
+        }).start();
+    }
+
     public static void setMessageBroker(MessageBroker messageBroker) {
         Environment.msgBroker = messageBroker;
     }
@@ -97,9 +118,8 @@ public class Environment {
     }
 
     public static boolean isYtDLPUpdated() {
-        final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
-        return timeSinceLastUpdate <= oneDay;
+        return timeSinceLastUpdate <= ONE_DAY;
     }
 
     public static MessageBroker getMessageBroker() {

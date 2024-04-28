@@ -33,6 +33,21 @@ public class Set {
         return INSTANCE;
     }
 
+    public void lastDriftyUpdateTime(long value) {
+        AppSettings.CLEAR.lastDriftyUpdateTime();
+        preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
+    }
+
+    public void driftyUpdateAvailable(boolean value) {
+        AppSettings.CLEAR.driftyUpdateAvailable();
+        preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, value);
+    }
+
+    public void newDriftyVersionName(String value) {
+        AppSettings.CLEAR.newDriftyVersionName();
+        preferences.put(NEW_DRIFTY_VERSION_NAME, value);
+    }
+
     public void lastYtDlpUpdateTime(long value) {
         AppSettings.CLEAR.lastYtDlpUpdateTime();
         preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);
@@ -98,5 +113,10 @@ public class Set {
     public void isFfmpegWorking(boolean isWorking) {
         AppSettings.CLEAR.isFfmpegWorking();
         preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
+    }
+
+    public void setUpdateChannel(String channel) {
+        AppSettings.CLEAR.updateChannel();
+        preferences.put(UPDATE_CHANNEL, channel);
     }
 }
