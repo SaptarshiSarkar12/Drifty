@@ -99,7 +99,7 @@ public class Utility {
             executableNames = new String[]{"Drifty-CLI_macos", "Drifty-CLI.exe", "Drifty-CLI_linux"};
         } // https://github.com/SaptarshiSarkar12/Drifty/releases/download/v2.1.0-beta/Drifty-CLI_linux
         String updateURLMiddle;
-        if (AppSettings.GET.updateChannel().equalsIgnoreCase("stable")) {
+        if ("stable".equalsIgnoreCase(AppSettings.GET.updateChannel())) {
             updateURLMiddle = "latest/download/";
         } else {
             updateURLMiddle = "download/v" + AppSettings.GET.updateChannel() + "/";

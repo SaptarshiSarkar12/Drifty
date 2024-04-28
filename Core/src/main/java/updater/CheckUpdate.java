@@ -36,7 +36,7 @@ public class CheckUpdate {
         try (HttpClient client = HttpClient.newHttpClient()) {
             String responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             String tag = responseBody.split("\"tag_name\":\"")[1].split("\"")[0];
-            if (AppSettings.GET.updateChannel().equals("stable")) {
+            if ("stable".equals(AppSettings.GET.updateChannel())) {
                 AppSettings.SET.newDriftyVersionName(responseBody.split("\"name\":\"")[1].split("\"")[0]);
                 return tag.replace("v", "");
             } else {
@@ -72,7 +72,7 @@ public class CheckUpdate {
 
     public static boolean isUpdateAvailable() {
         String latestVersion;
-        if (AppSettings.GET.updateChannel().equals("stable")) {
+        if ("stable".equals(AppSettings.GET.updateChannel())) {
             latestVersion = getLatestStableVersion();
         } else {
             latestVersion = getLatestPreReleaseVersion();
