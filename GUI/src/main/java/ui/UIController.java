@@ -83,9 +83,12 @@ public final class UIController {
      */
     private void start(MainGridPane pane) {
         new Thread(() -> {
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + "Do you want to download it now?", false, false);
-            if (ask.getResponse().isYes()) {
-                downloadUpdate();
+            if (AppSettings.GET.driftyUpdateAvailable()) {
+                M.msgUpdateInfo("A new version of Drifty is available!");
+                ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + "Do you want to download it now?", false, false);
+                if (ask.getResponse().isYes()) {
+                    downloadUpdate();
+                }
             }
         }).start();
         form = pane;

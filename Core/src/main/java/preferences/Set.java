@@ -43,6 +43,11 @@ public class Set {
         preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, value);
     }
 
+    public void newDriftyVersionName(String value) {
+        AppSettings.CLEAR.newDriftyVersionName();
+        preferences.put(NEW_DRIFTY_VERSION_NAME, value);
+    }
+
     public void lastYtDlpUpdateTime(long value) {
         AppSettings.CLEAR.lastYtDlpUpdateTime();
         preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);

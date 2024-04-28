@@ -50,4 +50,8 @@ public class Clear {
     public void updateChannel() {
         preferences.remove(UPDATE_CHANNEL);
     }
+
+    public void newDriftyVersionName() {
+        preferences.remove(NEW_DRIFTY_VERSION_NAME);
+    }
 }

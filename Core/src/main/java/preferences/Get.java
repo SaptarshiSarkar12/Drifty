@@ -34,6 +34,10 @@ public class Get {
         return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
     }
 
+    public String newDriftyVersionName() {
+        return preferences.get(NEW_DRIFTY_VERSION_NAME, "");
+    }
+
     public long lastYtDlpUpdateTime() {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
     }
