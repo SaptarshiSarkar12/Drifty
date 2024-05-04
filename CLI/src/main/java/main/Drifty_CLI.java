@@ -78,18 +78,20 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> {
-                        try {
+                        if (i + 1 < args.length) {
                             name = args[i + 1];
-                        } catch (ArrayIndexOutOfBoundsException e) {
+                            i++; // Skip the next iteration as we have already processed this argument
+                        } else {
                             messageBroker.msgInitError("No filename specified!");
                             Environment.terminate(1);
                         }
                     }
                     case LOCATION_FLAG, LOCATION_FLAG_SHORT -> {
-                        try {
+                        if (i + 1 < args.length) {
                             location = args[i + 1];
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            messageBroker.msgInitError("No download location specified!");
+                            i++; // Skip the next iteration as we have already processed this argument
+                        } else {
+                            messageBroker.msgInitError("No download directory specified!");
                             Environment.terminate(1);
                         }
                     }
@@ -98,18 +100,18 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case ADD_FLAG -> {
-                        if (i + 1 >= args.length) {
-                            messageBroker.msgBatchError("No URL provided.");
+                        if (i + 1 < args.length) {
+                            for (int j = i + 1; j < args.length; j++) {
+                                addUrlToFile(args[j]);
+                            }
+                            i = args.length; // Skip the remaining iterations as we have already processed these arguments
+                            Environment.terminate(0);
+                        } else {
+                            messageBroker.msgBatchError("No URL(s) provided for adding!");
                             Environment.terminate(1);
                         }
-                        for (int j = i + 1; j < args.length; j++) {
-                            addUrlToFile(args[j]);
-                        }
-                        Environment.terminate(0);
                     }
-                    case LIST_FLAG -> {
-                        listUrls();
-                    }
+                    case LIST_FLAG -> listUrls();
                     case GET_FLAG -> {
                         batchDownloading = true;
                         batchDownloadingFile = yamlFilePath;
@@ -118,27 +120,27 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case REMOVE_FLAG -> {
-                        if (i + 1 >= args.length) {
-                            messageBroker.msgBatchError("No line number provided for removal.");
+                        if (i + 1 < args.length) {
+                            if ("all".equalsIgnoreCase(args[i + 1])) {
+                                messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
+                                String choiceString = SC.nextLine().toLowerCase();
+                                boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
+                                if (choice) {
+                                    removeAllUrls();
+                                }
+                            } else {
+                                String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
+                                removeUrl(indexStr);
+                            }
+                            i = args.length; // Skip the remaining iterations as we have already processed these arguments
+                            Environment.terminate(0);
+                        } else {
+                            messageBroker.msgBatchError("No line number provided for removal!");
                             Environment.terminate(1);
                         }
-
-                        if ("all".equalsIgnoreCase(args[i + 1])) {
-                            messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
-                            String choiceString = SC.nextLine().toLowerCase();
-                            boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
-                            if (choice) {
-                                removeAllUrls();
-                            }
-                        } else {
-                            String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
-                            removeUrl(indexStr);
-                        }
-                        Environment.terminate(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
-                        batchDownloading = true;
-                        try {
+                        if (i + 1 < args.length) {
                             batchDownloadingFile = args[i + 1];
                             if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
                                 messageBroker.msgBatchError("The data file should be a YAML file!");
@@ -148,11 +150,12 @@ public class Drifty_CLI {
                                 messageBroker.msgBatchError("YAML data file \"" + batchDownloadingFile + "\" does not exist!");
                                 Environment.terminate(1);
                             }
-                        } catch (ArrayIndexOutOfBoundsException e) {
+                            i++; // Skip the next iteration as we have already processed this argument
+                            batchDownloader();
+                        } else {
                             messageBroker.msgInitError("No batch file specified!");
                             Environment.terminate(1);
                         }
-                        batchDownloader();
                     }
                     default -> {
                         if (isURL(args[i])) {
@@ -599,38 +602,29 @@ public class Drifty_CLI {
     private static String normalizeUrl(String urlString) {
         try {
             URI uri = new URI(urlString.trim());
-
             String scheme = uri.getScheme();
             String authority = uri.getAuthority();
             String path = uri.getPath();
             String query = uri.getQuery();
-            String fragment = uri.getFragment();
-
             // Normalize the scheme to lowercase
             if (scheme != null) {
                 scheme = scheme.toLowerCase();
             }
-
             // Decode path
             if (path != null) {
                 path = path.replaceAll("%2F", "/");
             }
-
-            // Remove fragment
-            fragment = null;
-
             // Reconstruct the URI without the unwanted components
-            URI normalizedUri = new URI(scheme, authority, path, query, fragment);
-
-            // Remove trailing slash from path, except for root '/'
+            URI normalizedUri = new URI(scheme, authority, path, query, null);
+            // Remove trailing slash from the path, except for root '/'
             String normalizedUrl = normalizedUri.toString();
             if (!"/".equals(path) && normalizedUrl.endsWith("/")) {
                 normalizedUrl = normalizedUrl.substring(0, normalizedUrl.length() - 1);
             }
-
             return normalizedUrl;
         } catch (URISyntaxException e) {
-            throw new IllegalArgumentException("Invalid URL: " + urlString, e);
+            messageBroker.msgLinkError("Invalid URL: " + e.getMessage());
+            return urlString;
         }
     }
 
@@ -643,10 +637,10 @@ public class Drifty_CLI {
                 if (isNewFileCreated) {
                     messageBroker.msgLogInfo("New YAML file created: " + yamlFilePath);
                 } else {
-                    messageBroker.msgLogError("Failed to create new YAML file.");
+                    messageBroker.msgLogError("Failed to create YAML file: " + yamlFilePath);
                 }
             } catch (IOException e) {
-                messageBroker.msgLogError("Error while creating YAML file: " + e.getMessage());
+                messageBroker.msgBatchError("Error creating YAML file: " + e.getMessage());
             }
         }
     }
@@ -691,8 +685,9 @@ public class Drifty_CLI {
         try {
             Files.copy(originalFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            messageBroker.msgLogError("Failed to create a backup of the YAML file: " + e.getMessage());
-            return; // Abort the operation if backup fails to ensure data integrity
+            messageBroker.msgLinkError("Failed to create a backup of the YAML file: " + e.getMessage());
+            messageBroker.msgLinkError("Aborting the operation to prevent data loss!");
+            Environment.terminate(1);
         }
 
         // Proceed with writing the updated data to the YAML file
@@ -700,7 +695,7 @@ public class Drifty_CLI {
             yaml.dump(data, writer);
         } catch (IOException e) {
             messageBroker.msgLogError("Error writing to YAML file: " + e.getMessage());
-            // Attempt to restore from backup in case of a write error
+            // Attempt to restore from backup in case of write error
             try {
                 Files.copy(backupFile.toPath(), originalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 messageBroker.msgLogError("Restored the original YAML file from backup due to write error.");
@@ -721,11 +716,10 @@ public class Drifty_CLI {
             if (isEmptyYaml(data)) {
                 Environment.terminate(1);
             }
-
             List<String> urls = data.get("links");
             messageBroker.msgDownloadInfo("List of URLs:");
             for (int i = 0; i < urls.size(); i++) {
-                System.out.println((i + 1) + ". " + urls.get(i));
+                messageBroker.msgLinkInfo((i + 1) + ". " + urls.get(i));
             }
             Environment.terminate(0);
         } catch (Exception e) {
@@ -738,9 +732,8 @@ public class Drifty_CLI {
         try {
             Map<String, List<String>> data = loadYamlData();
             if (isEmptyYaml(data)) {
-                return;
+                Environment.terminate(1);
             }
-
             List<String> urls = data.get("links");
             Set<Integer> uniqueIndices = new TreeSet<>(Collections.reverseOrder()); // TreeSet to sort in reverse order automatically
             for (String indexStr : args) {
@@ -748,7 +741,12 @@ public class Drifty_CLI {
                 try {
                     index = Integer.parseInt(indexStr);
                     if (index < 0 || index > urls.size()) {
-                        messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+                        if (urls.size() == 1) {
+                            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide '1' to remove the only URL in the list.", true);
+                        } else {
+                            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + ".", true);
+                        }
+                        Environment.terminate(1); // Exit the program if the input is invalid
                         return;
                     }
                     uniqueIndices.add(index);
@@ -757,12 +755,10 @@ public class Drifty_CLI {
                     return;
                 }
             }
-
             for (int index : uniqueIndices) {
                 String removedUrl = urls.remove(index - 1);
                 messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
             }
-
             saveYamlData(data); // Save updated YAML data
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while removing a URL: " + e.getMessage());
@@ -784,19 +780,21 @@ public class Drifty_CLI {
                     }
                 } else {
                     messageBroker.msgLinkError("Failed to remove all URLs.");
+                    Environment.terminate(1);
                 }
             } else {
                 messageBroker.msgLinkError("No URLs to remove.");
+                Environment.terminate(1);
             }
         } catch (Exception e) {
-            messageBroker.msgLogError("An error occurred while removing all URLs: " + e.getMessage());
+            messageBroker.msgLinkError("An error occurred while removing all URLs: " + e.getMessage());
             Environment.terminate(1);
         }
     }
 
     private static void addUrlToFile(String urlString) {
         if (!Utility.isURL(urlString)) {
-            messageBroker.msgInputError("Error: '" + urlString + "' is not a valid URL.", true);
+            messageBroker.msgInputError("Error: \"" + urlString + "\" is not a valid URL.", true);
             return;
         }
 
@@ -809,7 +807,7 @@ public class Drifty_CLI {
                 saveYamlData(data); // Save the updated data back to the YAML file
                 messageBroker.msgLinkInfo("URL added: " + urlString);
             } else {
-                messageBroker.msgInputError("URL already exists: " + urlString, true);
+                messageBroker.msgInputError("URL already exists: \"" + urlString + "\"", true);
             }
         } catch (Exception e) {
             messageBroker.msgLogError("An error occurred while adding a URL: " + e.getMessage());
