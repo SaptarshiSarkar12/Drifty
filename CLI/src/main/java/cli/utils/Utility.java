@@ -4,12 +4,13 @@ import cli.init.Environment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import java.util.*;
 
-import static cli.support.Constants.FILENAME_DETECTED;
-import static cli.support.Constants.FILENAME_DETECTION_ERROR;
-import static cli.support.Constants.ENTER_Y_OR_N;
+import static cli.support.Constants.*;
 
 public class Utility extends utils.Utility {
     private static final Scanner SC = ScannerFactory.getInstance();
@@ -105,5 +106,15 @@ public class Utility extends utils.Utility {
             }
         }
         return "https://www.youtube.com/watch?v=" + matchedId;
+    }
+
+    public static Yaml getYamlParser() {
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setAllowDuplicateKeys(false);
+        loaderOptions.setAllowRecursiveKeys(false);
+        loaderOptions.setProcessComments(false);
+        Yaml yamlParser = new Yaml(new SafeConstructor(loaderOptions));
+        M.msgLogInfo("YAML parser initialized successfully");
+        return yamlParser;
     }
 }
