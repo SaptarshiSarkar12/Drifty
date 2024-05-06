@@ -59,12 +59,6 @@ public class Drifty_CLI {
         printBanner();
         if (args.length > 0) {
             link = null;
-            try {
-                yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(YAML_FILENAME).toString();
-            } catch (InvalidPathException e) {
-                messageBroker.msgBatchError("Failed to initialize YAML file path! Invalid path: " + e.getMessage());
-                Environment.terminate(1);
-            }
             String name = null;
             String location = null;
             for (int i = 0; i < args.length; i++) {
@@ -96,6 +90,7 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case ADD_FLAG -> {
+                        setYamlFilePath();
                         if (i + 1 < args.length) {
                             for (int j = i + 1; j < args.length; j++) {
                                 addUrlToFile(args[j]);
@@ -107,8 +102,12 @@ public class Drifty_CLI {
                             Environment.terminate(1);
                         }
                     }
-                    case LIST_FLAG -> listUrls();
+                    case LIST_FLAG -> {
+                        setYamlFilePath();
+                        listUrls();
+                    }
                     case GET_FLAG -> {
+                        setYamlFilePath();
                         batchDownloading = true;
                         batchDownloadingFile = yamlFilePath;
                         ensureYamlFileExists();
@@ -120,6 +119,7 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case REMOVE_FLAG -> {
+                        setYamlFilePath();
                         if (i + 1 < args.length) {
                             if ("all".equalsIgnoreCase(args[i + 1])) {
                                 messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
@@ -840,6 +840,15 @@ public class Drifty_CLI {
             Environment.terminate(1);
         } catch (Exception e) {
             messageBroker.msgBatchError("An unknown error occurred while adding URL to the YAML file: " + e.getMessage());
+            Environment.terminate(1);
+        }
+    }
+
+    private static void setYamlFilePath() {
+        try {
+            yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(YAML_FILENAME).toString();
+        } catch (InvalidPathException e) {
+            messageBroker.msgBatchError("Failed to initialize YAML file path! Invalid path: " + e.getMessage());
             Environment.terminate(1);
         }
     }
