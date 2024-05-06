@@ -517,6 +517,10 @@ public class Drifty_CLI {
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
         System.out.println("--version    -v            Current Version          Displays version number of Drifty");
+        System.out.println("--add        N/A           N/A                      Add URL(s) to the links queue");
+        System.out.println("--remove     N/A           N/A                      Remove URL(s) from the links queue");
+        System.out.println("--list       N/A           N/A                      List all the URLs in the links queue");
+        System.out.println("--get        N/A           N/A                      Download all the URLs in the links queue");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");

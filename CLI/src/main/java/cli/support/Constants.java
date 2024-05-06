@@ -6,10 +6,10 @@ public class Constants extends support.Constants {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String CLI_APPLICATION_STARTED = "Drifty CLI (Command Line Interface) Application Started !";
     public static final String CLI_APPLICATION_TERMINATED = "Drifty CLI (Command Line Interface) Application Terminated!";
-    public static final String ADD_FLAG = "add";
-    public static final String REMOVE_FLAG = "remove";
-    public static final String LIST_FLAG = "list";
-    public static final String GET_FLAG = "get";
+    public static final String ADD_FLAG = "--add";
+    public static final String REMOVE_FLAG = "--remove";
+    public static final String LIST_FLAG = "--list";
+    public static final String GET_FLAG = "--get";
     public static final String HELP_FLAG = "--help";
     public static final String NAME_FLAG = "--name";
     public static final String VERSION_FLAG = "--version";
