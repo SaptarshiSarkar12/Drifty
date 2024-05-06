@@ -120,24 +120,23 @@ public class Drifty_CLI {
                     }
                     case REMOVE_FLAG -> {
                         setYamlFilePath();
-                        if (i + 1 < args.length) {
-                            if ("all".equalsIgnoreCase(args[i + 1])) {
-                                messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
-                                String choiceString = SC.nextLine().toLowerCase();
-                                boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
-                                if (choice) {
-                                    removeAllUrls();
-                                }
-                            } else {
-                                String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
-                                removeUrl(indexStr);
-                            }
-                            i = args.length; // Skip the remaining iterations as we have already processed these arguments
-                            Environment.terminate(0);
-                        } else {
+                        if (i + 1 >= args.length) {
                             messageBroker.msgBatchError("No line number provided for removal!");
                             Environment.terminate(1);
                         }
+                        if ("all".equalsIgnoreCase(args[i + 1])) {
+                            messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
+                            String choiceString = SC.nextLine().toLowerCase();
+                            boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
+                            if (choice) {
+                                removeAllUrls();
+                            }
+                        } else {
+                            String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
+                            removeUrl(indexStr);
+                        }
+                        i = args.length; // Skip the remaining iterations as we have already processed these arguments
+                        Environment.terminate(0);
                     }
                     case BATCH_FLAG, BATCH_FLAG_SHORT -> {
                         if (i + 1 < args.length) {
@@ -281,7 +280,6 @@ public class Drifty_CLI {
                         verifyJobAndDownload(true);
                     } else {
                         messageBroker.msgFilenameError("Failed to retrieve filename from link!");
-                        messageBroker.msgFilenameError("This instagram post/reel could not be downloaded!");
                     }
                 }
             }
@@ -641,6 +639,9 @@ public class Drifty_CLI {
         } catch (URISyntaxException e) {
             messageBroker.msgLinkError("Invalid URL: " + e.getMessage());
             return urlString;
+        } catch (Exception e) {
+            messageBroker.msgLinkError("An unexpected error occurred during URL normalization: " + e.getMessage());
+            return urlString;
         }
     }
 
@@ -671,7 +672,7 @@ public class Drifty_CLI {
 
     private static boolean isEmptyYaml(Map<String, List<String>> data) {
         if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
-            messageBroker.msgLinkError("No link is present in the links queue!\n" + "Please run with \"add <link>\" to add a link to the list.");
+            messageBroker.msgLinkError("No link is present in the links queue!\n" + "Please run with \"--add <link>\" to add a link to the list.");
             return true;
         }
         return false;
