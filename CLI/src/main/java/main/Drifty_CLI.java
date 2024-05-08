@@ -8,9 +8,8 @@ import cli.utils.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.error.YAMLException;
 import preferences.AppSettings;
 import properties.MessageType;
 import properties.OS;
@@ -19,14 +18,11 @@ import support.Job;
 import support.JobHistory;
 import utils.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 
 import static cli.support.Constants.*;
@@ -48,6 +44,8 @@ public class Drifty_CLI {
     private static String batchDownloadingFile;
     private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
     private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
+    private static final String YAML_FILENAME = "links.yml";
+    private static String yamlFilePath;
 
     public static void main(String[] args) {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
@@ -70,18 +68,20 @@ public class Drifty_CLI {
                         Environment.terminate(0);
                     }
                     case NAME_FLAG, NAME_FLAG_SHORT -> {
-                        try {
+                        if (i + 1 < args.length) {
                             name = args[i + 1];
-                        } catch (ArrayIndexOutOfBoundsException e) {
+                            i++; // Skip the next iteration as we have already processed this argument
+                        } else {
                             messageBroker.msgInitError("No filename specified!");
                             Environment.terminate(1);
                         }
                     }
                     case LOCATION_FLAG, LOCATION_FLAG_SHORT -> {
-                        try {
+                        if (i + 1 < args.length) {
                             location = args[i + 1];
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            messageBroker.msgInitError("No download location specified!");
+                            i++; // Skip the next iteration as we have already processed this argument
+                        } else {
+                            messageBroker.msgInitError("No download directory specified!");
                             Environment.terminate(1);
                         }
                     }
@@ -89,9 +89,57 @@ public class Drifty_CLI {
                         printVersion();
                         Environment.terminate(0);
                     }
-                    case BATCH_FLAG, BATCH_FLAG_SHORT -> {
+                    case ADD_FLAG -> {
+                        setYamlFilePath();
+                        if (i + 1 < args.length) {
+                            for (int j = i + 1; j < args.length; j++) {
+                                addUrlToFile(args[j]);
+                            }
+                            i = args.length; // Skip the remaining iterations as we have already processed these arguments
+                            Environment.terminate(0);
+                        } else {
+                            messageBroker.msgBatchError("No URL(s) provided for adding!");
+                            Environment.terminate(1);
+                        }
+                    }
+                    case LIST_FLAG -> {
+                        setYamlFilePath();
+                        listUrls();
+                    }
+                    case GET_FLAG -> {
+                        setYamlFilePath();
                         batchDownloading = true;
-                        try {
+                        batchDownloadingFile = yamlFilePath;
+                        ensureYamlFileExists();
+                        if (isEmptyYaml(loadYamlData())) {
+                            Environment.terminate(1);
+                        }
+                        batchDownloader();
+                        removeAllUrls();
+                        Environment.terminate(0);
+                    }
+                    case REMOVE_FLAG -> {
+                        setYamlFilePath();
+                        if (i + 1 >= args.length) {
+                            messageBroker.msgBatchError("No line number provided for removal!");
+                            Environment.terminate(1);
+                        }
+                        if ("all".equalsIgnoreCase(args[i + 1])) {
+                            messageBroker.msgInputInfo(REMOVE_ALL_URL_CONFIRMATION, false);
+                            String choiceString = SC.nextLine().toLowerCase();
+                            boolean choice = utility.yesNoValidation(choiceString, REMOVE_ALL_URL_CONFIRMATION);
+                            if (choice) {
+                                removeAllUrls();
+                            }
+                        } else {
+                            String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
+                            removeUrl(indexStr);
+                        }
+                        i = args.length; // Skip the remaining iterations as we have already processed these arguments
+                        Environment.terminate(0);
+                    }
+                    case BATCH_FLAG, BATCH_FLAG_SHORT -> {
+                        if (i + 1 < args.length) {
                             batchDownloadingFile = args[i + 1];
                             if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
                                 messageBroker.msgBatchError("The data file should be a YAML file!");
@@ -101,11 +149,12 @@ public class Drifty_CLI {
                                 messageBroker.msgBatchError("YAML data file \"" + batchDownloadingFile + "\" does not exist!");
                                 Environment.terminate(1);
                             }
-                        } catch (ArrayIndexOutOfBoundsException e) {
+                            i++; // Skip the next iteration as we have already processed this argument
+                            batchDownloader();
+                        } else {
                             messageBroker.msgInitError("No batch file specified!");
                             Environment.terminate(1);
                         }
-                        batchDownloader();
                     }
                     default -> {
                         if (isURL(args[i])) {
@@ -229,6 +278,8 @@ public class Drifty_CLI {
                     fileName = findFilenameInLink(link);
                     if (!Objects.requireNonNull(fileName).isEmpty()) {
                         verifyJobAndDownload(true);
+                    } else {
+                        messageBroker.msgFilenameError("Failed to retrieve filename from link!");
                     }
                 }
             }
@@ -285,17 +336,9 @@ public class Drifty_CLI {
     }
 
     private static void batchDownloader() {
-        LoaderOptions loaderOptions = new LoaderOptions();
-        loaderOptions.setAllowDuplicateKeys(false);
-        loaderOptions.setAllowRecursiveKeys(false);
-        loaderOptions.setProcessComments(false);
-        Yaml yamlParser = new Yaml(new SafeConstructor(loaderOptions));
+        Yaml yamlParser = Utility.getYamlParser();
         messageBroker.msgLogInfo("Trying to load YAML data file (" + batchDownloadingFile + ") ...");
-        try (
-                FileInputStream yamlInputStream = new FileInputStream(batchDownloadingFile);
-                InputStreamReader yamlDataFile = new InputStreamReader(yamlInputStream)
-                )
-        {
+        try (FileInputStream yamlInputStream = new FileInputStream(batchDownloadingFile); InputStreamReader yamlDataFile = new InputStreamReader(yamlInputStream)) {
             Map<String, List<String>> data = yamlParser.load(yamlDataFile);
             messageBroker.msgLogInfo("YAML data file (" + batchDownloadingFile + ") loaded successfully");
             int numberOfLinks;
@@ -350,6 +393,10 @@ public class Drifty_CLI {
                 messageBroker.msgStyleInfo(BANNER_BORDER);
                 link = data.get("links").get(i);
                 messageBroker.msgLinkInfo("[" + (i + 1) + "/" + numberOfLinks + "] " + "Processing link : " + link);
+                if (!isURL(link)) {
+                    messageBroker.msgLinkError("Invalid URL : " + link);
+                    continue;
+                }
                 isYoutubeURL = isYoutube(link);
                 isInstagramLink = isInstagram(link);
                 isSpotifyLink = isSpotify(link);
@@ -396,6 +443,15 @@ public class Drifty_CLI {
             }
         } catch (IOException e) {
             messageBroker.msgDownloadError("Failed to load YAML data file (" + batchDownloadingFile + ") ! " + e.getMessage());
+        } catch (YAMLException e) {
+            String errorMessage = e.getMessage();
+            if (errorMessage.contains("duplicate key")) {
+                messageBroker.msgBatchError("Duplicate keys are not allowed in the YAML file!");
+            } else if (errorMessage.contains("recursive key")) {
+                messageBroker.msgBatchError("Recursive keys are not allowed in the YAML file!");
+            } else {
+                messageBroker.msgBatchError("An unknown error occurred while parsing the YAML file! " + errorMessage);
+            }
         }
     }
 
@@ -459,6 +515,10 @@ public class Drifty_CLI {
         System.out.println("--name       -n            Source                   Filename of the downloaded file");
         System.out.println("--help       -h            N/A                      Prints this help menu");
         System.out.println("--version    -v            Current Version          Displays version number of Drifty");
+        System.out.println("--add        N/A           N/A                      Add URL(s) to the links queue");
+        System.out.println("--remove     N/A           N/A                      Remove URL(s) from the links queue");
+        System.out.println("--list       N/A           N/A                      List all the URLs in the links queue");
+        System.out.println("--get        N/A           N/A                      Download all the URLs in the links queue");
         System.out.println("\033[97;1mSee full documentation at https://github.com/SaptarshiSarkar12/Drifty#readme" + ANSI_RESET);
         System.out.println("For more information visit: ");
         System.out.println("\tProject Link - https://github.com/SaptarshiSarkar12/Drifty/");
@@ -550,6 +610,247 @@ public class Drifty_CLI {
                 FileDownloader downloader = new FileDownloader(link, fileName, downloadsFolder, isSpotifyLink);
                 downloader.run();
             }
+        }
+    }
+
+    private static String normalizeUrl(String urlString) {
+        try {
+            URI uri = new URI(urlString.trim());
+            String scheme = uri.getScheme();
+            String authority = uri.getAuthority();
+            String path = uri.getPath();
+            String query = uri.getQuery();
+            // Normalize the scheme to lowercase
+            if (scheme != null) {
+                scheme = scheme.toLowerCase();
+            }
+            // Decode path
+            if (path != null) {
+                path = path.replaceAll("%2F", "/");
+            }
+            // Reconstruct the URI without the unwanted components
+            URI normalizedUri = new URI(scheme, authority, path, query, null);
+            // Remove trailing slash from the path, except for root '/'
+            String normalizedUrl = normalizedUri.toString();
+            if (!"/".equals(path) && normalizedUrl.endsWith("/")) {
+                normalizedUrl = normalizedUrl.substring(0, normalizedUrl.length() - 1);
+            }
+            return normalizedUrl;
+        } catch (URISyntaxException e) {
+            messageBroker.msgLinkError("Invalid URL: " + e.getMessage());
+            return urlString;
+        } catch (Exception e) {
+            messageBroker.msgLinkError("An unexpected error occurred during URL normalization: " + e.getMessage());
+            return urlString;
+        }
+    }
+
+    private static void ensureYamlFileExists() {
+        // Check if the links queue file exists, and create it if it doesn't
+        File yamlFile = new File(yamlFilePath);
+        messageBroker.msgLogInfo("Checking if links queue file (" + yamlFilePath + ") exists...");
+        if (!yamlFile.exists()) {
+            try {
+                boolean isNewFileCreated = yamlFile.createNewFile();
+                boolean isReadable = yamlFile.setReadable(true, true);
+                boolean isWritable = yamlFile.setWritable(true, true);
+                if (isNewFileCreated && isReadable && isWritable) {
+                    messageBroker.msgLogInfo("New links queue file created: " + yamlFilePath);
+                } else if (!isNewFileCreated) {
+                    messageBroker.msgBatchError("Failed to create links queue file: " + yamlFilePath);
+                    Environment.terminate(1);
+                } else {
+                    messageBroker.msgBatchError("Failed to set file permissions for the links queue file: " + yamlFilePath);
+                    Environment.terminate(1);
+                }
+            } catch (IOException e) {
+                messageBroker.msgBatchError("Error creating links queue file: " + e.getMessage());
+                Environment.terminate(1);
+            }
+        }
+    }
+
+    private static boolean isEmptyYaml(Map<String, List<String>> data) {
+        if (data == null || !data.containsKey("links") || data.get("links").isEmpty()) {
+            messageBroker.msgLinkError("No link is present in the links queue!\n" + "Please run with \"--add <link>\" to add a link to the list.");
+            return true;
+        }
+        return false;
+    }
+
+    private static Map<String, List<String>> loadYamlData() {
+        Yaml yamlParser = Utility.getYamlParser();
+        Map<String, List<String>> data = null;
+        ensureYamlFileExists(); // Ensure the YAML file exists before trying to read
+
+        try (InputStreamReader reader = new InputStreamReader(new FileInputStream(yamlFilePath))) {
+            data = yamlParser.load(reader);
+            if (data == null) {
+                data = new HashMap<>();
+            }
+            data.computeIfAbsent("links", k -> new ArrayList<>()); // Ensure 'links' list exists
+        } catch (YAMLException e) {
+            String errorMessage = e.getMessage();
+            if (errorMessage.contains("duplicate key")) {
+                messageBroker.msgBatchError("Duplicate keys are not allowed in the YAML file!");
+            } else if (errorMessage.contains("recursive key")) {
+                messageBroker.msgBatchError("Recursive keys are not allowed in the YAML file!");
+            } else {
+                messageBroker.msgBatchError("An unknown error occurred while parsing the YAML file! " + errorMessage);
+            }
+        } catch (IOException e) {
+            messageBroker.msgBatchError("Error reading YAML file: " + e.getMessage());
+        }
+        return data;
+    }
+
+    private static void saveYamlData(Map<String, List<String>> data) {
+        Yaml yaml = new Yaml();
+        File originalFile = new File(yamlFilePath);
+        File backupFile = new File(yamlFilePath + ".bak");
+
+        // Create a backup of the original file
+        try {
+            Files.copy(originalFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            messageBroker.msgLinkError("Failed to create a backup of the YAML file: " + e.getMessage());
+            messageBroker.msgLinkError("Aborting the operation to prevent data loss!");
+            Environment.terminate(1);
+        }
+
+        // Proceed with writing the updated data to the YAML file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(originalFile))) {
+            yaml.dump(data, writer);
+        } catch (IOException e) {
+            messageBroker.msgBatchError("An error occurred while writing to the YAML file: " + e.getMessage());
+            // Attempt to restore from backup in case of write error
+            try {
+                Files.copy(backupFile.toPath(), originalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                messageBroker.msgBatchError("Restored the original YAML file from backup due to write error.");
+            } catch (IOException restoreException) {
+                messageBroker.msgBatchError("Failed to restore the original YAML file from backup: " + restoreException.getMessage());
+            }
+        } finally {
+            // Clean up: Delete the backup file if everything went smoothly
+            if (backupFile.exists() && !backupFile.delete()) {
+                messageBroker.msgLogError("Failed to delete the backup file: " + backupFile.getName());
+            }
+        }
+    }
+
+    private static void listUrls() {
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            if (isEmptyYaml(data)) {
+                Environment.terminate(1);
+            }
+            List<String> urls = data.get("links");
+            messageBroker.msgDownloadInfo("List of links:");
+            for (int i = 0; i < urls.size(); i++) {
+                messageBroker.msgLinkInfo((i + 1) + ". " + urls.get(i));
+            }
+            Environment.terminate(0);
+        } catch (Exception e) {
+            messageBroker.msgBatchError("An error occurred while listing the links: " + e.getMessage());
+            Environment.terminate(1);
+        }
+    }
+
+    private static void removeUrl(String[] args) {
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            if (isEmptyYaml(data)) {
+                Environment.terminate(1);
+            }
+            List<String> urls = data.get("links");
+            Set<Integer> uniqueIndices = new TreeSet<>(Collections.reverseOrder()); // TreeSet to sort in reverse order automatically
+            for (String indexStr : args) {
+                int index;
+                try {
+                    index = Integer.parseInt(indexStr);
+                    if (index < 0 || index > urls.size()) {
+                        if (urls.size() == 1) {
+                            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide '1' to remove the only link in the list!", true);
+                        } else {
+                            messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + "!", true);
+                        }
+                        Environment.terminate(1); // Exit the program if the input is invalid
+                        return;
+                    }
+                    uniqueIndices.add(index);
+                } catch (NumberFormatException e) {
+                    messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
+                    return;
+                }
+            }
+            for (int index : uniqueIndices) {
+                String removedUrl = urls.remove(index - 1);
+                messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
+            }
+            saveYamlData(data); // Save updated YAML data
+        } catch (Exception e) {
+            messageBroker.msgBatchError("An error occurred while removing a link: " + e.getMessage());
+            Environment.terminate(1);
+        }
+    }
+
+
+    private static void removeAllUrls() {
+        try {
+            // Delete the YAML file to remove all URLs
+            File yamlFile = new File(yamlFilePath);
+            if (yamlFile.exists()) {
+                if (yamlFile.delete()) {
+                    if (batchDownloading) {
+                        messageBroker.msgLogInfo("All links removed successfully from the YAML file.");
+                    } else {
+                        messageBroker.msgLinkInfo("All links removed successfully.");
+                    }
+                } else {
+                    messageBroker.msgLinkError("Failed to remove all links!");
+                    Environment.terminate(1);
+                }
+            } else {
+                messageBroker.msgLinkError("No links to remove!");
+                Environment.terminate(1);
+            }
+        } catch (Exception e) {
+            messageBroker.msgLinkError("An error occurred while removing all URLs: " + e.getMessage());
+            Environment.terminate(1);
+        }
+    }
+
+    private static void addUrlToFile(String urlString) {
+        if (!Utility.isURL(urlString)) {
+            messageBroker.msgInputError("Error: \"" + urlString + "\" is not a valid link!", true);
+            return;
+        }
+        try {
+            Map<String, List<String>> data = loadYamlData();
+            urlString = normalizeUrl(urlString);
+            List<String> urls = data.get("links");
+            if (!urls.contains(urlString)) {
+                urls.add(urlString); // Add the URL if it doesn't exist
+                saveYamlData(data); // Save the updated data back to the YAML file
+                messageBroker.msgLinkInfo("Link added: " + urlString);
+            } else {
+                messageBroker.msgInputError("Link already exists: \"" + urlString + "\"", true);
+            }
+        } catch (NullPointerException e) {
+            messageBroker.msgBatchError("Failed to add link to the YAML file! The YAML data is null.");
+            Environment.terminate(1);
+        } catch (Exception e) {
+            messageBroker.msgBatchError("An unknown error occurred while adding URL to the YAML file: " + e.getMessage());
+            Environment.terminate(1);
+        }
+    }
+
+    private static void setYamlFilePath() {
+        try {
+            yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(YAML_FILENAME).toString();
+        } catch (InvalidPathException e) {
+            messageBroker.msgBatchError("Failed to initialize YAML file path! Invalid path: " + e.getMessage());
+            Environment.terminate(1);
         }
     }
 }
