@@ -4,7 +4,7 @@ Thank you for considering and taking the time to contribute! The following are t
 
 ## How to Report Bugs and Issues
 
-In order to report any bugs or any difficulties which you face which you would like to solve for this project, check out the steps how to reproduce 👇
+To report any bugs or any difficulties you are facing, you can create an issue by following the below steps 👇
 
 1. Go to the [issues](https://github.com/SaptarshiSarkar12/Drifty/issues) tab of the drifty project on GitHub
 2. Click on the [new issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) button
@@ -16,34 +16,42 @@ In order to report any bugs or any difficulties which you face which you would l
 1. **Bug Report for Application**
    You can create a **Bug Report for Application** to report any bug related to the application including installation problems and crashes.
 2. **Bug report for Website** 
-    You can also raise issues related to the project's official website incase you encounter any bugs or issues.
+    You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://saptarshisarkar12.github.io/Drifty/).
 3. **Documentation Change Request**
-    Raise a request for a change in the official documentation of the drifty project.
+    Raise an issue if you think any improvements can be made in the Documentation of Drifty.
 4. **Feature Request for Drifty Applicaiton**
-    If you have any new features which you think can improve the application in any way, then you can raise a request for that as well.
+    If you have any ideas to improve the application by adding new features, you can create an issue in this category.
 5. **Feature Request for Drifty Website**
-    If you have any new features which you think can improve the project's official website in any way, then you can raise a request for that as well.
+    If you have any ideas to improve the Website of Drifty by adding new features, you can create an issue in this category.
 
-If you have anything else related to the project, you can select the others issue as well.
+If none of the above categories applies to your case, feel free to create an issue in the **Others** category.
 
 
 ## Pull Requests
 
-[Pull requests](https://github.com/SaptarshiSarkar12/Drifty/pulls) are a great way to get your ideas (through code changes) into this project. Please open an issue at first, describing the changes you want to make, then feel free to open a PR (Pull Request).
+[Pull requests](https://github.com/SaptarshiSarkar12/Drifty/pulls) are a great way to implement your ideas into this project via relevant code changes. It is necessary to open an issue at first, describing the changes you want to make and discuss them with the maintainers. Once the issue gets assigned to you, you can open a pull request.
 
-## What does each PR Label mean?
+## What does each Label mean in Issues and Pull Requests?
 
-1. **App💻**
-    This label is for bugs/features/pulls regarding the application
-2. **bug🪱**
-    This label is used to mark a PR when something isn't working or some bug is getting solved
-3. **dependencies🥡**
-    This label is for issues/pull requests that update the applcations internal or external dependencies
-4. **docker🐋**
-    This label is used as an indication for the issues working on docker images / docker files
-5. **documentation📝**
-    Indicates improvements or additions to the official docuementations
-6. ****
+1. **App 💻**
+    This label indicates that changes are made in the Application code
+2. **bug 🐛**
+    This label indicates that changes are made to fix a bug
+3. **dependencies 📦️**
+    This label indicates that dependencies are updated in a Pull Request
+4. **docker 🐋**
+    This label indicates that changes are made in the Dockerfiles
+5. **documentation 📝**
+    This label indicates that changes are made in the documentation
+6. **CI/CD 🔁**
+    This label indicates that changes are made in the CI/CD workflows (GitHub Actions)
+7. **duplicate**
+    This label indicates that the issue / Pull Request is duplicate
+8. **hacktoberfest**
+    This label indicates that the issue is a part of [Hacktoberfest](https://hacktoberfest.com/)
+9. **hacktoberfest-accepted**
+    This label indicates that the Pull Request is accepted for [Hacktoberfest](https://hacktoberfest.com/) and will count towards your participation
+10. 
 
 ## Checkout Projects
 
