@@ -44,7 +44,7 @@ After the Docker image of Drifty GUI has been built/pulled, we need to provide a
 > Why static IP address is preferred for running Drifty GUI in Docker on macOS?
 > </summary>
 > Now that the image is built/pulled, we need to talk about how the GUI itself is going to be shown on your desktop. The only real relevant issue here pertains to your local IP address assigned to your network interface card on your Mac. You see, in a Linux environment (which macOS is modeled after), programs that run in the Terminal do not have direct access to your graphical environment (Graphical User Interface), so we are going to have to provide the Docker instance with a pathway to access the GUI and that has to be done by telling it what your local IP address is.
->  
+>
 > On most home networks, the typical setup is to have a router where your computer is connected to the LAN (Local Area network) side of the router either via Wi-Fi or an Ethernet cable. And most people just make that connection, find that they can access the Internet and don't look back.
 >
 > We, however, need to look back...
