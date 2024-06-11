@@ -59,8 +59,8 @@ jobs:
       if: ${{ matrix.mode == 'CLI' }}
       shell: bash
       run: mvn -P build-drifty-cli-for-${{ matrix.os }} package
-    - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
-      if: ${{ matrix.mode == 'GUI' }}
+    - name: Set Up Maven version 3.8.8 # For GUI and macOS build issues, maven version 3.8.8 needs to be used
+      if: ${{ matrix.mode == 'GUI' && matrix.os == 'macos-latest' }}
       uses: stCarolas/setup-maven@v5
       with:
         maven-version: 3.8.8
