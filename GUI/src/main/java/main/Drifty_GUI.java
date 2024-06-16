@@ -188,13 +188,17 @@ public class Drifty_GUI extends Application {
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
+        MenuItem settings = new MenuItem("Settings");
         wipeHistory.setOnAction(e -> {
             ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }
         });
-        menu.getItems().addAll(wipeHistory);
+        settings.setOnAction(e ->{
+            Settings settings1 = new Settings();
+        });
+        menu.getItems().addAll(wipeHistory , settings);
         return menu;
     }
 
