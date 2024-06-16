@@ -14,8 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
-import static gui.preferences.Labels.FOLDERS;
-import static gui.preferences.Labels.MAIN_AUTO_PASTE;
+import static gui.preferences.Labels.*;
 import static properties.Program.JOB_FILE;
 
 public final class Set extends preferences.Set {
@@ -40,6 +39,11 @@ public final class Set extends preferences.Set {
     public void mainAutoPaste(boolean isMainAutoPasteEnabled) {
         AppSettings.CLEAR.mainAutoPaste();
         preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
+    }
+    public void mainTheme(String theme){
+        AppSettings.CLEAR.mainTheme();
+        preferences.put(MAIT_THEME.toString() ,theme );
+
     }
 
     public void jobs(Jobs jobs) {

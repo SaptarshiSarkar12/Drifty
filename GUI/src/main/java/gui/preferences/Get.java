@@ -40,6 +40,9 @@ public class Get extends preferences.Get {
     public boolean mainAutoPaste() {
         return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
     }
+    public String mainTheme(){
+        return preferences.get(MAIT_THEME.toString() , "LIGHT");
+    }
 
     public Jobs jobs() {
         GsonBuilder gsonBuilder = new GsonBuilder();
