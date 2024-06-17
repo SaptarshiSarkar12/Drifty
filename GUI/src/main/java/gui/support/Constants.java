@@ -1,6 +1,7 @@
 package gui.support;
 
 import gui.init.Environment;
+import gui.preferences.AppSettings;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,6 +37,7 @@ public class Constants extends support.Constants {
 
     // Stylesheets
     public static final URL SCENE_CSS = Constants.class.getResource("/CSS/Scene.css");
+    public static final URL DARK_THEME_CSS = Constants.class.getResource("/CSS/DarkTheme.css");
     public static final URL LIST_VIEW_CSS = Constants.class.getResource("/CSS/ListView.css");
     public static final URL TEXT_FIELD_CSS = Constants.class.getResource("/CSS/TextField.css");
     public static final URL CONTEXT_MENU_CSS = Constants.class.getResource("/CSS/ContextMenu.css");
@@ -80,10 +82,13 @@ public class Constants extends support.Constants {
         return stage;
     }
 
-    public static Scene getScene(Parent root) {
+    public static Scene getScene(Parent root ) {
+
         Scene scene = new Scene(root);
-        addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS, PROGRESS_BAR_CSS, SCENE_CSS, SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
+        addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS,SCENE_CSS , PROGRESS_BAR_CSS,  SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
         return scene;
+
+
     }
 
     public static void addCSS(Scene scene, URL... css) {

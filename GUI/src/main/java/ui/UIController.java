@@ -86,17 +86,21 @@ public final class UIController {
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
         DIRECTORY_EXISTS.setValue(new File(getDir()).exists());
-
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
         BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
-
         form.btnSave.visibleProperty().bind(UPDATING_BATCH);
         form.btnStart.disableProperty().bind(disableStartButton);
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
+        if(AppSettings.GET.mainTheme().equals("Dark")){
+            form.tfDir.setStyle("-fx-text-fill: White;");
+            form.tfFilename.setStyle("-fx-text-fill: White;");
+            form.tfLink.setStyle("-fx-text-fill: White;");
+        }
 
         form.listView.setContextMenu(getListMenu());
+
 
         Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + nl + "Link field when switching back to this screen."));
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
@@ -574,6 +578,7 @@ public final class UIController {
             clearLink();
             clearFilename();
             form.listView.getItems().clear();
+            form.listView.getItems();
             M.msgLinkInfo("");
             M.msgFilenameInfo("");
             M.msgDirInfo("");

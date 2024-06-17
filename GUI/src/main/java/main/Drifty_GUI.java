@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -31,7 +32,10 @@ import static support.Constants.VERSION_NUMBER;
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
     private Stage primaryStage;
-    private Scene scene;
+    public static Scene scene;
+    public static Scene aboutScene;
+    public static VBox aboutRoot = new VBox(10);
+
 
     public static void main(String[] args) {
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
@@ -59,15 +63,19 @@ public class Drifty_GUI extends Application {
         this.primaryStage.show();
     }
 
+     public static  AnchorPane ap = new AnchorPane();
     private void createScene() {
-        AnchorPane ap = new AnchorPane();
         MainGridPane gridPane = new MainGridPane();
         MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
+
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
+        if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+            scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+        }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
@@ -139,9 +147,9 @@ public class Drifty_GUI extends Application {
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
             Stage stage = Constants.getStage("About Drifty", false);
-            VBox root = new VBox(10);
-            root.setPadding(new Insets(10));
-            root.setAlignment(Pos.TOP_CENTER);
+            aboutRoot.setPadding(new Insets(10));
+
+            aboutRoot.setAlignment(Pos.TOP_CENTER);
             ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
             appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
             appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
@@ -167,15 +175,26 @@ public class Drifty_GUI extends Application {
             githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            root.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
+            aboutRoot.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
             if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
                 Label lblFfmpegVersion = new Label("FFMPEG version: " + AppSettings.GET.ffmpegVersion());
                 lblFfmpegVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
                 lblFfmpegVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                root.getChildren().add(lblFfmpegVersion);
+                aboutRoot.getChildren().add(lblFfmpegVersion);
             }
-            root.getChildren().addAll(websiteLink, discordLink, githubLink);
-            Scene aboutScene = Constants.getScene(root);
+            aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
+             aboutScene = Constants.getScene(aboutRoot );
+            if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+                aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+                for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
+                    if (node instanceof Label) {
+                        ((Label) node).setTextFill(Color.WHITE);
+                    }
+                }
+            }
+            if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+
+            }
             stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
             stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
             stage.setScene(aboutScene);
@@ -184,7 +203,6 @@ public class Drifty_GUI extends Application {
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
-
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
