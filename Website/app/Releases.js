@@ -108,7 +108,7 @@ export default function Releases({ props }) {
     const releases = [];
     props.release.map((item) => {
       if (
-          item.tag_name.startsWith("v2") &&
+          !item.tag_name.startsWith("v1") &&
           item.prerelease === false &&
           item.latest === false &&
           releases.length <= maxReleasesToDisplay
@@ -127,7 +127,7 @@ export default function Releases({ props }) {
         noOfReleases < maxReleasesToDisplay &&
         index !== 0
       ) {
-        if (!item.tag_name.startsWith("v2") && item.prerelease === false) {
+        if (item.tag_name.startsWith("v1") && item.prerelease === false) {
           releases.push(item);
           noOfReleases++;
         }
@@ -276,12 +276,15 @@ export default function Releases({ props }) {
                   <span className="font-bold">{item.tag_name} </span>
                   <p>
                     {new Date(item.published_at).toString()} with{" "}
-                    {item.assets[0].download_count +
+                    {
+                        item.assets[0].download_count +
                         item.assets[1].download_count +
                         item.assets[2].download_count +
                         item.assets[3].download_count +
                         item.assets[4].download_count +
-                        item.assets[5].download_count}{" "}
+                        item.assets[5].download_count +
+                        item.assets[6].download_count
+                    }{" "}
                     Downloads
                   </p>
                   <button
@@ -371,12 +374,15 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets[0].download_count +
+                  {
+                      item.assets[0].download_count +
                       item.assets[1].download_count +
                       item.assets[2].download_count +
                       item.assets[3].download_count +
                       item.assets[4].download_count +
-                      item.assets[5].download_count}{" "}
+                      item.assets[5].download_count +
+                      item.assets[6].download_count
+                  }{" "}
                   Downloads
                 </p>
                 <button
