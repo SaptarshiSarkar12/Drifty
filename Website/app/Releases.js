@@ -153,7 +153,12 @@ export default function Releases({ props }) {
       [index]: !prevState[index],
     }));
   };
-  const markerToHtml = async (itemBody, i) => {
+  const markerToHtml = async (itemBody, itemTagName, i) => {
+    const maxLines = window.innerWidth < 768 ? 7 : 15;
+    if (itemBody.split("\n").length > maxLines) {
+        itemBody = itemBody.split("\n").slice(0, maxLines).join("\n");
+        itemBody += "\n\n...[Read More](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/" + itemTagName + ")";
+    }
     const cont = await remark().use(html).process(itemBody);
     setContent((prev) => {
       prev[i] = cont.toString();
@@ -162,13 +167,13 @@ export default function Releases({ props }) {
   };
   useEffect(() => {
     filteredPreReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index);
+      await markerToHtml(item.body, item.tag_name, index);
     });
     filteredReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index + filteredPreReleases.length);
+      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length);
     });
     filterOlderReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index + filteredPreReleases.length + filteredReleases.length);
+      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length + filteredReleases.length);
     });
   }, [filteredPreReleases, filteredReleases, filterOlderReleases]);
 
