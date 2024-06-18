@@ -95,6 +95,17 @@ export default function Releases({ props }) {
   const [content, setContent] = useState([]);
   const [applicationType, setApplicationType] = useState("GUI");
   const maxReleasesToDisplay = 3;
+  const latestVersion = useMemo(() => {
+    let v = "";
+    let counter = 1;
+    props.release.find((item) => {
+      if (item.prerelease === false && counter === 1) {
+        v = item.tag_name;
+        counter++;
+      }
+    });
+    return v;
+  }, [props.release]);
   const filteredPreReleases = useMemo(() => {
     const releases = [];
     props.release.map((item) => {
@@ -206,6 +217,9 @@ export default function Releases({ props }) {
                 }
               >
                 Download Now <i className="fab fa-brands fa-windows"></i>
+                <div className="text-lg md:text-sm text-gray-700 font-semibold">
+                    {latestVersion}
+                </div>
               </button>
               {applicationType === "GUI" && (
                 <div>
@@ -228,6 +242,9 @@ export default function Releases({ props }) {
             onClick={() => downloadLatestRelease("Linux", applicationType)}
           >
             Download Now <i className="fab fa-brands fa-linux"></i>
+            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+              {latestVersion}
+            </div>
           </button>
         </div>
 
@@ -238,6 +255,9 @@ export default function Releases({ props }) {
             onClick={() => downloadLatestRelease("MacOS", applicationType)}
           >
             Download Now <i className="fab fa-brands fa-apple"></i>
+            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+              {latestVersion}
+            </div>
           </button>
         </div>
       </div>
