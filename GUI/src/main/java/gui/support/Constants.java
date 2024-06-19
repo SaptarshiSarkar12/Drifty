@@ -39,7 +39,8 @@ public class Constants extends support.Constants {
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/Labels/Filename.png");
     public static final URL DRIFTY_ICON = Constants.class.getResource("/Icons/AppIcon.png");
-    public static final URL SPLASH = AppSettings.GET.mainTheme().equals("Dark")?Constants.class.getResource("/Splash Dark.png"): Constants.class.getResource("/Splash.png");
+    public static final URL SPLASH = AppSettings.GET.mainTheme().equals("Dark")?Constants.class.getResource("/Splash Dark.png"):
+            Constants.class.getResource("/Splash.png");
 
     // Stylesheets
     public static final URL SCENE_CSS = Constants.class.getResource("/CSS/LightTheme.css");

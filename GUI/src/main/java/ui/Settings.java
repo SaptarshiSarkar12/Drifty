@@ -178,6 +178,7 @@ public class Settings {
                 UIController.form.tfLink.setStyle("-fx-text-fill: Black;");
                 changeFormBtn("Light");
 
+                
 
                 Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
                 MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
