@@ -82,6 +82,10 @@ public final class UIController {
         form.tfLink.requestFocus();
         commitJobListToListView();
     }
+    public void refresh(){
+        MainGridPane form = new MainGridPane();
+        UIController.initLogic(form);
+    }
 
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
@@ -89,7 +93,7 @@ public final class UIController {
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
         BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
         form.btnSave.visibleProperty().bind(UPDATING_BATCH);
-        form.btnStart.disableProperty().bind(disableStartButton);
+
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
@@ -97,6 +101,7 @@ public final class UIController {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
+
         }
 
         form.listView.setContextMenu(getListMenu());
@@ -114,7 +119,9 @@ public final class UIController {
             selectJob(job);
         });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
-        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
+        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) ->
+                AppSettings.SET.mainAutoPaste(newValue)
+        ));
         form.cbAutoPaste.setOnAction( e -> {
             Settings.autoPasteCheck.setSelected(form.cbAutoPaste.isSelected());
         });

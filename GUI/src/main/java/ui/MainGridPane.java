@@ -1,5 +1,6 @@
 package ui;
 
+import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -20,18 +21,21 @@ import java.util.Objects;
 import static gui.support.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
-    public final ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
+    public static ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER , .45);
     public final ProgressBar pBar = pBar();
     public final ListView<Job> listView = listView();
     public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
     public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
     public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN);
-    public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN);
+    public Button btnStart = AppSettings.GET.mainTheme().equals("Dark")? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) :newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN);
+
+
+    public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark")? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) :newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN);
+
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
-    private final HBox boxLogo = newHBox(ivLogo);
+    public static HBox boxLogo = newHBox(ivLogo);
     public final Label lblLinkOut = newLabel();
     public final Label lblDirOut = newLabel();
     public final Label lblFilenameOut = newLabel();
@@ -148,7 +152,7 @@ public class MainGridPane extends GridPane {
         return pb;
     }
 
-    private HBox newHBox(Node node) {
+    public static HBox newHBox(Node node) {
         HBox box = new HBox(node);
         box.setAlignment(Pos.CENTER);
         return box;
@@ -160,7 +164,7 @@ public class MainGridPane extends GridPane {
         return box;
     }
 
-    private ImageView newImageView(Image image, double scale) {
+    public static ImageView newImageView(Image image, double scale) {
         ImageView iv = new ImageView(image);
         double width = image.getWidth();
         iv.setPreserveRatio(true);

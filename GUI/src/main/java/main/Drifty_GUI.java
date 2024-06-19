@@ -34,6 +34,8 @@ public class Drifty_GUI extends Application {
     private Stage primaryStage;
     public static Scene scene;
     public static Scene aboutScene;
+    public static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
+
     public static VBox aboutRoot = new VBox(10);
 
 
@@ -150,7 +152,7 @@ public class Drifty_GUI extends Application {
             aboutRoot.setPadding(new Insets(10));
 
             aboutRoot.setAlignment(Pos.TOP_CENTER);
-            ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
+            appIcon = new ImageView(Constants.IMG_SPLASH);
             appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
             appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
             appIcon.setPreserveRatio(true);

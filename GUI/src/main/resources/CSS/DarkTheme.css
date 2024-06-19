@@ -6,3 +6,31 @@
     -fx-background-color: transparent;
     -fx-text-fill: rgb(255, 255, 255);
 }
+.progress-bar .bar {
+    -fx-background-color: #17e500;
+    -fx-border-color: black;
+    -fx-border-width: 1.5px;
+}
+.normalLabel {
+    -fx-font-family: Arial;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-text-fill: ghostwhite
+}
+.check-box {
+    -fx-background-color: #22ff00;
+    /*-fx-background-image: url('CheckBoxBorder.png');*/
+    -fx-border-width:2px ;
+    /*-fx-background-repeat: stretch;*/
+    /*-fx-background-size: 99% 99%;*/
+    -fx-padding: 0px;
+    -fx-font-size: 20;
+}
+.check-box:selected .box{
+    -fx-background-color: #22ff00;
+}
+.check-box:selected .box .mark{
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 0.5px;
+}

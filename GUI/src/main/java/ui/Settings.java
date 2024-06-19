@@ -1,12 +1,15 @@
 package ui;
 
+import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,10 +19,46 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
 
+import java.util.Objects;
+
+import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
+
 public class Settings {
 
     private final String nl = System.lineSeparator();
     public static CheckBox autoPasteCheck = new CheckBox();
+
+    private void changeFormBtn(String theme){
+        if(theme.equals("Dark")){
+            UIController.form.btnStart.setGraphic(null);
+            Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp Dark.png")).toExternalForm());
+            Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown Dark.png")).toExternalForm());
+            ImageView imageViewUp = new ImageView(imageUp);
+            ImageView imageViewDn = new ImageView(imageDown);
+            double width = imageUp.getWidth();
+            imageViewUp.setPreserveRatio(true);
+            imageViewUp.setFitWidth(width * 0.45);
+            imageViewDn.setPreserveRatio(true);
+            imageViewDn.setFitWidth(width * 0.45);
+            UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
+            UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
+            UIController.form.btnStart.setGraphic(imageViewUp);
+        }else{
+            UIController.form.btnStart.setGraphic(null);
+            Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp.png")).toExternalForm());
+            Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown.png")).toExternalForm());
+            ImageView imageViewUp = new ImageView(imageUp);
+            ImageView imageViewDn = new ImageView(imageDown);
+            double width = imageUp.getWidth();
+            imageViewUp.setPreserveRatio(true);
+            imageViewUp.setFitWidth(width * 0.45);
+            imageViewDn.setPreserveRatio(true);
+            imageViewDn.setFitWidth(width * 0.45);
+            UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
+            UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
+            UIController.form.btnStart.setGraphic(imageViewUp);
+        }
+    }
 
     public Settings() {
         Stage stage = Constants.getStage("Settings", false);
@@ -110,7 +149,13 @@ public class Settings {
                 UIController.form.tfDir.setStyle("-fx-text-fill: White;");
                 UIController.form.tfFilename.setStyle("-fx-text-fill: White;");
                 UIController.form.tfLink.setStyle("-fx-text-fill: White;");
+                changeFormBtn("Dark");
+                Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain Dark.png")).toExternalForm());
+                MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
 
+
+                Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash Dark.png")).toExternalForm());
+                Drifty_GUI.appIcon.setImage(Constants.IMG_SPLASH);
             }
             else {
                 AppSettings.SET.mainTheme("LIGHT");
@@ -131,6 +176,16 @@ public class Settings {
                 UIController.form.tfDir.setStyle("-fx-text-fill: Black;");
                 UIController.form.tfFilename.setStyle("-fx-text-fill: Black;");
                 UIController.form.tfLink.setStyle("-fx-text-fill: Black;");
+                changeFormBtn("Light");
+
+
+                Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
+                MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
+
+                Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash.png")).toExternalForm());
+                Drifty_GUI.appIcon.setImage(Constants.IMG_SPLASH);
+
+
 
             }
         });
