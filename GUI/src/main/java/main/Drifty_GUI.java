@@ -31,7 +31,7 @@ import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
-    private Stage primaryStage;
+    public static Stage primaryStage;
     public static Scene scene;
     public static Scene aboutScene;
     public static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);

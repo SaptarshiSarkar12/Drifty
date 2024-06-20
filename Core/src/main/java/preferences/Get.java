@@ -24,7 +24,7 @@ import static properties.Program.JOB_HISTORY_FILE;
 
 public class Get {
     private static final Get INSTANCE = new Get();
-    private final Preferences preferences = Labels.PREFERENCES;
+    private static final Preferences preferences = Labels.PREFERENCES;
 
     static Get getInstance() {
         return INSTANCE;
@@ -34,7 +34,7 @@ public class Get {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
     }
 
-    public String lastDownloadFolder() {
+    public static String lastDownloadFolder() {
         String defaultPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
         return preferences.get(LAST_FOLDER, defaultPath);
     }
