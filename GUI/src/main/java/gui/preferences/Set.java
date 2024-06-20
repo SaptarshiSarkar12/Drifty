@@ -40,9 +40,10 @@ public final class Set extends preferences.Set {
         AppSettings.CLEAR.mainAutoPaste();
         preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
     }
-    public void mainTheme(String theme){
+
+    public void mainTheme(String theme) {
         AppSettings.CLEAR.mainTheme();
-        preferences.put(MAIT_THEME.toString() ,theme );
+        preferences.put(MAIT_THEME.toString(), theme);
 
     }
 

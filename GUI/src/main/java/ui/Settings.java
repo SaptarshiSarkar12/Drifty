@@ -74,7 +74,7 @@ public class Settings {
     private Stage stage = Constants.getStage("Settings", false);
     Label lblAutoPaste = new Label("Auto-Paste");
 
-    public Settings() {
+    public void creatSettings() {
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));

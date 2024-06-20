@@ -120,9 +120,7 @@ public final class UIController {
             selectJob(job);
         });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
-        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) ->
-                AppSettings.SET.mainAutoPaste(newValue)
-        ));
+        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
         form.cbAutoPaste.setOnAction(e -> {
             Settings.autoPasteCheck.setSelected(form.cbAutoPaste.isSelected());
         });
@@ -295,13 +293,10 @@ public final class UIController {
                         String folder = fileExists(filename);
                         String windowTitle;
                         if (!folder.isEmpty()) {
-                            message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) +
-                                    "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) +
-                                    "YES will add the job to the list with new filename. NO will do nothing.";
+                            message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) + "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) + "YES will add the job to the list with new filename. NO will do nothing.";
                             windowTitle = "File Already Exists";
                         } else {
-                            message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) +
-                                    "Do you still wish to download this file?";
+                            message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) + "Do you still wish to download this file?";
                             windowTitle = "File Already Downloaded";
                         }
                         ConfirmationDialog ask = new ConfirmationDialog(windowTitle, message, renameFile(filename, dir));
@@ -505,12 +500,8 @@ public final class UIController {
 
     private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {
         String pastJobNoFile = "You have downloaded %s in the past, but the file does not exist in your download folder." + nl.repeat(2) + " Click Yes if you still wish to download this file. Otherwise, click No.";
-        String pastJobFileExists = "You have downloaded %s in the past, and the file exists in your download folder." + nl.repeat(2) +
-                "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) +
-                "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
-        String fileExistsString = "This file:" + nl.repeat(2) + "%s" + nl.repeat(2) + "Exists in in the download folder." + nl.repeat(2) +
-                "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) +
-                "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
+        String pastJobFileExists = "You have downloaded %s in the past, and the file exists in your download folder." + nl.repeat(2) + "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) + "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
+        String fileExistsString = "This file:" + nl.repeat(2) + "%s" + nl.repeat(2) + "Exists in in the download folder." + nl.repeat(2) + "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) + "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
         Platform.runLater(() -> {
             String message;
             ConfirmationDialog ask = new ConfirmationDialog("", "");
@@ -783,9 +774,7 @@ public final class UIController {
                 } else {
                     // Remove duplicate jobs if any
                     Set<String> encounteredLinks = new HashSet<>();
-                    ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream()
-                            .filter(job -> !encounteredLinks.add(job.getLink()))
-                            .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
+                    ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream().filter(job -> !encounteredLinks.add(job.getLink())).collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
                     for (Job job : duplicates) {
                         removeJobFromList(job);
                     }

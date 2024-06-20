@@ -216,6 +216,7 @@ public class Drifty_GUI extends Application {
         });
         settings.setOnAction(e -> {
             Settings settings1 = new Settings();
+            settings1.creatSettings();
         });
         menu.getItems().addAll(wipeHistory, settings);
         return menu;
