@@ -25,7 +25,7 @@ public class Get extends preferences.Get {
         return INSTANCE;
     }
 
-    public  String lastDwnldDir(){
+    public String lastDwnldDir() {
         return "hello";
     }
 
@@ -44,8 +44,9 @@ public class Get extends preferences.Get {
     public boolean mainAutoPaste() {
         return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
     }
-    public String mainTheme(){
-        return preferences.get(MAIT_THEME.toString() , "LIGHT");
+
+    public String mainTheme() {
+        return preferences.get(MAIT_THEME.toString(), "LIGHT");
     }
 
     public Jobs jobs() {

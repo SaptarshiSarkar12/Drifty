@@ -32,15 +32,15 @@ public class Settings {
     Scene settingsScene;
     private ChoiceBox<String> darkLightTheme = new ChoiceBox<>();
 
-    Label lblDwnDir = new Label("Default Download Directory" );
+    Label lblDwnDir = new Label("Default Download Directory");
 
-    private  TextField tfCurrDir = new TextField(UIController.form.tfDir.getText());
+    private TextField tfCurrDir = new TextField(UIController.form.tfDir.getText());
 
     private final String nl = System.lineSeparator();
     public static CheckBox autoPasteCheck = new CheckBox();
 
-    private void changeFormBtn(String theme){
-        if(theme.equals("Dark")){
+    private void changeFormBtn(String theme) {
+        if (theme.equals("Dark")) {
             UIController.form.btnStart.setGraphic(null);
             Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp Dark.png")).toExternalForm());
             Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown Dark.png")).toExternalForm());
@@ -54,7 +54,7 @@ public class Settings {
             UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
             UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
             UIController.form.btnStart.setGraphic(imageViewUp);
-        }else{
+        } else {
             UIController.form.btnStart.setGraphic(null);
             Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp.png")).toExternalForm());
             Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown.png")).toExternalForm());
@@ -70,12 +70,13 @@ public class Settings {
             UIController.form.btnStart.setGraphic(imageViewUp);
         }
     }
-    Label lblTheme = new Label("Theme" );
 
-    Label settingsHeading = new Label("Settings" );
+    Label lblTheme = new Label("Theme");
+
+    Label settingsHeading = new Label("Settings");
     private Button button = new Button("Select Directory");
     private Stage stage = Constants.getStage("Settings", false);
-    Label lblAutoPaste = new Label("Auto-Paste" );
+    Label lblAutoPaste = new Label("Auto-Paste");
 
     public Settings() {
 
@@ -94,22 +95,22 @@ public class Settings {
         creatDarkThemeLogic();
 
 
-        root.getChildren().addAll(darkLightTheme,autoPasteCheck ,lblTheme , lblAutoPaste , settingsHeading, button , lblDwnDir , tfCurrDir);
-         settingsScene = Constants.getScene(root);
-        Constants.addCSS(settingsScene , Constants.SCENE_CSS);
+        root.getChildren().addAll(darkLightTheme, autoPasteCheck, lblTheme, lblAutoPaste, settingsHeading, button, lblDwnDir, tfCurrDir);
+        settingsScene = Constants.getScene(root);
+        Constants.addCSS(settingsScene, Constants.SCENE_CSS);
         stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
         stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
         stage.setScene(settingsScene);
 
 
-        if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+        if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
             settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             lblAutoPaste.setTextFill(Color.WHITE);
             lblTheme.setTextFill(Color.WHITE);
             tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
             settingsHeading.setTextFill(Color.WHITE);
 
-        }else{
+        } else {
             tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
 
             lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
@@ -133,20 +134,20 @@ public class Settings {
             System.out.println("Selected: " + darkLightTheme.getItems().get(newValue.intValue()));
         });
 
-        darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark")? "Dark Theme": "Ligh Theme");
+        darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Ligh Theme");
 
 
         darkLightTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(AppSettings.GET.mainTheme().equals("LIGHT")){
+            if (AppSettings.GET.mainTheme().equals("LIGHT")) {
                 System.out.println("This is the light theme settings");
-            }else{
+            } else {
                 System.out.println("This is the dark theme settings");
                 AppSettings.SET.mainTheme("Dark");
             }
         });
 
-        darkLightTheme.setOnAction(e->{
-            if(darkLightTheme.getValue().equals("Dark Theme")){
+        darkLightTheme.setOnAction(e -> {
+            if (darkLightTheme.getValue().equals("Dark Theme")) {
                 AppSettings.SET.mainTheme("Dark");
                 settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
                 Drifty_GUI.scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
@@ -157,7 +158,7 @@ public class Settings {
                 lblTheme.setTextFill(Color.WHITE);
                 settingsHeading.setTextFill(Color.WHITE);
                 UIController.form.tfDir.setStyle("-fx-text-fill: White;");
-                if (Drifty_GUI.aboutScene != null){
+                if (Drifty_GUI.aboutScene != null) {
                     Drifty_GUI.aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
 
                 }
@@ -180,34 +181,34 @@ public class Settings {
                 tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
                 lblDwnDir.setTextFill(Color.WHITE);
                 button.setStyle(" -fx-text-fill: white;\n" +
-                        "    -fx-font-weight: Bold;"+
+                        "    -fx-font-weight: Bold;" +
                         "    -fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
                         "    -fx-border-color: black;"
                 );
-                button.setOnMousePressed(ev->{
+                button.setOnMousePressed(ev -> {
                     button.setStyle(
                             "-fx-text-fill: white;" +
-                                    "-fx-font-weight: Bold;"+
+                                    "-fx-font-weight: Bold;" +
                                     " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n" +
                                     "-fx-border-color: black;"
 
-                    );        });
-                button.setOnMouseReleased(ev->{
+                    );
+                });
+                button.setOnMouseReleased(ev -> {
                     button.setStyle(" -fx-text-fill: white;\n" +
-                            "-fx-font-weight: Bold;"+
+                            "-fx-font-weight: Bold;" +
                             "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
                             "    -fx-border-color: black;");
                 });
 
-            }
-            else {
+            } else {
                 AppSettings.SET.mainTheme("LIGHT");
                 lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
                 lblTheme.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
                 settingsScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
                 Drifty_GUI.scene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
                 settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                if (Drifty_GUI.aboutScene != null){
+                if (Drifty_GUI.aboutScene != null) {
                     Drifty_GUI.aboutScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
                 }
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
@@ -222,7 +223,6 @@ public class Settings {
                 changeFormBtn("Light");
 
 
-
                 Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
                 MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
 
@@ -233,10 +233,10 @@ public class Settings {
 
                 button.setStyle(" -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);\n" +
                         "-fx-border-color: black;");
-                button.setOnMousePressed(ev->{
+                button.setOnMousePressed(ev -> {
                     button.setStyle("    -fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, rgb(54,151,225) 100%);\n");
                 });
-                button.setOnMouseReleased(ev->{
+                button.setOnMouseReleased(ev -> {
                     button.setStyle(" -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);\n" +
                             "-fx-border-color: black;");
                 });
@@ -255,7 +255,7 @@ public class Settings {
         autoPasteCheck.setMaxWidth(5.0);
         autoPasteCheck.setSelected(UIController.isAutoPaste());
         autoPasteCheck.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
-        autoPasteCheck.setOnAction( e-> {
+        autoPasteCheck.setOnAction(e -> {
             UIController.form.cbAutoPaste.setSelected(autoPasteCheck.isSelected());
         });
     }
@@ -273,7 +273,6 @@ public class Settings {
         lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
 
 
-
         lblTheme.setAlignment(Pos.TOP_CENTER);
         lblTheme.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
         lblTheme.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
@@ -287,8 +286,7 @@ public class Settings {
         lblDwnDir.setStyle(
                 "-fx-font-weight: Bold ; -fx-font-size:20px"
         );
-        lblDwnDir.setTextFill(AppSettings.GET.mainTheme().equals("Dark")? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-
+        lblDwnDir.setTextFill(AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
 
 
     }
@@ -299,33 +297,33 @@ public class Settings {
         tfCurrDir.setTranslateX(150);
 
 
-
     }
 
     private void creatDirBtn() {
         button.setTranslateY(50);
-        if(AppSettings.GET.mainTheme().equals("Dark")){
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
             button.setStyle(" -fx-text-fill: white;\n" +
-                    "    -fx-font-weight: Bold;"+
+                    "    -fx-font-weight: Bold;" +
                     "    -fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
                     "    -fx-border-color: black;"
             );
-            button.setOnMousePressed(e->{
+            button.setOnMousePressed(e -> {
                 button.setStyle(
                         "-fx-text-fill: white;" +
-                                "-fx-font-weight: Bold;"+
+                                "-fx-font-weight: Bold;" +
                                 " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n" +
                                 "-fx-border-color: black;"
 
-                );        });
-            button.setOnMouseReleased(e->{
+                );
+            });
+            button.setOnMouseReleased(e -> {
                 button.setStyle(" -fx-text-fill: white;\n" +
-                        "-fx-font-weight: Bold;"+
+                        "-fx-font-weight: Bold;" +
                         "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
                         "    -fx-border-color: black;");
             });
 
-        }else{
+        } else {
             button.getStyleClass().add("button");
 
         }
@@ -335,12 +333,12 @@ public class Settings {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
             File selectedDirectory = chooser.showDialog(this.stage);
-            if(selectedDirectory!=null){
+            if (selectedDirectory != null) {
                 UIController.form.tfDir.setText(selectedDirectory.getAbsolutePath());
                 tfCurrDir.setText(UIController.form.tfDir.getText());
 
 
-            }else{
+            } else {
                 UIController.form.tfDir.setText(Get.lastDownloadFolder());
                 tfCurrDir.setText(UIController.form.tfDir.getText());
 

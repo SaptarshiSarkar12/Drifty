@@ -82,7 +82,8 @@ public final class UIController {
         form.tfLink.requestFocus();
         commitJobListToListView();
     }
-    public void refresh(){
+
+    public void refresh() {
         MainGridPane form = new MainGridPane();
         UIController.initLogic(form);
     }
@@ -97,7 +98,7 @@ public final class UIController {
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
-        if(AppSettings.GET.mainTheme().equals("Dark")){
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -122,7 +123,7 @@ public final class UIController {
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) ->
                 AppSettings.SET.mainAutoPaste(newValue)
         ));
-        form.cbAutoPaste.setOnAction( e -> {
+        form.cbAutoPaste.setOnAction(e -> {
             Settings.autoPasteCheck.setSelected(form.cbAutoPaste.isSelected());
         });
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
@@ -622,7 +623,7 @@ public final class UIController {
     }
 
     public static boolean isAutoPaste() {
-        return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste() ;
+        return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste();
     }
 
     public static void clearJobHistory() {

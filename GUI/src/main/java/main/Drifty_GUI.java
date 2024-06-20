@@ -65,7 +65,8 @@ public class Drifty_GUI extends Application {
         this.primaryStage.show();
     }
 
-     public static  AnchorPane ap = new AnchorPane();
+    public static AnchorPane ap = new AnchorPane();
+
     private void createScene() {
         MainGridPane gridPane = new MainGridPane();
         MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
@@ -75,7 +76,7 @@ public class Drifty_GUI extends Application {
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
-        if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+        if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
             scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
         }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
@@ -185,17 +186,14 @@ public class Drifty_GUI extends Application {
                 aboutRoot.getChildren().add(lblFfmpegVersion);
             }
             aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
-             aboutScene = Constants.getScene(aboutRoot );
-            if(AppSettings.GET.mainTheme().toString().equals("Dark")){
+            aboutScene = Constants.getScene(aboutRoot);
+            if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
                 aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.WHITE);
                     }
                 }
-            }
-            if(AppSettings.GET.mainTheme().toString().equals("Dark")){
-
             }
             stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
             stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
@@ -205,6 +203,7 @@ public class Drifty_GUI extends Application {
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
+
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
@@ -215,10 +214,10 @@ public class Drifty_GUI extends Application {
                 UIController.clearJobHistory();
             }
         });
-        settings.setOnAction(e ->{
+        settings.setOnAction(e -> {
             Settings settings1 = new Settings();
         });
-        menu.getItems().addAll(wipeHistory , settings);
+        menu.getItems().addAll(wipeHistory, settings);
         return menu;
     }
 
