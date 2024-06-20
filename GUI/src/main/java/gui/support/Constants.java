@@ -23,7 +23,7 @@ public class Constants extends support.Constants {
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
 
     // Graphics Files
-    public static URL DRIFTY_MAIN_PNG = AppSettings.GET.mainTheme().equals("Dark")?Constants.class.getResource("/Backgrounds/DriftyMain Dark.png") :
+    public static URL DRIFTY_MAIN_PNG = AppSettings.GET.mainTheme().equals("Dark") ? Constants.class.getResource("/Backgrounds/DriftyMain Dark.png") :
             Constants.class.getResource("/Backgrounds/DriftyMain.png");
 
     public static final URL SAVE_UP_PNG = Constants.class.getResource("/Buttons/Save/SaveUp.png");
@@ -39,7 +39,7 @@ public class Constants extends support.Constants {
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/Labels/Filename.png");
     public static final URL DRIFTY_ICON = Constants.class.getResource("/Icons/AppIcon.png");
-    public static final URL SPLASH = AppSettings.GET.mainTheme().equals("Dark")?Constants.class.getResource("/Splash Dark.png"):
+    public static final URL SPLASH = AppSettings.GET.mainTheme().equals("Dark") ? Constants.class.getResource("/Splash Dark.png") :
             Constants.class.getResource("/Splash.png");
 
     // Stylesheets
@@ -93,10 +93,9 @@ public class Constants extends support.Constants {
         return stage;
     }
 
-    public static Scene getScene(Parent root ) {
-
+    public static Scene getScene(Parent root) {
         Scene scene = new Scene(root);
-        addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS,SCENE_CSS , PROGRESS_BAR_CSS,  SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
+        addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS, SCENE_CSS, PROGRESS_BAR_CSS, SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
         return scene;
 
 

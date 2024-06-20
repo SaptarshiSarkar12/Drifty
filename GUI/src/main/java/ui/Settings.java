@@ -1,9 +1,7 @@
 package ui;
 
-import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -23,9 +21,7 @@ import preferences.Get;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.prefs.Preferences;
 
-import static preferences.Labels.LAST_FOLDER;
 import static ui.UIController.DIRECTORY_EXISTS;
 
 public class Settings {
