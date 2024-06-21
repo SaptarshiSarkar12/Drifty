@@ -215,13 +215,12 @@ public class Settings {
     }
 
     private void creatAutoPasteCheck() {
-        autoPasteCheck.setSelected(AppSettings.GET.alwaysAutoPaste());
+        autoPasteCheck.setSelected(AppSettings.GET.mainAutoPaste());
         autoPasteCheck.setTranslateX(160);
         autoPasteCheck.setTranslateY(115);
         autoPasteCheck.setMaxWidth(5.0);
-        autoPasteCheck.setSelected(UIController.isAutoPaste());
         autoPasteCheck.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
-        UIController.form.cbAutoPaste.selectedProperty().bindBidirectional(autoPasteCheck.selectedProperty());
+
 
     }
 

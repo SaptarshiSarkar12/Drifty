@@ -122,8 +122,6 @@ public final class UIController {
             selectJob(job);
         });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
-        form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
-        Settings.autoPasteCheck.selectedProperty().bindBidirectional(form.cbAutoPaste.selectedProperty());
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
