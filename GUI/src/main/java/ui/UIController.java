@@ -93,9 +93,9 @@ public final class UIController {
         DIRECTORY_EXISTS.setValue(new File(getDir()).exists());
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
         BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
-        form.btnSave.visibleProperty().bind(UPDATING_BATCH);
 
-        form.tfDir.disableProperty().bind(disableInputs);
+        form.btnSave.visibleProperty().bind(UPDATING_BATCH);
+        form.tfDir.disableProperty().bind(disableStartButton);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
         if (AppSettings.GET.mainTheme().equals("Dark")) {

@@ -31,10 +31,29 @@ import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
-    public static Stage primaryStage;
-    public static Scene scene;
-    public static Scene aboutScene;
-    public static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
+    private static final AnchorPane ap = new AnchorPane();
+    static Stage primaryStage;
+    private static Scene scene;
+    private static Scene aboutScene;
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public static Scene getScene() {
+        return scene;
+    }
+
+
+    public static Scene getAboutScene() {
+        return aboutScene;
+    }
+
+    public static ImageView getAppIcon() {
+        return appIcon;
+    }
+
+    private static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
 
     public static VBox aboutRoot = new VBox(10);
 
@@ -65,7 +84,6 @@ public class Drifty_GUI extends Application {
         this.primaryStage.show();
     }
 
-    public static AnchorPane ap = new AnchorPane();
 
     private void createScene() {
         MainGridPane gridPane = new MainGridPane();
@@ -76,7 +94,7 @@ public class Drifty_GUI extends Application {
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
-        if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
             scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
         }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
@@ -187,7 +205,7 @@ public class Drifty_GUI extends Application {
             }
             aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
             aboutScene = Constants.getScene(aboutRoot);
-            if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
+            if (AppSettings.GET.mainTheme().equals("Dark")) {
                 aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
                     if (node instanceof Label) {

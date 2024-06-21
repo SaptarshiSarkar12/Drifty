@@ -25,9 +25,6 @@ public class Get extends preferences.Get {
         return INSTANCE;
     }
 
-    public String lastDwnldDir() {
-        return "hello";
-    }
 
     public Folders folders() {
         GsonBuilder gsonBuilder = new GsonBuilder();

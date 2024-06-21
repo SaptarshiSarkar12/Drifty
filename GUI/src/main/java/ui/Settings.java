@@ -35,36 +35,21 @@ public class Settings {
     private final String nl = System.lineSeparator();
     public static CheckBox autoPasteCheck = new CheckBox();
 
-    private void changeFormBtn(String theme) {
-        if (theme.equals("Dark")) {
-            UIController.form.btnStart.setGraphic(null);
-            Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp Dark.png")).toExternalForm());
-            Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown Dark.png")).toExternalForm());
-            ImageView imageViewUp = new ImageView(imageUp);
-            ImageView imageViewDn = new ImageView(imageDown);
-            double width = imageUp.getWidth();
-            imageViewUp.setPreserveRatio(true);
-            imageViewUp.setFitWidth(width * 0.45);
-            imageViewDn.setPreserveRatio(true);
-            imageViewDn.setFitWidth(width * 0.45);
-            UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
-            UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
-            UIController.form.btnStart.setGraphic(imageViewUp);
-        } else {
-            UIController.form.btnStart.setGraphic(null);
-            Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartUp.png")).toExternalForm());
-            Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource("/Buttons/Start/StartDown.png")).toExternalForm());
-            ImageView imageViewUp = new ImageView(imageUp);
-            ImageView imageViewDn = new ImageView(imageDown);
-            double width = imageUp.getWidth();
-            imageViewUp.setPreserveRatio(true);
-            imageViewUp.setFitWidth(width * 0.45);
-            imageViewDn.setPreserveRatio(true);
-            imageViewDn.setFitWidth(width * 0.45);
-            UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
-            UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
-            UIController.form.btnStart.setGraphic(imageViewUp);
-        }
+    private void setupButtonGraphics(String theme) {
+        boolean isDark = theme.equals("Dark");
+        String imagePath = isDark ? "/Buttons/Start/StartUp Dark.png" : "/Buttons/Start/StartUp.png";
+        Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
+        Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource(imagePath.replace("Up", "Down"))).toExternalForm());
+        ImageView imageViewUp = new ImageView(imageUp);
+        ImageView imageViewDn = new ImageView(imageDown);
+        double width = imageUp.getWidth();
+        imageViewUp.setPreserveRatio(true);
+        imageViewUp.setFitWidth(width * 0.45);
+        imageViewDn.setPreserveRatio(true);
+        imageViewDn.setFitWidth(width * 0.45);
+        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
+        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
+        UIController.form.btnStart.setGraphic(imageViewUp);
     }
 
     Label lblTheme = new Label("Theme");
@@ -99,7 +84,7 @@ public class Settings {
         stage.setScene(settingsScene);
 
 
-        if (AppSettings.GET.mainTheme().toString().equals("Dark")) {
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
             settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             lblAutoPaste.setTextFill(Color.WHITE);
             lblTheme.setTextFill(Color.WHITE);
@@ -108,14 +93,10 @@ public class Settings {
 
         } else {
             tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
-
             lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-
             settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-
-
         }
         stage.show();
 
@@ -130,7 +111,7 @@ public class Settings {
             System.out.println("Selected: " + darkLightTheme.getItems().get(newValue.intValue()));
         });
 
-        darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Ligh Theme");
+        darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
 
 
         darkLightTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -146,16 +127,15 @@ public class Settings {
             if (darkLightTheme.getValue().equals("Dark Theme")) {
                 AppSettings.SET.mainTheme("Dark");
                 settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-                Drifty_GUI.scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+                Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
                 settingsScene.getStylesheets().remove(getClass().getResource("/CSS/Label.css").toExternalForm());
-
                 lblAutoPaste.setTextFill(Color.WHITE);
                 lblDwnDir.setTextFill(Color.WHITE);
                 lblTheme.setTextFill(Color.WHITE);
                 settingsHeading.setTextFill(Color.WHITE);
                 UIController.form.tfDir.setStyle("-fx-text-fill: White;");
-                if (Drifty_GUI.aboutScene != null) {
-                    Drifty_GUI.aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+                if (Drifty_GUI.getAboutScene() != null) {
+                    Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
 
                 }
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
@@ -167,13 +147,11 @@ public class Settings {
                 UIController.form.tfDir.setStyle("-fx-text-fill: White;");
                 UIController.form.tfFilename.setStyle("-fx-text-fill: White;");
                 UIController.form.tfLink.setStyle("-fx-text-fill: White;");
-                changeFormBtn("Dark");
+                setupButtonGraphics("Dark");
                 Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain Dark.png")).toExternalForm());
                 MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
-
-
                 Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash Dark.png")).toExternalForm());
-                Drifty_GUI.appIcon.setImage(Constants.IMG_SPLASH);
+                Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
                 tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
                 lblDwnDir.setTextFill(Color.WHITE);
                 button.setStyle(" -fx-text-fill: white;\n" +
@@ -202,10 +180,10 @@ public class Settings {
                 lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
                 lblTheme.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
                 settingsScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
-                Drifty_GUI.scene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+                Drifty_GUI.getScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
                 settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                if (Drifty_GUI.aboutScene != null) {
-                    Drifty_GUI.aboutScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+                if (Drifty_GUI.getAboutScene()!= null) {
+                    Drifty_GUI.getAboutScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
                 }
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
                     if (node instanceof Label) {
@@ -216,14 +194,14 @@ public class Settings {
                 UIController.form.tfDir.setStyle("-fx-text-fill: Black;");
                 UIController.form.tfFilename.setStyle("-fx-text-fill: Black;");
                 UIController.form.tfLink.setStyle("-fx-text-fill: Black;");
-                changeFormBtn("Light");
+                setupButtonGraphics("Light");
 
 
                 Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
                 MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
 
                 Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash.png")).toExternalForm());
-                Drifty_GUI.appIcon.setImage(Constants.IMG_SPLASH);
+                Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
                 tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
                 lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
 
@@ -326,19 +304,7 @@ public class Settings {
 
 
         button.setOnAction(e -> {
-            DirectoryChooser chooser = new DirectoryChooser();
-            chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-            File selectedDirectory = chooser.showDialog(this.stage);
-            if (selectedDirectory != null) {
-                UIController.form.tfDir.setText(selectedDirectory.getAbsolutePath());
-                tfCurrDir.setText(UIController.form.tfDir.getText());
-
-
-            } else {
-                UIController.form.tfDir.setText(Get.lastDownloadFolder());
-                tfCurrDir.setText(UIController.form.tfDir.getText());
-
-            }
+            handleDirectorySelection();
             UIController.form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
                 if (!newValue.equals(oldValue)) {
                     UIController.DIRECTORY_EXISTS.setValue(false);
@@ -359,5 +325,14 @@ public class Settings {
 
 
     }
+    private void handleDirectorySelection() {
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File selectedDirectory = chooser.showDialog(this.stage);
+        String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : Get.lastDownloadFolder();
+        UIController.form.tfDir.setText(directoryPath);
+        tfCurrDir.setText(directoryPath);
+    }
+
 
 }
