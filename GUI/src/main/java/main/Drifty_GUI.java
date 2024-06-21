@@ -55,7 +55,11 @@ public class Drifty_GUI extends Application {
 
     private static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
 
-    public static VBox aboutRoot = new VBox(10);
+    public static VBox getAboutRoot() {
+        return aboutRoot;
+    }
+
+    private static VBox aboutRoot = new VBox(10);
 
 
     public static void main(String[] args) {
@@ -167,6 +171,9 @@ public class Drifty_GUI extends Application {
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
+            if(aboutScene!=null){
+                aboutRoot = new VBox(10);
+            }
             Stage stage = Constants.getStage("About Drifty", false);
             aboutRoot.setPadding(new Insets(10));
 

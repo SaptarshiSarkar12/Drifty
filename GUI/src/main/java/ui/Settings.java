@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
@@ -65,6 +66,8 @@ public class Settings {
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
 
+        creatDarkThemeLogic();
+
         creatTfDir();
 
         creatLabels();
@@ -72,8 +75,6 @@ public class Settings {
         creatAutoPasteCheck();
 
         creatDirBtn();
-
-        creatDarkThemeLogic();
 
 
         root.getChildren().addAll(darkLightTheme, autoPasteCheck, lblTheme, lblAutoPaste, settingsHeading, button, lblDwnDir, tfCurrDir);
@@ -107,117 +108,232 @@ public class Settings {
         darkLightTheme.setTranslateY(210);
         darkLightTheme.setTranslateX(130);
 
-        darkLightTheme.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Selected: " + darkLightTheme.getItems().get(newValue.intValue()));
-        });
-
         darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
 
 
         darkLightTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (AppSettings.GET.mainTheme().equals("LIGHT")) {
-                System.out.println("This is the light theme settings");
+                AppSettings.SET.mainTheme("Light");
             } else {
-                System.out.println("This is the dark theme settings");
                 AppSettings.SET.mainTheme("Dark");
             }
         });
 
         darkLightTheme.setOnAction(e -> {
-            if (darkLightTheme.getValue().equals("Dark Theme")) {
-                AppSettings.SET.mainTheme("Dark");
-                settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-                Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-                settingsScene.getStylesheets().remove(getClass().getResource("/CSS/Label.css").toExternalForm());
-                lblAutoPaste.setTextFill(Color.WHITE);
-                lblDwnDir.setTextFill(Color.WHITE);
-                lblTheme.setTextFill(Color.WHITE);
-                settingsHeading.setTextFill(Color.WHITE);
-                UIController.form.tfDir.setStyle("-fx-text-fill: White;");
-                if (Drifty_GUI.getAboutScene() != null) {
-                    Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            applyTheme(darkLightTheme.getValue().equals("Dark") ? "Dark" : "Light");
+        });
 
+
+    }
+
+    private void applyTheme(String theme) {
+////        // Ai Code
+//        boolean isDark = theme.equals("Dark");
+//        //    settingsScene.getStylesheets().clear();
+//        //    settingsScene.getStylesheets().add(isDark ? Constants.DARK_THEME_CSS.toExternalForm() : Constants.SCENE_CSS.toExternalForm());
+//        //    Color textColor = isDark ? Color.WHITE : Color.BLACK;
+//        //    lblAutoPaste.setTextFill(textColor);
+//        //    lblTheme.setTextFill(textColor);
+//        //    lblDwnDir.setTextFill(textColor);
+//        //    settingsHeading.setTextFill(textColor);
+//        //    tfCurrDir.setStyle("-fx-text-fill: " + (isDark ? "white" : "black") + "; -fx-font-weight: Bold");
+//        //    changeFormBtn(theme);
+//
+//
+//        AppSettings.SET.mainTheme(isDark ? "Dark" : "Light");
+//        if(isDark){
+//            settingsScene.getStylesheets().remove(getClass().getResource("/CSS/Label.css").toExternalForm());
+//            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+//            Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+//            if (Drifty_GUI.getAboutScene() != null) {
+//                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+//            }
+//        }else {
+//            settingsScene.getStylesheets().clear();
+//            Drifty_GUI.getScene().getStylesheets().clear();
+//            settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+//            Drifty_GUI.getScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+//            if (Drifty_GUI.getAboutScene() != null) {
+//                Drifty_GUI.getAboutScene().getStylesheets().clear();
+//                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+//
+//            }
+//        }
+//
+//
+//
+//        Paint color = isDark ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
+//        // Labels
+//        lblAutoPaste.setTextFill(color);
+//        lblDwnDir.setTextFill(color);
+//        lblTheme.setTextFill(color);
+//        settingsHeading.setTextFill(color);
+//        for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
+//            if (node instanceof Label) {
+//                ((Label) node).setTextFill(color);
+//            }
+//        }
+//
+//        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
+//        // TextFields
+//        UIController.form.tfDir.setStyle(style);
+//        UIController.form.tfFilename.setStyle(style);
+//        UIController.form.tfLink.setStyle(style);
+//        tfCurrDir.setStyle(style + "-fx-font-weight: Bold");
+//
+//        setupButtonGraphics("Light");
+//
+//
+//        // Banner and Logo
+//        String bannerPath = isDark? "/Backgrounds/DriftyMain Dark.png" : "/Backgrounds/DriftyMain.png";
+//        String splashPath = isDark? "/Splash Dark.png" : "/Splash.png";
+//        Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
+//        MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
+//        Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
+//        Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+//
+//
+//        // handeling the button styles
+//        String backColorRealesd = isDark?"-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);":
+//                " -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
+//
+//
+//        String backColorPressed = isDark?" -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);":
+//                " -fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, " +
+//                        "rgb(54,151,225) 100%);";
+//
+//        button.setStyle(style +
+//                "    -fx-font-weight: Bold;" +
+//                backColorRealesd +
+//                "    -fx-border-color: black;"
+//        );
+//        button.setOnMousePressed(ev -> {
+//            button.setStyle(
+//                    style +
+//                            "-fx-font-weight: Bold;" +
+//                            backColorPressed +
+//                            "-fx-border-color: black;"
+//
+//            );
+//        });
+//        button.setOnMouseReleased(ev -> {
+//            button.setStyle(style +
+//                    "-fx-font-weight: Bold;" +
+//                    backColorRealesd +
+//                    "    -fx-border-color: black;");
+//        });
+
+        // ######################################################################################
+        if (darkLightTheme.getValue().equals("Dark Theme")) {
+            AppSettings.SET.mainTheme("Dark");
+            settingsScene.getStylesheets().remove(getClass().getResource("/CSS/Label.css").toExternalForm());
+            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            // Labels
+            lblAutoPaste.setTextFill(Color.WHITE);
+            lblDwnDir.setTextFill(Color.WHITE);
+            lblTheme.setTextFill(Color.WHITE);
+            settingsHeading.setTextFill(Color.WHITE);
+            for (Node node : Drifty_GUI.getAboutRoot().getChildren()) {
+                if (node instanceof Label) {
+                    ((Label) node).setTextFill(Color.WHITE);
                 }
-                for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
-                    if (node instanceof Label) {
-                        ((Label) node).setTextFill(Color.WHITE);
-                    }
-                }
-                settingsHeading.setTextFill(Color.WHITE);
-                UIController.form.tfDir.setStyle("-fx-text-fill: White;");
-                UIController.form.tfFilename.setStyle("-fx-text-fill: White;");
-                UIController.form.tfLink.setStyle("-fx-text-fill: White;");
-                setupButtonGraphics("Dark");
-                Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain Dark.png")).toExternalForm());
-                MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
-                Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash Dark.png")).toExternalForm());
-                Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
-                tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
-                lblDwnDir.setTextFill(Color.WHITE);
-                button.setStyle(" -fx-text-fill: white;\n" +
-                        "    -fx-font-weight: Bold;" +
-                        "    -fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
-                        "    -fx-border-color: black;"
-                );
-                button.setOnMousePressed(ev -> {
-                    button.setStyle(
-                            "-fx-text-fill: white;" +
-                                    "-fx-font-weight: Bold;" +
-                                    " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n" +
-                                    "-fx-border-color: black;"
-
-                    );
-                });
-                button.setOnMouseReleased(ev -> {
-                    button.setStyle(" -fx-text-fill: white;\n" +
-                            "-fx-font-weight: Bold;" +
-                            "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
-                            "    -fx-border-color: black;");
-                });
-
-            } else {
-                AppSettings.SET.mainTheme("LIGHT");
-                lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                lblTheme.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                settingsScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
-                Drifty_GUI.getScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
-                settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                if (Drifty_GUI.getAboutScene()!= null) {
-                    Drifty_GUI.getAboutScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
-                }
-                for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
-                    if (node instanceof Label) {
-                        ((Label) node).setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                    }
-                }
-                settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                UIController.form.tfDir.setStyle("-fx-text-fill: Black;");
-                UIController.form.tfFilename.setStyle("-fx-text-fill: Black;");
-                UIController.form.tfLink.setStyle("-fx-text-fill: Black;");
-                setupButtonGraphics("Light");
+            }
 
 
-                Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
-                MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
-
-                Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash.png")).toExternalForm());
-                Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
-                tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
-                lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-
-                button.setStyle(" -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);\n" +
-                        "-fx-border-color: black;");
-                button.setOnMousePressed(ev -> {
-                    button.setStyle("    -fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, rgb(54,151,225) 100%);\n");
-                });
-                button.setOnMouseReleased(ev -> {
-                    button.setStyle(" -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);\n" +
-                            "-fx-border-color: black;");
-                });
-
+            if (Drifty_GUI.getAboutScene() != null) {
+                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
 
             }
-        });
+
+            // TextFields
+            UIController.form.tfDir.setStyle("-fx-text-fill: White;");
+            UIController.form.tfFilename.setStyle("-fx-text-fill: White;");
+            UIController.form.tfLink.setStyle("-fx-text-fill: White;");
+            tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
+
+            setupButtonGraphics("Dark");
+
+            Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain Dark.png")).toExternalForm());
+            MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
+            Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash Dark.png")).toExternalForm());
+            Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+
+
+            button.setStyle(" -fx-text-fill: white;\n" +
+                    "    -fx-font-weight: Bold;" +
+                    "    -fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
+                    "    -fx-border-color: black;"
+            );
+            button.setOnMousePressed(ev -> {
+                button.setStyle(
+                        "-fx-text-fill: white;" +
+                                "-fx-font-weight: Bold;" +
+                                " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);" +
+                                "-fx-border-color: black;"
+
+                );
+            });
+            button.setOnMouseReleased(ev -> {
+                button.setStyle(" -fx-text-fill: white;\n" +
+                        "-fx-font-weight: Bold;" +
+                        "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
+                        "    -fx-border-color: black;");
+            });
+
+        } else {
+            AppSettings.SET.mainTheme("LIGHT");
+            settingsScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+            if (Drifty_GUI.getAboutScene() != null) {
+                Drifty_GUI.getAboutScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+            }
+            for (Node node : Drifty_GUI.getAboutRoot().getChildren()) {
+                if (node instanceof Label) {
+                    ((Label) node).setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+                }
+            }
+
+
+            // Labels
+            settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblTheme.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+
+
+            // TextFields
+            UIController.form.tfDir.setStyle("-fx-text-fill: Black;");
+            UIController.form.tfFilename.setStyle("-fx-text-fill: Black;");
+            UIController.form.tfLink.setStyle("-fx-text-fill: Black;");
+            tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
+
+
+            setupButtonGraphics("Light");
+
+
+            // Banner and Logo
+            Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource("/Backgrounds/DriftyMain.png")).toExternalForm());
+            MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
+            Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource("/Splash.png")).toExternalForm());
+            Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+
+            button.setStyle(
+                    " -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);" +
+                            "-fx-border-color: black;");
+            button.setOnMousePressed(ev -> {
+                button.setStyle(" -fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, " +
+                        "rgb(54,151,225) 100%);");
+            });
+            button.setOnMouseReleased(ev -> {
+                button.setStyle(
+                        " -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);" +
+                                "-fx-border-color: black;");
+            });
+
+
+        }
 
 
     }
@@ -325,6 +441,7 @@ public class Settings {
 
 
     }
+
     private void handleDirectorySelection() {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
