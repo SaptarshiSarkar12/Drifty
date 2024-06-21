@@ -89,10 +89,6 @@ public final class UIController {
         commitJobListToListView();
     }
 
-    public void refresh() {
-        MainGridPane form = new MainGridPane();
-        UIController.initLogic(form);
-    }
 
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
@@ -127,9 +123,7 @@ public final class UIController {
         });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
         form.cbAutoPaste.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
-        form.cbAutoPaste.setOnAction(e -> {
-            Settings.autoPasteCheck.setSelected(form.cbAutoPaste.isSelected());
-        });
+        Settings.autoPasteCheck.selectedProperty().bindBidirectional(form.cbAutoPaste.selectedProperty());
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);

@@ -221,9 +221,8 @@ public class Settings {
         autoPasteCheck.setMaxWidth(5.0);
         autoPasteCheck.setSelected(UIController.isAutoPaste());
         autoPasteCheck.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
-        autoPasteCheck.setOnAction(e -> {
-            UIController.form.cbAutoPaste.setSelected(autoPasteCheck.isSelected());
-        });
+        UIController.form.cbAutoPaste.selectedProperty().bindBidirectional(autoPasteCheck.selectedProperty());
+
     }
 
     private void creatLabels() {
