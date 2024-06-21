@@ -93,8 +93,7 @@ public class Constants extends support.Constants {
         return stage;
     }
 
-    public static Scene getScene(Parent root)
-    {
+    public static Scene getScene(Parent root) {
         Scene scene = new Scene(root);
         addCSS(scene, CHECK_BOX_CSS, CONTEXT_MENU_CSS, LABEL_CSS, LIST_VIEW_CSS, MENU_CSS, SCENE_CSS, PROGRESS_BAR_CSS, SCROLL_PANE_CSS, TEXT_FIELD_CSS, V_BOX_CSS, BUTTON_CSS);
         return scene;

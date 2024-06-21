@@ -1,5 +1,6 @@
 package ui;
 
+import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.geometry.Insets;
@@ -23,7 +24,6 @@ import preferences.Get;
 import java.io.File;
 import java.util.Objects;
 
-import static ui.UIController.DIRECTORY_EXISTS;
 
 public class Settings {
     Scene settingsScene;
@@ -297,22 +297,7 @@ public class Settings {
 
         button.setOnAction(e -> {
             handleDirectorySelection();
-            UIController.form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
-                if (!newValue.equals(oldValue)) {
-                    UIController.DIRECTORY_EXISTS.setValue(false);
-                    if (newValue.isEmpty()) {
-                        UIController.M.msgDirError("Directory cannot be empty!");
-                    } else {
-                        File folder = new File(newValue);
-                        if (folder.exists() && folder.isDirectory()) {
-                            UIController.M.msgDirInfo("Directory exists!");
-                            DIRECTORY_EXISTS.setValue(true);
-                        } else {
-                            UIController.M.msgDirError("Directory does not exist or is not a directory!");
-                        }
-                    }
-                }
-            }));
+
         });
 
 
@@ -325,6 +310,22 @@ public class Settings {
         String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : Get.lastDownloadFolder();
         UIController.form.tfDir.setText(directoryPath);
         tfCurrDir.setText(directoryPath);
+        UIController.form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                UIController.getDirExist().setValue(false);
+                if (newValue.isEmpty()) {
+                    Environment.getMessageBroker().msgDirError("Directory cannot be empty!");
+                } else {
+                    File folder = new File(newValue);
+                    if (folder.exists() && folder.isDirectory()) {
+                        Environment.getMessageBroker().msgDirInfo("Directory exists!");
+                        UIController.getDirExist().setValue(true);
+                    } else {
+                        Environment.getMessageBroker().msgDirError("Directory does not exist or is not a directory!");
+                    }
+                }
+            }
+        }));
     }
 
 

@@ -51,8 +51,14 @@ import static utils.Utility.*;
 public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
-    public static final MessageBroker M = Environment.getMessageBroker();
-    public static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
+    private static final MessageBroker M = Environment.getMessageBroker();
+
+
+    public static BooleanProperty getDirExist() {
+        return DIRECTORY_EXISTS;
+    }
+
+    private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
     private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
     private static final BooleanProperty UPDATING_BATCH = new SimpleBooleanProperty(false);
     private static final BooleanProperty VERIFYING_LINKS = new SimpleBooleanProperty(false);
