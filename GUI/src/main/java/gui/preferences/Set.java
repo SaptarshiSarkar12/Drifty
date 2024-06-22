@@ -43,8 +43,7 @@ public final class Set extends preferences.Set {
 
     public void mainTheme(String theme) {
         AppSettings.CLEAR.mainTheme();
-        preferences.put(MAIT_THEME.toString(), theme);
-
+        preferences.put(MAIN_THEME.toString(), theme);
     }
 
     public void jobs(Jobs jobs) {

@@ -52,12 +52,6 @@ public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
     private static final MessageBroker M = Environment.getMessageBroker();
-
-
-    public static BooleanProperty getDirExist() {
-        return DIRECTORY_EXISTS;
-    }
-
     private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
     private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
     private static final BooleanProperty UPDATING_BATCH = new SimpleBooleanProperty(false);
@@ -72,8 +66,8 @@ public final class UIController {
     private Job selectedJob;
 
     /*
-    Single instance model only constructor
-     */
+    Single instance model-only constructor
+    */
     private UIController() {
         folders = AppSettings.GET.folders();
     }
@@ -89,26 +83,24 @@ public final class UIController {
         commitJobListToListView();
     }
 
-
     private void setControlProperties() {
         setDir(folders.getDownloadFolder());
         DIRECTORY_EXISTS.setValue(new File(getDir()).exists());
+
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
         BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
-
         form.btnSave.visibleProperty().bind(UPDATING_BATCH);
-        form.tfDir.disableProperty().bind(disableStartButton);
+        form.btnStart.disableProperty().bind(disableStartButton);
+        form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
         form.tfLink.disableProperty().bind(disableInputs);
+        form.listView.setContextMenu(getListMenu());
+
         if (AppSettings.GET.mainTheme().equals("Dark")) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
-
         }
-
-        form.listView.setContextMenu(getListMenu());
-
 
         Tooltip.install(form.cbAutoPaste, new Tooltip("When checked, will paste contents of clipboard into" + nl + "Link field when switching back to this screen."));
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
@@ -876,6 +868,10 @@ public final class UIController {
 
     private JobHistory getHistory() {
         return AppSettings.GET.jobHistory();
+    }
+
+    static BooleanProperty getDirectoryExists() {
+        return DIRECTORY_EXISTS;
     }
 
     private void selectJob(Job job) {

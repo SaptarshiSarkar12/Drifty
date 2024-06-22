@@ -19,10 +19,7 @@
 }
 .check-box {
     -fx-background-color: #22ff00;
-    /*-fx-background-image: url('CheckBoxBorder.png');*/
-    -fx-border-width:2px ;
-    /*-fx-background-repeat: stretch;*/
-    /*-fx-background-size: 99% 99%;*/
+    -fx-border-width:2px;
     -fx-padding: 0px;
     -fx-font-size: 20;
 }
@@ -32,5 +29,5 @@
 .check-box:selected .box .mark{
     -fx-background-color: white;
     -fx-border-color: black;
-    -fx-border-width: 0.5px;
+    -fx-border-width: 1px;
 }

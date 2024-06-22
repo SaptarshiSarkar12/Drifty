@@ -20,7 +20,7 @@ public class Clear extends preferences.Clear {
         preferences.remove(MAIN_AUTO_PASTE.toString());
     }
     public void mainTheme() {
-        preferences.remove(MAIT_THEME.toString());
+        preferences.remove(MAIN_THEME.toString());
     }
 
     public void jobs() {

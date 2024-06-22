@@ -24,6 +24,8 @@ import properties.Mode;
 import ui.*;
 import utils.Utility;
 
+import java.util.Objects;
+
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
 import static support.Constants.DRIFTY_WEBSITE_URL;
@@ -31,36 +33,11 @@ import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
-    private static final AnchorPane ap = new AnchorPane();
-    static Stage primaryStage;
+    private static final VBox aboutRoot = new VBox(10);
     private static Scene scene;
     private static Scene aboutScene;
-
-    public static Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public static Scene getScene() {
-        return scene;
-    }
-
-
-    public static Scene getAboutScene() {
-        return aboutScene;
-    }
-
-    public static ImageView getAppIcon() {
-        return appIcon;
-    }
-
-    private static ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
-
-    public static VBox getAboutRoot() {
-        return aboutRoot;
-    }
-
-    private static VBox aboutRoot = new VBox(10);
-
+    private static ImageView appIcon = new ImageView(Constants.imgSplash);
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
@@ -88,8 +65,8 @@ public class Drifty_GUI extends Application {
         this.primaryStage.show();
     }
 
-
     private void createScene() {
+        AnchorPane ap = new AnchorPane();
         MainGridPane gridPane = new MainGridPane();
         MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
         ap.getChildren().add(gridPane);
@@ -99,7 +76,7 @@ public class Drifty_GUI extends Application {
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
         if (AppSettings.GET.mainTheme().equals("Dark")) {
-            scene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            Constants.addCSS(scene, Constants.DARK_THEME_CSS);
         }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
@@ -149,6 +126,22 @@ public class Drifty_GUI extends Application {
         return new MenuBar(menus);
     }
 
+    public static Scene getScene() {
+        return scene;
+    }
+
+    public static Scene getAboutScene() {
+        return aboutScene;
+    }
+
+    public static ImageView getAppIcon() {
+        return appIcon;
+    }
+
+    public static VBox getAboutRoot() {
+        return aboutRoot;
+    }
+
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
@@ -171,14 +164,10 @@ public class Drifty_GUI extends Application {
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
-            if (aboutScene != null) {
-                aboutRoot = new VBox(10);
-            }
             Stage stage = Constants.getStage("About Drifty", false);
             aboutRoot.setPadding(new Insets(10));
-
             aboutRoot.setAlignment(Pos.TOP_CENTER);
-            appIcon = new ImageView(Constants.IMG_SPLASH);
+            appIcon = new ImageView(Constants.imgSplash);
             appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
             appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
             appIcon.setPreserveRatio(true);
@@ -213,7 +202,7 @@ public class Drifty_GUI extends Application {
             aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
             aboutScene = Constants.getScene(aboutRoot);
             if (AppSettings.GET.mainTheme().equals("Dark")) {
-                aboutScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+                aboutScene.getStylesheets().add(Objects.requireNonNull(Constants.DARK_THEME_CSS).toExternalForm());
                 for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.WHITE);

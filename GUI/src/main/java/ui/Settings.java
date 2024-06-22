@@ -19,65 +19,49 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
-import preferences.Get;
 
 import java.io.File;
 import java.util.Objects;
 
-
 public class Settings {
+    public static final CheckBox AUTO_PASTE_CHECK = new CheckBox();
+    private final ChoiceBox<String> themeCheckBox = new ChoiceBox<>();
+    private final TextField tfCurrDir = new TextField(UIController.form.tfDir.getText());
+    private final Button button = new Button("Select Directory");
+    private final Stage stage = Constants.getStage("Settings", false);
     Scene settingsScene;
-    private ChoiceBox<String> darkLightTheme = new ChoiceBox<>();
-    Label lblDwnDir = new Label("Default Download Directory");
-
-    private TextField tfCurrDir = new TextField(UIController.form.tfDir.getText());
-
-    private final String nl = System.lineSeparator();
-    public static CheckBox autoPasteCheck = new CheckBox();
+    Label lblDefaultDownloadDir = new Label("Default Download Directory");
+    Label lblTheme = new Label("Theme");
+    Label settingsHeading = new Label("Settings");
+    Label lblAutoPaste = new Label("Auto-Paste");
 
     private Image getImageForButton(String theme, String buttonType) {
+        String imagePath;
         if (buttonType.equals("StartUp") || buttonType.equals("StartDown")) {
-            String imagePath = theme.equals("Dark") ? "/Buttons/Start/" + buttonType + " Dark.png" : "/Buttons/Start/" + buttonType + ".png";
-            return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
+            imagePath = "/Buttons/Start/" + buttonType + theme + ".png";
         } else {
-            String imagePath = theme.equals("Dark") ? "/Buttons/Save/" + buttonType + " Dark.png" : "/Buttons/Save/" + buttonType + ".png";
-            return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
+            imagePath = "/Buttons/Save/" + buttonType + theme + ".png";
         }
-
+        return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
     }
+
     private void setupButtonGraphics(String theme) {
         Image imageStartUp = getImageForButton(theme, "StartUp");
         Image imageStartDown = getImageForButton(theme, "StartDown");
-        ImageView imageViewStartUp = new ImageView(imageStartUp);
-        ImageView imageViewSartDn = new ImageView(imageStartDown);
-        double width = imageStartUp.getWidth();
-        imageViewStartUp.setPreserveRatio(true);
-        imageViewStartUp.setFitWidth(width * 0.45);
-        imageViewSartDn.setPreserveRatio(true);
-        imageViewSartDn.setFitWidth(width * 0.45);
-        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewSartDn));
-        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewStartUp));
-        UIController.form.btnStart.setGraphic(imageViewStartUp);
+        ImageView ivStartUp = MainGridPane.newImageView(imageStartUp, 0.45);
+        ImageView ivStartDown = MainGridPane.newImageView(imageStartDown, 0.45);
+        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(ivStartDown));
+        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(ivStartUp));
+        UIController.form.btnStart.setGraphic(ivStartUp);
 
         Image imageSaveUp = getImageForButton(theme, "SaveUp");
         Image imageSaveDown = getImageForButton(theme, "SaveDown");
-        ImageView imageViewSaveUp = new ImageView(imageSaveUp);
-        ImageView imageViewSaveDn = new ImageView(imageSaveDown);
-        double widthSave = imageSaveUp.getWidth();
-        imageViewSaveUp.setPreserveRatio(true);
-        imageViewSaveUp.setFitWidth(widthSave * 0.45);
-        imageViewSaveDn.setPreserveRatio(true);
-        imageViewSaveDn.setFitWidth(widthSave * 0.45);
-        UIController.form.btnSave.setOnMousePressed(ev -> UIController.form.btnSave.setGraphic(imageViewSaveDn));
-        UIController.form.btnSave.setOnMouseReleased(ev -> UIController.form.btnSave.setGraphic(imageViewSaveUp));
-        UIController.form.btnSave.setGraphic(imageViewSaveUp);
+        ImageView ivSaveUp = MainGridPane.newImageView(imageSaveUp, 0.45);
+        ImageView ivSaveDown = MainGridPane.newImageView(imageSaveDown, 0.45);
+        UIController.form.btnSave.setOnMousePressed(ev -> UIController.form.btnSave.setGraphic(ivSaveDown));
+        UIController.form.btnSave.setOnMouseReleased(ev -> UIController.form.btnSave.setGraphic(ivSaveUp));
+        UIController.form.btnSave.setGraphic(ivSaveUp);
     }
-
-    Label lblTheme = new Label("Theme");
-    Label settingsHeading = new Label("Settings");
-    private Button button = new Button("Select Directory");
-    private Stage stage = Constants.getStage("Settings", false);
-    Label lblAutoPaste = new Label("Auto-Paste");
 
     public void creatSettings() {
         VBox root = new VBox(10);
@@ -87,55 +71,39 @@ public class Settings {
         creatTfDir();
         creatLabels();
         creatAutoPasteCheck();
-        creatDirBtn();
-        root.getChildren().addAll(darkLightTheme, autoPasteCheck, lblTheme, lblAutoPaste, settingsHeading, button, lblDwnDir, tfCurrDir);
+        creatDirButton();
+        root.getChildren().addAll(themeCheckBox, AUTO_PASTE_CHECK, lblTheme, lblAutoPaste, settingsHeading, button, lblDefaultDownloadDir, tfCurrDir);
         settingsScene = Constants.getScene(root);
-        Constants.addCSS(settingsScene, Constants.SCENE_CSS);
+        Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
         stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
         stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
         stage.setScene(settingsScene);
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
-            setInitialTheme("Dark");
-
-        } else {
-            setInitialTheme("Light");
-        }
+        setInitialTheme(AppSettings.GET.mainTheme());
         stage.show();
     }
 
     private void setInitialTheme(String theme) {
         if (theme.equals("Dark")) {
-            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            Constants.addCSS(settingsScene, Constants.DARK_THEME_CSS);
             lblAutoPaste.setTextFill(Color.WHITE);
             lblTheme.setTextFill(Color.WHITE);
             tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
             settingsHeading.setTextFill(Color.WHITE);
         } else {
-            settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+            Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
             lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
-            lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            lblDefaultDownloadDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
         }
     }
 
     private void creatDarkThemeLogic() {
-        darkLightTheme.getItems().addAll("Dark Theme", "Light Theme");
-        darkLightTheme.setTranslateY(210);
-        darkLightTheme.setTranslateX(130);
-        darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
-        darkLightTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (AppSettings.GET.mainTheme().equals("LIGHT")) {
-                AppSettings.SET.mainTheme("Light");
-            } else {
-                AppSettings.SET.mainTheme("Dark");
-            }
-        });
-        darkLightTheme.setOnAction(e -> {
-            applyTheme(darkLightTheme.getValue().equals("Dark Theme") ? "Dark" : "Light");
-        });
-
-
+        themeCheckBox.getItems().addAll("Dark Theme", "Light Theme");
+        themeCheckBox.setTranslateY(210);
+        themeCheckBox.setTranslateX(130);
+        themeCheckBox.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
+        themeCheckBox.setOnAction(e -> applyTheme(themeCheckBox.getValue().equals("Dark Theme") ? "Dark" : "Light"));
     }
 
     private void updateTextColors(boolean isDark) {
@@ -143,7 +111,7 @@ public class Settings {
         Paint color = isDark ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
         lblAutoPaste.setTextFill(color);
         lblTheme.setTextFill(color);
-        lblDwnDir.setTextFill(color);
+        lblDefaultDownloadDir.setTextFill(color);
         settingsHeading.setTextFill(color);
         for (Node node : Drifty_GUI.getAboutRoot().getChildren()) {
             if (node instanceof Label) {
@@ -160,87 +128,66 @@ public class Settings {
 
     private void applyTheme(String theme) {
         boolean isDark = theme.equals("Dark");
-        AppSettings.SET.mainTheme(isDark ? "Dark" : "Light");
-        addingCSSFiels(isDark);
+        AppSettings.SET.mainTheme(theme);
+        updateCSS(isDark);
         updateTextColors(isDark);
-        setupButtonGraphics(isDark ? "Dark" : "Light");
+        setupButtonGraphics(theme);
         // Banner and Logo
-        changeImages(isDark);
-        // handeling the button styles
-        changeBtnStyle(isDark);
+        changeImages(theme);
+        // handling the button styles
+        changeButtonStyle(isDark);
     }
 
-    private void changeBtnStyle(boolean isDark) {
+    private void changeButtonStyle(boolean isDark) {
         String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
-
-        String backColorRealesd = isDark ? "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" :
-                " -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
-
-
-        String backColorPressed = isDark ? " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);" :
-                " -fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, " +
-                        "rgb(54,151,225) 100%);";
-
-        button.setStyle(style +
-                "    -fx-font-weight: Bold;" +
-                backColorRealesd +
-                "    -fx-border-color: black;"
-        );
-        button.setOnMousePressed(ev -> {
-            button.setStyle(
-                    style +
-                            "-fx-font-weight: Bold;" +
-                            backColorPressed +
-                            "-fx-border-color: black;"
-
-            );
-        });
-        button.setOnMouseReleased(ev -> {
-            button.setStyle(style +
-                    "-fx-font-weight: Bold;" +
-                    backColorRealesd +
-                    "    -fx-border-color: black;");
-        });
+        String backColorRealesd = isDark ? "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" : "-fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
+        String backColorPressed = isDark ? " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);" : "-fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, rgb(54,151,225) 100%);";
+        button.setStyle(style + "-fx-font-weight: Bold;" + backColorRealesd + "-fx-border-color: black;");
+        button.setOnMousePressed(ev -> button.setStyle(
+            style + "-fx-font-weight: Bold;" + backColorPressed + "-fx-border-color: black;"
+        ));
+        button.setOnMouseReleased(ev -> button.setStyle(
+            style + "-fx-font-weight: Bold;" + backColorRealesd + "-fx-border-color: black;"
+        ));
     }
 
-    private void changeImages(boolean isDark) {
-        String bannerPath = isDark ? "/Backgrounds/DriftyMain Dark.png" : "/Backgrounds/DriftyMain.png";
-        String splashPath = isDark ? "/Splash Dark.png" : "/Splash.png";
-        Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
-        MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
-        Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
-        Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+    private void changeImages(String theme) {
+        String bannerPath = "/Backgrounds/DriftyMain" + theme + ".png";
+        String splashPath = "/Splash" + theme + ".png";
+        Constants.imgMainGuiBanner = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
+        MainGridPane.ivLogo.setImage(Constants.imgMainGuiBanner);
+        Constants.imgSplash = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
+        Drifty_GUI.getAppIcon().setImage(Constants.imgSplash);
     }
 
-    private void addingCSSFiels(boolean isDark) {
+    private void updateCSS(boolean isDark) {
         if (isDark) {
-            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/Label.css").toExternalForm());
-            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            settingsScene.getStylesheets().remove(Objects.requireNonNull(Settings.class.getResource("/CSS/Label.css")).toExternalForm());
+            Constants.addCSS(settingsScene, Constants.DARK_THEME_CSS);
+            Drifty_GUI.getScene().getStylesheets().add(Objects.requireNonNull(Constants.DARK_THEME_CSS).toExternalForm());
             if (Drifty_GUI.getAboutScene() != null) {
                 Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             }
         } else {
-            AppSettings.SET.mainTheme("LIGHT");
-            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
-            settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+            AppSettings.SET.mainTheme("Light");
+            settingsScene.getStylesheets().remove(Objects.requireNonNull(Settings.class.getResource("/CSS/DarkTheme.css")).toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().remove(Objects.requireNonNull(Settings.class.getResource("/CSS/DarkTheme.css")).toExternalForm());
+            settingsScene.getStylesheets().add(Objects.requireNonNull(Constants.LIGHT_THEME_CSS).toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().add(Constants.LIGHT_THEME_CSS.toExternalForm());
             if (Drifty_GUI.getAboutScene() != null) {
                 Drifty_GUI.getAboutScene().getStylesheets().clear();
-                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
-
+                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.LIGHT_THEME_CSS.toExternalForm());
             }
         }
 
     }
 
     private void creatAutoPasteCheck() {
-        autoPasteCheck.setSelected(AppSettings.GET.mainAutoPaste());
-        autoPasteCheck.setTranslateX(160);
-        autoPasteCheck.setTranslateY(115);
-        autoPasteCheck.setMaxWidth(5.0);
-        autoPasteCheck.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
+        AUTO_PASTE_CHECK.setSelected(AppSettings.GET.mainAutoPaste());
+        AUTO_PASTE_CHECK.setTranslateX(160);
+        AUTO_PASTE_CHECK.setTranslateY(115);
+        AUTO_PASTE_CHECK.setMaxWidth(5.0);
+        AUTO_PASTE_CHECK.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
 
 
     }
@@ -264,13 +211,13 @@ public class Settings {
         lblTheme.setTranslateX(-20);
 
 
-        lblDwnDir.setTranslateX(-160);
-        lblDwnDir.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        lblDwnDir.setTranslateY(-50);
-        lblDwnDir.setStyle(
+        lblDefaultDownloadDir.setTranslateX(-160);
+        lblDefaultDownloadDir.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        lblDefaultDownloadDir.setTranslateY(-50);
+        lblDefaultDownloadDir.setStyle(
                 "-fx-font-weight: Bold ; -fx-font-size:20px"
         );
-        lblDwnDir.setTextFill(AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        lblDefaultDownloadDir.setTextFill(AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
 
 
     }
@@ -283,7 +230,7 @@ public class Settings {
 
     }
 
-    private void creatDirBtn() {
+    private void creatDirButton() {
         button.setTranslateY(50);
         if (AppSettings.GET.mainTheme().equals("Dark")) {
             button.setStyle(" -fx-text-fill: white;\n" +
@@ -325,19 +272,19 @@ public class Settings {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedDirectory = chooser.showDialog(this.stage);
-        String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : Get.lastDownloadFolder();
+        String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
         UIController.form.tfDir.setText(directoryPath);
         tfCurrDir.setText(directoryPath);
         UIController.form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
-                UIController.getDirExist().setValue(false);
+                UIController.getDirectoryExists().setValue(false);
                 if (newValue.isEmpty()) {
                     Environment.getMessageBroker().msgDirError("Directory cannot be empty!");
                 } else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         Environment.getMessageBroker().msgDirInfo("Directory exists!");
-                        UIController.getDirExist().setValue(true);
+                        UIController.getDirectoryExists().setValue(true);
                     } else {
                         Environment.getMessageBroker().msgDirError("Directory does not exist or is not a directory!");
                     }

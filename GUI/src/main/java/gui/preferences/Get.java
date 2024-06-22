@@ -43,7 +43,7 @@ public class Get extends preferences.Get {
     }
 
     public String mainTheme() {
-        return preferences.get(MAIT_THEME.toString(), "LIGHT");
+        return preferences.get(MAIN_THEME.toString(), "Light");
     }
 
     public Jobs jobs() {

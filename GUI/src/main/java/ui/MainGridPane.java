@@ -21,18 +21,15 @@ import java.util.Objects;
 import static gui.support.Constants.MONACO_TTF;
 
 public class MainGridPane extends GridPane {
-    public static ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER , .45);
+    public static ImageView ivLogo = newImageView(Constants.imgMainGuiBanner, .45);
     public final ProgressBar pBar = pBar();
     public final ListView<Job> listView = listView();
     public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
     public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
     public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public Button btnStart = AppSettings.GET.mainTheme().equals("Dark")? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) :newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN);
-
-
-    public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark")? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) :newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN);
-
+    public final Button btnStart = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) : newButton(Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
+    public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) : newButton(Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
     public static HBox boxLogo = newHBox(ivLogo);
