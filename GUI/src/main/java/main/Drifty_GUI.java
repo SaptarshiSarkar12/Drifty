@@ -33,7 +33,7 @@ import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
-    private static final VBox aboutRoot = new VBox(10);
+    private static final VBox ABOUT_ROOT = new VBox(10);
     private static Scene scene;
     private static Scene aboutScene;
     private static ImageView appIcon = new ImageView(Constants.imgSplash);
@@ -139,7 +139,7 @@ public class Drifty_GUI extends Application {
     }
 
     public static VBox getAboutRoot() {
-        return aboutRoot;
+        return ABOUT_ROOT;
     }
 
     private Menu getWindowMenu() {
@@ -165,8 +165,8 @@ public class Drifty_GUI extends Application {
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
             Stage stage = Constants.getStage("About Drifty", false);
-            aboutRoot.setPadding(new Insets(10));
-            aboutRoot.setAlignment(Pos.TOP_CENTER);
+            ABOUT_ROOT.setPadding(new Insets(10));
+            ABOUT_ROOT.setAlignment(Pos.TOP_CENTER);
             appIcon = new ImageView(Constants.imgSplash);
             appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
             appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
@@ -192,18 +192,18 @@ public class Drifty_GUI extends Application {
             githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
             githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
             githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            aboutRoot.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
+            ABOUT_ROOT.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
             if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
                 Label lblFfmpegVersion = new Label("FFMPEG version: " + AppSettings.GET.ffmpegVersion());
                 lblFfmpegVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
                 lblFfmpegVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                aboutRoot.getChildren().add(lblFfmpegVersion);
+                ABOUT_ROOT.getChildren().add(lblFfmpegVersion);
             }
-            aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
-            aboutScene = Constants.getScene(aboutRoot);
+            ABOUT_ROOT.getChildren().addAll(websiteLink, discordLink, githubLink);
+            aboutScene = Constants.getScene(ABOUT_ROOT);
             if (AppSettings.GET.mainTheme().equals("Dark")) {
                 aboutScene.getStylesheets().add(Objects.requireNonNull(Constants.DARK_THEME_CSS).toExternalForm());
-                for (Node node : Drifty_GUI.aboutRoot.getChildren()) {
+                for (Node node : Drifty_GUI.ABOUT_ROOT.getChildren()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(Color.WHITE);
                     }
