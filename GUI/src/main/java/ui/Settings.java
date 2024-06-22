@@ -28,7 +28,6 @@ import java.util.Objects;
 public class Settings {
     Scene settingsScene;
     private ChoiceBox<String> darkLightTheme = new ChoiceBox<>();
-
     Label lblDwnDir = new Label("Default Download Directory");
 
     private TextField tfCurrDir = new TextField(UIController.form.tfDir.getText());
@@ -46,7 +45,6 @@ public class Settings {
         }
 
     }
-
     private void setupButtonGraphics(String theme) {
         Image imageStartUp = getImageForButton(theme, "StartUp");
         Image imageStartDown = getImageForButton(theme, "StartDown");
@@ -76,63 +74,56 @@ public class Settings {
     }
 
     Label lblTheme = new Label("Theme");
-
     Label settingsHeading = new Label("Settings");
     private Button button = new Button("Select Directory");
     private Stage stage = Constants.getStage("Settings", false);
     Label lblAutoPaste = new Label("Auto-Paste");
 
     public void creatSettings() {
-
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
-
         creatDarkThemeLogic();
-
         creatTfDir();
-
         creatLabels();
-
         creatAutoPasteCheck();
-
         creatDirBtn();
-
-
         root.getChildren().addAll(darkLightTheme, autoPasteCheck, lblTheme, lblAutoPaste, settingsHeading, button, lblDwnDir, tfCurrDir);
         settingsScene = Constants.getScene(root);
         Constants.addCSS(settingsScene, Constants.SCENE_CSS);
         stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
         stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
         stage.setScene(settingsScene);
-
-
         if (AppSettings.GET.mainTheme().equals("Dark")) {
+            setInitialTheme("Dark");
+
+        } else {
+            setInitialTheme("Light");
+        }
+        stage.show();
+    }
+
+    private void setInitialTheme(String theme) {
+        if (theme.equals("Dark")) {
             settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             lblAutoPaste.setTextFill(Color.WHITE);
             lblTheme.setTextFill(Color.WHITE);
             tfCurrDir.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
             settingsHeading.setTextFill(Color.WHITE);
-
         } else {
-            tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
-            lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             lblAutoPaste.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            tfCurrDir.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
+            lblDwnDir.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             settingsHeading.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
         }
-        stage.show();
-
     }
 
     private void creatDarkThemeLogic() {
         darkLightTheme.getItems().addAll("Dark Theme", "Light Theme");
         darkLightTheme.setTranslateY(210);
         darkLightTheme.setTranslateX(130);
-
         darkLightTheme.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
-
-
         darkLightTheme.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (AppSettings.GET.mainTheme().equals("LIGHT")) {
                 AppSettings.SET.mainTheme("Light");
@@ -140,7 +131,6 @@ public class Settings {
                 AppSettings.SET.mainTheme("Dark");
             }
         });
-
         darkLightTheme.setOnAction(e -> {
             applyTheme(darkLightTheme.getValue().equals("Dark Theme") ? "Dark" : "Light");
         });
@@ -148,62 +138,41 @@ public class Settings {
 
     }
 
-    private void applyTheme(String theme) {
-
-        boolean isDark = theme.equals("Dark");
-        AppSettings.SET.mainTheme(isDark ? "Dark" : "Light");
-        if (isDark) {
-            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/Label.css").toExternalForm());
-            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-            if (Drifty_GUI.getAboutScene() != null) {
-                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
-            }
-        } else {
-            AppSettings.SET.mainTheme("LIGHT");
-            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
-            settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
-            if (Drifty_GUI.getAboutScene() != null) {
-                Drifty_GUI.getAboutScene().getStylesheets().clear();
-                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
-
-            }
-        }
-
-
-        Paint color = isDark ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
+    private void updateTextColors(boolean isDark) {
         // Labels
+        Paint color = isDark ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
         lblAutoPaste.setTextFill(color);
-        lblDwnDir.setTextFill(color);
         lblTheme.setTextFill(color);
+        lblDwnDir.setTextFill(color);
         settingsHeading.setTextFill(color);
         for (Node node : Drifty_GUI.getAboutRoot().getChildren()) {
             if (node instanceof Label) {
                 ((Label) node).setTextFill(color);
             }
         }
-
-        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
         // TextFields
+        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
         tfCurrDir.setStyle(style + "-fx-font-weight: Bold");
+    }
 
+    private void applyTheme(String theme) {
+        boolean isDark = theme.equals("Dark");
+        AppSettings.SET.mainTheme(isDark ? "Dark" : "Light");
+        addingCSSFiels(isDark);
+        updateTextColors(isDark);
         setupButtonGraphics(isDark ? "Dark" : "Light");
-
         // Banner and Logo
-        String bannerPath = isDark ? "/Backgrounds/DriftyMain Dark.png" : "/Backgrounds/DriftyMain.png";
-        String splashPath = isDark ? "/Splash Dark.png" : "/Splash.png";
-        Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
-        MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
-        Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
-        Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+        changeImages(isDark);
+        // handeling the button styles
+        changeBtnStyle(isDark);
+    }
 
+    private void changeBtnStyle(boolean isDark) {
+        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
 
-//        // handeling the button styles
         String backColorRealesd = isDark ? "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" :
                 " -fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
 
@@ -232,7 +201,37 @@ public class Settings {
                     backColorRealesd +
                     "    -fx-border-color: black;");
         });
+    }
 
+    private void changeImages(boolean isDark) {
+        String bannerPath = isDark ? "/Backgrounds/DriftyMain Dark.png" : "/Backgrounds/DriftyMain.png";
+        String splashPath = isDark ? "/Splash Dark.png" : "/Splash.png";
+        Constants.IMG_MAIN_GUI_BANNER = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
+        MainGridPane.ivLogo.setImage(Constants.IMG_MAIN_GUI_BANNER);
+        Constants.IMG_SPLASH = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
+        Drifty_GUI.getAppIcon().setImage(Constants.IMG_SPLASH);
+    }
+
+    private void addingCSSFiels(boolean isDark) {
+        if (isDark) {
+            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/Label.css").toExternalForm());
+            settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            if (Drifty_GUI.getAboutScene() != null) {
+                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
+            }
+        } else {
+            AppSettings.SET.mainTheme("LIGHT");
+            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
+            settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+            if (Drifty_GUI.getAboutScene() != null) {
+                Drifty_GUI.getAboutScene().getStylesheets().clear();
+                Drifty_GUI.getAboutScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
+
+            }
+        }
 
     }
 
@@ -245,7 +244,6 @@ public class Settings {
 
 
     }
-
     private void creatLabels() {
         settingsHeading.setAlignment(Pos.TOP_CENTER);
         settingsHeading.setFont(Font.font("monospace", FontWeight.EXTRA_BOLD, 100));
