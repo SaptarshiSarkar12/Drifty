@@ -153,7 +153,7 @@ public class Settings {
         boolean isDark = theme.equals("Dark");
         AppSettings.SET.mainTheme(isDark ? "Dark" : "Light");
         if (isDark) {
-            settingsScene.getStylesheets().remove(getClass().getResource("/CSS/Label.css").toExternalForm());
+            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/Label.css").toExternalForm());
             settingsScene.getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             Drifty_GUI.getScene().getStylesheets().add(Constants.DARK_THEME_CSS.toExternalForm());
             if (Drifty_GUI.getAboutScene() != null) {
@@ -161,8 +161,8 @@ public class Settings {
             }
         } else {
             AppSettings.SET.mainTheme("LIGHT");
-            settingsScene.getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
-            Drifty_GUI.getScene().getStylesheets().remove(getClass().getResource("/CSS/DarkTheme.css").toExternalForm());
+            settingsScene.getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
+            Drifty_GUI.getScene().getStylesheets().remove(Settings.class.getResource("/CSS/DarkTheme.css").toExternalForm());
             settingsScene.getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             Drifty_GUI.getScene().getStylesheets().add(Constants.SCENE_CSS.toExternalForm());
             if (Drifty_GUI.getAboutScene() != null) {
