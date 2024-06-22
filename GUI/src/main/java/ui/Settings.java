@@ -36,21 +36,43 @@ public class Settings {
     private final String nl = System.lineSeparator();
     public static CheckBox autoPasteCheck = new CheckBox();
 
+    private Image getImageForButton(String theme, String buttonType) {
+        if (buttonType.equals("StartUp") || buttonType.equals("StartDown")) {
+            String imagePath = theme.equals("Dark") ? "/Buttons/Start/" + buttonType + " Dark.png" : "/Buttons/Start/" + buttonType + ".png";
+            return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
+        } else {
+            String imagePath = theme.equals("Dark") ? "/Buttons/Save/" + buttonType + " Dark.png" : "/Buttons/Save/" + buttonType + ".png";
+            return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
+        }
+
+    }
+
     private void setupButtonGraphics(String theme) {
-        boolean isDark = theme.equals("Dark");
-        String imagePath = isDark ? "/Buttons/Start/StartUp Dark.png" : "/Buttons/Start/StartUp.png";
-        Image imageUp = new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
-        Image imageDown = new Image(Objects.requireNonNull(Constants.class.getResource(imagePath.replace("Up", "Down"))).toExternalForm());
-        ImageView imageViewUp = new ImageView(imageUp);
-        ImageView imageViewDn = new ImageView(imageDown);
-        double width = imageUp.getWidth();
-        imageViewUp.setPreserveRatio(true);
-        imageViewUp.setFitWidth(width * 0.45);
-        imageViewDn.setPreserveRatio(true);
-        imageViewDn.setFitWidth(width * 0.45);
-        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewDn));
-        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewUp));
-        UIController.form.btnStart.setGraphic(imageViewUp);
+        Image imageStartUp = getImageForButton(theme, "StartUp");
+        Image imageStartDown = getImageForButton(theme, "StartDown");
+        ImageView imageViewStartUp = new ImageView(imageStartUp);
+        ImageView imageViewSartDn = new ImageView(imageStartDown);
+        double width = imageStartUp.getWidth();
+        imageViewStartUp.setPreserveRatio(true);
+        imageViewStartUp.setFitWidth(width * 0.45);
+        imageViewSartDn.setPreserveRatio(true);
+        imageViewSartDn.setFitWidth(width * 0.45);
+        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(imageViewSartDn));
+        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(imageViewStartUp));
+        UIController.form.btnStart.setGraphic(imageViewStartUp);
+
+        Image imageSaveUp = getImageForButton(theme, "SaveUp");
+        Image imageSaveDown = getImageForButton(theme, "SaveDown");
+        ImageView imageViewSaveUp = new ImageView(imageSaveUp);
+        ImageView imageViewSaveDn = new ImageView(imageSaveDown);
+        double widthSave = imageSaveUp.getWidth();
+        imageViewSaveUp.setPreserveRatio(true);
+        imageViewSaveUp.setFitWidth(widthSave * 0.45);
+        imageViewSaveDn.setPreserveRatio(true);
+        imageViewSaveDn.setFitWidth(widthSave * 0.45);
+        UIController.form.btnSave.setOnMousePressed(ev -> UIController.form.btnSave.setGraphic(imageViewSaveDn));
+        UIController.form.btnSave.setOnMouseReleased(ev -> UIController.form.btnSave.setGraphic(imageViewSaveUp));
+        UIController.form.btnSave.setGraphic(imageViewSaveUp);
     }
 
     Label lblTheme = new Label("Theme");
@@ -170,7 +192,7 @@ public class Settings {
         UIController.form.tfLink.setStyle(style);
         tfCurrDir.setStyle(style + "-fx-font-weight: Bold");
 
-        setupButtonGraphics("Light");
+        setupButtonGraphics(isDark ? "Dark" : "Light");
 
         // Banner and Logo
         String bannerPath = isDark ? "/Backgrounds/DriftyMain Dark.png" : "/Backgrounds/DriftyMain.png";
