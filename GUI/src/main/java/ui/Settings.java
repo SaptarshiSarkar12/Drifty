@@ -5,7 +5,6 @@ import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -13,15 +12,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.Drifty_GUI;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Settings {
@@ -101,12 +97,7 @@ public class Settings {
         themeCheckBox.setTranslateY(210);
         themeCheckBox.setTranslateX(130);
         themeCheckBox.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
-        ArrayList<Scene> scenes = new ArrayList<>();
         themeCheckBox.setOnAction(e -> {
-            scenes.add(settingsScene);
-            scenes.add(Drifty_GUI.getScene());
-            scenes.add(Drifty_GUI.getAboutScene());
-            scenes.add(ConfirmationDialog.getScene());
             Theme.applyTheme(themeCheckBox.getValue().equals("Dark Theme") ? "Dark" : "Light",
                     settingsScene, Drifty_GUI.getScene(), Drifty_GUI.getAboutScene(), ConfirmationDialog.getScene());
         });

@@ -9,27 +9,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import main.Drifty_GUI;
-
-import java.util.ArrayList;
-
 import static utils.Utility.sleep;
 
 public class ConfirmationDialog {
     enum State {
         YES_NO, OK, FILENAME
     }
+
     private static Scene scene;
     private final State state;
     private final String lf = System.lineSeparator();
@@ -47,12 +42,15 @@ public class ConfirmationDialog {
     public static Button getBtnNo() {
         return btnNo;
     }
+
     public static Scene getScene() {
         return scene;
     }
+
     public static Button getBtnYes() {
         return btnYes;
     }
+
     public ConfirmationDialog(String windowTitle, String message, boolean okOnly) {
         this.windowTitle = windowTitle;
         this.msg = message;
@@ -106,6 +104,7 @@ public class ConfirmationDialog {
         button.setOnAction(event);
         return button;
     }
+
     private void createControls() {
         Text text = new Text(msg);
         text.setFont(Constants.getMonaco(16));
@@ -165,15 +164,13 @@ public class ConfirmationDialog {
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
-        ArrayList<Scene> scenes = new ArrayList<>();
-        scenes.add(scene);
-        if(AppSettings.GET.mainTheme().equals("Dark")){
-            Theme.applyTheme("Dark" , scene);
-            Theme.changeButtonStyle(true , btnYes);
-            Theme.changeButtonStyle(true , btnNo);
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Theme.applyTheme("Dark", scene);
+            Theme.changeButtonStyle(true, btnYes);
+            Theme.changeButtonStyle(true, btnNo);
 
-        }else {
-            Theme.applyTheme("Light" , scene);
+        } else {
+            Theme.applyTheme("Light", scene);
         }
         stage.setWidth(width);
         stage.setHeight(height);

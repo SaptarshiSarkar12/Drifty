@@ -1,7 +1,6 @@
 package ui;
 
 import gui.preferences.AppSettings;
-import gui.preferences.Set;
 import gui.support.Constants;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -9,14 +8,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import main.Drifty_GUI;
-
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Theme {
