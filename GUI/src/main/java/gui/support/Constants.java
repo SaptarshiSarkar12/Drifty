@@ -14,6 +14,17 @@ import java.net.URL;
 import java.util.Objects;
 
 public class Constants extends support.Constants {
+    public static final String BTN_THEME =
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: Bold;" +
+            "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
+            "-fx-border-color: black;";
+    public static final String BTN_THEME_PRESSED =
+            "-fx-text-fill: white;" +
+            "-fx-font-weight: Bold;" +
+            " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n" +
+            "-fx-border-color: black;";
+
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String TRYING_TO_DOWNLOAD_F = "Trying to download \"%s\" ...";
     public static final String WRITE_ACCESS_DENIED_F = "Write Access To \"%s\" DENIED!";

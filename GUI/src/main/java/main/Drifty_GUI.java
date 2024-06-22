@@ -33,7 +33,7 @@ import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
-    private static final VBox ABOUT_ROOT = new VBox(10);
+    private static VBox ABOUT_ROOT;
     private static Scene scene;
     private static Scene aboutScene;
     private static ImageView appIcon = new ImageView(Constants.imgSplash);
@@ -164,6 +164,7 @@ public class Drifty_GUI extends Application {
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
+            ABOUT_ROOT = new VBox(10);
             Stage stage = Constants.getStage("About Drifty", false);
             ABOUT_ROOT.setPadding(new Insets(10));
             ABOUT_ROOT.setAlignment(Pos.TOP_CENTER);
