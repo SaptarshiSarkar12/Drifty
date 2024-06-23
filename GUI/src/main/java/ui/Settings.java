@@ -24,7 +24,7 @@ public class Settings {
     private static final Label LBL_THEME = new Label("Theme");
     private static final Label SETTINGS_HEADING = new Label("Settings");
     private static final Label LBL_AUTO_PASTE = new Label("Auto-Paste");
-    static final Button button = new Button("Select Directory");
+    static final Button SELECT_DIRECTORY_BUTTON = new Button("Select Directory");
     private final ChoiceBox<String> themeChoiceBox = new ChoiceBox<>();
     private final Stage stage = Constants.getStage("Settings", false);
     private static Scene settingsScene;
@@ -38,7 +38,7 @@ public class Settings {
         createLabels();
         createAutoPasteCheck();
         createDirectoryButton();
-        root.getChildren().addAll(themeChoiceBox, AUTO_PASTE_CHECKBOX, LBL_THEME, LBL_AUTO_PASTE, SETTINGS_HEADING, button, LBL_DEFAULT_DOWNLOAD_DIR, TF_CURRENT_DIRECTORY);
+        root.getChildren().addAll(themeChoiceBox, AUTO_PASTE_CHECKBOX, LBL_THEME, LBL_AUTO_PASTE, SETTINGS_HEADING, SELECT_DIRECTORY_BUTTON, LBL_DEFAULT_DOWNLOAD_DIR, TF_CURRENT_DIRECTORY);
         settingsScene = Constants.getScene(root);
         Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
         stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
@@ -112,15 +112,15 @@ public class Settings {
     }
 
     private void createDirectoryButton() {
-        button.setTranslateY(50);
+        SELECT_DIRECTORY_BUTTON.setTranslateY(50);
         if (AppSettings.GET.mainTheme().equals("Dark")) {
-            button.setStyle(Constants.BUTTON_THEME_RELEASED);
-            button.setOnMousePressed(e -> button.setStyle(Constants.BUTTON_THEME_PRESSED));
-            button.setOnMouseReleased(e -> button.setStyle(Constants.BUTTON_THEME_RELEASED));
+            SELECT_DIRECTORY_BUTTON.setStyle(Constants.BUTTON_THEME_RELEASED);
+            SELECT_DIRECTORY_BUTTON.setOnMousePressed(e -> SELECT_DIRECTORY_BUTTON.setStyle(Constants.BUTTON_THEME_PRESSED));
+            SELECT_DIRECTORY_BUTTON.setOnMouseReleased(e -> SELECT_DIRECTORY_BUTTON.setStyle(Constants.BUTTON_THEME_RELEASED));
         } else {
-            button.getStyleClass().add("button");
+            SELECT_DIRECTORY_BUTTON.getStyleClass().add("button");
         }
-        button.setOnAction(e -> handleDirectorySelection());
+        SELECT_DIRECTORY_BUTTON.setOnAction(e -> handleDirectorySelection());
     }
 
     private void handleDirectorySelection() {

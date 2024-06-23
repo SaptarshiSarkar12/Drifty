@@ -22,7 +22,7 @@ public class Theme {
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
         changeImages(theme);
-        changeButtonStyle(isDark, Settings.button);
+        changeButtonStyle(isDark, Settings.SELECT_DIRECTORY_BUTTON);
         Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnYes());
         Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
         setupButtonGraphics(theme);
