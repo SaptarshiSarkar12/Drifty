@@ -42,7 +42,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 import static gui.support.Colors.*;
 import static gui.support.Constants.MONACO_TTF;
@@ -283,10 +282,10 @@ public final class UIController {
                         String folder = fileExists(filename);
                         String windowTitle;
                         if (!folder.isEmpty()) {
-                            message = intro + "And the file exists in this download folder:" + nl + folder + nl.repeat(2) + "If you wish to download it again, it will be given the name shown below, or you can change it as you wish." + nl.repeat(2) + "YES will add the job to the list with new filename. NO will do nothing.";
+                            message = intro + "The file already exists in the selected download folder:" + nl + folder + nl.repeat(2) + "Choose 'YES' to download and automatically rename the file to avoid overwriting the existing one. Alternatively, you can manually change the filename below to your preference." + nl.repeat(2) + "Choose 'NO' if you do not wish to download the file again.";
                             windowTitle = "File Already Exists";
                         } else {
-                            message = intro + "However, the file does not exist in any of your download folders." + nl.repeat(2) + "Do you still wish to download this file?";
+                            message = intro + "The file does not exist in any of your designated download folders." + nl.repeat(2) + "This is a good opportunity to download it without concerns of duplicating existing files. Click 'YES' to proceed with the download, or 'NO' if you decide not to download.";
                             windowTitle = "File Already Downloaded";
                         }
                         ConfirmationDialog ask = new ConfirmationDialog(windowTitle, message, renameFile(filename, dir));
@@ -762,16 +761,10 @@ public final class UIController {
                 if (getJobs().isEmpty()) {
                     form.listView.getItems().clear();
                 } else {
-                    // Remove duplicate jobs if any
-                    Set<String> encounteredLinks = new HashSet<>();
-                    ConcurrentLinkedDeque<Job> duplicates = getJobs().jobList().stream().filter(job -> !encounteredLinks.add(job.getLink())).collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
-                    for (Job job : duplicates) {
-                        removeJobFromList(job);
-                    }
-                    // Sort the Job list
-                    ArrayList<Job> sortList = new ArrayList<>(getJobs().jobList());
-                    sortList.sort(Comparator.comparing(Job::toString));
-                    getJobs().setList(new ConcurrentLinkedDeque<>(sortList));
+                    // Use TreeSet to remove duplicates and sort simultaneously
+                    Set<Job> sortedJobs = new TreeSet<>(Comparator.comparing(Job::toString));
+                    sortedJobs.addAll(getJobs().jobList());
+                    getJobs().setList(new ConcurrentLinkedDeque<>(sortedJobs));
                 }
                 // Assign the jobList to the ListView
                 form.listView.getItems().setAll(getJobs().jobList());
@@ -868,10 +861,6 @@ public final class UIController {
 
     private JobHistory getHistory() {
         return AppSettings.GET.jobHistory();
-    }
-
-    static BooleanProperty getDirectoryExists() {
-        return DIRECTORY_EXISTS;
     }
 
     private void selectJob(Job job) {

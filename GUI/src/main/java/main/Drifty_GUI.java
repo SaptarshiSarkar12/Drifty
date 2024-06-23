@@ -6,37 +6,27 @@ import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.application.Application;
 import javafx.application.Preloader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import properties.Mode;
 import ui.*;
 import utils.Utility;
 
-import java.util.Objects;
-
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
 import static support.Constants.DRIFTY_WEBSITE_URL;
-import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
+    public static final Drifty_GUI INSTANCE = new Drifty_GUI();
     private static MessageBroker msgBroker;
-    private static VBox ABOUT_ROOT;
     private static Scene scene;
-    private static Scene aboutScene;
-    private static ImageView appIcon = new ImageView(Constants.imgSplash);
     private Stage primaryStage;
 
     public static void main(String[] args) {
@@ -130,18 +120,6 @@ public class Drifty_GUI extends Application {
         return scene;
     }
 
-    public static Scene getAboutScene() {
-        return aboutScene;
-    }
-
-    public static ImageView getAppIcon() {
-        return appIcon;
-    }
-
-    public static VBox getAboutRoot() {
-        return ABOUT_ROOT;
-    }
-
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
@@ -163,58 +141,7 @@ public class Drifty_GUI extends Application {
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        about.setOnAction(event -> {
-            ABOUT_ROOT = new VBox(10);
-            Stage stage = Constants.getStage("About Drifty", false);
-            ABOUT_ROOT.setPadding(new Insets(10));
-            ABOUT_ROOT.setAlignment(Pos.TOP_CENTER);
-            appIcon = new ImageView(Constants.imgSplash);
-            appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
-            appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
-            appIcon.setPreserveRatio(true);
-            Label lblDescription = new Label("An Open-Source Interactive File Downloader System");
-            lblDescription.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-            lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
-            Label lblDriftyVersion = new Label("Drifty " + VERSION_NUMBER);
-            Label lblYtDlpVersion = new Label("yt-dlp version: " + AppSettings.GET.ytDlpVersion());
-            lblDriftyVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-            lblDriftyVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            lblYtDlpVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-            lblYtDlpVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            Hyperlink websiteLink = new Hyperlink("Website");
-            websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
-            websiteLink.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty"));
-            Hyperlink discordLink = new Hyperlink("Join Discord");
-            discordLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            discordLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"));
-            discordLink.setOnAction(e -> openWebsite("https://discord.gg/DeT4jXPfkG"));
-            Hyperlink githubLink = new Hyperlink("Contribute to Drifty");
-            githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
-            githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            ABOUT_ROOT.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
-            if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
-                Label lblFfmpegVersion = new Label("FFMPEG version: " + AppSettings.GET.ffmpegVersion());
-                lblFfmpegVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-                lblFfmpegVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                ABOUT_ROOT.getChildren().add(lblFfmpegVersion);
-            }
-            ABOUT_ROOT.getChildren().addAll(websiteLink, discordLink, githubLink);
-            aboutScene = Constants.getScene(ABOUT_ROOT);
-            if (AppSettings.GET.mainTheme().equals("Dark")) {
-                aboutScene.getStylesheets().add(Objects.requireNonNull(Constants.DARK_THEME_CSS).toExternalForm());
-                for (Node node : Drifty_GUI.ABOUT_ROOT.getChildren()) {
-                    if (node instanceof Label) {
-                        ((Label) node).setTextFill(Color.WHITE);
-                    }
-                }
-            }
-            stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
-            stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
-            stage.setScene(aboutScene);
-            stage.show();
-        });
+        about.setOnAction(event -> new About().show());
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
@@ -229,10 +156,7 @@ public class Drifty_GUI extends Application {
                 UIController.clearJobHistory();
             }
         });
-        settings.setOnAction(e -> {
-            Settings settings1 = new Settings();
-            settings1.creatSettings();
-        });
+        settings.setOnAction(e -> new Settings().show());
         menu.getItems().addAll(wipeHistory, settings);
         return menu;
     }
@@ -251,7 +175,7 @@ public class Drifty_GUI extends Application {
         return contextMenu;
     }
 
-    protected void openWebsite(String websiteURL) {
+    public void openWebsite(String websiteURL) {
         getHostServices().showDocument(websiteURL);
     }
 

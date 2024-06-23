@@ -39,18 +39,6 @@ public class ConfirmationDialog {
     private String filename = "";
     private final GetConfirmationDialogResponse answer = new GetConfirmationDialogResponse();
 
-    public static Button getBtnNo() {
-        return btnNo;
-    }
-
-    public static Scene getScene() {
-        return scene;
-    }
-
-    public static Button getBtnYes() {
-        return btnYes;
-    }
-
     public ConfirmationDialog(String windowTitle, String message, boolean okOnly) {
         this.windowTitle = windowTitle;
         this.msg = message;
@@ -160,7 +148,6 @@ public class ConfirmationDialog {
         return answer;
     }
 
-
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
@@ -168,7 +155,6 @@ public class ConfirmationDialog {
             Theme.applyTheme("Dark", scene);
             Theme.changeButtonStyle(true, btnYes);
             Theme.changeButtonStyle(true, btnNo);
-
         } else {
             Theme.applyTheme("Light", scene);
         }
@@ -187,5 +173,17 @@ public class ConfirmationDialog {
 
     public String getFilename() {
         return filename;
+    }
+
+    static Button getBtnNo() {
+        return btnNo;
+    }
+
+    static Scene getScene() {
+        return scene;
+    }
+
+    static Button getBtnYes() {
+        return btnYes;
     }
 }

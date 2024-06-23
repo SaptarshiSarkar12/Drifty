@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import main.Drifty_GUI;
+
 import java.util.Objects;
 
 public class Theme {
@@ -27,31 +27,27 @@ public class Theme {
         Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
         setupButtonGraphics(theme);
     }
-    private static void setupButtonGraphics(String theme) {
-        Image imageStartUp = getImageForButton(theme, "StartUp");
-        Image imageStartDown = getImageForButton(theme, "StartDown");
-        ImageView ivStartUp = MainGridPane.newImageView(imageStartUp, 0.45);
-        ImageView ivStartDown = MainGridPane.newImageView(imageStartDown, 0.45);
-        UIController.form.btnStart.setOnMousePressed(ev -> UIController.form.btnStart.setGraphic(ivStartDown));
-        UIController.form.btnStart.setOnMouseReleased(ev -> UIController.form.btnStart.setGraphic(ivStartUp));
-        UIController.form.btnStart.setGraphic(ivStartUp);
 
-        Image imageSaveUp = getImageForButton(theme, "SaveUp");
-        Image imageSaveDown = getImageForButton(theme, "SaveDown");
-        ImageView ivSaveUp = MainGridPane.newImageView(imageSaveUp, 0.45);
-        ImageView ivSaveDown = MainGridPane.newImageView(imageSaveDown, 0.45);
-        UIController.form.btnSave.setOnMousePressed(ev -> UIController.form.btnSave.setGraphic(ivSaveDown));
-        UIController.form.btnSave.setOnMouseReleased(ev -> UIController.form.btnSave.setGraphic(ivSaveUp));
-        UIController.form.btnSave.setGraphic(ivSaveUp);
+    private static void setupButton(Image imageUp, Image imageDown, Button button) {
+        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45);
+        ImageView imageViewDown = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45);
+        button.setOnMousePressed(ev -> button.setGraphic(imageViewDown));
+        button.setOnMouseReleased(ev -> button.setGraphic(imageViewUp));
+        button.setGraphic(imageViewUp);
     }
 
-    private static Image getImageForButton(String theme, String buttonType) {
-        String imagePath;
-        if (buttonType.equals("StartUp") || buttonType.equals("StartDown")) {
-            imagePath = "/Buttons/Start/" + buttonType + theme + ".png";
-        } else {
-            imagePath = "/Buttons/Save/" + buttonType + theme + ".png";
-        }
+    private static void setupButtonGraphics(String theme) {
+        Image imageStartUp = getImageForButton(theme, "Start", "StartUp");
+        Image imageStartDown = getImageForButton(theme, "Start", "StartDown");
+        setupButton(imageStartUp, imageStartDown, UIController.form.btnStart);
+
+        Image imageSaveUp = getImageForButton(theme, "Save", "SaveUp");
+        Image imageSaveDown = getImageForButton(theme, "Save", "SaveDown");
+        setupButton(imageSaveUp, imageSaveDown, UIController.form.btnSave);
+    }
+
+    private static Image getImageForButton(String theme, String buttonCategory, String buttonType) {
+        String imagePath = "/Buttons/" + buttonCategory + "/" + buttonType + theme + ".png";
         return new Image(Objects.requireNonNull(Constants.class.getResource(imagePath)).toExternalForm());
     }
 
@@ -61,7 +57,7 @@ public class Theme {
         Constants.imgMainGuiBanner = new Image(Objects.requireNonNull(Constants.class.getResource(bannerPath)).toExternalForm());
         MainGridPane.ivLogo.setImage(Constants.imgMainGuiBanner);
         Constants.imgSplash = new Image(Objects.requireNonNull(Constants.class.getResource(splashPath)).toExternalForm());
-        Drifty_GUI.getAppIcon().setImage(Constants.imgSplash);
+        About.getIvSplash().setImage(Constants.imgSplash);
     }
 
     private static void updateTextColors(boolean isDark, Scene... scenes) {
@@ -77,40 +73,30 @@ public class Theme {
                     }
                 }
             }
-
         }
         // TextFields
         String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
-        Settings.tfCurrDir.setStyle(style + "-fx-font-weight: Bold");
+        Settings.TF_CURRENT_DIRECTORY.setStyle(style + "-fx-font-weight: Bold");
     }
 
     static void changeButtonStyle(boolean isDark, Button button) {
         if (button != null) {
             if (isDark) {
-                button.setStyle(Constants.BTN_THEME);
-                button.setOnMousePressed(ev -> button.setStyle(
-                        Constants.BTN_THEME_PRESSED
-                ));
-                button.setOnMouseReleased(ev -> button.setStyle(
-                        Constants.BTN_THEME
-                ));
+                button.setStyle(Constants.BUTTON_THEME_RELEASED);
+                button.setOnMousePressed(ev -> button.setStyle(Constants.BUTTON_THEME_PRESSED));
+                button.setOnMouseReleased(ev -> button.setStyle(Constants.BUTTON_THEME_RELEASED));
             } else {
                 String style = "-fx-text-fill: Black;";
-                String backColorRealesd = "-fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
+                String backColorReleased = "-fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
                 String backColorPressed = "-fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, rgb(54,151,225) 100%);";
-                button.setStyle(style + backColorRealesd);
-                button.setOnMousePressed(ev -> button.setStyle(
-                        style + backColorPressed
-                ));
-                button.setOnMouseReleased(ev -> button.setStyle(
-                        style + backColorRealesd
-                ));
+                button.setStyle(style + backColorReleased);
+                button.setOnMousePressed(ev -> button.setStyle(style + backColorPressed));
+                button.setOnMouseReleased(ev -> button.setStyle(style + backColorReleased));
             }
         }
-
     }
 
     private static void updateCSS(boolean isDark, Scene... scenes) {
@@ -128,7 +114,5 @@ public class Theme {
                 }
             }
         }
-
     }
-
 }
