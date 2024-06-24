@@ -20,7 +20,7 @@ import java.io.File;
 
 public class Settings {
 
-    public CheckBox AUTO_PASTE_CHECKBOX;// Checkbox for auto-paste
+    public CheckBox AUTO_PASTE_CHECKBOX;
     private static TextField TF_CURRENT_DIRECTORY;
     private Label LBL_DEFAULT_DOWNLOAD_DIR;
     private Label LBL_THEME;

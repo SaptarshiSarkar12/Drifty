@@ -2,7 +2,6 @@ package main;
 
 import gui.init.Environment;
 import gui.preferences.AppSettings;
-import gui.preferences.Set;
 import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.application.Application;

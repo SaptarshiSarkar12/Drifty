@@ -1,7 +1,6 @@
 package ui;
 
 import gui.preferences.AppSettings;
-import gui.preferences.Set;
 import gui.support.Constants;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -80,8 +79,9 @@ public class Theme {
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
-        if (Settings.getTF_CURRENT_DIRECTORY() != null)
+        if (Settings.getTF_CURRENT_DIRECTORY() != null){
             Settings.getTF_CURRENT_DIRECTORY().setStyle(style + "-fx-font-weight: Bold");
+        }
 
     }
 
