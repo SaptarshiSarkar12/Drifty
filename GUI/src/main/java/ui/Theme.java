@@ -15,6 +15,8 @@ import javafx.scene.text.Text;
 
 import java.util.Objects;
 
+import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
+
 public class Theme {
     public static void applyTheme(String theme, Scene... scenes) {
         boolean isDark = theme.equals("Dark");
@@ -22,15 +24,12 @@ public class Theme {
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
         changeImages(theme);
-        changeButtonStyle(isDark, Settings.getSelectDirectoryButton());
-        Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnYes());
-        Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
-        setupButtonGraphics(theme);
+        updateButtonStyles(isDark, theme);
     }
 
     private static void setupButton(Image imageUp, Image imageDown, Button button) {
-        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45).build();
-        ImageView imageViewDown = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45).build();
+        ImageView imageViewUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageUp, 0.45);
+        ImageView imageViewDown = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageDown, 0.45);
         button.setOnMousePressed(ev -> button.setGraphic(imageViewDown));
         button.setOnMouseReleased(ev -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);
@@ -79,18 +78,24 @@ public class Theme {
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
-        if (Settings.getTF_CURRENT_DIRECTORY() != null){
-            Settings.getTF_CURRENT_DIRECTORY().setStyle(style + "-fx-font-weight: Bold");
+        if (Settings.getTfCurrentDirectory() != null){
+            Settings.getTfCurrentDirectory().setStyle(style + "-fx-font-weight: Bold");
         }
+    }
 
+    private static void updateButtonStyles(boolean isDark, String theme) {
+        changeButtonStyle(isDark, Settings.getSelectDirectoryButton());
+        changeButtonStyle(isDark, ConfirmationDialog.getBtnYes());
+        changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
+        setupButtonGraphics(theme);
     }
 
     static void changeButtonStyle(boolean isDark, Button button) {
         if (button != null) {
             if (isDark) {
-                button.setStyle(Constants.BUTTON_THEME_RELEASED);
-                button.setOnMousePressed(ev -> button.setStyle(Constants.BUTTON_THEME_PRESSED));
-                button.setOnMouseReleased(ev -> button.setStyle(Constants.BUTTON_THEME_RELEASED));
+                button.setStyle(Constants.BUTTON_RELEASED);
+                button.setOnMousePressed(ev -> button.setStyle(Constants.BUTTON_PRESSED));
+                button.setOnMouseReleased(ev -> button.setStyle(Constants.BUTTON_RELEASED));
             } else {
                 String style = "-fx-text-fill: Black;";
                 String backColorReleased = "-fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
@@ -103,18 +108,10 @@ public class Theme {
     }
 
     private static void updateCSS(boolean isDark, Scene... scenes) {
-        if (isDark) {
-            for (Scene scene : scenes) {
-                if (scene != null) {
-                    Constants.addCSS(scene, Constants.DARK_THEME_CSS);
-                }
-            }
-        } else {
-            for (Scene scene : scenes) {
-                if (scene != null) {
-                    scene.getStylesheets().remove(Objects.requireNonNull(Settings.class.getResource("/CSS/DarkTheme.css")).toExternalForm());
-                    Constants.addCSS(scene, Constants.LIGHT_THEME_CSS);
-                }
+        for (Scene scene : scenes) {
+            if (scene != null) {
+                Constants.addCSS(scene, isDark ? Constants.DARK_THEME_CSS : Constants.LIGHT_THEME_CSS);
+                scene.getStylesheets().remove(isDark ? Objects.requireNonNull(Constants.LIGHT_THEME_CSS).toExternalForm() : Objects.requireNonNull(Constants.DARK_THEME_CSS).toExternalForm());
             }
         }
     }

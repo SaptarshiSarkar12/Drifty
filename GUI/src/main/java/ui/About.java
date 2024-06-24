@@ -2,7 +2,6 @@ package ui;
 
 import gui.preferences.AppSettings;
 import gui.support.Constants;
-import gui.utils.UIComponentBuilder;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,11 +16,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 import static support.Constants.VERSION_NUMBER;
 
 public class About {
     private static Scene aboutScene;
-    private static ImageView ivSplash = new ImageView(Constants.imgSplash);
+    private static final ImageView ivSplash = new ImageView(Constants.imgSplash);
     private Label lblDescription;
     private Label lblDriftyVersion;
     private Label lblYtDlpVersion;
@@ -30,24 +30,37 @@ public class About {
     private Hyperlink githubLink;
     private Stage stage;
 
-    private void initializeScene() {
+    private void setupLayout() {
         VBox aboutRoot = new VBox(10);
-        stage = Constants.getStage("About Drifty", false);
         aboutRoot.setPadding(new Insets(10));
         aboutRoot.setAlignment(Pos.TOP_CENTER);
-        ivSplash = new ImageView(Constants.imgSplash);
+        setupImageView();
+        createLabels();
+        createHyperlinks();
+        setupStage();
+        aboutRoot.getChildren().addAll(ivSplash, lblDescription, lblDriftyVersion, lblYtDlpVersion);
+        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+            Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("FFMPEG version: " + AppSettings.GET.ffmpegVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            aboutRoot.getChildren().add(lblFfmpegVersion);
+        }
+        aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
+        aboutScene = Constants.getScene(aboutRoot);
+        applyThemeSettings(aboutRoot);
+    }
+
+    private void setupImageView() {
         ivSplash.setFitWidth(Constants.SCREEN_WIDTH * .2);
         ivSplash.setFitHeight(Constants.SCREEN_HEIGHT * .2);
         ivSplash.setPreserveRatio(true);
-        createLabels();
-        aboutRoot.getChildren().addAll(ivSplash, lblDescription, lblDriftyVersion, lblYtDlpVersion);
-        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
-            Label lblFfmpegVersion = UIComponentBuilder.getInstance().newLabel("FFMPEG version: " + AppSettings.GET.ffmpegVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            aboutRoot.getChildren().add(lblFfmpegVersion);
-        }
-        createHyperlinks();
-        aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
-        aboutScene = Constants.getScene(aboutRoot);
+    }
+
+    private void setupStage() {
+        stage = Constants.getStage("About Drifty", false);
+        stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
+        stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
+    }
+
+    private void applyThemeSettings(VBox aboutRoot) {
         if (AppSettings.GET.mainTheme().equals("Dark")) {
             Constants.addCSS(aboutScene, Constants.DARK_THEME_CSS);
             for (Node node : aboutRoot.getChildren()) {
@@ -56,31 +69,28 @@ public class About {
                 }
             }
         }
-        stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
-        stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
     }
 
     public void show() {
         if (stage != null && stage.isShowing()) {
             stage.toFront();
         } else {
-            initializeScene();
+            setupLayout();
             stage.setScene(aboutScene);
             stage.showAndWait();
         }
-
     }
 
     private void createLabels() {
-        lblDescription = UIComponentBuilder.getInstance().newLabel("An Open-Source Interactive File Downloader System", Font.font("Arial", FontWeight.BOLD, 24), LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
-        lblDriftyVersion = UIComponentBuilder.getInstance().newLabel("Drifty " + VERSION_NUMBER, Font.font("Arial", FontWeight.BOLD, 20), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-        lblYtDlpVersion = UIComponentBuilder.getInstance().newLabel("yt-dlp version: " + AppSettings.GET.ytDlpVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        lblDescription = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("An Open-Source Interactive File Downloader System", Font.font("Arial", FontWeight.BOLD, 24), LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
+        lblDriftyVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Drifty " + VERSION_NUMBER, Font.font("Arial", FontWeight.BOLD, 20), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("yt-dlp version: " + AppSettings.GET.ytDlpVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
     }
 
     private void createHyperlinks() {
-        websiteLink = UIComponentBuilder.getInstance().newHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://saptarshisarkar12.github.io/Drifty");
-        discordLink = UIComponentBuilder.getInstance().newHyperlink("Join Discord", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"), "https://discord.gg/DeT4jXPfkG");
-        githubLink = UIComponentBuilder.getInstance().newHyperlink("Contribute to Drifty", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"), "https://github.com/SaptarshiSarkar12/Drifty");
+        websiteLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://saptarshisarkar12.github.io/Drifty");
+        discordLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Join Discord", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"), "https://discord.gg/DeT4jXPfkG");
+        githubLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Contribute to Drifty", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"), "https://github.com/SaptarshiSarkar12/Drifty");
     }
 
     public static Scene getScene() {

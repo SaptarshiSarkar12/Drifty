@@ -14,26 +14,28 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import support.Job;
 
+import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
+
 public class MainGridPane extends GridPane {
-    public static ImageView ivLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.imgMainGuiBanner, .45).build();
+    public static ImageView ivLogo = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.imgMainGuiBanner, .45);
     public final ProgressBar pBar = pBar();
     public final ListView<Job> listView = listView();
-    public final ImageView ivLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_LINK_LABEL, .7).build();
-    public final ImageView ivDir = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_DIR_LABEL, .7).build();
-    public final ImageView ivFilename = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_FILENAME_LABEL, .7).build();
-    public final ImageView ivAutoPaste = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7).build();
+    public final ImageView ivLink = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_LINK_LABEL, .7);
+    public final ImageView ivDir = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_DIR_LABEL, .7);
+    public final ImageView ivFilename = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_FILENAME_LABEL, .7);
+    public final ImageView ivAutoPaste = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
     public final Button btnStart = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) : newButton(Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
     public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) : newButton(Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
-    public static HBox boxLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newHBox(ivLogo).build();
-    public final Label lblLinkOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
-    public final Label lblDirOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
-    public final Label lblFilenameOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
-    public final Label lblDownloadInfo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
-    public final TextField tfLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.newTextField();
-    public final TextField tfDir = Constants.UI_COMPONENT_BUILDER_INSTANCE.newTextField();
-    public final TextField tfFilename = Constants.UI_COMPONENT_BUILDER_INSTANCE.newTextField();
+    public static HBox boxLogo = UI_COMPONENT_BUILDER_INSTANCE.buildHBox(ivLogo);
+    public final Label lblLinkOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblDirOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblFilenameOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblDownloadInfo = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final TextField tfLink = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
+    public final TextField tfDir = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
+    public final TextField tfFilename = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
 
     public MainGridPane() {
         super();
@@ -137,8 +139,8 @@ public class MainGridPane extends GridPane {
 
     private Button newButton(Image imageUp, Image imageDown) {
         Button button = new Button();
-        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45).build();
-        ImageView imageViewDn = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45).build();
+        ImageView imageViewUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageUp, 0.45);
+        ImageView imageViewDn = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageDown, 0.45);
         button.setOnMousePressed(e -> button.setGraphic(imageViewDn));
         button.setOnMouseReleased(e -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);
