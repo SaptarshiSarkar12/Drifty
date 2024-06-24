@@ -103,7 +103,7 @@ public class Settings {
 
     private void createLabels() {
         Paint textFill = LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
-        lblSettingsHeading = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Settings", Font.font("monospace", FontWeight.EXTRA_BOLD, 100), textFill, 0 ,-150);
+        lblSettingsHeading = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Settings", Font.font("monospace", FontWeight.EXTRA_BOLD, 100), textFill, 0, -150);
         lblAutoPaste = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Auto-Paste", Font.font("Arial", FontWeight.EXTRA_BOLD, 20), textFill, 0, 45);
         lblTheme = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Theme", Font.font("Arial", FontWeight.EXTRA_BOLD, 20), textFill, -20, 130);
         lblDefaultDownloadDir = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Default Download Directory", Font.font("Arial", FontWeight.BOLD, 20), textFill, -160, -50);

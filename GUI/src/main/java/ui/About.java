@@ -21,7 +21,7 @@ import static support.Constants.VERSION_NUMBER;
 
 public class About {
     private static Scene aboutScene;
-    private static final ImageView ivSplash = new ImageView(Constants.imgSplash);
+    private static final ImageView IV_SPLASH = new ImageView(Constants.imgSplash);
     private Label lblDescription;
     private Label lblDriftyVersion;
     private Label lblYtDlpVersion;
@@ -38,7 +38,7 @@ public class About {
         createLabels();
         createHyperlinks();
         setupStage();
-        aboutRoot.getChildren().addAll(ivSplash, lblDescription, lblDriftyVersion, lblYtDlpVersion);
+        aboutRoot.getChildren().addAll(IV_SPLASH, lblDescription, lblDriftyVersion, lblYtDlpVersion);
         if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
             Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("FFMPEG version: " + AppSettings.GET.ffmpegVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             aboutRoot.getChildren().add(lblFfmpegVersion);
@@ -49,9 +49,9 @@ public class About {
     }
 
     private void setupImageView() {
-        ivSplash.setFitWidth(Constants.SCREEN_WIDTH * .2);
-        ivSplash.setFitHeight(Constants.SCREEN_HEIGHT * .2);
-        ivSplash.setPreserveRatio(true);
+        IV_SPLASH.setFitWidth(Constants.SCREEN_WIDTH * .2);
+        IV_SPLASH.setFitHeight(Constants.SCREEN_HEIGHT * .2);
+        IV_SPLASH.setPreserveRatio(true);
     }
 
     private void setupStage() {
@@ -98,6 +98,6 @@ public class About {
     }
 
     public static ImageView getIvSplash() {
-        return ivSplash;
+        return IV_SPLASH;
     }
 }
