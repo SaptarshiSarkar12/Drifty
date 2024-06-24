@@ -15,18 +15,18 @@ import javafx.scene.layout.Priority;
 import support.Job;
 
 public class MainGridPane extends GridPane {
-    public static ImageView ivLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.imgMainGuiBanner, .45);
+    public static ImageView ivLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.imgMainGuiBanner, .45).build();
     public final ProgressBar pBar = pBar();
     public final ListView<Job> listView = listView();
-    public final ImageView ivLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_LINK_LABEL, .7);
-    public final ImageView ivDir = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_DIR_LABEL, .7);
-    public final ImageView ivFilename = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_FILENAME_LABEL, .7);
-    public final ImageView ivAutoPaste = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
+    public final ImageView ivLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_LINK_LABEL, .7).build();
+    public final ImageView ivDir = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_DIR_LABEL, .7).build();
+    public final ImageView ivFilename = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_FILENAME_LABEL, .7).build();
+    public final ImageView ivAutoPaste = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7).build();
     public final Button btnStart = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) : newButton(Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
     public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) : newButton(Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
-    public static HBox boxLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newHBox(ivLogo);
+    public static HBox boxLogo = Constants.UI_COMPONENT_BUILDER_INSTANCE.newHBox(ivLogo).build();
     public final Label lblLinkOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
     public final Label lblDirOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
     public final Label lblFilenameOut = Constants.UI_COMPONENT_BUILDER_INSTANCE.newLabel();
@@ -137,8 +137,8 @@ public class MainGridPane extends GridPane {
 
     private Button newButton(Image imageUp, Image imageDown) {
         Button button = new Button();
-        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45);
-        ImageView imageViewDn = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45);
+        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45).build();
+        ImageView imageViewDn = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45).build();
         button.setOnMousePressed(e -> button.setGraphic(imageViewDn));
         button.setOnMouseReleased(e -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);

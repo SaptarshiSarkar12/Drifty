@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
 import static utils.Utility.sleep;
 
 public class ConfirmationDialog {
@@ -82,7 +83,6 @@ public class ConfirmationDialog {
 
     private Button newButton(String text, EventHandler<ActionEvent> event) {
         Button button = new Button(text);
-        button.setFont(Constants.getMonaco(17));
         button.setMinWidth(80);
         button.setMaxWidth(80);
         button.setPrefWidth(80);

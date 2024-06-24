@@ -1,6 +1,7 @@
 package ui;
 
 import gui.preferences.AppSettings;
+import gui.preferences.Set;
 import gui.support.Constants;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -22,15 +23,15 @@ public class Theme {
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
         changeImages(theme);
-        changeButtonStyle(isDark, Settings.SELECT_DIRECTORY_BUTTON);
+        changeButtonStyle(isDark, Settings.getSelectDirectoryButton());
         Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnYes());
         Theme.changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
         setupButtonGraphics(theme);
     }
 
     private static void setupButton(Image imageUp, Image imageDown, Button button) {
-        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45);
-        ImageView imageViewDown = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45);
+        ImageView imageViewUp = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageUp, 0.45).build();
+        ImageView imageViewDown = Constants.UI_COMPONENT_BUILDER_INSTANCE.newImageView(imageDown, 0.45).build();
         button.setOnMousePressed(ev -> button.setGraphic(imageViewDown));
         button.setOnMouseReleased(ev -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);
@@ -79,7 +80,9 @@ public class Theme {
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
-        Settings.TF_CURRENT_DIRECTORY.setStyle(style + "-fx-font-weight: Bold");
+        if (Settings.getTF_CURRENT_DIRECTORY() != null)
+            Settings.getTF_CURRENT_DIRECTORY().setStyle(style + "-fx-font-weight: Bold");
+
     }
 
     static void changeButtonStyle(boolean isDark, Button button) {

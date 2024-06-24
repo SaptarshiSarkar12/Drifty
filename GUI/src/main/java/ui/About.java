@@ -28,10 +28,11 @@ public class About {
     private Hyperlink websiteLink;
     private Hyperlink discordLink;
     private Hyperlink githubLink;
+    private Stage stage;
 
-    public void show() {
+    private void initializeScene() {
         VBox aboutRoot = new VBox(10);
-        Stage stage = Constants.getStage("About Drifty", false);
+        stage = Constants.getStage("About Drifty", false);
         aboutRoot.setPadding(new Insets(10));
         aboutRoot.setAlignment(Pos.TOP_CENTER);
         ivSplash = new ImageView(Constants.imgSplash);
@@ -57,8 +58,17 @@ public class About {
         }
         stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
         stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
-        stage.setScene(aboutScene);
-        stage.showAndWait();
+    }
+
+    public void show() {
+        if (stage != null && stage.isShowing()) {
+            stage.toFront();
+        } else {
+            initializeScene();
+            stage.setScene(aboutScene);
+            stage.showAndWait();
+        }
+
     }
 
     private void createLabels() {

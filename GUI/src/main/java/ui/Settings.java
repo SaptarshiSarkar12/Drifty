@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
@@ -18,59 +19,89 @@ import main.Drifty_GUI;
 import java.io.File;
 
 public class Settings {
-    public static final CheckBox AUTO_PASTE_CHECKBOX = new CheckBox(); // Checkbox for auto-paste
-    public static final TextField TF_CURRENT_DIRECTORY = new TextField(UIController.form.tfDir.getText());
-    private static final Label LBL_DEFAULT_DOWNLOAD_DIR = new Label("Default Download Directory");
-    private static final Label LBL_THEME = new Label("Theme");
-    private static final Label SETTINGS_HEADING = new Label("Settings");
-    private static final Label LBL_AUTO_PASTE = new Label("Auto-Paste");
-    static final Button SELECT_DIRECTORY_BUTTON = new Button("Select Directory");
-    private final ChoiceBox<String> themeChoiceBox = new ChoiceBox<>();
-    private final Stage stage = Constants.getStage("Settings", false);
+
+    public CheckBox AUTO_PASTE_CHECKBOX;// Checkbox for auto-paste
+    private static TextField TF_CURRENT_DIRECTORY;
+    private Label LBL_DEFAULT_DOWNLOAD_DIR;
+    private Label LBL_THEME;
+    private Label SETTINGS_HEADING;
+    private Label LBL_AUTO_PASTE;
+    private static Button SELECT_DIRECTORY_BUTTON;
+    private ChoiceBox<String> themeChoiceBox;
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public Stage stage;
     private static Scene settingsScene;
 
-    public void show() {
+    public static TextField getTF_CURRENT_DIRECTORY() {
+        return TF_CURRENT_DIRECTORY;
+    }
+
+    public static Button getSelectDirectoryButton() {
+        return SELECT_DIRECTORY_BUTTON;
+    }
+
+    private void initializeComponents() {
+        TF_CURRENT_DIRECTORY = new TextField(UIController.form.tfDir.getText());
+        SELECT_DIRECTORY_BUTTON = new Button("Select Directory");
+        stage = Constants.getStage("Settings", false);
+        AUTO_PASTE_CHECKBOX = new CheckBox();
+        LBL_DEFAULT_DOWNLOAD_DIR = new Label("Default Download Directory");
+        LBL_THEME = new Label("Theme");
+        SETTINGS_HEADING = new Label("Settings");
+        LBL_AUTO_PASTE = new Label("Auto-Paste");
+        themeChoiceBox = new ChoiceBox<>();
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.TOP_CENTER);
-        createDarkThemeLogic();
+        root.getChildren().addAll(themeChoiceBox, AUTO_PASTE_CHECKBOX, LBL_THEME, LBL_AUTO_PASTE, SETTINGS_HEADING, SELECT_DIRECTORY_BUTTON, LBL_DEFAULT_DOWNLOAD_DIR, TF_CURRENT_DIRECTORY);
+        settingsScene = Constants.getScene(root);
+        setupLayout();
+        Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
+        stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
+        stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
+        setInitialTheme(AppSettings.GET.mainTheme());
+    }
+
+    private void setupLayout() {
+        setupThemeChoice();
         createTfDirectory();
         createLabels();
         createAutoPasteCheck();
         createDirectoryButton();
-        root.getChildren().addAll(themeChoiceBox, AUTO_PASTE_CHECKBOX, LBL_THEME, LBL_AUTO_PASTE, SETTINGS_HEADING, SELECT_DIRECTORY_BUTTON, LBL_DEFAULT_DOWNLOAD_DIR, TF_CURRENT_DIRECTORY);
-        settingsScene = Constants.getScene(root);
-        Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
-        stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
-        stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
-        stage.setScene(settingsScene);
-        setInitialTheme(AppSettings.GET.mainTheme());
-        stage.showAndWait();
     }
 
-    private void setInitialTheme(String theme) {
-        if (theme.equals("Dark")) {
-            Constants.addCSS(settingsScene, Constants.DARK_THEME_CSS);
-            LBL_AUTO_PASTE.setTextFill(Color.WHITE);
-            LBL_THEME.setTextFill(Color.WHITE);
-            TF_CURRENT_DIRECTORY.setStyle("-fx-text-fill: white ; -fx-font-weight: Bold");
-            SETTINGS_HEADING.setTextFill(Color.WHITE);
+    public void show() {
+        if (stage != null && stage.isShowing()) {
+            stage.toFront();
         } else {
-            Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
-            LBL_AUTO_PASTE.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            TF_CURRENT_DIRECTORY.setStyle("-fx-text-fill: black ; -fx-font-weight: Bold");
-            LBL_DEFAULT_DOWNLOAD_DIR.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            SETTINGS_HEADING.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+            initializeComponents();
+            stage.setScene(settingsScene);
+            stage.showAndWait();
         }
     }
 
-    private void createDarkThemeLogic() {
+    private void setInitialTheme(String theme) {
+        boolean isDark = theme.equals("Dark");
+        Color textColor = isDark ? Color.WHITE : null;
+        LinearGradient gradientColor = isDark ? null : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
+        Constants.addCSS(settingsScene, isDark ? Constants.DARK_THEME_CSS : Constants.LIGHT_THEME_CSS);
+        LBL_AUTO_PASTE.setTextFill(isDark ? textColor : gradientColor);
+        LBL_THEME.setTextFill(isDark ? textColor : gradientColor);
+        LBL_DEFAULT_DOWNLOAD_DIR.setTextFill(isDark ? textColor : gradientColor);
+        TF_CURRENT_DIRECTORY.setStyle("-fx-text-fill: " + (isDark ? "white" : "black") + " ; -fx-font-weight: Bold");
+        SETTINGS_HEADING.setTextFill(isDark ? textColor : gradientColor);
+    }
+
+    private void setupThemeChoice() {
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
         themeChoiceBox.setTranslateY(210);
         themeChoiceBox.setTranslateX(130);
         themeChoiceBox.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
-        themeChoiceBox.setOnAction(e -> Theme.applyTheme(themeChoiceBox.getValue().equals("Dark Theme") ? "Dark" : "Light",
-                settingsScene, Drifty_GUI.getScene(), About.getScene(), ConfirmationDialog.getScene()));
+        themeChoiceBox.setOnAction(e -> Theme.applyTheme(themeChoiceBox.getValue().equals("Dark Theme") ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
@@ -82,27 +113,20 @@ public class Settings {
     }
 
     private void createLabels() {
-        SETTINGS_HEADING.setAlignment(Pos.TOP_CENTER);
-        SETTINGS_HEADING.setFont(Font.font("monospace", FontWeight.EXTRA_BOLD, 100));
-        SETTINGS_HEADING.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-        SETTINGS_HEADING.setTranslateY(-150);
-
-        LBL_AUTO_PASTE.setAlignment(Pos.TOP_CENTER);
-        LBL_AUTO_PASTE.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
-        LBL_AUTO_PASTE.setTranslateY(45);
-        LBL_AUTO_PASTE.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-
-        LBL_THEME.setAlignment(Pos.TOP_CENTER);
-        LBL_THEME.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
-        LBL_THEME.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-        LBL_THEME.setTranslateY(130);
+        Paint paint = LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
+        setupLabel(SETTINGS_HEADING, "monospace", FontWeight.EXTRA_BOLD, 100, paint, -150);
+        setupLabel(LBL_AUTO_PASTE, "Arial", FontWeight.EXTRA_BOLD, 20, paint, 45);
+        setupLabel(LBL_THEME, "Arial", FontWeight.EXTRA_BOLD, 20, paint, 130);
         LBL_THEME.setTranslateX(-20);
-
+        setupLabel(LBL_DEFAULT_DOWNLOAD_DIR, "Arial", FontWeight.BOLD, 20, paint, -50);
         LBL_DEFAULT_DOWNLOAD_DIR.setTranslateX(-160);
-        LBL_DEFAULT_DOWNLOAD_DIR.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        LBL_DEFAULT_DOWNLOAD_DIR.setTranslateY(-50);
-        LBL_DEFAULT_DOWNLOAD_DIR.setStyle("-fx-font-weight: Bold ; -fx-font-size:20px");
-        LBL_DEFAULT_DOWNLOAD_DIR.setTextFill(AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+    }
+
+    private void setupLabel(Label label, String fontName, FontWeight weight, double size, Paint gradient, double translateY) {
+        label.setAlignment(Pos.TOP_CENTER);
+        label.setFont(Font.font(fontName, weight, size));
+        label.setTranslateY(translateY);
+        label.setTextFill(gradient);
     }
 
     private void createTfDirectory() {
