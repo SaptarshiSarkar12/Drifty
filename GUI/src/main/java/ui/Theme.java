@@ -86,13 +86,13 @@ public class Theme {
 
     private static void changeInfoTextFlow(Paint color) {
         Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
-        for (int i = 0; i < UIController.infoTf.getChildren().size(); i++) {
-            if (UIController.infoTf.getChildren().get(i) instanceof Text) {
-                Text text = (Text) UIController.infoTf.getChildren().get(i);
+        for (int i = 0; i < UIController.INFO_TF.getChildren().size(); i++) {
+            if (UIController.INFO_TF.getChildren().get(i) instanceof Text) {
+                Text text = (Text) UIController.INFO_TF.getChildren().get(i);
                 if (text.getFont().getSize() == 16) {
-                    ((Text) UIController.infoTf.getChildren().get(i)).setFill(color);
+                    ((Text) UIController.INFO_TF.getChildren().get(i)).setFill(color);
                 } else {
-                    ((Text) UIController.infoTf.getChildren().get(i)).setFill(headingsColor);
+                    ((Text) UIController.INFO_TF.getChildren().get(i)).setFill(headingsColor);
 
                 }
             }
