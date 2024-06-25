@@ -44,7 +44,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static gui.support.Colors.*;
-import static gui.support.Constants.MONACO_TTF;
 import static utils.Utility.*;
 
 public final class UIController {
@@ -58,11 +57,14 @@ public final class UIController {
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount;
     private int speedValue;
+    public static final TextFlow infoTf = new TextFlow();
+    public static Scene infoScene;
     private String songMetadataJson;
     private String filename;
     private String songLink;
     private Folders folders;
     private Job selectedJob;
+
 
     /*
     Single instance model-only constructor
@@ -773,32 +775,33 @@ public final class UIController {
     }
 
     private void help() {
+        Color textColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : Color.BLACK;
+        Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
-        TextFlow tf = new TextFlow();
-        tf.getChildren().add(text("Link:\n", true, BLUE, h));
-        tf.getChildren().add(text("The Drifty GUI lets you easily create batches for downloading, or download a single file. You start by pasting your web links into the Link field. Once a link has been put into Link field, Drifty will start to process it where it will attempt to determine the name of the file being downloaded. Once it has done that, you will see the filename show up in the batch list on the left.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("The URLs you paste into the link field must be valid URLs or Drifty wont process them.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Checking the ", false, BLACK, n));
-        tf.getChildren().add(text("Auto Paste ", true, BLACK, n));
-        tf.getChildren().add(text("option will let you go to another window and put a link in the clipboard then when you come back to Drifty, the link will be pasted into the Link field automatically and processed then added to the batch list.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("If you paste in a link that happens to extract multiple files for downloading, such as a Youtube play list, Drifty will first attempt to get the number of files in the list, then it will ask you if you would like it to obtain all of the filenames in the list. The progress bar will indicate how many filenames have been obtained and the batch list will populate with download jobs with each new filename discovered.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Directory:\n", true, BLUE, h));
-        tf.getChildren().add(text("Right clicking anywhere on the form brings up a menu where you can add directories to use as download folders. As you add more directories, they accumulate and persist between reloads. The last directory that you add last will be considered the current download directory. When you click start which begins the download process for all jobs in the batch list, Drifty will look through all of the added folders for a matching filenames and it will let you know when it finds duplicates and give you the option to not download them again.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Right clicking on the form and choosing to edit the directory list pulls up a form with all of the directories you have added. Click on one to remove it if necessary.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Filename:\n", true, BLUE, h));
-        tf.getChildren().add(text("Drifty tries to get the name of the file from the link. This process can take a little time but not usually more than 10 to 20 seconds. By default, Drifty adds the extension of 'mp4' to video file downloads because these have the highest chance of success. If Drifty cannot determine the name of the file, you can type in whatever filename you'd like, then click on Save to commit that to the job in the list. You can also determine the download format of the file by setting the filename extension to one of these options: 3gp, aac, flv, m4a, mp3, mp4, ogg, wav, webm.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Job list:\n", true, BLUE, h));
-        tf.getChildren().add(text("Once the list box on the left has the jobs in it that you want, you can click on each one in turn and the link, download directory and filename will be placed into the related fields so you can edit them if you need to. Just click on Save when you're done editing.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("You can right click on any item in the list to remove it or clear out the job list completely.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("The Job list and the directory list will persist between program reloads. The job list will empty out one at a time as each file in the list is downloaded. You start the batch by clicking on the Start button. Any files that fail to download will get recycled back into the list on this form. I found that they will download usually after a second attempt.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Auto Paste:\n", true, BLUE, h));
-        tf.getChildren().add(text("The whole point of Auto Paste is to help speed things up. When you check the box, then go out to your browser and find links that you want to download, just copy them into your clip board then ALT+TAB back to Drifty or just click on it to make it the active window. Drifty will sense that it has been made the active screen and the contents of your clipboard will be analyzed to make sure it is a valid URL, then it will process it if so.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Multi-link pasting:\n", true, BLUE, h));
-        tf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, BLACK, n));
-        tf.getChildren().add(text("Youtube Playlists:\n", true, BLUE, h));
-        tf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, BLACK, n));
-        tf.setStyle("-fx-background-color: transparent");
+        infoTf.getChildren().add(text("Link:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("The Drifty GUI lets you easily create batches for downloading, or download a single file. You start by pasting your web links into the Link field. Once a link has been put into Link field, Drifty will start to process it where it will attempt to determine the name of the file being downloaded. Once it has done that, you will see the filename show up in the batch list on the left.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("The URLs you paste into the link field must be valid URLs or Drifty wont process them.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Checking the ", false, textColor, n));
+        infoTf.getChildren().add(text("Auto Paste ", true, textColor, n));
+        infoTf.getChildren().add(text("option will let you go to another window and put a link in the clipboard then when you come back to Drifty, the link will be pasted into the Link field automatically and processed then added to the batch list.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("If you paste in a link that happens to extract multiple files for downloading, such as a Youtube play list, Drifty will first attempt to get the number of files in the list, then it will ask you if you would like it to obtain all of the filenames in the list. The progress bar will indicate how many filenames have been obtained and the batch list will populate with download jobs with each new filename discovered.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Directory:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("Right clicking anywhere on the form brings up a menu where you can add directories to use as download folders. As you add more directories, they accumulate and persist between reloads. The last directory that you add last will be considered the current download directory. When you click start which begins the download process for all jobs in the batch list, Drifty will look through all of the added folders for a matching filenames and it will let you know when it finds duplicates and give you the option to not download them again.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Right clicking on the form and choosing to edit the directory list pulls up a form with all of the directories you have added. Click on one to remove it if necessary.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Filename:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("Drifty tries to get the name of the file from the link. This process can take a little time but not usually more than 10 to 20 seconds. By default, Drifty adds the extension of 'mp4' to video file downloads because these have the highest chance of success. If Drifty cannot determine the name of the file, you can type in whatever filename you'd like, then click on Save to commit that to the job in the list. You can also determine the download format of the file by setting the filename extension to one of these options: 3gp, aac, flv, m4a, mp3, mp4, ogg, wav, webm.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Job list:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("Once the list box on the left has the jobs in it that you want, you can click on each one in turn and the link, download directory and filename will be placed into the related fields so you can edit them if you need to. Just click on Save when you're done editing.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("You can right click on any item in the list to remove it or clear out the job list completely.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("The Job list and the directory list will persist between program reloads. The job list will empty out one at a time as each file in the list is downloaded. You start the batch by clicking on the Start button. Any files that fail to download will get recycled back into the list on this form. I found that they will download usually after a second attempt.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Auto Paste:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("The whole point of Auto Paste is to help speed things up. When you check the box, then go out to your browser and find links that you want to download, just copy them into your clip board then ALT+TAB back to Drifty or just click on it to make it the active window. Drifty will sense that it has been made the active screen and the contents of your clipboard will be analyzed to make sure it is a valid URL, then it will process it if so.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Multi-link pasting:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("Another way to speed things up it to copy and paste links into a notepad of some kind, then just put a single space between each link so that all the links are on a single line, then paste that line into the Link field and Drifty will start processing them in turn and build up your batch for you.\n\n", false, textColor, n));
+        infoTf.getChildren().add(text("Youtube Playlists:\n", true, headingsColor, h));
+        infoTf.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, textColor, n));
+        infoTf.setStyle("-fx-background-color: transparent");
 
         double width = 500;
         double height = 700;
@@ -806,7 +809,7 @@ public final class UIController {
         Stage stage = Constants.getStage("Help", false);
         stage.setWidth(width);
         stage.setHeight(height + 100);
-        VBox vox = new VBox(20, tf);
+        VBox vox = new VBox(20, infoTf);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
         vox.setPadding(new Insets(30));
@@ -818,14 +821,18 @@ public final class UIController {
         scrollPane.setPrefWidth(width);
         scrollPane.setPrefHeight(height);
         scrollPane.setFitToWidth(true);
-        Scene scene = Constants.getScene(scrollPane);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
+        infoScene = Constants.getScene(scrollPane);
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Theme.applyTheme("Dark", infoScene);
+        }
+
+        infoScene.setFill(Color.TRANSPARENT);
+        stage.setScene(infoScene);
         stage.setAlwaysOnTop(true);
         stage.setTitle("Help");
         stage.setOnCloseRequest(e -> stage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
-        VBox.setVgrow(tf, Priority.ALWAYS);
+        VBox.setVgrow(infoTf, Priority.ALWAYS);
         btnOK.setOnAction(e -> stage.close());
         scrollPane.setVvalue(0.0);
         stage.showAndWait();
@@ -834,7 +841,7 @@ public final class UIController {
     private Text text(String string, boolean bold, Color color, double size) {
         // This is used by the help() method for custom text formatting
         Text text = new Text(string);
-        text.setFont(new Font(Objects.requireNonNull(MONACO_TTF).toExternalForm(), size));
+        text.setFont(new Font("monospace", size));
         text.setFill(color);
         if (bold) {
             text.setStyle("-fx-font-weight: bold;");

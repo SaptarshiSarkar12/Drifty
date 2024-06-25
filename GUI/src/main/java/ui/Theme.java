@@ -73,13 +73,29 @@ public class Theme {
                 }
             }
         }
+        changeInfoTextFlow(color);
         // TextFields
         String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
         UIController.form.tfDir.setStyle(style);
         UIController.form.tfFilename.setStyle(style);
         UIController.form.tfLink.setStyle(style);
-        if (Settings.getTfCurrentDirectory() != null){
+        if (Settings.getTfCurrentDirectory() != null) {
             Settings.getTfCurrentDirectory().setStyle(style + "-fx-font-weight: Bold");
+        }
+    }
+
+    private static void changeInfoTextFlow(Paint color) {
+        Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
+        for (int i = 0; i < UIController.infoTf.getChildren().size(); i++) {
+            if (UIController.infoTf.getChildren().get(i) instanceof Text) {
+                Text text = (Text) UIController.infoTf.getChildren().get(i);
+                if (text.getFont().getSize() == 16) {
+                    ((Text) UIController.infoTf.getChildren().get(i)).setFill(color);
+                } else {
+                    ((Text) UIController.infoTf.getChildren().get(i)).setFill(headingsColor);
+
+                }
+            }
         }
     }
 
