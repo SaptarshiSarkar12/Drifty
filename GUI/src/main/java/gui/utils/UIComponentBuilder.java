@@ -37,20 +37,9 @@ public class UIComponentBuilder {
 
     public Label buildLabel(String text, Font font, Paint textFill) {
         Label label = new Label(text);
-        label.setFont(font);
-        label.setTextFill(textFill);
-        return label;
-    }
-
-    public Label buildLabel(String text, Font font, Paint textFill, double translateX, double translateY) {
-        Label label = new Label(text);
         label.setAlignment(Pos.TOP_CENTER);
         label.setFont(font);
         label.setTextFill(textFill);
-        label.setTranslateY(translateY);
-        if (translateX != 0) {
-            label.setTranslateX(translateX);
-        }
         return label;
     }
 
