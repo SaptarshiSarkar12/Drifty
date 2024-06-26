@@ -69,7 +69,7 @@ public final class UIController {
         return infoScene;
     }
 
-    public static TextFlow getINFO_TF() {
+    public static TextFlow getInfoTf() {
         return INFO_TF;
     }
 
