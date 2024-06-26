@@ -6,7 +6,7 @@ on:
       - "Website/**"
       - "*.md"
       - "*.txt"
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - "Website/**"
       - "*.md"
@@ -39,4 +39,5 @@ jobs:
              git commit -m "style: Formatted Java files"
           fi
       - name: Push changes
+        if: github.event_name != 'pull_request'
         run: git push
