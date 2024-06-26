@@ -95,6 +95,17 @@ export default function Releases({ props }) {
   const [content, setContent] = useState([]);
   const [applicationType, setApplicationType] = useState("GUI");
   const maxReleasesToDisplay = 3;
+  const latestVersion = useMemo(() => {
+    let v = "";
+    let counter = 1;
+    props.release.find((item) => {
+      if (item.prerelease === false && counter === 1) {
+        v = item.tag_name;
+        counter++;
+      }
+    });
+    return v;
+  }, [props.release]);
   const filteredPreReleases = useMemo(() => {
     const releases = [];
     props.release.map((item) => {
@@ -108,7 +119,7 @@ export default function Releases({ props }) {
     const releases = [];
     props.release.map((item) => {
       if (
-          item.tag_name.startsWith("v2") &&
+          !item.tag_name.startsWith("v1") &&
           item.prerelease === false &&
           item.latest === false &&
           releases.length <= maxReleasesToDisplay
@@ -127,7 +138,7 @@ export default function Releases({ props }) {
         noOfReleases < maxReleasesToDisplay &&
         index !== 0
       ) {
-        if (!item.tag_name.startsWith("v2") && item.prerelease === false) {
+        if (item.tag_name.startsWith("v1") && item.prerelease === false) {
           releases.push(item);
           noOfReleases++;
         }
@@ -142,7 +153,12 @@ export default function Releases({ props }) {
       [index]: !prevState[index],
     }));
   };
-  const markerToHtml = async (itemBody, i) => {
+  const markerToHtml = async (itemBody, itemTagName, i) => {
+    const maxLines = window.innerWidth < 768 ? 7 : 15;
+    if (itemBody.split("\n").length > maxLines) {
+        itemBody = itemBody.split("\n").slice(0, maxLines).join("\n");
+        itemBody += "\n\n...[Read More](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/" + itemTagName + ")";
+    }
     const cont = await remark().use(html).process(itemBody);
     setContent((prev) => {
       prev[i] = cont.toString();
@@ -151,13 +167,13 @@ export default function Releases({ props }) {
   };
   useEffect(() => {
     filteredPreReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index);
+      await markerToHtml(item.body, item.tag_name, index);
     });
     filteredReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index + filteredPreReleases.length);
+      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length);
     });
     filterOlderReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, index + filteredPreReleases.length + filteredReleases.length);
+      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length + filteredReleases.length);
     });
   }, [filteredPreReleases, filteredReleases, filterOlderReleases]);
 
@@ -206,6 +222,9 @@ export default function Releases({ props }) {
                 }
               >
                 Download Now <i className="fab fa-brands fa-windows"></i>
+                <div className="text-lg md:text-sm text-gray-700 font-semibold">
+                    {latestVersion}
+                </div>
               </button>
               {applicationType === "GUI" && (
                 <div>
@@ -228,6 +247,9 @@ export default function Releases({ props }) {
             onClick={() => downloadLatestRelease("Linux", applicationType)}
           >
             Download Now <i className="fab fa-brands fa-linux"></i>
+            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+              {latestVersion}
+            </div>
           </button>
         </div>
 
@@ -238,6 +260,9 @@ export default function Releases({ props }) {
             onClick={() => downloadLatestRelease("MacOS", applicationType)}
           >
             Download Now <i className="fab fa-brands fa-apple"></i>
+            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+              {latestVersion}
+            </div>
           </button>
         </div>
       </div>
@@ -276,12 +301,15 @@ export default function Releases({ props }) {
                   <span className="font-bold">{item.tag_name} </span>
                   <p>
                     {new Date(item.published_at).toString()} with{" "}
-                    {item.assets[0].download_count +
+                    {
+                        item.assets[0].download_count +
                         item.assets[1].download_count +
                         item.assets[2].download_count +
                         item.assets[3].download_count +
                         item.assets[4].download_count +
-                        item.assets[5].download_count}{" "}
+                        item.assets[5].download_count +
+                        item.assets[6].download_count
+                    }{" "}
                     Downloads
                   </p>
                   <button
@@ -371,12 +399,15 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets[0].download_count +
+                  {
+                      item.assets[0].download_count +
                       item.assets[1].download_count +
                       item.assets[2].download_count +
                       item.assets[3].download_count +
                       item.assets[4].download_count +
-                      item.assets[5].download_count}{" "}
+                      item.assets[5].download_count +
+                      item.assets[6].download_count
+                  }{" "}
                   Downloads
                 </p>
                 <button
