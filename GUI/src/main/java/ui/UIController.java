@@ -57,14 +57,21 @@ public final class UIController {
     private final String nl = System.lineSeparator();
     private int speedValueUpdateCount;
     private int speedValue;
-    public static final TextFlow INFO_TF = new TextFlow();
-    public static Scene infoScene;
+    private static final TextFlow INFO_TF = new TextFlow();
+    private static Scene infoScene;
     private String songMetadataJson;
     private String filename;
     private String songLink;
     private Folders folders;
     private Job selectedJob;
 
+    public static Scene getInfoScene() {
+        return infoScene;
+    }
+
+    public static TextFlow getINFO_TF() {
+        return INFO_TF;
+    }
 
     /*
     Single instance model-only constructor
