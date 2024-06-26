@@ -6,18 +6,14 @@ import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.application.Application;
 import javafx.application.Preloader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import properties.Mode;
 import ui.*;
@@ -26,12 +22,14 @@ import utils.Utility;
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
 import static javafx.scene.layout.AnchorPane.*;
 import static support.Constants.DRIFTY_WEBSITE_URL;
-import static support.Constants.VERSION_NUMBER;
 
 public class Drifty_GUI extends Application {
+    public static final Drifty_GUI INSTANCE = new Drifty_GUI();
     private static MessageBroker msgBroker;
+    private static Scene scene;
+    private final Settings settingsInstance = new Settings();
+    private About aboutInstance;
     private Stage primaryStage;
-    private Scene scene;
 
     public static void main(String[] args) {
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
@@ -65,9 +63,13 @@ public class Drifty_GUI extends Application {
         MenuBar menu = menuBar(getMenuItemsOfMenu(), getEditMenu(), getWindowMenu(), getHelpMenu());
         ap.getChildren().add(gridPane);
         ap.getChildren().add(menu);
+
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Constants.addCSS(scene, Constants.DARK_THEME_CSS);
+        }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
@@ -116,6 +118,10 @@ public class Drifty_GUI extends Application {
         return new MenuBar(menus);
     }
 
+    public static Scene getScene() {
+        return scene;
+    }
+
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
@@ -138,48 +144,10 @@ public class Drifty_GUI extends Application {
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         about.setOnAction(event -> {
-            Stage stage = Constants.getStage("About Drifty", false);
-            VBox root = new VBox(10);
-            root.setPadding(new Insets(10));
-            root.setAlignment(Pos.TOP_CENTER);
-            ImageView appIcon = new ImageView(Constants.IMG_SPLASH);
-            appIcon.setFitWidth(Constants.SCREEN_WIDTH * .2);
-            appIcon.setFitHeight(Constants.SCREEN_HEIGHT * .2);
-            appIcon.setPreserveRatio(true);
-            Label lblDescription = new Label("An Open-Source Interactive File Downloader System");
-            lblDescription.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-            lblDescription.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
-            Label lblDriftyVersion = new Label("Drifty " + VERSION_NUMBER);
-            Label lblYtDlpVersion = new Label("yt-dlp version: " + AppSettings.GET.ytDlpVersion());
-            lblDriftyVersion.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-            lblDriftyVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            lblYtDlpVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-            lblYtDlpVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-            Hyperlink websiteLink = new Hyperlink("Website");
-            websiteLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            websiteLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"));
-            websiteLink.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty"));
-            Hyperlink discordLink = new Hyperlink("Join Discord");
-            discordLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            discordLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"));
-            discordLink.setOnAction(e -> openWebsite("https://discord.gg/DeT4jXPfkG"));
-            Hyperlink githubLink = new Hyperlink("Contribute to Drifty");
-            githubLink.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            githubLink.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"));
-            githubLink.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-            root.getChildren().addAll(appIcon, lblDescription, lblDriftyVersion, lblYtDlpVersion);
-            if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
-                Label lblFfmpegVersion = new Label("FFMPEG version: " + AppSettings.GET.ffmpegVersion());
-                lblFfmpegVersion.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-                lblFfmpegVersion.setTextFill(LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-                root.getChildren().add(lblFfmpegVersion);
+            if (aboutInstance == null) {
+                aboutInstance = new About();
             }
-            root.getChildren().addAll(websiteLink, discordLink, githubLink);
-            Scene aboutScene = Constants.getScene(root);
-            stage.setMinHeight(Constants.SCREEN_HEIGHT * .55);
-            stage.setMinWidth(Constants.SCREEN_WIDTH * .5);
-            stage.setScene(aboutScene);
-            stage.show();
+            aboutInstance.show();
         });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
@@ -188,13 +156,15 @@ public class Drifty_GUI extends Application {
     private Menu getEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
+        MenuItem settings = new MenuItem("Settings");
         wipeHistory.setOnAction(e -> {
             ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }
         });
-        menu.getItems().addAll(wipeHistory);
+        settings.setOnAction(e -> settingsInstance.show());
+        menu.getItems().addAll(wipeHistory, settings);
         return menu;
     }
 
@@ -212,7 +182,7 @@ public class Drifty_GUI extends Application {
         return contextMenu;
     }
 
-    protected void openWebsite(String websiteURL) {
+    public void openWebsite(String websiteURL) {
         getHostServices().showDocument(websiteURL);
     }
 

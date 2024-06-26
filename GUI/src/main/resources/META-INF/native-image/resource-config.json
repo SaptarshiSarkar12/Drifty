@@ -1,15 +1,25 @@
 {
   "resources":{
   "includes":[{
-    "pattern":"GUI:\\QBackgrounds/DriftyMain.png\\E"
+    "pattern":"GUI:\\QBackgrounds/DriftyMainDark.png\\E"
   }, {
-    "pattern":"GUI:\\QButtons/Save/SaveDown.png\\E"
+    "pattern":"GUI:\\QBackgrounds/DriftyMainLight.png\\E"
   }, {
-    "pattern":"GUI:\\QButtons/Save/SaveUp.png\\E"
+    "pattern":"GUI:\\QButtons/Save/SaveDownDark.png\\E"
   }, {
-    "pattern":"GUI:\\QButtons/Start/StartDown.png\\E"
+    "pattern":"GUI:\\QButtons/Save/SaveDownLight.png\\E"
   }, {
-    "pattern":"GUI:\\QButtons/Start/StartUp.png\\E"
+    "pattern":"GUI:\\QButtons/Save/SaveUpDark.png\\E"
+  }, {
+    "pattern":"GUI:\\QButtons/Save/SaveUpLight.png\\E"
+  }, {
+    "pattern":"GUI:\\QButtons/Start/StartDownDark.png\\E"
+  }, {
+    "pattern":"GUI:\\QButtons/Start/StartDownLight.png\\E"
+  }, {
+    "pattern":"GUI:\\QButtons/Start/StartUpDark.png\\E"
+  }, {
+    "pattern":"GUI:\\QButtons/Start/StartUpLight.png\\E"
   }, {
     "pattern":"GUI:\\QCSS/Button.css\\E"
   }, {
@@ -17,15 +27,17 @@
   }, {
     "pattern":"GUI:\\QCSS/ContextMenu.css\\E"
   }, {
+    "pattern":"GUI:\\QCSS/DarkTheme.css\\E"
+  }, {
     "pattern":"GUI:\\QCSS/Label.css\\E"
+  }, {
+    "pattern":"GUI:\\QCSS/LightTheme.css\\E"
   }, {
     "pattern":"GUI:\\QCSS/ListView.css\\E"
   }, {
     "pattern":"GUI:\\QCSS/Menu.css\\E"
   }, {
     "pattern":"GUI:\\QCSS/ProgressBar.css\\E"
-  }, {
-    "pattern":"GUI:\\QCSS/Scene.css\\E"
   }, {
     "pattern":"GUI:\\QCSS/ScrollPane.css\\E"
   }, {
@@ -45,7 +57,9 @@
   }, {
     "pattern":"GUI:\\QLabels/Link.png\\E"
   }, {
-    "pattern":"GUI:\\QSplash.png\\E"
+    "pattern":"GUI:\\QSplashDark.png\\E"
+  }, {
+    "pattern":"GUI:\\QSplashLight.png\\E"
   }, {
     "pattern":"\\QMETA-INF/fonts.mf\\E"
   }, {
@@ -59,29 +73,53 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.charset.spi.CharsetProvider\\E"
   }, {
-    "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
-  }, {
     "pattern":"\\QMETA-INF/services/java.util.prefs.PreferencesFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.parsers.DocumentBuilderFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
   }, {
-    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
+    "pattern":"\\Qcom/sun/javafx/scene/control/skin/resources/controls_en.properties\\E"
   }, {
-    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/ubidi.icu\\E"
+    "pattern":"\\Qcom/sun/javafx/scene/control/skin/resources/controls_en_US.properties\\E"
   }, {
-    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
+    "pattern":"\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en.properties\\E"
+  }, {
+    "pattern":"\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en_US.properties\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfkc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/ubidi.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/uprops.icu\\E"
   }, {
     "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
-    "pattern":"java.base:\\Qsun/text/resources/WordBreakIteratorData\\E"
-  }, {
     "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/Encodings.properties\\E"
+  }, {
+    "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/XMLEntities.properties\\E"
+  }, {
+    "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/XMLEntities_en.properties\\E"
+  }, {
+    "pattern":"java.xml:\\Qcom/sun/org/apache/xml/internal/serializer/XMLEntities_en_US.properties\\E"
+  }, {
+    "pattern":"java.xml:\\Qjdk/xml/internal/jdkcatalog/JDKCatalog.xml\\E"
   }, {
     "pattern":"javafx.controls:\\Qcom/sun/javafx/scene/control/skin/modena/modena.bss\\E"
   }, {
+    "pattern":"javafx.controls:\\Qcom/sun/javafx/scene/control/skin/resources/controls.properties\\E"
+  }, {
+    "pattern":"javafx.controls:\\Qcom/sun/javafx/scene/control/skin/resources/controls_en.properties\\E"
+  }, {
+    "pattern":"javafx.controls:\\Qcom/sun/javafx/scene/control/skin/resources/controls_en_US.properties\\E"
+  }, {
     "pattern":"javafx.graphics:\\Qcom/sun/glass/utils/NativeLibLoader.class\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle.properties\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en.properties\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en_US.properties\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/DrawPgram_Color.frag\\E"
   }, {
@@ -93,6 +131,8 @@
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Mask_TextureSuper.frag\\E"
   }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Solid_Color.frag\\E"
+  }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Solid_TextureFirstPassLCD.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Solid_TextureRGB.frag\\E"
@@ -102,6 +142,8 @@
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Texture_Color.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Texture_LinearGradient_PAD.frag\\E"
+  }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/scenario/effect/impl/es2/glsl/Blend_SRC_IN.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/scenario/effect/impl/es2/glsl/LinearConvolveShadow_20.frag\\E"
   }, {
@@ -123,12 +165,18 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":[""]
+    "locales":["en-US"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":[""]
+    "locales":["en-US"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":[""]
+    "locales":["en-US"]
+  }, {
+    "name":"sun.text.resources.cldr.FormatData",
+    "locales":["en", "en-US", "und"]
+  }, {
+    "name":"sun.util.resources.cldr.CalendarData",
+    "locales":["und"]
   }]
 }
