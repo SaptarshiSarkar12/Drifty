@@ -67,7 +67,7 @@ public class Drifty_GUI extends Application {
         placeControl(gridPane, 40, 40, 40, 40);
         placeControl(menu, 0, 0, 0, -1);
         scene = Constants.getScene(ap);
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Constants.addCSS(scene, Constants.DARK_THEME_CSS);
         }
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));

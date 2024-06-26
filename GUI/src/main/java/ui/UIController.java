@@ -104,7 +104,7 @@ public final class UIController {
         form.tfLink.disableProperty().bind(disableInputs);
         form.listView.setContextMenu(getListMenu());
 
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -782,8 +782,8 @@ public final class UIController {
     }
 
     private void help() {
-        Color textColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : Color.BLACK;
-        Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color textColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.WHITE : Color.BLACK;
+        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
         INFO_TF.getChildren().add(text("Link:\n", true, headingsColor, h));
@@ -829,7 +829,7 @@ public final class UIController {
         scrollPane.setPrefHeight(height);
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
 
