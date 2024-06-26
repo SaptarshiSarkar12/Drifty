@@ -1,10 +1,10 @@
 package ui;
 
+import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,33 +12,30 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Font;
 import support.Job;
 
-import java.util.Objects;
-
-import static gui.support.Constants.MONACO_TTF;
+import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 
 public class MainGridPane extends GridPane {
-    public final ImageView ivLogo = newImageView(Constants.IMG_MAIN_GUI_BANNER, .45);
+    public static ImageView ivLogo = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.imgMainGuiBanner, .45);
     public final ProgressBar pBar = pBar();
     public final ListView<Job> listView = listView();
-    public final ImageView ivLink = newImageView(Constants.IMG_LINK_LABEL, .7);
-    public final ImageView ivDir = newImageView(Constants.IMG_DIR_LABEL, .7);
-    public final ImageView ivFilename = newImageView(Constants.IMG_FILENAME_LABEL, .7);
-    public final ImageView ivAutoPaste = newImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public final Button btnStart = newButton(Constants.IMG_START_UP, Constants.IMG_START_DOWN);
-    public final Button btnSave = newButton(Constants.IMG_SAVE_UP, Constants.IMG_SAVE_DOWN);
+    public final ImageView ivLink = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_LINK_LABEL, .7);
+    public final ImageView ivDir = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_DIR_LABEL, .7);
+    public final ImageView ivFilename = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_FILENAME_LABEL, .7);
+    public final ImageView ivAutoPaste = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
+    public final Button btnStart = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) : newButton(Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
+    public final Button btnSave = AppSettings.GET.mainTheme().equals("Dark") ? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) : newButton(Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
-    private final HBox boxLogo = newHBox(ivLogo);
-    public final Label lblLinkOut = newLabel();
-    public final Label lblDirOut = newLabel();
-    public final Label lblFilenameOut = newLabel();
-    public final Label lblDownloadInfo = newLabel();
-    public final TextField tfLink = newTextField();
-    public final TextField tfDir = newTextField();
-    public final TextField tfFilename = newTextField();
+    public static HBox boxLogo = UI_COMPONENT_BUILDER_INSTANCE.buildHBox(ivLogo);
+    public final Label lblLinkOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblDirOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblFilenameOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final Label lblDownloadInfo = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
+    public final TextField tfLink = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
+    public final TextField tfDir = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
+    public final TextField tfFilename = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
 
     public MainGridPane() {
         super();
@@ -127,31 +124,11 @@ public class MainGridPane extends GridPane {
         return listView;
     }
 
-    private Label newLabel() {
-        Label label = new Label("");
-        label.setFont(new Font(Objects.requireNonNull(MONACO_TTF).toExternalForm(), 20 * .75));
-        label.setPrefWidth(Double.MAX_VALUE);
-        label.getStyleClass().add("outline");
-        return label;
-    }
-
-    private TextField newTextField() {
-        TextField tf = new TextField("");
-        tf.setPrefWidth(Double.MAX_VALUE);
-        return tf;
-    }
-
     private ProgressBar pBar() {
         ProgressBar pb = new ProgressBar(0.0);
         pb.setPrefWidth(Double.MAX_VALUE);
         pb.setMinHeight(25);
         return pb;
-    }
-
-    private HBox newHBox(Node node) {
-        HBox box = new HBox(node);
-        box.setAlignment(Pos.CENTER);
-        return box;
     }
 
     private HBox boxAutoPaste() {
@@ -160,23 +137,10 @@ public class MainGridPane extends GridPane {
         return box;
     }
 
-    private ImageView newImageView(Image image, double scale) {
-        ImageView iv = new ImageView(image);
-        double width = image.getWidth();
-        iv.setPreserveRatio(true);
-        iv.setFitWidth(width * scale);
-        return iv;
-    }
-
     private Button newButton(Image imageUp, Image imageDown) {
         Button button = new Button();
-        ImageView imageViewUp = new ImageView(imageUp);
-        ImageView imageViewDn = new ImageView(imageDown);
-        double width = imageUp.getWidth();
-        imageViewUp.setPreserveRatio(true);
-        imageViewUp.setFitWidth(width * 0.45);
-        imageViewDn.setPreserveRatio(true);
-        imageViewDn.setFitWidth(width * 0.45);
+        ImageView imageViewUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageUp, 0.45);
+        ImageView imageViewDn = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageDown, 0.45);
         button.setOnMousePressed(e -> button.setGraphic(imageViewDn));
         button.setOnMouseReleased(e -> button.setGraphic(imageViewUp));
         button.setGraphic(imageViewUp);

@@ -1,6 +1,8 @@
 package ui;
 
 import gui.init.Environment;
+
+import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -24,8 +26,11 @@ public class ConfirmationDialog {
         YES_NO, OK, FILENAME
     }
 
+    private static Scene scene;
     private final State state;
     private final String lf = System.lineSeparator();
+    private static Button btnNo;
+    private static Button btnYes;
     private double width = 200;
     private double height = 150;
     private Stage stage;
@@ -78,7 +83,6 @@ public class ConfirmationDialog {
 
     private Button newButton(String text, EventHandler<ActionEvent> event) {
         Button button = new Button(text);
-        button.setFont(Constants.getMonaco(17));
         button.setMinWidth(80);
         button.setMaxWidth(80);
         button.setPrefWidth(80);
@@ -101,11 +105,11 @@ public class ConfirmationDialog {
             message.setWrapText(true);
             message.setTextAlignment(TextAlignment.CENTER);
         }
-        Button btnYes = newButton("Yes", e -> {
+        btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
             stage.close();
         });
-        Button btnNo = newButton("No", e -> {
+        btnNo = newButton("No", e -> {
             answer.setAnswer(false);
             stage.close();
         });
@@ -146,7 +150,14 @@ public class ConfirmationDialog {
 
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
-        Scene scene = Constants.getScene(vbox);
+        scene = Constants.getScene(vbox);
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Theme.applyTheme("Dark", scene);
+            Theme.changeButtonStyle(true, btnYes);
+            Theme.changeButtonStyle(true, btnNo);
+        } else {
+            Theme.applyTheme("Light", scene);
+        }
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setScene(scene);
@@ -162,5 +173,17 @@ public class ConfirmationDialog {
 
     public String getFilename() {
         return filename;
+    }
+
+    static Button getBtnNo() {
+        return btnNo;
+    }
+
+    static Scene getScene() {
+        return scene;
+    }
+
+    static Button getBtnYes() {
+        return btnYes;
     }
 }
