@@ -61,7 +61,7 @@ public class About {
     }
 
     private void applyThemeSettings(VBox aboutRoot) {
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Constants.addCSS(aboutScene, Constants.DARK_THEME_CSS);
             for (Node node : aboutRoot.getChildren()) {
                 if (node instanceof Label) {

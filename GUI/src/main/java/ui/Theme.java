@@ -19,7 +19,7 @@ import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 
 public class Theme {
     public static void applyTheme(String theme, Scene... scenes) {
-        boolean isDark = theme.equals("Dark");
+        boolean isDark = "Dark".equals(theme);
         AppSettings.SET.mainTheme(theme);
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
@@ -85,7 +85,7 @@ public class Theme {
     }
 
     private static void changeInfoTextFlow(Paint color) {
-        Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         for (int i = 0; i < UIController.getInfoTf().getChildren().size(); i++) {
             if (UIController.getInfoTf().getChildren().get(i) instanceof Text) {
                 Text text = (Text) UIController.getInfoTf().getChildren().get(i);
