@@ -28,7 +28,7 @@ public class Drifty_GUI extends Application {
     private static MessageBroker msgBroker;
     private static Scene scene;
     private final Settings settingsInstance = new Settings();
-    private final About aboutInstance = new About();
+    private About aboutInstance;
     private Stage primaryStage;
 
     public static void main(String[] args) {
@@ -143,7 +143,12 @@ public class Drifty_GUI extends Application {
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        about.setOnAction(event -> aboutInstance.show());
+        about.setOnAction(event -> {
+            if (aboutInstance == null) {
+                aboutInstance = new About();
+            }
+            aboutInstance.show();
+        });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
         return menu;
     }
