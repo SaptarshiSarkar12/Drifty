@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useRouter } from "next/router";
 
 export default {
@@ -54,4 +55,12 @@ export default {
       </span>
     ),
   },
+=======
+export default {
+  logo: <span>Drifty Docs</span>,
+  project: {
+    link: "https://github.com/SaptarshiSarkar12/Drifty",
+  },
+  // ... other theme options
+>>>>>>> 6b502dc (init docs)
 };

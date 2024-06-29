@@ -13,12 +13,15 @@
     "autoprefixer": "10.4.20",
     "eslint": "8.57.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "eslint-config-next": "14.2.5",
     "next": "14.2.5",
     "postcss": "8.4.41",
     "react": "18.3.1",
     "react-dom": "18.3.1",
 =======
+=======
+>>>>>>> 6b502dc (init docs)
     "eslint-config-next": "14.2.4",
     "next": "^14.2.4",
     "nextra": "^2.13.4",
@@ -26,6 +29,9 @@
     "postcss": "8.4.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+<<<<<<< HEAD
+>>>>>>> 6b502dc (init docs)
+=======
 >>>>>>> 6b502dc (init docs)
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
