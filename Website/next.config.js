@@ -22,5 +22,14 @@ const nextConfig = {
     unoptimized: true,
   },
 };
+<<<<<<< HEAD
 
 module.exports = nextConfig;
+=======
+const withNextra = require("nextra")({
+  theme: "nextra-theme-docs",
+  themeConfig: "./theme.config.jsx",
+});
+module.exports = withNextra(nextConfig);
+// module.exports = nextConfig
+>>>>>>> 6b502dc (init docs)
