@@ -65,8 +65,16 @@
   "methods":[{"name":"<init>","parameterTypes":["int","byte[]","int","float[]","int"] }]
 },
 {
+  "name":"java.lang.Boolean",
+  "fields":[{"name":"FALSE"}, {"name":"TRUE"}]
+},
+{
   "name":"java.lang.Iterable",
   "methods":[{"name":"iterator","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Object",
+  "methods":[{"name":"equals","parameterTypes":["java.lang.Object"] }]
 },
 {
   "name":"java.lang.Runnable",
@@ -85,8 +93,12 @@
   "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"<init>","parameterTypes":["int"] }, {"name":"add","parameterTypes":["java.lang.Object"] }, {"name":"get","parameterTypes":["int"] }]
 },
 {
+  "name":"java.util.Collections",
+  "methods":[{"name":"unmodifiableMap","parameterTypes":["java.util.Map"] }]
+},
+{
   "name":"java.util.HashMap",
-  "methods":[{"name":"containsKey","parameterTypes":["java.lang.Object"] }, {"name":"get","parameterTypes":["java.lang.Object"] }, {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }]
+  "methods":[{"name":"<init>","parameterTypes":[] }, {"name":"containsKey","parameterTypes":["java.lang.Object"] }, {"name":"get","parameterTypes":["java.lang.Object"] }, {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }]
 },
 {
   "name":"java.util.HashSet",
@@ -98,10 +110,14 @@
 },
 {
   "name":"java.util.Map",
-  "methods":[{"name":"containsKey","parameterTypes":["java.lang.Object"] }, {"name":"get","parameterTypes":["java.lang.Object"] }, {"name":"keySet","parameterTypes":[] }]
+  "methods":[{"name":"containsKey","parameterTypes":["java.lang.Object"] }, {"name":"get","parameterTypes":["java.lang.Object"] }, {"name":"keySet","parameterTypes":[] }, {"name":"put","parameterTypes":["java.lang.Object","java.lang.Object"] }]
 },
 {
   "name":"java.util.Set",
   "methods":[{"name":"add","parameterTypes":["java.lang.Object"] }, {"name":"size","parameterTypes":[] }, {"name":"toArray","parameterTypes":["java.lang.Object[]"] }]
+},
+{
+  "name":"javafx.scene.paint.Color",
+  "methods":[{"name":"rgb","parameterTypes":["int","int","int","double"] }]
 }
 ]

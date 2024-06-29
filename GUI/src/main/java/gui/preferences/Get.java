@@ -25,6 +25,7 @@ public class Get extends preferences.Get {
         return INSTANCE;
     }
 
+
     public Folders folders() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
@@ -39,6 +40,10 @@ public class Get extends preferences.Get {
 
     public boolean mainAutoPaste() {
         return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
+    }
+
+    public String mainTheme() {
+        return preferences.get(MAIN_THEME.toString(), "Light");
     }
 
     public Jobs jobs() {
