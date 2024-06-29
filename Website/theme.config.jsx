@@ -61,6 +61,36 @@ export default {
   project: {
     link: "https://github.com/SaptarshiSarkar12/Drifty",
   },
+<<<<<<< HEAD
   // ... other theme options
 >>>>>>> 6b502dc (init docs)
+=======
+  docsRepositoryBase:
+    "https://github.com/SaptarshiSarkar12/Drifty/tree/master/docs",
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s | Drifty",
+    };
+  },
+  toc: {
+    backToTop: true,
+    float: true,
+  },
+  sidebar: { toggleButton: true, autoCollapse: true },
+  navigation: true,
+  search: {
+    placeholder: "Search ",
+  },
+  footer: {
+    text: (
+      <span>
+        © {new Date().getFullYear()}{" "}
+        <a href="/" target="_blank">
+          Drifty
+        </a>
+        . All Rights Reserved.
+      </span>
+    ),
+  },
+>>>>>>> 62b3acc (Update Broken Links to Github)
 };
