@@ -2,5 +2,15 @@
   "index": "Quickstart",
   "gettingStarted": "Getting Started",
   "contribution": "Contribution",
-  "faq": "FAQ"
+  "faq": "FAQ",
+  "github_link": {
+    "title": "Repo Link [E]",
+    "href": "https://github.com/SaptarshiSarkar12/Drifty",
+    "newWindow": true
+  },
+  "download_link": {
+    "title": "Download Drifty [E]",
+    "href": "/download",
+    "newWindow": true
+  }
 }
