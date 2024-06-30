@@ -1,0 +1,21 @@
+{
+  "docs": {
+    "title": "Drifty",
+    "type": "page",
+    "href": "/docs",
+    "display": "hidden"
+  },
+  "Home": {
+    "type": "page",
+    "href": "/"
+  },
+  "Documentation": {
+    "type": "page",
+    "href": "/docs"
+  },
+  "Download": {
+    "type": "page",
+    "href": "/download",
+    "newWindow": true
+  }
+}
