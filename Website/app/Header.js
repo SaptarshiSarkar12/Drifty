@@ -50,6 +50,12 @@ function MobileNav({ open }) {
           <button className="">Download</button>
         </NavLink>
         <NavLink
+          to="/docs"
+          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
+        >
+          <button className="">Docs</button>
+        </NavLink>
+        <NavLink
           to="/contact"
           cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
         >
@@ -152,6 +158,11 @@ export default function Header({ props }) {
           <NavLink to="/download" cn="mx-4 flex">
             <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               DOWNLOAD
+            </button>
+          </NavLink>
+          <NavLink to="/docs" cn="mx-4 flex">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              DOCS
             </button>
           </NavLink>
           <NavLink to="/contact" cn="mx-4 flex">
