@@ -27,23 +27,23 @@ public class Utility extends utils.Utility {
             // example.com/file.json -> file.json
             String file = link.substring(link.lastIndexOf("/") + 1);
             if (file.isEmpty()) {
-                M.msgFilenameError(FILENAME_DETECTION_ERROR);
+                msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                 return null;
             }
             int index = file.lastIndexOf(".");
             if (index < 0) {
-                M.msgFilenameError(FILENAME_DETECTION_ERROR);
+                msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                 return null;
             }
             String extension = file.substring(index);
             // edge case 1: "example.com/."
             if (extension.length() == 1) {
-                M.msgFilenameError(FILENAME_DETECTION_ERROR);
+                msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                 return null;
             }
             // file.png?width=200 -> file.png
             filename = file.split("([?])")[0];
-            M.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
+            msgBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
         }
         return filename;
     }
@@ -51,7 +51,7 @@ public class Utility extends utils.Utility {
     public boolean yesNoValidation(String input, String printMessage) {
         while (input.isEmpty()) {
             Environment.getMessageBroker().msgInputError(ENTER_Y_OR_N, true);
-            M.msgLogError(ENTER_Y_OR_N);
+            msgBroker.msgLogError(ENTER_Y_OR_N);
             Environment.getMessageBroker().msgInputInfo(printMessage, false);
             input = SC.nextLine().toLowerCase();
         }
@@ -62,7 +62,7 @@ public class Utility extends utils.Utility {
             return false;
         } else {
             Environment.getMessageBroker().msgInputError("Invalid input!", true);
-            M.msgLogError("Invalid input!");
+            msgBroker.msgLogError("Invalid input!");
             Environment.getMessageBroker().msgInputInfo(printMessage, false);
             input = SC.nextLine().toLowerCase();
             return yesNoValidation(input, printMessage);
@@ -82,26 +82,26 @@ public class Utility extends utils.Utility {
         ArrayList<HashMap<String, Object>> searchResults = getYoutubeSearchResults(query, true);
         boolean searchedWithFilters = true;
         if (searchResults == null) {
-            M.msgLogError("Failed to get search results for the song with filters! Trying without filters ...");
+            msgBroker.msgLogError("Failed to get search results for the song with filters! Trying without filters ...");
             searchResults = getYoutubeSearchResults(query, false);
             searchedWithFilters = false;
             if (searchResults == null) {
-                M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
                 return null;
             }
         }
         String matchedId = getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
         if (matchedId.isEmpty()) {
             if (searchedWithFilters) {
-                M.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
+                msgBroker.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
                 searchResults = getYoutubeSearchResults(query, false);
                 matchedId = getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
                 if (matchedId.isEmpty()) {
-                    M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                    msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
                     return null;
                 }
             } else {
-                M.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
                 return null;
             }
         }
@@ -114,7 +114,7 @@ public class Utility extends utils.Utility {
         loaderOptions.setAllowRecursiveKeys(false);
         loaderOptions.setProcessComments(false);
         Yaml yamlParser = new Yaml(new SafeConstructor(loaderOptions));
-        M.msgLogInfo("YAML parser initialized successfully");
+        msgBroker.msgLogInfo("YAML parser initialized successfully");
         return yamlParser;
     }
 }
