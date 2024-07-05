@@ -76,6 +76,14 @@ public class MessageBroker {
         sendMessage(message, MessageType.ERROR, MessageCategory.BATCH);
     }
 
+    public void msgUpdateError(String message) {
+        sendMessage(message, MessageType.ERROR, MessageCategory.UPDATE);
+    }
+
+    public void msgUpdateInfo(String message) {
+        sendMessage(message, MessageType.INFO, MessageCategory.UPDATE);
+    }
+
     protected void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         logger.log(messageType, message);
         message = switch (messageType) {

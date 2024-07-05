@@ -47,7 +47,7 @@ public class Splash extends Preloader {
     @Override
     public void handleStateChangeNotification(StateChangeNotification info) {
         StateChangeNotification.Type type = info.getType();
-        if (Objects.requireNonNull(type) == StateChangeNotification.Type.BEFORE_LOAD) {
+        if (Objects.requireNonNull(type) == StateChangeNotification.Type.BEFORE_START) {
             double time;
             if (AppSettings.GET.ytDlpUpdating()) {
                 time = 2.0;

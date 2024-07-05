@@ -43,17 +43,17 @@ public class Drifty_GUI extends Application {
         msgBroker = new MessageBroker();
         Environment.setGUIMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
+        Environment.initializeEnvironment();
+        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START));
     }
 
     @Override
     public void start(Stage primaryStage) {
-        Environment.initializeEnvironment();
         this.primaryStage = Constants.getStage("Drifty GUI", true);
         this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
         this.primaryStage.setMinHeight(Constants.SCREEN_HEIGHT * .8125);
         createScene();
         this.primaryStage.setScene(scene);
-        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_LOAD));
         this.primaryStage.show();
     }
 
@@ -158,7 +158,7 @@ public class Drifty_GUI extends Application {
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
         wipeHistory.setOnAction(e -> {
-            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
+            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false, false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }

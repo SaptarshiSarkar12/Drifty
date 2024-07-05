@@ -101,4 +101,24 @@ public class Get {
     public boolean isFfmpegWorking() {
         return preferences.getBoolean(IS_FFMPEG_WORKING, false);
     }
+
+    public boolean earlyAccess() {
+        return preferences.getBoolean(EARLY_ACCESS, false);
+    }
+
+    public String newDriftyVersionName() {
+        return preferences.get(NEW_DRIFTY_VERSION_NAME, "");
+    }
+
+    public long lastDriftyUpdateTime() {
+        return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
+    }
+
+    public String latestDriftyVersionTag() {
+        return preferences.get(LATEST_DRIFTY_VERSION_TAG, "");
+    }
+
+    public boolean driftyUpdateAvailable() {
+        return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
+    }
 }
