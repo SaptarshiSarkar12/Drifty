@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
+import properties.MessageCategory;
 import properties.Program;
 import support.Job;
 import utils.Utility;
@@ -162,7 +163,7 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                     for (String line : list) {
                         Matcher m = pattern.matcher(line);
                         if (m.find()) {
-                            fileCount = Utility.parseStringToInt(m.group(2));
+                            fileCount = Utility.parseStringToInt(m.group(2), "Failed to get file count", MessageCategory.FILENAME);
                             break;
                         }
                     }

@@ -2,8 +2,10 @@ package updater;
 
 import init.Environment;
 import preferences.AppSettings;
+import properties.MessageCategory;
 import support.Constants;
 import utils.MessageBroker;
+import utils.Utility;
 
 import java.io.IOException;
 import java.net.URI;
@@ -88,8 +90,8 @@ public class UpdateChecker {
 
         // Check major, minor, and patch versions
         for (int i = 0; i < 3; i++) {
-            int cvPart = Integer.parseInt(currentVersionParts[i]);
-            int lvPart = Integer.parseInt(latestVersionParts[i]);
+            int cvPart = Utility.parseStringToInt(currentVersionParts[i], "Failed to parse current version part " + i, MessageCategory.UPDATE);
+            int lvPart = Utility.parseStringToInt(latestVersionParts[i], "Failed to parse latest version part " + i, MessageCategory.UPDATE);
 
             if (cvPart < lvPart) {
                 return true;
@@ -123,8 +125,8 @@ public class UpdateChecker {
                 } else {
                     // Both versions have the same pre-release type (alpha, beta, rc)
                     // Higher Revision number means a newer version
-                    int cvRevisionNumber = Integer.parseInt(currentVersionParts[4]);
-                    int lvRevisionNumber = Integer.parseInt(latestVersionParts[4]);
+                    int cvRevisionNumber = Utility.parseStringToInt(currentVersionParts[4], "Failed to parse current version's revision number", MessageCategory.UPDATE);
+                    int lvRevisionNumber = Utility.parseStringToInt(latestVersionParts[4], "Failed to parse latest version's revision number", MessageCategory.UPDATE);
                     return cvRevisionNumber < lvRevisionNumber;
                 }
             }

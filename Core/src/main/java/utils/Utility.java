@@ -7,6 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
+import properties.MessageCategory;
 import properties.Mode;
 import properties.OS;
 import properties.Program;
@@ -477,7 +478,7 @@ public class Utility {
                 continue;
             }
             String[] durationInMinutes = searchResult.get("duration").toString().split(":");
-            int videoDurationInMs = parseStringToInt(durationInMinutes[0]) * 60000 + parseStringToInt(durationInMinutes[1]) * 1000;
+            int videoDurationInMs = parseStringToInt(durationInMinutes[0], "Failed to parse video duration for Spotify song!", MessageCategory.DOWNLOAD) * 60000 + parseStringToInt(durationInMinutes[1], "Failed to parse video duration for Spotify song!", MessageCategory.DOWNLOAD) * 1000;
             if ("Top result".equalsIgnoreCase(searchResult.get("category").toString())) {
                 if (isDurationMatched(videoDurationInMs, spotifySongDuration, false)) {
                     matchedVideoId = (String) searchResult.get("videoId");
@@ -815,10 +816,11 @@ public class Utility {
         }
     }
 
-    public static int parseStringToInt(String string) {
+    public static int parseStringToInt(String string, String errorMessage, MessageCategory messageCategory) {
         try {
             return Integer.parseInt(string);
         } catch (NumberFormatException e) {
+            msgBroker.msgError(errorMessage + " " + e.getMessage(), messageCategory);
             return 0;
         }
     }
