@@ -22,6 +22,10 @@ public class Utility extends utils.Utility {
             for (String json : Objects.requireNonNull(linkMetadataList)) {
                 filename = Utility.getFilenameFromJson(json);
             }
+            if (filename.isEmpty()) {
+                msgBroker.msgFilenameError("Filename detection failed!");
+                return null;
+            }
         } else {
             // Example: "example.com/file.txt" prints "Filename detected: file.txt"
             // example.com/file.json -> file.json

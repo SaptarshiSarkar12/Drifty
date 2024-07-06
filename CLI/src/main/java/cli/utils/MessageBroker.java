@@ -30,8 +30,4 @@ public class MessageBroker extends utils.MessageBroker {
         this.endWithNewLine = endWithNewLine;
         sendMessage(message, MessageType.WARN, MessageCategory.HISTORY);
     }
-
-    public void msgUpdateInfo(String message) {
-        sendMessage(message, MessageType.INFO, MessageCategory.UPDATE);
-    }
 }

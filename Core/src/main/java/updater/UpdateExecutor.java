@@ -10,9 +10,6 @@ public abstract class UpdateExecutor {
     protected File currentExecutableFile;
     protected File latestExecutableFile;
 
-    protected UpdateExecutor() {
-    }
-
     public UpdateExecutor(File currentExecutableFile, File latestExecutableFile) {
         this.currentExecutableFile = currentExecutableFile;
         this.latestExecutableFile = latestExecutableFile;

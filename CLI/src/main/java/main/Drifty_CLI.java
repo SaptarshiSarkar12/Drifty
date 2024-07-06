@@ -209,10 +209,14 @@ public class Drifty_CLI {
                             } else {
                                 fileName = findFilenameInLink(link);
                             }
-                            if (!Objects.requireNonNull(fileName).isEmpty()) {
+                            if (fileName != null && !fileName.isEmpty()) {
                                 verifyJobAndDownload(false);
                             }
                         }
+                    } else {
+                        fileName = name;
+                        messageBroker.msgFilenameInfo("Filename provided : " + fileName);
+                        verifyJobAndDownload(false);
                     }
                 }
             }
@@ -275,7 +279,7 @@ public class Drifty_CLI {
                         } else {
                             messageBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
                         }
-                        if (!Objects.requireNonNull(fileName).isEmpty()) {
+                        if (fileName != null && !fileName.isEmpty()) {
                             verifyJobAndDownload(true);
                         }
                     }
@@ -285,7 +289,7 @@ public class Drifty_CLI {
                     }
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
                     fileName = findFilenameInLink(link);
-                    if (!Objects.requireNonNull(fileName).isEmpty()) {
+                    if (fileName != null && !fileName.isEmpty()) {
                         verifyJobAndDownload(true);
                     } else {
                         messageBroker.msgFilenameError("Failed to retrieve filename from link!");
@@ -305,10 +309,10 @@ public class Drifty_CLI {
 
     private static void checkAndUpdateDrifty(boolean askForInstallingUpdate) {
         messageBroker.msgInitInfo("Checking for updates...");
-        if (!isDriftyUpdateChecked()) {
+        if (!isDriftyUpdateChecked() || !askForInstallingUpdate) { // Check for updates only once a day and only if the user wants to install the update (if available)
             if (UpdateChecker.isUpdateAvailable()) {
                 messageBroker.msgUpdateInfo("Update available!");
-                messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + "(" + AppSettings.GET.newDriftyVersionName() + ")");
+                messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.newDriftyVersionName() + ")");
                 boolean choice = true;
                 if (askForInstallingUpdate) {
                     messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
@@ -321,10 +325,11 @@ public class Drifty_CLI {
                     messageBroker.msgUpdateInfo("Downloading update...");
                     if (!downloadUpdate()) {
                         messageBroker.msgUpdateError("Failed to update Drifty!");
+                        Environment.terminate(1);
                     } else {
                         messageBroker.msgUpdateInfo("Update successful!");
                         messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
-                        System.exit(0);
+                        Environment.terminate(0);
                     }
                 }
             }
@@ -508,7 +513,7 @@ public class Drifty_CLI {
                 }
                 if (isSpotifyLink && link.contains("playlist")) {
                     handleSpotifyPlaylist();
-                } else if (!Objects.requireNonNull(fileName).isEmpty()) {
+                } else if (fileName != null && !fileName.isEmpty()) {
                     verifyJobAndDownload(false);
                 }
             }

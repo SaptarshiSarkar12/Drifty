@@ -93,7 +93,7 @@ public final class UIController {
         new Thread(() -> {
             if (AppSettings.GET.driftyUpdateAvailable()) {
                 M.msgLogInfo("A new version of Drifty is available!");
-                ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + "Do you want to download it now?", false, false);
+                ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
                 if (ask.getResponse().isYes()) {
                     downloadUpdate();
                 }
@@ -127,6 +127,7 @@ public final class UIController {
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
                 sleep(500);
             }
+            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
