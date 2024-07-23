@@ -34,7 +34,7 @@ jobs:
           docker compose build runner
           docker compose build ${{ matrix.image_name_suffix }}
       - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@0.19.0
+        uses: aquasecurity/trivy-action@0.24.0
         continue-on-error: true
         with:
           image-ref: drifty-${{ matrix.image_name_suffix }}
