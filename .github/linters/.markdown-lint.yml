@@ -8,7 +8,7 @@ MD005: true # Inconsistent indentation for list items at the same level
 MD022: true # Headers should be surrounded by blank lines
 MD023: true # Headers must start at the beginning of the line
 MD024:
-  allow_different_nesting: true # Multiple headers with the same content under different nesting levels are allowed
+  siblings_only: true # Multiple headers with the same content under different nesting levels are allowed
 MD026:
   punctuation: ".,;:!" # Trailing punctuation in header
 MD027: true # Multiple spaces after blockquote symbol
