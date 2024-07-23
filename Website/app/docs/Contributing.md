@@ -70,13 +70,13 @@ If none of the above categories applies to your case, feel free to create an iss
 
 ## Running the Project in IntelliJ IDEA
 
-#### Prerequisites
+### Prerequisites
 
 - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** (Maven v3.8.8 is required for building installer or executable binaries for Drifty GUI, locally)
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Recommended)
 
-#### Steps
+### Steps
 
 1. Clone the repository
    ```bash
