@@ -19,5 +19,5 @@ RUN mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf 
 FROM drifty-runner:latest
 WORKDIR /app
 COPY --from=build /app/GUI/target/gluonfx/x86_64-linux /app
-RUN chmod +x /app/GUI
-CMD ["/app/GUI"]
+RUN chmod +x "/app/Drifty GUI"
+CMD ["/app/Drifty GUI"]

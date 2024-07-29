@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -14,7 +14,11 @@ jobs:
     name: Lint Code Base
     if: github.repository == 'SaptarshiSarkar12/Drifty'
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: read
+      packages: read
+      pull-requests: write
+      statuses: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

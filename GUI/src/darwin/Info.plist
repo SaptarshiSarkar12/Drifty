@@ -9,7 +9,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>2.1.0-beta.1</string>
 	<key>CFBundleExecutable</key>
-	<string>GUI</string>
+	<string>Drifty GUI</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon.icns</string>
 	<key>CFBundleFileName</key>
