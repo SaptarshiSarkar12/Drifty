@@ -10,7 +10,7 @@
     </parent>
     <artifactId>CLI</artifactId>
     <packaging>jar</packaging>
-    <name>CLI</name>
+    <name>Drifty CLI</name>
     <description>CLI module of Drifty</description>
 
     <properties>
