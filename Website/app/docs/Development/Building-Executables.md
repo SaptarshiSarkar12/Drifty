@@ -14,7 +14,7 @@
 > [!NOTE]
 > Check if GraalVM is added to the system path by running `native-image --version` in the terminal.
 > If the command is not recognized, add GraalVM `bin` directory to the system path.
-> ```
+> ```shell
 > GRAALVM_HOME=<path-to-graalvm>
 > PATH=$GRAALVM_HOME/bin:$PATH
 > ```
