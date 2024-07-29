@@ -1,6 +1,8 @@
-# Contributing for the first time? We've got you covered
+# Contributing to Drifty
 
-Thank you for considering and taking the time to contribute! The following are the guidelines for contributing to this project
+Drifty is an Open-Source project, and we encourage contributions from the community.
+Thank you for considering and taking the time to contribute!
+The following are the guidelines for contributing to this project.
 
 ## Code of Conduct
 
@@ -17,19 +19,18 @@ To report any bugs or any difficulties you are facing, you can create an issue b
 
 ## What does each Issue Category mean?
 
-1. **Bug Report for Application**
+1. **Bug Report for Application**:
    You can create a **Bug Report for Application** to report any bug related to the application, including installation problems and crashes.
-2. **Bug report for Website** 
+2. **Bug report for Website**:
     You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://saptarshisarkar12.github.io/Drifty/).
-3. **Documentation Change Request**
+3. **Documentation Change Request**:
     Raise an issue if you think any improvements can be made in the Documentation of Drifty.
-4. **Feature Request for Drifty Application**
+4. **Feature Request for Drifty Application**:
     If you have any ideas to improve the application by adding new features, you can create an issue in this category.
-5. **Feature Request for Drifty Website**
+5. **Feature Request for Drifty Website**:
     If you have any ideas to improve the Website of Drifty by adding new features, you can create an issue in this category.
 
 If none of the above categories applies to your case, feel free to create an issue in the **Others** category.
-
 
 ## Pull Requests
 
@@ -66,119 +67,4 @@ If none of the above categories applies to your case, feel free to create an iss
 
 [Projects Tab](https://github.com/users/SaptarshiSarkar12/projects/3) lists the tasks completed, in progress and the ideas left to be incorporated in the project. You can work on the **todo tasks** by creating the issue (if not already created) and getting yourself assigned.
 
-![image](image.png)
-
-## Running the Project in IntelliJ IDEA
-
-### Prerequisites
-
-- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
-- [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** (Maven v3.8.8 is required for building installer or executable binaries for Drifty GUI, locally)
-- [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Recommended)
-
-### Steps
-
-1. Clone the repository
-   ```bash
-   git clone git@github.com:SaptarshiSarkar12/Drifty.git
-   ```
-   You'll need to replace `SaptarshiSarkar12` with your GitHub username if you have forked the repository.
-2. Open the project in IntelliJ IDEA
-3. Follow the below steps to run the project:
-   - Open the `Drifty_CLI` java class in `CLI/src/main/java/main` directory and run the project. This will start the CLI application.
-   - Open the `Drifty_GUI` java class in `GUI/src/main/java/main` directory and run the project. This will start the GUI application.
-
-## Building Installer or Executable Binaries for Drifty
-
-### Local Build
-
-#### Prerequisites
-
-- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
-- [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** (Maven v3.8.8 is required for building installer or executable binaries for Drifty GUI, locally)
-- [GraalVM](https://www.graalvm.org/downloads/) (Optional but required for building executable binaries locally)
-- [GCC](https://gcc.gnu.org/install/) (Optional but required for building executable binaries for Drifty GUI, locally)
-
-#### Steps
-
-1. Open the terminal and navigate to the project directory
-2. Run the below command to install the jar files in the local maven repository
-   ```shell
-   mvn clean install
-   ```
-3. For Drifty GUI only, you need to build a C object file by running the below command
-   - For Linux,
-     ```shell
-     gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
-     ```
-   - For Windows,
-     ```shell
-     gcc -c config/missing_symbols.c -o config/missing_symbols-windows-latest.o
-     ```
-   - For Mac,
-     ```shell
-        gcc -c config/missing_symbols.c -o config/missing_symbols-macos-latest.o
-     ```
-   Replace `gcc` with the path to the GCC compiler if it is not in the system path.
-4. Run the below command to build the installer or executable binaries
-   - For GUI,
-      - For Linux,
-        ```shell
-        mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI -U
-        ```
-      - For Windows,
-        ```shell
-        mvn -P build-drifty-gui-for-windows-latest gluonfx:build gluonfx:package -rf :GUI -U
-        ```
-      - For Mac,
-        ```shell
-        mvn -P build-drifty-gui-for-macos-latest gluonfx:build gluonfx:package -rf :GUI -U
-        ```
-   - For CLI,
-       - For Linux,
-         ```shell
-         mvn -P build-drifty-cli-for-ubuntu-latest package
-         ```
-       - For Windows,
-         ```shell
-         mvn -P build-drifty-cli-for-windows-latest package
-         ```
-       - For Mac,
-         ```shell
-         mvn -P build-drifty-cli-for-macos-latest package
-         ```
-5. Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below. The placeholder `{arch}` should be replaced with either `x86_64` or `aarch64`, depending on your system's architecture.
-    - For GUI,
-      - For Linux,
-        ```shell
-        GUI/target/gluonfx/{arch}-linux
-        ```
-      - For Windows,
-        ```shell
-        GUI/target/gluonfx/{arch}-windows
-        ```
-      - For Mac,
-        ```shell
-        GUI/target/gluonfx/{arch}-mac
-        ```
-    - For CLI,
-      - For Linux,
-        ```shell
-        CLI/target/CLI/linux
-        ```
-      - For Windows,
-        ```shell
-        CLI/target/CLI/windows
-        ```
-      - For Mac,
-        ```shell
-        CLI/target/CLI/mac
-        ```
-6. You can now run the installer or executable binaries to use the application.
-7. To remove the generated files, run the below command
-   ```shell
-   mvn clean
-   ```
-
-## Docker Compose
-
+![image](https://github.com/user-attachments/assets/292c5c90-fbee-4eb0-8912-02faea96ad23)
