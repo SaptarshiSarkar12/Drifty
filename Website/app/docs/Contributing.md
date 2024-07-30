@@ -6,7 +6,9 @@ The following are the guidelines for contributing to this project.
 
 ## Code of Conduct
 
-We have a [Code of Conduct](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md) that all contributors must follow. This code of conduct outlines our expectations for participants within the project and also steps to report unacceptable behavior. We are committed to providing a welcoming and inspiring community for all and expect our code of conduct to be honored. Anyone who violates or has concerns about the code of conduct should report it directly to the project maintainers.
+We have a [Code of Conduct](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CODE_OF_CONDUCT.md) that all contributors must follow.
+This code of conduct outlines our expectations for participants within the project. It also includes steps to report unacceptable behavior.
+We are committed to providing a welcoming and inspiring community for all and expect our code of conduct to be honored. Anyone who violates or has concerns about the code of conduct should report it directly to the project maintainers.
 
 ## How to Report Bugs and Issues
 
@@ -34,7 +36,7 @@ If none of the above categories applies to your case, feel free to create an iss
 
 ## Pull Requests
 
-[Pull requests](https://github.com/SaptarshiSarkar12/Drifty/pulls) are a great way to implement your ideas into this project via relevant code changes. It is necessary to open an issue at first, describing the changes you want to make and discuss them with the maintainers. Once the issue gets assigned to you, you can open a pull request.
+[Pull requests](https://github.com/SaptarshiSarkar12/Drifty/pulls) are a fantastic way to bring your ideas to life in this project! Start by opening an issue to describe your proposed changes and discuss them with the maintainers. Once the issue is assigned to you, you can go ahead and submit your pull request.
 
 ## What does each Label mean in Issues and Pull Requests?
 
@@ -65,6 +67,6 @@ If none of the above categories applies to your case, feel free to create an iss
 
 ## Project Insights: Status and Task Progress
 
-[Projects Tab](https://github.com/users/SaptarshiSarkar12/projects/3) lists the tasks completed, in progress and the ideas left to be incorporated in the project. You can work on the **todo tasks** by creating the issue (if not already created) and getting yourself assigned.
+[Projects Tab](https://github.com/users/SaptarshiSarkar12/projects/3) lists the tasks completed, in progress and the ideas left to be incorporated in the project. You can work on the **to-do tasks** by creating the issue (if not already created) and getting yourself assigned.
 
 ![image](https://github.com/user-attachments/assets/292c5c90-fbee-4eb0-8912-02faea96ad23)

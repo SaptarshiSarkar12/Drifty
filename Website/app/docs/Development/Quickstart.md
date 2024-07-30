@@ -1,6 +1,6 @@
 # Quick Start
 
-This is a quick start guide to get you up and running with the project for development purposes.
+This is a quick start guide to get developers up and running with the project for development purposes.
 
 ## Clone the Project
 
@@ -35,13 +35,13 @@ This command will install all the dependencies required for the maven project.
 
 1. Open the project in IntelliJ IDEA.
 2. Follow the below steps to run the project:
-   - Open the `Drifty_CLI` java class in `CLI/src/main/java/main` directory and click on the run button. This will start the Drifty CLI application.
-   - Open the `Drifty_GUI` java class in `GUI/src/main/java/main` directory and click on the run button. This will start the Drifty GUI application.
-3. You can start making changes to the code and see the changes reflected in the application. Remember to re-run the project every time you make changes to see the updated output.
+   - Open the `Drifty_CLI` Java class in the `CLI/src/main/java/main` directory and click on the run button. This will start the Drifty CLI application.
+   - Open the `Drifty_GUI` Java class in the `GUI/src/main/java/main` directory and click on the run button. This will start the Drifty GUI application.
+3. Make changes to the code and see them reflected in the application. Re-run the project after each change to see the updated output.
 
 ### Debugging Drifty Application
 
-To debug the project, you can set breakpoints in the code and run the project in debug mode (by clicking on the debug button in IntelliJ IDEA). This will allow you to step through the code and inspect variables to identify and fix issues.
+To debug the project, you can set breakpoints in the code and run the project in debug mode (by clicking on the debug button in IntelliJ IDEA). This will allow you to step through the code and inspect variables to identify and resolve issues.
 
 ## Drifty Website Development
 
@@ -68,7 +68,7 @@ npm run dev
 ```
 
 This will start the development server, and you can access the website at `http://localhost:3000` in your browser.
-You can make changes to the website code from your IDE, and the changes will be reflected in real-time in the browser.
+Make changes to the website code from your IDE and see them reflected in real-time in the browser.
 
 ### Debugging Drifty Website
 

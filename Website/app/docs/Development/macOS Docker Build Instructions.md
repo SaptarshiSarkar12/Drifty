@@ -24,7 +24,7 @@ Once you have Docker installed **(and running)**, open the terminal and follow t
   brew install socat
   brew install xquartz
   ```
-- If you are going to build **Drifty GUI** Docker image using your changed source code, then run this command in the directory where the project files are present:
+- To build the **Drifty GUI** Docker image using your changed source code, run this command in the directory where the project files are present:
   ```bash
   docker compose build gui
   ```
@@ -69,7 +69,7 @@ The **IP address** that is after the word `inet` will be the address that your r
 
 If you are not running at **_least macOS version 13 (Ventura)_**, then refer to [**this article**](https://www.macinstruct.com/tutorials/how-to-set-a-static-ip-address-on-a-mac/) to get the instructions for **statically assigning your IP address**. Otherwise, follow these instructions:
 
-- Go to `System Settings` by clicking on the Apple logo in the top left corner of your screen.
+- Go to `System Settings` by clicking on the Apple logo in the top-left corner of your screen.
 - Click on `Network` then click on your network adapter.
   ![Network Settings' screenshot](https://github.com/user-attachments/assets/f2f54273-1bf4-4286-bc56-88991eb4df84)
 - Click on `Details`   
@@ -88,7 +88,7 @@ A small change in XQuartz is necessary for running **Drifty GUI** via _Docker_. 
   ```
 - When XQuartz loads, you will see a window that looks like this:
   ![XQuartz initial window](https://github.com/user-attachments/assets/762bacba-7770-4590-8396-93c9bc31ace3)
-- Click on the XQuartz menu at the top left of your screen just next to the Apple logo and select `Settings`. Click on the `Security` tab and then check `Allow connections from network clients` as shown below:
+- Click on the XQuartz menu at the top-left of your screen just next to the Apple logo and select `Settings`. Click on the `Security` tab and then check `Allow connections from network clients` as shown below:
   ![XQuartz Security window](https://github.com/user-attachments/assets/43fba116-030e-47bf-b5a1-17d09dd64e31)
 
 ### Commands to run the Docker image
@@ -101,8 +101,8 @@ We have finally set up everything required to run the Docker image of **Drifty G
   open -a Xquartz
   docker run -e DISPLAY=192.168.1.10:0 ghcr.io/saptarshisarkar12/drifty-gui:master
   ```
-  Remember to change the tag to the version/branch you want to use.
-- If you want to run the **docker image built from your changed source code** (by using `docker compose`), then run these commands:
+  Ensure to update the tag to the desired version/branch.
+- To run the **docker image built from your changed source code** (using `docker compose`), execute the following commands:
   ```bash
   socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
   open -a Xquartz

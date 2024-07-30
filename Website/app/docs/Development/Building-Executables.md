@@ -49,11 +49,11 @@
 
 > [!NOTE]
 > Check if GraalVM is added to the system path by running `native-image --version` in the terminal.
-> If the command is not recognized, add GraalVM `bin` directory to the system path.
+> If the command is not recognized, add the GraalVM `bin` directory to the system path.
 > ```shell
 > PATH=$GRAALVM_HOME/bin
 > ```
-> The below environment variable must be set pointing to the GraalVM installation directory. 
+> Set the following environment variable to point to your GraalVM installation directory.
 > ```shell
 > GRAALVM_HOME=<path-to-graalvm>
 > ```
@@ -69,7 +69,7 @@
      ```shell
      gcc -c config/missing_symbols.c -o config/missing_symbols-windows-latest.o
      ```
-   - For Mac,
+   - For macOS,
      ```shell
      gcc -c config/missing_symbols.c -o config/missing_symbols-macos-latest.o
      ```
@@ -84,7 +84,7 @@
        ```shell
        mvn -P build-drifty-gui-for-windows-latest gluonfx:build gluonfx:package -rf :GUI -U
        ```
-     - For Mac,
+     - For macOS,
        ```shell
        mvn -P build-drifty-gui-for-macos-latest gluonfx:build gluonfx:package -rf :GUI -U
        ```
@@ -97,7 +97,7 @@
        ```shell
        mvn -P build-drifty-cli-for-windows-latest package
        ```
-     - For Mac,
+     - For macOS,
        ```shell
        mvn -P build-drifty-cli-for-macos-latest package
        ```
@@ -111,7 +111,7 @@
        ```shell
        GUI/target/gluonfx/{arch}-windows
        ```
-     - For Mac,
+     - For macOS,
        ```shell
        GUI/target/gluonfx/{arch}-mac
        ```
@@ -124,7 +124,7 @@
        ```shell
        CLI/target/CLI/windows
        ```
-     - For Mac,
+     - For macOS,
        ```shell
        CLI/target/CLI/mac
        ```
