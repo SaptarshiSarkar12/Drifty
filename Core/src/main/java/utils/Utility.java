@@ -223,7 +223,7 @@ public class Utility {
                     if (Mode.isCLI()) {
                         // Get the time (from `retry-after` header) to wait before sending another request
                         String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("5");
-                        long timeToWait = Long.parseLong(retryAfter) * 1000;
+                        long timeToWait = (long) parseStringToInt(retryAfter) * 1000;
                         for (long i = timeToWait; i >= 0; i -= 1000) {
                             System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
                             sleep(1000);
