@@ -69,6 +69,10 @@ jobs:
         run: |
           sudo apt-get install libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libfreetype6-dev
           sudo apt-get install libgl-dev libglib2.0-dev libgtk-3-dev libpango1.0-dev libx11-dev libxtst-dev zlib1g-dev
+      - name: Update yt-dlp
+        run: |
+          chmod +x Core/src/main/resources/yt-dlp
+          Core/src/main/resources/yt-dlp -U
       - name: Set up GraalVM JDK 21
         uses: graalvm/setup-graalvm@v1
         with:
@@ -106,7 +110,7 @@ jobs:
         run: |
           mkdir build
           mkdir build/GUI
-          mv GUI/target/gluonfx/x86_64-linux/GUI "GUI/target/gluonfx/x86_64-linux/Drifty_GUI"
+          mv "GUI/target/gluonfx/x86_64-linux/Drifty GUI" "GUI/target/gluonfx/x86_64-linux/Drifty_GUI"
           mv "GUI/target/gluonfx/x86_64-linux/Drifty_GUI" -t build/GUI
 
       - name: Set up QEMU
@@ -116,7 +120,7 @@ jobs:
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.5.0
+        uses: docker/setup-buildx-action@v3.6.1
 
       # Login to GitHub Container Registry
       # https://github.com/docker/login-action

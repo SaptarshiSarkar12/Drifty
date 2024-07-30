@@ -9,7 +9,7 @@
         <version>2.1.0-beta.1</version>
     </parent>
     <artifactId>GUI</artifactId>
-    <name>GUI</name>
+    <name>Drifty GUI</name>
     <description>GUI module of Drifty</description>
 
     <properties>
