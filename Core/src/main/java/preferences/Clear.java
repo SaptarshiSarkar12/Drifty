@@ -38,4 +38,24 @@ public class Clear {
     public void isFfmpegWorking() {
         preferences.remove(IS_FFMPEG_WORKING);
     }
+
+    public void earlyAccess() {
+        preferences.remove(EARLY_ACCESS);
+    }
+
+    public void newDriftyVersionName() {
+        preferences.remove(NEW_DRIFTY_VERSION_NAME);
+    }
+
+    public void lastDriftyUpdateTime() {
+        preferences.remove(LAST_DRIFTY_UPDATE_TIME);
+    }
+
+    public void latestDriftyVersionTag() {
+        preferences.remove(LATEST_DRIFTY_VERSION_TAG);
+    }
+
+    public void driftyUpdateAvailable() {
+        preferences.remove(DRIFTY_UPDATE_AVAILABLE);
+    }
 }

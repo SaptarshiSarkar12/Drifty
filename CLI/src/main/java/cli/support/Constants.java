@@ -13,11 +13,15 @@ public class Constants extends support.Constants {
     public static final String HELP_FLAG = "--help";
     public static final String NAME_FLAG = "--name";
     public static final String VERSION_FLAG = "--version";
+    public static final String UPDATE_FLAG = "--update";
+    public static final String EARLY_ACCESS_FLAG = "--early-access";
     public static final String LOCATION_FLAG = "--location";
     public static final String BATCH_FLAG = "--batch";
     public static final String HELP_FLAG_SHORT = "-h";
     public static final String NAME_FLAG_SHORT = "-n";
     public static final String VERSION_FLAG_SHORT = "-v";
+    public static final String UPDATE_FLAG_SHORT = "-u";
+    public static final String EARLY_ACCESS_FLAG_SHORT = "-ea";
     public static final String LOCATION_FLAG_SHORT = "-l";
     public static final String BATCH_FLAG_SHORT = "-b";
     public static final String REMOVE_ALL_URL_CONFIRMATION = "Are you sure you wish to delete ALL links? (Y/N): ";

@@ -87,6 +87,10 @@
   }, {
     "pattern":"\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en_US.properties\\E"
   }, {
+    "pattern":"\\Qffmpeg\\E"
+  }, {
+    "pattern":"\\Qyt-dlp\\E"
+  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/ubidi.icu\\E"
@@ -130,8 +134,6 @@
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/FillRoundRect_Color.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Mask_TextureSuper.frag\\E"
-  }, {
-    "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Solid_Color.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/Solid_TextureFirstPassLCD.frag\\E"
   }, {

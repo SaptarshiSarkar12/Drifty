@@ -28,10 +28,12 @@ public class Settings {
     private static Scene settingsScene;
     private static TextField tfCurrentDirectory;
     private CheckBox autoPasteCheckbox;
+    private CheckBox earlyAccessCheckbox;
     private Label lblDefaultDownloadDir;
     private Label lblTheme;
     private Label lblSettingsHeading;
     private Label lblAutoPaste;
+    private Label lblEarlyAccess;
     private ChoiceBox<String> themeChoiceBox;
     private Stage stage;
     private GridPane root;
@@ -46,6 +48,7 @@ public class Settings {
         createTfDirectory();
         createLabels();
         createAutoPasteCheck();
+        createEarlyAccessCheck();
         createDirectoryButton();
     }
 
@@ -73,7 +76,7 @@ public class Settings {
         root.setPadding(new Insets(10, 20, 20, 20));
         addComponents();
         setHAlignments();
-        setHGrowsAlways(lblSettingsHeading, lblAutoPaste, autoPasteCheckbox, lblTheme, themeChoiceBox, lblDefaultDownloadDir, tfCurrentDirectory, selectDirectoryButton);
+        setHGrowsAlways(lblSettingsHeading, lblAutoPaste, autoPasteCheckbox, lblEarlyAccess, earlyAccessCheckbox, lblTheme, themeChoiceBox, lblDefaultDownloadDir, tfCurrentDirectory, selectDirectoryButton);
     }
 
     public void show() {
@@ -89,6 +92,7 @@ public class Settings {
     private void setHAlignments() {
         GridPane.setHalignment(lblSettingsHeading, HPos.CENTER);
         GridPane.setHalignment(lblAutoPaste, HPos.RIGHT);
+        GridPane.setHalignment(lblEarlyAccess, HPos.RIGHT);
         GridPane.setHalignment(lblTheme, HPos.RIGHT);
         GridPane.setHalignment(lblDefaultDownloadDir, HPos.RIGHT);
         GridPane.setHalignment(selectDirectoryButton, HPos.CENTER);
@@ -104,17 +108,19 @@ public class Settings {
         root.add(lblSettingsHeading, 0, 0, 2, 1);
         root.add(lblAutoPaste, 0, 1);
         root.add(autoPasteCheckbox, 1, 1);
-        root.add(lblTheme, 0, 2);
-        root.add(themeChoiceBox, 1, 2);
-        root.add(lblDefaultDownloadDir, 0, 3);
-        root.add(tfCurrentDirectory, 1, 3);
-        root.add(selectDirectoryButton, 1, 4, 2, 1);
+        root.add(lblEarlyAccess, 0, 2);
+        root.add(earlyAccessCheckbox, 1, 2);
+        root.add(lblTheme, 0, 3);
+        root.add(themeChoiceBox, 1, 3);
+        root.add(lblDefaultDownloadDir, 0, 4);
+        root.add(tfCurrentDirectory, 1, 4);
+        root.add(selectDirectoryButton, 1, 5);
     }
 
     private void setInitialTheme(String theme) {
         boolean isDark = "Dark".equals(theme);
         Constants.addCSS(settingsScene, isDark ? Constants.DARK_THEME_CSS : Constants.LIGHT_THEME_CSS);
-        applyStyleToLabels(isDark, lblTheme, lblAutoPaste, lblDefaultDownloadDir, lblSettingsHeading);
+        applyStyleToLabels(isDark, lblTheme, lblAutoPaste, lblEarlyAccess, lblDefaultDownloadDir, lblSettingsHeading);
         tfCurrentDirectory.setStyle("-fx-text-fill: " + (isDark ? "white" : "black") + " ; -fx-font-weight: Bold");
     }
 
@@ -140,10 +146,18 @@ public class Settings {
         autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
     }
 
+    private void createEarlyAccessCheck() {
+        earlyAccessCheckbox = new CheckBox();
+        earlyAccessCheckbox.setSelected(AppSettings.GET.earlyAccess());
+        earlyAccessCheckbox.setMaxWidth(5.0);
+        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.earlyAccess(newValue)));
+    }
+
     private void createLabels() {
         Paint textFill = LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)");
         lblSettingsHeading = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Settings", Font.font("monospace", FontWeight.EXTRA_BOLD, 100), textFill);
         lblAutoPaste = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Auto-Paste", Font.font("Arial", FontWeight.EXTRA_BOLD, 20), textFill);
+        lblEarlyAccess = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Get Early Access Updates", Font.font("Arial", FontWeight.EXTRA_BOLD, 20), textFill);
         lblTheme = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Theme", Font.font("Arial", FontWeight.EXTRA_BOLD, 20), textFill);
         lblDefaultDownloadDir = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Default Download Directory", Font.font("Arial", FontWeight.BOLD, 20), textFill);
     }

@@ -3,6 +3,7 @@ package init;
 import preferences.AppSettings;
 import properties.OS;
 import properties.Program;
+import updater.UpdateChecker;
 import utils.CopyExecutables;
 import utils.MessageBroker;
 import utils.Utility;
@@ -27,6 +28,8 @@ public class Environment {
     */
     public static void initializeEnvironment() {
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
+        Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
+        new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
