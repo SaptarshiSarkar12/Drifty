@@ -73,6 +73,8 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.nio.charset.spi.CharsetProvider\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
+  }, {
     "pattern":"\\QMETA-INF/services/java.util.prefs.PreferencesFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.parsers.DocumentBuilderFactory\\E"
@@ -86,6 +88,12 @@
     "pattern":"\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en.properties\\E"
   }, {
     "pattern":"\\Qcom/sun/javafx/tk/quantum/QuantumMessagesBundle_en_US.properties\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/ubidi.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt74b/nfkc.nrm\\E"
   }, {
@@ -165,13 +173,13 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":["en-US"]
+    "locales":["", "en-US"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":["en-US"]
+    "locales":["", "en-US"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":["en-US"]
+    "locales":["", "en-US"]
   }, {
     "name":"sun.text.resources.cldr.FormatData",
     "locales":["en", "en-US", "und"]
