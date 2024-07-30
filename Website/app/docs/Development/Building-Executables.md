@@ -1,5 +1,41 @@
 # Building Installer or Executable Binaries for Drifty
 
+## Generating GraalVM Metadata
+
+> [!NOTE]
+> This step is required only if you want to see your changes reflected in Drifty CLI or GUI executables.
+> If you are only interested in building the installer or executable binaries, you can skip this step.
+
+### Prerequisites
+
+- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
+- [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** (Maven v3.8.8 is required for generating GraalVM metadata for Drifty GUI)
+- [GraalVM 21](https://www.graalvm.org/downloads/)
+
+### Steps
+
+1. Open the terminal and navigate to the project directory
+2. Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
+   - For Drifty GUI,
+     - Navigate to the `GUI` directory
+       ```shell
+       cd GUI
+       ```
+     - Run the below command to generate GraalVM metadata for Drifty GUI
+       ```shell
+       mvn gluonfx:runagent
+       ```
+   - For Drifty CLI,
+     - Navigate to the `CLI` directory
+       ```shell
+       cd CLI
+       ```
+     - Run the below command to generate GraalVM metadata for Drifty CLI
+       ```shell
+       mvn -P generate-graalvm-metadata exec:exec@java-agent
+       ```
+3. Upon completion of the command, the GraalVM metadata will be generated in `src/main/resources/META-INF/native-image` directory of the respective project (`GUI` or `CLI`) directory.
+
 ## Local Build
 
 ### Prerequisites
@@ -15,10 +51,13 @@
 > Check if GraalVM is added to the system path by running `native-image --version` in the terminal.
 > If the command is not recognized, add GraalVM `bin` directory to the system path.
 > ```shell
-> GRAALVM_HOME=<path-to-graalvm>
-> PATH=$GRAALVM_HOME/bin:$PATH
+> PATH=$GRAALVM_HOME/bin
 > ```
-> Replace `<path-to-graalvm>` with the actual path to GraalVM.
+> The below environment variable must be set pointing to the GraalVM installation directory. 
+> ```shell
+> GRAALVM_HOME=<path-to-graalvm>
+> ```
+> Replace `<path-to-graalvm>` with the actual path to the GraalVM installation directory.
 
 1. Open the terminal and navigate to the project directory
 2. Assuming you have installed the necessary project dependencies, run the below command to generate the C object file required only for building executable binaries for Drifty GUI
