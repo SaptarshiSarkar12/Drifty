@@ -5,8 +5,7 @@ Drifty CLI is the command-line interface for Drifty that allows you to download 
 > [!NOTE]
 > We have assumed that the name of the executable for Drifty CLI is `drifty`. Replace `drifty` with the actual executable name if it is different in your case.
 
-[//]: # (TODO: Add image link)
-![Drifty CLI Help]()
+![Drifty CLI Help](https://github.com/user-attachments/assets/b695f3b4-c695-4dfe-a431-9742671488f9)
 
 ## Commands
 
