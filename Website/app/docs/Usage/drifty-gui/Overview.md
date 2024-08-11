@@ -25,7 +25,7 @@ The link input field is located at the top-center portion of the window and is w
 
 ## The Directory Input Field
 
-The directory input field is located at the middle-center portion of the window and is where you can specify the directory where you want to save the downloaded file. By default, the directory is set to `{user_home}/Downloads`. You can manage directories by right-clicking on the directory input field to open a context menu that lists all previously used download directories. You can also **Add** a new directory by clicking on **Add Folder**.
+The directory input field is located in the middle-center portion of the window and is where you can specify the directory where you want to save the downloaded file. By default, the directory is set to `{user_home}/Downloads`. You can manage directories by right-clicking on the directory input field to open a context menu that lists all previously used download directories. You can also **Add** a new directory by clicking on **Add Folder**.
 ![Directory Context Menu](https://github.com/user-attachments/assets/303a593b-392f-46ea-891b-fe8e5a02fe49)
 
 ## The File Name Input Field
