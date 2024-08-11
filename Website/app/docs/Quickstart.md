@@ -8,13 +8,13 @@
 - For Drifty GUI, select the GUI button.
   ![Application Type](https://github.com/user-attachments/assets/d729f074-0f73-4d79-b562-7717b673d6c7)
   - If you are using Windows, click on the download button with the **Windows** icon, and it will start downloading the executable file (**`.exe`**). You may also download the **msi** (Microsoft Installer) file by clicking on **Prefer the msi?**.
-      ![Windows Download button highlighted](https://github.com/user-attachments/assets/90865f7c-b0df-4957-9560-9e8a6a8c5bfb)
+    ![Windows Download button highlighted](https://github.com/user-attachments/assets/90865f7c-b0df-4957-9560-9e8a6a8c5bfb)
 
   - If you are using Linux, click on the download button with the **Linux** icon, and it will start downloading the executable binary.
-      ![Linux Download button highlighted](https://github.com/user-attachments/assets/aad3ad93-3126-4d77-9305-61d68a69a313)
+    ![Linux Download button highlighted](https://github.com/user-attachments/assets/aad3ad93-3126-4d77-9305-61d68a69a313)
 
   - If you are using macOS, click on the download button with the **Apple** icon, and it will start downloading the package file (**`.pkg`**).
-      ![MAC Download Exp](https://github.com/user-attachments/assets/35cdd3b7-6ea5-43ba-895b-acf7dc972321)
+    ![MAC Download Exp](https://github.com/user-attachments/assets/35cdd3b7-6ea5-43ba-895b-acf7dc972321)
 
 - For Drifty CLI, select the CLI button.
   ![Application Type](https://github.com/user-attachments/assets/d729f074-0f73-4d79-b562-7717b673d6c7)

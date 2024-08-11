@@ -20,7 +20,7 @@ After the project has been cloned successfully, the **`Drifty`** directory will 
 
 - [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Maven](https://maven.apache.org/download.cgi)
-- [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Recommended)
+- [IntelliJ IDEA](https://www.jetbrains.com/idea/) (**Recommended**)
 
 ### Install Dependencies
 
@@ -49,7 +49,7 @@ To debug the project, you can set breakpoints in the code and run the project in
 
 - [Node.js](https://nodejs.org/en/download/)
 - [npm](https://www.npmjs.com/get-npm)
-- [WebStorm](https://www.jetbrains.com/webstorm/) (Recommended) (You can also use any other IDE of your choice)
+- [WebStorm](https://www.jetbrains.com/webstorm/) (**Recommended**) (You can also use any other IDE of your choice)
 
 ### Install Dependencies
 

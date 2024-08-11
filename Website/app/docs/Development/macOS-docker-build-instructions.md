@@ -14,7 +14,7 @@ You will need these programs to follow these instructions:
 
 Once you have Docker installed **(and running)**, open the terminal and follow these steps:
 
-- Update the local Homebrew repository and upgrade any outdated installations. This ensures that any libraries that might be needed will be up-to-date.
+- Update the local Homebrew repository and upgrade any outdated installations. This ensures that any libraries that might be necessary will be up to date.
   ```bash
   brew update
   brew upgrade

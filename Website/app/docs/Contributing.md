@@ -69,4 +69,4 @@ If none of the above categories applies to your case, feel free to create an iss
 
 [Projects Tab](https://github.com/users/SaptarshiSarkar12/projects/3) lists the tasks completed, in progress and the ideas left to be incorporated in the project. You can work on the **to-do tasks** by creating the issue (if not already created) and getting yourself assigned.
 
-![image](https://github.com/user-attachments/assets/292c5c90-fbee-4eb0-8912-02faea96ad23)
+![Project Insights](https://github.com/user-attachments/assets/292c5c90-fbee-4eb0-8912-02faea96ad23)

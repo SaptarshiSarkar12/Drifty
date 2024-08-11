@@ -155,7 +155,7 @@
          ```shell
          docker compose run gui
          ```
-       - For macOS users, please follow [these instructions](macOS%20Docker%20Build%20Instructions.md)
+     - For macOS users, please follow [these instructions](macOS%20Docker%20Build%20Instructions.md)
    - For Drifty CLI,
      Run the below command to build and start the Drifty CLI native executable in a Docker container
      ```shell
