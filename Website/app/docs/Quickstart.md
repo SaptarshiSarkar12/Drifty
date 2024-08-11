@@ -36,7 +36,7 @@
 
     Once the installation is complete, you can start using Drifty GUI by searching for it in the Windows Start menu.
   - For Windows exe, you can directly run Drifty GUI by double-clicking on the downloaded file.
-  - For linux, open the terminal and navigate to the directory where the binary is downloaded and run the following command:
+  - For Linux, open the terminal and navigate to the directory where the binary is downloaded and run the following command:
     ```bash
     chmod +x Drifty-GUI_linux
     ./Drifty-GUI_linux

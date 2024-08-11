@@ -65,7 +65,7 @@ ifconfig | grep 192.168
 You should see something like this:
 > inet 192.168.1.123 netmask 0xffffff00 broadcast 192.168.1.255
 
-The **IP address** that is after the word `inet` will be the address that your router assigned to your Mac. Since that address exists in the router's pool of IP addresses, so we cannot statically assign that address to your Mac. So I recommend assigning an address that is lower in value which has a better chance of being outside the router's address pool. I would use an address like `192.168.1.10`, so we will go with that.
+The **IP address** that is after the word `inet` will be the address that your router assigned to your Mac. Since that address exists in the router's pool of IP addresses, so we cannot statically assign that address to your Mac. So I recommend assigning an address that is lower in value, which has a better chance of being outside the router's address pool. I would use an address like `192.168.1.10`, so we will go with that.
 
 If you are not running at **_least macOS version 13 (Ventura)_**, then refer to [**this article**](https://www.macinstruct.com/tutorials/how-to-set-a-static-ip-address-on-a-mac/) to get the instructions for **statically assigning your IP address**. Otherwise, follow these instructions:
 

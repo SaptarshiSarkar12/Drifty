@@ -1,6 +1,6 @@
 # Frequently Asked Questions
 
-1. **Why does Drifty GUI not open in my Windows machine?**
+1. **Why does Drifty GUI not open on my Windows machine?**
 
     ➡️ Your Windows machine must have Microsoft Visual C++ Redistributable installed on your machine. You can download and install it from its [official download page](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 

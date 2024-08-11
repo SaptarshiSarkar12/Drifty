@@ -2,9 +2,9 @@
 
 Drifty CLI allows you to download files from the internet using a simple command-line interface. There are three ways to download files using Drifty CLI:
 
-1. **Single File download**: You can download files one by one, providing the link to the file each time.
+1. **Single File Download**: Download individual files by providing their URLs one at a time.
 2. **Batch download**: You can download multiple files by providing a YAML file with the list of URLs.
-3. **Using Drifty CLI Queue**: Add multiple links to the download queue, and you can download them anytime you want.
+3. **Using Drifty CLI Queue**: Add multiple URLs to a download queue, allowing you to download them at your convenience.
 
 ## Single file download
 
@@ -12,7 +12,7 @@ Drifty CLI allows you to download files from the internet using a simple command
 2. You will be prompted to choose the download option. Enter `1` for **Single File download**.
    ![Download Options Prompt](https://github.com/user-attachments/assets/c1bb0da0-e36c-4229-9e8a-a473a973beaa)
 3. Enter the URL of the video you want to download.
-4. Once the URL is validated, you will be prompted to choose the download destination folder. Enter
+4. After validating the URL, Drifty will prompt you to choose a download destination folder. Enter
    - `.` if you want to download the video in the default download directory (which is `{user_home}/Downloads` in most cases).
    - `L` if you want to use the last used directory.
    - the absolute path of the directory where you want to save the video, e.g., `/home/user/Videos`.
@@ -30,7 +30,7 @@ Drifty CLI allows you to download files from the internet using a simple command
 2. You will be prompted to choose the download option. Enter `2` for **Batch download**.
    ![Download Options Prompt](https://github.com/user-attachments/assets/c1bb0da0-e36c-4229-9e8a-a473a973beaa)
 3. Enter the path to the YAML file containing the list of URLs you want to download.
-   For this example we are going to use the following data:
+   For this example, we are going to use the following data:
    ```yaml
    # batch.yml
    links: ["https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz", "https://www.youtube.com/watch?v=pBy1zgt0XPc"]
@@ -41,7 +41,7 @@ Drifty CLI allows you to download files from the internet using a simple command
    - Enter `N` to skip downloading the file.
 
    ![File Exists Prompt](https://github.com/user-attachments/assets/6f475d3a-a316-443a-9b17-739a33155a7f)
-5. The files will be downloaded sequentially to the default download directory as we have not specified a custom download location in our YAML file.
+5. The files will be downloaded sequentially to the default download directory, as we have not specified a custom download location in our YAML file.
    ![Batch Download Progress](https://github.com/user-attachments/assets/1ba81b88-ddb4-4721-aa5f-9579d4634e99)
 6. After the download is complete, you will be prompted to download another file or exit the application. Enter `Q` to exit or any other key to continue downloading files.
    ![Exit Prompt](https://github.com/user-attachments/assets/3e8d7491-bb27-454a-b633-092bc45e0260)
