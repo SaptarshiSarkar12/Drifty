@@ -1,21 +1,21 @@
 <a href="https://saptarshisarkar12.github.io/Drifty/">
-    <p align="center">
+    <p style="text-align: center;">
         <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332" alt="Drifty Banner with App Icon">
     </p>
 </a>
 
-<p align="center">
-    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
+<p style="text-align: center;">
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" alt="Build Workflow Status"/></a> 
     <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment Status"></a>
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
     <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow us on Twitter"></a> 
     <a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord Server"></a>
@@ -23,10 +23,10 @@
 
 ## About 🔥
 
-- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-- It is both available in **Command-line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
+- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **Open-Source** Interactive File downloader system developed in _Java_.
+- It offers both **Command-line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) modes, providing flexibility and ease of use for various user preferences.
 
-## Demo
+## Demo 🎥
 
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
@@ -49,10 +49,10 @@ https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-
 
 https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/8a32ca07-1922-4c21-895d-44164bec9d76
 
-## Tech Stack
+## Tech Stack 🛠️
 
 The _Application_ **Drifty** is built using the following technologies :
-- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independent applications.
+- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine-independent applications.
 
 The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
 - [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
@@ -67,7 +67,7 @@ If you find any issues during the testing period, please open an [`issue`](https
 
 For **Users** :
 
-### Using Drifty Application executable
+### Using Drifty Application executable 📦
 
 1. Visit the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) </p>
     ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
@@ -130,7 +130,7 @@ For **Contributors** :
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) ⭐ on GitHub if you liked the project. </br>
 6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
-### Using Docker 🐋 for Development
+### Using Docker 🐋 for Development 🛠️
 
 > [!IMPORTANT]  
 > For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
@@ -168,7 +168,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 ## Safety warning ⚠️ while Installing
 
-- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below:
+- For Windows, click on **More Info** and then **Run Anyway** as present on the screen below:
     |||
     |--|--|
     | ![Windows Defender - More Info screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![Windows Defender - Run Anyway screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
@@ -176,7 +176,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
     <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
 
 
-## Contributing to the project
+## Contributing to the project 🤝
 
 - We welcome 🤝 your contributions to this Open-Source project.
 - Please check the [**`Contributing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and the [**`Roadmaps`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to get involved.
