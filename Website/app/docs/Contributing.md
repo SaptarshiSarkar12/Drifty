@@ -24,13 +24,13 @@ To report any bugs or any difficulties you are facing, you can create an issue b
 1. **Bug Report for Application**:
    You can create a **Bug Report for Application** to report any bug related to the application, including installation problems and crashes.
 2. **Bug report for Website**:
-    You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://saptarshisarkar12.github.io/Drifty/).
+   You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://saptarshisarkar12.github.io/Drifty/).
 3. **Documentation Change Request**:
-    Raise an issue if you think any improvements can be made in the Documentation of Drifty.
+   Raise an issue if you think any improvements can be made in the Documentation of Drifty.
 4. **Feature Request for Drifty Application**:
-    If you have any ideas to improve the application by adding new features, you can create an issue in this category.
+   If you have any ideas to improve the application by adding new features, you can create an issue in this category.
 5. **Feature Request for Drifty Website**:
-    If you have any ideas to improve the Website of Drifty by adding new features, you can create an issue in this category.
+   If you have any ideas to improve the Website of Drifty by adding new features, you can create an issue in this category.
 
 If none of the above categories applies to your case, feel free to create an issue in the **Others** category.
 
@@ -41,29 +41,29 @@ If none of the above categories applies to your case, feel free to create an iss
 ## What does each Label mean in Issues and Pull Requests?
 
 1. **App 💻**
-    This label indicates that changes are made in the Application code
+   This label indicates that changes are made in the Application code
 2. **bug 🐛**
-    This label indicates that changes are made to fix a bug
+   This label indicates that changes are made to fix a bug
 3. **dependencies 📦️**
-    This label indicates that dependencies are updated in a Pull Request
+   This label indicates that dependencies are updated in a Pull Request
 4. **docker 🐋**
-    This label indicates that changes are made in the Dockerfiles
+   This label indicates that changes are made in the Dockerfiles
 5. **documentation 📝**
-    This label indicates that changes are made in the documentation
+   This label indicates that changes are made in the documentation
 6. **good first issue**
-    This label indicates that the issue is suitable for beginners to start contributing
+   This label indicates that the issue is suitable for beginners to start contributing
 7. **help wanted**
-    This label indicates that the issue requires help from the community
+   This label indicates that the issue requires help from the community
 8. **invalid**
    This label is used to mark an issue or Pull Request as invalid, meaning it does not meet the project's guidelines or is not relevant to the project's goals.
 9. **CI/CD 🔁**
-    This label indicates that changes are made in the CI/CD workflows (GitHub Actions)
+   This label indicates that changes are made in the CI/CD workflows (GitHub Actions)
 10. **duplicate**
-     This label indicates that the issue / Pull Request is duplicate
+    This label indicates that the issue / Pull Request is duplicate
 11. **hacktoberfest**
-     This label indicates that the issue is a part of [Hacktoberfest](https://hacktoberfest.com/)
+    This label indicates that the issue is a part of [Hacktoberfest](https://hacktoberfest.com/)
 12. **hacktoberfest-accepted**
-     This label indicates that the Pull Request is accepted for [Hacktoberfest](https://hacktoberfest.com/) and will count towards your participation
+    This label indicates that the Pull Request is accepted for [Hacktoberfest](https://hacktoberfest.com/) and will count towards your participation
 
 ## Project Insights: Status and Task Progress
 
