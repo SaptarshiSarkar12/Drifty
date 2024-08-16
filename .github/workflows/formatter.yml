@@ -30,7 +30,7 @@ jobs:
       - name: Install prettier
         run: npm install -g --save-dev --save-exact prettier
       - name: Format CSS, JavaScript, YAML, JSON and Markdown files
-        run: prettier . --write --ignore-path GUI/src/main/resources/META-INF/native-image --ignore-path CLI/src/main/resources/META-INF/native-image --ignore-path .idea
+        run: prettier . --write
       - name: Commit changes
         run: |
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
