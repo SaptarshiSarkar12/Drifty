@@ -57,7 +57,11 @@ directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
 
 ```yaml
 # batch.yaml (You can name the file as you like)
-links: ["https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz", "https://www.youtube.com/watch?v=pBy1zgt0XPc"]
+links:
+  [
+    "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz",
+    "https://www.youtube.com/watch?v=pBy1zgt0XPc",
+  ]
 fileNames: ["jdk-22.tar.gz", "What is GitHub?.mp4"]
 directories: ["/home/user/Downloads", "/home/user/Videos"]
 ```

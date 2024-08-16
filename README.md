@@ -1,21 +1,21 @@
 <a href="https://saptarshisarkar12.github.io/Drifty/">
-    <p align="center">
+    <p style="text-align: center;">
         <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332" alt="Drifty Banner with App Icon">
     </p>
 </a>
 
-<p align="center">
-    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?          color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
+<p style="text-align: center;">
+    <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/v/release/SaptarshiSarkar12/Drifty?color=%23FFFF0g&amp;label=Drifty" alt="Release Version"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/blob/master/LICENSE"><img src="https://img.shields.io/github/license/SaptarshiSarkar12/Drifty" alt="License"></a>
     <a href="https://github.com/SaptarshiSarkar12/Drifty/releases/latest/"><img src="https://img.shields.io/github/downloads/SaptarshiSarkar12/Drifty/total" alt="Total No. Of Downloads of Drifty"></a>    
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" alt="Build Workflow Status"/></a> 
     <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment Status"></a>
 </p>
 
-<p align="center">
+<p style="text-align: center;">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/stargazers"><img src="https://img.shields.io/github/stars/SaptarshiSarkar12/Drifty?    label=Leave%20a%20star&amp;style=social" alt="GitHub Stargazers for Drifty"></a> 
     <a href="https://twitter.com/SSarkar2007"><img src="https://img.shields.io/twitter/follow/SSarkar2007?style=social" alt="Follow us on Twitter"></a> 
     <a href="https://discord.gg/DeT4jXPfkG"><img src="https://img.shields.io/discord/1034035416300519454?label=Discord&amp;logo=discord" alt="Discord Server"></a>
@@ -23,15 +23,16 @@
 
 ## About 🔥
 
-- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **open-source** interactive **File Downloader system** built using _Java_. 
-- It is both available in **Command-line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) mode.
+- [**Drifty**](https://github.com/SaptarshiSarkar12/Drifty/) is an **Open-Source** Interactive File downloader system developed in _Java_.
+- It offers both **Command-line Interface** (_CLI_) and **Graphical User Interface** (_GUI_) modes, providing flexibility and ease of use for various user preferences.
 
-## Demo
+## Demo 🎥
 
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
 For **Batch Downloading** via **Drifty CLI**, the path to a YAML file has to be provided to it.
 It should have the following structure :
+
 ```yaml
 links: ["", ""] # [REQUIRED] - Links to the files to be downloaded
 # Below parameters are OPTIONAL
@@ -49,12 +50,14 @@ https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-
 
 https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/8a32ca07-1922-4c21-895d-44164bec9d76
 
-## Tech Stack
+## Tech Stack 🛠️
 
 The _Application_ **Drifty** is built using the following technologies :
-- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine independent applications.
+
+- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine-independent applications.
 
 The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
+
 - [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
 
@@ -67,17 +70,19 @@ If you find any issues during the testing period, please open an [`issue`](https
 
 For **Users** :
 
-### Using Drifty Application executable
+### Using Drifty Application executable 📦
 
 1. Visit the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) </p>
-    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
+   ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-    ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
+   ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
 3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉.</p>
-> [!TIP]
-> If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase.
+
+   > [!TIP]
+   > If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase.
 
    ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/9094cfaf-5283-434b-a154-431b9e699642)
+
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
 5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application. </p>
 6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub. </p>
@@ -85,55 +90,57 @@ For **Users** :
 
 ### Using Drifty Application via Docker 🐋
 
-> [!TIP]   
+> [!TIP]
+>
 > - To download files to a specific local directory, you need to mount that directory as a volume for Drifty.
-> For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
+>   For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
 > - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
 > - If you want to try unstable (**Alpha** or **Beta**) [**_Alpha releases are not available as of now_**] or the mostly stable versions (**Release Candidate**) [**_Release Candidate releases are not available as of now_**], you need to use the respective docker image tags. For example, to use the **Beta** version of Drifty, you need to use the docker image tag `beta` like `ghcr.io/saptarshisarkar12/drifty-cli:beta` or `ghcr.io/saptarshisarkar12/drifty-gui:beta`.
 
-
 > [!IMPORTANT]
+>
 > - To run Drifty GUI docker image, you need to do the following 👇
->     - For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.
->     - For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md).
+>   - For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.
+>   - For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md).
 
-1. Pull the Docker image for Drifty using the below command -   
-    **For Drifty CLI**,
-    ```bash
-    docker pull ghcr.io/saptarshisarkar12/drifty-cli:master
-    ```
-    **For Drifty GUI**,
-    ```bash
-    docker pull ghcr.io/saptarshisarkar12/drifty-gui:master
-    ```
-2. Run the docker image using the below command -   
-    **For Drifty CLI**,
-    ```bash
-    docker run ghcr.io/saptarshisarkar12/drifty-cli:master
-    ```
-    **For Drifty GUI**,
-    ```bash
-    docker run -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:master
-    ```
+1. Pull the Docker image for Drifty using the below command -  
+   **For Drifty CLI**,
+   ```bash
+   docker pull ghcr.io/saptarshisarkar12/drifty-cli:master
+   ```
+   **For Drifty GUI**,
+   ```bash
+   docker pull ghcr.io/saptarshisarkar12/drifty-gui:master
+   ```
+2. Run the docker image using the below command -  
+   **For Drifty CLI**,
+   ```bash
+   docker run ghcr.io/saptarshisarkar12/drifty-cli:master
+   ```
+   **For Drifty GUI**,
+   ```bash
+   docker run -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:master
+   ```
 3. Drifty will open, and you can now use it 🎉!
 
-For **Contributors** : 
+For **Contributors** :
+
 1. Go to the [`project link on GitHub`](https://github.com/SaptarshiSarkar12/Drifty), [**`fork`**](https://github.com/SaptarshiSarkar12/Drifty/fork) this repository and clone your fork into your local directory by running this command in your terminal.
-    ```bash
-    git clone git@github.com:SaptarshiSarkar12/Drifty.git
-    ```
-    ![Clone Drifty](https://user-images.githubusercontent.com/105960032/194497334-856c610e-39cd-4538-a998-18afb10dac04.gif) </p>
+   ```bash
+   git clone git@github.com:SaptarshiSarkar12/Drifty.git
+   ```
+   ![Clone Drifty](https://user-images.githubusercontent.com/105960032/194497334-856c610e-39cd-4538-a998-18afb10dac04.gif) </p>
 2. Open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) ❕ describing the changes you want to make. </p>
 3. Make the changes in an IDE (preferably [`Intellij Idea`](https://www.jetbrains.com/idea/)) and open a Pull Request. Ensure that you have linked the issue to the Pull Request.
 4. The Pull Request will be reviewed by the maintainers and merged if approved. ✔ </p>
 5. Leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) ⭐ on GitHub if you liked the project. </br>
 6. You may join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to discuss on the changes that you want to bring.
 
-### Using Docker 🐋 for Development
+### Using Docker 🐋 for Development 🛠️
 
 > [!IMPORTANT]  
-> For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.   
+> For **Linux and Windows**, please run `xhost +local:docker` before running the GUI docker image.  
 > For **macOS**, please follow [these instructions](Docker/macOS%20Docker%20Build%20Instructions.md) to run Drifty GUI docker image.
 
 1. To start **Drifty GUI** and **Drifty CLI** with your modified source code, run `docker compose run gui` and `docker compose run cli` respectively.
@@ -144,7 +151,8 @@ For **Contributors** :
 ![image](https://user-images.githubusercontent.com/58129377/193471489-87ee10a0-f719-47ef-9d46-e5b71c611d4b.png)
 
 It is because Microsoft Defender could not verify it is safe as it is not commonly downloaded. Feel free to proceed with the following steps:
-- Click on the three dots. 
+
+- Click on the three dots.
 - Click on keep.
 
 ![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
@@ -159,6 +167,7 @@ It is because Microsoft Defender could not verify it is safe as it is not common
 ### Report the file as safe ✔️
 
 You can also provide your feedback to Microsoft Defender by reporting it to be Safe, by following the below steps:
+
 - Click on three dots.
 - Click on **`Report this file as safe`** instead of clicking on **`Keep`**.
 
@@ -168,15 +177,14 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 
 ## Safety warning ⚠️ while Installing
 
-- For Windows, click on **More Info** and then **Run Anyway** as present in the screen below:
-    |||
-    |--|--|
-    | ![Windows Defender - More Info screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![Windows Defender - Run Anyway screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
+- For Windows, click on **More Info** and then **Run Anyway** as present on the screen below:
+  |||
+  |--|--|
+  | ![Windows Defender - More Info screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/0470c61c-63b1-49bd-8662-2f9eac0e120b) | ![Windows Defender - Run Anyway screen](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/d07dc9b6-cdc3-48e1-8111-7062341b662d) |
 - For macOS, click on **OK** and run `sudo spctl --master-disable` in your terminal to allow running unsigned apps. Try running Drifty again. </br>
-    <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
+  <img width="250" alt="gatekeeper" src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/2fb88e8a-5de2-4847-98e2-9e4972d9486d">
 
-
-## Contributing to the project
+## Contributing to the project 🤝
 
 - We welcome 🤝 your contributions to this Open-Source project.
 - Please check the [**`Contributing Guidelines`**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/CONTRIBUTING.md) and the [**`Roadmaps`**](https://github.com/users/SaptarshiSarkar12/projects/3) for ways to get involved.

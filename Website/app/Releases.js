@@ -8,33 +8,33 @@ function downloadLatestRelease(OSName, applicationType) {
   if (applicationType === "CLI") {
     if (OSName === "Windows exe") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe",
       );
     } else if (OSName === "Linux") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux",
       );
     } else {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos",
       );
     }
   } else {
     if (OSName === "Windows exe") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe",
       );
     } else if (OSName === "Windows msi") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.msi"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.msi",
       );
     } else if (OSName === "Linux") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux",
       );
     } else {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg"
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg",
       );
     }
   }
@@ -46,19 +46,19 @@ function downloadOlderReleases(OSName, applicationType, version) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI.exe"
+          "/Drifty-CLI.exe",
       );
     } else if (OSName === "Linux") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_linux"
+          "/Drifty-CLI_linux",
       );
     } else {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_macos"
+          "/Drifty-CLI_macos",
       );
     }
   } else {
@@ -66,25 +66,25 @@ function downloadOlderReleases(OSName, applicationType, version) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.exe"
+          "/Drifty-GUI.exe",
       );
     } else if (OSName === "Windows msi") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.msi"
+          "/Drifty-GUI.msi",
       );
     } else if (OSName === "Linux") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI_linux"
+          "/Drifty-GUI_linux",
       );
     } else {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.pkg"
+          "/Drifty-GUI.pkg",
       );
     }
   }
@@ -115,14 +115,15 @@ export default function Releases({ props }) {
     });
     return releases;
   }, [props.release]);
-  const filteredReleases = useMemo(() => { // Starting from v2.0.0, separate executables for windows, linux and macOS are available. So, we need three buttons (in total) in that case.
+  const filteredReleases = useMemo(() => {
+    // Starting from v2.0.0, separate executables for windows, linux and macOS are available. So, we need three buttons (in total) in that case.
     const releases = [];
     props.release.map((item) => {
       if (
-          !item.tag_name.startsWith("v1") &&
-          item.prerelease === false &&
-          item.latest === false &&
-          releases.length <= maxReleasesToDisplay
+        !item.tag_name.startsWith("v1") &&
+        item.prerelease === false &&
+        item.latest === false &&
+        releases.length <= maxReleasesToDisplay
       ) {
         releases.push(item);
       }
@@ -156,8 +157,11 @@ export default function Releases({ props }) {
   const markerToHtml = async (itemBody, itemTagName, i) => {
     const maxLines = window.innerWidth < 768 ? 7 : 15;
     if (itemBody.split("\n").length > maxLines) {
-        itemBody = itemBody.split("\n").slice(0, maxLines).join("\n");
-        itemBody += "\n\n...[Read More](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/" + itemTagName + ")";
+      itemBody = itemBody.split("\n").slice(0, maxLines).join("\n");
+      itemBody +=
+        "\n\n...[Read More](https://github.com/SaptarshiSarkar12/Drifty/releases/tag/" +
+        itemTagName +
+        ")";
     }
     const cont = await remark().use(html).process(itemBody);
     setContent((prev) => {
@@ -170,10 +174,18 @@ export default function Releases({ props }) {
       await markerToHtml(item.body, item.tag_name, index);
     });
     filteredReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length);
+      await markerToHtml(
+        item.body,
+        item.tag_name,
+        index + filteredPreReleases.length,
+      );
     });
     filterOlderReleases.forEach(async (item, index) => {
-      await markerToHtml(item.body, item.tag_name, index + filteredPreReleases.length + filteredReleases.length);
+      await markerToHtml(
+        item.body,
+        item.tag_name,
+        index + filteredPreReleases.length + filteredReleases.length,
+      );
     });
   }, [filteredPreReleases, filteredReleases, filterOlderReleases]);
 
@@ -223,7 +235,7 @@ export default function Releases({ props }) {
               >
                 Download Now <i className="fab fa-brands fa-windows"></i>
                 <div className="text-lg md:text-sm text-gray-700 font-semibold">
-                    {latestVersion}
+                  {latestVersion}
                 </div>
               </button>
               {applicationType === "GUI" && (
@@ -297,92 +309,92 @@ export default function Releases({ props }) {
         {filteredPreReleases.map((item, index) => {
           if (filteredPreReleases.length !== 0) {
             return (
-                <div key={index} className="text-center p-5 text-base font-normal">
-                  <span className="font-bold">{item.tag_name} </span>
-                  <p>
-                    {new Date(item.published_at).toString()} with{" "}
-                    {
-                        item.assets[0].download_count +
-                        item.assets[1].download_count +
-                        item.assets[2].download_count +
-                        item.assets[3].download_count +
-                        item.assets[4].download_count +
-                        item.assets[5].download_count +
-                        item.assets[6].download_count
-                    }{" "}
-                    Downloads
-                  </p>
-                  <button
-                      onClick={() => handleButtonClick(index)}
-                      className="text-slate-800/50"
-                  >
-                    {buttonStates[index] ? "Hide" : "Learn More"}
-                  </button>
-                  {buttonStates[index] && (
-                      <div
-                          className="md:p-5 overflow-hidden"
-                          dangerouslySetInnerHTML={{__html: content[index]}}
-                      ></div>
-                  )}
-
+              <div
+                key={index}
+                className="text-center p-5 text-base font-normal"
+              >
+                <span className="font-bold">{item.tag_name} </span>
+                <p>
+                  {new Date(item.published_at).toString()} with{" "}
+                  {item.assets[0].download_count +
+                    item.assets[1].download_count +
+                    item.assets[2].download_count +
+                    item.assets[3].download_count +
+                    item.assets[4].download_count +
+                    item.assets[5].download_count +
+                    item.assets[6].download_count}{" "}
+                  Downloads
+                </p>
+                <button
+                  onClick={() => handleButtonClick(index)}
+                  className="text-slate-800/50"
+                >
+                  {buttonStates[index] ? "Hide" : "Learn More"}
+                </button>
+                {buttonStates[index] && (
                   <div
-                      className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
-                    <div className={"grid grid-cols-1 justify-items-center"}>
+                    className="md:p-5 overflow-hidden"
+                    dangerouslySetInnerHTML={{ __html: content[index] }}
+                  ></div>
+                )}
+
+                <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
+                  <div className={"grid grid-cols-1 justify-items-center"}>
+                    <button
+                      className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                      onClick={() =>
+                        downloadOlderReleases(
+                          "Windows exe",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
+                    >
+                      Download <i className="fab fa-brands fa-windows"></i>
+                    </button>
+                    {applicationType === "GUI" && (
                       <button
-                          className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                          onClick={() =>
-                              downloadOlderReleases(
-                                  "Windows exe",
-                                  applicationType,
-                                  item.tag_name
-                              )
-                          }
+                        className={
+                          "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                        }
+                        onClick={() =>
+                          downloadOlderReleases(
+                            "Windows msi",
+                            applicationType,
+                            item.tag_name,
+                          )
+                        }
                       >
-                        Download <i className="fab fa-brands fa-windows"></i>
+                        Prefer the msi?
                       </button>
-                      {applicationType === "GUI" && (
-                          <button
-                              className={
-                                "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                              }
-                              onClick={() =>
-                                  downloadOlderReleases(
-                                      "Windows msi",
-                                      applicationType,
-                                      item.tag_name
-                                  )
-                              }
-                          >
-                            Prefer the msi?
-                          </button>
-                      )}
-                    </div>
-                    <button
-                        className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            downloadOlderReleases(
-                                "Linux",
-                                applicationType,
-                                item.tag_name
-                            )
-                        }
-                    >
-                      Download <i className="fab fa-brands fa-linux"></i>
-                    </button>
-                    <button
-                        className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            downloadOlderReleases(
-                                "MacOS",
-                                applicationType,
-                                item.tag_name
-                            )
-                        }
-                    >
-                      Download <i className="fab fa-brands fa-apple"></i>
-                    </button>
+                    )}
                   </div>
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      downloadOlderReleases(
+                        "Linux",
+                        applicationType,
+                        item.tag_name,
+                      )
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-linux"></i>
+                  </button>
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      downloadOlderReleases(
+                        "MacOS",
+                        applicationType,
+                        item.tag_name,
+                      )
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-apple"></i>
+                  </button>
                 </div>
+              </div>
             );
           }
         })}
@@ -395,141 +407,138 @@ export default function Releases({ props }) {
         {filteredReleases.map((item, index) => {
           index = index + filteredPreReleases.length;
           return (
-              <div key={index} className="text-center p-5 text-base font-normal">
-                <span className="font-bold">{item.tag_name} </span>
-                <p>
-                  {new Date(item.published_at).toString()} with{" "}
-                  {
-                      item.assets[0].download_count +
-                      item.assets[1].download_count +
-                      item.assets[2].download_count +
-                      item.assets[3].download_count +
-                      item.assets[4].download_count +
-                      item.assets[5].download_count +
-                      item.assets[6].download_count
-                  }{" "}
-                  Downloads
-                </p>
-                <button
-                    onClick={() => handleButtonClick(index)}
-                    className="text-slate-800/50"
-                >
-                  {buttonStates[index] ? "Hide" : "Learn More"}
-                </button>
-                {buttonStates[index] && (
-                    <div
-                        className="md:p-5 overflow-hidden"
-                        dangerouslySetInnerHTML={{__html: content[index]}}
-                    ></div>
-                )}
+            <div key={index} className="text-center p-5 text-base font-normal">
+              <span className="font-bold">{item.tag_name} </span>
+              <p>
+                {new Date(item.published_at).toString()} with{" "}
+                {item.assets[0].download_count +
+                  item.assets[1].download_count +
+                  item.assets[2].download_count +
+                  item.assets[3].download_count +
+                  item.assets[4].download_count +
+                  item.assets[5].download_count +
+                  item.assets[6].download_count}{" "}
+                Downloads
+              </p>
+              <button
+                onClick={() => handleButtonClick(index)}
+                className="text-slate-800/50"
+              >
+                {buttonStates[index] ? "Hide" : "Learn More"}
+              </button>
+              {buttonStates[index] && (
+                <div
+                  className="md:p-5 overflow-hidden"
+                  dangerouslySetInnerHTML={{ __html: content[index] }}
+                ></div>
+              )}
 
-                <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
-                  <div className={"grid grid-cols-1 justify-items-center"}>
+              <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
+                <div className={"grid grid-cols-1 justify-items-center"}>
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      downloadOlderReleases(
+                        "Windows exe",
+                        applicationType,
+                        item.tag_name,
+                      )
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-windows"></i>
+                  </button>
+                  {applicationType === "GUI" && (
                     <button
-                        className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            downloadOlderReleases(
-                                "Windows exe",
-                                applicationType,
-                                item.tag_name
-                            )
-                        }
+                      className={
+                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                      }
+                      onClick={() =>
+                        downloadOlderReleases(
+                          "Windows msi",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
                     >
-                      Download <i className="fab fa-brands fa-windows"></i>
+                      Prefer the msi?
                     </button>
-                    {applicationType === "GUI" && (
-                        <button
-                            className={
-                              "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                            }
-                            onClick={() =>
-                                downloadOlderReleases(
-                                    "Windows msi",
-                                    applicationType,
-                                    item.tag_name
-                                )
-                            }
-                        >
-                          Prefer the msi?
-                        </button>
-                    )}
-                  </div>
-                  <button
-                      className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                      onClick={() =>
-                          downloadOlderReleases(
-                              "Linux",
-                              applicationType,
-                              item.tag_name
-                          )
-                      }
-                  >
-                    Download <i className="fab fa-brands fa-linux"></i>
-                  </button>
-                  <button
-                      className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                      onClick={() =>
-                          downloadOlderReleases(
-                              "MacOS",
-                              applicationType,
-                              item.tag_name
-                          )
-                      }
-                  >
-                    Download <i className="fab fa-brands fa-apple"></i>
-                  </button>
+                  )}
                 </div>
+                <button
+                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                  onClick={() =>
+                    downloadOlderReleases(
+                      "Linux",
+                      applicationType,
+                      item.tag_name,
+                    )
+                  }
+                >
+                  Download <i className="fab fa-brands fa-linux"></i>
+                </button>
+                <button
+                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                  onClick={() =>
+                    downloadOlderReleases(
+                      "MacOS",
+                      applicationType,
+                      item.tag_name,
+                    )
+                  }
+                >
+                  Download <i className="fab fa-brands fa-apple"></i>
+                </button>
               </div>
+            </div>
           );
         })}
         {filterOlderReleases.map((item, index) => {
           index = index + filteredPreReleases.length + filteredReleases.length;
           if (filterOlderReleases.length !== 0) {
             return (
-                <div
-                    key={index}
-                    className="text-center p-5 text-base font-normal"
+              <div
+                key={index}
+                className="text-center p-5 text-base font-normal"
+              >
+                <span className="font-bold">{item.tag_name} </span>
+                <p>
+                  {new Date(item.published_at).toString()} with{" "}
+                  {item.assets[0].download_count +
+                    item.assets[1].download_count}{" "}
+                  Downloads
+                </p>
+                <button
+                  onClick={() => handleButtonClick(index)}
+                  className="text-slate-800/50"
                 >
-                  <span className="font-bold">{item.tag_name} </span>
-                  <p>
-                    {new Date(item.published_at).toString()} with{" "}
-                    {item.assets[0].download_count +
-                        item.assets[1].download_count}{" "}
-                    Downloads
-                  </p>
-                  <button
-                      onClick={() => handleButtonClick(index)}
-                      className="text-slate-800/50"
-                  >
-                    {buttonStates[index] ? "Hide" : "Learn More"}
-                  </button>
-                  {buttonStates[index] && (
-                      <div
-                          className=" md:p-5 overflow-hidden"
-                          dangerouslySetInnerHTML={{__html: content[index]}}
-                      ></div>
-                  )}
+                  {buttonStates[index] ? "Hide" : "Learn More"}
+                </button>
+                {buttonStates[index] && (
                   <div
-                      className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
-                    <button
-                        className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            window.open(item.assets[1].browser_download_url)
-                        }
-                    >
-                      Download <i className="fab fa-brands fa-windows"></i>
-                    </button>
-                    <button
-                        className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            window.open(item.assets[0].browser_download_url)
-                        }
-                    >
-                      Download <i className="fab fa-brands fa-apple"></i>{" "}
-                      <i className="fab fa-brands fa-linux"></i>
-                    </button>
-                  </div>
+                    className=" md:p-5 overflow-hidden"
+                    dangerouslySetInnerHTML={{ __html: content[index] }}
+                  ></div>
+                )}
+                <div className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      window.open(item.assets[1].browser_download_url)
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-windows"></i>
+                  </button>
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      window.open(item.assets[0].browser_download_url)
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-apple"></i>{" "}
+                    <i className="fab fa-brands fa-linux"></i>
+                  </button>
                 </div>
+              </div>
             );
           }
         })}

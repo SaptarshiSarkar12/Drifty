@@ -5,6 +5,7 @@ There are some steps to follow if you're going to run the Drifty GUI Docker imag
 ## Prerequisites
 
 You will need these programs to follow these instructions:
+
 - [**Docker**](https://docs.docker.com/desktop/install/mac-install)
 - [**HomeBrew**](https://brew.sh/)
 - **Socat** (will be installed later in the instructions)
@@ -39,6 +40,7 @@ Once you have Docker installed **(and running)**, open the terminal and follow t
 After the Docker image of Drifty GUI has been built/pulled, we need to provide a pathway for the Docker instance to access the display. This can be done by providing it the IP address of your Mac. For simplicity and ease of use, manually (or statically) assigning an IP address to your Mac is suggested.
 
 > [!NOTE]
+>
 > <details>
 > <summary>
 > Why static IP address is preferred for running Drifty GUI in Docker on macOS?
@@ -50,19 +52,23 @@ After the Docker image of Drifty GUI has been built/pulled, we need to provide a
 > We, however, need to look back...
 >
 > Routers use a service called DHCP (Dynamic Host Control Protocol) which uses a reserved pool of IP addresses. If any device connects to your network and when it is set up to use DHCP (which is always the default), it will send out a broadcast packet onto your network asking for an IP address. Your router will see that request, then it will take out an IP address from its pool, and it will give it to your device so that your device can talk on your network, access the Internet, etc.
-> 
+>
 > DHCP services are also designed to make that assigned IP address expire after some time (usually three days). In case a device that was on the network is no longer on the network, it can pull that IP address back and put it into the pool so that it doesn't run out of IP addresses. This means that it is possible your local IP address might change in a short period of time. We cannot build a command to run Drifty when your IP address is changing because docker needs to send the graphics to a known IP address.
-> 
+>
 > There are usually two generic ways to refer to your local ip address in a linux or Windows environment. The first way is to simply use the word `localhost` and the second way is to use the default home IP address of `127.0.0.1`. Unfortunately, neither of those generics will work in this case, so we have to give the command the exact IP address of your Mac.
+>
 > </details>
 
 ### Manually assigning an IP address to your Mac
 
 We first need to know the IP address that the router has assigned to your Mac. Most of the routers will use an IP address that starts with `192.168` so let's see if we have that kind of address assigned to our Mac, by running this command:
+
 ```bash
 ifconfig | grep 192.168
 ```
+
 You should see something like this:
+
 > inet 192.168.1.123 netmask 0xffffff00 broadcast 192.168.1.255
 
 The **IP address** that is after the word `inet` will be the address that your router assigned to your Mac. Since that address exists in the router's pool of IP addresses, so we cannot statically assign that address to your Mac. So I recommend assigning an address that is lower in value, which has a better chance of being outside the router's address pool. I would use an address like `192.168.1.10`, so we will go with that.
@@ -72,9 +78,9 @@ If you are not running at **_least macOS version 13 (Ventura)_**, then refer to 
 - Go to `System Settings` by clicking on the Apple logo in the top-left corner of your screen.
 - Click on `Network` then click on your network adapter.
   ![Network Settings' screenshot](https://github.com/user-attachments/assets/f2f54273-1bf4-4286-bc56-88991eb4df84)
-- Click on `Details`   
+- Click on `Details`  
   ![Details of Network Adapter](https://github.com/user-attachments/assets/d3a43e3f-616d-4286-a527-d1bc2ecbb207)
-- Now you need to change `Configure IPv4` to `Manually` and then type your **static IP address**, **subnet mask** and **gateway**. The subnet mask will look exactly like I have it here, regardless of your ip address and your router will always be `.1` (in most cases) as shown here.   
+- Now you need to change `Configure IPv4` to `Manually` and then type your **static IP address**, **subnet mask** and **gateway**. The subnet mask will look exactly like I have it here, regardless of your ip address and your router will always be `.1` (in most cases) as shown here.  
   ![Configuring IPv4 manually](https://github.com/user-attachments/assets/c7358318-fb90-4554-86c2-6629d7c9476a)
 - Click `OK` and then go back to your Terminal.
 

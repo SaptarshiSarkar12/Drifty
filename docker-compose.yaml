@@ -1,5 +1,4 @@
 services:
-
   base:
     build:
       context: .
@@ -15,9 +14,9 @@ services:
       context: .
       dockerfile: ./Docker/dev/commons/runner/Dockerfile
     container_name: drifty-runner
-  
+
   cli:
-    depends_on: 
+    depends_on:
       - base
     build:
       context: .
@@ -28,7 +27,7 @@ services:
       - ./.drifty:/root/.drifty
 
   gui:
-    depends_on: 
+    depends_on:
       - base
       - runner
     build:

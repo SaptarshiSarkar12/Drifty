@@ -50,13 +50,17 @@
 > [!NOTE]
 > Check if GraalVM is added to the system path by running `native-image --version` in the terminal.
 > If the command is not recognized, add the GraalVM `bin` directory to the system path.
+>
 > ```shell
 > PATH=$GRAALVM_HOME/bin
 > ```
+>
 > Set the following environment variable to point to your GraalVM installation directory.
+>
 > ```shell
 > GRAALVM_HOME=<path-to-graalvm>
 > ```
+>
 > Replace `<path-to-graalvm>` with the actual path to the GraalVM installation directory.
 
 1. Open the terminal and navigate to the project directory
@@ -73,7 +77,7 @@
      ```shell
      gcc -c config/missing_symbols.c -o config/missing_symbols-macos-latest.o
      ```
-   Replace `gcc` with the path to the GCC compiler if it is not in the system path.
+     Replace `gcc` with the path to the GCC compiler if it is not in the system path.
 3. Run the below command to build the installer or executable binaries
    - For Drifty GUI,
      - For Linux,

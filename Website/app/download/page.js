@@ -4,7 +4,7 @@ import Footer from "../Footer";
 
 export const metadata = {
   title: "Download",
-  description: "Download Drifty"
+  description: "Download Drifty",
 };
 
 export default async function download() {
@@ -21,7 +21,7 @@ export default async function download() {
 export async function getData() {
   const res = await fetch(
     "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases",
-    { method: "GET" }
+    { method: "GET" },
   );
   const release = await res.json();
   return {

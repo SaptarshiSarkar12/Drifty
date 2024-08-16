@@ -20,6 +20,7 @@ Drifty is a powerful and versatile File Downloader System that offers a wide ran
 ## Community and Support
 
 Drifty is an Open-Source project that welcomes contributions from the community. If you have any feedback, suggestions, or ideas for improvement, please feel free to reach out to us. We are committed to making Drifty the best File Downloader System available and appreciate your support.
+
 - **[Join our Discord Community](https://discord.gg/DeT4jXPfkG)**: It is the best place to get help, share your ideas, and connect with maintainers and other users/developers.
 - **[Join our GitHub Discussions](https://github.com/SaptarshiSarkar12/Drifty/discussions)**: Participate in discussions, ask questions, and share your thoughts on Drifty. We would love to hear from you!
 - **[Learn how to contribute](Contributing.md)**: If you are interested in contributing to Drifty, check out our guidelines and get started with your first contribution.
