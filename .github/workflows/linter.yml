@@ -19,13 +19,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          # Full git history is needed to get a proper
+          # Full git history is necessary to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
         id: lint
-        uses: super-linter/super-linter/slim@v6
+        uses: super-linter/super-linter/slim@v7
         continue-on-error: true
         env:
           DEFAULT_BRANCH: master
