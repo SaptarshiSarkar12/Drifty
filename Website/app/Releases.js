@@ -14,9 +14,17 @@ function downloadLatestRelease(OSName, applicationType) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux",
       );
-    } else {
+    } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos",
+      );
+    } else if (OSName === "MacOS Apple Silicon") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_aarch64",
+      );
+    } else if (OSName === "MacOS Intel") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_x86_64",
       );
     }
   } else {
@@ -32,9 +40,17 @@ function downloadLatestRelease(OSName, applicationType) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux",
       );
-    } else {
+    } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg",
+      );
+    } else if (OSName === "MacOS Apple Silicon") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_aarch64.pkg",
+      );
+    } else if (OSName === "MacOS Intel") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_x86_64.pkg",
       );
     }
   }
@@ -54,11 +70,23 @@ function downloadOlderReleases(OSName, applicationType, version) {
           version +
           "/Drifty-CLI_linux",
       );
-    } else {
+    } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
           "/Drifty-CLI_macos",
+      );
+    } else if (OSName === "MacOS Apple Silicon") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
+          version +
+          "/Drifty-CLI_macos_aarch64",
+      );
+    } else if (OSName === "MacOS Intel") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
+          version +
+          "/Drifty-CLI_macos_x86_64",
       );
     }
   } else {
@@ -80,11 +108,23 @@ function downloadOlderReleases(OSName, applicationType, version) {
           version +
           "/Drifty-GUI_linux",
       );
-    } else {
+    } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
           "/Drifty-GUI.pkg",
+      );
+    } else if (OSName === "MacOS Apple Silicon") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
+          version +
+          "/Drifty-GUI_aarch64.pkg",
+      );
+    } else if (OSName === "MacOS Intel") {
+      window.open(
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
+          version +
+          "/Drifty-GUI_x86_64.pkg",
       );
     }
   }
@@ -95,7 +135,7 @@ export default function Releases({ props }) {
   const [content, setContent] = useState([]);
   const [applicationType, setApplicationType] = useState("GUI");
   const maxReleasesToDisplay = 3;
-  const latestVersion = useMemo(() => {
+  let latestVersion = useMemo(() => {
     let v = "";
     let counter = 1;
     props.release.find((item) => {
@@ -239,7 +279,7 @@ export default function Releases({ props }) {
                 </div>
               </button>
               {applicationType === "GUI" && (
-                <div>
+                <div className="text-center">
                   <button
                     className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
                     onClick={() => downloadLatestRelease("Windows msi")}
@@ -269,13 +309,30 @@ export default function Releases({ props }) {
         <div className="md:ml-4 xs:ml-0">
           <button
             className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
-            onClick={() => downloadLatestRelease("MacOS", applicationType)}
+            onClick={() =>
+              downloadLatestRelease(
+                latestVersion >= "v2.1.0" ? "MacOS Apple Silicon" : "MacOS",
+                applicationType,
+              )
+            }
           >
             Download Now <i className="fab fa-brands fa-apple"></i>
             <div className="text-lg md:text-sm text-gray-700 font-semibold">
               {latestVersion}
             </div>
           </button>
+          {latestVersion >= "v2.1.0" && ( // If the version of the latest release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
+            <div className={"text-center"}>
+              <button
+                className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                onClick={() =>
+                  downloadLatestRelease("MacOS Intel", applicationType)
+                }
+              >
+                Download for macOS (Intel)
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -316,13 +373,23 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets[0].download_count +
-                    item.assets[1].download_count +
-                    item.assets[2].download_count +
-                    item.assets[3].download_count +
-                    item.assets[4].download_count +
-                    item.assets[5].download_count +
-                    item.assets[6].download_count}{" "}
+                  {item.tag_name.split("-")[0] > "v2.1.0"
+                    ? item.assets[0].download_count +
+                      item.assets[1].download_count +
+                      item.assets[2].download_count +
+                      item.assets[3].download_count +
+                      item.assets[4].download_count +
+                      item.assets[5].download_count +
+                      item.assets[6].download_count +
+                      item.assets[7].download_count +
+                      item.assets[8].download_count
+                    : item.assets[0].download_count +
+                      item.assets[1].download_count +
+                      item.assets[2].download_count +
+                      item.assets[3].download_count +
+                      item.assets[4].download_count +
+                      item.assets[5].download_count +
+                      item.assets[6].download_count}{" "}
                   Downloads
                 </p>
                 <button
@@ -381,18 +448,38 @@ export default function Releases({ props }) {
                   >
                     Download <i className="fab fa-brands fa-linux"></i>
                   </button>
-                  <button
-                    className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                    onClick={() =>
-                      downloadOlderReleases(
-                        "MacOS",
-                        applicationType,
-                        item.tag_name,
-                      )
-                    }
-                  >
-                    Download <i className="fab fa-brands fa-apple"></i>
-                  </button>
+                  <div className={"grid grid-cols-1 justify-items-center"}>
+                    <button
+                      className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                      onClick={() =>
+                        downloadOlderReleases(
+                          item.tag_name.split("-")[0] > "v2.1.0"
+                            ? "MacOS Apple Silicon"
+                            : "MacOS",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
+                    >
+                      Download <i className="fab fa-brands fa-apple"></i>
+                    </button>
+                    {item.tag_name.split("-")[0] > "v2.1.0" && ( // If the version of pre-release is greater than v2.1.0, then show the download button for macOS (Intel)
+                      <button
+                        className={
+                          "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                        }
+                        onClick={() =>
+                          downloadOlderReleases(
+                            "MacOS Intel",
+                            applicationType,
+                            item.tag_name,
+                          )
+                        }
+                      >
+                        Download for macOS (Intel)
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -411,13 +498,23 @@ export default function Releases({ props }) {
               <span className="font-bold">{item.tag_name} </span>
               <p>
                 {new Date(item.published_at).toString()} with{" "}
-                {item.assets[0].download_count +
-                  item.assets[1].download_count +
-                  item.assets[2].download_count +
-                  item.assets[3].download_count +
-                  item.assets[4].download_count +
-                  item.assets[5].download_count +
-                  item.assets[6].download_count}{" "}
+                {item.tag_name >= "v2.1.0"
+                  ? item.assets[0].download_count +
+                    item.assets[1].download_count +
+                    item.assets[2].download_count +
+                    item.assets[3].download_count +
+                    item.assets[4].download_count +
+                    item.assets[5].download_count +
+                    item.assets[6].download_count +
+                    item.assets[7].download_count +
+                    item.assets[8].download_count
+                  : item.assets[0].download_count +
+                    item.assets[1].download_count +
+                    item.assets[2].download_count +
+                    item.assets[3].download_count +
+                    item.assets[4].download_count +
+                    item.assets[5].download_count +
+                    item.assets[6].download_count}{" "}
                 Downloads
               </p>
               <button
@@ -476,18 +573,38 @@ export default function Releases({ props }) {
                 >
                   Download <i className="fab fa-brands fa-linux"></i>
                 </button>
-                <button
-                  className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                  onClick={() =>
-                    downloadOlderReleases(
-                      "MacOS",
-                      applicationType,
-                      item.tag_name,
-                    )
-                  }
-                >
-                  Download <i className="fab fa-brands fa-apple"></i>
-                </button>
+                <div className={"grid grid-cols-1 justify-items-center"}>
+                  <button
+                    className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    onClick={() =>
+                      downloadOlderReleases(
+                        item.tag_name >= "v2.1.0"
+                          ? "MacOS Apple Silicon"
+                          : "MacOS",
+                        applicationType,
+                        item.tag_name,
+                      )
+                    }
+                  >
+                    Download <i className="fab fa-brands fa-apple"></i>
+                  </button>
+                  {item.tag_name >= "v2.1.0" && ( // If the version of the past release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
+                    <button
+                      className={
+                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                      }
+                      onClick={() =>
+                        downloadOlderReleases(
+                          "MacOS Intel",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
+                    >
+                      Download for macOS (Intel)
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           );
