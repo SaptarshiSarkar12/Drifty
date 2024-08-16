@@ -1,3 +1,5 @@
 GUI/src/main/resources/META-INF/native-image
 CLI/src/main/resources/META-INF/native-image
 .idea
+.github/workflows
+config/

@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      actions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,7 +29,7 @@ jobs:
         run: mvn rewrite:run
       - name: Install prettier
         run: npm install -g --save-dev --save-exact prettier
-      - name: Format CSS, JavaScript, YAML, JSON and Markdown files
+      - name: Format the rest of the files
         run: prettier . --write
       - name: Commit changes
         run: |
