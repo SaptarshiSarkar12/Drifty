@@ -5,27 +5,27 @@ on:
   pull_request_target:
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Lint Code Base
     if: github.repository == 'SaptarshiSarkar12/Drifty'
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: read
+      packages: read
+      pull-requests: write
+      statuses: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          # Full git history is needed to get a proper
+          # Full git history is necessary to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Lint Code Base
         id: lint
-        uses: super-linter/super-linter/slim@v6
+        uses: super-linter/super-linter/slim@v7
         continue-on-error: true
         env:
           DEFAULT_BRANCH: master
@@ -37,6 +37,9 @@ jobs:
           VALIDATE_GITHUB_ACTIONS: false
           VALIDATE_GOOGLE_JAVA_FORMAT: false
           VALIDATE_JAVASCRIPT_STANDARD: false
+          VALIDATE_JAVASCRIPT_ES: false
+          VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_JSON: false
           VALIDATE_CLANG_FORMAT: false
           VALIDATE_CSHARP: false
           VALIDATE_NATURAL_LANGUAGE: false
@@ -67,7 +70,8 @@ jobs:
         run: |
           COMMENT_INITIAL=$(echo -e "## :x: Linting errors found!\n")
           COMMENT_MIDDLE=$(cat super-linter.log | grep "\[ERROR]" | sed 's/[0-9A-Z:.-]\+ [0-9:]\+ //' | sed 's/\[ERROR]//' | sed 's/   //' | sed 's/Error code: [0-9]. Command output://' | sed 's/ //' | sed 's/ERRORSFOUND//' | sed 's/ in [A-Z:]\+//' | sed 's/[[0-9]\+]//' | sed -r "s/\x1B\[(([0-9]+)(;[0-9]+)*)?[m,K,H,f,J]//g" | sed '1,2d' | sed 's/Errorsfound//' | sed 's/\/github\/workspace\///' | awk '!x[$1]++ && ! /^[[:blank:]]*$/' | sed 's/Founderrors when linting [A-Za-z.]\+. Exit code: [0-9].//' | sed 's/Super-linterdetected linting errors//' | tr -s '\n' '\n')
-          COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.event.pull_request.user.login }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`")
+          COMMENT_END=$(echo -e "\n\n#### Generated from [this workflow run (ID: ${{ github.run_id }})](${{ github.run_url }})")
+          COMMENT_BODY=$(echo -e "$COMMENT_INITIAL \n @${{ github.event.pull_request.user.login }} Please fix the following errors:\n\n\`\`\`css\n$COMMENT_MIDDLE\n\`\`\`$COMMENT_END")
           COMMENT=$(echo "$COMMENT_BODY")
           gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
         env:

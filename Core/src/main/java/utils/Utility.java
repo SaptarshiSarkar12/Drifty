@@ -9,6 +9,7 @@ import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
 import properties.MessageCategory;
 import properties.Mode;
+import properties.Mode;
 import properties.OS;
 import properties.Program;
 
@@ -234,44 +235,65 @@ public class Utility {
             msgBroker.msgLinkError("Failed to extract track ID from Spotify link!");
             return null;
         }
-        try {
-            HttpRequest getSongMetadata = HttpRequest.newBuilder()
-                    .uri(new URI("https://api.spotify.com/v1/tracks/" + trackId))
-                    .GET()
-                    .header("Authorization", "Bearer " + AppSettings.GET.spotifyAccessToken())
-                    .header("accept-encoding", "gzip, deflate")
-                    .header("content-encoding", "gzip")
-                    .build();
-            HttpResponse<byte[]> songMetadataResponse;
-            try (HttpClient client = HttpClient.newHttpClient()) {
-                songMetadataResponse = client.send(getSongMetadata, HttpResponse.BodyHandlers.ofByteArray());
+        while (true) {
+            try {
+                HttpRequest getSongMetadata = HttpRequest.newBuilder()
+                        .uri(new URI("https://api.spotify.com/v1/tracks/" + trackId))
+                        .GET()
+                        .header("Authorization", "Bearer " + AppSettings.GET.spotifyAccessToken())
+                        .header("accept-encoding", "gzip, deflate")
+                        .header("content-encoding", "gzip")
+                        .build();
+                HttpResponse<byte[]> songMetadataResponse;
+                try (HttpClient client = HttpClient.newHttpClient()) {
+                    songMetadataResponse = client.send(getSongMetadata, HttpResponse.BodyHandlers.ofByteArray());
+                }
+                String songMetadataResponseBody = extractContent(songMetadataResponse);
+                // extract the JSON part of the list in the response body;
+                JsonObject songMetadata = JsonParser.parseString(songMetadataResponseBody.replace("[\n{", "{").replace("}\n]", "}")).getAsJsonObject();
+                if (songMetadata.has("error")) {
+                    msgBroker.msgDownloadError("Failed to get song metadata! " + songMetadata.get("error").getAsJsonObject().get("message").getAsString());
+                    if (Mode.isCLI()) {
+                        // Get the time (from `retry-after` header) to wait before sending another request
+                        String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("5");
+                        long timeToWait = (long) parseStringToInt(retryAfter,
+                        for (long i = timeToWait; i >= 0; i -= 1000) {
+                            System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
+                            sleep(1000);
+                        }
+                        System.out.println("\r" + "Retrying now...");
+                        continue;
+                    } else {
+                        return null;
+                    }
+                }
+                String songName = songMetadata.get("name").getAsString().replace("\"", "");
+                int duration = songMetadata.get("duration_ms").getAsInt();
+                JsonArray artists = songMetadata.get("artists").getAsJsonArray();
+                ArrayList<String> artistNames = new ArrayList<>();
+                artists.forEach(artist -> artistNames.add(artist.getAsJsonObject().get("name").getAsString()));
+                // Dump the JSON from the hashmap to a file for debugging
+                HashMap<String, Object> songMetadataMap = new HashMap<>();
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement artistJsonTree = gson.toJsonTree(artistNames);
+                songMetadataMap.put("songName", songName);
+                songMetadataMap.put("duration", duration);
+                songMetadataMap.put("artists", artistJsonTree);
+                String json = gson.toJson(songMetadataMap);
+                File jsonFile = Program.getJsonDataPath().resolve("spotify-metadata.json").toFile();
+                FileUtils.writeStringToFile(jsonFile, json, Charset.defaultCharset());
+                msgBroker.msgLogInfo("Spotify metadata retrieved successfully!");
+                return songMetadataMap;
+            } catch (URISyntaxException e) {
+                msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());
+                break;
+            } catch (IOException e) {
+                msgBroker.msgLinkError("Failed to send request to Spotify API! " + e.getMessage());
+                break;
+            } catch (InterruptedException e) {
+                msgBroker.msgLinkError("The request to Spotify API was interrupted! " + e.getMessage());
+                break;
             }
-            String songMetadataResponseBody = extractContent(songMetadataResponse);
-            // extract the JSON part of the list in the response body;
-            JsonObject songMetadata = JsonParser.parseString(songMetadataResponseBody.replace("[\n{", "{").replace("}\n]", "}")).getAsJsonObject();
-            String songName = songMetadata.get("name").getAsString().replace("\"", "");
-            int duration = songMetadata.get("duration_ms").getAsInt();
-            JsonArray artists = songMetadata.get("artists").getAsJsonArray();
-            ArrayList<String> artistNames = new ArrayList<>();
-            artists.forEach(artist -> artistNames.add(artist.getAsJsonObject().get("name").getAsString()));
-            // Dump the json from the hashmap to a file for debugging
-            HashMap<String, Object> songMetadataMap = new HashMap<>();
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonElement artistJsonTree = gson.toJsonTree(artistNames);
-            songMetadataMap.put("songName", songName);
-            songMetadataMap.put("duration", duration);
-            songMetadataMap.put("artists", artistJsonTree);
-            String json = gson.toJson(songMetadataMap);
-            File jsonFile = Program.getJsonDataPath().resolve("spotify-metadata.json").toFile();
-            FileUtils.writeStringToFile(jsonFile, json, Charset.defaultCharset());
-            msgBroker.msgLogInfo("Spotify metadata retrieved successfully!");
-            return songMetadataMap;
-        } catch (URISyntaxException e) {
-            msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());
-        } catch (IOException e) {
-            msgBroker.msgLinkError("Failed to send request to Spotify API! " + e.getMessage());
-        } catch (InterruptedException e) {
-            msgBroker.msgLinkError("The request to Spotify API was interrupted! " + e.getMessage());
         }
         return null;
     }

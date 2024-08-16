@@ -582,7 +582,7 @@ public class Drifty_CLI {
 
     public static void help() {
         System.out.println(ANSI_RESET + "\n\033[38;31;48;40;1m------------------------==| DRIFTY CLI HELP |==------------------------" + ANSI_RESET);
-        System.out.println("\033[38;31;48;40;0m\t\t\t\t\t\t\t\t" + VERSION_NUMBER + ANSI_RESET);
+        System.out.println("\033[38;31;48;40;0m\t\t\t\t\t\t\t" + VERSION_NUMBER + ANSI_RESET);
         System.out.println("\033[31;1mRequired parameter: File URL" + ANSI_RESET);
         System.out.println("\033[33;1mOptional parameters:");
         System.out.println("\033[97;1mName           ShortForm     Default                  Description" + ANSI_RESET);

@@ -45,10 +45,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.sun.crypto.provider.HmacCore$HmacSHA256",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"com.sun.crypto.provider.HmacCore$HmacSHA384",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -104,15 +100,7 @@
   "name":"java.sql.Date"
 },
 {
-  "name":"java.util.ArrayList",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"java.util.Date"
-},
-{
-  "name":"java.util.HashMap",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"java.util.concurrent.ConcurrentLinkedDeque",
@@ -123,20 +111,8 @@
   "fields":[{"name":"aux"}, {"name":"status"}]
 },
 {
-  "name":"java.util.concurrent.atomic.AtomicBoolean",
-  "fields":[{"name":"value"}]
-},
-{
-  "name":"java.util.concurrent.atomic.AtomicReference",
-  "fields":[{"name":"value"}]
-},
-{
   "name":"java.util.concurrent.atomic.Striped64",
   "fields":[{"name":"base"}, {"name":"cellsBusy"}]
-},
-{
-  "name":"java.util.concurrent.atomic.Striped64$Cell",
-  "fields":[{"name":"value"}]
 },
 {
   "name":"javax.security.auth.x500.X500Principal",
