@@ -57,10 +57,10 @@ changelog:
           - "dependencies 📦️"
     - title: Bug 🪲 Fixes in Docker 🐋
       labels:
-          - "docker 🐋"
-          - "bug 🐛"
+        - "docker 🐋"
+        - "bug 🐛"
       exclude:
-          labels:
+        labels:
           - "App 💻"
           - "documentation 📝"
           - "Website 🌐"
