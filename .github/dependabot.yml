@@ -5,58 +5,58 @@
 
 version: 2
 updates:
-  - package-ecosystem: 'npm' # See documentation for possible values
-    directory: '/Website' # Location of package manifests
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/Website" # Location of package manifests
     schedule:
-      interval: 'daily'
+      interval: "daily"
     commit-message:
-      prefix: 'chore(npm)'
+      prefix: "chore(npm)"
     labels:
-      - 'dependencies 📦️'
-      - 'npm 📦️'
-    reviewers:
-      - SaptarshiSarkar12
-      
-  - package-ecosystem: 'maven' # See documentation for possible values
-    directory: '/' # Location of package manifests
-    schedule:
-      interval: 'daily'
-    commit-message:
-      prefix: 'chore(maven)'
-    labels:
-      - 'dependencies 📦️'
-      - 'maven 📦️'
-    reviewers:
-      - SaptarshiSarkar12
-      
-  - package-ecosystem: 'github-actions'
-    directory: '/.github/workflows'
-    schedule:
-      # Check for updates to GitHub Actions every weekday
-      interval: 'daily'
-    commit-message:
-      prefix: 'chore(ci)'
-    labels:
-      - 'dependencies 📦️'
-      - 'CI/CD 🔁'
+      - "dependencies 📦️"
+      - "npm 📦️"
     reviewers:
       - SaptarshiSarkar12
 
-  - package-ecosystem: 'docker'
+  - package-ecosystem: "maven" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore(maven)"
+    labels:
+      - "dependencies 📦️"
+      - "maven 📦️"
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      # Check for updates to GitHub Actions every weekday
+      interval: "daily"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies 📦️"
+      - "CI/CD 🔁"
+    reviewers:
+      - SaptarshiSarkar12
+
+  - package-ecosystem: "docker"
     directories:
-      - '/Docker/dev/CLI'
-      - '/Docker/dev/GUI'
-      - '/Docker/dev/commons/base'
-      - '/Docker/dev/commons/runner'
-      - '/Docker/prod/CLI'
-      - '/Docker/prod/GUI'
+      - "/Docker/dev/CLI"
+      - "/Docker/dev/GUI"
+      - "/Docker/dev/commons/base"
+      - "/Docker/dev/commons/runner"
+      - "/Docker/prod/CLI"
+      - "/Docker/prod/GUI"
     schedule:
       # Check for updates to Docker every day
-      interval: 'daily'
+      interval: "daily"
     commit-message:
-      prefix: 'chore(docker)'
+      prefix: "chore(docker)"
     labels:
-        - 'dependencies 📦️'
-        - 'docker 🐋'
+      - "dependencies 📦️"
+      - "docker 🐋"
     reviewers:
       - SaptarshiSarkar12

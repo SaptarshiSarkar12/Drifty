@@ -12,6 +12,7 @@ Clone the Drifty repository to your local machine using the following command:
 ```bash
 git clone git@github.com:SaptarshiSarkar12/Drifty.git
 ```
+
 After the project has been cloned successfully, the **`Drifty`** directory will be created. Navigate into that directory.
 
 ## Drifty Application Development
@@ -29,6 +30,7 @@ Install the dependencies required for the project using the following command:
 ```bash
 mvn clean install
 ```
+
 This command will install all the dependencies required for the maven project.
 
 ### Running the Project in IntelliJ IDEA

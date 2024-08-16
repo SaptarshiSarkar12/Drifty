@@ -19,9 +19,10 @@ Be sure to include as much detail as possible including step-by-step description
 ### Issues
 
 [**Issues**](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) are very valuable to this project. Please check if any similar issues are already present. If not, then feel free to open that issue.
-  - **Feature 💡 Requests** are valuable sources of enhancements which the project can make.
-  - **Bug 🐞 Reports** show where this project is lacking and errors come up.
-  - With a **question**, you show where contributors can improve the user experience.
+
+- **Feature 💡 Requests** are valuable sources of enhancements which the project can make.
+- **Bug 🐞 Reports** show where this project is lacking and errors come up.
+- With a **question**, you show where contributors can improve the user experience.
 
 ### Projects
 
