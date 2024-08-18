@@ -113,11 +113,11 @@ public class Utility {
             executableNames = new String[]{"Drifty-CLI_macos_" + arch, "Drifty-CLI.exe", "Drifty-CLI_linux"};
         }
         String updateURLMiddle;
-//        if (AppSettings.GET.earlyAccess()) {
-//            updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
-//        } else {
-//            updateURLMiddle = "latest/download/";
-//        }
+        // if (AppSettings.GET.earlyAccess()) {
+        //     updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
+        // } else {
+        //     updateURLMiddle = "latest/download/";
+        // }
         updateURLMiddle = "download/v1.0.0/";
         if (OS.isMac()) {
             updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[0]).toURL();
