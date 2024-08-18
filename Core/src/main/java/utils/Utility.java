@@ -102,9 +102,9 @@ public class Utility {
         URL updateURL;
         String[] executableNames;
         String arch = System.getProperty("os.arch");
-        if (arch.equals("amd64") || arch.equals("x86_64")) {
+        if ("amd64".equals(arch) || "x86_64".equals(arch)) {
             arch = "x86_64";
-        } else if (arch.equals("aarch64")) {
+        } else if ("aarch64".equals(arch)) {
             arch = "aarch64";
         }
         if (Mode.isGUI()) {
