@@ -9,7 +9,6 @@ import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
 import properties.MessageCategory;
 import properties.Mode;
-import properties.Mode;
 import properties.OS;
 import properties.Program;
 
@@ -102,17 +101,24 @@ public class Utility {
     public static URL getUpdateURL() throws MalformedURLException, URISyntaxException {
         URL updateURL;
         String[] executableNames;
+        String arch = System.getProperty("os.arch");
+        if (arch.equals("amd64") || arch.equals("x86_64")) {
+            arch = "x86_64";
+        } else if (arch.equals("aarch64")) {
+            arch = "aarch64";
+        }
         if (Mode.isGUI()) {
-            executableNames = new String[]{"Drifty-GUI.pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
+            executableNames = new String[]{"Drifty-GUI_" + arch + ".pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
         } else {
-            executableNames = new String[]{"Drifty-CLI_macos", "Drifty-CLI.exe", "Drifty-CLI_linux"};
+            executableNames = new String[]{"Drifty-CLI_macos_" + arch, "Drifty-CLI.exe", "Drifty-CLI_linux"};
         }
         String updateURLMiddle;
-        if (AppSettings.GET.earlyAccess()) {
-            updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
-        } else {
-            updateURLMiddle = "latest/download/";
-        }
+//        if (AppSettings.GET.earlyAccess()) {
+//            updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
+//        } else {
+//            updateURLMiddle = "latest/download/";
+//        }
+        updateURLMiddle = "download/v1.0.0/";
         if (OS.isMac()) {
             updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[0]).toURL();
         } else if (OS.isWindows()) {
@@ -256,7 +262,7 @@ public class Utility {
                     if (Mode.isCLI()) {
                         // Get the time (from `retry-after` header) to wait before sending another request
                         String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("5");
-                        long timeToWait = (long) parseStringToInt(retryAfter,
+                        long timeToWait = (long) parseStringToInt(retryAfter, "Failed to parse time to wait before retrying!", MessageCategory.DOWNLOAD) * 1000;
                         for (long i = timeToWait; i >= 0; i -= 1000) {
                             System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
                             sleep(1000);
