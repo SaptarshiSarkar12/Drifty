@@ -22,7 +22,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         M.msgLogInfo("Download successful! Setting executable permission...");
         if (OS.isWindows()) { // Added logging for debugging purposes
             // Check if we have administrative privileges in windows
-            ConfirmationDialog confirmationDialog = new ConfirmationDialog("Drifty Update", "canWrite: " + currentExecutableFile.canWrite() + "\n" + "canExecute: " + currentExecutableFile.canExecute() + "\n" + "canRead: " + currentExecutableFile.canRead() + "\n" + "Latest Executable - canWrite: " + latestExecutableFile.canWrite() + "\n" + "Latest Executable - canExecute: " + latestExecutableFile.canExecute() + "\n" + "Latest Executable - canRead: " + latestExecutableFile.canRead() + "\n" + "Do you want to continue?");
+            ConfirmationDialog confirmationDialog = new ConfirmationDialog("Drifty Update", "\n" + "canWrite: " + currentExecutableFile.canWrite() + "\n" + "canExecute: " + currentExecutableFile.canExecute() + "\n" + "canRead: " + currentExecutableFile.canRead() + "\n" + "Latest Executable - canWrite: " + latestExecutableFile.canWrite() + "\n" + "Latest Executable - canExecute: " + latestExecutableFile.canExecute() + "\n" + "Latest Executable - canRead: " + latestExecutableFile.canRead() + "\n" + "Do you want to continue?");
             if (confirmationDialog.getResponse().isYes()) {
                 M.msgLogInfo("User confirmed to continue with the update...");
             } else {

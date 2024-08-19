@@ -122,6 +122,7 @@ public final class UIController {
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), false);
             addJob(updateJob);
+
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
