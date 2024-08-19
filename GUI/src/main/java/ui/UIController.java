@@ -119,10 +119,14 @@ public final class UIController {
             // For other OS, the latest executable name along with the extension is the same as that of the current executable.
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
+            // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
+            // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
+            getJobs().clear();s
+
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), false);
             addJob(updateJob);
-
             Thread downloadUpdate = new Thread(batchDownloader());
             downloadUpdate.start();
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
@@ -130,6 +134,8 @@ public final class UIController {
             }
             AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            // Reset the download queue to the previous state.
+            getJobs().setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
