@@ -22,12 +22,23 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         M.msgLogInfo("Download successful! Setting executable permission...");
         if (OS.isWindows()) { // Added logging for debugging purposes
             // Check if we have administrative privileges in windows
-            ConfirmationDialog confirmationDialog = new ConfirmationDialog("Drifty Update", "\n" + "canWrite: " + currentExecutableFile.canWrite() + "\n" + "canExecute: " + currentExecutableFile.canExecute() + "\n" + "canRead: " + currentExecutableFile.canRead() + "\n" + "Latest Executable - canWrite: " + latestExecutableFile.canWrite() + "\n" + "Latest Executable - canExecute: " + latestExecutableFile.canExecute() + "\n" + "Latest Executable - canRead: " + latestExecutableFile.canRead() + "\n" + "Do you want to continue?");
-            if (confirmationDialog.getResponse().isYes()) {
-                M.msgLogInfo("User confirmed to continue with the update...");
+            if (currentExecutableFile.canWrite()) {
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog("I can write", "I can write to the current executable file. Do you want to continue?");
+                if (confirmationDialog.getResponse().isYes()) {
+                    M.msgLogInfo("User confirmed to continue with the update...");
+                } else {
+                    M.msgLogInfo("User cancelled the update...");
+                    return false;
+                }
             } else {
-                M.msgLogInfo("User cancelled the update...");
-                return false;
+                M.msgLogInfo("I can't write to the current executable file. Trying to set the permission...");
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog("I can't write", "I can't write to the current executable file. Do you want to continue?");
+                if (confirmationDialog.getResponse().isYes()) {
+                    M.msgLogInfo("User confirmed to continue with the update...");
+                } else {
+                    M.msgLogInfo("User cancelled the update...");
+                    return false;
+                }
             }
         }
         if (setExecutablePermissions()) {
