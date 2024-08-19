@@ -122,7 +122,7 @@ public final class UIController {
             // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
             ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
             // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
-            getJobs().clear();s
+            getJobs().clear();
 
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), false);
