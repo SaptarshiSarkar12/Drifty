@@ -1,6 +1,8 @@
 {
-  "index": "Quickstart",
-  "gettingStarted": "Getting Started",
-  "contribution": "Contribution",
-  "faq": "FAQ"
+	"index": "Overview",
+	"gettingStarted": "Getting Started",
+	"usage": "Usage",
+	"contribution": "Contribution",
+	"development": "Development",
+	"faq": "FAQ"
 }
