@@ -3,6 +3,7 @@ package gui.updater;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
+import ui.ConfirmationDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,21 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
             if (!isCurrentExecutableRenamed) {
                 M.msgUpdateError("Failed to rename the current version of Drifty!");
                 return false;
+            }
+            // Check if the application runner user has adequate permissions to replace the current executable
+            if (Paths.get(currentExecutablePathString).getParent().toFile().canWrite()) {
+                M.msgLogInfo("User has write permissions to the current executable directory!");
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog("User Permissions", "User has write permissions to the current executable directory!\n\nDo you want to replace the current version of Drifty with the latest version?", true, false);
+                if (confirmationDialog.getResponse().isYes()) {
+                    M.msgLogInfo("User has confirmed to replace the current version of Drifty with the latest version!");
+                } else {
+                    M.msgLogInfo("User has denied to replace the current version of Drifty with the latest version!");
+                    return false;
+                }
+            } else {
+                M.msgUpdateError("User does not have write permissions to the current executable directory!");
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog("User Permissions", "User does not have write permissions to the current executable directory!\n\nDo you want to run the latest version of Drifty without replacing the current version?", true, false);
+                confirmationDialog.getResponse().isYes();
             }
             try {
                 Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
