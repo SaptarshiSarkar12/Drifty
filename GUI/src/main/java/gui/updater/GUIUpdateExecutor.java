@@ -36,6 +36,16 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
+            M.msgLogInfo("Current executable path: " + currentExecutablePathString);
+            M.msgLogInfo("Latest executable path: " + latestExecutableFile.getAbsolutePath());
+            M.msgLogInfo("For Current executable,");
+            M.msgLogInfo("canWrite: " + currentExecutableFile.canWrite());
+            M.msgLogInfo("canExecute: " + currentExecutableFile.canExecute());
+            M.msgLogInfo("canModify: " + currentExecutableFile.setWritable(true));
+            M.msgLogInfo("For Latest executable,");
+            M.msgLogInfo("canWrite: " + latestExecutableFile.canWrite());
+            M.msgLogInfo("canExecute: " + latestExecutableFile.canExecute());
+            M.msgLogInfo("canModify: " + latestExecutableFile.setWritable(true));
             // Check if the application runner user has adequate permissions to replace the current executable
             if (Paths.get(currentExecutablePathString).getParent().toFile().canWrite()) {
                 M.msgLogInfo("User has write permissions to the current executable directory!");
