@@ -33,7 +33,7 @@ public class Environment {
     public static void initializeEnvironment() {
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
-        isAdministrator = HasAdminPrivileges();
+        isAdministrator = hasAdminPrivileges();
         new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
@@ -110,7 +110,7 @@ public class Environment {
         return timeSinceLastUpdate <= oneDay;
     }
 
-    private static boolean HasAdminPrivileges() {
+    private static boolean hasAdminPrivileges() {
         try {
             Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
             Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
