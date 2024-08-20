@@ -3,11 +3,11 @@ package gui.updater;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
-import ui.ConfirmationDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -36,30 +36,16 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
-            M.msgLogInfo("Current executable path: " + currentExecutablePathString);
-            M.msgLogInfo("Latest executable path: " + latestExecutableFile.getAbsolutePath());
-            M.msgLogInfo("For Current executable,");
-            M.msgLogInfo("canWrite: " + currentExecutableFile.canWrite());
-            M.msgLogInfo("canExecute: " + currentExecutableFile.canExecute());
-            M.msgLogInfo("canModify: " + currentExecutableFile.setWritable(true));
-            M.msgLogInfo("For Latest executable,");
-            M.msgLogInfo("canWrite: " + latestExecutableFile.canWrite());
-            M.msgLogInfo("canExecute: " + latestExecutableFile.canExecute());
-            M.msgLogInfo("canModify: " + latestExecutableFile.setWritable(true));
             // Check if the application runner user has adequate permissions to replace the current executable
-            if (Paths.get(currentExecutablePathString).getParent().toFile().canWrite()) {
-                M.msgLogInfo("User has write permissions to the current executable directory!");
-                ConfirmationDialog confirmationDialog = new ConfirmationDialog("User Permissions", "User has write permissions to the current executable directory!\n\nDo you want to replace the current version of Drifty with the latest version?", true, false);
-                if (confirmationDialog.getResponse().isYes()) {
-                    M.msgLogInfo("User has confirmed to replace the current version of Drifty with the latest version!");
-                } else {
-                    M.msgLogInfo("User has denied to replace the current version of Drifty with the latest version!");
-                    return false;
-                }
-            } else {
-                M.msgUpdateError("User does not have write permissions to the current executable directory!");
-                ConfirmationDialog confirmationDialog = new ConfirmationDialog("User Permissions", "User does not have write permissions to the current executable directory!\n\nDo you want to run the latest version of Drifty without replacing the current version?", true, false);
-                confirmationDialog.getResponse().isYes();
+            try {
+                String windowsDriveLetter = currentExecutablePathString.substring(0, 2);
+                M.msgLogInfo("Drive letter: " + windowsDriveLetter);
+                Path testFilePath = Files.createFile(Paths.get(windowsDriveLetter).resolve("Windows").resolve("System32").resolve("test.txt"));
+                Files.deleteIfExists(testFilePath);
+            } catch (IOException e) {
+                M.msgUpdateError("Insufficient permissions to replace the current version of Drifty!");
+                M.msgLogInfo("Please run Drifty as an administrator to update the application." + e.getMessage());
+                return false;
             }
             boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
             if (!isCurrentExecutableRenamed) {
