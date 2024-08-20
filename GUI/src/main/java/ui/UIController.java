@@ -580,7 +580,7 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miInfo.setOnAction(e -> help());
+        miInfo.setOnAction(e -> Helpshow());
         return new ContextMenu(miDel, miClear, separator, miInfo);
     }
 
@@ -781,6 +781,7 @@ public final class UIController {
         });
     }
 
+    Stage Helpstage;
     private void help() {
         Color textColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : Color.BLACK;
         Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
@@ -810,12 +811,17 @@ public final class UIController {
         INFO_TF.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, textColor, n));
         INFO_TF.setStyle("-fx-background-color: transparent");
 
+
+        Helpstage = Constants.getStage("Help", false);
+
         double width = 500;
         double height = 700;
         Button btnOK = new Button("OK");
-        Stage stage = Constants.getStage("Help", false);
-        stage.setWidth(width);
-        stage.setHeight(height + 100);
+
+
+
+        Helpstage.setWidth(width);
+        Helpstage.setHeight(height + 100);
         VBox vox = new VBox(20, INFO_TF);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
@@ -834,16 +840,27 @@ public final class UIController {
         }
 
         infoScene.setFill(Color.TRANSPARENT);
-        stage.setScene(infoScene);
-        stage.setAlwaysOnTop(true);
-        stage.setTitle("Help");
-        stage.setOnCloseRequest(e -> stage.close());
+        Helpstage.setScene(infoScene);
+        Helpstage.setAlwaysOnTop(true);
+        Helpstage.setTitle("Help");
+        Helpstage.setOnCloseRequest(e -> Helpstage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
-        btnOK.setOnAction(e -> stage.close());
+        btnOK.setOnAction(e -> Helpstage.close());
         scrollPane.setVvalue(0.0);
-        stage.showAndWait();
+        Helpstage.showAndWait();
     }
+    public void Helpshow(){
+        if (Helpstage != null && Helpstage.isShowing()) {
+            Helpstage.toFront();
+        } else {
+            help();
+        }
+    }
+    private void initializeHelpComponents(){
+
+    }
+
 
     private Text text(String string, boolean bold, Color color, double size) {
         // This is used by the help() method for custom text formatting

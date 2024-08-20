@@ -7,6 +7,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -16,13 +17,24 @@ import javafx.stage.StageStyle;
 
 public class ManageFolders {
     private Stage stage;
+
+    public static Scene scene;
     private final double width = 400;
     private final double height = 550;
     private final Folders folders;
     private VBox vBox;
     private ListView<String> lvFolders;
-    private javafx.scene.control.Button btnRemove;
-    private javafx.scene.control.Button btnClose;
+
+    public static Button getBtnRemove() {
+        return btnRemove;
+    }
+
+    public static Button getBtnClose() {
+        return btnClose;
+    }
+
+    private static javafx.scene.control.Button btnRemove;
+    private static javafx.scene.control.Button btnClose;
 
     public ManageFolders() {
         this.folders = AppSettings.GET.folders();
@@ -87,7 +99,12 @@ public class ManageFolders {
 
     public void showScene() {
         stage = new Stage();
-        Scene scene = Constants.getScene(vBox);
+        scene = Constants.getScene(vBox);
+        if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Constants.addCSS(scene, Constants.DARK_THEME_CSS);
+            Theme.changeButtonStyle(true, ManageFolders.getBtnClose());
+            Theme.changeButtonStyle(true, ManageFolders.getBtnRemove());
+        }
         stage.setScene(scene);
         stage.setWidth(width);
         stage.setHeight(height);
