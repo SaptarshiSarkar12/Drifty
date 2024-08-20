@@ -3,7 +3,6 @@ package gui.updater;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
-import ui.ConfirmationDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,27 +19,6 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
     @Override
     public boolean execute() {
         M.msgLogInfo("Download successful! Setting executable permission...");
-        if (OS.isWindows()) { // Added logging for debugging purposes
-            // Check if we have administrative privileges in windows
-            if (currentExecutableFile.canWrite()) {
-                ConfirmationDialog confirmationDialog = new ConfirmationDialog("I can write", "I can write to the current executable file. Do you want to continue?");
-                if (confirmationDialog.getResponse().isYes()) {
-                    M.msgLogInfo("User confirmed to continue with the update...");
-                } else {
-                    M.msgLogInfo("User cancelled the update...");
-                    return false;
-                }
-            } else {
-                M.msgLogInfo("I can't write to the current executable file. Trying to set the permission...");
-                ConfirmationDialog confirmationDialog = new ConfirmationDialog("I can't write", "I can't write to the current executable file. Do you want to continue?");
-                if (confirmationDialog.getResponse().isYes()) {
-                    M.msgLogInfo("User confirmed to continue with the update...");
-                } else {
-                    M.msgLogInfo("User cancelled the update...");
-                    return false;
-                }
-            }
-        }
         if (setExecutablePermissions()) {
             M.msgLogInfo("Executable permission set! Executing update...");
         } else {
