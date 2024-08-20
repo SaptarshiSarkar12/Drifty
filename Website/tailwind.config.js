@@ -3,14 +3,7 @@ module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,md,mdx}",
     "./pages/**/*.{js,jsx,ts,tsx,md,mdx}",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "./components/**/*.{js,jsx,ts,tsx,md,mdx}",
-=======
->>>>>>> 821c12a (Add  navigation and Discord links and Logo)
-=======
-    "./components/**/*.{js,jsx,ts,tsx,md,mdx}",
->>>>>>> f1d5bbe (Added Release Notes and release tags)
   ],
   theme: {
     extend: {
