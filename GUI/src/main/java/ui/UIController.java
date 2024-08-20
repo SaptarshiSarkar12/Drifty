@@ -132,8 +132,8 @@ public final class UIController {
             while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
                 sleep(500);
             }
-            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
             getJobs().setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {

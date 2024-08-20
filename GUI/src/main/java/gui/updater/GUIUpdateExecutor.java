@@ -44,7 +44,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
                 Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
                 M.msgUpdateInfo("Update successful!");
             } catch (IOException e) {
-                M.msgUpdateError("Failed to replace the current version of Drifty!");
+                M.msgUpdateError("Failed to replace the current version of Drifty!\n" + e.getMessage());
                 return false;
             }
             try {
