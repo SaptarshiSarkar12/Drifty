@@ -308,8 +308,8 @@ public class Drifty_CLI {
     }
 
     private static void checkAndUpdateDrifty(boolean askForInstallingUpdate) {
-        messageBroker.msgInitInfo("Checking for updates...");
         if (!isDriftyUpdateChecked() || !askForInstallingUpdate) { // Check for updates only once a day and only if the user wants to install the update (if available)
+            messageBroker.msgInitInfo("Checking for updates...");
             if (UpdateChecker.isUpdateAvailable()) {
                 messageBroker.msgUpdateInfo("Update available!");
                 messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.newDriftyVersionName() + ")");
@@ -387,16 +387,14 @@ public class Drifty_CLI {
             Utility.setYtDlpVersion().run();
         }
         System.out.println("yt-dlp version : " + AppSettings.GET.ytDlpVersion());
-        if (AppSettings.GET.isFfmpegWorking()) {
-            if (AppSettings.GET.ffmpegVersion().isEmpty()) {
-                Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
-                ffmpegVersion.start();
-                while (ffmpegVersion.isAlive()) {
-                    sleep(100);
-                }
+        if (AppSettings.GET.ffmpegVersion().isEmpty()) {
+            Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
+            ffmpegVersion.start();
+            while (ffmpegVersion.isAlive()) {
+                sleep(100);
             }
-            System.out.println("FFMPEG version : " + AppSettings.GET.ffmpegVersion());
         }
+        System.out.println("FFMPEG version : " + AppSettings.GET.ffmpegVersion());
     }
 
     private static void handleSpotifyPlaylist() {

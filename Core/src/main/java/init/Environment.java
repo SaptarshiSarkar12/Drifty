@@ -22,7 +22,7 @@ import static properties.Program.YT_DLP;
 
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
-    private static final boolean IS_ADMINISTRATOR = HasAdminPrivileges();
+    private static boolean isAdministrator;
 
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
@@ -33,6 +33,7 @@ public class Environment {
     public static void initializeEnvironment() {
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
+        isAdministrator = HasAdminPrivileges();
         new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
@@ -129,7 +130,7 @@ public class Environment {
     }
 
     public static boolean isAdministrator() {
-        return IS_ADMINISTRATOR;
+        return isAdministrator;
     }
 
     public static MessageBroker getMessageBroker() {
