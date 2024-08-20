@@ -36,11 +36,6 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
-            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
-            if (!isCurrentExecutableRenamed) {
-                M.msgUpdateError("Failed to rename the current version of Drifty!");
-                return false;
-            }
             // Check if the application runner user has adequate permissions to replace the current executable
             if (Paths.get(currentExecutablePathString).getParent().toFile().canWrite()) {
                 M.msgLogInfo("User has write permissions to the current executable directory!");
@@ -55,6 +50,11 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
                 M.msgUpdateError("User does not have write permissions to the current executable directory!");
                 ConfirmationDialog confirmationDialog = new ConfirmationDialog("User Permissions", "User does not have write permissions to the current executable directory!\n\nDo you want to run the latest version of Drifty without replacing the current version?", true, false);
                 confirmationDialog.getResponse().isYes();
+            }
+            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
+            if (!isCurrentExecutableRenamed) {
+                M.msgUpdateError("Failed to rename the current version of Drifty!");
+                return false;
             }
             try {
                 Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
