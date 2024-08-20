@@ -49,6 +49,8 @@ import static utils.Utility.*;
 public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
+    private Stage helpStage;
+
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
     private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
@@ -580,7 +582,7 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miInfo.setOnAction(e -> Helpshow());
+        miInfo.setOnAction(e -> helpShow());
         return new ContextMenu(miDel, miClear, separator, miInfo);
     }
 
@@ -781,7 +783,6 @@ public final class UIController {
         });
     }
 
-    Stage Helpstage;
     private void help() {
         Color textColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : Color.BLACK;
         Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
@@ -812,7 +813,7 @@ public final class UIController {
         INFO_TF.setStyle("-fx-background-color: transparent");
 
 
-        Helpstage = Constants.getStage("Help", false);
+        helpStage = Constants.getStage("Help", false);
 
         double width = 500;
         double height = 700;
@@ -820,8 +821,8 @@ public final class UIController {
 
 
 
-        Helpstage.setWidth(width);
-        Helpstage.setHeight(height + 100);
+        helpStage.setWidth(width);
+        helpStage.setHeight(height + 100);
         VBox vox = new VBox(20, INFO_TF);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
@@ -840,19 +841,19 @@ public final class UIController {
         }
 
         infoScene.setFill(Color.TRANSPARENT);
-        Helpstage.setScene(infoScene);
-        Helpstage.setAlwaysOnTop(true);
-        Helpstage.setTitle("Help");
-        Helpstage.setOnCloseRequest(e -> Helpstage.close());
+        helpStage.setScene(infoScene);
+        helpStage.setAlwaysOnTop(true);
+        helpStage.setTitle("Help");
+        helpStage.setOnCloseRequest(e -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
-        btnOK.setOnAction(e -> Helpstage.close());
+        btnOK.setOnAction(e -> helpStage.close());
         scrollPane.setVvalue(0.0);
-        Helpstage.showAndWait();
+        helpStage.showAndWait();
     }
-    public void Helpshow(){
-        if (Helpstage != null && Helpstage.isShowing()) {
-            Helpstage.toFront();
+    public void helpShow(){
+        if (helpStage != null && helpStage.isShowing()) {
+            helpStage.toFront();
         } else {
             help();
         }
