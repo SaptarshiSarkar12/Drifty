@@ -10,7 +10,10 @@ import utils.Utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,6 +22,7 @@ import static properties.Program.YT_DLP;
 
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
+    private static final boolean isAdministrator = checkForAdminPrivileges();
 
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
@@ -103,6 +107,29 @@ public class Environment {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
         return timeSinceLastUpdate <= oneDay;
+    }
+
+    private static boolean checkForAdminPrivileges() {
+        try {
+            Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
+            Files.createFile(adminTestFilePath);
+            Files.deleteIfExists(adminTestFilePath);
+            return true;
+        } catch (URISyntaxException e) {
+            msgBroker.msgInitError("Failed to get the current executable folder! " + e.getMessage());
+            return false;
+        } catch (AccessDeniedException e) {
+            msgBroker.msgInitError("You are not running Drifty as an administrator! " + e.getMessage());
+            return false;
+        } catch (IOException e) {
+            msgBroker.msgInitError("Failed to create a file in the current executable folder! " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isAdministrator() {
+        return isAdministrator;
     }
 
     public static MessageBroker getMessageBroker() {

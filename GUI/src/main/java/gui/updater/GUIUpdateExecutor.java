@@ -7,7 +7,6 @@ import properties.OS;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -36,17 +35,6 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
-            // Check if the application runner user has adequate permissions to replace the current executable
-            try {
-                String windowsDriveLetter = currentExecutablePathString.substring(0, 2);
-                M.msgLogInfo("Drive letter: " + windowsDriveLetter);
-                Path testFilePath = Files.createFile(Paths.get(windowsDriveLetter).resolve("Windows").resolve("System32").resolve("test.txt"));
-                Files.deleteIfExists(testFilePath);
-            } catch (IOException e) {
-                M.msgUpdateError("Insufficient permissions to replace the current version of Drifty!");
-                M.msgLogInfo("Please run Drifty as an administrator to update the application." + e.getMessage());
-                return false;
-            }
             boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
             if (!isCurrentExecutableRenamed) {
                 M.msgUpdateError("Failed to rename the current version of Drifty!");

@@ -1,9 +1,11 @@
 package utils;
 
+import init.Environment;
 import properties.MessageType;
 import properties.Mode;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,11 +29,18 @@ public final class Logger {
             logFilename = "Drifty GUI.log";
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            logFile = File.createTempFile(logFilename.replace(".log", ""), ".log");
-        } catch (IOException e) {
-            throw new RuntimeException(FAILED_TO_CREATE_LOG + logFilename);
+        logFile = determineLogFile();
+    }
+
+    private File determineLogFile() {
+        if (!Environment.isAdministrator()) {
+            try {
+                return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile();
+            } catch (IOException e) {
+                System.err.println(FAILED_TO_CREATE_LOG + logFilename);
+            }
         }
+        return new File(logFilename);
     }
 
     public static Logger getInstance() {

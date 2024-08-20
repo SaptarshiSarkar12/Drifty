@@ -313,23 +313,34 @@ public class Drifty_CLI {
             if (UpdateChecker.isUpdateAvailable()) {
                 messageBroker.msgUpdateInfo("Update available!");
                 messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.newDriftyVersionName() + ")");
-                boolean choice = true;
-                if (askForInstallingUpdate) {
-                    messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
-                    String choiceString = SC.nextLine().toLowerCase();
-                    choice = utility.yesNoValidation(choiceString, "Do you want to download the update? (Enter Y for yes and N for no) : ");
-                }
-                if (!choice) {
-                    messageBroker.msgUpdateInfo("Drifty update cancelled!");
-                } else {
-                    messageBroker.msgUpdateInfo("Downloading update...");
-                    if (!downloadUpdate()) {
-                        messageBroker.msgUpdateError("Failed to update Drifty!");
-                        Environment.terminate(1);
+                if (Environment.isAdministrator()) {
+                    boolean choice = true;
+                    if (askForInstallingUpdate) {
+                        messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
+                        String choiceString = SC.nextLine().toLowerCase();
+                        choice = utility.yesNoValidation(choiceString, "Do you want to download the update? (Enter Y for yes and N for no) : ");
+                    }
+                    if (!choice) {
+                        messageBroker.msgUpdateInfo("Drifty update cancelled!");
                     } else {
-                        messageBroker.msgUpdateInfo("Update successful!");
-                        messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
-                        Environment.terminate(0);
+                        messageBroker.msgUpdateInfo("Downloading update...");
+                        if (!downloadUpdate()) {
+                            messageBroker.msgUpdateError("Failed to update Drifty!");
+                            Environment.terminate(1);
+                        } else {
+                            messageBroker.msgUpdateInfo("Update successful!");
+                            messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
+                            Environment.terminate(0);
+                        }
+                    }
+                } else {
+                    if (askForInstallingUpdate) {
+                        messageBroker.msgUpdateWarning("Drifty update requires administrator privileges!");
+                        messageBroker.msgUpdateWarning("Please run Drifty with administrator privileges to update!");
+                    } else {
+                        messageBroker.msgUpdateError("Drifty update requires administrator privileges!");
+                        messageBroker.msgUpdateError("Please run Drifty with administrator privileges to update!");
+                        Environment.terminate(1);
                     }
                 }
             }
