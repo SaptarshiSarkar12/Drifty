@@ -177,7 +177,7 @@ public class ConfirmationDialog {
             answer.setAnswer(false);
             stage.close();
         });
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.showAndWait();
     }
 

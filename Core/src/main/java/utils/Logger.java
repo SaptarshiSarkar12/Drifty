@@ -2,14 +2,16 @@ package utils;
 
 import properties.MessageType;
 import properties.Mode;
+import properties.Program;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static support.Constants.FAILED_TO_CREATE_LOG;
 import static support.Constants.FAILED_TO_CLEAR_LOG;
+import static support.Constants.FAILED_TO_CREATE_LOG;
 
 public final class Logger {
     boolean isLogEmpty;
@@ -45,7 +47,7 @@ public final class Logger {
     }
 
     private void clearLog() {
-        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Path.of(Program.get(Program.DRIFTY_PATH)).resolveSibling(logFilename).toFile(), false))))) {
             isLogEmpty = true;
             logWriter.write("");
         } catch (IOException e) {
