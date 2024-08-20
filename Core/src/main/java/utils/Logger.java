@@ -2,10 +2,8 @@ package utils;
 
 import properties.MessageType;
 import properties.Mode;
-import properties.Program;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,6 +18,7 @@ public final class Logger {
     private final DateFormat dateFormat;
     private final Calendar calendarObject = Calendar.getInstance();
     private final String logFilename;
+    private final File logFile;
 
     private Logger() {
         if (Mode.isCLI()) {
@@ -28,6 +27,11 @@ public final class Logger {
             logFilename = "Drifty GUI.log";
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            logFile = File.createTempFile(logFilename.replace(".log", ""), ".log");
+        } catch (IOException e) {
+            throw new RuntimeException(FAILED_TO_CREATE_LOG + logFilename);
+        }
     }
 
     public static Logger getInstance() {
@@ -47,7 +51,7 @@ public final class Logger {
     }
 
     private void clearLog() {
-        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Path.of(Program.get(Program.DRIFTY_PATH)).resolveSibling(logFilename).toFile(), false))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, false))))) {
             isLogEmpty = true;
             logWriter.write("");
         } catch (IOException e) {
@@ -60,7 +64,7 @@ public final class Logger {
         if (!isLogEmpty) {
             clearLog();
         }
-        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true))))) {
             isLogEmpty = true;
             logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
