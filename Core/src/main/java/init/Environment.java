@@ -110,7 +110,7 @@ public class Environment {
         return timeSinceLastUpdate <= oneDay;
     }
 
-    private static boolean hasAdminPrivileges() {
+    public static boolean hasAdminPrivileges() {
         try {
             Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
             Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");

@@ -313,7 +313,7 @@ public class Drifty_CLI {
             if (UpdateChecker.isUpdateAvailable()) {
                 messageBroker.msgUpdateInfo("Update available!");
                 messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.newDriftyVersionName() + ")");
-                if (Environment.isAdministrator()) {
+                if (Environment.hasAdminPrivileges()) {
                     boolean choice = true;
                     if (askForInstallingUpdate) {
                         messageBroker.msgUpdateInfo("Do you want to download the update? (Enter Y for yes and N for no) : ");
