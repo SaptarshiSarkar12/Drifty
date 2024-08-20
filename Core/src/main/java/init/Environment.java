@@ -22,7 +22,7 @@ import static properties.Program.YT_DLP;
 
 public class Environment {
     private static MessageBroker msgBroker = Environment.getMessageBroker();
-    private static final boolean isAdministrator = checkForAdminPrivileges();
+    private static final boolean IS_ADMINISTRATOR = HasAdminPrivileges();
 
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
@@ -109,7 +109,7 @@ public class Environment {
         return timeSinceLastUpdate <= oneDay;
     }
 
-    private static boolean checkForAdminPrivileges() {
+    private static boolean HasAdminPrivileges() {
         try {
             Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
             Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
@@ -129,7 +129,7 @@ public class Environment {
     }
 
     public static boolean isAdministrator() {
-        return isAdministrator;
+        return IS_ADMINISTRATOR;
     }
 
     public static MessageBroker getMessageBroker() {
