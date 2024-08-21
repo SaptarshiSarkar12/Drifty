@@ -7,7 +7,7 @@ const ReleaseInfo = () => {
     const fetchReleases = async () => {
       try {
         const response = await fetch(
-          "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases"
+          "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases",
         );
         if (response.ok) {
           const data = await response.json();

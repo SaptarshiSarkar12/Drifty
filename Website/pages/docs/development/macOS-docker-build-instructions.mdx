@@ -44,39 +44,40 @@ After the Docker image of Drifty GUI has been built/pulled, we need to provide a
 <Callout type="info">
 
 <details>
-	<summary>
-		Why static IP address is preferred for running Drifty GUI in Docker on
-		macOS?
-	</summary>
-	Now that the image is built/pulled, we need to talk about how the GUI itself is
-	going to be shown on your desktop. The only real relevant issue here pertains to
-	your local IP address assigned to your network interface card on your Mac. You
-	see, in a Linux environment (which macOS is modeled after), programs that run in
-	the Terminal do not have direct access to your graphical environment (Graphical
-	User Interface), so we are going to have to provide the Docker instance with a
-	pathway to access the GUI and that has to be done by telling it what your local
-	IP address is. > > On most home networks, the typical setup is to have a router
-	where your computer is connected to the LAN (Local Area network) side of the router
-	either via Wi-Fi or an Ethernet cable. And most people just make that connection,
-	find that they can access the Internet and don't look back. > > We, however, need
-	to look back... > > Routers use a service called DHCP (Dynamic Host Control Protocol)
-	which uses a reserved pool of IP addresses. If any device connects to your network
-	and when it is set up to use DHCP (which is always the default), it will send out
-	a broadcast packet onto your network asking for an IP address. Your router will
-	see that request, then it will take out an IP address from its pool, and it will
-	give it to your device so that your device can talk on your network, access the
-	Internet, etc. > > DHCP services are also designed to make that assigned IP address
-	expire after some time (usually three days). In case a device that was on the network
-	is no longer on the network, it can pull that IP address back and put it into the
-	pool so that it doesn't run out of IP addresses. This means that it is possible
-	your local IP address might change in a short period of time. We cannot build a
-	command to run Drifty when your IP address is changing because docker needs to
-	send the graphics to a known IP address. > > There are usually two generic ways
-	to refer to your local ip address in a linux or Windows environment. The first
-	way is to simply use the word `localhost` and the second way is to use the default
-	home IP address of `127.0.0.1`. Unfortunately, neither of those generics will work
-	in this case, so we have to give the command the exact IP address of your Mac.
-	> >{" "}
+  <summary>
+    Why static IP address is preferred for running Drifty GUI in Docker on
+    macOS?
+  </summary>
+  Now that the image is built/pulled, we need to talk about how the GUI itself
+  is going to be shown on your desktop. The only real relevant issue here
+  pertains to your local IP address assigned to your network interface card on
+  your Mac. You see, in a Linux environment (which macOS is modeled after),
+  programs that run in the Terminal do not have direct access to your graphical
+  environment (Graphical User Interface), so we are going to have to provide the
+  Docker instance with a pathway to access the GUI and that has to be done by
+  telling it what your local IP address is. > > On most home networks, the
+  typical setup is to have a router where your computer is connected to the LAN
+  (Local Area network) side of the router either via Wi-Fi or an Ethernet cable.
+  And most people just make that connection, find that they can access the
+  Internet and don't look back. > > We, however, need to look back... > >
+  Routers use a service called DHCP (Dynamic Host Control Protocol) which uses a
+  reserved pool of IP addresses. If any device connects to your network and when
+  it is set up to use DHCP (which is always the default), it will send out a
+  broadcast packet onto your network asking for an IP address. Your router will
+  see that request, then it will take out an IP address from its pool, and it
+  will give it to your device so that your device can talk on your network,
+  access the Internet, etc. > > DHCP services are also designed to make that
+  assigned IP address expire after some time (usually three days). In case a
+  device that was on the network is no longer on the network, it can pull that
+  IP address back and put it into the pool so that it doesn't run out of IP
+  addresses. This means that it is possible your local IP address might change
+  in a short period of time. We cannot build a command to run Drifty when your
+  IP address is changing because docker needs to send the graphics to a known IP
+  address. > > There are usually two generic ways to refer to your local ip
+  address in a linux or Windows environment. The first way is to simply use the
+  word `localhost` and the second way is to use the default home IP address of
+  `127.0.0.1`. Unfortunately, neither of those generics will work in this case,
+  so we have to give the command the exact IP address of your Mac. > >{" "}
 </details>
 
 </Callout>
