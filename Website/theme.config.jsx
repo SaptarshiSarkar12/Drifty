@@ -38,6 +38,7 @@ export default {
 	sidebar: {
 		toggleButton: true,
 		autoCollapse: true,
+		defaultMenuCollapseLevel: 1,
 	},
 	navigation: true,
 	search: {
