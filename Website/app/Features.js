@@ -52,7 +52,9 @@ const Features = () => {
             </h2>
 
             <div className="flex mt-2">
-              <p className="text-sm text-center text-gray-600">{feature.description}</p>
+              <p className="text-sm text-center text-gray-600">
+                {feature.description}
+              </p>
               <div className={"text-6xl p-2"}>
                 <i
                   className={feature.icon}

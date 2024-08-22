@@ -152,7 +152,7 @@ public class ConfirmationDialog {
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", scene);
             Theme.changeButtonStyle(true, btnYes);
             Theme.changeButtonStyle(true, btnNo);

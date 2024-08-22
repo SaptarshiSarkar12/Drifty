@@ -112,7 +112,7 @@ public class Settings {
     }
 
     private void setInitialTheme(String theme) {
-        boolean isDark = theme.equals("Dark");
+        boolean isDark = "Dark".equals(theme);
         Constants.addCSS(settingsScene, isDark ? Constants.DARK_THEME_CSS : Constants.LIGHT_THEME_CSS);
         applyStyleToLabels(isDark, lblTheme, lblAutoPaste, lblDefaultDownloadDir, lblSettingsHeading);
         tfCurrentDirectory.setStyle("-fx-text-fill: " + (isDark ? "white" : "black") + " ; -fx-font-weight: Bold");
@@ -129,8 +129,8 @@ public class Settings {
     private void setupThemeChoice() {
         themeChoiceBox = new ChoiceBox<>();
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
-        themeChoiceBox.setValue(AppSettings.GET.mainTheme().equals("Dark") ? "Dark Theme" : "Light Theme");
-        themeChoiceBox.setOnAction(e -> Theme.applyTheme(themeChoiceBox.getValue().equals("Dark Theme") ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ConfirmationDialog.getScene(), ManageFolders.scene));
+        themeChoiceBox.setValue("Dark".equals(AppSettings.GET.mainTheme()) ? "Dark Theme" : "Light Theme");
+        themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
@@ -156,7 +156,7 @@ public class Settings {
 
     private void createDirectoryButton() {
         selectDirectoryButton = new Button("Select Directory");
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED);
             selectDirectoryButton.setOnMousePressed(e -> selectDirectoryButton.setStyle(Constants.BUTTON_PRESSED));
             selectDirectoryButton.setOnMouseReleased(e -> selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED));
@@ -170,7 +170,7 @@ public class Settings {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedDirectory = chooser.showDialog(this.stage);
-        String directoryPath = (selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder());
+        String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
         UIController.form.tfDir.setText(directoryPath);
         tfCurrentDirectory.setText(directoryPath);
     }

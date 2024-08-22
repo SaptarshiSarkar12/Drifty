@@ -106,7 +106,7 @@ public final class UIController {
         form.tfLink.disableProperty().bind(disableInputs);
         form.listView.setContextMenu(getListMenu());
 
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -784,8 +784,8 @@ public final class UIController {
     }
 
     private void help() {
-        Color textColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.WHITE : Color.BLACK;
-        Color headingsColor = AppSettings.GET.mainTheme().equals("Dark") ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color textColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.WHITE : Color.BLACK;
+        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
         INFO_TF.getChildren().add(text("Link:\n", true, headingsColor, h));
@@ -812,14 +812,9 @@ public final class UIController {
         INFO_TF.getChildren().add(text("Another thing you can do is grab a YouTube playlist and Drifty will extract all of the videos from the playlist and build a batch from the list (or add to your existing batch).\n\n", false, textColor, n));
         INFO_TF.setStyle("-fx-background-color: transparent");
 
-
-        helpStage = Constants.getStage("Help", false);
-
         double width = 500;
         double height = 700;
         Button btnOK = new Button("OK");
-
-
 
         helpStage.setWidth(width);
         helpStage.setHeight(height + 100);
@@ -837,6 +832,16 @@ public final class UIController {
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
         if (AppSettings.GET.mainTheme().equals("Dark")) {
+            Theme.applyTheme("Dark", infoScene);
+        }
+
+        infoScene.setFill(Color.TRANSPARENT);
+        helpStage.setScene(infoScene);
+        helpStage.setAlwaysOnTop(true);
+        helpStage.setTitle("Help");
+        helpStage.setOnCloseRequest(e -> helpStage.close());
+        infoScene = Constants.getScene(scrollPane);
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
 
