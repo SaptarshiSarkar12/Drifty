@@ -52,9 +52,9 @@ public class ManageFolders {
         lvFolders.setMinHeight(height * .85);
         lvFolders.setMaxHeight(height * .85);
         lvFolders.setPrefHeight(height * .85);
-        btnRemove.setMinWidth(65);
-        btnRemove.setMaxWidth(65);
-        btnRemove.setPrefWidth(65);
+        btnRemove.setMinWidth(85);
+        btnRemove.setMaxWidth(85);
+        btnRemove.setPrefWidth(85);
         btnRemove.setMinHeight(35);
         btnRemove.setMaxHeight(35);
         btnRemove.setPrefHeight(35);

@@ -562,7 +562,7 @@ public final class UIController {
     private ContextMenu getListMenu() {
         MenuItem miDel = new MenuItem("Delete");
         MenuItem miClear = new MenuItem("Clear");
-        MenuItem miInfo = new MenuItem("Information");
+        MenuItem miHelp = new MenuItem("Help");
         SeparatorMenuItem separator = new SeparatorMenuItem();
         miDel.setOnAction(e -> {
             Job job = form.listView.getSelectionModel().getSelectedItem();
@@ -582,8 +582,8 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miInfo.setOnAction(e -> helpShow());
-        return new ContextMenu(miDel, miClear, separator, miInfo);
+        miHelp.setOnAction(e -> handleHelpWindow());
+        return new ContextMenu(miDel, miClear, separator, miHelp);
     }
 
     private void setDirContextMenu() {
@@ -814,8 +814,7 @@ public final class UIController {
 
         double width = 500;
         double height = 700;
-        Button btnOK = new Button("OK");
-
+        helpStage = Constants.getStage("Help", false);
         helpStage.setWidth(width);
         helpStage.setHeight(height + 100);
         VBox vox = new VBox(20, INFO_TF);
@@ -831,42 +830,27 @@ public final class UIController {
         scrollPane.setPrefHeight(height);
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
+        infoScene.setFill(Color.TRANSPARENT);
         if (AppSettings.GET.mainTheme().equals("Dark")) {
             Theme.applyTheme("Dark", infoScene);
         }
-
-        infoScene.setFill(Color.TRANSPARENT);
-        helpStage.setScene(infoScene);
-        helpStage.setAlwaysOnTop(true);
-        helpStage.setTitle("Help");
-        helpStage.setOnCloseRequest(e -> helpStage.close());
-        infoScene = Constants.getScene(scrollPane);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
-            Theme.applyTheme("Dark", infoScene);
-        }
-
-        infoScene.setFill(Color.TRANSPARENT);
         helpStage.setScene(infoScene);
         helpStage.setAlwaysOnTop(true);
         helpStage.setTitle("Help");
         helpStage.setOnCloseRequest(e -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
-        btnOK.setOnAction(e -> helpStage.close());
         scrollPane.setVvalue(0.0);
         helpStage.showAndWait();
     }
-    public void helpShow(){
+
+    public void handleHelpWindow() {
         if (helpStage != null && helpStage.isShowing()) {
             helpStage.toFront();
         } else {
             help();
         }
     }
-    private void initializeHelpComponents(){
-
-    }
-
 
     private Text text(String string, boolean bold, Color color, double size) {
         // This is used by the help() method for custom text formatting
