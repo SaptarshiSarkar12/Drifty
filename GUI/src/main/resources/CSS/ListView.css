@@ -13,9 +13,9 @@
   -fx-background-color: rgb(9, 106, 216);
   -fx-text-fill: ghostwhite;
 }
-.list-cell:selected{
-    -fx-background-color: rgb(9,106,216);
-    -fx-text-fill: ghostwhite;
+.list-cell:selected {
+  -fx-background-color: rgb(9, 106, 216);
+  -fx-text-fill: ghostwhite;
 }
 .list-view .scroll-bar:horizontal,
 .list-view .scroll-bar:vertical {

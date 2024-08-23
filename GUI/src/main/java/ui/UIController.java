@@ -831,7 +831,7 @@ public final class UIController {
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
         infoScene.setFill(Color.TRANSPARENT);
-        if (AppSettings.GET.mainTheme().equals("Dark")) {
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
         helpStage.setScene(infoScene);
