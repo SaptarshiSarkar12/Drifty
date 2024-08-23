@@ -156,7 +156,7 @@ public class ConfirmationDialog {
             Theme.applyTheme("Dark", scene);
             Theme.changeButtonStyle(true, btnYes);
             Theme.changeButtonStyle(true, btnNo);
-            Theme.changeButtonStyle(true , btnOk);
+            Theme.changeButtonStyle(true, btnOk);
         } else {
             Theme.applyTheme("Light", scene);
         }
