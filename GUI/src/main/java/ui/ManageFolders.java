@@ -24,6 +24,8 @@ public class ManageFolders {
     private final Folders folders;
     private VBox vBox;
     private ListView<String> lvFolders;
+    private static Button btnRemove;
+    private static Button btnClose;
 
     public static Button getBtnRemove() {
         return btnRemove;
@@ -33,9 +35,6 @@ public class ManageFolders {
         return btnClose;
     }
 
-    private static javafx.scene.control.Button btnRemove;
-    private static javafx.scene.control.Button btnClose;
-
     public ManageFolders() {
         this.folders = AppSettings.GET.folders();
         createControls();
@@ -44,8 +43,8 @@ public class ManageFolders {
 
     private void createControls() {
         lvFolders = listView(folders.getFolders());
-        btnRemove = new javafx.scene.control.Button("Remove");
-        btnClose = new javafx.scene.control.Button("Close");
+        btnRemove = new Button("Remove");
+        btnClose = new Button("Close");
         lvFolders.setMinWidth(width * .9);
         lvFolders.setMaxWidth(width * .9);
         lvFolders.setPrefWidth(width * .9);
