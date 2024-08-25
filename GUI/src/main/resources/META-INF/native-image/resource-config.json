@@ -131,6 +131,8 @@
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/DrawPgram_Color.frag\\E"
   }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/DrawRoundRect_Color.frag\\E"
+  }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/FillPgram_Color.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/FillPgram_LinearGradient_PAD.frag\\E"
@@ -173,13 +175,13 @@
   }]},
   "bundles":[{
     "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
-    "locales":["", "en-US"]
+    "locales":["", "en-US", "und"]
   }, {
     "name":"com.sun.org.apache.xml.internal.serializer.XMLEntities",
-    "locales":["", "en-US"]
+    "locales":["", "en-US", "und"]
   }, {
     "name":"com/sun/javafx/scene/control/skin/resources/controls",
-    "locales":["", "en-US"]
+    "locales":["", "en-US", "und"]
   }, {
     "name":"sun.text.resources.cldr.FormatData",
     "locales":["en", "en-US", "und"]
