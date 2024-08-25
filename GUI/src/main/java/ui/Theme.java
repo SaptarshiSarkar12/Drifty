@@ -103,6 +103,8 @@ public class Theme {
         changeButtonStyle(isDark, Settings.getSelectDirectoryButton());
         changeButtonStyle(isDark, ConfirmationDialog.getBtnYes());
         changeButtonStyle(isDark, ConfirmationDialog.getBtnNo());
+        changeButtonStyle(isDark, ManageFolders.getBtnClose());
+        changeButtonStyle(isDark, ManageFolders.getBtnRemove());
         setupButtonGraphics(theme);
     }
 

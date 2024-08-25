@@ -130,7 +130,7 @@ public class Settings {
         themeChoiceBox = new ChoiceBox<>();
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
         themeChoiceBox.setValue("Dark".equals(AppSettings.GET.mainTheme()) ? "Dark Theme" : "Light Theme");
-        themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ConfirmationDialog.getScene()));
+        themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ManageFolders.scene, ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
