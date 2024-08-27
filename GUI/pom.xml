@@ -75,8 +75,8 @@
                         <description>Drifty is an open-source interactive file downloader system</description>
                         <packageType>${package.type}</packageType>
                         <!-- for macOS/iOS -->
-                        <bundleShortVersion>${project.version}</bundleShortVersion>
-                        <bundleVersion>${project.version}</bundleVersion>
+                        <bundleShortVersion>2.1.0</bundleShortVersion>
+                        <bundleVersion>2.1.0</bundleVersion>
                         <skipSigning>true</skipSigning>
                     </releaseConfiguration>
                 </configuration>
