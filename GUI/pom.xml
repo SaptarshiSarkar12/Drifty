@@ -91,6 +91,8 @@
             <id>build-drifty-gui-for-macos-14</id>
             <properties>
                 <package.type>pkg</package.type>
+                <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>
+                <bundleVersion>${project.shortVersionString}</bundleVersion>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-14.o</system-linker-arg>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
