@@ -71,7 +71,7 @@
                     <appIdentifier>Drifty GUI</appIdentifier>
                     <releaseConfiguration>
                         <vendor>Drifty</vendor>
-                        <version>${project.version}</version>
+                        <version>2.1.0</version>
                         <description>Drifty is an open-source interactive file downloader system</description>
                         <packageType>${package.type}</packageType>
                         <!-- for macOS/iOS -->

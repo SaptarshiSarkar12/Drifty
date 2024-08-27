@@ -139,7 +139,7 @@ jobs:
             mv "CLI/target/CLI/windows/Drifty CLI.exe" "CLI/target/CLI/windows/Drifty-CLI.exe"
             mv "CLI/target/CLI/windows/Drifty-CLI.exe" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-2.1.0.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI.exe" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi" build/GUI
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
@@ -151,7 +151,7 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_aarch64"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos_aarch64" build/CLI
         else
-            mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.pkg" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg"
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI-2.1.0.pkg" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg"
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI.app" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.app"
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg" build/GUI
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.app" build/GUI
@@ -163,7 +163,7 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_x86_64"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos_x86_64" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.pkg" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg"
+            mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI-2.1.0.pkg" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg"
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI.app" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.app"
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg" build/GUI
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.app" build/GUI
