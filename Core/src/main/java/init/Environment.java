@@ -30,8 +30,11 @@ public class Environment {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
-        if (!System.getProperty("os.arch").contains("arm")) {
-            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos" : "ffmpeg";
+        if (!System.getProperty("os.arch").contains("arm") || System.getProperty("os.arch").contains("aarch64")) {
+            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
+            Program.setFfmpegExecutableName(ffmpegExecName);
+        } else if (OS.isMac() && (System.getProperty("os.arch").contains("arm") || System.getProperty("os.arch").contains("aarch64"))) {
+            ffmpegExecName = "ffmpeg_macos-arm64";
             Program.setFfmpegExecutableName(ffmpegExecName);
         } else {
             msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions

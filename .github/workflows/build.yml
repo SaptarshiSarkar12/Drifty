@@ -18,8 +18,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  fetch-drifty-version:
+    name: Fetch latest Drifty version
+    runs-on: ubuntu-latest
+    outputs:
+      VERSION: ${{ steps.get-drifty-version.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+      - name: Get Drifty version from version.json file
+        id: get-drifty-version
+        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+
   build-Drifty:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
+    needs: fetch-drifty-version
     strategy:
       matrix:
         os: ["windows-latest", "macos-14", "ubuntu-latest", "macos-13"] # macOS 14 is Apple Silicon, macOS 13 is Intel
@@ -125,7 +139,7 @@ jobs:
             mv "CLI/target/CLI/windows/Drifty CLI.exe" "CLI/target/CLI/windows/Drifty-CLI.exe"
             mv "CLI/target/CLI/windows/Drifty-CLI.exe" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-1.0.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI.exe" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi" build/GUI
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
@@ -137,7 +151,7 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_aarch64"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos_aarch64" build/CLI
         else
-            mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI-1.0.0.pkg" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg"
+            mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.pkg" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg"
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty GUI.app" "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.app"
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.pkg" build/GUI
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.app" build/GUI
@@ -149,7 +163,7 @@ jobs:
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_x86_64"
             mv "CLI/target/CLI/macos/Drifty-CLI_macos_x86_64" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI-1.0.0.pkg" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg"
+            mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.pkg" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg"
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty GUI.app" "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.app"
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.pkg" build/GUI
             mv "GUI/target/gluonfx/x86_64-darwin/Drifty-GUI_x86_64.app" build/GUI
@@ -166,13 +180,10 @@ jobs:
   generate-metadata-and-create-release:
     name: Artifacts Metadata & Release
     runs-on: ubuntu-latest
-    needs: build-Drifty
+    needs: [build-Drifty, fetch-drifty-version]
+    env:
+      VERSION: ${{ needs.fetch-drifty-version.outputs.VERSION }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-tags: true
-    - name: Get Drifty version from version.json file
-      run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_ENV
     - name: Split up Version into semantic parts
       run: |
         echo "VERSION_NUMBER=$(echo $VERSION | cut -d '-' -f1)" >> $GITHUB_ENV
