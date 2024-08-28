@@ -91,8 +91,6 @@
             <id>build-drifty-gui-for-macos-14</id>
             <properties>
                 <package.type>pkg</package.type>
-                <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>
-                <bundleVersion>${project.shortVersionString}</bundleVersion>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-14.o</system-linker-arg>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
@@ -101,7 +99,62 @@
                 <capcache-arg3>-H:+NewCAPCache</capcache-arg3>
                 <mac.app.store>true</mac.app.store>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <version>1.0.23</version>
+                        <configuration>
+                            <enableSWRendering>true</enableSWRendering>
+                            <mainClass>${gui.main-class}</mainClass>
+                            <linkerArgs>
+                                <arg>${system-linker-arg}</arg>
+                            </linkerArgs>
+                            <nativeImageArgs>
+                                <arg>--enable-url-protocols=https</arg>
+                                <arg>--enable-url-protocols=http</arg>
+                                <arg>--no-fallback</arg>
+                                <arg>--verbose</arg>
+                                <arg>-H:ResourceConfigurationFiles=${pom.parent.basedir}/config/${resource-config-file}</arg>
+                                <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
+                                <arg>${system-native-image-arg}</arg>
+                                <arg>${compatibility-arg}</arg>
+                                <arg>${capcache-arg1}</arg>
+                                <arg>${capcache-arg2}</arg>
+                                <arg>${capcache-arg3}</arg>
+                            </nativeImageArgs>
+                            <appIdentifier>Drifty GUI</appIdentifier>
+                            <releaseConfiguration>
+                                <vendor>Drifty</vendor>
+                                <version>${project.shortVersionString}</version>
+                                <description>Drifty is an Open-Source Interactive File Downloader System</description>
+                                <packageType>${package.type}</packageType>
+                                <!-- for macOS/iOS -->
+                                <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>
+                                <bundleVersion>${project.shortVersionString}</bundleVersion>
+                                <skipSigning>true</skipSigning>
+                            </releaseConfiguration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
+<!--        <profile>-->
+<!--            <id>build-drifty-gui-for-macos-14</id>-->
+<!--            <properties>-->
+<!--                <package.type>pkg</package.type>-->
+<!--                <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>-->
+<!--                <bundleVersion>${project.shortVersionString}</bundleVersion>-->
+<!--                <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>-->
+<!--                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-14.o</system-linker-arg>-->
+<!--                <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>-->
+<!--                <compatibility-arg>-march=compatibility</compatibility-arg>-->
+<!--                <capcache-arg1>-H:CAPCacheDir=/tmp/cap</capcache-arg1>-->
+<!--                <capcache-arg3>-H:+NewCAPCache</capcache-arg3>-->
+<!--                <mac.app.store>true</mac.app.store>-->
+<!--            </properties>-->
+<!--        </profile>-->
         <!-- [macOS x86_64] GUI native image builder profile -->
         <profile>
             <id>build-drifty-gui-for-macos-13</id>
