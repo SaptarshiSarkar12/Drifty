@@ -116,7 +116,7 @@ jobs:
       run: mvn -U clean install
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       if: ${{ matrix.mode == 'GUI' }}
-      run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI
+      run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI -X
     - name: Create Application Type specific folders
       run: |
         mkdir build
