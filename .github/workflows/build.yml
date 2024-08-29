@@ -22,14 +22,18 @@ jobs:
     name: Fetch latest Drifty version
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.get-drifty-version.outputs.VERSION }}
+      VERSION: ${{ steps.get-drifty-version.outputs.VERSION }} # The full version of Drifty with the release stage and revision number
+      SHORT_VERSION: ${{ steps.get-drifty-short-version.outputs.SHORT_VERSION }} # The short version of Drifty without the release stage and revision number
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Get Drifty version from version.json file
         id: get-drifty-version
         run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+      - name: Get Drifty short version from version.json file
+        id: get-drifty-short-version
+        run: echo "SHORT_VERSION=$(jq .version version.json | sed -r 's/"//g' | cut -d '-' -f1)" >> $GITHUB_OUTPUT
 
   build-Drifty:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
@@ -139,7 +143,7 @@ jobs:
             mv "CLI/target/CLI/windows/Drifty CLI.exe" "CLI/target/CLI/windows/Drifty-CLI.exe"
             mv "CLI/target/CLI/windows/Drifty-CLI.exe" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-${{ needs.fetch-drifty-version.outputs.SHORT_VERSION }}.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI.exe" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi" build/GUI
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
