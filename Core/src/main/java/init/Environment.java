@@ -30,13 +30,18 @@ public class Environment {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
-        if (!System.getProperty("os.arch").contains("arm")) {
-            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos" : "ffmpeg";
-            Program.setFfmpegExecutableName(ffmpegExecName);
+        String osArch = System.getProperty("os.arch");
+        if (osArch.contains("arm") || osArch.contains("aarch64")) {
+            if (OS.isMac()) {
+                ffmpegExecName = "ffmpeg_macos-arm64";
+            } else {
+                msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
+                AppSettings.SET.isFfmpegWorking(false);
+            }
         } else {
-            msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
-            AppSettings.SET.isFfmpegWorking(false);
+            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
         }
+        Program.setFfmpegExecutableName(ffmpegExecName);
         String ytDlpExecName = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
         String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".drifty").toAbsolutePath().toString();
         Program.setYtDlpExecutableName(ytDlpExecName);
