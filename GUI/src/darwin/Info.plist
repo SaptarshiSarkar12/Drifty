@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>main.Drifty_GUI</string>
+	<string>io.github.SaptarshiSarkar12.Drifty-GUI</string>
 	<key>CFBundleVersion</key>
 	<string>2.1.0</string>
 	<key>CFBundleShortVersionString</key>

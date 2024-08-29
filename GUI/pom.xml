@@ -17,7 +17,6 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gui.main-class>main.Drifty_GUI</gui.main-class>
-        <project.shortVersionString>2.1.0</project.shortVersionString>
         <system-linker-arg/>
         <resource-config-file/>
         <system-native-image-arg/>
@@ -77,8 +76,8 @@
                         <packageType>${package.type}</packageType>
                         <!-- for macOS/iOS -->
                         <bundleName>Drifty GUI</bundleName>
-                        <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>
-                        <bundleVersion>${project.shortVersionString}</bundleVersion>
+                        <bundleShortVersion>${project.version}</bundleShortVersion>
+                        <bundleVersion>${project.version}</bundleVersion>
                         <skipSigning>true</skipSigning>
                     </releaseConfiguration>
                 </configuration>
@@ -92,8 +91,6 @@
             <id>build-drifty-gui-for-macos-14</id>
             <properties>
                 <package.type>pkg</package.type>
-                <bundleShortVersion>${project.shortVersionString}</bundleShortVersion>
-                <bundleVersion>${project.shortVersionString}</bundleVersion>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-14.o</system-linker-arg>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
