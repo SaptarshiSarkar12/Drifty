@@ -117,6 +117,10 @@ jobs:
     - name: Package Drifty GUI for ${{ matrix.os }} with GluonFX maven plugin
       if: ${{ matrix.mode == 'GUI' }}
       run: mvn -P build-drifty-gui-for-${{ matrix.os }} gluonfx:build gluonfx:package -rf :GUI -X
+    - name: Show the version of the generated pkg file
+      if: ${{ matrix.os == 'macos-14' && matrix.mode == 'GUI' }}
+      run: |
+        echo "Generated pkg file version: $(pkgutil --expand "GUI/target/gluonfx/aarch64-darwin/Drifty GUI-1.0.0.pkg" /tmp/pkg; cat /tmp/pkg/PackageInfo | grep ./Applications | grep -m 1 .app\" | awk '{ print $3, $2 }'; rm -rf /tmp/pkg)"
     - name: Create Application Type specific folders
       run: |
         mkdir build
