@@ -47,6 +47,7 @@ jobs:
         - name: Bump Project Version
           run: |
             mvn versions:set -D newVersion=${{ env.NEW_VERSION }} -D generateBackupPoms=false
+            mvn versions:set-property -D property=project.shortVersionString -D newVersion=${{ inputs.new_version }} -D generateBackupPoms=false
             sed -i 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/${{ env.NEW_VERSION }}/g' version.json
             sed -i 's/v\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/v${{ env.NEW_VERSION }}/g' Core/src/main/java/support/Constants.java
             sed -i 's/\([0-9]\+\.[0-9]\+\.[0-9]\+\(-[a-z]\+\.[0-9]\+\)\?\)/${{ env.NEW_VERSION }}/g' GUI/src/darwin/Info.plist
