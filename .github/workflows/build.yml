@@ -139,7 +139,7 @@ jobs:
             mv "CLI/target/CLI/windows/Drifty CLI.exe" "CLI/target/CLI/windows/Drifty-CLI.exe"
             mv "CLI/target/CLI/windows/Drifty-CLI.exe" build/CLI
         else
-            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-2.1.0.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
+            mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI-${{ needs.fetch-drifty-version.outputs.VERSION }}.msi" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty GUI.exe" "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe"
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.msi" build/GUI
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
