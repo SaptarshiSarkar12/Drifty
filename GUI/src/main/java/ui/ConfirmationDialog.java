@@ -35,6 +35,7 @@ public class ConfirmationDialog {
     private final State state;
     private final String lf = System.lineSeparator();
     private static Button btnNo;
+    private static Button btnOk;
     private static Button btnYes;
     private double width = 200;
     private double height = 150;
@@ -118,7 +119,7 @@ public class ConfirmationDialog {
             answer.setAnswer(false);
             stage.close();
         });
-        Button btnOk = newButton("OK", e -> stage.close());
+        btnOk = newButton("OK", e -> stage.close());
         TextField tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
         tfFilename.setMaxWidth(width * .8);
@@ -165,6 +166,7 @@ public class ConfirmationDialog {
             Theme.applyTheme("Dark", scene);
             Theme.changeButtonStyle(true, btnYes);
             Theme.changeButtonStyle(true, btnNo);
+            Theme.changeButtonStyle(true, btnOk);
         } else {
             Theme.applyTheme("Light", scene);
         }

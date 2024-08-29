@@ -55,6 +55,8 @@ import static utils.Utility.*;
 public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
+    private Stage helpStage;
+
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
     private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
@@ -626,7 +628,7 @@ public final class UIController {
     private ContextMenu getListMenu() {
         MenuItem miDel = new MenuItem("Delete");
         MenuItem miClear = new MenuItem("Clear");
-        MenuItem miInfo = new MenuItem("Information");
+        MenuItem miHelp = new MenuItem("Help");
         SeparatorMenuItem separator = new SeparatorMenuItem();
         miDel.setOnAction(e -> {
             Job job = form.listView.getSelectionModel().getSelectedItem();
@@ -646,8 +648,8 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miInfo.setOnAction(e -> help());
-        return new ContextMenu(miDel, miClear, separator, miInfo);
+        miHelp.setOnAction(e -> handleHelpWindow());
+        return new ContextMenu(miDel, miClear, separator, miHelp);
     }
 
     private void setDirContextMenu() {
@@ -878,10 +880,9 @@ public final class UIController {
 
         double width = 500;
         double height = 700;
-        Button btnOK = new Button("OK");
-        Stage stage = Constants.getStage("Help", false);
-        stage.setWidth(width);
-        stage.setHeight(height + 100);
+        helpStage = Constants.getStage("Help", false);
+        helpStage.setWidth(width);
+        helpStage.setHeight(height + 100);
         VBox vox = new VBox(20, INFO_TF);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
@@ -895,20 +896,26 @@ public final class UIController {
         scrollPane.setPrefHeight(height);
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
+        infoScene.setFill(Color.TRANSPARENT);
         if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
-
-        infoScene.setFill(Color.TRANSPARENT);
-        stage.setScene(infoScene);
-        stage.setAlwaysOnTop(true);
-        stage.setTitle("Help");
-        stage.setOnCloseRequest(e -> stage.close());
+        helpStage.setScene(infoScene);
+        helpStage.setAlwaysOnTop(true);
+        helpStage.setTitle("Help");
+        helpStage.setOnCloseRequest(e -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
-        btnOK.setOnAction(e -> stage.close());
         scrollPane.setVvalue(0.0);
-        stage.showAndWait();
+        helpStage.showAndWait();
+    }
+
+    public void handleHelpWindow() {
+        if (helpStage != null && helpStage.isShowing()) {
+            helpStage.toFront();
+        } else {
+            help();
+        }
     }
 
     private Text text(String string, boolean bold, Color color, double size) {
