@@ -30,10 +30,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get Drifty version from version.json file
         id: get-drifty-version
-        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(jq .version version.json | sed -r 's/"//g')" >> "$GITHUB_OUTPUT"
       - name: Get Drifty short version from version.json file
         id: get-drifty-short-version
-        run: echo "SHORT_VERSION=$(jq .version version.json | sed -r 's/"//g' | cut -d '-' -f1)" >> $GITHUB_OUTPUT
+        run: echo "SHORT_VERSION=$(jq .version version.json | sed -r 's/"//g' | cut -d '-' -f1)" >> "$GITHUB_OUTPUT"
 
   build-Drifty:
     name: Build [${{ matrix.os }}, ${{ matrix.mode }}]
