@@ -26,6 +26,6 @@ export async function getData() {
   const release = await res.json();
   return {
     release,
-    revalidate: 60,
+    revalidate: 360,
   };
 }
