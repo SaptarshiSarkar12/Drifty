@@ -131,6 +131,8 @@
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/DrawPgram_Color.frag\\E"
   }, {
+    "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/DrawRoundRect_Color.frag\\E"
+  }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/FillPgram_Color.frag\\E"
   }, {
     "pattern":"javafx.graphics:\\Qcom/sun/prism/es2/glsl/FillPgram_LinearGradient_PAD.frag\\E"
