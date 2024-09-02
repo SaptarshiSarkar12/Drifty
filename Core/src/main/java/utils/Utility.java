@@ -860,4 +860,66 @@ public class Utility {
             return 0;
         }
     }
+
+    /**
+     * Extracts the specified query parameters from the given URL. If no parameter names are provided (null or empty), all parameters are returned.
+     *
+     * @param urlLink   The URL string from which to extract parameters.
+     * @param paramNames The names of the query parameters to extract. If null or empty, all parameters will be returned.
+     * @return A map containing the query parameter names and their corresponding values.
+     */
+    public static Map<String, String> extractQueryParams(String urlLink, String... paramNames) {
+        Map<String, String> paramMap = new HashMap<>();
+
+        URL url = null;
+        try {
+            url = URI.create(urlLink).toURL();
+        } catch (MalformedURLException e) {
+            M.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
+        }
+        String query = url != null ? url.getQuery() : null;
+
+        // query is null or empty, return an empty map (no query parameters)
+        if (query == null || query.isEmpty()) {
+            return paramMap;
+        }
+
+        // splitting query string into individual parameters
+        String[] params = query.split("&");
+
+        // check if specific parameters are requested or if all should be returned
+        boolean returnAllParams = (paramNames == null || paramNames.length == 0);
+
+        for (String param : params) {
+            String[] pair = param.split("=");
+            if (pair.length == 2) {
+                String paramName = pair[0];
+                String paramValue = pair[1];
+
+                // add parameter to the map if it's requested or if all parameters should be returned
+                if (returnAllParams || contains(paramNames, paramName)) {
+                    paramMap.put(paramName, paramValue);
+                }
+            }
+        }
+
+        return paramMap;
+    }
+
+    /**
+     * Helper method to check if an array contains a specific value.
+     *
+     * @param array The array to check.
+     * @param value The value to search for.
+     * @return True if the array contains the value, false otherwise.
+     */
+    private static boolean contains(String[] array, String value) {
+        if (array == null) return false;
+        for (String item : array) {
+            if (item.equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
