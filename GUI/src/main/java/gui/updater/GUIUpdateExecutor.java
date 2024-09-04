@@ -58,6 +58,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
                 M.msgUpdateError("Failed to start the latest version of Drifty!");
             }
             if (OS.isWindows()) {
+                Paths.get(currentExecutablePathString + ".old").toFile().deleteOnExit();
                 System.exit(0);
             } else {
                 try {
