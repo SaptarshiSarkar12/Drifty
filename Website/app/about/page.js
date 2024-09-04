@@ -67,22 +67,22 @@ export default function about() {
               width="0"
               height="0"
               style={{ width: "100%", height: "auto" }}
-              src="https://camo.githubusercontent.com/bfb749217193aa06c1ba75f130ad01c6d67a0c596c604b1bea8dd9509cabf097/68747470733a2f2f6769746875622d726561646d652d73746174732e76657263656c2e6170702f6170693f757365726e616d653d7361707461727368697361726b617231322673686f775f69636f6e733d74727565267468656d653d746f6b796f6e696768742673686f773d72657669657773"
-              alt=""
+              src="https://github-readme-stats.vercel.app/api?username=saptarshisarkar12&show_icons=true&theme=tokyonight&show=reviews"
+              alt="GitHub Stats of Saptarshi Sarkar"
             />
             <Image
               width="0"
               height="0"
               style={{ width: "100%", height: "auto" }}
-              src="https://camo.githubusercontent.com/a1774c77529d275b27f41ee35b03f0e99ae219328594fa8b9c54efa78851de96/68747470733a2f2f6769746875622d726561646d652d61637469766974792d67726170682e76657263656c2e6170702f67726170683f757365726e616d653d5361707461727368695361726b617231322662675f636f6c6f723d30663264336426636f6c6f723d316361646662266c696e653d31636164666226706f696e743d31636164666226617265613d7472756526686964655f626f726465723d74727565"
+              src="https://github-readme-activity-graph.vercel.app/graph?username=SaptarshiSarkar12&bg_color=0f2d3d&color=1cadfb&line=1cadfb&point=1cadfb&area=true&hide_border=true"
               alt="GitHub Contribution graph of Saptarshi Sarkar"
             />
             <Image
               width="0"
               height="0"
               style={{ width: "100%", height: "auto" }}
-              src="https://camo.githubusercontent.com/1825f31f8281e10d9490f2df42bfd4d3ba9bb6923bbf11bee69e38c4b0e14bfb/68747470733a2f2f6769746875622d726561646d652d73747265616b2d73746174732e6865726f6b756170702e636f6d2f3f757365723d7361707461727368697361726b61723132267468656d653d746f6b796f6e69676874"
-              alt=""
+              src="https://github-readme-streak-stats.herokuapp.com/?user=saptarshisarkar12&theme=tokyonight"
+              alt="GitHub Streak Stats of Saptarshi Sarkar"
             />
           </div>
         </div>
