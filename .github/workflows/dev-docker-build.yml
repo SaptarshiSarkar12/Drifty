@@ -28,16 +28,33 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Pull runtime os image # to patch vulnerabilities
+        if: matrix.os == 'ubuntu-latest'
+        run: docker pull oraclelinux:9-slim
+      - name: Build latest version of Copa # to support Oracle Linux yum packages
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          git clone https://github.com/project-copacetic/copacetic
+          cd copacetic
+          make
+          sudo mv dist/linux_amd64/release/copa /usr/local/bin/
+      - name: Run Copa to patch vulnerabilities
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
+          copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --ignore-errors
+          docker stop buildkitd
       - name: Build Docker image
         run: |
           docker compose build base
           docker compose build runner
           docker compose build ${{ matrix.image_name_suffix }}
       - name: Run Trivy security scan
+        if: matrix.os == 'ubuntu-latest'
         uses: aquasecurity/trivy-action@0.24.0
         continue-on-error: true
         with:
-          image-ref: drifty-${{ matrix.image_name_suffix }}
+          image-ref: "drifty-${{ matrix.image_name_suffix }}"
           format: 'sarif'
           exit-code: 1
           vuln-type: os,library
@@ -46,7 +63,7 @@ jobs:
           hide-progress: false
           scanners: vuln,secret,misconfig
       - name: Upload Trivy security scan results
-        if: always()
+        if: always() && matrix.os == 'ubuntu-latest'
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: trivy-report.sarif
