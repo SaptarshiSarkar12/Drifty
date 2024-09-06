@@ -179,7 +179,7 @@ public class ConfirmationDialog {
             answer.setAnswer(false);
             stage.close();
         });
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.showAndWait();
     }
 
