@@ -42,7 +42,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
-          copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --ignore-errors
+          copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --ignore-errors --timeout 10m
           docker stop buildkitd
       - name: Build Docker image
         run: |
