@@ -1,5 +1,7 @@
 package gui.updater;
 
+import gui.init.Environment;
+import gui.preferences.AppSettings;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
@@ -7,8 +9,6 @@ import properties.OS;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 public class GUIUpdateExecutor extends updater.UpdateExecutor {
 
@@ -29,48 +29,32 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
             ProcResult executionResult = new ProcBuilder("open").withArgs(latestExecutableFile.getAbsolutePath()).withNoTimeout().ignoreExitStatus().run();
             if (executionResult.getExitValue() != 0) {
                 M.msgUpdateError("Failed to open the installer for the latest version of Drifty!");
+                return false;
             } else {
-                System.exit(0);
+                AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+                Environment.terminate(0);
             }
         } else {
-            String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
             try {
-                Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+                Files.deleteIfExists(oldExecutableFile.toPath());
             } catch (IOException e) {
                 M.msgUpdateError("Failed to delete the old version of Drifty!");
             }
-            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
+            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(oldExecutableFile);
             if (!isCurrentExecutableRenamed) {
                 M.msgUpdateError("Failed to rename the current version of Drifty!");
                 return false;
             }
-            try {
-                Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
-                M.msgUpdateInfo("Update successful!");
-            } catch (IOException e) {
+            if (replaceCurrentExecutable()) {
                 try {
-                    Files.copy(latestExecutableFile.toPath(), Paths.get(currentExecutablePathString), StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception ex) {
-                    M.msgUpdateError("Failed to replace the current version of Drifty!\n" + ex.getMessage());
-                    return false;
-                }
-            }
-            try {
-                runCurrentExecutable.start();
-            } catch (IOException e) {
-                M.msgUpdateError("Failed to start the latest version of Drifty!");
-            }
-            if (OS.isWindows()) {
-                Paths.get(currentExecutablePathString + ".old").toFile().deleteOnExit();
-                System.exit(0);
-            } else {
-                try {
-                    Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
-                    System.exit(0);
+                    runCurrentExecutable.start();
                 } catch (IOException e) {
-                    M.msgUpdateError("Failed to delete the old version of Drifty!");
+                    M.msgUpdateError("Failed to start the latest version of Drifty!");
                 }
+                cleanup();
+            } else {
+                return false;
             }
         }
         return true;

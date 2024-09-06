@@ -91,7 +91,7 @@ public class MessageBroker {
     protected void sendMessage(String message, MessageType messageType, MessageCategory messageCategory) {
         logger.log(messageType, message);
         message = switch (messageType) {
-            case INFO -> messageCategory == MessageCategory.INPUT ? "\033[94m" + message + "\033[0m" : "\033[92m" + message + "\033[0m";
+            case INFO -> (messageCategory == MessageCategory.INPUT || messageCategory == MessageCategory.UPDATE) ? "\033[94m" + message + "\033[0m" : "\033[92m" + message + "\033[0m";
             case WARN -> "\033[93m" + message + "\033[0m";
             case ERROR -> "\033[91m" + message + "\033[0m";
         };

@@ -1,21 +1,29 @@
 package updater;
 
 import init.Environment;
+import preferences.AppSettings;
+import properties.OS;
 import utils.MessageBroker;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public abstract class UpdateExecutor {
     protected static final MessageBroker M = Environment.getMessageBroker();
+    protected File oldExecutableFile;
     protected File currentExecutableFile;
     protected File latestExecutableFile;
 
-    public UpdateExecutor(File currentExecutableFile, File latestExecutableFile) {
+    protected UpdateExecutor(File currentExecutableFile, File latestExecutableFile) {
         this.currentExecutableFile = currentExecutableFile;
         this.latestExecutableFile = latestExecutableFile;
+        this.oldExecutableFile = Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile();
     }
 
-    public boolean setLatestExecutablePermissions() {
+    protected boolean setLatestExecutablePermissions() {
         boolean isExecutablePermissionGranted = latestExecutableFile.setExecutable(true);
         if (!isExecutablePermissionGranted) {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
@@ -34,5 +42,35 @@ public abstract class UpdateExecutor {
         return true;
     }
 
-    public abstract boolean execute();
+    protected void cleanup() {
+        try {
+            if (OS.isWindows()) {
+                oldExecutableFile.deleteOnExit();
+            } else {
+                Files.deleteIfExists(oldExecutableFile.toPath());
+            }
+            Environment.terminate(0);
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to delete the old version of Drifty!");
+        } finally {
+            AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+        }
+    }
+
+    protected boolean replaceCurrentExecutable() {
+        try {
+            Files.move(latestExecutableFile.toPath(), currentExecutableFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            M.msgUpdateInfo("Update successful!");
+        } catch (IOException e) {
+            try {
+                Files.copy(latestExecutableFile.toPath(), currentExecutableFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception ex) {
+                M.msgUpdateError("Failed to replace the current version of Drifty!\n" + ex.getMessage());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected abstract boolean execute();
 }

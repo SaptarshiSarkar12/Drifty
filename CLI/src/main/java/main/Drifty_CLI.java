@@ -343,6 +343,9 @@ public class Drifty_CLI {
                         Environment.terminate(1);
                     }
                 }
+            } else {
+                messageBroker.msgUpdateInfo("Drifty is up to date!");
+                Environment.terminate(0);
             }
         }
     }

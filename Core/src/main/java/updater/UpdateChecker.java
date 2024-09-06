@@ -85,9 +85,11 @@ public class UpdateChecker {
     }
 
     public static boolean compareVersions(String currentVersion, String latestVersion) {
+        if (currentVersion.equals(latestVersion)) {
+            return false;
+        }
         String[] currentVersionParts = getTagParts(currentVersion);
         String[] latestVersionParts = getTagParts(latestVersion);
-
         // Check major, minor, and patch versions
         for (int i = 0; i < 3; i++) {
             int cvPart = Utility.parseStringToInt(currentVersionParts[i], "Failed to parse current version part " + i, MessageCategory.UPDATE);

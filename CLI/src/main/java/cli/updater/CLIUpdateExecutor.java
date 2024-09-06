@@ -1,12 +1,8 @@
 package cli.updater;
 
-import properties.OS;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 public class CLIUpdateExecutor extends updater.UpdateExecutor {
     public CLIUpdateExecutor(File currentExecutableFile, File latestExecutableFile) {
@@ -19,28 +15,24 @@ public class CLIUpdateExecutor extends updater.UpdateExecutor {
         if (setLatestExecutablePermissions()) {
             M.msgLogInfo("Executing update...");
         } else {
+            M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
             return false;
         }
-        String currentExecutablePath = currentExecutableFile.toPath().toString();
-        boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
+        try {
+            Files.deleteIfExists(oldExecutableFile.toPath());
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to delete the old version of Drifty!");
+        }
+        boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(oldExecutableFile);
         if (!isCurrentExecutableRenamed) {
             M.msgUpdateError("Failed to rename the current executable!");
             return false;
         }
-        try {
-            Files.move(latestExecutableFile.toPath(), Paths.get(currentExecutablePath), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            M.msgUpdateError("Failed to replace the current executable with the latest version!");
+        if (replaceCurrentExecutable()) {
+            cleanup();
+            return true;
+        } else {
             return false;
         }
-        if (!OS.isWindows()) {
-            try {
-                Files.deleteIfExists(Paths.get(currentExecutablePath + ".old"));
-            } catch (IOException e) {
-                M.msgUpdateError("Failed to delete the old version of Drifty!");
-                return false;
-            }
-        }
-        return true;
     }
 }
