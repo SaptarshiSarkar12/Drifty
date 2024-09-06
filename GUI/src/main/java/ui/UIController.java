@@ -95,15 +95,7 @@ public final class UIController {
         new Thread(() -> {
             if (AppSettings.GET.driftyUpdateAvailable()) {
                 M.msgLogInfo("A new version of Drifty is available!");
-                if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
-                    ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
-                    if (ask.getResponse().isYes()) {
-                        downloadUpdate();
-                    }
-                } else {
-                    ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
-                    ask.getResponse().isYes();
-                }
+                showUpdateDialog();
             }
         }).start();
         form = pane;
@@ -111,6 +103,18 @@ public final class UIController {
         setControlActions();
         form.tfLink.requestFocus();
         commitJobListToListView();
+    }
+
+    public void showUpdateDialog() {
+        if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            if (ask.getResponse().isYes()) {
+                downloadUpdate();
+            }
+        } else {
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ask.getResponse().isYes();
+        }
     }
 
     private void downloadUpdate() {

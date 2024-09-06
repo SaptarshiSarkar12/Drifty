@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import properties.Mode;
 import ui.*;
+import updater.UpdateChecker;
 import utils.Utility;
 
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
@@ -137,19 +138,28 @@ public class Drifty_GUI extends Application {
         MenuItem bug = new MenuItem("Report a Bug");
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
+        MenuItem checkForUpdates = new MenuItem("Check for Updates");
         MenuItem about = new MenuItem("About Drifty");
         contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
         contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        checkForUpdates.setOnAction(e -> {
+            if (UpdateChecker.isUpdateAvailable()) {
+                UIController.INSTANCE.showUpdateDialog();
+            } else {
+                ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
+                noUpdate.getResponse();
+            }
+        });
         about.setOnAction(event -> {
             if (aboutInstance == null) {
                 aboutInstance = new About();
             }
             aboutInstance.show();
         });
-        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
+        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
         return menu;
     }
 

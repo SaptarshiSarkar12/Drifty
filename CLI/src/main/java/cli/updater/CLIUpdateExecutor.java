@@ -16,7 +16,7 @@ public class CLIUpdateExecutor extends updater.UpdateExecutor {
     @Override
     public boolean execute() {
         M.msgLogInfo("Setting executable permission for the latest version of Drifty...");
-        if (setExecutablePermissions()) {
+        if (setLatestExecutablePermissions()) {
             M.msgLogInfo("Executing update...");
         } else {
             return false;

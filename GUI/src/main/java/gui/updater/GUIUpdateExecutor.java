@@ -19,7 +19,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
     @Override
     public boolean execute() {
         M.msgLogInfo("Download successful! Setting executable permission...");
-        if (setExecutablePermissions()) {
+        if (setLatestExecutablePermissions()) {
             M.msgLogInfo("Executable permission set! Executing update...");
         } else {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
@@ -35,6 +35,11 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         } else {
             String currentExecutablePathString = currentExecutableFile.toPath().toString();
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
+            try {
+                Files.deleteIfExists(Paths.get(currentExecutablePathString + ".old"));
+            } catch (IOException e) {
+                M.msgUpdateError("Failed to delete the old version of Drifty!");
+            }
             boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(Paths.get(currentExecutableFile.getParent()).resolve(currentExecutableFile.getName() + ".old").toFile());
             if (!isCurrentExecutableRenamed) {
                 M.msgUpdateError("Failed to rename the current version of Drifty!");

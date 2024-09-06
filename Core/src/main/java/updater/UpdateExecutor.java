@@ -15,7 +15,7 @@ public abstract class UpdateExecutor {
         this.latestExecutableFile = latestExecutableFile;
     }
 
-    public boolean setExecutablePermissions() {
+    public boolean setLatestExecutablePermissions() {
         boolean isExecutablePermissionGranted = latestExecutableFile.setExecutable(true);
         if (!isExecutablePermissionGranted) {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
