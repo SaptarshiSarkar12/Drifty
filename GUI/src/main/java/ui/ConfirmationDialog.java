@@ -162,14 +162,7 @@ public class ConfirmationDialog {
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
-            Theme.applyTheme("Dark", scene);
-            Theme.changeButtonStyle(true, btnYes);
-            Theme.changeButtonStyle(true, btnNo);
-            Theme.changeButtonStyle(true, btnOk);
-        } else {
-            Theme.applyTheme("Light", scene);
-        }
+        Theme.applyTheme(AppSettings.GET.mainTheme(), scene);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setScene(scene);
@@ -197,5 +190,9 @@ public class ConfirmationDialog {
 
     static Button getBtnYes() {
         return btnYes;
+    }
+
+    static Button getBtnOk() {
+        return btnOk;
     }
 }

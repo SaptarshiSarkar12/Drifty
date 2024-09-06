@@ -54,7 +54,11 @@ public class Drifty_CLI {
         messageBroker = new MessageBroker(System.out);
         Environment.setCLIMessageBroker(messageBroker);
         utility = new Utility();
-        checkAndUpdateDrifty(true);
+        if (Utility.isOffline()) {
+            messageBroker.msgUpdateWarning("Failed to check for updates! You are not connected to the internet.");
+        } else {
+            checkAndUpdateDrifty(true);
+        }
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
@@ -92,7 +96,14 @@ public class Drifty_CLI {
                         printVersion();
                         Environment.terminate(0);
                     }
-                    case UPDATE_FLAG, UPDATE_FLAG_SHORT -> checkAndUpdateDrifty(false);
+                    case UPDATE_FLAG, UPDATE_FLAG_SHORT -> {
+                        if (Utility.isOffline()) {
+                            messageBroker.msgUpdateError("Failed to check for updates! You are not connected to the internet.");
+                            Environment.terminate(1);
+                        } else {
+                            checkAndUpdateDrifty(false);
+                        }
+                    }
                     case EARLY_ACCESS_FLAG, EARLY_ACCESS_FLAG_SHORT -> {
                         AppSettings.SET.earlyAccess(!AppSettings.GET.earlyAccess());
                         messageBroker.msgInitInfo("Early access mode " + (AppSettings.GET.earlyAccess() ? "enabled!" : "disabled!"));

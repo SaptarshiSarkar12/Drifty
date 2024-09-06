@@ -57,7 +57,7 @@ public class Environment {
         CopyExecutables copyExecutables = new CopyExecutables(new String[]{ytDlpExecName, ffmpegExecName});
         try {
             copyExecutables.start();
-            if (!isYtDLPUpdated()) {
+            if (!isYtDLPUpdated() && !Utility.isOffline()) {
                 checkAndUpdateYtDlp();
             }
         } catch (IOException e) {
@@ -117,13 +117,21 @@ public class Environment {
 
     public static boolean hasAdminPrivileges() {
         try {
+            msgBroker.msgLogInfo("Determining current executable folder path...");
             Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            msgBroker.msgLogInfo("Current executable folder path: " + currentExecutableFolderPath);
+
             Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
+            msgBroker.msgLogInfo("Creating test file at: " + adminTestFilePath);
             Files.createFile(adminTestFilePath);
+
+            msgBroker.msgLogInfo("Deleting test file at: " + adminTestFilePath);
             Files.deleteIfExists(adminTestFilePath);
+
+            msgBroker.msgLogInfo("Admin privileges confirmed.");
             return true;
         } catch (URISyntaxException e) {
-            msgBroker.msgInitError("Failed to get the current executable folder! " + e.getMessage());
+            msgBroker.msgInitError("Failed to get the current executable path! " + e.getMessage());
             return false;
         } catch (AccessDeniedException e) {
             msgBroker.msgInitError("You are not running Drifty as an administrator! " + e.getMessage());

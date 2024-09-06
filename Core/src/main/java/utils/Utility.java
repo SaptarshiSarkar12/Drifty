@@ -63,6 +63,22 @@ public class Utility {
         return isYoutube(link) || isInstagram(link) || isSpotify(link);
     }
 
+    public static boolean isOffline() {
+        try {
+            URL projectWebsite = URI.create(DRIFTY_WEBSITE_URL).toURL();
+            HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
+            connectProjectWebsite.connect();
+            return false;
+        } catch (UnknownHostException e) {
+            return true;
+        } catch (MalformedURLException e) {
+            msgBroker.msgLinkError("The link is not correctly formatted! " + e.getMessage());
+        } catch (IOException e) {
+            msgBroker.msgLinkError("Failed to connect to the project website! " + e.getMessage());
+        }
+        return true;
+    }
+
     public static boolean isLinkValid(String link) {
         try {
             URL url = URI.create(link).toURL();
@@ -74,17 +90,10 @@ public class Utility {
         } catch (ConnectException e) {
             msgBroker.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
         } catch (UnknownHostException unknownHost) {
-            try {
-                URL projectWebsite = URI.create(DRIFTY_WEBSITE_URL).toURL();
-                HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
-                connectProjectWebsite.connect();
-                msgBroker.msgLinkError(INVALID_LINK); // If our project website can be connected to, then the one entered by user is not valid! [NOTE: UnknownHostException is thrown if either internet is not connected or the website address is incorrect]
-            } catch (UnknownHostException e) {
+            if (isOffline()) {
                 msgBroker.msgLinkError("You are not connected to the Internet!");
-            } catch (MalformedURLException e) {
-                msgBroker.msgLinkError("The link is not correctly formatted! " + e.getMessage());
-            } catch (IOException e) {
-                msgBroker.msgLinkError("Failed to connect to the project website! " + e.getMessage());
+            } else {
+                msgBroker.msgLinkError(INVALID_LINK);
             }
         } catch (ProtocolException e) {
             msgBroker.msgLinkError("An error occurred with the protocol! " + e.getMessage());
@@ -93,7 +102,7 @@ public class Utility {
         } catch (IOException e) {
             msgBroker.msgLinkError("Failed to connect to " + link + " ! " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            msgBroker.msgLinkError(link + " is not a URL; error: " + e.getMessage());
+            msgBroker.msgLinkError(link + " is not a URL; Error: " + e.getMessage());
         }
         return false;
     }
@@ -787,7 +796,7 @@ public class Utility {
                 JsonObject jsonObject = JsonParser.parseString(responseContent.toString()).getAsJsonObject();
                 AppSettings.SET.spotifyAccessToken(jsonObject.get("access_token").getAsString());
             } catch (UnknownHostException e) {
-                msgBroker.msgInitError("You are not connected to the Internet!");
+                msgBroker.msgLogError("You are not connected to the Internet!");
                 ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
                 executor.schedule(setSpotifyAccessToken(), 5, TimeUnit.SECONDS); // retry after 5 seconds
             } catch (IOException e) {

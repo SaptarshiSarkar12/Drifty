@@ -24,36 +24,38 @@ public abstract class UpdateExecutor {
     }
 
     protected boolean setLatestExecutablePermissions() {
-        boolean isExecutablePermissionGranted = latestExecutableFile.setExecutable(true);
-        if (!isExecutablePermissionGranted) {
-            M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
-            return false;
-        }
-        boolean isWritePermissionGranted = latestExecutableFile.setWritable(true);
-        if (!isWritePermissionGranted) {
-            M.msgUpdateError("Failed to set write permission for the latest version of Drifty!");
-            return false;
-        }
-        boolean isReadPermissionGranted = latestExecutableFile.setReadable(true);
-        if (!isReadPermissionGranted) {
-            M.msgUpdateError("Failed to set read permission for the latest version of Drifty!");
-            return false;
-        }
-        return true;
+        return setPermission("executable") && setPermission("writeable") && setPermission("readable");
     }
 
-    protected void cleanup() {
+    private boolean setPermission(String permissionType) {
+        boolean granted = switch (permissionType) {
+            case "executable" -> latestExecutableFile.setExecutable(true);
+            case "writeable" -> latestExecutableFile.setWritable(true);
+            case "readable" -> latestExecutableFile.setReadable(true);
+            default -> false;
+        };
+        if (!granted) {
+            M.msgUpdateError("Failed to set " + permissionType + " permission for the latest version of Drifty!");
+        }
+        return granted;
+    }
+
+    protected void cleanup(boolean deleteImmediately) {
         try {
-            if (OS.isWindows()) {
-                oldExecutableFile.deleteOnExit();
-            } else {
+            if (deleteImmediately || !OS.isWindows()) {
                 Files.deleteIfExists(oldExecutableFile.toPath());
+            } else {
+                oldExecutableFile.deleteOnExit();
             }
-            Environment.terminate(0);
+            if (!deleteImmediately) {
+                Environment.terminate(0);
+            }
         } catch (IOException e) {
-            M.msgUpdateError("Failed to delete the old version of Drifty!");
+            M.msgUpdateError("Failed to delete the old version of Drifty!\n" + e.getMessage());
         } finally {
-            AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+            if (!deleteImmediately) {
+                AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+            }
         }
     }
 
@@ -68,6 +70,15 @@ public abstract class UpdateExecutor {
                 M.msgUpdateError("Failed to replace the current version of Drifty!\n" + ex.getMessage());
                 return false;
             }
+        }
+        return true;
+    }
+
+    protected boolean renameCurrentExecutable() {
+        boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(oldExecutableFile);
+        if (!isCurrentExecutableRenamed) {
+            M.msgUpdateError("Failed to rename the current executable!");
+            return false;
         }
         return true;
     }

@@ -113,7 +113,7 @@ public final class UIController {
             }
         } else {
             ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
-            ask.getResponse().isYes();
+            ask.getResponse();
         }
     }
 

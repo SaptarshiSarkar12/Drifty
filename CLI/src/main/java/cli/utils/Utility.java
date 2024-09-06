@@ -23,7 +23,7 @@ public class Utility extends utils.Utility {
                 filename = Utility.getFilenameFromJson(json);
             }
             if (filename.isEmpty()) {
-                msgBroker.msgFilenameError("Filename detection failed!");
+                msgBroker.msgFilenameError("Filename detection failed: No filename found in metadata!");
                 return null;
             }
         } else {

@@ -19,6 +19,10 @@ public class UpdateChecker {
     private static final MessageBroker M = Environment.getMessageBroker();
 
     public static boolean isUpdateAvailable() {
+        if (Utility.isOffline()) {
+            M.msgInitError("Failed to check for updates! You are not connected to the internet.");
+            return false;
+        }
         String latestVersion;
         if (AppSettings.GET.earlyAccess()) {
             latestVersion = getLatestPreReleaseVersion();

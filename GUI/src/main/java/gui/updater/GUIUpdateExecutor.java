@@ -8,7 +8,6 @@ import properties.OS;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class GUIUpdateExecutor extends updater.UpdateExecutor {
 
@@ -26,36 +25,33 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
             return false;
         }
         if (OS.isMac()) {
-            ProcResult executionResult = new ProcBuilder("open").withArgs(latestExecutableFile.getAbsolutePath()).withNoTimeout().ignoreExitStatus().run();
-            if (executionResult.getExitValue() != 0) {
-                M.msgUpdateError("Failed to open the installer for the latest version of Drifty!");
-                return false;
-            } else {
-                AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
-                Environment.terminate(0);
-            }
+            return executeMacUpdate();
         } else {
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
-            try {
-                Files.deleteIfExists(oldExecutableFile.toPath());
-            } catch (IOException e) {
-                M.msgUpdateError("Failed to delete the old version of Drifty!");
-            }
-            boolean isCurrentExecutableRenamed = currentExecutableFile.renameTo(oldExecutableFile);
-            if (!isCurrentExecutableRenamed) {
-                M.msgUpdateError("Failed to rename the current version of Drifty!");
-                return false;
-            }
-            if (replaceCurrentExecutable()) {
-                try {
-                    runCurrentExecutable.start();
-                } catch (IOException e) {
-                    M.msgUpdateError("Failed to start the latest version of Drifty!");
+            cleanup(true); // This will delete the old executable created previously
+            if (renameCurrentExecutable()) {
+                if (replaceCurrentExecutable()) {
+                    try {
+                        runCurrentExecutable.start();
+                    } catch (IOException e) {
+                        M.msgUpdateError("Failed to start the latest version of Drifty!");
+                    }
+                    cleanup(false);
+                    return true;
                 }
-                cleanup();
-            } else {
-                return false;
             }
+        }
+        return false;
+    }
+
+    private boolean executeMacUpdate() {
+        ProcResult executionResult = new ProcBuilder("open").withArgs(latestExecutableFile.getAbsolutePath()).withNoTimeout().ignoreExitStatus().run();
+        if (executionResult.getExitValue() != 0) {
+            M.msgUpdateError("Failed to open the installer for the latest version of Drifty! Error code: " + executionResult.getExitValue());
+            return false;
+        } else {
+            AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+            Environment.terminate(0);
         }
         return true;
     }

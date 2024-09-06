@@ -146,11 +146,16 @@ public class Drifty_GUI extends Application {
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
         checkForUpdates.setOnAction(e -> {
-            if (UpdateChecker.isUpdateAvailable()) {
-                UIController.INSTANCE.showUpdateDialog();
+            if (Utility.isOffline()) {
+                ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
+                noInternet.getResponse();
             } else {
-                ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
-                noUpdate.getResponse();
+                if (UpdateChecker.isUpdateAvailable()) {
+                    UIController.INSTANCE.showUpdateDialog();
+                } else {
+                    ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
+                    noUpdate.getResponse();
+                }
             }
         });
         about.setOnAction(event -> {
