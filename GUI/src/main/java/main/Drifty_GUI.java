@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import properties.Mode;
 import ui.*;
+import updater.UpdateChecker;
 import utils.Utility;
 
 import static gui.support.Constants.GUI_APPLICATION_TERMINATED;
@@ -32,6 +33,7 @@ public class Drifty_GUI extends Application {
     private Stage primaryStage;
 
     public static void main(String[] args) {
+        Mode.setGUIMode();
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
         launch(args);
     }
@@ -39,21 +41,20 @@ public class Drifty_GUI extends Application {
     @Override
     public void init() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        Mode.setGUIMode();
         msgBroker = new MessageBroker();
         Environment.setGUIMessageBroker(msgBroker);
         msgBroker.msgLogInfo("Drifty GUI (Graphical User Interface) Application Started !");
+        Environment.initializeEnvironment();
+        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START));
     }
 
     @Override
     public void start(Stage primaryStage) {
-        Environment.initializeEnvironment();
         this.primaryStage = Constants.getStage("Drifty GUI", true);
         this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
         this.primaryStage.setMinHeight(Constants.SCREEN_HEIGHT * .8125);
         createScene();
         this.primaryStage.setScene(scene);
-        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_LOAD));
         this.primaryStage.show();
     }
 
@@ -137,20 +138,38 @@ public class Drifty_GUI extends Application {
         MenuItem bug = new MenuItem("Report a Bug");
         MenuItem securityVulnerability = new MenuItem("Report a Security Vulnerability");
         MenuItem feature = new MenuItem("Suggest a Feature");
+        MenuItem checkForUpdates = new MenuItem("Check for Updates");
         MenuItem about = new MenuItem("About Drifty");
         contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
         contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        checkForUpdates.setOnAction(e -> {
+            if (Utility.isOffline()) {
+                ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
+                noInternet.getResponse();
+            } else {
+                new Thread(this::checkForUpdates).start();
+            }
+        });
         about.setOnAction(event -> {
             if (aboutInstance == null) {
                 aboutInstance = new About();
             }
             aboutInstance.show();
         });
-        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, about);
+        menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
         return menu;
+    }
+
+    private void checkForUpdates() {
+        if (UpdateChecker.isUpdateAvailable()) {
+            UIController.INSTANCE.showUpdateDialog();
+        } else {
+            ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
+            noUpdate.getResponse();
+        }
     }
 
     private Menu getEditMenu() {
@@ -158,7 +177,7 @@ public class Drifty_GUI extends Application {
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
         wipeHistory.setOnAction(e -> {
-            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false);
+            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false, false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }

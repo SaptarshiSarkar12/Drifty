@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import properties.LinkType;
+import properties.MessageCategory;
 import properties.Program;
 import support.DownloadMetrics;
 import support.Job;
@@ -410,9 +411,9 @@ public class FileDownloader extends Task<Integer> {
                     String speed = String.format("%06.2f", averageSpeed);
                     String units = m2.group(2);
                     String[] parts = m2.group(3).split(":");
-                    int hours = parts.length > 0 ? Utility.parseStringToInt(parts[0]) : 0;
-                    int minutes = parts.length > 1 ? Utility.parseStringToInt(parts[1]) : 0;
-                    int seconds = parts.length > 2 ? Utility.parseStringToInt(parts[2]) : 0;
+                    int hours = parts.length > 0 ? Utility.parseStringToInt(parts[0], "Failed to parse hours in ETA", MessageCategory.DOWNLOAD) : 0;
+                    int minutes = parts.length > 1 ? Utility.parseStringToInt(parts[1], "Failed to parse minutes in ETA", MessageCategory.DOWNLOAD) : 0;
+                    int seconds = parts.length > 2 ? Utility.parseStringToInt(parts[2], "Failed to parse seconds in ETA", MessageCategory.DOWNLOAD) : 0;
                     String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
                     updateMessage(speed + " " + units + " ETA " + time);
                     if (progress > 99) {
