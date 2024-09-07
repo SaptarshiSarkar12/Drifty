@@ -10,6 +10,7 @@ module Core {
     exports preferences;
     exports properties;
     exports support;
+    exports updater;
     exports utils;
     opens support to com.google.gson;
 }

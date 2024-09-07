@@ -1,7 +1,6 @@
 package ui;
 
 import gui.init.Environment;
-
 import gui.preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
@@ -11,10 +10,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -34,17 +39,23 @@ public class ConfirmationDialog {
     private static Button btnYes;
     private double width = 200;
     private double height = 150;
-    private Stage stage;
-    private VBox vbox;
     private final String windowTitle;
     private final String msg;
-    private String filename = "";
+    private boolean isUpdateError;
     private final GetConfirmationDialogResponse answer = new GetConfirmationDialogResponse();
+    private Stage stage;
+    private VBox vbox;
+    private String filename = "";
 
-    public ConfirmationDialog(String windowTitle, String message, boolean okOnly) {
+    public ConfirmationDialog(String windowTitle, String message, boolean okOnly, boolean isUpdateError) {
         this.windowTitle = windowTitle;
-        this.msg = message;
         this.state = okOnly ? State.OK : State.YES_NO;
+        this.isUpdateError = isUpdateError;
+        if (isUpdateError) {
+            this.msg = message + "\n\nPlease try again later or download the latest version from the below link :";
+        } else {
+            this.msg = message;
+        }
         finish();
     }
 
@@ -99,13 +110,7 @@ public class ConfirmationDialog {
         text.setFont(Constants.getMonaco(16));
         text.setTextAlignment(TextAlignment.LEFT);
         text.setWrappingWidth(width * .85);
-        Label message = new Label("Are you sure?");
-        message.setFont(Constants.getMonaco(17));
-        if (!msg.isEmpty()) {
-            message.setText(msg);
-            message.setWrapText(true);
-            message.setTextAlignment(TextAlignment.CENTER);
-        }
+        Hyperlink downloadLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Download the Latest Version", Font.font("Verdana", FontWeight.BOLD, 16), new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0.25, Color.valueOf("#4158D0")), new Stop(1, Color.valueOf("#C850C0"))), "https://saptarshisarkar12.github.io/Drifty/download");
         btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
             stage.close();
@@ -130,7 +135,12 @@ public class ConfirmationDialog {
             vbox.getChildren().add(tfFilename);
         }
         switch (state) {
-            case OK -> hbox.getChildren().add(btnOk);
+            case OK -> {
+                if (isUpdateError) {
+                    vbox.getChildren().add(downloadLink);
+                }
+                hbox.getChildren().add(btnOk);
+            }
             case YES_NO, FILENAME -> hbox.getChildren().addAll(btnYes, btnNo);
             default -> Environment.getMessageBroker().msgLogError("Unknown state in ConfirmationDialog : " + state);
         }
@@ -152,14 +162,7 @@ public class ConfirmationDialog {
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
-            Theme.applyTheme("Dark", scene);
-            Theme.changeButtonStyle(true, btnYes);
-            Theme.changeButtonStyle(true, btnNo);
-            Theme.changeButtonStyle(true, btnOk);
-        } else {
-            Theme.applyTheme("Light", scene);
-        }
+        Theme.applyTheme(AppSettings.GET.mainTheme(), scene);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setScene(scene);
@@ -187,5 +190,9 @@ public class ConfirmationDialog {
 
     static Button getBtnYes() {
         return btnYes;
+    }
+
+    static Button getBtnOk() {
+        return btnOk;
     }
 }

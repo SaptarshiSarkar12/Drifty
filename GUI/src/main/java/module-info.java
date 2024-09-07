@@ -7,6 +7,7 @@ module GUI {
     requires com.google.gson;
     requires org.hildan.fxgson;
     requires java.prefs;
+    requires jproc;
 
     exports gui.support;
     exports gui.utils;

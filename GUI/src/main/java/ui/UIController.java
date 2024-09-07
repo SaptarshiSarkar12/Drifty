@@ -8,6 +8,7 @@ import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.Jobs;
+import gui.updater.GUIUpdateExecutor;
 import gui.utils.CheckFile;
 import gui.utils.MessageBroker;
 import javafx.application.Platform;
@@ -32,11 +33,16 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import main.Drifty_GUI;
+import properties.OS;
 import support.Job;
 import support.JobHistory;
 import utils.Utility;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -86,11 +92,75 @@ public final class UIController {
     Methods for initializing the various controls that are on the form - MainGridPane
      */
     private void start(MainGridPane pane) {
+        new Thread(() -> {
+            if (AppSettings.GET.driftyUpdateAvailable()) {
+                M.msgLogInfo("A new version of Drifty is available!");
+                showUpdateDialog();
+            }
+        }).start();
         form = pane;
         setControlProperties();
         setControlActions();
         form.tfLink.requestFocus();
         commitJobListToListView();
+    }
+
+    public void showUpdateDialog() {
+        if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            if (ask.getResponse().isYes()) {
+                downloadUpdate();
+            }
+        } else {
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ask.getResponse();
+        }
+    }
+
+    private void downloadUpdate() {
+        String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
+        try {
+            // "Current executable" means the executable currently running i.e., the one that is outdated.
+            File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
+            // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
+            File tmpFolder = Files.createTempDirectory("Drifty").toFile();
+            tmpFolder.deleteOnExit();
+            // For Mac, the latest executable is a ".pkg" file as it is the only working way to update the application, i.e., by installing a new version.
+            // For other OS, the latest executable name along with the extension is the same as that of the current executable.
+            String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
+            File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
+            // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
+            // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
+            getJobs().clear();
+
+            // Download the latest executable
+            Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), false);
+            addJob(updateJob);
+            Thread downloadUpdate = new Thread(batchDownloader());
+            downloadUpdate.start();
+            while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
+                sleep(500);
+            }
+            setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            // Reset the download queue to the previous state.
+            getJobs().setList(currentDownloadQueue);
+            if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
+                // If the latest executable was successfully downloaded, set the executable permission and execute the update.
+                GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
+                updateExecutor.execute();
+            } else {
+                M.msgUpdateError("Failed to download update!");
+            }
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
+        } catch (URISyntaxException e) {
+            M.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
+        } catch (Exception e) {
+            M.msgUpdateError("Failed to update! An unknown error occurred! " + e.getMessage());
+        }
     }
 
     private void setControlProperties() {
@@ -519,10 +589,10 @@ public final class UIController {
                             ask = new ConfirmationDialog("File Already Downloaded and Exists", message, renameFile(job.getFilename(), job.getDir()));
                         } else if (existsNoHistory) {
                             message = String.format(fileExistsString, job.getFilename());
-                            ask = new ConfirmationDialog("File Already Exists", message, false);
+                            ask = new ConfirmationDialog("File Already Exists", message, false, false);
                         } else if (fileHasHistory) {
                             message = String.format(pastJobNoFile, job.getFilename());
-                            ask = new ConfirmationDialog("File Already Downloaded", message, false);
+                            ask = new ConfirmationDialog("File Already Downloaded", message, false, false);
                         }
                         if (fileHasHistory || existsHasHistory || existsNoHistory) {
                             addJob = ask.getResponse().isYes();
