@@ -70,11 +70,11 @@ public class Utility {
             connectProjectWebsite.connect();
             return false;
         } catch (UnknownHostException e) {
-            return true;
+            msgBroker.msgLogError("You are not connected to the Internet!");
         } catch (MalformedURLException e) {
-            msgBroker.msgLinkError("The link is not correctly formatted! " + e.getMessage());
+            msgBroker.msgLogError("The link is not correctly formatted! " + e.getMessage());
         } catch (IOException e) {
-            msgBroker.msgLinkError("Failed to connect to the project website! " + e.getMessage());
+            msgBroker.msgLogError("Failed to connect to the project website! " + e.getMessage());
         }
         return true;
     }

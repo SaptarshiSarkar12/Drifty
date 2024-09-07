@@ -20,7 +20,7 @@ public class UpdateChecker {
 
     public static boolean isUpdateAvailable() {
         if (Utility.isOffline()) {
-            M.msgInitError("Failed to check for updates! You are not connected to the internet.");
+            M.msgLogError("Failed to check for updates! You are not connected to the internet.");
             return false;
         }
         String latestVersion;

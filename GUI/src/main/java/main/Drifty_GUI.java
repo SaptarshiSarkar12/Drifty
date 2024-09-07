@@ -150,12 +150,7 @@ public class Drifty_GUI extends Application {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
                 noInternet.getResponse();
             } else {
-                if (UpdateChecker.isUpdateAvailable()) {
-                    UIController.INSTANCE.showUpdateDialog();
-                } else {
-                    ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
-                    noUpdate.getResponse();
-                }
+                new Thread(this::checkForUpdates).start();
             }
         });
         about.setOnAction(event -> {
@@ -166,6 +161,15 @@ public class Drifty_GUI extends Application {
         });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
         return menu;
+    }
+
+    private void checkForUpdates() {
+        if (UpdateChecker.isUpdateAvailable()) {
+            UIController.INSTANCE.showUpdateDialog();
+        } else {
+            ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
+            noUpdate.getResponse();
+        }
     }
 
     private Menu getEditMenu() {
