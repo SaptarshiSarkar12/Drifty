@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
@@ -65,6 +66,7 @@ public class UIComponentBuilder {
     public Hyperlink buildHyperlink(String text, Font font, LinearGradient fill, String url) {
         Hyperlink link = new Hyperlink(text);
         link.setFont(font);
+        link.setBorder(Border.EMPTY);
         link.setTextFill(fill);
         link.setOnAction(e -> Drifty_GUI.INSTANCE.openWebsite(url));
         return link;

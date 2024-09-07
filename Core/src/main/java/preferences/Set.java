@@ -99,4 +99,29 @@ public class Set {
         AppSettings.CLEAR.isFfmpegWorking();
         preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
     }
+
+    public void earlyAccess(boolean isEarlyAccess) {
+        AppSettings.CLEAR.earlyAccess();
+        preferences.putBoolean(EARLY_ACCESS, isEarlyAccess);
+    }
+
+    public void newDriftyVersionName(String versionName) {
+        AppSettings.CLEAR.newDriftyVersionName();
+        preferences.put(NEW_DRIFTY_VERSION_NAME, versionName);
+    }
+
+    public void lastDriftyUpdateTime(long value) {
+        AppSettings.CLEAR.lastDriftyUpdateTime();
+        preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
+    }
+
+    public void latestDriftyVersionTag(String tag) {
+        AppSettings.CLEAR.latestDriftyVersionTag();
+        preferences.put(LATEST_DRIFTY_VERSION_TAG, tag);
+    }
+
+    public void driftyUpdateAvailable(boolean isUpdateAvailable) {
+        AppSettings.CLEAR.driftyUpdateAvailable();
+        preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
+    }
 }

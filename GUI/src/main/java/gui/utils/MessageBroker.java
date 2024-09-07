@@ -3,6 +3,7 @@ package gui.utils;
 import javafx.scene.paint.Color;
 import properties.MessageCategory;
 import properties.MessageType;
+import ui.ConfirmationDialog;
 import ui.UIController;
 
 import java.util.Objects;
@@ -35,6 +36,11 @@ public class MessageBroker extends utils.MessageBroker {
             case FILENAME -> Objects.requireNonNull(ui).setFilenameOutput(color, message);
             case DIRECTORY -> Objects.requireNonNull(ui).setDirOutput(color, message);
             case DOWNLOAD -> Objects.requireNonNull(ui).setDownloadOutput(color, message);
+            case UPDATE -> {
+                if (MessageType.ERROR.equals(messageType)) {
+                    new ConfirmationDialog("Update Failed", message, true, true).getResponse();
+                }
+            }
             default -> {
                 if (!message.isEmpty()) {
                     logger.log(messageType, message);
