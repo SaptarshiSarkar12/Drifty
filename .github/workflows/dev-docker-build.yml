@@ -40,10 +40,16 @@ jobs:
           sudo mv dist/linux_amd64/release/copa /usr/local/bin/
       - name: Run Copa to patch vulnerabilities
         if: matrix.os == 'ubuntu-latest'
-        run: |
-          docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
-          copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --ignore-errors --timeout 10m
-          docker stop buildkitd
+        uses: nick-fields/retry@v3 # Retry action to handle network issues
+        with:
+          timeout_minutes: 15
+          max_attempts: 5
+          retry_on: error
+          command: |
+            docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
+            copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --ignore-errors --timeout 10m
+            docker stop buildkitd
+          retry_wait_seconds: '30'
       - name: Build Docker image
         run: |
           docker compose build base
