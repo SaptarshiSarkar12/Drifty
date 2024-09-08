@@ -163,6 +163,10 @@ public class ConfirmationDialog {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
         Theme.applyTheme(AppSettings.GET.mainTheme(), scene);
+        boolean isDark = "Dark".equals(AppSettings.GET.mainTheme());
+        Theme.changeButtonStyle(isDark, btnYes);
+        Theme.changeButtonStyle(isDark, btnNo);
+        Theme.changeButtonStyle(isDark, btnOk);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setScene(scene);
