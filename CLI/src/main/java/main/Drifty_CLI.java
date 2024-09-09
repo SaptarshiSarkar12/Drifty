@@ -296,7 +296,6 @@ public class Drifty_CLI {
                     }
                     else if (isYoutube(link)) {
                         String videoId = null;
-
                         try {
                             URI uri = URI.create(link);
                             String domain = uri.getHost();
@@ -320,6 +319,14 @@ public class Drifty_CLI {
                                 link = uri.toString();
                             } else {
                                 messageBroker.msgLinkError("YouTube video ID not found in the link.");
+                                messageBroker.msgInputInfo(QUIT_OR_CONTINUE, true);
+                                String choice = SC.next().toLowerCase().strip();
+                                if ("q".equals(choice)) {
+                                    LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                                    break;
+                                }
+                                printBanner();
+                                continue;
                             }
 
                         } catch (IllegalArgumentException | URISyntaxException e) {

@@ -875,7 +875,7 @@ public class Utility {
         try {
             url = URI.create(urlLink).toURL();
         } catch (MalformedURLException e) {
-            M.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
+            msgBroker.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
         }
         String query = url != null ? url.getQuery() : null;
 
