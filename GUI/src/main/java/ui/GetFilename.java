@@ -1,41 +1,34 @@
 package ui;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import gui.init.Environment;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
-import properties.MessageCategory;
 import properties.Program;
 import support.Job;
 import utils.Utility;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.StringJoiner;
+import java.nio.file.Files;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static gui.support.Colors.GREEN;
-import static properties.Program.YT_DLP;
-import static utils.Utility.isSpotify;
-import static utils.Utility.sleep;
+import static utils.Utility.*;
 
 public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
     private final String link;
     private final String dir;
-    private final String regex = "(\\[download] Downloading item \\d+ of )(\\d+)";
-    private final Pattern pattern = Pattern.compile(regex);
-    private final String lineFeed = System.lineSeparator();
-    private int result = -1;
     private int fileCount;
     private int filesProcessed;
     private final ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
-    private final StringProperty feedback = new SimpleStringProperty();
     boolean dirUp = true;
 
     public GetFilename(String link, String dir) {
@@ -49,38 +42,20 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
         this.updateMessage("Retrieving Filename(s)");
         Timer progTimer = new Timer();
         progTimer.scheduleAtFixedRate(runProgress(), 2500, 150);
-        Thread thread = new Thread(getFileCount());
-        result = -1;
-        thread.start();
-        while (result == -1) {
-            sleep(500);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(getJson(), 100, 1);
+        if (isSpotify(link)) {
+            Utility.getSpotifySongMetadata(link);
+        } else {
+            Utility.getYtDlpMetadata(link);
         }
-        boolean proceed = true;
-        if (fileCount > 0) {
-            progTimer.cancel();
-            updateProgress(0, 1);
-            progTimer = null;
-            ConfirmationDialog ask = new ConfirmationDialog("Confirmation", "There are " + fileCount + " files in this list. Proceed and get all filenames?");
-            proceed = ask.getResponse().isYes();
-        }
-        if (proceed) {
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(getJson(), 100, 1);
-            if (isSpotify(link)) {
-                Utility.getSpotifySongMetadata(link);
-            } else {
-                Utility.getYtDlpMetadata(link);
-            }
-            sleep(1000); // give timerTask enough time to do its last run
-            timer.cancel();
-            jobList.clear();
-            UIController.setDownloadInfoColor(GREEN);
-            updateMessage("File(s) added to batch.");
-            if (progTimer != null) {
-                progTimer.cancel();
-            }
-            updateProgress(0, 1);
-        }
+        sleep(1000); // give timerTask enough time to do its last run
+        timer.cancel();
+        jobList.clear();
+        UIController.setDownloadInfoColor(GREEN);
+        updateMessage("File(s) added to batch.");
+        progTimer.cancel();
+        updateProgress(0, 1);
         return jobList;
     }
 
@@ -98,10 +73,23 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                 for (File file : files) {
                     try {
                         if ("yt-metadata.info.json".equals(file.getName())) {
-                            String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
-                            String filename = Utility.getFilenameFromJson(jsonString);
-                            updateMessage("Filename detected: " + filename);
-                            jobList.addLast(new Job(link, dir, filename, false));
+                            String jsonString = Files.readString(file.toPath());
+                            if (isYoutube(link) && link.contains("playlist")) {
+                                JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+                                JsonArray entries = jsonObject.get("entries").getAsJsonArray();
+                                fileCount = entries.size();
+                                for (JsonElement entry : entries) {
+                                    JsonObject entryObject = entry.getAsJsonObject();
+                                    String videoLink = entryObject.get("url").getAsString();
+                                    String filename = Utility.cleanFilename(entryObject.get("title").getAsString()).concat(".mp4");
+                                    updateMessage("Filename detected: " + filename);
+                                    jobList.addLast(new Job(videoLink, dir, filename, false));
+                                }
+                            } else {
+                                String filename = Utility.getFilenameFromJson(jsonString);
+                                updateMessage("Filename detected: " + filename);
+                                jobList.addLast(new Job(link, dir, filename, false));
+                            }
                         } else if ("spotify-metadata.json".equals(file.getName())) {
                             String jsonString = FileUtils.readFileToString(file, Charset.defaultCharset());
                             String filename = Utility.getSpotifyFilename(jsonString);
@@ -151,52 +139,6 @@ public class GetFilename extends Task<ConcurrentLinkedDeque<Job>> {
                     }
                     updateProgress(value, 1.0);
                 });
-            }
-        };
-    }
-
-    private Runnable getFileCount() {
-        return () -> {
-            feedback.addListener(((observable, oldValue, newValue) -> {
-                String[] list = newValue.split(lineFeed);
-                if (list.length > 3) {
-                    for (String line : list) {
-                        Matcher m = pattern.matcher(line);
-                        if (m.find()) {
-                            fileCount = Utility.parseStringToInt(m.group(2), "Failed to get file count", MessageCategory.FILENAME);
-                            break;
-                        }
-                    }
-                }
-            }));
-            try {
-                String command = Program.get(YT_DLP);
-                String[] args = new String[]{command, "--flat-playlist", "--skip-download", "-P", dir, link};
-                ProcessBuilder pb = new ProcessBuilder(args);
-                pb.redirectErrorStream(true);
-                Process process = pb.start();
-                StringJoiner joiner = new StringJoiner(lineFeed);
-                try {
-                    try (
-                        InputStream inputStream = process.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))
-                            )
-                    {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            if (this.isCancelled()) {
-                                break;
-                            }
-                            joiner.add(line);
-                            feedback.setValue(joiner.toString());
-                        }
-                    }
-                } catch (IOException e) {
-                    Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
-                }
-                result = process.waitFor();
-            } catch (IOException | InterruptedException e) {
-                Environment.getMessageBroker().msgFilenameError("Failed to get filename(s) from link: " + link);
             }
         };
     }

@@ -426,7 +426,7 @@ public class Utility {
 
     private static Runnable ytDLPJsonData(String folderPath, String link) {
         return () -> {
-            String[] command = new String[]{Program.get(YT_DLP), "--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link, "-o", "yt-metadata"}; // -o flag is used to specify the output filename which is "yt-metadata.info.json" in this case
+            String[] command = new String[]{Program.get(YT_DLP), "--flat-playlist", "--write-info-json", "--no-clean-info-json", "--skip-download", "--compat-options", "no-youtube-unavailable-videos", "-P", folderPath, link, "-o", "yt-metadata"}; // -o flag is used to specify the output filename, which is "yt-metadata.info.json" in this case
             try {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 pb.redirectErrorStream(true);
