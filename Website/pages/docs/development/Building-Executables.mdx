@@ -47,7 +47,7 @@ Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
        ```
 </Tabs.Tab>
 </Tabs>
-Upon completion of the command, the GraalVM metadata will be generated in `src/main/resources/META-INF/native-image` directory of the respective project (`GUI` or `CLI`) directory.
+Upon completion of the command, the GraalVM metadata will be generated in `src/main/resources/META-INF/native-image{:shell}` directory of the respective project (`GUI` or `CLI`) directory.
 </Steps>
 
 
@@ -63,7 +63,7 @@ Upon completion of the command, the GraalVM metadata will be generated in `src/m
 ### Steps
 
 <Callout type="info">
-Check if GraalVM is added to the system path by running `native-image --version` in the terminal.
+Check if GraalVM is added to the system path by running `native-image --version{:shell}` in the terminal.
 If the command is not recognized, add the GraalVM `bin` directory to the system path.
 
 ```shell
@@ -153,7 +153,7 @@ Run the below command to build the installer or executable binaries
 
 Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below. 
 <Callout type="warning">
-The placeholder `{arch}` should be replaced with either `x86_64` or `aarch64`, depending on your system's architecture.
+The placeholder `{arch}` should be replaced with either `x86_64{:shell}` or `aarch64{:shell}`, depending on your system's architecture.
 </Callout>
 <Tabs items={['GUI', 'CLI']}>
 <Tabs.Tab>

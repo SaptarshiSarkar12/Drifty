@@ -16,7 +16,7 @@ Drifty CLI supports the following commands:
 
 ### Help
 
-**Command**: `--help` or `-h`
+**Command**: `--help{:shell}` or `-h{:shell}`
 
 **Description**: Display the help message with all the available commands and options.
 
@@ -28,7 +28,7 @@ drifty --help
 
 ### Version
 
-**Command**: `--version` or `-v`
+**Command**: `--version{:shell}` or `-v{:shell}`
 
 **Description**: Display the version of Drifty CLI along with its components.
 
@@ -40,7 +40,7 @@ drifty --version
 
 ### Batch Download
 
-**Command**: `--batch <file>` or `-b <file>`
+**Command**: `--batch <file>{:shell}` or `-b <file>{:shell}`
 
 **Description**: Download multiple files without the need to specify the URL each time. You need to create an YAML file with the list of URLs you want to download. You can also specify the directory and file name for each URL. The YAML file should have the following format:
 
@@ -54,7 +54,7 @@ directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
 
 - **links** (**Required**): List of URLs to download.
 - **fileNames** (**Optional**): List of file names to save the downloaded files. The order should match the order of URLs. If not specified, the file name will be automatically detected from the URL.
-- **directory** or **directories** (**Optional**): Specify the directory where the files will be saved. Use **directory** to save all files in the same directory. Use **directories** to save each file in the corresponding directory specified in the order of URLs. By default, files are saved in the last used directory or the default download directory (`{user_home}/Downloads`) if not specified.
+- **directory** or **directories** (**Optional**): Specify the directory where the files will be saved. Use **directory** to save all files in the same directory. Use **directories** to save each file in the corresponding directory specified in the order of URLs. By default, files are saved in the last used directory or the default download directory (`{user_home}/Downloads{:shell}`) if not specified.
 
 **Example Configuration**:
 
@@ -77,7 +77,7 @@ drifty --batch batch.yaml
 
 ### Add links to Queue
 
-**Command**: `--add <URL1> <URL2> ...`
+**Command**: `--add <URL1> <URL2> ...{:shell}`
 
 **Description**: Add one or more URLs to the download queue. The URLs will be downloaded sequentially.
 
@@ -89,7 +89,7 @@ drifty --add "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.ta
 
 ### List links in Queue
 
-**Command**: `--list`
+**Command**: `--list{:shell}`
 
 **Description**: List all the URLs in the download queue.
 
@@ -101,7 +101,7 @@ drifty --list
 
 ### Remove links from Queue
 
-**Command**: `--remove <index1> <index2> ...` or `--remove all`
+**Command**: `--remove <index1> <index2> ...{:shell}` or `--remove all{:shell}`
 
 **Description**: Remove one or more URLs from the download queue. You can specify the index of the URLs to remove, or use `all` to clear the entire queue.
 
@@ -113,7 +113,7 @@ drifty --remove 1 3
 
 ### Download from Queue
 
-**Command**: `--get`
+**Command**: `--get{:shell}`
 
 **Description**: Start downloading the URLs in the download queue. The URLs will be downloaded sequentially.
 
@@ -130,7 +130,7 @@ This command is not a standalone command. It must be used with the URL of the fi
 You can also use the `--name` command in conjunction with this command.
 </Callout>
 
-**Command**: `--location <path>` or `-l <path>`
+**Command**: `--location <path>{:shell}` or `-l <path>{:shell}`
 
 **Description**: Specify a custom download location for the files. If not specified, you will be prompted to choose the download location each time you download a file (Default download location, Last-used directory, or Custom directory).
 
@@ -144,10 +144,10 @@ drifty https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz --
 
 <Callout type="info">
 This command is not a standalone command. It must be used with the URL of the file you want to download.
-You can also use the `--location` command in conjunction with this command.
+You can also use the `--location{:shell}` command in conjunction with this command.
 </Callout>
 
-**Command**: `--name <filename>` or `-n <filename>`
+**Command**: `--name <filename>{:shell}` or `-n <filename>{:shell}`
 
 **Description**: Specify a custom file name, including the extension if applicable. If not provided, the file name will be automatically detected from the URL.
 
