@@ -44,7 +44,7 @@ drifty --version
 
 **Description**: Download multiple files without the need to specify the URL each time. You need to create an YAML file with the list of URLs you want to download. You can also specify the directory and file name for each URL. The YAML file should have the following format:
 
-```yaml
+```yaml filename="sample.yaml" showLineNumbers
 links: ["<URL1>", "<URL2>", "<URL3>", ...]
 # Optional: Specify the directory and file name for each URL
 fileNames: ["<FileName1>", "<FileName2>", "<FileName3>", ...]
@@ -58,7 +58,7 @@ directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
 
 **Example Configuration**:
 
-```yaml
+```yaml filename="batch.yaml" showLineNumbers
 # batch.yaml (You can name the file as you like)
 links:
   [
