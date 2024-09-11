@@ -1,10 +1,13 @@
+import { Tabs } from 'nextra/components'
+
 # Getting Started
 
 ## Download Drifty
 
 - Go to the official website of Drifty and click on the download button. It will redirect you to the download page.
   ![Download Design](https://github.com/user-attachments/assets/b42c540b-eb99-4b9c-9c2f-6143d40166f0)
-
+<Tabs items={['GUI', 'CLI']}>
+<Tabs.Tab>
 - For Drifty GUI, select the GUI button.
   ![Application Type](https://github.com/user-attachments/assets/d729f074-0f73-4d79-b562-7717b673d6c7)
 
@@ -16,7 +19,8 @@
 
   - If you are using macOS, click on the download button with the **Apple** icon, and it will start downloading the package file (**`.pkg`**).
     ![MAC Download Exp](https://github.com/user-attachments/assets/35cdd3b7-6ea5-43ba-895b-acf7dc972321)
-
+</Tabs.Tab>
+<Tabs.Tab>
 - For Drifty CLI, select the CLI button.
   ![Application Type](https://github.com/user-attachments/assets/d729f074-0f73-4d79-b562-7717b673d6c7)
   - If you are using Windows, click on the download button with the **Windows** icon, and it will start downloading the executable file (**`.exe`**).
@@ -25,10 +29,18 @@
     ![Linux Download button highlighted](https://github.com/user-attachments/assets/c4677f08-de5f-4ade-9414-881abe82edc4)
   - If you are using macOS, click on the download button with the **Apple** icon, and it will start downloading the executable binary.
     ![MAC Download Exp](https://github.com/user-attachments/assets/8ce5fdb0-1cfa-4d88-a470-9068886482a5)
-
+</Tabs.Tab>
+</Tabs>
 ## Installation
 
+<Tabs items={['GUI', 'CLI']}>
+
+<Tabs.Tab>
 ### Drifty GUI
+
+<Tabs items={['Windows', 'Linux', 'MacOS']}>
+
+<Tabs.Tab>
 
 ##### Windows MSI
 
@@ -45,6 +57,9 @@ For Windows MSI, double-click on the downloaded file and follow the installation
 
 For Windows exe, you can directly run Drifty GUI by double-clicking on the downloaded file.
 
+</Tabs.Tab>
+<Tabs.Tab>
+
 ##### Linux
 
 For Linux, open the terminal and navigate to the directory where the binary is downloaded and run the following command:
@@ -53,7 +68,8 @@ For Linux, open the terminal and navigate to the directory where the binary is d
 chmod +x Drifty-GUI_linux
 ./Drifty-GUI_linux
 ```
-
+</Tabs.Tab>
+<Tabs.Tab>
 ##### MacOS
 
 For macOS, double-click on the downloaded package file and follow the installation instructions.
@@ -64,13 +80,21 @@ For macOS, double-click on the downloaded package file and follow the installati
 | <img width="624" alt="Mac installation — 3" src="https://github.com/user-attachments/assets/015946f0-7c62-4ebc-bed9-bdcbf2efdd13"/> | <img width="624" alt="Mac installation — 4" src="https://github.com/user-attachments/assets/931f74b4-4753-4f71-ba5f-6a584b302ad8"/> |
 
 Once the installation is complete, you can start using Drifty GUI by searching for it in the applications' menu.
+</Tabs.Tab>
+</Tabs>
+</Tabs.Tab>
+<Tabs.Tab>
 
 ### Drifty CLI
+
+<Tabs items={['Windows', 'Linux', 'MacOS']}>
+<Tabs.Tab>
 
 ##### Windows
 
 For Windows, you can directly run Drifty CLI by double-clicking on the downloaded file.
-
+</Tabs.Tab>
+<Tabs.Tab>
 ##### Linux
 
 For Linux, open the terminal and navigate to the directory where the binary is downloaded and run the following command:
@@ -79,7 +103,8 @@ For Linux, open the terminal and navigate to the directory where the binary is d
 chmod +x Drifty-CLI_linux
 ./Drifty-CLI_linux
 ```
-
+</Tabs.Tab>
+<Tabs.Tab>
 ##### MacOS
 
 For macOS, open the terminal and navigate to the directory where the binary is downloaded and run the following command:
@@ -88,3 +113,7 @@ For macOS, open the terminal and navigate to the directory where the binary is d
 chmod +x Drifty-CLI_macos
 ./Drifty-CLI_macos
 ```
+</Tabs.Tab>
+</Tabs>
+</Tabs.Tab>
+</Tabs>
