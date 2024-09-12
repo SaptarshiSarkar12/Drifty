@@ -41,7 +41,7 @@
             <plugin>
                 <groupId>org.openrewrite.maven</groupId>
                 <artifactId>rewrite-maven-plugin</artifactId>
-                <version>5.39.2</version>
+                <version>5.40.0</version>
                 <configuration>
                     <activeRecipes>
                         <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
@@ -58,12 +58,12 @@
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-static-analysis</artifactId>
-                        <version>1.15.0</version>
+                        <version>1.16.0</version>
                     </dependency>
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-recommendations</artifactId>
-                        <version>1.8.4</version>
+                        <version>1.9.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
