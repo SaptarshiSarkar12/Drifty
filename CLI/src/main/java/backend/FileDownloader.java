@@ -2,8 +2,10 @@ package backend;
 
 import cli.utils.Utility;
 import init.Environment;
+import properties.LinkType;
 import properties.Program;
 import support.DownloadMetrics;
+import support.Job;
 import utils.MessageBroker;
 
 import java.io.*;
@@ -11,52 +13,38 @@ import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static cli.support.Constants.*;
-import static properties.Program.YT_DLP;
-import static utils.Utility.*;
+import static utils.Utility.sleep;
 
 public class FileDownloader implements Runnable {
     private static final MessageBroker M = Environment.getMessageBroker();
+    private final Job job;
     private final DownloadMetrics downloadMetrics;
     private final int numberOfThreads;
     private final long threadMaxDataSize;
     private final String dir;
-    private final boolean isSpotifySong;
-    private String fileName;
     private final String link;
+    private final Path directoryPath;
+    private final LinkType linkType;
+    private String fileName;
     private URL url;
 
-    public FileDownloader(String link, String fileName, String dir, boolean isSpotifySong) {
-        link = link.replace('\\', '/');
-        if (!(link.startsWith("http://") || link.startsWith("https://"))) {
-            link = "https://" + link;
-        }
-        if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
-            if (!link.endsWith("?raw=true")) {
-                link = link + "?raw=true";
-            }
-        }
-        this.isSpotifySong = isSpotifySong;
-        this.link = link;
-        this.fileName = fileName;
-        this.dir = dir;
+    public FileDownloader(Job job) {
+        this.job = job;
+        this.link = job.getDownloadLink();
+        this.linkType = LinkType.getLinkType(link);
+        this.fileName = job.getFilename();
+        this.dir = job.getDir();
+        this.directoryPath = Paths.get(dir);
         this.downloadMetrics = new DownloadMetrics();
         this.numberOfThreads = downloadMetrics.getThreadCount();
         this.threadMaxDataSize = downloadMetrics.getMultiThreadingThreshold();
         downloadMetrics.setMultithreading(false);
-    }
-
-    public String getDir() {
-        if (dir.endsWith(File.separator)) {
-            return dir;
-        } else {
-            return dir + File.separator;
-        }
     }
 
     private void downloadFile() {
@@ -77,7 +65,7 @@ public class FileDownloader implements Runnable {
                     File file;
                     for (int i = 0; i < numberOfThreads; i++) {
                         file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
-                        file.deleteOnExit(); // Deletes temporary file when JVM exits
+                        file.deleteOnExit(); // Deletes a temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
                         end = (numberOfThreads - 1) == i ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
@@ -88,7 +76,7 @@ public class FileDownloader implements Runnable {
                         downloaderThreads.add(downloader);
                         tempFiles.add(file);
                     }
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, getDir(), totalSize, downloadMetrics);
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, dir, totalSize, downloadMetrics);
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     // check if all the files are downloaded
@@ -98,8 +86,8 @@ public class FileDownloader implements Runnable {
                 } else {
                     InputStream urlStream = url.openStream();
                     readableByteChannel = Channels.newChannel(urlStream);
-                    FileOutputStream fos = new FileOutputStream(getDir() + fileName);
-                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, getDir(), downloadMetrics);
+                    FileOutputStream fos = new FileOutputStream(directoryPath.resolve(fileName).toFile());
+                    ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, dir, downloadMetrics);
                     progressBarThread.start();
                     M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
                     fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
@@ -107,10 +95,10 @@ public class FileDownloader implements Runnable {
                     urlStream.close();
                 }
                 downloadMetrics.setActive(false);
-                // keep the main thread from closing the IO for a short amount of time so UI thread can finish and give output
+                // keep the main thread from closing the IO for a short amount of time so the UI thread can finish and give output
                 Utility.sleep(1800);
             } catch (SecurityException e) {
-                M.msgDownloadError("Write access to \"" + dir + fileName + "\" denied !");
+                M.msgDownloadError("Write access to \"" + directoryPath.resolve(fileName).toAbsolutePath() + "\" is denied! " + e.getMessage());
             } catch (FileNotFoundException fileNotFoundException) {
                 M.msgDownloadError(FILE_NOT_FOUND);
             } catch (IOException e) {
@@ -121,41 +109,47 @@ public class FileDownloader implements Runnable {
         }
     }
 
-    public void downloadFromYouTube() {
-        String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
-        String fileDownloadMessage;
-        if (outputFileName.equals(DEFAULT_FILENAME)) {
-            fileDownloadMessage = "the YouTube Video";
-        } else {
-            fileDownloadMessage = outputFileName;
-        }
-        M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName, "-f", (isSpotifySong ? "bestaudio" : "mp4"));
+    private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
+        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", fileName, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
+        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         processBuilder.inheritIO();
-        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
-        int exitValueOfYtDlp = -1;
+        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+        Process process;
+        int exitCode = 1;
         try {
-            Process ytDlp = processBuilder.start();
-            ytDlp.waitFor();
-            exitValueOfYtDlp = ytDlp.exitValue();
+            process = processBuilder.start();
+            process.waitFor();
+            exitCode = process.exitValue();
         } catch (IOException e) {
-            M.msgDownloadError("An I/O error occurred while initialising YouTube video downloader! " + e.getMessage());
-        } catch (InterruptedException e) {
-            M.msgDownloadError("The YouTube video download process was interrupted by user! " + e.getMessage());
+            M.msgDownloadError("Failed to start download process for \"" + fileName + "\"");
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            String[] messageArray = msg.split(",");
+            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+                M.msgDownloadError(PERMISSION_DENIED);
+            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+                M.msgDownloadError(VIDEO_UNAVAILABLE);
+            } else {
+                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
+            }
         }
-        if (exitValueOfYtDlp == 0) {
-            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
+        if (exitCode == 0) {
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName));
             if (isSpotifySong) {
-                M.msgDownloadInfo("Converting to mp3...");
-                String conversionProcessMessage = convertToMp3(Paths.get(dir, fileName).toAbsolutePath());
+                M.msgDownloadInfo("Converting to mp3 ...");
+                String conversionProcessMessage = utils.Utility.convertToMp3(directoryPath.resolve(fileName).toAbsolutePath());
                 if (conversionProcessMessage.contains("Failed")) {
                     M.msgDownloadError(conversionProcessMessage);
                 } else {
-                    M.msgDownloadInfo(conversionProcessMessage);
+                    M.msgDownloadInfo("Successfully converted to mp3!");
                 }
             }
-        } else if (exitValueOfYtDlp == 1) {
-            M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
+        } else if (exitCode == 1) {
+            M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
+        } else {
+            M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitCode);
         }
     }
 
@@ -179,7 +173,7 @@ public class FileDownloader implements Runnable {
         }
         // check if it is merged-able
         if (completed == numberOfThreads) {
-            fileOutputStream = new FileOutputStream(getDir() + fileName);
+            fileOutputStream = new FileOutputStream(directoryPath.resolve(fileName).toFile());
             long position = 0;
             for (int i = 0; i < numberOfThreads; i++) {
                 File f = tempFiles.get(i);
@@ -198,37 +192,10 @@ public class FileDownloader implements Runnable {
 
     @Override
     public void run() {
-        boolean isYouTubeLink = isYoutube(link);
-        boolean isInstagramLink = isInstagram(link);
         try {
             // If the link is of a YouTube or Instagram video, then the following block of code will execute.
-            if (isYouTubeLink || isInstagramLink) {
-                try {
-                    if (isYouTubeLink) {
-                        downloadFromYouTube();
-                    } else {
-                        downloadFromInstagram();
-                    }
-                } catch (InterruptedException e) {
-                    M.msgDownloadError(USER_INTERRUPTION);
-                } catch (Exception e) {
-                    if (isYouTubeLink) {
-                        M.msgDownloadError(YOUTUBE_DOWNLOAD_FAILED);
-                    } else {
-                        M.msgDownloadError(INSTAGRAM_DOWNLOAD_FAILED);
-                    }
-                    String msg = e.getMessage();
-                    String[] messageArray = msg.split(",");
-                    if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                        M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
-                    } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
-                        M.msgDownloadError(PERMISSION_DENIED);
-                    } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
-                        M.msgDownloadError(VIDEO_UNAVAILABLE);
-                    } else {
-                        M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
-                    }
-                }
+            if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
+                downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
             } else {
                 url = new URI(link).toURL();
                 URLConnection openConnection = url.openConnection();
@@ -248,28 +215,6 @@ public class FileDownloader implements Runnable {
             M.msgLinkError(INVALID_LINK);
         } catch (IOException e) {
             M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
-        }
-    }
-
-    private void downloadFromInstagram() throws InterruptedException, IOException {
-        String outputFileName = Objects.requireNonNullElse(fileName, DEFAULT_FILENAME);
-        String fileDownloadMessage;
-        if (outputFileName.equals(DEFAULT_FILENAME)) {
-            fileDownloadMessage = "the Instagram Video";
-        } else {
-            fileDownloadMessage = outputFileName;
-        }
-        M.msgDownloadInfo("Trying to download \"" + fileDownloadMessage + "\" ...");
-        ProcessBuilder processBuilder = new ProcessBuilder(Program.get(YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", outputFileName); // The command line arguments tell `yt-dlp` to download the video and to save it to the specified directory.
-        processBuilder.inheritIO();
-        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileDownloadMessage));
-        Process instagramDownloadProcess = processBuilder.start(); // Starts the download process
-        instagramDownloadProcess.waitFor();
-        int exitStatus = instagramDownloadProcess.exitValue();
-        if (exitStatus == 0) {
-            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileDownloadMessage));
-        } else if (exitStatus == 1) {
-            M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileDownloadMessage));
         }
     }
 }

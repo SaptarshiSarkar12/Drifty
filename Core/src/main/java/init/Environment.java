@@ -21,7 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static properties.Program.YT_DLP;
 
 public class Environment {
-    private static MessageBroker msgBroker = Environment.getMessageBroker();
+    private static MessageBroker msgBroker;
     private static boolean isAdministrator;
 
     /*
@@ -31,9 +31,10 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
+        msgBroker = Environment.getMessageBroker();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
-        Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
         isAdministrator = hasAdminPrivileges();
+        Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
         new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
@@ -117,27 +118,19 @@ public class Environment {
 
     public static boolean hasAdminPrivileges() {
         try {
-            msgBroker.msgLogInfo("Determining current executable folder path...");
             Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-            msgBroker.msgLogInfo("Current executable folder path: " + currentExecutableFolderPath);
-
             Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
-            msgBroker.msgLogInfo("Creating test file at: " + adminTestFilePath);
             Files.createFile(adminTestFilePath);
-
-            msgBroker.msgLogInfo("Deleting test file at: " + adminTestFilePath);
             Files.deleteIfExists(adminTestFilePath);
-
-            msgBroker.msgLogInfo("Admin privileges confirmed.");
             return true;
         } catch (URISyntaxException e) {
-            msgBroker.msgInitError("Failed to get the current executable path! " + e.getMessage());
+            System.out.println("Failed to get the current executable path! " + e.getMessage());
             return false;
         } catch (AccessDeniedException e) {
-            msgBroker.msgInitError("You are not running Drifty as an administrator! " + e.getMessage());
+            System.out.println("You are not running Drifty as an administrator! " + e.getMessage());
             return false;
         } catch (IOException e) {
-            msgBroker.msgInitError("Failed to create a file in the current executable folder! " + e.getMessage());
+            System.out.println("Failed to create a file in the current executable folder! " + e.getMessage());
             return false;
         }
     }

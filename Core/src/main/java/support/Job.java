@@ -1,51 +1,39 @@
 package support;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class Job {
     private final String link;
     private final String dir;
     private final String filename;
-    private String spotifyMetadataJson;
-    private boolean repeatDownload;
+    private final String downloadLink;
 
-    public Job(String link, String dir, String filename, boolean repeatDownload) {
+    public Job(String link, String dir, String filename, String downloadLink) {
         this.link = link;
+        this.downloadLink = downloadLink;
         this.dir = dir;
         this.filename = filename;
-        this.repeatDownload = repeatDownload;
-    }
-
-    public Job(String link, String dir, String filename, String spotifyMetadataJson, boolean repeatDownload) {
-        this.link = link;
-        this.dir = dir;
-        this.filename = filename;
-        this.repeatDownload = repeatDownload;
-        this.spotifyMetadataJson = spotifyMetadataJson;
-    }
-
-    public Job(String link, String dir) {
-        this.link = link;
-        this.dir = dir;
-        this.filename = getName();
-    }
-
-    public boolean matches(Job otherJob) {
-        return otherJob.getLink().equals(link) && otherJob.getDir().equals(dir) && otherJob.getFilename().equals(filename);
     }
 
     public boolean matchesLink(Job job) {
-        return job.getLink().equals(link);
+        return job.getSourceLink().equals(link);
     }
 
     public boolean matchesLink(String link) {
         return this.link.equals(link);
     }
 
-    public String getLink() {
+    public String getSourceLink() {
         return link;
+    }
+
+    public String getDownloadLink() {
+        if (downloadLink == null) {
+            return link;
+        }
+        return downloadLink;
     }
 
     public String getDir() {
@@ -53,33 +41,33 @@ public class Job {
     }
 
     public String getFilename() {
-        return this.filename;
+        return filename;
     }
 
     public File getFile() {
-        return Paths.get(dir, filename).toFile();
+        return Paths.get(dir).resolve(filename).toFile();
     }
 
     public boolean fileExists() {
-        Path path = Paths.get(dir, filename);
-        return path.toFile().exists();
+        return getFile().exists();
     }
 
-    private String getName() {
-        String[] nameParts = link.split("/");
-        return nameParts[nameParts.length - 1];
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Job job) {
+            return job.getSourceLink().equals(link) && job.getDir().equals(dir) && job.getFilename().equals(filename);
+        }
+        return false;
     }
 
-    public String getSpotifyMetadataJson() {
-        return spotifyMetadataJson;
-    }
-
-    public boolean repeatOK() {
-        return repeatDownload;
+    @Override
+    public int hashCode() {
+        return Objects.hash(link, dir, filename);
     }
 
     @Override
     public String toString() {
+        // This method returns only the filename, else the hashCodes will appear in the ListView
         return filename;
     }
 }

@@ -43,6 +43,6 @@ public class Constants {
      */
     public static final String DOWNLOADING_F = "Downloading \"%s\" ...";
     public static final String FAILED_CONNECTION_F = "Failed to connect to %s!";
-    public static final String SUCCESSFULLY_DOWNLOADED_F = "Successfully downloaded %s!";
+    public static final String SUCCESSFULLY_DOWNLOADED_F = "Successfully downloaded \"%s\"";
     public static final String FAILED_TO_DOWNLOAD_F = "Failed to download %s!";
 }

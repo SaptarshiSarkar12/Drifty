@@ -3,19 +3,11 @@ package gui.preferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.support.Folders;
-import gui.support.Jobs;
-import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
-import properties.Program;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 import static gui.preferences.Labels.*;
-import static properties.Program.JOB_FILE;
 
 public final class Set extends preferences.Set {
     private static final Set INSTANCE = new Set();
@@ -44,18 +36,5 @@ public final class Set extends preferences.Set {
     public void mainTheme(String theme) {
         AppSettings.CLEAR.mainTheme();
         preferences.put(MAIN_THEME.toString(), theme);
-    }
-
-    public void jobs(Jobs jobs) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        String value = gson.toJson(jobs);
-        AppSettings.CLEAR.jobs();
-        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
-        try {
-            FileUtils.writeStringToFile(jobBatchFile.toFile(), value, Charset.defaultCharset());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -33,12 +33,13 @@ public final class Logger {
     }
 
     private File determineLogFile() {
-        if (!Environment.isAdministrator()) {
-            try {
-                return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile();
-            } catch (IOException e) {
-                System.err.println(FAILED_TO_CREATE_LOG + logFilename);
-            }
+        if (Environment.hasAdminPrivileges()) {
+            return new File(logFilename); // Log file will be created in the same directory as the executable
+        }
+        try {
+            return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile(); // Log file will be created in the temp directory
+        } catch (IOException e) {
+            System.err.println(FAILED_TO_CREATE_LOG + logFilename);
         }
         return new File(logFilename);
     }
