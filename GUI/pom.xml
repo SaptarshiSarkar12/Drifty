@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
-                <version>1.0.23</version>
+                <version>1.0.24</version>
                 <configuration>
                     <enableSWRendering>true</enableSWRendering>
                     <mainClass>${gui.main-class}</mainClass>
