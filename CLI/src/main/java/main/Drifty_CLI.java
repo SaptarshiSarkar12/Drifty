@@ -661,7 +661,6 @@ public class Drifty_CLI {
             }
         } else {
             jobHistory.addJob(job, true);
-//            clearInputBuffer();
             renameFilenameIfRequired();
             if (link != null) {
                 FileDownloader downloader = new FileDownloader(job);
