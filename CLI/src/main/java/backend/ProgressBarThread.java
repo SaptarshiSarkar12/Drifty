@@ -8,6 +8,7 @@ import utils.UnitConverter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,14 +151,15 @@ public class ProgressBarThread extends Thread {
 
     private void cleanup() {
         downloadMetrics.setProgressPercent(0f);
+        String path = Paths.get(dir).resolve(fileName).toAbsolutePath().toString();
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = UnitConverter.format(totalDownloadedBytes, 2);
-            System.out.println();
-            M.msgDownloadInfo(SUCCESSFULLY_DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName);
+            System.out.print("\r");
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = UnitConverter.format(downloadedBytes, 2);
-            System.out.println();
-            M.msgDownloadInfo(SUCCESSFULLY_DOWNLOADED + fileName + OF_SIZE + sizeWithUnit + " at " + dir + fileName);
+            System.out.print("\r");
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
         } else {
             System.out.println();
             M.msgDownloadError(DOWNLOAD_FAILED);
@@ -209,7 +211,7 @@ public class ProgressBarThread extends Thread {
                     }
                 }
             } catch (IOException e) {
-                M.msgDownloadError("Error while downloading " + fileName + " : " + e.getMessage());
+                M.msgDownloadError("Error while downloading \"" + fileName + "\" : " + e.getMessage());
             } finally {
                 downloading = downloadMetrics.isActive();
             }
