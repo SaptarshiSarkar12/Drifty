@@ -1,7 +1,6 @@
-package gui.support;
+package support;
 
-import gui.preferences.AppSettings;
-import support.Job;
+import preferences.AppSettings;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -21,7 +20,7 @@ public class Jobs {
 
     public void add(Job newJob) {
         for (Job job : jobList) {
-            if (job.matches(newJob)) {
+            if (job.equals(newJob)) {
                 return;
             }
         }

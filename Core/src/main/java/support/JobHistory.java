@@ -34,7 +34,7 @@ public class JobHistory {
 
     public boolean exists(String link) {
         for (Job job : jobHistoryList) {
-            if (job.getLink().equals(link)) {
+            if (job.getSourceLink().equals(link)) {
                 return true;
             }
         }

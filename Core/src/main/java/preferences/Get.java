@@ -7,9 +7,11 @@ import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
 import properties.Program;
 import support.JobHistory;
+import support.Jobs;
 import utils.Utility;
 
 import javax.crypto.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -20,6 +22,7 @@ import java.util.Base64;
 import java.util.prefs.Preferences;
 
 import static preferences.Labels.*;
+import static properties.Program.JOB_FILE;
 import static properties.Program.JOB_HISTORY_FILE;
 
 public class Get {
@@ -120,5 +123,22 @@ public class Get {
 
     public boolean driftyUpdateAvailable() {
         return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
+    }
+
+    public Jobs jobs() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
+        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
+        try {
+            String json = FileUtils.readFileToString(jobBatchFile.toFile(), Charset.defaultCharset());
+            if (json != null && !json.isEmpty()) {
+                return gson.fromJson(json, Jobs.class);
+            }
+        } catch (FileNotFoundException e) {
+            Environment.getMessageBroker().msgLogInfo("Job file not found: " + jobBatchFile);
+        } catch (IOException e) {
+            Environment.getMessageBroker().msgLogError("Failed to read job file: " + jobBatchFile);
+        }
+        return new Jobs();
     }
 }

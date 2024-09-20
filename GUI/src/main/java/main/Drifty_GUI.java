@@ -145,14 +145,14 @@ public class Drifty_GUI extends Application {
         bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
         securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
         feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        checkForUpdates.setOnAction(e -> {
+        checkForUpdates.setOnAction(e -> new Thread(() -> {
             if (Utility.isOffline()) {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
                 noInternet.getResponse();
             } else {
-                new Thread(this::checkForUpdates).start();
+                checkForUpdates();
             }
-        });
+        }).start());
         about.setOnAction(event -> {
             if (aboutInstance == null) {
                 aboutInstance = new About();

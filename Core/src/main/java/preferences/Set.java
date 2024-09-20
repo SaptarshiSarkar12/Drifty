@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
 import properties.Program;
 import support.JobHistory;
+import support.Jobs;
 
 import javax.crypto.*;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Base64;
 import java.util.prefs.Preferences;
 
 import static preferences.Labels.*;
+import static properties.Program.JOB_FILE;
 import static properties.Program.JOB_HISTORY_FILE;
 
 public class Set {
@@ -123,5 +125,28 @@ public class Set {
     public void driftyUpdateAvailable(boolean isUpdateAvailable) {
         AppSettings.CLEAR.driftyUpdateAvailable();
         preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
+    }
+
+    public void jobs(Jobs jobs) {
+        String serializedJobs = serializeJobs(jobs);
+        writeJobsToFile(serializedJobs);
+    }
+
+    private String serializeJobs(Jobs jobs) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
+        return gson.toJson(jobs);
+    }
+
+    private void writeJobsToFile(String serializedJobs) {
+        AppSettings.CLEAR.jobs();
+        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
+        try {
+            FileUtils.writeStringToFile(jobBatchFile.toFile(), serializedJobs, Charset.defaultCharset());
+        } catch (IOException e) {
+            String errorMessage = "Failed to write jobs to file: " + e.getMessage();
+            Environment.getMessageBroker().msgInitError(errorMessage);
+            throw new RuntimeException(errorMessage, e);
+        }
     }
 }

@@ -46,6 +46,7 @@ public class ConfirmationDialog {
     private Stage stage;
     private VBox vbox;
     private String filename = "";
+    private TextField tfFilename;
 
     public ConfirmationDialog(String windowTitle, String message, boolean okOnly, boolean isUpdateError) {
         this.windowTitle = windowTitle;
@@ -120,7 +121,7 @@ public class ConfirmationDialog {
             stage.close();
         });
         btnOk = newButton("OK", e -> stage.close());
-        TextField tfFilename = new TextField(filename);
+        tfFilename = new TextField(filename);
         tfFilename.setMinWidth(width * .4);
         tfFilename.setMaxWidth(width * .8);
         tfFilename.setPrefWidth(width * .8);
@@ -167,6 +168,7 @@ public class ConfirmationDialog {
         Theme.changeButtonStyle(isDark, btnYes);
         Theme.changeButtonStyle(isDark, btnNo);
         Theme.changeButtonStyle(isDark, btnOk);
+        Theme.updateTextFields(isDark, false, tfFilename);
         stage.setWidth(width);
         stage.setHeight(height);
         stage.setScene(scene);

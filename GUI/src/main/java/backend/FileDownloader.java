@@ -1,8 +1,5 @@
 package backend;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import gui.init.Environment;
 import gui.support.SplitDownloadMetrics;
 import gui.utils.MessageBroker;
@@ -27,8 +24,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,17 +31,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static gui.support.Colors.GREEN;
-import static gui.support.Colors.RED;
+import static gui.support.Colors.DARK_RED;
 import static gui.support.Constants.*;
 
 public class FileDownloader extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final String YT_DLP = Program.get(Program.YT_DLP);
     private final StringProperty progressProperty = new SimpleStringProperty();
-    private String link;
+    private final String downloadLink;
     private final String filename;
     private final String dir;
-    private final String spotifySongMetadata;
     private final LinkType type;
     private int exitCode = 1;
     private boolean done;
@@ -63,18 +57,16 @@ public class FileDownloader extends Task<Integer> {
 
     public FileDownloader(Job job, StringProperty linkProperty, StringProperty dirProperty, StringProperty filenameProperty, StringProperty downloadMessage, IntegerProperty transferSpeedProperty, DoubleProperty progressProperty) {
         this.job = job;
-        this.link = job.getLink();
+        this.downloadLink = job.getDownloadLink();
         this.filename = Utility.cleanFilename(job.getFilename());
         this.dir = job.getDir();
-        this.type = LinkType.getLinkType(link);
-        if (this.type.equals(LinkType.SPOTIFY)) {
-            this.spotifySongMetadata = job.getSpotifyMetadataJson();
-        } else {
-            this.spotifySongMetadata = null;
+        if (this.downloadLink == null && LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY)) {
+            sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
         }
+        this.type = LinkType.getLinkType(this.downloadLink);
         setProperties();
         Platform.runLater(() -> {
-            linkProperty.setValue(link);
+            linkProperty.setValue(job.getSourceLink());
             filenameProperty.setValue(filename);
             dirProperty.setValue(dir);
             progressProperty.bind(this.progressProperty());
@@ -88,14 +80,7 @@ public class FileDownloader extends Task<Integer> {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
         switch (type) {
-            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(false);
-            case SPOTIFY -> {
-                link = getSpotifyDownloadLink(spotifySongMetadata);
-                if (link == null) {
-                    break;
-                }
-                downloadYoutubeOrInstagram(true);
-            }
+            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
             case OTHER -> splitDecision();
             default -> sendFinalMessage(INVALID_LINK);
         }
@@ -105,7 +90,7 @@ public class FileDownloader extends Task<Integer> {
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
-        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, link, "-o", filename, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
+        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, downloadLink, "-o", filename, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
@@ -117,11 +102,11 @@ public class FileDownloader extends Task<Integer> {
             String msg = e.getMessage();
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
             } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
-                M.msgDownloadError(PERMISSION_DENIED);
+                M.msgDownloadError(PERMISSION_DENIED_ERROR);
             } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
-                M.msgDownloadError(VIDEO_UNAVAILABLE);
+                M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
@@ -155,7 +140,7 @@ public class FileDownloader extends Task<Integer> {
     private void splitDecision() {
         long fileSize;
         try {
-            URL url = new URI(link).toURL();
+            URL url = new URI(downloadLink).toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
             fileSize = con.getHeaderFieldLong("Content-Length", -1);
@@ -168,7 +153,7 @@ public class FileDownloader extends Task<Integer> {
             exitCode = 1;
             return;
         } catch (IOException e) {
-            M.msgDownloadError(String.format(FAILED_CONNECTION_F, link));
+            M.msgDownloadError(String.format(FAILED_CONNECTION_F, downloadLink));
             exitCode = 1;
             return;
         }
@@ -223,7 +208,7 @@ public class FileDownloader extends Task<Integer> {
         String path = job.getFile().getAbsolutePath();
         try {
             int numParts = new DownloadMetrics().getThreadCount();
-            url = new URI(link).toURL();
+            url = new URI(downloadLink).toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
             long fileSize = con.getHeaderFieldLong("Content-Length", -1);
@@ -297,7 +282,7 @@ public class FileDownloader extends Task<Integer> {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
         } catch (FileNotFoundException e) {
-            message = FILE_NOT_FOUND;
+            message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
         } catch (UnknownHostException e) {
             message = "You are not connected to the internet!";
@@ -317,7 +302,7 @@ public class FileDownloader extends Task<Integer> {
         Path path = Paths.get(dir, filename);
         URL url = null;
         try {
-            url = new URI(link).toURL();
+            url = new URI(downloadLink).toURL();
             URLConnection con = url.openConnection();
             con.connect();
 
@@ -360,7 +345,7 @@ public class FileDownloader extends Task<Integer> {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
         } catch (FileNotFoundException e) {
-            message = FILE_NOT_FOUND;
+            message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
         } catch (IOException e) {
             message = String.format(FAILED_CONNECTION_F, url);
@@ -415,7 +400,7 @@ public class FileDownloader extends Task<Integer> {
                     int minutes = parts.length > 1 ? Utility.parseStringToInt(parts[1], "Failed to parse minutes in ETA", MessageCategory.DOWNLOAD) : 0;
                     int seconds = parts.length > 2 ? Utility.parseStringToInt(parts[2], "Failed to parse seconds in ETA", MessageCategory.DOWNLOAD) : 0;
                     String time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-                    updateMessage(speed + " " + units + " ETA " + time);
+                    updateMessage("Downloading at " + speed + units + "/s (ETA " + time + ")");
                     if (progress > 99) {
                         lastProgress = value;
                     }
@@ -436,7 +421,7 @@ public class FileDownloader extends Task<Integer> {
             msg = message.isEmpty() ? String.format(SUCCESSFULLY_DOWNLOADED_F, filename) : message;
             M.msgDownloadInfo(msg);
         } else {
-            UIController.setDownloadInfoColor(RED);
+            UIController.setDownloadInfoColor(DARK_RED);
             msg = message.isEmpty() ? String.format(FAILED_TO_DOWNLOAD_F, filename) : message;
             M.msgDownloadError(msg);
         }
@@ -449,51 +434,6 @@ public class FileDownloader extends Task<Integer> {
 
     public int getExitCode() {
         return exitCode;
-    }
-
-    public String getSpotifyDownloadLink(String spotifyMetadataJson) {
-        sendInfoMessage("Trying to get download link...");
-        if (spotifyMetadataJson == null) {
-            sendFinalMessage("Song metadata is missing!");
-            return null;
-        }
-        JsonObject jsonObject = JsonParser.parseString(spotifyMetadataJson).getAsJsonObject();
-        String songName = jsonObject.get("songName").getAsString();
-        int duration = jsonObject.get("duration").getAsInt();
-        JsonArray artists = jsonObject.get("artists").getAsJsonArray();
-        ArrayList<String> artistNames = new ArrayList<>(artists.size());
-        for (int i = 0; i < artists.size(); i++) {
-            artistNames.add(artists.get(i).getAsString());
-        }
-        String query = (String.join(", ", artistNames) + " - " + songName).toLowerCase();
-        ArrayList<HashMap<String, Object>> searchResults = Utility.getYoutubeSearchResults(query, true);
-        boolean searchedWithFilters = true;
-        if (searchResults == null) {
-            M.msgLogError("Failed to get search results for the song with filters! Trying without filters ...");
-            searchResults = Utility.getYoutubeSearchResults(query, false);
-            searchedWithFilters = false;
-            if (searchResults == null) {
-                sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
-                return null;
-            }
-        }
-        String matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
-        if (matchedId.isEmpty()) {
-            if (searchedWithFilters) {
-                M.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
-                searchResults = Utility.getYoutubeSearchResults(query, false);
-                matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
-                if (matchedId.isEmpty()) {
-                    sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
-                    return null;
-                }
-            } else {
-                sendFinalMessage("Song is exclusive to Spotify and cannot be downloaded!");
-                return null;
-            }
-        }
-        sendInfoMessage("Download link retrieved successfully!");
-        return "https://www.youtube.com/watch?v=" + matchedId;
     }
 
     private double parseStringToDouble(String value) {

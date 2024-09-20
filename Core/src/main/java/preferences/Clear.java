@@ -58,4 +58,8 @@ public class Clear {
     public void driftyUpdateAvailable() {
         preferences.remove(DRIFTY_UPDATE_AVAILABLE);
     }
+
+    public void jobs() {
+        preferences.remove(JOBS);
+    }
 }

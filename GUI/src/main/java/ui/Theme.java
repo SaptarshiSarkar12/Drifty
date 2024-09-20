@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -74,14 +75,8 @@ public class Theme {
             }
         }
         changeInfoTextFlow(color);
-        // TextFields
-        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
-        UIController.form.tfDir.setStyle(style);
-        UIController.form.tfFilename.setStyle(style);
-        UIController.form.tfLink.setStyle(style);
-        if (Settings.getTfCurrentDirectory() != null) {
-            Settings.getTfCurrentDirectory().setStyle(style + "-fx-font-weight: Bold");
-        }
+        updateTextFields(isDark, false, UIController.form.tfDir, UIController.form.tfFilename, UIController.form.tfLink);
+        updateTextFields(isDark, true, Settings.getTfCurrentDirectory());
     }
 
     private static void changeInfoTextFlow(Paint color) {
@@ -121,6 +116,15 @@ public class Theme {
                 button.setStyle(style + backColorReleased);
                 button.setOnMousePressed(ev -> button.setStyle(style + backColorPressed));
                 button.setOnMouseReleased(ev -> button.setStyle(style + backColorReleased));
+            }
+        }
+    }
+
+    static void updateTextFields(boolean isDark, boolean isBold, TextField... textFields) {
+        String style = isDark ? "-fx-text-fill: White;" : "-fx-text-fill: Black;";
+        for (TextField textField : textFields) {
+            if (textField != null) {
+                textField.setStyle(isBold ? style.concat("-fx-font-weight: Bold") : style);
             }
         }
     }

@@ -10,8 +10,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static support.Constants.FAILED_TO_CLEAR_LOG;
-import static support.Constants.FAILED_TO_CREATE_LOG;
+import static support.Constants.FAILED_TO_CLEAR_LOG_ERROR;
+import static support.Constants.FAILED_TO_CREATE_LOG_ERROR;
 
 public final class Logger {
     boolean isLogEmpty;
@@ -33,12 +33,13 @@ public final class Logger {
     }
 
     private File determineLogFile() {
-        if (!Environment.isAdministrator()) {
-            try {
-                return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile();
-            } catch (IOException e) {
-                System.err.println(FAILED_TO_CREATE_LOG + logFilename);
-            }
+        if (Environment.hasAdminPrivileges()) {
+            return new File(logFilename); // Log file will be created in the same directory as the executable
+        }
+        try {
+            return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile(); // Log file will be created in the temp directory
+        } catch (IOException e) {
+            System.err.println(FAILED_TO_CREATE_LOG_ERROR + logFilename);
         }
         return new File(logFilename);
     }
@@ -64,7 +65,7 @@ public final class Logger {
             isLogEmpty = true;
             logWriter.write("");
         } catch (IOException e) {
-            System.err.println(FAILED_TO_CLEAR_LOG);
+            System.err.println(FAILED_TO_CLEAR_LOG_ERROR);
         }
     }
 
@@ -77,7 +78,7 @@ public final class Logger {
             isLogEmpty = true;
             logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
-            System.err.println(FAILED_TO_CREATE_LOG + logMessage);
+            System.err.println(FAILED_TO_CREATE_LOG_ERROR + logMessage);
         }
     }
 }
