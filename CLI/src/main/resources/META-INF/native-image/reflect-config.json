@@ -65,6 +65,9 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"java.beans.Introspector"
+},
+{
   "name":"java.lang.Class",
   "methods":[{"name":"getRecordComponents","parameterTypes":[] }, {"name":"isRecord","parameterTypes":[] }]
 },
@@ -102,6 +105,9 @@
 },
 {
   "name":"java.sql.Date"
+},
+{
+  "name":"java.sql.Timestamp"
 },
 {
   "name":"java.util.Date"
