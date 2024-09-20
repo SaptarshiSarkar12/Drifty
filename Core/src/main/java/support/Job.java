@@ -59,8 +59,8 @@ public class Job {
     public boolean equals(Object obj) {
         if (obj instanceof Job job) {
             return Objects.equals(job.getSourceLink(), link) &&
-                   Objects.equals(job.getDir(), dir) &&
-                   Objects.equals(job.getFilename(), filename);
+                    Objects.equals(job.getDir(), dir) &&
+                    Objects.equals(job.getFilename(), filename);
         }
         return false;
     }
