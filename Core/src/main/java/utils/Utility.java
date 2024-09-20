@@ -5,7 +5,6 @@ import init.Environment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
 import properties.MessageCategory;
 import properties.Mode;
@@ -38,6 +37,7 @@ public class Utility {
     private static final Random RANDOM_GENERATOR = new Random(System.currentTimeMillis());
     protected static MessageBroker msgBroker;
     private static boolean interrupted;
+    private static String ytDlpErrorMessage;
 
     public static void initializeUtility() {
         // Lazy initialization of the MessageBroker as it might be null when the Environment MessageBroker is not set
@@ -57,10 +57,6 @@ public class Utility {
     public static boolean isSpotify(String url) {
         String pattern = "(https?://(open.spotify\\.com|play\\.spotify\\.com)/(track|album|playlist)/[a-zA-Z0-9]+).*";
         return url.matches(pattern);
-    }
-
-    public static boolean isExtractableLink(String link) {
-        return isYoutube(link) || isInstagram(link) || isSpotify(link);
     }
 
     public static boolean isOffline() {
@@ -137,9 +133,8 @@ public class Utility {
         return updateURL;
     }
 
-    public static LinkedList<String> getYtDlpMetadata(String link) {
+    public static String getYtDlpMetadata(String link) {
         try {
-            LinkedList<String> list = new LinkedList<>();
             File driftyJsonFolder = Program.getJsonDataPath().toFile();
             if (driftyJsonFolder.exists() && driftyJsonFolder.isDirectory()) {
                 FileUtils.forceDelete(driftyJsonFolder); // Deletes the previously generated temporary directory for Drifty
@@ -164,20 +159,21 @@ public class Utility {
                 return null;
             }
             File[] files = driftyJsonFolder.listFiles();
+            String linkMetadata;
             if (files != null) {
                 for (File file : files) {
                     if ("yt-metadata.info.json".equals(file.getName())) {
-                        String linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
-                        list.addLast(linkMetadata);
+                        linkMetadata = FileUtils.readFileToString(file, Charset.defaultCharset());
+                        FileUtils.forceDelete(driftyJsonFolder); // delete the metadata files of Drifty from the config directory
+                        return linkMetadata;
                     }
                 }
-                FileUtils.forceDelete(driftyJsonFolder); // delete the metadata files of Drifty from the config directory
             }
-            return list;
         } catch (IOException e) {
             msgBroker.msgLinkError("Failed to perform I/O operations on link metadata! " + e.getMessage());
             return null;
         }
+        return null;
     }
 
     public static String getHomeDownloadFolder() {
@@ -191,19 +187,11 @@ public class Utility {
         }
         if (downloadsFolder.equals(FileSystems.getDefault().getSeparator())) {
             downloadsFolder = System.getProperty("user.home");
-            msgBroker.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
+            msgBroker.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER_ERROR);
         } else {
             msgBroker.msgDirInfo(FOLDER_DETECTED + downloadsFolder);
         }
         return downloadsFolder;
-    }
-
-    public static String makePretty(String json) {
-        // The regex strings won't match unless the json string is converted to pretty format
-        GsonBuilder g = new GsonBuilder();
-        Gson gson = FxGson.addFxSupport(g).setPrettyPrinting().create();
-        JsonElement element = JsonParser.parseString(json);
-        return gson.toJson(element);
     }
 
     public static String renameFile(String filename, String dir) {
@@ -221,22 +209,6 @@ public class Utility {
             path = Paths.get(dir, newFilename);
         }
         return newFilename;
-    }
-
-    public static String getFilenameFromJson(String jsonString) {
-        String json = makePretty(jsonString);
-        String filename;
-        String regexFilename = "(\"title\": \")(.+)(\",)";
-        Pattern p = Pattern.compile(regexFilename);
-        Matcher m = p.matcher(json);
-        if (m.find()) {
-            filename = cleanFilename(m.group(2)) + ".mp4";
-            msgBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + filename + "\"");
-        } else {
-            filename = cleanFilename("Unknown_Filename_") + randomString(15) + ".mp4";
-            msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
-        }
-        return filename;
     }
 
     public static HashMap<String, Object> getSpotifySongMetadata(String songUrl) {
@@ -272,10 +244,18 @@ public class Utility {
                         String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("5");
                         long timeToWait = (long) parseStringToInt(retryAfter, "Failed to parse time to wait before retrying!", MessageCategory.DOWNLOAD) * 1000;
                         for (long i = timeToWait; i >= 0; i -= 1000) {
-                            System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
+                            if (Mode.isCLI()) {
+                                System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
+                            } else {
+                                msgBroker.msgLinkInfo("Retrying in " + i / 1000 + " seconds...");
+                            }
                             sleep(1000);
                         }
-                        System.out.println("\r" + "Retrying now...");
+                        if (Mode.isCLI()) {
+                            System.out.println("\r" + "Retrying now...");
+                        } else {
+                            msgBroker.msgLinkInfo("Retrying now...");
+                        }
                         continue;
                     } else {
                         return null;
@@ -290,6 +270,7 @@ public class Utility {
                 HashMap<String, Object> songMetadataMap = new HashMap<>();
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 JsonElement artistJsonTree = gson.toJsonTree(artistNames);
+                songMetadataMap.put("link", songUrl);
                 songMetadataMap.put("songName", songName);
                 songMetadataMap.put("duration", duration);
                 songMetadataMap.put("artists", artistJsonTree);
@@ -391,12 +372,10 @@ public class Utility {
                     artistNames.add(artists.get(j).getAsJsonObject().get("name").getAsString());
                 }
                 HashMap<String, Object> songMetadataMap = new HashMap<>();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                JsonElement artistJsonTree = gson.toJsonTree(artistNames);
                 songMetadataMap.put("link", link);
                 songMetadataMap.put("songName", songName);
                 songMetadataMap.put("duration", duration);
-                songMetadataMap.put("artists", artistJsonTree);
+                songMetadataMap.put("artists", artistNames);
                 playlistData.add(songMetadataMap);
             }
         }
@@ -419,14 +398,131 @@ public class Utility {
         return content.toString();
     }
 
+    public static String extractFilenameFromURL(String link) { // TODO: Check CLI problems on this method
+        // Example: "example.com/file.txt" prints "Filename detected: file.txt"
+        // example.com/file.json -> file.json
+        String file = link.substring(link.lastIndexOf("/") + 1);
+        if (file.isEmpty()) {
+            msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+            return null;
+        }
+        int index = file.lastIndexOf(".");
+        if (index < 0) {
+            msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+            return null;
+        }
+        String extension = file.substring(index);
+        // edge case 1: "example.com/."
+        if (extension.length() == 1) {
+            msgBroker.msgFilenameError(FILENAME_DETECTION_ERROR);
+            return null;
+        }
+        // file.png?width=200 -> file.png
+        String filename = file.split("([?])")[0];
+        msgBroker.msgLogInfo(FILENAME_DETECTED + "\"" + filename + "\"");
+        return filename;
+    }
+
+    public static HashMap<String, Object> getSpotifySongDownloadData(HashMap<String, Object> songMetadata, String directory) {
+        long startTime = System.currentTimeMillis();
+        String songLink = songMetadata.get("link").toString();
+        String songName = cleanFilename(songMetadata.get("songName").toString());
+        if (songName.isEmpty()) {
+            songName = "Unknown_Spotify_Song_".concat(randomString(5));
+        }
+        String filename = songName.concat(".webm");
+        String downloadLink = Utility.getSpotifyDownloadLink(songMetadata);
+        if (downloadLink == null) {
+            if (Mode.isGUI()) {
+                msgBroker.msgLinkError("Song is exclusive to Spotify and cannot be downloaded!");
+            } else {
+                System.out.println("\nSong (" + filename.replace(".webm", "") + ") is exclusive to Spotify and cannot be downloaded!");
+            }
+            return null;
+        }
+        if (Mode.isGUI()) {
+            msgBroker.msgLinkInfo("Download link retrieved successfully!");
+        }
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("link", songLink);
+        data.put("downloadLink", downloadLink);
+        data.put("filename", filename);
+        data.put("directory", directory);
+        msgBroker.msgLogInfo("Time taken to process Spotify song (" + filename + "): " + (System.currentTimeMillis() - startTime) + " ms");
+        return data;
+    }
+
+    public static String getSpotifyDownloadLink(HashMap<String, Object> songMetadata) {
+        String songName = songMetadata.get("songName").toString();
+        int duration = Utility.parseStringToInt(songMetadata.get("duration").toString(), "Failed to convert Spotify song duration from String to int", MessageCategory.DOWNLOAD);
+        ArrayList<String> artistNames;
+        if (songMetadata.get("artists") instanceof JsonArray artists) {
+            artistNames = new ArrayList<>();
+            for (int i = 0; i < artists.size(); i++) {
+                artistNames.add(artists.get(i).getAsString());
+            }
+        } else {
+            // Safe casting with type check
+            ArrayList<?> rawList = (ArrayList<?>) songMetadata.get("artists");
+            artistNames = new ArrayList<>();
+            for (Object obj : rawList) {
+                if (obj instanceof String) {
+                    artistNames.add((String) obj);
+                } else {
+                    // Handle the case where an element is not a String
+                    msgBroker.msgLinkError("Failed to cast artist names to String in Spotify song metadata!");
+                    return null;
+                }
+            }
+        }
+        String query = (String.join(", ", artistNames) + " - " + songName).toLowerCase();
+        ArrayList<HashMap<String, Object>> searchResults = Utility.getYoutubeSearchResults(query, true);
+        boolean searchedWithFilters = true;
+        if (searchResults == null) {
+            msgBroker.msgLogError("Failed to get search results for the Spotify song with filters! Trying without filters ...");
+            searchResults = Utility.getYoutubeSearchResults(query, false);
+            searchedWithFilters = false;
+            if (searchResults == null) {
+                msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                return null;
+            }
+        }
+        String matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+        if (matchedId.isEmpty()) {
+            if (searchedWithFilters) {
+                msgBroker.msgLogError("Failed to get a matching video ID for the song with filters! Trying without filters ...");
+                searchResults = Utility.getYoutubeSearchResults(query, false);
+                if (searchResults == null) {
+                    msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                    return null;
+                }
+                matchedId = Utility.getMatchingVideoID(Objects.requireNonNull(searchResults), duration, artistNames);
+                if (matchedId.isEmpty()) {
+                    msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                    return null;
+                }
+            } else {
+                msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
+                return null;
+            }
+        }
+        return "https://www.youtube.com/watch?v=" + matchedId;
+    }
+
+    /*
+    * This method is used to remove illegal characters from the filename to prevent errors while saving the file.
+    */
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
+        if (fn == null) {
+            return "";
+        }
         return fn.replaceAll("[^a-zA-Z0-9-.%?*:|_)<(> ]+", "").strip();
     }
 
     private static Runnable ytDLPJsonData(String folderPath, String link) {
         return () -> {
-            String[] command = new String[]{Program.get(YT_DLP), "--write-info-json", "--skip-download", "--restrict-filenames", "-P", folderPath, link, "-o", "yt-metadata"}; // -o flag is used to specify the output filename which is "yt-metadata.info.json" in this case
+            String[] command = new String[]{Program.get(YT_DLP), "--flat-playlist", "--write-info-json", "--no-clean-info-json", "--skip-download", "--compat-options", "no-youtube-unavailable-videos", "-P", folderPath, link, "-o", "yt-metadata"}; // -o flag is used to specify the output filename, which is "yt-metadata.info.json" in this case
             try {
                 ProcessBuilder pb = new ProcessBuilder(command);
                 pb.redirectErrorStream(true);
@@ -440,18 +536,21 @@ public class Utility {
                     while ((line = reader.readLine()) != null) {
                         if (line.contains("ERROR") || line.contains("WARNING")) {
                             if (line.contains("unable to extract username")) {
-                                msgBroker.msgLinkError("The Instagram post/reel is private!");
+                                ytDlpErrorMessage = "The Instagram post/reel is private!";
                                 break;
                             } else if (line.contains("The playlist does not exist")) {
-                                msgBroker.msgLinkError("The YouTube playlist does not exist or is private!");
+                                ytDlpErrorMessage = "The YouTube playlist does not exist or is private!";
                                 break;
                             } else if (line.contains("Video unavailable")) {
-                                msgBroker.msgLinkError("The YouTube video is unavailable!");
+                                ytDlpErrorMessage = "The YouTube video is unavailable ".concat(line.substring(line.indexOf("because")));
                                 break;
                             } else if (line.contains("Skipping player responses from android clients")) {
                                 msgBroker.msgLogWarning(line);
                             } else if (line.contains("Unable to download webpage") && line.contains("Temporary failure in name resolution")) {
-                                msgBroker.msgLinkError("You are not connected to the Internet!");
+                                ytDlpErrorMessage = "You are not connected to the Internet!";
+                                break;
+                            } else if (line.contains("unable to extract shared data; please report this issue on")) {
+                                ytDlpErrorMessage = "Instagram post/reel is not accessible due to temporary blockage by Instagram!";
                                 break;
                             } else {
                                 if (line.contains("ERROR")) {
@@ -462,9 +561,13 @@ public class Utility {
                             }
                         }
                     }
+                    if (ytDlpErrorMessage != null) {
+                        msgBroker.msgLinkError(ytDlpErrorMessage);
+                    }
                 }
             } catch (Exception e) {
-                msgBroker.msgLinkError("Failed to get link metadata! " + e.getMessage());
+                ytDlpErrorMessage = "Failed to get link metadata! " + e.getMessage();
+                msgBroker.msgLinkError(ytDlpErrorMessage);
             }
         };
     }
@@ -522,6 +625,10 @@ public class Utility {
             }
             @SuppressWarnings("unchecked")
             ArrayList<String> artistsFromSearchResult = (ArrayList<String>) searchResult.get("artists");
+            if (artistsFromSearchResult == null) {
+                msgBroker.msgLinkError("Failed to get artists from search result!");
+                continue;
+            }
             for (String artist : artistNames) {
                 if (artistsFromSearchResult.contains(artist)) {
                     noOfMatches++;
@@ -807,18 +914,12 @@ public class Utility {
         };
     }
 
-    public static String getSpotifyFilename(String jsonString) {
-        JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
-        String songName = jsonObject.get("songName").getAsString();
-        return cleanFilename(songName) + ".webm";
-    }
-
     public static String convertToMp3(Path inputFilePath) {
         String command = Program.get(Program.FFMPEG);
         Path outputFilePath = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + " - converted.mp3").toAbsolutePath();
         String newFilename;
         if (outputFilePath.toFile().exists()) {
-            newFilename = renameFile(outputFilePath.getFileName().toString(), outputFilePath.getParent().toString()); // rename the file if it already exists else ffmpeg conversion hangs indefinitely and tries to overwrite the file
+            newFilename = renameFile(outputFilePath.getFileName().toString(), outputFilePath.getParent().toString()); // rename the file if it already exists, else ffmpeg conversion hangs indefinitely and tries to overwrite the file
             outputFilePath = outputFilePath.getParent().resolve(newFilename);
         }
         ProcessBuilder convertToMp3 = new ProcessBuilder(command, "-i", inputFilePath.toString(), outputFilePath.toString());
