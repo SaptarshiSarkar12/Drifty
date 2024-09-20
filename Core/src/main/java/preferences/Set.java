@@ -128,15 +128,25 @@ public class Set {
     }
 
     public void jobs(Jobs jobs) {
+        String serializedJobs = serializeJobs(jobs);
+        writeJobsToFile(serializedJobs);
+    }
+
+    private String serializeJobs(Jobs jobs) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        String value = gson.toJson(jobs);
+        return gson.toJson(jobs);
+    }
+
+    private void writeJobsToFile(String serializedJobs) {
         AppSettings.CLEAR.jobs();
         Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
         try {
-            FileUtils.writeStringToFile(jobBatchFile.toFile(), value, Charset.defaultCharset());
+            FileUtils.writeStringToFile(jobBatchFile.toFile(), serializedJobs, Charset.defaultCharset());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            String errorMessage = "Failed to write jobs to file: " + e.getMessage();
+            Environment.getMessageBroker().msgInitError(errorMessage);
+            throw new RuntimeException(errorMessage, e);
         }
     }
 }

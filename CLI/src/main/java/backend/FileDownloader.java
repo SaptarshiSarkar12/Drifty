@@ -65,7 +65,6 @@ public class FileDownloader implements Runnable {
                     File file;
                     for (int i = 0; i < numberOfThreads; i++) {
                         file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
-                        file.deleteOnExit(); // Deletes a temporary file when JVM exits
                         fileOut = new FileOutputStream(file);
                         start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
                         end = (numberOfThreads - 1) == i ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
@@ -83,6 +82,9 @@ public class FileDownloader implements Runnable {
                     while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
                         sleep(500);
                     }
+                    for (File tempFile : tempFiles) {
+                        Files.deleteIfExists(tempFile.toPath());
+                    }
                 } else {
                     InputStream urlStream = url.openStream();
                     readableByteChannel = Channels.newChannel(urlStream);
@@ -98,9 +100,9 @@ public class FileDownloader implements Runnable {
                 // keep the main thread from closing the IO for a short amount of time so the UI thread can finish and give output
                 Utility.sleep(1800);
             } catch (SecurityException e) {
-                M.msgDownloadError("Write access to \"" + directoryPath.resolve(fileName).toAbsolutePath() + "\" is denied! " + e.getMessage());
+                M.msgDownloadError("Write access to the download directory is DENIED! " + e.getMessage());
             } catch (FileNotFoundException fileNotFoundException) {
-                M.msgDownloadError(FILE_NOT_FOUND);
+                M.msgDownloadError(FILE_NOT_FOUND_ERROR);
             } catch (IOException e) {
                 M.msgDownloadError(FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
             }
@@ -115,27 +117,27 @@ public class FileDownloader implements Runnable {
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
         Process process;
-        int exitCode = 1;
+        int exitValueOfYtDlp = 1;
         try {
             process = processBuilder.start();
             process.waitFor();
-            exitCode = process.exitValue();
+            exitValueOfYtDlp = process.exitValue();
         } catch (IOException e) {
             M.msgDownloadError("Failed to start download process for \"" + fileName + "\"");
         } catch (Exception e) {
             String msg = e.getMessage();
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
             } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
-                M.msgDownloadError(PERMISSION_DENIED);
+                M.msgDownloadError(PERMISSION_DENIED_ERROR);
             } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
-                M.msgDownloadError(VIDEO_UNAVAILABLE);
+                M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
         }
-        if (exitCode == 0) {
+        if (exitValueOfYtDlp == 0) {
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName));
             if (isSpotifySong) {
                 M.msgDownloadInfo("Converting to mp3 ...");
@@ -146,10 +148,10 @@ public class FileDownloader implements Runnable {
                     M.msgDownloadInfo("Successfully converted to mp3!");
                 }
             }
-        } else if (exitCode == 1) {
+        } else if (exitValueOfYtDlp == 1) {
             M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
         } else {
-            M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitCode);
+            M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
         }
     }
 
@@ -173,18 +175,18 @@ public class FileDownloader implements Runnable {
         }
         // check if it is merged-able
         if (completed == numberOfThreads) {
-            fileOutputStream = new FileOutputStream(directoryPath.resolve(fileName).toFile());
-            long position = 0;
-            for (int i = 0; i < numberOfThreads; i++) {
-                File f = tempFiles.get(i);
-                FileInputStream fs = new FileInputStream(f);
-                ReadableByteChannel rbs = Channels.newChannel(fs);
-                fileOutputStream.getChannel().transferFrom(rbs, position, f.length());
-                position += f.length();
-                fs.close();
-                rbs.close();
+            try (FileOutputStream fos = new FileOutputStream(directoryPath.resolve(fileName).toFile())) {
+                long position = 0;
+                for (int i = 0; i < numberOfThreads; i++) {
+                    File f = tempFiles.get(i);
+                    FileInputStream fs = new FileInputStream(f);
+                    ReadableByteChannel rbs = Channels.newChannel(fs);
+                    fos.getChannel().transferFrom(rbs, position, f.length());
+                    position += f.length();
+                    fs.close();
+                    rbs.close();
+                }
             }
-            fileOutputStream.close();
             return true;
         }
         return false;

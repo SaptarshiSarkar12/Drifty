@@ -155,11 +155,11 @@ public class ProgressBarThread extends Thread {
         if (isMultiThreadedDownloading) {
             String sizeWithUnit = UnitConverter.format(totalDownloadedBytes, 2);
             System.out.print("\r");
-            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at " + path);
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
         } else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = UnitConverter.format(downloadedBytes, 2);
             System.out.print("\r");
-            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at " + path);
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
         } else {
             System.out.println();
             M.msgDownloadError(DOWNLOAD_FAILED);
@@ -211,7 +211,7 @@ public class ProgressBarThread extends Thread {
                     }
                 }
             } catch (IOException e) {
-                M.msgDownloadError("Error while downloading " + fileName + " : " + e.getMessage());
+                M.msgDownloadError("Error while downloading \"" + fileName + "\" : " + e.getMessage());
             } finally {
                 downloading = downloadMetrics.isActive();
             }

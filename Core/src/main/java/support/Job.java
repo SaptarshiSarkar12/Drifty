@@ -30,10 +30,13 @@ public class Job {
     }
 
     public String getDownloadLink() {
-        if (downloadLink == null) {
+        if (downloadLink != null) {
+            return downloadLink;
+        }
+        if (link != null) {
             return link;
         }
-        return downloadLink;
+        throw new IllegalStateException("Both link and downloadLink are null");
     }
 
     public String getDir() {
@@ -55,7 +58,9 @@ public class Job {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Job job) {
-            return job.getSourceLink().equals(link) && job.getDir().equals(dir) && job.getFilename().equals(filename);
+            return Objects.equals(job.getSourceLink(), link)
+                    && Objects.equals(job.getDir(), dir)
+                    && Objects.equals(job.getFilename(), filename);
         }
         return false;
     }

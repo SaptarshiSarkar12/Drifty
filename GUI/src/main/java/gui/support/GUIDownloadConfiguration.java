@@ -5,26 +5,22 @@ import gui.utils.MessageBroker;
 import support.DownloadConfiguration;
 
 public class GUIDownloadConfiguration extends DownloadConfiguration {
-    protected MessageBroker msgBroker = Environment.getMessageBroker();
-
-    public GUIDownloadConfiguration(String link, String directory) {
-        super(link, directory, null);
-    }
+    private final MessageBroker messageBroker = Environment.getMessageBroker();
 
     public GUIDownloadConfiguration(String link, String directory, String filename) {
         super(link, directory, filename);
     }
 
     public void prepareFileData() {
-        msgBroker.msgLinkInfo("Fetching file data...");
+        messageBroker.msgLinkInfo("Fetching file data...");
         int statusCode = fetchFileData();
         if (statusCode == 0) {
-            msgBroker.msgLinkInfo("File data fetched successfully");
-            msgBroker.msgLinkInfo("Adding file(s) to batch...");
+            messageBroker.msgLinkInfo("File data fetched successfully");
+            messageBroker.msgLinkInfo("Adding file(s) to batch...");
             updateJobList();
-            msgBroker.msgLinkInfo("File(s) added to batch successfully");
+            messageBroker.msgLinkInfo("File(s) added to batch successfully");
         } else {
-            msgBroker.msgLogError("Failed to fetch file data");
+            messageBroker.msgLogError("Failed to fetch file data");
         }
     }
 }

@@ -102,11 +102,11 @@ public class FileDownloader extends Task<Integer> {
             String msg = e.getMessage();
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE);
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
             } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
-                M.msgDownloadError(PERMISSION_DENIED);
+                M.msgDownloadError(PERMISSION_DENIED_ERROR);
             } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
-                M.msgDownloadError(VIDEO_UNAVAILABLE);
+                M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
@@ -282,7 +282,7 @@ public class FileDownloader extends Task<Integer> {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
         } catch (FileNotFoundException e) {
-            message = FILE_NOT_FOUND;
+            message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
         } catch (UnknownHostException e) {
             message = "You are not connected to the internet!";
@@ -345,7 +345,7 @@ public class FileDownloader extends Task<Integer> {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
         } catch (FileNotFoundException e) {
-            message = FILE_NOT_FOUND;
+            message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
         } catch (IOException e) {
             message = String.format(FAILED_CONNECTION_F, url);

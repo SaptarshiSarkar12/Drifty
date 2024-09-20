@@ -187,7 +187,7 @@ public class Utility {
         }
         if (downloadsFolder.equals(FileSystems.getDefault().getSeparator())) {
             downloadsFolder = System.getProperty("user.home");
-            msgBroker.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER);
+            msgBroker.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER_ERROR);
         } else {
             msgBroker.msgDirInfo(FOLDER_DETECTED + downloadsFolder);
         }
@@ -514,6 +514,9 @@ public class Utility {
     */
     public static String cleanFilename(String filename) {
         String fn = StringEscapeUtils.unescapeJava(filename);
+        if (fn == null) {
+            return "";
+        }
         return fn.replaceAll("[^a-zA-Z0-9-.%?*:|_)<(> ]+", "").strip();
     }
 

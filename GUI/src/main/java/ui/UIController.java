@@ -355,7 +355,7 @@ public final class UIController {
                             downloadConfig = new GUIDownloadConfiguration(link, dir, filename);
                         }
                     } else {
-                        downloadConfig = new GUIDownloadConfiguration(link, getDir());
+                        downloadConfig = new GUIDownloadConfiguration(link, getDir(), null); // Filename is null because it will be retrieved from the link
                     }
                     downloadConfig.sanitizeLink();
                     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -507,7 +507,7 @@ public final class UIController {
     private void updateBatch() {
         UPDATING_BATCH.setValue(false);
         if (selectedJob != null) {
-            Job job = new Job(getLink(), getDir(), getFilename(), selectedJob.getDownloadLink());
+            Job job = new Job(selectedJob.getSourceLink(), getDir(), getFilename(), selectedJob.getDownloadLink());
             removeJobFromList(selectedJob);
             addJob(job);
         }

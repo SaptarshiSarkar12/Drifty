@@ -12,6 +12,7 @@ import static gui.support.Colors.GREEN;
 
 public class FileMetadataRetriever extends Task<Void> {
     private final GUIDownloadConfiguration config;
+    // Progress bar direction
     boolean dirUp = true;
 
     public FileMetadataRetriever(GUIDownloadConfiguration config) {
@@ -47,15 +48,8 @@ public class FileMetadataRetriever extends Task<Void> {
             public void run() {
                 Platform.runLater(() -> {
                     double value = getProgress();
-                    value = dirUp ? value + .01 : value - .01;
-                    if (value > 1.0) {
-                        dirUp = !dirUp;
-                        value = 1.0;
-                    }
-                    if (value < 0) {
-                        dirUp = !dirUp;
-                        value = 0.0;
-                    }
+                    dirUp = (value >= 1.0 || value <= 0.0) != dirUp;
+                    value += dirUp ? 0.01 : -0.01;
                     updateProgress(value, 1.0);
                 });
             }

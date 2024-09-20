@@ -11,6 +11,7 @@ import support.Jobs;
 import utils.Utility;
 
 import javax.crypto.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -127,15 +128,16 @@ public class Get {
     public Jobs jobs() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        Jobs jobs;
         Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
         try {
             String json = FileUtils.readFileToString(jobBatchFile.toFile(), Charset.defaultCharset());
             if (json != null && !json.isEmpty()) {
-                jobs = gson.fromJson(json, Jobs.class);
-                return jobs;
+                return gson.fromJson(json, Jobs.class);
             }
-        } catch (IOException ignored) {
+        } catch (FileNotFoundException e) {
+            Environment.getMessageBroker().msgLogInfo("Job file not found: " + jobBatchFile);
+        } catch (IOException e) {
+            Environment.getMessageBroker().msgLogError("Failed to read job file: " + jobBatchFile);
         }
         return new Jobs();
     }

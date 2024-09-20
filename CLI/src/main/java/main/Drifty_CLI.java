@@ -24,18 +24,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static cli.support.Constants.*;
-import static cli.utils.Utility.*;
+import static cli.utils.Utility.isURL;
+import static cli.utils.Utility.sleep;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();
     protected static final Scanner SC = ScannerFactory.getInstance();
     protected static JobHistory jobHistory;
     private static LinkType linkType;
-    protected static boolean isYoutubeURL;
-    protected static boolean isInstagramLink;
-    protected static boolean isSpotifyLink;
     private static MessageBroker messageBroker;
     private static String link;
     private static String downloadsFolder;
@@ -180,6 +182,10 @@ public class Drifty_CLI {
                 }
             }
             if (!batchDownloading) {
+                if (link == null) {
+                    messageBroker.msgInitError("No URL specified! Exiting...");
+                    Environment.terminate(1);
+                }
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
                     isUrlValid = Utility.isLinkValid(link);
@@ -189,11 +195,8 @@ public class Drifty_CLI {
                 }
                 if (isUrlValid) {
                     linkType = LinkType.getLinkType(link);
-                    isYoutubeURL = linkType.equals(LinkType.YOUTUBE);
-                    isInstagramLink = linkType.equals(LinkType.INSTAGRAM);
-                    isSpotifyLink = linkType.equals(LinkType.SPOTIFY);
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                    if (isSpotifyLink && link.contains("playlist")) {
+                    if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                         handleSpotifyPlaylist();
                     } else {
                         verifyJobAndDownload();
@@ -243,15 +246,8 @@ public class Drifty_CLI {
                 messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
                 downloadsFolder = SC.nextLine().split(" ")[0];
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
-                isYoutubeURL = linkType.equals(LinkType.YOUTUBE);
-                isInstagramLink = linkType.equals(LinkType.INSTAGRAM);
-                isSpotifyLink = linkType.equals(LinkType.SPOTIFY);
-                if (isSpotifyLink) {
-                    if (link.contains("playlist")) {
-                        handleSpotifyPlaylist();
-                    } else {
-                        verifyJobAndDownload();
-                    }
+                if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
+                    handleSpotifyPlaylist();
                 } else {
                     verifyJobAndDownload();
                 }
@@ -387,10 +383,13 @@ public class Drifty_CLI {
     private static void handleSpotifyPlaylist() {
         messageBroker.msgFilenameInfo("Retrieving the number of tracks in the playlist...");
         DownloadConfiguration config = new DownloadConfiguration(link, downloadsFolder, null);
-        Thread prepareFileData = new Thread(config::fetchFileData);
-        prepareFileData.start();
-        while (prepareFileData.isAlive()) {
-            sleep(100);
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+            Future<Integer> future = executor.submit(config::fetchFileData);
+            future.get();
+        } catch (ExecutionException e) {
+            messageBroker.msgLinkError("Failed to retrieve spotify playlist metadata! " + e.getMessage());
+        } catch (InterruptedException e) {
+            messageBroker.msgLinkError("User interrupted the process of retrieving spotify playlist metadata! " + e.getMessage());
         }
         ArrayList<HashMap<String, Object>> playlistData = config.getFileData();
         if (playlistData != null && !playlistData.isEmpty()) {
@@ -472,9 +471,6 @@ public class Drifty_CLI {
                     continue;
                 }
                 linkType = LinkType.getLinkType(link);
-                isYoutubeURL = linkType.equals(LinkType.YOUTUBE);
-                isInstagramLink = linkType.equals(LinkType.INSTAGRAM);
-                isSpotifyLink = linkType.equals(LinkType.SPOTIFY);
                 if (".".equals(downloadsFolder)) {
                     downloadsFolder = Utility.getHomeDownloadFolder();
                 } else if ("L".equalsIgnoreCase(downloadsFolder)) {
@@ -489,7 +485,7 @@ public class Drifty_CLI {
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
                 }
-                if (isSpotifyLink && link.contains("playlist")) {
+                if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                     handleSpotifyPlaylist();
                 } else {
                     verifyJobAndDownload();
@@ -510,7 +506,7 @@ public class Drifty_CLI {
     }
 
     private static void renameFilenameIfRequired() { // Asks the user if the detected filename is to be used or not. If not, then the user is asked to enter a filename.
-        if ((fileName == null || (fileName.isEmpty())) && (!isYoutubeURL && !isInstagramLink && !isSpotifyLink)) {
+        if ((fileName == null || (fileName.isEmpty())) && linkType.equals(LinkType.OTHER)) {
             messageBroker.msgInputInfo(ENTER_FILE_NAME_WITH_EXTENSION, false);
             fileName = SC.nextLine();
         } else {
@@ -596,10 +592,13 @@ public class Drifty_CLI {
         DownloadConfiguration config = new DownloadConfiguration(link, downloadsFolder, fileName);
         config.sanitizeLink();
         messageBroker.msgFilenameInfo("Retrieving file data...");
-        Thread prepareFileData = new Thread(config::fetchFileData);
-        prepareFileData.start();
-        while (prepareFileData.isAlive()) {
-            sleep(100);
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+            Future<Integer> future = executor.submit(config::fetchFileData);
+            future.get();
+        } catch (ExecutionException e) {
+            messageBroker.msgLinkError("Failed to retrieve file metadata! " + e.getMessage());
+        } catch (InterruptedException e) {
+            messageBroker.msgLinkError("User interrupted the process of retrieving file metadata! " + e.getMessage());
         }
         if (config.getStatusCode() != 0) {
             messageBroker.msgLinkError("Failed to fetch file data!");
@@ -663,6 +662,7 @@ public class Drifty_CLI {
             jobHistory.addJob(job, true);
             renameFilenameIfRequired();
             if (link != null) {
+                job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
                 FileDownloader downloader = new FileDownloader(job);
                 downloader.run();
             }
