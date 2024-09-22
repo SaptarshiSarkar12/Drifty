@@ -44,3 +44,9 @@ The start button is located at the bottom-right portion of the window and is use
 
 The download queue is located on the left side of the window and displays the list of files that are currently in the download queue. You can manage the download queue by right-clicking on a file to open the context menu, which allows you to **Delete** the selected file from the queue or **Clear** files from the queue. The menu also has the **Information** option to show the **Help** window.
 ![Download Queue Context Menu](https://github.com/user-attachments/assets/f719d2f5-7ed9-4f4a-b29f-b3c1254a89c5)
+
+## Check for Updates
+
+Drifty GUI automatically checks for updates when you start the application.
+If a new version is available, a popup will appear with the option to update to the latest version. By clicking on **Yes** button, Drifty GUI will download the latest version and install it automatically.
+Alternatively, you can manually check for updates by clicking on the **Check for Updates** button under the **Help** menu.

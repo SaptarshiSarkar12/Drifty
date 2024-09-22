@@ -78,8 +78,8 @@ device that was on the network is no longer on the network, it can pull that
 IP address back and put it into the pool so that it doesn't run out of IP
 addresses. This means that it is possible your local IP address might change
 in a short period of time. We cannot build a command to run Drifty when your
-IP address is changing because docker needs to send the graphics to a known IP
-address. > > There are usually two generic ways to refer to your local ip
+IP address is changing because docker needs to send the graphics to a known IP address.
+There are usually two generic ways to refer to your local ip
 address in a linux or Windows environment. The first way is to simply use the
 word `localhost` and the second way is to use the default home IP address of
 `127.0.0.1`. Unfortunately, neither of those generics will work in this case,
@@ -140,7 +140,7 @@ We have finally set up everything required to run the Docker image of **Drifty G
   docker run -e DISPLAY=192.168.1.10:0 ghcr.io/saptarshisarkar12/drifty-gui:master
   ```
   Ensure to update the tag to the desired version/branch.
-- To run the **docker image built from your changed source code** (using `docker compose`), execute the following commands:
+- To run the **docker image built from your changed source code** (using `docker compose{:shell}`), execute the following commands:
   ```bash showLineNumbers
   socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
   open -a Xquartz
