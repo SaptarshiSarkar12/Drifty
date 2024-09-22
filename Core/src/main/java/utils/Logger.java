@@ -1,15 +1,17 @@
 package utils;
 
+import init.Environment;
 import properties.MessageType;
 import properties.Mode;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static support.Constants.FAILED_TO_CREATE_LOG;
-import static support.Constants.FAILED_TO_CLEAR_LOG;
+import static support.Constants.FAILED_TO_CLEAR_LOG_ERROR;
+import static support.Constants.FAILED_TO_CREATE_LOG_ERROR;
 
 public final class Logger {
     boolean isLogEmpty;
@@ -18,6 +20,7 @@ public final class Logger {
     private final DateFormat dateFormat;
     private final Calendar calendarObject = Calendar.getInstance();
     private final String logFilename;
+    private final File logFile;
 
     private Logger() {
         if (Mode.isCLI()) {
@@ -26,6 +29,19 @@ public final class Logger {
             logFilename = "Drifty GUI.log";
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logFile = determineLogFile();
+    }
+
+    private File determineLogFile() {
+        if (Environment.hasAdminPrivileges()) {
+            return new File(logFilename); // Log file will be created in the same directory as the executable
+        }
+        try {
+            return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile(); // Log file will be created in the temp directory
+        } catch (IOException e) {
+            System.err.println(FAILED_TO_CREATE_LOG_ERROR + logFilename);
+        }
+        return new File(logFilename);
     }
 
     public static Logger getInstance() {
@@ -45,11 +61,11 @@ public final class Logger {
     }
 
     private void clearLog() {
-        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, false))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, false))))) {
             isLogEmpty = true;
             logWriter.write("");
         } catch (IOException e) {
-            System.err.println(FAILED_TO_CLEAR_LOG);
+            System.err.println(FAILED_TO_CLEAR_LOG_ERROR);
         }
     }
 
@@ -58,11 +74,11 @@ public final class Logger {
         if (!isLogEmpty) {
             clearLog();
         }
-        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFilename, true))))) {
+        try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true))))) {
             isLogEmpty = true;
             logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
         } catch (IOException e) {
-            System.err.println(FAILED_TO_CREATE_LOG + logMessage);
+            System.err.println(FAILED_TO_CREATE_LOG_ERROR + logMessage);
         }
     }
 }

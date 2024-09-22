@@ -1,13 +1,12 @@
 package ui;
 
 import backend.FileDownloader;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
-import gui.support.Jobs;
+import gui.support.GUIDownloadConfiguration;
+import gui.updater.GUIUpdateExecutor;
 import gui.utils.CheckFile;
 import gui.utils.MessageBroker;
 import javafx.application.Platform;
@@ -32,23 +31,30 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import main.Drifty_GUI;
+import properties.OS;
 import support.Job;
 import support.JobHistory;
+import support.Jobs;
 import utils.Utility;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.LinkedList;
+import java.util.concurrent.*;
 
 import static gui.support.Colors.*;
-import static utils.Utility.*;
+import static utils.Utility.renameFile;
+import static utils.Utility.sleep;
 
 public final class UIController {
     public static final UIController INSTANCE = new UIController();
     public static MainGridPane form;
+    private Stage helpStage;
+    private GUIDownloadConfiguration downloadConfig;
     private static final MessageBroker M = Environment.getMessageBroker();
     private static final BooleanProperty DIRECTORY_EXISTS = new SimpleBooleanProperty(false);
     private static final BooleanProperty PROCESSING_BATCH = new SimpleBooleanProperty(false);
@@ -59,9 +65,7 @@ public final class UIController {
     private int speedValue;
     private static final TextFlow INFO_TF = new TextFlow();
     private static Scene infoScene;
-    private String songMetadataJson;
     private String filename;
-    private String songLink;
     private Folders folders;
     private Job selectedJob;
 
@@ -84,11 +88,75 @@ public final class UIController {
     Methods for initializing the various controls that are on the form - MainGridPane
      */
     private void start(MainGridPane pane) {
+        new Thread(() -> {
+            if (AppSettings.GET.driftyUpdateAvailable()) {
+                M.msgLogInfo("A new version of Drifty is available!");
+                showUpdateDialog();
+            }
+        }).start();
         form = pane;
         setControlProperties();
         setControlActions();
         form.tfLink.requestFocus();
         commitJobListToListView();
+    }
+
+    public void showUpdateDialog() {
+        if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            if (ask.getResponse().isYes()) {
+                downloadUpdate();
+            }
+        } else {
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ask.getResponse();
+        }
+    }
+
+    private void downloadUpdate() {
+        String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
+        try {
+            // "Current executable" means the executable currently running i.e., the one that is outdated.
+            File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
+            // "tmpFolder" is the temporary folder where the latest executable will be downloaded to.
+            File tmpFolder = Files.createTempDirectory("Drifty").toFile();
+            tmpFolder.deleteOnExit();
+            // For Mac, the latest executable is a ".pkg" file as it is the only working way to update the application, i.e., by installing a new version.
+            // For other OS, the latest executable name along with the extension is the same as that of the current executable.
+            String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
+            File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
+            // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
+            // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
+            getJobs().clear();
+
+            // Download the latest executable
+            Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), Constants.updateURL.toString());
+            addJob(updateJob);
+            Thread downloadUpdate = new Thread(batchDownloader());
+            downloadUpdate.start();
+            while (!downloadUpdate.getState().equals(Thread.State.TERMINATED)) {
+                sleep(500);
+            }
+            setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            // Reset the download queue to the previous state.
+            getJobs().setList(currentDownloadQueue);
+            if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
+                // If the latest executable was successfully downloaded, set the executable permission and execute the update.
+                GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
+                updateExecutor.execute();
+            } else {
+                M.msgUpdateError("Failed to download update!");
+            }
+        } catch (IOException e) {
+            M.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
+        } catch (URISyntaxException e) {
+            M.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
+        } catch (Exception e) {
+            M.msgUpdateError("Failed to update! An unknown error occurred! " + e.getMessage());
+        }
     }
 
     private void setControlProperties() {
@@ -97,11 +165,12 @@ public final class UIController {
 
         BooleanBinding disableStartButton = form.listView.itemsProperty().isNotNull().not().or(PROCESSING_BATCH).or(DIRECTORY_EXISTS.not()).or(VERIFYING_LINKS);
         BooleanBinding disableInputs = PROCESSING_BATCH.or(VERIFYING_LINKS);
+        BooleanBinding disableLinkInput = UPDATING_BATCH.or(PROCESSING_BATCH).or(VERIFYING_LINKS);
         form.btnSave.visibleProperty().bind(UPDATING_BATCH);
         form.btnStart.disableProperty().bind(disableStartButton);
         form.tfDir.disableProperty().bind(disableInputs);
         form.tfFilename.disableProperty().bind(disableInputs);
-        form.tfLink.disableProperty().bind(disableInputs);
+        form.tfLink.disableProperty().bind(disableLinkInput);
         form.listView.setContextMenu(getListMenu());
 
         if ("Dark".equals(AppSettings.GET.mainTheme())) {
@@ -114,13 +183,6 @@ public final class UIController {
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
-        form.listView.setOnMouseClicked(e -> {
-            Job job = form.listView.getSelectionModel().getSelectedItem();
-            setLink(job.getLink());
-            setDir(job.getDir());
-            setFilename(job.getFilename());
-            selectJob(job);
-        });
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
         form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
@@ -144,6 +206,7 @@ public final class UIController {
 
     private void setControlActions() {
         form.btnSave.setOnAction(e -> new Thread(() -> {
+            UPDATING_BATCH.setValue(true);
             String link = getLink();
             filename = getFilename();
             String dir = getDir();
@@ -154,9 +217,10 @@ public final class UIController {
                 }
             }
             removeJobFromList(selectedJob);
-            addJob(new Job(link, dir, filename, selectedJob.getSpotifyMetadataJson(), selectedJob.repeatOK()));
+            addJob(new Job(link, dir, filename, selectedJob.getDownloadLink()));
             clearLink();
             clearFilename();
+            setDir(folders.getDownloadFolder());
             UPDATING_BATCH.setValue(false);
         }).start());
         form.btnStart.setOnAction(e -> new Thread(() -> {
@@ -175,12 +239,18 @@ public final class UIController {
         form.tfLink.setOnKeyTyped(e -> processLink());
         form.listView.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
-                Job job = form.listView.getSelectionModel().getSelectedItem();
-                if (job != null) {
-                    selectJob(job);
-                    setLink(job.getLink());
-                    setDir(job.getDir());
-                    setFilename(job.getFilename());
+                if (UPDATING_BATCH.getValue().equals(true)) {
+                    clearControls();
+                    setDir(folders.getDownloadFolder());
+                    UPDATING_BATCH.setValue(false);
+                } else {
+                    Job job = form.listView.getSelectionModel().getSelectedItem();
+                    if (job != null) {
+                        selectJob(job);
+                        setLink(job.getSourceLink());
+                        setDir(job.getDir());
+                        setFilename(job.getFilename());
+                    }
                 }
             }
         });
@@ -214,23 +284,7 @@ public final class UIController {
                 }
                 VERIFYING_LINKS.setValue(true);
                 for (String link : links) {
-                    if (isSpotify(link) && link.contains("playlist")) {
-                        M.msgFilenameInfo("Retrieving the songs from the playlist...");
-                        ArrayList<HashMap<String, Object>> playlistMetadata = Utility.getSpotifyPlaylistMetadata(link);
-                        if (playlistMetadata != null && !playlistMetadata.isEmpty()) {
-                            for (HashMap<String, Object> songMetadata : playlistMetadata) {
-                                songLink = songMetadata.get("link").toString();
-                                String songName = songMetadata.get("songName").toString();
-                                filename = cleanFilename(songName) + ".webm";
-                                songMetadata.remove("link");
-                                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                songMetadataJson = gson.toJson(songMetadata);
-                                verifyLinksAndWaitFor(songLink);
-                            }
-                        }
-                    } else {
-                        verifyLinksAndWaitFor(link);
-                    }
+                    verifyLinksAndWaitFor(link);
                 }
                 VERIFYING_LINKS.setValue(false);
                 clearLink();
@@ -240,9 +294,6 @@ public final class UIController {
     }
 
     private void verifyLinksAndWaitFor(String link) {
-        if (isInstagram(link)) {
-            link = formatInstagramLink(link);
-        }
         Thread verify = new Thread(verifyLink(link));
         verify.start();
         while (!verify.getState().equals(Thread.State.TERMINATED)) {
@@ -259,16 +310,17 @@ public final class UIController {
      */
     private Runnable verifyLink(String link) {
         /*
-        When adding links to the jobList, only YouTube, Instagram and Spotify links will be put through the process of
-        searching the link for more than one download, in case the link happens to be a link to a playlist. This
-        will probably be far more common with YouTube links.
+        This method is called when the user pastes a link into the Link field. It checks the link to see if it is valid.
 
-        If the link does not test positive for YouTube, Instagram or Spotify, then it is merely added to the jobList as a job
-        with only the link and the download folder given to the Job class. However, the Job class will take all
-        the text after the last forward slash in the link and set it as the filename for that job.
+        If it is, it will then check to see if the link has been downloaded before. If it has, it will ask the user if they want to download it again. If they do, it will automatically rename the file to avoid overwriting the existing file.
+        If the file has not been downloaded before, it will add the link to the job list and begin the process of extracting the filename from the link. If it is a Spotify URL (song or playlist), then the final download link will be retrieved from the Spotify API.
+
+        If the link is not valid, the user will be informed and the link field will be cleared.
 
         Users should be instructed to click through each job in the list and make sure the filename is what they
-        want. They can change it after clicking on the job in the list then clicking on the save button.
+        want. They can change it after clicking on the job in the list, then clicking on the save button.
+        They can deselect the job by clicking on the list again with CTRL held down. Alternatively, they can click on the Save button to save the job.
+        Also, they can press the DELETE key to remove the selected job from the list.
          */
         return () -> {
             if (link.isEmpty()) {
@@ -300,33 +352,20 @@ public final class UIController {
                         ConfirmationDialog ask = new ConfirmationDialog(windowTitle, message, renameFile(filename, dir));
                         if (ask.getResponse().isYes()) {
                             filename = ask.getFilename();
-                            if (isSpotify(link)) {
-                                addJob(new Job(link, dir, filename, job.getSpotifyMetadataJson(), true));
-                            } else {
-                                addJob(new Job(link, dir, filename, true));
-                            }
-                        }
-                    } else if (Utility.isExtractableLink(link)) {
-                        if (isSpotify(link) && link.contains("playlist")) {
-                            if (!songMetadataJson.isEmpty()) {
-                                addJob(new Job(link, getDir(), filename, songMetadataJson, true));
-                            } else {
-                                Thread getNames = new Thread(getFilenames(songLink));
-                                getNames.start();
-                                while (!getNames.getState().equals(Thread.State.TERMINATED)) {
-                                    sleep(150);
-                                }
-                            }
-                        } else {
-                            Thread getNames = new Thread(getFilenames(link));
-                            getNames.start();
-                            while (!getNames.getState().equals(Thread.State.TERMINATED)) {
-                                sleep(150);
-                            }
+                            downloadConfig = new GUIDownloadConfiguration(link, dir, filename);
                         }
                     } else {
-                        addJob(new Job(link, getDir()));
+                        downloadConfig = new GUIDownloadConfiguration(link, getDir(), null); // Filename is null because it will be retrieved from the link
                     }
+                    downloadConfig.sanitizeLink();
+                    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                    executor.scheduleWithFixedDelay(this::commitJobListToListView, 0, 100, TimeUnit.MILLISECONDS);
+                    Thread getNames = new Thread(getFilenames(downloadConfig));
+                    getNames.start();
+                    while (!getNames.getState().equals(Thread.State.TERMINATED)) {
+                        sleep(150);
+                    }
+                    executor.shutdown();
                 }
                 clearFilename();
                 clearLink();
@@ -335,14 +374,15 @@ public final class UIController {
             } else {
                 M.msgLinkError("Link already in job list");
                 clearLink();
+                UPDATING_BATCH.setValue(false);
             }
         };
     }
 
-    private Runnable getFilenames(String link) {
+    private Runnable getFilenames(GUIDownloadConfiguration config) {
         return () -> {
-            // Using a Worker Task, this method gets the filename(s) from the link.
-            Task<ConcurrentLinkedDeque<Job>> task = new GetFilename(link, getDir());
+            // Using a Worker Task, this method calls the FileMetadataRetriever class to retrieve all the required metadata for the file(s) to be downloaded and adds them to the jobList.
+            Task<Void> task = new FileMetadataRetriever(config);
             Platform.runLater(() -> {
                 /*
                 These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
@@ -350,32 +390,19 @@ public final class UIController {
                 to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
                 The controls that are bound to the thread cannot have their text updated while they are bound or else an error will be thrown and possibly the program execution halted.
                 */
-                form.lblDownloadInfo.textProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).messageProperty());
-                form.pBar.progressProperty().bind(((Worker<ConcurrentLinkedDeque<Job>>) task).progressProperty());
+                form.lblDownloadInfo.textProperty().bind(((Worker<Void>) task).messageProperty());
+                form.pBar.progressProperty().bind(((Worker<Void>) task).progressProperty());
             });
-
-            /*
-            This parent thread allows us to repeatedly check the Worker Task Thread for new filenames found so that we can add them
-            to the job batch as they are discovered. Doing this in this thread keeps the UI from appearing frozen to the user.
-            We use the checkHistoryAddJobs method to look for discovered filenames. If we didn't do it this way, then we would need
-            to wait until all filenames are discovered then add the jobs to the batch list in one action. Doing it this way
-            gives the user more consistent feedback of the process while it is happening. This matters when a link contains
-            a lot of files because each file discovered takes a while, and when there are even hundreds of files, this process
-            can appear to take a long time, so constant feedback for the user becomes relevant.
-             */
-
-            setLink(link);
-            Thread getFilenameThread = new Thread(task);
-            getFilenameThread.setDaemon(true);
-            getFilenameThread.start();
+            setLink(config.getLink());
+            Thread retrieveFileData = new Thread(task);
+            retrieveFileData.setDaemon(true);
+            retrieveFileData.start();
             sleep(2000);
             form.lblDownloadInfo.setTextFill(GREEN);
-            while (!getFilenameThread.getState().equals(Thread.State.TERMINATED) && !getFilenameThread.getState().equals(Thread.State.BLOCKED)) {
-                checkHistoryAddJobs(task);
+            while (!retrieveFileData.getState().equals(Thread.State.TERMINATED) && !retrieveFileData.getState().equals(Thread.State.BLOCKED)) {
                 sleep(50);
             }
             sleep(500);
-            checkHistoryAddJobs(task); // Check one last time
             clearControls();
         };
     }
@@ -394,7 +421,7 @@ public final class UIController {
                         int speed = speedValue / 5;
                         speedValueUpdateCount = 0;
                         speedValue = 0;
-                        setFilenameOutput(GREEN, speed + " /s");
+                        setFilenameOutput(GREEN, "Speed: " + speed + " KB/s");
                     }
                 }
             }));
@@ -445,7 +472,7 @@ public final class UIController {
 
     private boolean linkInJobList(String link) {
         for (Job job : getJobs().jobList()) {
-            if (job.getLink().equals(link)) {
+            if (job.getSourceLink().equals(link)) {
                 return true;
             }
         }
@@ -457,88 +484,34 @@ public final class UIController {
         for (Job job : getJobs().jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
+                System.out.println("Old Job: " + oldJob.getFilename() + " " + oldJob.getSourceLink());
+                System.out.println("New Job: " + newJob.getFilename() + " " + newJob.getSourceLink());
                 break;
             }
         }
         if (oldJob != null) {
             getJobs().remove(oldJob);
+            System.out.println("Job Removed: " + oldJob.getFilename());
         }
         getJobs().add(newJob);
+        System.out.println("Job Added: " + newJob.getFilename());
         commitJobListToListView();
-    }
-
-    public static void addJob(ConcurrentLinkedDeque<Job> list) {
-        /*
-        This takes the list passed in as argument and compares it against the jobs in the current jobList
-        then it only adds jobs that do not exist.
-         */
-        for (Job job : list) {
-            boolean hasJob = INSTANCE.getJobs().jobList().stream().anyMatch(jb -> jb.getFilename().equals(job.getFilename()));
-            if (!hasJob) {
-                INSTANCE.addJob(job);
-            }
-        }
     }
 
     private void removeJobFromList(Job oldJob) {
         getJobs().remove(oldJob);
         commitJobListToListView();
-        M.msgBatchInfo("Job Removed: " + oldJob.getLink());
+        M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
 
     private void updateBatch() {
         UPDATING_BATCH.setValue(false);
         if (selectedJob != null) {
-            Job job = new Job(getLink(), getDir(), getFilename(), selectedJob.repeatOK());
+            Job job = new Job(selectedJob.getSourceLink(), getDir(), getFilename(), selectedJob.getDownloadLink());
             removeJobFromList(selectedJob);
             addJob(job);
         }
         selectedJob = null;
-    }
-
-    private void checkHistoryAddJobs(Worker<ConcurrentLinkedDeque<Job>> worker) {
-        String pastJobNoFile = "You have downloaded %s in the past, but the file does not exist in your download folder." + nl.repeat(2) + " Click Yes if you still wish to download this file. Otherwise, click No.";
-        String pastJobFileExists = "You have downloaded %s in the past, and the file exists in your download folder." + nl.repeat(2) + "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) + "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
-        String fileExistsString = "This file:" + nl.repeat(2) + "%s" + nl.repeat(2) + "Exists in in the download folder." + nl.repeat(2) + "It will be renamed as shown here, or you may change the filename to your liking." + nl.repeat(2) + "Clicking Yes will commit the job with the shown filename, while clicking No will not add this file to the job list.";
-        Platform.runLater(() -> {
-            String message;
-            ConfirmationDialog ask = new ConfirmationDialog("", "");
-            boolean addJob;
-            if (worker.valueProperty().get() != null) {
-                for (Job job : worker.valueProperty().get()) {
-                    boolean fileExists = job.fileExists();
-                    boolean hasHistory = getHistory().exists(job.getLink());
-                    boolean existsHasHistory = fileExists && hasHistory;
-                    boolean existsNoHistory = fileExists && !hasHistory;
-                    boolean fileHasHistory = hasHistory && !fileExists;
-                    if (!getJobs().jobList().contains(job)) {
-                        if (existsHasHistory) {
-                            message = String.format(pastJobFileExists, job.getFilename());
-                            ask = new ConfirmationDialog("File Already Downloaded and Exists", message, renameFile(job.getFilename(), job.getDir()));
-                        } else if (existsNoHistory) {
-                            message = String.format(fileExistsString, job.getFilename());
-                            ask = new ConfirmationDialog("File Already Exists", message, false);
-                        } else if (fileHasHistory) {
-                            message = String.format(pastJobNoFile, job.getFilename());
-                            ask = new ConfirmationDialog("File Already Downloaded", message, false);
-                        }
-                        if (fileHasHistory || existsHasHistory || existsNoHistory) {
-                            addJob = ask.getResponse().isYes();
-                            if (addJob) {
-                                String newFilename = ask.getFilename();
-                                boolean repeatDownload = newFilename.equals(job.getFilename());
-                                String filename = newFilename.isEmpty() ? job.getFilename() : newFilename;
-                                if (!filename.isEmpty()) {
-                                    addJob(new Job(job.getLink(), job.getDir(), filename, repeatDownload));
-                                }
-                            }
-                        } else {
-                            addJob(job);
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void delayFolderSave(String folderString, File folder) {
@@ -560,7 +533,7 @@ public final class UIController {
     private ContextMenu getListMenu() {
         MenuItem miDel = new MenuItem("Delete");
         MenuItem miClear = new MenuItem("Clear");
-        MenuItem miInfo = new MenuItem("Information");
+        MenuItem miHelp = new MenuItem("Help");
         SeparatorMenuItem separator = new SeparatorMenuItem();
         miDel.setOnAction(e -> {
             Job job = form.listView.getSelectionModel().getSelectedItem();
@@ -574,14 +547,15 @@ public final class UIController {
             commitJobListToListView();
             clearLink();
             clearFilename();
+            UPDATING_BATCH.setValue(false);
             form.listView.getItems().clear();
             form.listView.getItems();
             M.msgLinkInfo("");
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miInfo.setOnAction(e -> help());
-        return new ContextMenu(miDel, miClear, separator, miInfo);
+        miHelp.setOnAction(e -> handleHelpWindow());
+        return new ContextMenu(miDel, miClear, separator, miHelp);
     }
 
     private void setDirContextMenu() {
@@ -666,7 +640,7 @@ public final class UIController {
         Platform.runLater(() -> {
             form.lblLinkOut.getStyleClass().clear();
             form.lblLinkOut.setText(message);
-            if (color.equals(RED) || color.equals(YELLOW)) {
+            if (color.equals(DARK_RED) || color.equals(YELLOW)) {
                 new Thread(() -> {
                     sleep(5000);
                     clearLinkOutput();
@@ -687,7 +661,7 @@ public final class UIController {
             }
             form.lblDirOut.setTextFill(color);
             form.lblDirOut.setText(message);
-            if (color.equals(RED) || color.equals(YELLOW)) {
+            if (color.equals(DARK_RED) || color.equals(YELLOW)) {
                 new Thread(() -> {
                     sleep(5000);
                     clearDirOutput();
@@ -708,7 +682,7 @@ public final class UIController {
             }
             form.lblFilenameOut.setTextFill(color);
             form.lblFilenameOut.setText(message);
-            if (color.equals(RED) || color.equals(YELLOW)) {
+            if (color.equals(DARK_RED) || color.equals(YELLOW)) {
                 new Thread(() -> {
                     sleep(5000);
                     clearFilenameOutput();
@@ -731,7 +705,7 @@ public final class UIController {
                 form.lblDownloadInfo.textProperty().unbind();
                 form.lblDownloadInfo.setTextFill(color);
                 form.lblDownloadInfo.setText(message);
-                if (color.equals(RED) || color.equals(YELLOW)) {
+                if (color.equals(DARK_RED) || color.equals(YELLOW)) {
                     new Thread(() -> {
                         sleep(5000);
                         clearDownloadOutput();
@@ -770,13 +744,9 @@ public final class UIController {
                 if (getJobs().isEmpty()) {
                     form.listView.getItems().clear();
                 } else {
-                    // Use TreeSet to remove duplicates and sort simultaneously
-                    Set<Job> sortedJobs = new TreeSet<>(Comparator.comparing(Job::toString));
-                    sortedJobs.addAll(getJobs().jobList());
-                    getJobs().setList(new ConcurrentLinkedDeque<>(sortedJobs));
+                    // Assign the jobList to the ListView
+                    form.listView.getItems().setAll(getJobs().jobList());
                 }
-                // Assign the jobList to the ListView
-                form.listView.getItems().setAll(getJobs().jobList());
             }
         });
     }
@@ -812,10 +782,9 @@ public final class UIController {
 
         double width = 500;
         double height = 700;
-        Button btnOK = new Button("OK");
-        Stage stage = Constants.getStage("Help", false);
-        stage.setWidth(width);
-        stage.setHeight(height + 100);
+        helpStage = Constants.getStage("Help", false);
+        helpStage.setWidth(width);
+        helpStage.setHeight(height + 100);
         VBox vox = new VBox(20, INFO_TF);
         vox.setPrefWidth(width - 35);
         vox.setPrefHeight(height - 75);
@@ -829,20 +798,26 @@ public final class UIController {
         scrollPane.setPrefHeight(height);
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
+        infoScene.setFill(Color.TRANSPARENT);
         if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
-
-        infoScene.setFill(Color.TRANSPARENT);
-        stage.setScene(infoScene);
-        stage.setAlwaysOnTop(true);
-        stage.setTitle("Help");
-        stage.setOnCloseRequest(e -> stage.close());
+        helpStage.setScene(infoScene);
+        helpStage.setAlwaysOnTop(true);
+        helpStage.setTitle("Help");
+        helpStage.setOnCloseRequest(e -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
-        btnOK.setOnAction(e -> stage.close());
         scrollPane.setVvalue(0.0);
-        stage.showAndWait();
+        helpStage.showAndWait();
+    }
+
+    public void handleHelpWindow() {
+        if (helpStage != null && helpStage.isShowing()) {
+            helpStage.toFront();
+        } else {
+            help();
+        }
     }
 
     private Text text(String string, boolean bold, Color color, double size) {

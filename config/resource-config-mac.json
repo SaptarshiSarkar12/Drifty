@@ -1,8 +1,0 @@
-{
-  "resources": {
-    "includes": [
-      {"pattern": "yt-dlp_macos"},
-      {"pattern": "ffmpeg_macos"}
-    ]
-  }
-}

@@ -3,13 +3,17 @@ package init;
 import preferences.AppSettings;
 import properties.OS;
 import properties.Program;
+import updater.UpdateChecker;
 import utils.CopyExecutables;
 import utils.MessageBroker;
 import utils.Utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,7 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import static properties.Program.YT_DLP;
 
 public class Environment {
-    private static MessageBroker msgBroker = Environment.getMessageBroker();
+    private static MessageBroker msgBroker;
+    private static boolean isAdministrator;
 
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
@@ -26,17 +31,26 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
+        msgBroker = Environment.getMessageBroker();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
+        isAdministrator = hasAdminPrivileges();
+        Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
+        new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
-        if (!System.getProperty("os.arch").contains("arm")) {
-            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos" : "ffmpeg";
-            Program.setFfmpegExecutableName(ffmpegExecName);
+        String osArch = System.getProperty("os.arch");
+        if (osArch.contains("arm") || osArch.contains("aarch64")) {
+            if (OS.isMac()) {
+                ffmpegExecName = "ffmpeg_macos-arm64";
+            } else {
+                msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
+                AppSettings.SET.isFfmpegWorking(false);
+            }
         } else {
-            msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
-            AppSettings.SET.isFfmpegWorking(false);
+            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
         }
+        Program.setFfmpegExecutableName(ffmpegExecName);
         String ytDlpExecName = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
         String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".drifty").toAbsolutePath().toString();
         Program.setYtDlpExecutableName(ytDlpExecName);
@@ -44,7 +58,7 @@ public class Environment {
         CopyExecutables copyExecutables = new CopyExecutables(new String[]{ytDlpExecName, ffmpegExecName});
         try {
             copyExecutables.start();
-            if (!isYtDLPUpdated()) {
+            if (!isYtDLPUpdated() && !Utility.isOffline()) {
                 checkAndUpdateYtDlp();
             }
         } catch (IOException e) {
@@ -100,6 +114,29 @@ public class Environment {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
         long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
         return timeSinceLastUpdate <= oneDay;
+    }
+
+    public static boolean hasAdminPrivileges() {
+        try {
+            Path currentExecutableFolderPath = Paths.get(Utility.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            Path adminTestFilePath = currentExecutableFolderPath.resolve("adminTestFile.txt");
+            Files.createFile(adminTestFilePath);
+            Files.deleteIfExists(adminTestFilePath);
+            return true;
+        } catch (URISyntaxException e) {
+            System.out.println("Failed to get the current executable path! " + e.getMessage());
+            return false;
+        } catch (AccessDeniedException e) {
+            System.out.println("You are not running Drifty as an administrator! " + e.getMessage());
+            return false;
+        } catch (IOException e) {
+            System.out.println("Failed to create a file in the current executable folder! " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean isAdministrator() {
+        return isAdministrator;
     }
 
     public static MessageBroker getMessageBroker() {

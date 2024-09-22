@@ -23,8 +23,4 @@ public class Clear extends preferences.Clear {
     public void mainTheme() {
         preferences.remove(MAIN_THEME.toString());
     }
-
-    public void jobs() {
-        preferences.remove(JOBS.toString());
-    }
 }

@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>2.2</version>
+            <version>2.3</version>
         </dependency>
     </dependencies>
 
@@ -45,7 +45,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.2</version>
+                        <version>0.10.3</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -85,7 +85,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.2</version>
+                        <version>0.10.3</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -118,14 +118,14 @@
         <profile>
             <id>build-drifty-cli-for-macos-14</id>
             <properties>
-                <resource-config-file>resource-config-mac.json</resource-config-file>
+                <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
             </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.2</version>
+                        <version>0.10.3</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -158,14 +158,14 @@
         <profile>
             <id>build-drifty-cli-for-macos-13</id>
             <properties>
-                <resource-config-file>resource-config-mac.json</resource-config-file>
+                <resource-config-file>resource-config-macos-x64.json</resource-config-file>
             </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.2</version>
+                        <version>0.10.3</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>

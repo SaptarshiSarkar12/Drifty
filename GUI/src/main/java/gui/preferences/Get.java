@@ -3,19 +3,11 @@ package gui.preferences;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import gui.support.Folders;
-import gui.support.Jobs;
-import org.apache.commons.io.FileUtils;
 import org.hildan.fxgson.FxGson;
-import properties.Program;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
 import static gui.preferences.Labels.*;
-import static properties.Program.JOB_FILE;
 
 public class Get extends preferences.Get {
     private static final Get INSTANCE = new Get();
@@ -24,7 +16,6 @@ public class Get extends preferences.Get {
     static Get getInstance() {
         return INSTANCE;
     }
-
 
     public Folders folders() {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -44,22 +35,6 @@ public class Get extends preferences.Get {
 
     public String mainTheme() {
         return preferences.get(MAIN_THEME.toString(), "Light");
-    }
-
-    public Jobs jobs() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        Jobs jobs;
-        Path jobBatchFile = Paths.get(Program.get(JOB_FILE));
-        try {
-            String json = FileUtils.readFileToString(jobBatchFile.toFile(), Charset.defaultCharset());
-            if (json != null && !json.isEmpty()) {
-                jobs = gson.fromJson(json, Jobs.class);
-                return jobs;
-            }
-        } catch (IOException ignored) {
-        }
-        return new Jobs();
     }
 
     public boolean alwaysAutoPaste() {

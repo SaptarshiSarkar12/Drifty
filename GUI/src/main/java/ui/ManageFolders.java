@@ -7,6 +7,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -16,13 +17,23 @@ import javafx.stage.StageStyle;
 
 public class ManageFolders {
     private Stage stage;
+
+    public static Scene scene;
     private final double width = 400;
     private final double height = 550;
     private final Folders folders;
     private VBox vBox;
     private ListView<String> lvFolders;
-    private javafx.scene.control.Button btnRemove;
-    private javafx.scene.control.Button btnClose;
+    private static Button btnRemove;
+    private static Button btnClose;
+
+    public static Button getBtnRemove() {
+        return btnRemove;
+    }
+
+    public static Button getBtnClose() {
+        return btnClose;
+    }
 
     public ManageFolders() {
         this.folders = AppSettings.GET.folders();
@@ -32,17 +43,17 @@ public class ManageFolders {
 
     private void createControls() {
         lvFolders = listView(folders.getFolders());
-        btnRemove = new javafx.scene.control.Button("Remove");
-        btnClose = new javafx.scene.control.Button("Close");
+        btnRemove = new Button("Remove");
+        btnClose = new Button("Close");
         lvFolders.setMinWidth(width * .9);
         lvFolders.setMaxWidth(width * .9);
         lvFolders.setPrefWidth(width * .9);
         lvFolders.setMinHeight(height * .85);
         lvFolders.setMaxHeight(height * .85);
         lvFolders.setPrefHeight(height * .85);
-        btnRemove.setMinWidth(65);
-        btnRemove.setMaxWidth(65);
-        btnRemove.setPrefWidth(65);
+        btnRemove.setMinWidth(85);
+        btnRemove.setMaxWidth(85);
+        btnRemove.setPrefWidth(85);
         btnRemove.setMinHeight(35);
         btnRemove.setMaxHeight(35);
         btnRemove.setPrefHeight(35);
@@ -87,7 +98,12 @@ public class ManageFolders {
 
     public void showScene() {
         stage = new Stage();
-        Scene scene = Constants.getScene(vBox);
+        scene = Constants.getScene(vBox);
+        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+            Constants.addCSS(scene, Constants.DARK_THEME_CSS);
+            Theme.changeButtonStyle(true, ManageFolders.getBtnClose());
+            Theme.changeButtonStyle(true, ManageFolders.getBtnRemove());
+        }
         stage.setScene(scene);
         stage.setWidth(width);
         stage.setHeight(height);
