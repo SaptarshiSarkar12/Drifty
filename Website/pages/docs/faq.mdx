@@ -1,4 +1,4 @@
-import { Steps } from "nextra/components";
+import {Steps, Tabs} from "nextra/components";
 
 # Frequently Asked Questions
 
@@ -15,29 +15,102 @@ You can use any IDE you like. It is recommended to use [IntelliJ IDEA](https://w
 ### How can I get updates related to this project?
 
 You can join our [Discord server](https://discord.com/invite/DeT4jXPfkG) to get updates on this project. You can also watch this repository by clicking on the watch button [here](https://github.com/SaptarshiSarkar12/Drifty) and select notification types to **All Activity** to get all updates on this project.
+![Watch Button](https://github.com/user-attachments/assets/c488ec95-99a0-4f43-8038-cd8f3b617ddf)
 
 ### What technologies does Drifty use?
 
-The technologies that Drifty uses are as follows:
+The main technologies used in Drifty are:
 
 - **Java** - for the backend part of the application
 - **JavaFX** - for the GUI part of the application
 - **Docker** - for containerizing Drifty to add support for more platforms and help in faster local development
 - **Next.js** - for building the official [Website of Drifty](https://saptarshisarkar12.github.io/Drifty/)
 
+To know about the complete list of technologies used in Drifty, you can read the [Technologies Used](development/Architecture.mdx#technologies-used) section of the documentation.
+
 ### How can I contribute to Drifty?
 
-You can check the [Contribution](Contributing.md) section of this documentation to learn how to contribute to this project.
+You can check the [Contribution](contribution.mdx) section of this documentation to learn how to contribute to this project.
 
 ### How can I update Drifty to the latest version?
 
-Automatic updates are not supported yet and are still a [work-in-progress](https://github.com/SaptarshiSarkar12/Drifty/issues/217). To update Drifty, download [the latest version](https://saptarshisarkar12.github.io/Drifty/download) from the official website and install it.
+You can update Drifty to the latest version by following the steps mentioned in the [Updating Drifty](development/Updating-Drifty.mdx) section of the documentation.
 
 ### How can I access the Beta features in Drifty?
 
-Currently, Beta features are available only through Docker images. You can check the official [GitHub Docs for Drifty](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-).
+You can access the Beta features in Drifty by following the steps mentioned below:
+<Tabs items={["Drifty GUI", "Drifty CLI", "Docker Image"]}>
+    <Tabs.Tab>
+        #### Drifty GUI
+        Open Drifty GUI and follow the steps mentioned below:
 
-### Do you require any detailed explanations of Drifty?
+        <Steps>
+        ### Enable Early Access Updates
+        1. Click on the **Edit** menu.
+        2. Click on the **Settings** option.
+        3. Check the **Early Access Updates** checkbox in the settings window.
+
+        ### Check for Beta Updates
+           Once you enable this option, you will receive updates for the Beta features of Drifty GUI as soon as they are released.
+           Alternatively, you can also check for Beta updates already available by clicking on the **Check for Updates** button under the **Help** menu.
+        </Steps>
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+        #### Drifty CLI
+        Open the terminal in the directory where Drifty CLI is present and follow the steps mentioned below:
+
+        <Steps>
+        ### Enable Early Access Updates
+        Run the following command to toggle the Early Access Updates:
+            ```bash
+            drifty --early-access
+            ```
+            or, you can also use the shorthand version:
+            ```bash
+            drifty -ea
+            ```
+
+        ### Check for Beta Updates
+        Once you enable this option, you will receive updates for the Beta features of Drifty CLI as soon as they are released.
+        Alternatively, you can also check for Beta updates already available by running the following command:
+            ```bash
+            drifty --update
+            ```
+            or, you can also use the shorthand version:
+            ```bash
+            drifty -u
+            ```
+        </Steps>
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+        #### Docker Image
+        Drifty Docker image currently have only the **Beta** among other pre-release versions. Follow the steps mentioned below to access the **Beta** version of the Drifty Docker image:
+
+        <Steps>
+        ### Pull the Beta Version of Drifty Docker Image
+        You can pull the **Beta** version of the Drifty Docker image by running the following command:
+            <Tabs items={["Drifty CLI", "Drifty GUI"]}>
+                <Tabs.Tab>
+                ```bash
+                docker pull ghcr.io/saptarshisarkar12/drifty-cli:beta
+                ```
+                </Tabs.Tab>
+                <Tabs.Tab>
+                ```bash
+                docker pull ghcr.io/saptarshisarkar12/drifty-gui:beta
+                ```
+                </Tabs.Tab>
+            </Tabs>
+
+        ### Run the Drifty Docker Image
+        Once you have pulled the **Beta** version of the Drifty Docker image, you can refer to [this documentation](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-) to run those images in a container.
+        </Steps>
+    </Tabs.Tab>
+</Tabs>
+
+### Need More Information About Drifty?
 
 For more queries related to the further improvement to this project, you can raise an [issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) or reach out to the maintainers on the [discord server](https://discord.com/invite/DeT4jXPfkG). We will be happy to help you out.
 

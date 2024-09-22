@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 export default {
   logo: (
     <>
-      <img src="/Drifty.svg" alt="logo" width="30" height="30"></img>
+      <Image src="/Drifty.svg" alt="logo" width="30" height="30"></Image>
       &nbsp;&nbsp;
       <span>
         <strong>Drifty Docs</strong>
@@ -42,7 +43,7 @@ export default {
   },
   navigation: true,
   search: {
-    placeholder: "Search ",
+    placeholder: "Search the docs",
   },
   footer: {
     text: (
