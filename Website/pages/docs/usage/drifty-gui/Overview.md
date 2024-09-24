@@ -36,7 +36,6 @@ You can select a directory from the directory list by clicking on it and deselec
     Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/11ff7b69-a926-492b-83aa-f032c6cde376">view</a>
   </video>
 
-
 ## The File Name Input Field
 
 The file name input field is located at the bottom-center portion of the window and is where you can specify the name of the file you want to save. By default, the file name is automatically detected from the URL.
