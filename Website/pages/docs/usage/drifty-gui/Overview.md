@@ -15,8 +15,8 @@ The menu bar is located at the top of the window and contains the following menu
   ![Edit](https://github.com/user-attachments/assets/1c990f41-7c96-4b0b-bf7b-b577e171b487)
 - **Window**: Contains the option to **Toggle Full Screen**.
   ![Window](https://github.com/user-attachments/assets/cda8166e-31db-4e74-8e18-661d4ae30803)
-- **Help**: Contains options to **Contact Support**, **Contribute**, **Report a Bug**, **Report a Security Issue**, **Suggest a feature**, and **About Drifty**.
-  ![Help](https://github.com/user-attachments/assets/d0e39364-56b2-441f-a308-e47f3feb6047)
+- **Help**: Contains options to **Contact Support**, **Contribute**, **Report a Bug**, **Report a Security Issue**, **Suggest a feature**, **Check for Updates**, and **About Drifty**.
+  ![Help](https://github.com/user-attachments/assets/de66eb43-c517-4f89-88c7-ecdc6231d8e0)
 
 ## The Link Input Field
 
@@ -26,7 +26,16 @@ The link input field is located at the top-center portion of the window and is w
 ## The Directory Input Field
 
 The directory input field is located in the middle-center portion of the window and is where you can specify the directory where you want to save the downloaded file. By default, the directory is set to `{user_home}/Downloads`. You can manage directories by right-clicking on the directory input field to open a context menu that lists all previously used download directories. You can also **Add** a new directory by clicking on **Add Folder**.
-![Directory Context Menu](https://github.com/user-attachments/assets/303a593b-392f-46ea-891b-fe8e5a02fe49)
+![Directory Context Menu](https://github.com/user-attachments/assets/011f2745-c652-4e56-b26c-af520e625765)
+If you click above the directory input field just beside the **Directory** label, it will open the context menu to manage directories.
+![Directory Context Menu 2](https://github.com/user-attachments/assets/9a6e19ee-3733-4569-9219-898c6dc74625)
+You can select a directory from the directory list by clicking on it and deselect it by clicking on it again with the **Ctrl** key pressed. You can also **Remove** a directory from the list by right-clicking on it and selecting the **Remove** option.
+
+  <video controls width="100%">
+    <source src="https://github.com/user-attachments/assets/11ff7b69-a926-492b-83aa-f032c6cde376" type="video/mp4">
+    Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/11ff7b69-a926-492b-83aa-f032c6cde376">view</a>
+  </video>
+
 
 ## The File Name Input Field
 
@@ -49,4 +58,26 @@ The download queue is located on the left side of the window and displays the li
 
 Drifty GUI automatically checks for updates when you start the application.
 If a new version is available, a popup will appear with the option to update to the latest version. By clicking on **Yes** button, Drifty GUI will download the latest version and install it automatically.
+![Update Available](https://github.com/user-attachments/assets/e262b9cf-bae2-4574-9e2f-ad0c2abb6062)
+
 Alternatively, you can manually check for updates by clicking on the **Check for Updates** button under the **Help** menu.
+
+![Check for Updates](https://github.com/user-attachments/assets/4e19c874-60eb-49d4-a3f1-0a959b75e885)
+
+## Settings
+
+The settings window allows you to configure various options related to the application. You can open the settings window by clicking on the **Settings** option under the **Edit** menu.
+![Settings Window](https://github.com/user-attachments/assets/e96966f7-1e9a-4598-86a8-572ef899f8d5)
+
+In the settings window, you can configure the following options:
+
+- **Auto-paste**: Enable or disable the auto-paste feature.
+- **Get Early Access Updates**: Enable or disable early access updates.
+- **Theme**: Choose between **Light** and **Dark** themes.
+- **Default Download Directory**: Set the default download directory.
+
+## About Drifty
+
+The **About Drifty** window provides information about the application, including the version number and links to the project website, the source code repository and discord server.
+You can open the **About Drifty** window by clicking on the **About Drifty** option under the **Help** menu.
+![About Drifty Window](https://github.com/user-attachments/assets/b24171df-3763-4ae0-ba72-a902d4912465)
