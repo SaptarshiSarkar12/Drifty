@@ -158,11 +158,11 @@ Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
 
     Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below.
 
-    <Callout type="warning">
-        The placeholder `{arch}` should be replaced with either `x86_64{:shell}` or `aarch64{:shell}`, depending on your system's architecture.
-    </Callout>
     <Tabs items={['GUI', 'CLI']}>
         <Tabs.Tab>
+            <Callout type="warning">
+                The placeholder `{arch}` should be replaced with either `x86_64{:shell}` or `aarch64{:shell}`, depending on your system's architecture.
+            </Callout>
             <Tabs items={['Linux', 'Windows', 'macOS']}>
                 <Tabs.Tab>
                    ```shell
@@ -233,11 +233,10 @@ Follow the below instructions to build and start the Drifty application in a Doc
   <Tabs.Tab>
     <Tabs items={["Linux and Windows", "macOS"]}>
       <Tabs.Tab>
-        {" "}
-        - Run the below command to add access to the X server (required for GUI applications
-        running in Docker) `shell xhost +local:docker ` - Run the below command to
-        build and start the Drifty GUI native executable in a Docker container `shell
-        docker compose run gui `
+        - Run the below command to add access to the X server (required for GUI
+        applications running in Docker) ```shell xhost +local:docker ``` - Run
+        the below command to build and start the Drifty GUI native executable in
+        a Docker container ```shell docker compose run gui ```
       </Tabs.Tab>
       <Tabs.Tab>
         Please follow [these instructions](macOS-docker-build-instructions.mdx)
@@ -248,7 +247,7 @@ Follow the below instructions to build and start the Drifty application in a Doc
   </Tabs.Tab>
   <Tabs.Tab>
     Run the below command to build and start the Drifty CLI native executable in
-    a Docker container `shell docker compose run cli `
+    a Docker container ```shell docker compose run cli ```
   </Tabs.Tab>
 </Tabs>
 
