@@ -1,4 +1,4 @@
-import {Steps, Tabs} from "nextra/components";
+import {Callout, Steps, Tabs} from "nextra/components";
 
 # Frequently Asked Questions
 
@@ -34,32 +34,78 @@ You can check the [Contribution](contribution.mdx) section of this documentation
 
 ### How can I update Drifty to the latest version?
 
-You can update Drifty to the latest version by following the steps mentioned in the [Updating Drifty](development/Updating-Drifty.mdx) section of the documentation.
+You can update Drifty to the latest version by following the steps mentioned below:
+<Tabs items={["Drifty GUI", "Drifty CLI", "Docker Image"]}>
+    <Tabs.Tab>
+        1. Open Drifty GUI.
+        2. Click on the **Help** menu.
+            ![Help Menu](https://github.com/user-attachments/assets/de66eb43-c517-4f89-88c7-ecdc6231d8e0)
+        3. Click on the **Check for Updates** option.
+        4. If there is an update available, you will be prompted to download and install it.
+            Click on **Yes** to download and install the update.
+            ![Update Available](https://github.com/user-attachments/assets/e262b9cf-bae2-4574-9e2f-ad0c2abb6062)
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+        1. Open the terminal in the directory where Drifty CLI is present.
+        2. Run the following command to check for updates:
+            ```bash
+            drifty --update
+            ```
+            or, you can also use the shorthand version:
+            ```bash
+            drifty -u
+            ```
+        3. If there is an update available, you will be prompted to download and install it.
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+        1. Open the terminal.
+        2. You can pull the latest version of the Drifty Docker image by running the following command:
+            <Callout type={"info"}>
+                Replace `{tag}` with the docker image tag you want to pull.
+                If you don't know the tag, you can use the `latest` tag to pull the latest version of the Drifty Docker image.
+                Alternatively, you can also pull the `beta` tag to get the latest beta version of the Drifty Docker image.
+            </Callout>
+            <Tabs items={["Drifty CLI", "Drifty GUI"]}>
+                <Tabs.Tab>
+                ```bash
+                docker pull ghcr.io/saptarshisarkar12/drifty-cli:{tag}
+                ```
+                </Tabs.Tab>
+                <Tabs.Tab>
+                ```bash
+                docker pull ghcr.io/saptarshisarkar12/drifty-gui:{tag}
+                ```
+                </Tabs.Tab>
+            </Tabs>
+        3. Once you have pulled the latest version of the Drifty Docker image, you can refer to [this documentation](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-) to run those images in a container.
+    </Tabs.Tab>
+</Tabs>
 
 ### How can I access the Beta features in Drifty?
 
 You can access the Beta features in Drifty by following the steps mentioned below:
 <Tabs items={["Drifty GUI", "Drifty CLI", "Docker Image"]}>
     <Tabs.Tab>
-        #### Drifty GUI
         Open Drifty GUI and follow the steps mentioned below:
-
         <Steps>
         ### Enable Early Access Updates
         1. Click on the **Edit** menu.
+            ![Edit Menu](https://github.com/user-attachments/assets/1c990f41-7c96-4b0b-bf7b-b577e171b487)
         2. Click on the **Settings** option.
         3. Check the **Early Access Updates** checkbox in the settings window.
+            ![Early Access Updates checkbox checked](https://github.com/user-attachments/assets/e96966f7-1e9a-4598-86a8-572ef899f8d5)
 
         ### Check for Beta Updates
            Once you enable this option, you will receive updates for the Beta features of Drifty GUI as soon as they are released.
            Alternatively, you can also check for Beta updates already available by clicking on the **Check for Updates** button under the **Help** menu.
+            ![Check for Updates](https://github.com/user-attachments/assets/4e19c874-60eb-49d4-a3f1-0a959b75e885)
         </Steps>
     </Tabs.Tab>
 
     <Tabs.Tab>
-        #### Drifty CLI
         Open the terminal in the directory where Drifty CLI is present and follow the steps mentioned below:
-
         <Steps>
         ### Enable Early Access Updates
         Run the following command to toggle the Early Access Updates:
@@ -85,9 +131,7 @@ You can access the Beta features in Drifty by following the steps mentioned belo
     </Tabs.Tab>
 
     <Tabs.Tab>
-        #### Docker Image
         Drifty Docker image currently have only the **Beta** among other pre-release versions. Follow the steps mentioned below to access the **Beta** version of the Drifty Docker image:
-
         <Steps>
         ### Pull the Beta Version of Drifty Docker Image
         You can pull the **Beta** version of the Drifty Docker image by running the following command:
