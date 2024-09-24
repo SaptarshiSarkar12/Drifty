@@ -29,26 +29,26 @@ Open the terminal and navigate to the project directory
 Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
 <Tabs items={['GUI', 'CLI']}>
     <Tabs.Tab>
-        - Navigate to the `GUI` directory
-          ```shell
-          cd GUI
-          ```
-        - Run the below command to generate GraalVM metadata for Drifty GUI
-          ```shell
-          mvn gluonfx:runagent
-          ```
-        Upon completion of the command, the GraalVM metadata will be generated in `GUI/src/main/resources/META-INF/native-image{:shell}` directory.
+    - Navigate to the `GUI` directory
+      ```shell
+      cd GUI
+      ```
+    - Run the below command to generate GraalVM metadata for Drifty GUI
+      ```shell
+      mvn gluonfx:runagent
+      ```
+    Upon completion of the command, the GraalVM metadata will be generated in `GUI/src/main/resources/META-INF/native-image{:shell}` directory.
     </Tabs.Tab>
     <Tabs.Tab>
-        - Navigate to the `CLI` directory
-          ```shell
-          cd CLI
-          ```
-        - Run the below command to generate GraalVM metadata for Drifty CLI
-          ```shell
-          mvn -P generate-graalvm-metadata exec:exec@java-agent
-          ```
-        Upon completion of the command, the GraalVM metadata will be generated in `CLI/src/main/resources/META-INF/native-image{:shell}` directory.
+    - Navigate to the `CLI` directory
+      ```shell
+      cd CLI
+      ```
+    - Run the below command to generate GraalVM metadata for Drifty CLI
+      ```shell
+      mvn -P generate-graalvm-metadata exec:exec@java-agent
+      ```
+    Upon completion of the command, the GraalVM metadata will be generated in `CLI/src/main/resources/META-INF/native-image{:shell}` directory.
     </Tabs.Tab>
 </Tabs>
 </Steps>
@@ -224,29 +224,29 @@ Open the terminal and navigate to the project directory
 
 ### Build and start the Drifty application in a Docker container
 Follow the below instructions to build and start the Drifty application in a Docker container
-    <Tabs items={['GUI', 'CLI']}>
-        <Tabs.Tab>
-            <Tabs items={['Linux and Windows', 'macOS']}>
-                <Tabs.Tab>
-                    - Run the below command to add access to the X server (required for GUI applications running in Docker)
-                      ```shell
-                      xhost +local:docker
-                      ```
-                    - Run the below command to build and start the Drifty GUI native executable in a Docker container
-                      ```shell
-                      docker compose run gui
-                      ```
-                </Tabs.Tab>
-                <Tabs.Tab>
-                    Please follow [these instructions](macOS-docker-build-instructions.mdx) to build and start the Drifty GUI native executable in a Docker container
-                </Tabs.Tab>
-            </Tabs>
-        </Tabs.Tab>
-        <Tabs.Tab>
-            Run the below command to build and start the Drifty CLI native executable in a Docker container
-            ```shell
-            docker compose run cli
-            ```
-        </Tabs.Tab>
-    </Tabs>
+<Tabs items={['GUI', 'CLI']}>
+    <Tabs.Tab>
+        <Tabs items={['Linux and Windows', 'macOS']}>
+            <Tabs.Tab>
+            - Run the below command to add access to the X server (required for GUI applications running in Docker)
+              ```shell
+              xhost +local:docker
+              ```
+            - Run the below command to build and start the Drifty GUI native executable in a Docker container
+              ```shell
+              docker compose run gui
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+            Please follow [these instructions](macOS-docker-build-instructions.mdx) to build and start the Drifty GUI native executable in a Docker container
+            </Tabs.Tab>
+        </Tabs>
+    </Tabs.Tab>
+    <Tabs.Tab>
+    Run the below command to build and start the Drifty CLI native executable in a Docker container
+    ```shell
+    docker compose run cli
+    ```
+    </Tabs.Tab>
+</Tabs>
 </Steps>
