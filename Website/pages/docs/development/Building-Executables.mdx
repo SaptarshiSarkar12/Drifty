@@ -30,26 +30,26 @@ Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
 
 <Tabs items={['GUI', 'CLI']}>
     <Tabs.Tab>
-        - Navigate to the `GUI` directory
-          ```shell
-          cd GUI
-          ```
-        - Run the below command to generate GraalVM metadata for Drifty GUI
-          ```shell
-          mvn gluonfx:runagent
-          ```
-        Upon completion of the command, the GraalVM metadata will be generated in `GUI/src/main/resources/META-INF/native-image{:shell}` directory.
+    - Navigate to the `GUI` directory
+      ```shell
+      cd GUI
+      ```
+    - Run the below command to generate GraalVM metadata for Drifty GUI
+      ```shell
+      mvn gluonfx:runagent
+      ```
+    Upon completion of the command, the GraalVM metadata will be generated in `GUI/src/main/resources/META-INF/native-image{:shell}` directory.
     </Tabs.Tab>
     <Tabs.Tab>
-        - Navigate to the `CLI` directory
-          ```shell
-          cd CLI
-          ```
-        - Run the below command to generate GraalVM metadata for Drifty CLI
-          ```shell
-          mvn -P generate-graalvm-metadata exec:exec@java-agent
-          ```
-        Upon completion of the command, the GraalVM metadata will be generated in `CLI/src/main/resources/META-INF/native-image{:shell}` directory.
+    - Navigate to the `CLI` directory
+      ```shell
+      cd CLI
+      ```
+    - Run the below command to generate GraalVM metadata for Drifty CLI
+      ```shell
+      mvn -P generate-graalvm-metadata exec:exec@java-agent
+      ```
+    Upon completion of the command, the GraalVM metadata will be generated in `CLI/src/main/resources/META-INF/native-image{:shell}` directory.
     </Tabs.Tab>
 </Tabs>
 </Steps>
