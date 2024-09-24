@@ -6,10 +6,10 @@ Drifty GUI allows you to download files from the internet with just a few clicks
 2. Paste the URL of the file you want to download in the link input field.
 3. Wait for Drifty to automatically detect the file name and set it as the default file name.
 
-    <video controls width="100%">
-      <source src="https://github.com/user-attachments/assets/2cafaf6b-3598-451a-bcc1-b1159364c548" type="video/mp4">
-      Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/2cafaf6b-3598-451a-bcc1-b1159364c548">view</a>
-    </video>
+<video controls width="100%">
+  <source src="https://github.com/user-attachments/assets/2cafaf6b-3598-451a-bcc1-b1159364c548" type="video/mp4">
+  Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/2cafaf6b-3598-451a-bcc1-b1159364c548">view</a>
+</video>
 
 4. If you have previously downloaded the file or a file with the same name exists in the download directory, Drifty will prompt you to skip or re-download the file.
 
@@ -22,7 +22,7 @@ Drifty GUI allows you to download files from the internet with just a few clicks
 5. The file will be added to the download queue shown on the left side of the window.
 6. Click on the **Start** button to begin downloading all the files in the queue.
 
-    <video controls width="100%">
-      <source src="https://github.com/user-attachments/assets/48349e1a-f741-4f17-977d-91a1d6876b2a" type="video/mp4">
-      Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/48349e1a-f741-4f17-977d-91a1d6876b2a">view</a>
-    </video>
+<video controls width="100%">
+  <source src="https://github.com/user-attachments/assets/48349e1a-f741-4f17-977d-91a1d6876b2a" type="video/mp4">
+  Your browser does not support the video tag. Click here to <a href="https://github.com/user-attachments/assets/48349e1a-f741-4f17-977d-91a1d6876b2a">view</a>
+</video>
