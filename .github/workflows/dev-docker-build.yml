@@ -49,7 +49,7 @@ jobs:
           command: |
             docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
             copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --timeout 10m
-          retry_wait_seconds: '30'
+          retry_wait_seconds: '10'
           on_retry_command: |
             docker stop buildkitd
       - name: Build Docker image
