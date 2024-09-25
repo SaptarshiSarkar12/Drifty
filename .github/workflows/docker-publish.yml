@@ -172,15 +172,16 @@ jobs:
           make
           sudo mv dist/linux_amd64/release/copa /usr/local/bin/
       - name: Run Copa to patch vulnerabilities
+        continue-on-error: true # to handle cases where the image does not have vulnerabilities
         uses: nick-fields/retry@v3 # Retry action to handle network issues
         with:
           timeout_minutes: 15
-          max_attempts: 5
+          max_attempts: 3
           retry_on: error
           command: |
             docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
             copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --timeout 10m
-          retry_wait_seconds: '30'
+          retry_wait_seconds: '10'
           on_retry_command: |
             docker stop buildkitd
       # Build and push Docker image with Buildx (don't push on PR and branches created by Dependabot)
