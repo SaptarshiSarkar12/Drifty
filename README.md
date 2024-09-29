@@ -76,12 +76,9 @@ For **Users** :
    ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
 2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
    ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉.</p>
+3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉. If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase. </p>
 
-   > [!TIP]
-   > If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase.
-
-   ![Download Webpage of Drifty](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/9094cfaf-5283-434b-a154-431b9e699642)
+   ![Download Webpage of Drifty](https://github.com/user-attachments/assets/aeef6d00-4020-4611-bc78-5f22ed5ac4dc)
 
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
 5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application. </p>
@@ -96,7 +93,7 @@ For **Users** :
 >   For example, if you want to download the file to your `home/username/Downloads` directory, then, you need to use the volume flag `-v /home/username/Downloads:/root/Downloads` with the docker command.
 > - You can also mount `-v /home/username/.drifty:/root/.drifty` to enable the docker container to store Drifty's data in your local directory, which will make Drifty initialize much faster 🚀⚡.
 > - For **Linux**, we recommend using **Docker Engine** directly instead of running images with **Docker Desktop**. To do this, add **_`sudo`_** before the docker commands.
-> - If you want to try unstable (**Alpha** or **Beta**) [**_Alpha releases are not available as of now_**] or the mostly stable versions (**Release Candidate**) [**_Release Candidate releases are not available as of now_**], you need to use the respective docker image tags. For example, to use the **Beta** version of Drifty, you need to use the docker image tag `beta` like `ghcr.io/saptarshisarkar12/drifty-cli:beta` or `ghcr.io/saptarshisarkar12/drifty-gui:beta`.
+> - If you want to try unstable (**Alpha** or **Beta**) [**_Alpha releases are not available as of now_**] or the mostly stable versions (**Release Candidate**), you need to use the respective docker image tags. For example, to use the **Beta** version of Drifty, you need to use the docker image tag `beta` like `ghcr.io/saptarshisarkar12/drifty-cli:beta` or `ghcr.io/saptarshisarkar12/drifty-gui:beta`.
 
 > [!IMPORTANT]
 >
@@ -155,12 +152,12 @@ It is because Microsoft Defender could not verify it is safe as it is not common
 - Click on the three dots.
 - Click on keep.
 
-![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
+  ![image](https://user-images.githubusercontent.com/58129377/193471652-d88981c3-d903-406f-bc06-53cf77db9bf6.png)
 
 - Click **`Show More`**.
 - Click **`Keep anyway`**.
 
-![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
+  ![image](https://user-images.githubusercontent.com/58129377/193471671-e047003c-95e7-43ed-8d37-d3f401b36164.png)
 
 - Now it is downloaded, you can proceed.🎉
 
@@ -171,7 +168,7 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 - Click on three dots.
 - Click on **`Report this file as safe`** instead of clicking on **`Keep`**.
 
-![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
+  ![image](https://user-images.githubusercontent.com/58129377/193471838-63ba50ba-e303-48b4-b7c1-b71e6c0663e7.png)
 
 - It will take you to **`Report a download`** page. You can provide your feedback there.😄
 
