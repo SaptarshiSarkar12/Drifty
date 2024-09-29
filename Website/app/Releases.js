@@ -414,22 +414,22 @@ export default function Releases({ props }) {
                       Download <i className="fab fa-brands fa-windows"></i>
                     </button>
                     {applicationType === "GUI" && (
-                        <div className={"text-center"}>
-                          <button
-                            className={
-                              "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                            }
-                            onClick={() =>
-                              downloadOlderReleases(
-                                "Windows msi",
-                                applicationType,
-                                item.tag_name,
-                              )
-                            }
-                          >
-                            Prefer the msi?
-                          </button>
-                        </div>
+                      <div className={"text-center"}>
+                        <button
+                          className={
+                            "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                          }
+                          onClick={() =>
+                            downloadOlderReleases(
+                              "Windows msi",
+                              applicationType,
+                              item.tag_name,
+                            )
+                          }
+                        >
+                          Prefer the msi?
+                        </button>
+                      </div>
                     )}
                   </div>
                   <button
