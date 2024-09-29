@@ -191,6 +191,9 @@ jobs:
     env:
       VERSION: ${{ needs.fetch-drifty-version.outputs.VERSION }}
     steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
     - name: Split up Version into semantic parts
       run: |
         echo "VERSION_NUMBER=$(echo $VERSION | cut -d '-' -f1)" >> $GITHUB_ENV
