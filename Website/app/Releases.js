@@ -311,7 +311,9 @@ export default function Releases({ props }) {
             className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
             onClick={() =>
               downloadLatestRelease(
-                latestVersion >= "v2.1.0-beta.1" ? "MacOS Apple Silicon" : "MacOS",
+                latestVersion >= "v2.1.0-beta.1"
+                  ? "MacOS Apple Silicon"
+                  : "MacOS",
                 applicationType,
               )
             }
@@ -373,8 +375,7 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {
-                    item.assets[0].download_count +
+                  {item.assets[0].download_count +
                     item.assets[1].download_count +
                     item.assets[2].download_count +
                     item.assets[3].download_count +
@@ -382,8 +383,7 @@ export default function Releases({ props }) {
                     item.assets[5].download_count +
                     item.assets[6].download_count +
                     item.assets[7].download_count +
-                    item.assets[8].download_count
-                  }{" "}
+                    item.assets[8].download_count}{" "}
                   Downloads
                 </p>
                 <button
@@ -446,24 +446,28 @@ export default function Releases({ props }) {
                   </button>
                   <div className={"grid grid-cols-1 justify-items-center"}>
                     <button
-                        className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
-                        onClick={() =>
-                            downloadOlderReleases("MacOS Apple Silicon", applicationType, item.tag_name)
-                        }
+                      className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                      onClick={() =>
+                        downloadOlderReleases(
+                          "MacOS Apple Silicon",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
                     >
                       Download <i className="fab fa-brands fa-apple"></i>
                     </button>
                     <button
-                        className={
-                          "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                        }
-                        onClick={() =>
-                            downloadOlderReleases(
-                                "MacOS Intel",
-                                applicationType,
-                                item.tag_name,
-                            )
-                        }
+                      className={
+                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                      }
+                      onClick={() =>
+                        downloadOlderReleases(
+                          "MacOS Intel",
+                          applicationType,
+                          item.tag_name,
+                        )
+                      }
                     >
                       Download for macOS (Intel)
                     </button>
@@ -482,9 +486,9 @@ export default function Releases({ props }) {
         {filteredReleases.map((item, index) => {
           index = index + filteredPreReleases.length;
           return (
-              <div key={index} className="text-center p-5 text-base font-normal">
-                <span className="font-bold">{item.tag_name} </span>
-                <p>
+            <div key={index} className="text-center p-5 text-base font-normal">
+              <span className="font-bold">{item.tag_name} </span>
+              <p>
                 {new Date(item.published_at).toString()} with{" "}
                 {item.tag_name >= "v2.1.0"
                   ? item.assets[0].download_count +
