@@ -400,7 +400,7 @@ export default function Releases({ props }) {
                 )}
 
                 <div className="grid md:grid-flow-col  md:gap-16 xs:gap-3 justify-center text-white mt-3 font-semibold">
-                  <div className={"grid grid-cols-1 justify-items-center"}>
+                  <div className={"text-center"}>
                     <button
                       className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                       onClick={() =>
@@ -414,20 +414,22 @@ export default function Releases({ props }) {
                       Download <i className="fab fa-brands fa-windows"></i>
                     </button>
                     {applicationType === "GUI" && (
-                      <button
-                        className={
-                          "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                        }
-                        onClick={() =>
-                          downloadOlderReleases(
-                            "Windows msi",
-                            applicationType,
-                            item.tag_name,
-                          )
-                        }
-                      >
-                        Prefer the msi?
-                      </button>
+                        <div className={"text-center"}>
+                          <button
+                            className={
+                              "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                            }
+                            onClick={() =>
+                              downloadOlderReleases(
+                                "Windows msi",
+                                applicationType,
+                                item.tag_name,
+                              )
+                            }
+                          >
+                            Prefer the msi?
+                          </button>
+                        </div>
                     )}
                   </div>
                   <button
@@ -564,7 +566,7 @@ export default function Releases({ props }) {
                     className="select-none pl-3 pr-3 w-auto h-min text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
                     onClick={() =>
                       downloadOlderReleases(
-                        item.tag_name >= "v2.1.0-beta.1"
+                        item.tag_name >= "v2.1.0"
                           ? "MacOS Apple Silicon"
                           : "MacOS",
                         applicationType,
@@ -574,7 +576,7 @@ export default function Releases({ props }) {
                   >
                     Download <i className="fab fa-brands fa-apple"></i>
                   </button>
-                  {item.tag_name >= "v2.1.0-beta.1" && ( // If the version of the past release is greater than or equal to v2.1.0-beta.1, then show the download button for macOS (Intel)
+                  {item.tag_name >= "v2.1.0" && ( // If the version of the past release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
                     <button
                       className={
                         "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
