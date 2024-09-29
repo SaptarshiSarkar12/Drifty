@@ -72,6 +72,7 @@ jobs:
         timeout_seconds: 60
         max_attempts: 5
         retry_on: error
+        retry_wait_seconds: '30'
         command: |
           chmod +x Core/src/main/resources/yt-dlp
           Core/src/main/resources/yt-dlp -U
@@ -82,6 +83,7 @@ jobs:
         timeout_seconds: 60
         max_attempts: 5
         retry_on: error
+        retry_wait_seconds: '30'
         command: |
           chmod +x Core/src/main/resources/yt-dlp_macos
           Core/src/main/resources/yt-dlp_macos -U
@@ -92,6 +94,7 @@ jobs:
         timeout_seconds: 60
         max_attempts: 5
         retry_on: error
+        retry_wait_seconds: '30'
         command: |
           Core/src/main/resources/yt-dlp.exe -U
     - name: Set up GraalVM JDK 21
