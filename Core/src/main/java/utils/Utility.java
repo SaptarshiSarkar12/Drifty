@@ -7,10 +7,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hildan.fxgson.FxGson;
 import preferences.AppSettings;
-import properties.MessageCategory;
-import properties.Mode;
-import properties.OS;
-import properties.Program;
+import properties.*;
 
 import java.io.*;
 import java.net.*;
@@ -33,6 +30,7 @@ import java.util.zip.GZIPInputStream;
 
 import static properties.Program.YT_DLP;
 import static support.Constants.*;
+import static utils.Utility.extractQueryParams;
 
 public class Utility {
     private static final Random RANDOM_GENERATOR = new Random(System.currentTimeMillis());
@@ -859,6 +857,33 @@ public class Utility {
             msgBroker.msgError(errorMessage + " " + e.getMessage(), messageCategory);
             return 0;
         }
+    }
+
+    public static String formatYoutubeLink(String link) throws MalformedURLException, URISyntaxException {
+        String videoId = null;
+        URI uri = URI.create(link);
+        String domain = uri.getHost();
+
+        if ("youtu.be".equals(domain)) {
+            String path = uri.getPath();
+            if (path != null && path.length() > 1) {
+                videoId = path.substring(1); // removing the leading "/"
+            }
+        }
+
+        else if ("www.youtube.com".equals(domain) || "youtube.com".equals(domain)) {
+            Map<String, String> queryParams = extractQueryParams(link, "v");
+            videoId = queryParams.get("v");
+        }
+
+        if (videoId != null) {
+            uri = new URI("https", "www.youtube.com", "/watch", "v=" + videoId, null);
+            link = uri.toString();
+        } else {
+            throw new MalformedURLException(link + " is not a valid youtube link!");
+        }
+
+        return link;
     }
 
     /**

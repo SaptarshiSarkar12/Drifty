@@ -21,6 +21,7 @@ import updater.UpdateChecker;
 import utils.Logger;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -295,42 +296,18 @@ public class Drifty_CLI {
                         link = formatInstagramLink(link);
                     }
                     else if (isYoutube(link)) {
-                        String videoId = null;
                         try {
-                            URI uri = URI.create(link);
-                            String domain = uri.getHost();
-
-                            // checking if the domain is youtu.be
-                            if ("youtu.be".equals(domain)) {
-                                String path = uri.getPath();
-                                if (path != null && path.length() > 1) {
-                                    videoId = path.substring(1); // removing the leading "/"
-                                }
-                            }
-                            // checking if the domain is youtube.com
-                            else if ("www.youtube.com".equals(domain) || "youtube.com".equals(domain)) {
-                                Map<String, String> queryParams = extractQueryParams(link, "v");
-                                videoId = queryParams.get("v");
-                            }
-
-                            if (videoId != null) {
-                                // constructing link in youtube.com/watch?v={videoID}
-                                uri = new URI("https", "www.youtube.com", "/watch", "v=" + videoId, null);
-                                link = uri.toString();
-                            } else {
-                                messageBroker.msgLinkError("YouTube video ID not found in the link.");
-                                messageBroker.msgInputInfo(QUIT_OR_CONTINUE, true);
-                                String choice = SC.next().toLowerCase().strip();
-                                if ("q".equals(choice)) {
-                                    LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
-                                    break;
-                                }
-                                printBanner();
-                                continue;
-                            }
-
-                        } catch (IllegalArgumentException | URISyntaxException e) {
+                            link = formatYoutubeLink(link);
+                        } catch (IllegalArgumentException | URISyntaxException | MalformedURLException e) {
                             messageBroker.msgLinkError("Failed to process the YouTube link: " + e.getMessage());
+                            messageBroker.msgInputInfo(QUIT_OR_CONTINUE, true);
+                            String choice = SC.next().toLowerCase().strip();
+                            if ("q".equals(choice)) {
+                                LOGGER.log(MessageType.INFO, CLI_APPLICATION_TERMINATED);
+                                break;
+                            }
+                            printBanner();
+                            continue;
                         }
                     }
                     messageBroker.msgFilenameInfo("Retrieving filename from link...");
