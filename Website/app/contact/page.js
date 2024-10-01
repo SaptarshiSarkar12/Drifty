@@ -22,7 +22,7 @@ export default function contact() {
           method="POST"
           action="https://formsubmit.co/e94b201f9a607081e9f9f8ee09ff5e25"
         >
-                      <h1 className="  mb-4 text-5xl font-bold">Contact Us</h1>
+                      <h1 className="  max-md:text-3xl mb-4 text-5xl font-bold">Contact Us</h1>
                       <p className="">          We&apos;d love to hear from you!
                       </p>
                       <div className="flex justify-around gap-2 mt-6 max-md:flex-col">
