@@ -38,7 +38,7 @@ export default function contact() {
           <input 
             className="border max-md:w-full max-md:mt-6  max-w-[400px] rounded-full p-2 w-1/2 bg-white  focus:outline-blue-600 outline:none caret-blue-600  h-12  md:ml-auto md:w-1/2 justify-end  md:col-span-1 col-span-2  text-blue-600"
             inputMode="email"
-            pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/"
+            pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
             type="email"
             name="email"
             required
