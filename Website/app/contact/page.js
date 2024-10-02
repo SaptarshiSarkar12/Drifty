@@ -10,9 +10,6 @@ export default function contact() {
   return (
     <div>
       <Header props={"bg-top"} />
-     
-      
-
       <div className="select-none bg-gradient-to-b from-top via-about to-bottom ">
       
         <div className="flex justify-center items-center  w-full max-md:p-2   p-12">
@@ -21,6 +18,7 @@ export default function contact() {
           className="md:w-3/5   bg-white rounded-2xl shadow-lg shadow-gray-500 p-14" 
           method="POST"
           action="https://formsubmit.co/e94b201f9a607081e9f9f8ee09ff5e25"
+          aria-label="Contact Us Form"
         >
                       <h1 className="  max-md:text-3xl mb-4 text-5xl font-bold">Contact Us</h1>
                       <p className="">          We&apos;d love to hear from you!
@@ -34,6 +32,7 @@ export default function contact() {
             inputMode="text"
             required
             placeholder="Name"
+            pattern="^[A-Za-z\s]{1,}$"
           />
           <input 
             className="border max-md:w-full max-md:mt-6  max-w-[400px] rounded-full p-2 w-1/2 bg-white  focus:outline-blue-600 outline:none caret-blue-600  h-12  md:ml-auto md:w-1/2 justify-end  md:col-span-1 col-span-2  text-blue-600"
@@ -48,7 +47,7 @@ export default function contact() {
           <input
             className="border rounded-full p-2 w-full my-2 bg-white  focus:outline-blue-600 outline:none caret-blue-600 mt-6 md:mr-auto md:ml-1 justify-start  h-12   md:col-span-1 col-span-2 text-blue-600"
             minLength={6}
-            pattern="/^([+]?\d{1,2}[-\s]?|)\d{3}[-\s]?\d{3}[-\s]?\d{4}$/"
+            pattern="^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$"
             maxLength={26}
             inputMode="tel"
             type="tel"
