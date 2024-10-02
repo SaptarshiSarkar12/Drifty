@@ -26,7 +26,6 @@ export default function contact() {
               <div className="flex flex-col">
                 <input
                   type="text"
-                  name="name"
                   autoFocus={true}
                   inputMode="text"
                   required
@@ -45,7 +44,6 @@ export default function contact() {
                   inputMode="email"
                   pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
                   type="email"
-                  name="email"
                   required
                   placeholder="Email"
                 />
@@ -61,7 +59,6 @@ export default function contact() {
               maxLength={26}
               inputMode="tel"
               type="tel"
-              name="phone"
               required
               placeholder="Phone Number"
             />
