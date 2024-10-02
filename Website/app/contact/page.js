@@ -43,7 +43,6 @@ export default function contact() {
   </div>
   <input
   type="tel"
-  autoFocus={true}
   required
   className="border rounded-full p-2 w-full my-2 bg-white focus:outline-blue-600 outline:none caret-blue-600 mt-6 md:mr-auto md:ml-1 justify-start h-12 md:col-span-1 col-span-2 text-black"
   pattern="^[+0-9_]{10,}$"
