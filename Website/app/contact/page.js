@@ -27,12 +27,12 @@ export default function contact() {
         inputMode="text"
         required
         placeholder="Name"
-        pattern="^[a-zA-Z_]{5,}$"
-        title="Please enter at least 5 characters and a - z , A - Z and _ are allowed"
-        className="h-[50px] border pl-3 min-w-[200px] max-md:w-[95%] w-[40%]  border-gray-300 rounded-3xl"
+        pattern="^[A-Za-z\s'-]{5,}$"
+        title="Please enter at least 5 characters and  Only lowercase, uppercase and underscore are allowed"
+        className="h-[50px] border pl-3 focus:outline-blue-600 min-w-[200px] max-md:w-[95%] w-[40%]  border-gray-300 rounded-3xl"
       />
       <input
-        className="h-[50px] border pl-3  min-w-[200px] max-md:w-[95%]  w-[40%] max-w-[500px] border-gray-300 rounded-3xl"
+        className="h-[50px] border focus:outline-blue-600 pl-3  min-w-[200px] max-md:w-[95%]  w-[40%] max-w-[500px] border-gray-300 rounded-3xl"
         type="email"
         required
         pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
