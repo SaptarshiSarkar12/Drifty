@@ -37,7 +37,6 @@ export default function contact() {
         required
         pattern="^[A-Za-z\s'-]{5,}$"
         id="email"
-        autoFocus
         placeholder="Email"
         title="Please enter a valid email address (e.g., example@domain.com)."
       />
