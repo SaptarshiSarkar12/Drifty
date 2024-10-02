@@ -28,7 +28,7 @@ export default function contact() {
         required
         placeholder="Name"
         pattern="^[a-zA-Z_]{5,}$"
-        title="Please enter at least 5 characters and a - z , A - Z and _ are allowed"
+        title="Please enter at least 5 characters. Only lowercase, uppercase and underscore are allowed"
         className="h-[50px] border pl-3 min-w-[200px] max-md:w-[95%] w-[40%]  border-gray-300 rounded-3xl"
       />
       <input
