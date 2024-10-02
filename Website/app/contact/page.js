@@ -27,7 +27,7 @@ export default function contact() {
         inputMode="text"
         required
         placeholder="Name"
-        pattern="^[A-Za-z\s'-]{5,}$"
+        pattern="^[a-zA-Z_]{5,}$"
         title="Please enter at least 5 characters and a - z , A - Z and _ are allowed"
         className="h-[50px] border pl-3 min-w-[200px] max-md:w-[95%] w-[40%]  border-gray-300 rounded-3xl"
       />
@@ -37,14 +37,12 @@ export default function contact() {
         required
         pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
         id="email"
-        autoFocus
         placeholder="Email"
         title="Please enter a valid email address (e.g., example@domain.com)."
       />
   </div>
   <input
   type="tel"
-  autoFocus={true}
   required
   className="border rounded-full p-2 w-full my-2 bg-white focus:outline-blue-600 outline:none caret-blue-600 mt-6 md:mr-auto md:ml-1 justify-start h-12 md:col-span-1 col-span-2 text-black"
   pattern="^[+0-9_]{10,}$"
