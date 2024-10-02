@@ -54,7 +54,7 @@ export default function contact() {
             </div>
             <input
               className="border rounded-full p-2 w-full my-2 bg-white  focus:outline-blue-600 outline:none caret-blue-600 mt-6 md:mr-auto md:ml-1 justify-start  h-12   md:col-span-1 col-span-2 text-blue-600"
-              minLength={6}
+              minLength={10}
               pattern="^(\+\d{1,3}[- ]?)?\d{10}$"
               maxLength={26}
               inputMode="tel"
