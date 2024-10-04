@@ -80,31 +80,28 @@ function MobileNav({ open }) {
   );
 }
 
-
-
-
 export default function Header({ props }) {
   const [open, setOpen] = useState(false);
   const [hcolor, setHcolor] = useState(props + " pt-7");
-const onScroll = useCallback(() => {
-  const { scrollY } = window;
-  if (window.innerWidth <= 760 && open) {
-    setOpen(false);
-  }
-  if (window.innerWidth > 760) {
-    if (scrollY === 0) setHcolor(props + " pt-7");
-    else setHcolor("bg-var shadow-lg pt-4");
-  }
-}, [props, open]);
+  const onScroll = useCallback(() => {
+    const { scrollY } = window;
+    if (window.innerWidth <= 760 && open) {
+      setOpen(false);
+    }
+    if (window.innerWidth > 760) {
+      if (scrollY === 0) setHcolor(props + " pt-7");
+      else setHcolor("bg-var shadow-lg pt-4");
+    }
+  }, [props, open]);
 
-useEffect(() => {
-  // add event listener to window
-  window.addEventListener("scroll", onScroll, { passive: true });
-  // remove event listener on unmount to prevent memory leaks
-  return () => {
-    window.removeEventListener("scroll", onScroll);
-  };
-}, [onScroll]);
+  useEffect(() => {
+    // add event listener to window
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // remove event listener on unmount to prevent memory leaks
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [onScroll]);
 
   return (
     <header
