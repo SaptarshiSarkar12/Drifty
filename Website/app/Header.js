@@ -97,11 +97,14 @@ const onScroll = useCallback(() => {
   }
 }, [props, open]);
 
-  useEffect(() => {
-    //add event listener to window
-    window.addEventListener("scroll", onScroll, { passive: true });
-    // remove event on unmounting to prevent Linkmemory leak with the cleanup
-  }, [onScroll]);
+useEffect(() => {
+  // add event listener to window
+  window.addEventListener("scroll", onScroll, { passive: true });
+  // remove event listener on unmount to prevent memory leaks
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+  };
+}, [onScroll]);
 
   return (
     <header
