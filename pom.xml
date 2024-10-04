@@ -6,7 +6,7 @@
 
     <groupId>io.github.SaptarshiSarkar12</groupId>
     <artifactId>Drifty</artifactId>
-    <version>2.1.0-rc.1</version>
+    <version>2.1.0</version>
     <packaging>pom</packaging>
     <name>Drifty</name>
     <description>Drifty is an Open-Source Interactive File Downloader System built with Java</description>

@@ -148,9 +148,29 @@ export default function Releases({ props }) {
   }, [props.release]);
   const filteredPreReleases = useMemo(() => {
     const releases = [];
-    props.release.map((item) => {
-      if (item.prerelease === true && releases.length < 1) {
-        releases.push(item); // Only one pre-release is collected.
+
+    // Get the latest stable version
+    const sortedReleases = [...props.release].sort(
+      (a, b) => new Date(b.published_at) - new Date(a.published_at),
+    );
+    let latestStableVersion = sortedReleases.find(
+      (item) => !item.prerelease,
+    )?.tag_name;
+
+    props.release.forEach((item) => {
+      // Skip the pre-release if a stable version with the same base version exists
+      const baseVersion = item.tag_name.match(/^v?\d+\.\d+\.\d+/)?.[0]; // Match semantic versioning pattern
+
+      if (
+        item.prerelease &&
+        latestStableVersion &&
+        baseVersion === latestStableVersion // Compare base versions
+      ) {
+        return; // Skip pre-releases if a stable version with the same base exists
+      }
+
+      if (item.prerelease && releases.length < 1) {
+        releases.push(item); // Only add one pre-release
       }
     });
     return releases;
@@ -310,12 +330,7 @@ export default function Releases({ props }) {
           <button
             className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
             onClick={() =>
-              downloadLatestRelease(
-                latestVersion >= "v2.1.0-beta.1"
-                  ? "MacOS Apple Silicon"
-                  : "MacOS",
-                applicationType,
-              )
+              downloadLatestRelease("MacOS Apple Silicon", applicationType)
             }
           >
             Download Now <i className="fab fa-brands fa-apple"></i>
@@ -323,18 +338,16 @@ export default function Releases({ props }) {
               {latestVersion}
             </div>
           </button>
-          {latestVersion >= "v2.1.0-beta.1" && ( // If the version of the latest release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
-            <div className={"text-center"}>
-              <button
-                className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                onClick={() =>
-                  downloadLatestRelease("MacOS Intel", applicationType)
-                }
-              >
-                Download for macOS (Intel)
-              </button>
-            </div>
-          )}
+          <div className={"text-center"}>
+            <button
+              className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+              onClick={() =>
+                downloadLatestRelease("MacOS Intel", applicationType)
+              }
+            >
+              Download for macOS (Intel)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -375,15 +388,10 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets[0].download_count +
-                    item.assets[1].download_count +
-                    item.assets[2].download_count +
-                    item.assets[3].download_count +
-                    item.assets[4].download_count +
-                    item.assets[5].download_count +
-                    item.assets[6].download_count +
-                    item.assets[7].download_count +
-                    item.assets[8].download_count}{" "}
+                  {item.assets?.reduce(
+                    (sum, asset) => sum + (asset.download_count || 0),
+                    0,
+                  )}{" "}
                   Downloads
                 </p>
                 <button
