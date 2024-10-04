@@ -148,13 +148,28 @@ export default function Releases({ props }) {
   }, [props.release]);
   const filteredPreReleases = useMemo(() => {
     const releases = [];
-    props.release.map((item) => {
-      if (item.prerelease === true && releases.length < 1) {
-        releases.push(item); // Only one pre-release is collected.
+    
+    // Get the latest stable version
+    let latestStableVersion = props.release.find(item => !item.prerelease)?.tag_name;
+  
+    props.release.forEach((item) => {
+      // Skip the pre-release if a stable version with the same base version exists
+      const baseVersion = item.tag_name.split('-')[0]; // Extract the base version (e.g., v2.1.0 from v2.1.0-rc.1)
+      
+      if (
+        item.prerelease &&
+        latestStableVersion &&
+        baseVersion === latestStableVersion // Compare base versions
+      ) {
+        return; // Skip pre-releases if a stable version with the same base exists
+      }
+  
+      if (item.prerelease && releases.length < 1) {
+        releases.push(item); // Only add one pre-release
       }
     });
     return releases;
-  }, [props.release]);
+  }, [props.release]);  
   const filteredReleases = useMemo(() => {
     // Starting from v2.0.0, separate executables for windows, linux and macOS are available. So, we need three buttons (in total) in that case.
     const releases = [];
@@ -368,15 +383,7 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets[0].download_count +
-                    item.assets[1].download_count +
-                    item.assets[2].download_count +
-                    item.assets[3].download_count +
-                    item.assets[4].download_count +
-                    item.assets[5].download_count +
-                    item.assets[6].download_count +
-                    item.assets[7].download_count +
-                    item.assets[8].download_count}{" "}
+                  {item.assets?.reduce((sum, asset) => sum + (asset.download_count || 0), 0)}{" "}
                   Downloads
                 </p>
                 <button
