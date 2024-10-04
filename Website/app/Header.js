@@ -4,12 +4,14 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
+import { useRouter } from 'next/router';
 
 function handleNavLinkClick(to, setOpen) {
+  const router = useRouter();
   if (window.location.pathname === to) {
     setOpen(false);
   } else {
-    window.location.href = to;
+    router.push(to);
   }
 }
 
