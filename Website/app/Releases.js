@@ -310,12 +310,7 @@ export default function Releases({ props }) {
           <button
             className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
             onClick={() =>
-              downloadLatestRelease(
-                latestVersion >= "v2.1.0-beta.1"
-                  ? "MacOS Apple Silicon"
-                  : "MacOS",
-                applicationType,
-              )
+              downloadLatestRelease("MacOS Apple Silicon", applicationType)
             }
           >
             Download Now <i className="fab fa-brands fa-apple"></i>
@@ -323,18 +318,16 @@ export default function Releases({ props }) {
               {latestVersion}
             </div>
           </button>
-          {latestVersion >= "v2.1.0-beta.1" && ( // If the version of the latest release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
-            <div className={"text-center"}>
-              <button
-                className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
-                onClick={() =>
-                  downloadLatestRelease("MacOS Intel", applicationType)
-                }
-              >
-                Download for macOS (Intel)
-              </button>
-            </div>
-          )}
+          <div className={"text-center"}>
+            <button
+              className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+              onClick={() =>
+                downloadLatestRelease("MacOS Intel", applicationType)
+              }
+            >
+              Download for macOS (Intel)
+            </button>
+          </div>
         </div>
       </div>
 
