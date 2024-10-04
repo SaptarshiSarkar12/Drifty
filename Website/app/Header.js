@@ -6,8 +6,7 @@ import Link from "next/link";
 import { useCallback, useEffect } from "react";
 import { useRouter } from 'next/router';
 
-function handleNavLinkClick(to, setOpen) {
-  const router = useRouter();
+function handleNavLinkClick(to, setOpen, router) {
   if (window.location.pathname === to) {
     setOpen(false);
   } else {
