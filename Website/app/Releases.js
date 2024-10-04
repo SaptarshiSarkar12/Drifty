@@ -155,7 +155,7 @@ export default function Releases({ props }) {
   
     props.release.forEach((item) => {
       // Skip the pre-release if a stable version with the same base version exists
-      const baseVersion = item.tag_name.split('-')[0]; // Extract the base version (e.g., v2.1.0 from v2.1.0-rc.1)
+      const baseVersion = item.tag_name.match(/^v?\d+\.\d+\.\d+/)?.[0]; // Match semantic versioning pattern
       
       if (
         item.prerelease &&
