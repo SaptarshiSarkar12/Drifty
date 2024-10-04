@@ -20,9 +20,9 @@ function NavLink({ to, children, cn }) {
 function MobileNav({ open }) {
   return (
     <div
-      className={`fixed z-50 top-0 left-0 h-screen w-screen bg-top transform ${
+      className={`fixed z-10 top-0 left-0 h-screen w-screen bg-top transform ${
         !open && "-translate-x-full"
-      } transition-transform duration-300 ease-in-out filter drop-shadow-md overflow-y-auto`}
+      } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
       <div className="flex items-start justify-center filter bg-top h-30 m-4 z-50">
         {/* Logo container */}
@@ -86,13 +86,16 @@ function MobileNav({ open }) {
 export default function Header({ props }) {
   const [open, setOpen] = useState(false);
   const [hcolor, setHcolor] = useState(props + " pt-7");
-  const onScroll = useCallback(() => {
-    const { scrollY } = window;
-    if (window.innerWidth > 760) {
-      if (scrollY === 0) setHcolor(props + " pt-7");
-      else setHcolor("bg-var shadow-lg pt-4");
-    }
-  }, [props]);
+const onScroll = useCallback(() => {
+  const { scrollY } = window;
+  if (window.innerWidth <= 760 && open) {
+    setOpen(false);
+  }
+  if (window.innerWidth > 760) {
+    if (scrollY === 0) setHcolor(props + " pt-7");
+    else setHcolor("bg-var shadow-lg pt-4");
+  }
+}, [props, open]);
 
   useEffect(() => {
     //add event listener to window
