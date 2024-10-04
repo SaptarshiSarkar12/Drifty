@@ -150,7 +150,8 @@ export default function Releases({ props }) {
     const releases = [];
     
     // Get the latest stable version
-    let latestStableVersion = props.release.find(item => !item.prerelease)?.tag_name;
+    const sortedReleases = [...props.release].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+    let latestStableVersion = sortedReleases.find(item => !item.prerelease)?.tag_name;
   
     props.release.forEach((item) => {
       // Skip the pre-release if a stable version with the same base version exists
