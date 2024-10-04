@@ -148,15 +148,19 @@ export default function Releases({ props }) {
   }, [props.release]);
   const filteredPreReleases = useMemo(() => {
     const releases = [];
-    
+
     // Get the latest stable version
-    const sortedReleases = [...props.release].sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
-    let latestStableVersion = sortedReleases.find(item => !item.prerelease)?.tag_name;
-  
+    const sortedReleases = [...props.release].sort(
+      (a, b) => new Date(b.published_at) - new Date(a.published_at),
+    );
+    let latestStableVersion = sortedReleases.find(
+      (item) => !item.prerelease,
+    )?.tag_name;
+
     props.release.forEach((item) => {
       // Skip the pre-release if a stable version with the same base version exists
       const baseVersion = item.tag_name.match(/^v?\d+\.\d+\.\d+/)?.[0]; // Match semantic versioning pattern
-      
+
       if (
         item.prerelease &&
         latestStableVersion &&
@@ -164,13 +168,13 @@ export default function Releases({ props }) {
       ) {
         return; // Skip pre-releases if a stable version with the same base exists
       }
-  
+
       if (item.prerelease && releases.length < 1) {
         releases.push(item); // Only add one pre-release
       }
     });
     return releases;
-  }, [props.release]);  
+  }, [props.release]);
   const filteredReleases = useMemo(() => {
     // Starting from v2.0.0, separate executables for windows, linux and macOS are available. So, we need three buttons (in total) in that case.
     const releases = [];
@@ -384,7 +388,10 @@ export default function Releases({ props }) {
                 <span className="font-bold">{item.tag_name} </span>
                 <p>
                   {new Date(item.published_at).toString()} with{" "}
-                  {item.assets?.reduce((sum, asset) => sum + (asset.download_count || 0), 0)}{" "}
+                  {item.assets?.reduce(
+                    (sum, asset) => sum + (asset.download_count || 0),
+                    0,
+                  )}{" "}
                   Downloads
                 </p>
                 <button
