@@ -4,23 +4,23 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+
+function handleNavLinkClick(to, setOpen) {
+  if (window.location.pathname === to) {
+    setOpen(false);
+  } else {
+    window.location.href = to;
+  }
+}
 
 function NavLink({ to, children, cn, setOpen }) {
-  const router = useRouter();
-  const handleNavLinkClick = (e) => {
-    e.preventDefault();
-    if (router.pathname === to) {
-      setOpen(false);
-    } else {
-      router.push(to);
-    }
-  };
-
   return (
-    <Link href={to} className={`text-gray-900 hover:text-black ${cn}`} onClick={handleNavLinkClick}>
+    <button
+      onClick={() => handleNavLinkClick(to, setOpen)}
+      className={`text-gray-900 hover:text-black ${cn}`}
+    >
       {children}
-    </Link>
+    </button>
   );
 }
 
