@@ -281,6 +281,9 @@ export default function Releases({ props }) {
         </div>
       </div>
 
+      <h1 className="select-none text-center font-bold text-2xl pt-10">
+        Latest Release
+      </h1>
       {/* Download Buttons */}
       <div className="flex flex-col items-center md:flex-row md:items-start justify-center space-y-4 md:space-y-0 gap-5 pt-10">
         {/* First Download Now Button */}
