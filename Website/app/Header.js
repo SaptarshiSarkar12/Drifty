@@ -5,22 +5,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCallback, useEffect } from "react";
 
-function handleNavLinkClick(to, setOpen) {
-  if (window.location.pathname === to) {
-    setOpen(false);
-  } else {
-    window.location.href = to;
-  }
-}
-
 function NavLink({ to, children, cn, setOpen }) {
   return (
-    <button
-      onClick={() => handleNavLinkClick(to, setOpen)}
-      className={`text-gray-900 hover:text-black ${cn}`}
-    >
-      {children}
-    </button>
+      <Link
+          scroll={false}
+          href={to}
+          className={`text-gray-900 hover:text-black ${cn}`}
+          onClick={() => { setOpen(false); }}
+      >
+        {children}
+      </Link>
   );
 }
 
@@ -31,6 +25,7 @@ function MobileNav({ open, setOpen }) {
         !open && "-translate-x-full"
       } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
+      {/* Logo container */}
       <div className="flex items-start justify-center filter bg-top h-30 m-4 z-50">
         <Link className="text-xl font-semibold z-50" href="/">
           <Image
@@ -41,30 +36,30 @@ function MobileNav({ open, setOpen }) {
           />
         </Link>
       </div>
-
+      {/* Mobile Nav */}
       <div className="flex flex-col pt-12 justify-items-center items-center z-50">
         <NavLink
           to="/about"
           cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 z-50"
           setOpen={setOpen}
         >
-          About
+          <button>About</button>
         </NavLink>
         <NavLink
           to="/download"
           cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 z-50"
           setOpen={setOpen}
         >
-          Download
+          <button>Download</button>
         </NavLink>
         <NavLink
           to="/contact"
           cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300 z-50"
           setOpen={setOpen}
         >
-          Contact
+          <button>Contact</button>
         </NavLink>
-
+        {/* Social Icons */}
         <div className="flex justify-center items-center pt-10 z-50">
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i
@@ -102,7 +97,9 @@ export default function Header({ props }) {
   }, [props, open]);
 
   useEffect(() => {
+    // add event listener to window
     window.addEventListener("scroll", onScroll, { passive: true });
+    // remove event listener on unmounting to prevent memory leaks
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
@@ -133,6 +130,7 @@ export default function Header({ props }) {
           }}
           role={"button"}
         >
+          {/* hamburger button */}
           <span
             className={`h-1 w-full bg-white rounded-lg transform transition duration-300 ease-in-out ${
               open ? "rotate-45 translate-y-3.5" : ""
@@ -150,18 +148,27 @@ export default function Header({ props }) {
           />
         </div>
 
+        {/* Desktop Navbar buttons */}
         <div className="hidden md:flex mr-20 ">
           <NavLink to="/#" cn="mx-4 flex" setOpen={setOpen}>
-            HOME
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              HOME
+            </button>
           </NavLink>
           <NavLink to="/about" cn="mx-4 flex" setOpen={setOpen}>
-            ABOUT
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              ABOUT
+            </button>
           </NavLink>
           <NavLink to="/download" cn="mx-4 flex" setOpen={setOpen}>
-            DOWNLOAD
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              DOWNLOAD
+            </button>
           </NavLink>
           <NavLink to="/contact" cn="mx-4 flex" setOpen={setOpen}>
-            CONTACT
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              CONTACT
+            </button>
           </NavLink>
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i
