@@ -7,14 +7,16 @@ import { useCallback, useEffect } from "react";
 
 function NavLink({ to, children, cn, setOpen }) {
   return (
-      <Link
-          scroll={false}
-          href={to}
-          className={`text-gray-900 hover:text-black ${cn}`}
-          onClick={() => { setOpen(false); }}
-      >
-        {children}
-      </Link>
+    <Link
+      scroll={false}
+      href={to}
+      className={`text-gray-900 hover:text-black ${cn}`}
+      onClick={() => {
+        setOpen(false);
+      }}
+    >
+      {children}
+    </Link>
   );
 }
 
