@@ -17,9 +17,9 @@ function NavLink({ to, children, cn, setOpen }) {
   return (
     <button
       onClick={() => handleNavLinkClick(to, setOpen)}
-      className={`text-gray-900 hover:text-black ${cn}`}
+      className={`border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base ${cn}`}
     >
-      {children}
+      {children} 
     </button>
   );
 }
