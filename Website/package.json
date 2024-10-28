@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^2.1.10",
+    "@headlessui/react": "^2.2.0",
     "autoprefixer": "10.4.20",
     "eslint": "8.57.0",
     "eslint-config-next": "15.0.1",
