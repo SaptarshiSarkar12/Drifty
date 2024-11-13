@@ -5,6 +5,7 @@ import properties.OS;
 import properties.Program;
 import updater.UpdateChecker;
 import utils.CopyExecutables;
+import utils.DbConnection;
 import utils.MessageBroker;
 import utils.Utility;
 
@@ -15,6 +16,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -23,7 +25,7 @@ import static properties.Program.YT_DLP;
 public class Environment {
     private static MessageBroker msgBroker;
     private static boolean isAdministrator;
-
+    private static DbConnection dbConnection;
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
     It first determines which yt-dlp program to copy out of resources based on the OS.
@@ -67,6 +69,13 @@ public class Environment {
             } else {
                 msgBroker.msgInitError("Failed to copy yt-dlp executable! " + e.getMessage());
             }
+        }
+        try {
+            dbConnection = DbConnection.getInstance();
+            dbConnection.createTables();
+        } catch (SQLException e) {
+            msgBroker.msgInitError("Failed to setup the database: " + e.getMessage());
+            Environment.terminate(1);
         }
         File folder = new File(driftyFolderPath);
         if (!folder.exists()) {
