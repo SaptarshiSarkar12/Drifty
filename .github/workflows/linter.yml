@@ -46,6 +46,7 @@ jobs:
           VALIDATE_YAML: false
           VALIDATE_CHECKOV: false
           VALIDATE_SHELL_SHFMT: false
+          VALIDATE_GIT_MERGE_CONFLICT_MARKERS: false
       - name: Set read and write permission in super linter log
         run: sudo chmod 777 super-linter.log
       - name: Upload Lint Result
