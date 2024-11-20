@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -26,6 +28,7 @@ public class Environment {
     private static MessageBroker msgBroker;
     private static boolean isAdministrator;
     private static DbConnection dbConnection;
+    public static int currentSessionId;
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
     It first determines which yt-dlp program to copy out of resources based on the OS.
@@ -73,6 +76,9 @@ public class Environment {
         try {
             dbConnection = DbConnection.getInstance();
             dbConnection.createTables();
+
+            String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            currentSessionId = dbConnection.addSessionRecord(startDate);
         } catch (SQLException e) {
             msgBroker.msgInitError("Failed to setup the database: " + e.getMessage());
             Environment.terminate(1);
@@ -91,6 +97,13 @@ public class Environment {
     }
 
     public static void terminate(int exitCode) {
+        String endDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        try {
+            dbConnection.updateSessionEndDate(currentSessionId, endDate);
+        } catch (SQLException e) {
+            msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
+        }
+
         AppSettings.CLEAR.spotifyAccessToken();
         System.exit(exitCode);
     }
