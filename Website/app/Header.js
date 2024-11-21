@@ -42,21 +42,21 @@ function MobileNav({ open, setOpen }) {
       <div className="flex flex-col gap-8 justify-items-center items-center z-50">
         <NavLink
           to="/about"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#191B33] duration-500 text-sm lg:text-base"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
           setOpen={setOpen}
         >
           <button>About</button>
         </NavLink>
         <NavLink
           to="/download"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#191B33] duration-500 text-sm lg:text-base"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
           setOpen={setOpen}
         >
           <button>Download</button>
         </NavLink>
         <NavLink
           to="/contact"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#191B33] duration-500 text-sm lg:text-base"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
           setOpen={setOpen}
         >
           <button>Contact</button>
