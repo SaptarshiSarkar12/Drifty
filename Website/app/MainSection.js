@@ -19,14 +19,14 @@ export default function MainSection() {
 
           <div className="flex space-x-2 justify-start lg:ml-4 lg:mt-2 lg:mb-8">
             <Link
-              className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
+              className="px-3 py-2 bg-[#035792] text-white rounded-lg hover:border-[#191B33] hover:bg-[#191B33] duration-500 text-sm lg:text-base"
               href={"/download"}
               role="button"
             >
               Download
             </Link>
             <Link
-              className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
+              className="px-3 py-2 bg-[#1d356333] text-white rounded-lg hover:border-[#191B33] hover:bg-[#004f6a7d] duration-500 text-sm lg:text-base"
               href={"/#demo"}
               role="button"
             >
@@ -35,7 +35,7 @@ export default function MainSection() {
           </div>
         </div>
       </div>
-      <div className="xs:hidden mx-auto lg:block text-center text-gray-800 py-4 px-2 img-layer w-1/2">
+      <div className="xs:hidden overflow-hidden mx-auto lg:block text-center text-gray-800 py-4 px-2 img-layer w-1/2">
         <Image
           width={450}
           height={0}
