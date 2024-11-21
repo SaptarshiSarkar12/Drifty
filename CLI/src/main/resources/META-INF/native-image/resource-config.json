@@ -19,10 +19,6 @@
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
   }, {
-    "pattern":"\\Qffmpeg\\E"
-  }, {
-    "pattern":"\\Qyt-dlp\\E"
-  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
