@@ -175,7 +175,7 @@ export default function Header({ props }) {
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i
               className={
-                "fab fa-discord text-2xl text-white mx-4 hover:scale-110 duration-100 hover:text-violet-700"
+                "fab fa-discord text-2xl text-white mx-4 duration-100 hover:text-violet-700"
               }
             ></i>
           </a>
@@ -183,7 +183,7 @@ export default function Header({ props }) {
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
             <i
               className={
-                "fab fa-github text-2xl text-white mx-4 hover:scale-110 duration-100 hover:text-black"
+                "fab fa-github text-2xl text-white mx-4 duration-100 hover:text-black"
               }
             ></i>
           </a>
