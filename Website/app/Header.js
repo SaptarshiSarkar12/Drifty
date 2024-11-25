@@ -23,7 +23,7 @@ function NavLink({ to, children, cn, setOpen }) {
 function MobileNav({ open, setOpen }) {
   return (
     <div
-      className={`fixed z-10 top-0 left-0 h-screen w-screen flex flex-col gap-12 bg-top transform ${
+      className={`fixed z-10 top-0 left-0 h-screen w-screen flex flex-col gap-12 pt-16 bg-top transform ${
         !open && "-translate-x-full"
       } transition-transform duration-300 ease-in-out filter drop-shadow-md`}
     >
@@ -39,24 +39,24 @@ function MobileNav({ open, setOpen }) {
         </Link>
       </div>
       {/* Mobile Nav */}
-      <div className="flex flex-col gap-8 justify-items-center items-center z-50">
+      <div className="flex flex-col gap-12 justify-items-center items-center z-50">
         <NavLink
           to="/about"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
           setOpen={setOpen}
         >
           <button>About</button>
         </NavLink>
         <NavLink
           to="/download"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
           setOpen={setOpen}
         >
           <button>Download</button>
         </NavLink>
         <NavLink
           to="/contact"
-          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 text-lg"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
           setOpen={setOpen}
         >
           <button>Contact</button>
@@ -66,7 +66,7 @@ function MobileNav({ open, setOpen }) {
           <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
             <i
               className={
-                "fab fa-discord text-4xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-violet-600 z-50"
+                "fab fa-discord text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-violet-600 z-50"
               }
             ></i>
           </a>
@@ -74,7 +74,7 @@ function MobileNav({ open, setOpen }) {
           <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
             <i
               className={
-                "fab fa-github text-4xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-black z-50"
+                "fab fa-github text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-black z-50"
               }
             ></i>
           </a>
@@ -116,7 +116,7 @@ export default function Header({ props }) {
         <div className="flex items-center lg:pl-20 mb-3 w-full">
           <Link className="font-semibold" href="/">
             <Image
-              className="w-16"
+              className="w-12 lg:w-16"
               src="Drifty1024Thinner1Px.png"
               alt="Logo Of Drifty"
               width={300}
@@ -151,24 +151,24 @@ export default function Header({ props }) {
         </div>
 
         {/* Desktop Navbar buttons */}
-        <div className="hidden md:flex gap-4 justify-center items-center pr-8">
-          <NavLink to="/#" cn="mx-4 flex" setOpen={setOpen}>
-            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg text-sm lg:text-base duration-300">
+        <div className="hidden md:flex gap-4 lg:gap-8 justify-center items-center pr-4 lg:pr-8">
+          <NavLink to="/#" cn="flex" setOpen={setOpen}>
+            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg font-bold tracking-wider text-base lg:text-lg duration-300">
               HOME
             </button>
           </NavLink>
-          <NavLink to="/about" cn="mx-4 flex" setOpen={setOpen}>
-            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg text-sm lg:text-base duration-300">
+          <NavLink to="/about" cn="flex" setOpen={setOpen}>
+            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg font-bold tracking-wider text-base lg:text-lg duration-300">
               ABOUT
             </button>
           </NavLink>
-          <NavLink to="/download" cn="mx-4 flex" setOpen={setOpen}>
-            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg text-sm lg:text-base duration-300">
+          <NavLink to="/download" cn="flex" setOpen={setOpen}>
+            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg font-bold tracking-wider text-base lg:text-lg duration-300">
               DOWNLOAD
             </button>
           </NavLink>
-          <NavLink to="/contact" cn="mx-4 flex" setOpen={setOpen}>
-            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg text-sm lg:text-base duration-300">
+          <NavLink to="/contact" cn="flex" setOpen={setOpen}>
+            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg font-bold tracking-wider text-base lg:text-lg duration-300">
               CONTACT
             </button>
           </NavLink>
