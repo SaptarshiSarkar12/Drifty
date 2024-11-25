@@ -35,7 +35,7 @@ export default function MainSection() {
           </div>
         </div>
       </div>
-      <div className="xs:hidden overflow-hidden mx-auto lg:block text-center text-gray-800 py-4 px-2 img-layer w-1/2">
+      <div className="xs:hidden mx-auto lg:block text-center text-gray-800 py-4 px-2 img-layer w-1/2">
         <Image
           width={450}
           height={0}
