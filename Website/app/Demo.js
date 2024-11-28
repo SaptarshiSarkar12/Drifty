@@ -9,11 +9,11 @@ function classNames(...classes) {
 export default function Demo() {
   const tabs = ["Drifty CLI", "Drifty GUI"];
   return (
-    <div id="demo" className="bg-bottom">
+    <div id="demo" className="bg-bottom flex flex-col gap-4">
       <h1 className="select-none text-center font-extrabold text-4xl pt-6">
         Demonstration of Drifty
       </h1>
-      <p className="select-none text-center text-black text-2xl py-3">
+      <p className="select-none text-center text-black text-2xl">
         Here is a quick demo of Drifty
       </p>
       <div className={"text-center select-none"}>
@@ -25,10 +25,10 @@ export default function Demo() {
                   classNames(
                     "w-36 rounded-full py-2.5 font-extrabold text-blue-700",
                     "ring-blue ring-opacity-60 ring-offset-2 ring-offset-bottom focus:outline-none focus:ring-2",
-                    "hover:-translate-y-1 hover:scale-110 duration-200",
+                    "hover:bg-[#004f6a]  duration-200",
                     selected
                       ? "text-white bg-blue-600 shadow"
-                      : "hover:bg-gray-700/[0.12]",
+                      : "hover:bg-[#3741514f]",
                   )
                 }
                 key={tab}
