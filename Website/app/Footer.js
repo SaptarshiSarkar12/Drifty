@@ -79,7 +79,7 @@ export default function Footer() {
 
   return (
     <div className="select-none">
-      <footer className="p-4 bg-bottom sm:p-6">
+      <footer className="bg-bottom p-4 sm:p-6 sm:pt-12">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
             <a
@@ -99,12 +99,12 @@ export default function Footer() {
             </a>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-2">
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
+            <div className="flex flex-col gap-6 items-start justify-center">
+              <h2 className="text-sm font-semibold text-gray-900 uppercase">
                 Follow us
               </h2>
-              <ul className="text-gray-600 dark:text-gray-500">
-                <li className="mb-4">
+              <ul className="text-gray-600 dark:text-gray-500 flex flex-col gap-4">
+                <li className="">
                   <a
                     href="https://github.com/SaptarshiSarkar12"
                     className="hover:text-github-color"
@@ -122,12 +122,12 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
+            <div className="flex flex-col gap-6 items-start justify-center">
+              <h2 className="text-sm font-semibold text-gray-900 uppercase">
                 Legal
               </h2>
-              <ul className="text-gray-600 dark:text-gray-500">
-                <li className="mb-4">
+              <ul className="text-gray-600 dark:text-gray-500 flex flex-col gap-4">
+                <li className="">
                   <a
                     href="https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/master/Privacy%20Policy.txt"
                     className="hover:text-gray-800"
@@ -161,7 +161,7 @@ export default function Footer() {
               <a
                 key={index}
                 href={href}
-                className="text-gray-500 hover:text-github-color hover:transition ease-in-out duration-300 delay-100 hover:-translate-y-1 hover:scale-110"
+                className="text-gray-500 hover:text-github-color hover:transition ease-in-out duration-300 delay-100"
               >
                 {icon}
                 <span className="sr-only">{label}</span>
