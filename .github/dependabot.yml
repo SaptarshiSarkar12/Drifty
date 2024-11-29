@@ -9,6 +9,13 @@ updates:
     directory: "/Website" # Location of package manifests
     schedule:
       interval: "daily"
+    groups:
+      next-eslint-dependencies:
+        patterns:
+          - "@next*"
+          - "next*"
+          - "@eslint-config-next*"
+          - "eslint-config-next*"
     commit-message:
       prefix: "chore(npm)"
     labels:
@@ -21,6 +28,10 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    groups:
+      openrewrite-dependencies:
+        patterns:
+          - "org.openrewrite*"
     commit-message:
       prefix: "chore(maven)"
     labels:
