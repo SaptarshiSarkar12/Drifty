@@ -44,7 +44,6 @@
                 <version>5.46.1</version>
                 <configuration>
                     <activeRecipes>
-                        <recipe>org.openrewrite.staticanalysis.CommonStaticAnalysis</recipe>
                         <recipe>org.openrewrite.recommendations.CodeHealth</recipe>
                         <recipe>org.openrewrite.maven.BestPractices</recipe>
                         <recipe>org.openrewrite.java.format.AutoFormat</recipe>
@@ -58,12 +57,12 @@
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-static-analysis</artifactId>
-                        <version>1.21.0</version>
+                        <version>1.21.1</version>
                     </dependency>
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
                         <artifactId>rewrite-recommendations</artifactId>
-                        <version>1.14.0</version>
+                        <version>1.14.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
