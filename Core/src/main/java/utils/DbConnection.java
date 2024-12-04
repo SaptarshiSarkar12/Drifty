@@ -1,6 +1,11 @@
 package utils;
 
+import properties.FileState;
+import support.Job;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class DbConnection {
     private static Connection connection;
@@ -28,7 +33,7 @@ public final class DbConnection {
 
     public void createTables() throws SQLException {
         String createSessionTableQuery = "CREATE TABLE IF NOT EXISTS SESSION (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, StartDate TEXT NOT NULL, EndDate TEXT);";
-        String createFileTableQuery = "CREATE TABLE IF NOT EXISTS FILE (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Url TEXT NOT NULL, SaveTargetPath TEXT NOT NULL, Size INTEGER, DownloadStartTime TEXT, DownloadEndTime TEXT, State INTEGER NOT NULL, SessionId INTEGER NOT NULL, FOREIGN KEY(SessionId) REFERENCES Session(Id));";
+        String createFileTableQuery = "CREATE TABLE IF NOT EXISTS FILE (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, FileName TEXT NOT NULL, Url TEXT NOT NULL, SaveTargetPath TEXT NOT NULL, Size INTEGER, DownloadStartTime TEXT, DownloadEndTime TEXT, State INTEGER NOT NULL, SessionId INTEGER NOT NULL, FOREIGN KEY(SessionId) REFERENCES Session(Id));";
         PreparedStatement createSessionTableStatement = connection.prepareStatement(createSessionTableQuery);
         createSessionTableStatement.executeUpdate();
         PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery);
@@ -77,15 +82,16 @@ public final class DbConnection {
         preparedStatement.executeUpdate();
     }
 
-    public int addFileRecord(String url, String saveTargetPath, int size, String startDownloadingTime, int sessionId) throws SQLException {
-        String insertFileQuery = "INSERT INTO FILE (Url, SaveTargetPath, Size, DownloadStartTime, State, SessionId) VALUES (?, ?, ?, ?, ?, ?)";
+    public int addFileRecord(String fileName, String url, String saveTargetPath, int size, String startDownloadingTime, int sessionId) throws SQLException {
+        String insertFileQuery = "INSERT INTO FILE (FileName, Url, SaveTargetPath, Size, DownloadStartTime, State, SessionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, url);
-        preparedStatement.setString(2, saveTargetPath);
-        preparedStatement.setInt(3, size);
-        preparedStatement.setString(4, startDownloadingTime);
-        preparedStatement.setInt(5, 0);
-        preparedStatement.setInt(6, sessionId);
+        preparedStatement.setString(1, fileName);
+        preparedStatement.setString(2, url);
+        preparedStatement.setString(3, saveTargetPath);
+        preparedStatement.setInt(4, size);
+        preparedStatement.setString(5, startDownloadingTime);
+        preparedStatement.setInt(6, FileState.QUEUED.ordinal());
+        preparedStatement.setInt(7, sessionId);
         preparedStatement.executeUpdate();
 
         ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -96,10 +102,10 @@ public final class DbConnection {
         }
     }
 
-    public void updateFileInfo(int fileId, int state, String endDownloadingTime) throws SQLException {
+    public void updateFileInfo(int fileId, FileState state, String endDownloadingTime) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ? WHERE Id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery);
-        preparedStatement.setInt(1, state);
+        preparedStatement.setInt(1, state.ordinal());
         preparedStatement.setString(2, endDownloadingTime);
         preparedStatement.setInt(3, fileId);
         preparedStatement.executeUpdate();
@@ -123,6 +129,26 @@ public final class DbConnection {
         PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery);
         preparedStatement.setInt(1, fileId);
         preparedStatement.executeUpdate();
+    }
+
+    public Job getJobByFileId(int fileId) throws SQLException {
+        return getJobFromFile(getFileRecordById(fileId));
+    }
+
+    public Collection<Job> getAllJobs() throws SQLException {
+        return getJobsFromFiles(getAllFileRecords());
+    }
+
+    private Job getJobFromFile(ResultSet file) throws SQLException {
+        return new Job(file.getString("Url"), file.getString("SaveTargetPath"), file.getString("FileName"), null);
+    }
+
+    private Collection<Job> getJobsFromFiles(ResultSet files) throws SQLException {
+        ArrayList jobs = new ArrayList();
+        while (files.next()) {
+            jobs.add(getJobFromFile(files));
+        }
+        return jobs;
     }
 
 //    public void Create() throws SQLException {

@@ -2,6 +2,7 @@ package backend;
 
 import cli.utils.Utility;
 import init.Environment;
+import properties.FileState;
 import properties.LinkType;
 import properties.Program;
 import support.DownloadMetrics;
@@ -110,23 +111,23 @@ public class FileDownloader implements Runnable {
                     Utility.sleep(1800);
 
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, 1, endDownloadingTime);
+                    db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime);
                 } catch (SecurityException e) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, -1, endDownloadingTime);
+                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                     M.msgDownloadError("Write access to the download directory is DENIED! " + e.getMessage());
                 } catch (FileNotFoundException fileNotFoundException) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, -1, endDownloadingTime);
+                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                     M.msgDownloadError(FILE_NOT_FOUND_ERROR);
                 } catch (IOException e) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, -1, endDownloadingTime);
+                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                     M.msgDownloadError(FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
                 }
             } catch (NullPointerException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgDownloadError(FAILED_READING_STREAM);
             }
         } catch (SQLException e) {
@@ -150,11 +151,11 @@ public class FileDownloader implements Runnable {
                 exitValueOfYtDlp = process.exitValue();
             } catch (IOException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgDownloadError("Failed to start download process for \"" + fileName + "\"");
             } catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 String msg = e.getMessage();
                 String[] messageArray = msg.split(",");
                 if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
@@ -174,21 +175,21 @@ public class FileDownloader implements Runnable {
                     String conversionProcessMessage = utils.Utility.convertToMp3(directoryPath.resolve(fileName).toAbsolutePath());
                     if (conversionProcessMessage.contains("Failed")) {
                         endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                        db.updateFileInfo(fileId, -1, endDownloadingTime);
+                        db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                         M.msgDownloadError(conversionProcessMessage);
                     } else {
                         endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                        db.updateFileInfo(fileId, 1, endDownloadingTime);
+                        db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime);
                         M.msgDownloadInfo("Successfully converted to mp3!");
                     }
                 }
             } else if (exitValueOfYtDlp == 1) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
             } else {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
             }
         } catch (SQLException e) {
@@ -241,7 +242,7 @@ public class FileDownloader implements Runnable {
             DbConnection db = DbConnection.getInstance();
             String endDownloadingTime;
             try {
-                int fileId = db.addFileRecord(link, directoryPath.resolve(fileName).toString(), (int) downloadMetrics.getTotalSize(), startDownloadingTime, sessionId);
+                fileId = db.addFileRecord(fileName, link, directoryPath.resolve(fileName).toString(), (int) downloadMetrics.getTotalSize(), startDownloadingTime, sessionId);
 
                 // If the link is of a YouTube or Instagram video, then the following block of code will execute.
                 if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
@@ -262,14 +263,14 @@ public class FileDownloader implements Runnable {
                     downloadFile();
                 }
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, 1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime);
             } catch (MalformedURLException | URISyntaxException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgLinkError(INVALID_LINK);
             } catch (IOException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, -1, endDownloadingTime);
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime);
                 M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
             }
         } catch (SQLException e) {
