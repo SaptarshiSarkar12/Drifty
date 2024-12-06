@@ -16,6 +16,12 @@ updates:
           - "next*"
           - "@eslint-config-next*"
           - "eslint-config-next*"
+      react-dependencies:
+        patterns:
+          - "@react*"
+          - "react*"
+          - "@react-dom*"
+          - "react-dom*"
     commit-message:
       prefix: "chore(npm)"
     labels:
