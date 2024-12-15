@@ -9,12 +9,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import properties.FileState;
 import properties.LinkType;
 import properties.MessageCategory;
 import properties.Program;
 import support.DownloadMetrics;
 import support.Job;
 import ui.UIController;
+import utils.DbConnection;
 import utils.UnitConverter;
 import utils.Utility;
 
@@ -24,6 +26,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -33,6 +38,7 @@ import java.util.regex.Pattern;
 import static gui.support.Colors.GREEN;
 import static gui.support.Colors.DARK_RED;
 import static gui.support.Constants.*;
+import static init.Environment.currentSessionId;
 
 public class FileDownloader extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -79,6 +85,29 @@ public class FileDownloader extends Task<Integer> {
     protected Integer call() {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
+        String startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        try {
+            DbConnection db = DbConnection.getInstance();
+            int sessionId = currentSessionId;
+            int fileId = db.addFileRecord(filename, downloadLink, Paths.get(dir, filename).toString(), startDownloadingTime, sessionId);
+
+            switch (type) {
+                case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
+                case OTHER -> splitDecision();
+                default -> sendFinalMessage(INVALID_LINK);
+            }
+
+            if (exitCode == 0) {
+                long downloadedSize = new File(Paths.get(dir, filename).toString()).length();
+                String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
+            } else {
+                String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
+            }
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
         switch (type) {
             case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
             case OTHER -> splitDecision();
