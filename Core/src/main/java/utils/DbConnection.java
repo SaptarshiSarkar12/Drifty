@@ -82,16 +82,15 @@ public final class DbConnection {
         preparedStatement.executeUpdate();
     }
 
-    public int addFileRecord(String fileName, String url, String saveTargetPath, int size, String startDownloadingTime, int sessionId) throws SQLException {
-        String insertFileQuery = "INSERT INTO FILE (FileName, Url, SaveTargetPath, Size, DownloadStartTime, State, SessionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public int addFileRecord(String fileName, String url, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
+        String insertFileQuery = "INSERT INTO FILE (FileName, Url, SaveTargetPath, DownloadStartTime, State, SessionId) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setString(1, fileName);
         preparedStatement.setString(2, url);
         preparedStatement.setString(3, saveTargetPath);
-        preparedStatement.setInt(4, size);
-        preparedStatement.setString(5, startDownloadingTime);
-        preparedStatement.setInt(6, FileState.QUEUED.ordinal());
-        preparedStatement.setInt(7, sessionId);
+        preparedStatement.setString(4, startDownloadingTime);
+        preparedStatement.setInt(5, FileState.QUEUED.ordinal());
+        preparedStatement.setInt(6, sessionId);
         preparedStatement.executeUpdate();
 
         ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
@@ -102,12 +101,13 @@ public final class DbConnection {
         }
     }
 
-    public void updateFileInfo(int fileId, FileState state, String endDownloadingTime) throws SQLException {
-        String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ? WHERE Id = ?";
+    public void updateFileInfo(int fileId, FileState state, String endDownloadingTime, int size) throws SQLException {
+        String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ?, Size = ? WHERE Id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery);
         preparedStatement.setInt(1, state.ordinal());
         preparedStatement.setString(2, endDownloadingTime);
-        preparedStatement.setInt(3, fileId);
+        preparedStatement.setInt(3, size);
+        preparedStatement.setInt(4, fileId);
         preparedStatement.executeUpdate();
     }
 
