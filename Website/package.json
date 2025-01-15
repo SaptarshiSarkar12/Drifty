@@ -14,7 +14,7 @@
     "eslint": "8.57.0",
     "eslint-config-next": "15.1.4",
     "next": "15.1.4",
-    "postcss": "8.5.0",
+    "postcss": "8.5.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "remark": "^15.0.1",
