@@ -8,12 +8,15 @@ import init.Environment;
 import preferences.AppSettings;
 import properties.LinkType;
 import properties.Mode;
+import utils.DbConnection;
 import utils.MessageBroker;
 import utils.Utility;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static init.Environment.currentSessionId;
 import static utils.Utility.cleanFilename;
 import static utils.Utility.randomString;
 
@@ -234,7 +237,7 @@ public class DownloadConfiguration {
 
     public void updateJobList() {
         Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
-        for (Job job : AppSettings.GET.jobs().jobList()) {
+        for (Job job : AppSettings.GET.jobs2().jobList()) {
             distinctJobList.put(job.hashCode(), job);
         }
         if (fileData.isEmpty()) {
@@ -252,8 +255,19 @@ public class DownloadConfiguration {
                 job = new Job(link, directory, filename, null);
             }
             distinctJobList.put(job.hashCode(), job);
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.addFileRecordToQueue(
+                        filename,
+                        link,
+                        directory,
+                        currentSessionId
+                );
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-        AppSettings.GET.jobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
+        AppSettings.GET.jobs2().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {

@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 import static gui.support.Colors.GREEN;
 import static gui.support.Colors.DARK_RED;
 import static gui.support.Constants.*;
-import static init.Environment.currentSessionId;
 
 public class FileDownloader extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -88,8 +87,6 @@ public class FileDownloader extends Task<Integer> {
         String startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         try {
             DbConnection db = DbConnection.getInstance();
-            int sessionId = currentSessionId;
-            int fileId = db.addFileRecord(filename, downloadLink, Paths.get(dir, filename).toString(), startDownloadingTime, sessionId);
 
             switch (type) {
                 case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
@@ -100,10 +97,26 @@ public class FileDownloader extends Task<Integer> {
             if (exitCode == 0) {
                 long downloadedSize = new File(Paths.get(dir, filename).toString()).length();
                 String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
+                db.updateFileState(
+                        job.getSourceLink(),
+                        job.getDir(),
+                        job.getFilename(),
+                        FileState.COMPLETED,
+                        startDownloadingTime,
+                        endDownloadingTime,
+                        (int) downloadedSize
+                );
             } else {
                 String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
+                db.updateFileState(
+                        job.getSourceLink(),
+                        job.getDir(),
+                        job.getFilename(),
+                        FileState.COMPLETED,
+                        startDownloadingTime,
+                        endDownloadingTime,
+                        0
+                );
             }
         } catch(SQLException e) {
             throw new RuntimeException(e);

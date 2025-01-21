@@ -36,6 +36,7 @@ import properties.OS;
 import support.Job;
 import support.JobHistory;
 import support.Jobs;
+import utils.DbConnection;
 import utils.Utility;
 
 import java.io.File;
@@ -43,10 +44,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.concurrent.*;
 
 import static gui.support.Colors.*;
+import static init.Environment.currentSessionId;
 import static utils.Utility.renameFile;
 import static utils.Utility.sleep;
 
@@ -216,7 +219,7 @@ public final class UIController {
                     filename = renameFile(filename, dir);
                 }
             }
-            removeJobFromList(selectedJob);
+            //removeJobFromList(selectedJob);
             addJob(new Job(link, dir, filename, selectedJob.getDownloadLink()));
             clearLink();
             clearFilename();
@@ -438,11 +441,30 @@ public final class UIController {
                         while (downloadFile.notDone()) {
                             sleep(500);
                         }
+                        //String startDownloadingTime;
+                        //String endDownloadingTime;
+                        //startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         int exitCode = downloadFile.getExitCode();
+                        //endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         removeJobFromList(job);
                         setDownloadInfoColor(GREEN);
                         if (exitCode == 0) { // Success
                             getHistory().addJob(job, false);
+                            //removeJobFromList(job);
+                            //public void updateFileState(String url, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime)
+                            /*try {
+                                DbConnection dbConnection = DbConnection.getInstance();
+                                dbConnection.updateFileState(
+                                        job.getSourceLink(),
+                                        job.getDir(),
+                                        job.getFilename(),
+                                        FileState.COMPLETED,
+                                        startDownloadingTime,
+                                        endDownloadingTime
+                                );
+                            } catch(SQLException e) {
+                                throw new RuntimeException(e);
+                            }*/
                         }
                     }
                 }
@@ -491,15 +513,58 @@ public final class UIController {
         }
         if (oldJob != null) {
             getJobs().remove(oldJob);
-            System.out.println("Job Removed: " + oldJob.getFilename());
+            /*try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.deleteQueuedFile(
+                        oldJob.getSourceLink(),
+                        oldJob.getDir(),
+                        oldJob.getFilename()
+                );
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }*/
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.updateFile(
+                        newJob.getFilename(),
+                        oldJob.getSourceLink(),
+                        newJob.getDir()
+                );
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Job Updated: " + newJob.getFilename());
+        }
+        else {
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.addFileRecordToQueue(
+                        newJob.getFilename(),
+                        newJob.getSourceLink(),
+                        newJob.getDir(),
+                        currentSessionId
+                );
+            } catch(SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Job Added: " + newJob.getFilename());
         }
         getJobs().add(newJob);
-        System.out.println("Job Added: " + newJob.getFilename());
         commitJobListToListView();
     }
 
     private void removeJobFromList(Job oldJob) {
         getJobs().remove(oldJob);
+        try {
+            DbConnection dbConnection = DbConnection.getInstance();
+            dbConnection.deleteQueuedFile(
+                    oldJob.getSourceLink(),
+                    oldJob.getDir(),
+                    oldJob.getFilename()
+            );
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
@@ -594,6 +659,12 @@ public final class UIController {
         Called from the Edit menu, this wipes out the job history that is stored in the users file system
          */
         INSTANCE.getHistory().clear();
+        try {
+            DbConnection dbConnection = DbConnection.getInstance();
+            dbConnection.deleteFilesHistory();
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void pasteFromClipboard(String text) {
@@ -845,11 +916,11 @@ public final class UIController {
     }
 
     private Jobs getJobs() {
-        return AppSettings.GET.jobs();
+        return AppSettings.GET.jobs2();
     }
 
     private JobHistory getHistory() {
-        return AppSettings.GET.jobHistory();
+        return AppSettings.GET.jobHistory2();
     }
 
     private void selectJob(Job job) {
