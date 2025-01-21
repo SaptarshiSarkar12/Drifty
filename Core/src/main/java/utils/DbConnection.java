@@ -62,24 +62,22 @@ public final class DbConnection {
         preparedStatement.executeUpdate();
     }
 
-    public ResultSet getSessionRecordById(int sessionId) throws SQLException {
-        String getSessionQuery = "SELECT * FROM SESSION WHERE Id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(getSessionQuery);
-        preparedStatement.setInt(1, sessionId);
-        return preparedStatement.executeQuery();
-    }
-
-    public ResultSet getAllSessionRecords() throws SQLException {
-        String getAllSessionsQuery = "SELECT * FROM SESSION";
-        PreparedStatement preparedStatement = connection.prepareStatement(getAllSessionsQuery);
-        return preparedStatement.executeQuery();
-    }
-
-    public void deleteSessionRecord(int sessionId) throws SQLException {
-        String deleteSessionQuery = "DELETE FROM SESSION WHERE Id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteSessionQuery);
-        preparedStatement.setInt(1, sessionId);
+    public int addFileRecordToQueue(String fileName, String url, String saveTargetPath, int sessionId) throws SQLException {
+        String insertFileQuery = "INSERT INTO FILE (FileName, Url, SaveTargetPath, State, SessionId) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setString(1, fileName);
+        preparedStatement.setString(2, url);
+        preparedStatement.setString(3, saveTargetPath);
+        preparedStatement.setInt(4, FileState.QUEUED.ordinal());
+        preparedStatement.setInt(5, sessionId);
         preparedStatement.executeUpdate();
+
+        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            return generatedKeys.getInt(1);
+        } else {
+            throw new SQLException("Failed to insert record into FILE table, no ID generated.");
+        }
     }
 
     public int addFileRecord(String fileName, String url, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
@@ -111,62 +109,88 @@ public final class DbConnection {
         preparedStatement.executeUpdate();
     }
 
-    public ResultSet getFileRecordById(int fileId) throws SQLException {
-        String getFileQuery = "SELECT * FROM FILE WHERE Id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(getFileQuery);
-        preparedStatement.setInt(1, fileId);
-        return preparedStatement.executeQuery();
-    }
-
-    public ResultSet getAllFileRecords() throws SQLException {
-        String getAllFilesQuery = "SELECT * FROM FILE";
-        PreparedStatement preparedStatement = connection.prepareStatement(getAllFilesQuery);
-        return preparedStatement.executeQuery();
-    }
-
-    public void deleteFileRecord(int fileId) throws SQLException {
-        String deleteFileQuery = "DELETE FROM FILE WHERE Id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery);
-        preparedStatement.setInt(1, fileId);
+    public void updateFileState(String url, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime, int size) throws SQLException {
+        String updateFileQuery = "UPDATE FILE SET State = ?, DownloadStartTime = ?, DownloadEndTime = ?, Size = ? WHERE Url = ? AND SaveTargetPath = ? AND FileName = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery);
+        preparedStatement.setInt(1, state.ordinal());
+        preparedStatement.setString(2, startDownloadingTime);
+        preparedStatement.setString(3, endDownloadingTime);
+        preparedStatement.setInt(4, size);
+        preparedStatement.setString(5, url);
+        preparedStatement.setString(6, saveTargetPath);
+        preparedStatement.setString(7, fileName);
         preparedStatement.executeUpdate();
     }
 
-    public Job getJobByFileId(int fileId) throws SQLException {
-        return getJobFromFile(getFileRecordById(fileId));
+    public void updateFile(String fileName, String url, String saveTargetPath) throws SQLException {
+        String updateFileQuery = "UPDATE FILE SET FileName = ?, SaveTargetPath = ? WHERE Url = ? AND State = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery);
+        preparedStatement.setString(1, fileName);
+        preparedStatement.setString(2, saveTargetPath);
+        preparedStatement.setString(3, url);
+        preparedStatement.setInt(4, FileState.QUEUED.ordinal());
+        preparedStatement.executeUpdate();
     }
 
-    public Collection<Job> getAllJobs() throws SQLException {
-        return getJobsFromFiles(getAllFileRecords());
-    }
+    public Collection<Job> getCompletedJobs() throws SQLException {
+        String query = "SELECT Url, SaveTargetPath, FileName FROM FILE WHERE State = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, FileState.COMPLETED.ordinal());
 
-    private Job getJobFromFile(ResultSet file) throws SQLException {
-        return new Job(file.getString("Url"), file.getString("SaveTargetPath"), file.getString("FileName"), null);
-    }
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<Job> jobs = new ArrayList<>();
+        while (resultSet.next()) {
+            String url = resultSet.getString("Url");
+            String saveTargetPath = resultSet.getString("SaveTargetPath");
+            String fileName = resultSet.getString("FileName");
 
-    private Collection<Job> getJobsFromFiles(ResultSet files) throws SQLException {
-        ArrayList jobs = new ArrayList();
-        while (files.next()) {
-            jobs.add(getJobFromFile(files));
+            jobs.add(new Job(url, saveTargetPath, fileName, url));
         }
         return jobs;
     }
 
-//    public void Create() throws SQLException {
-//        //connection.createStatement().executeQuery("");
-//    }
-//
-//    public <T> List<T> Read(String sql) throws SQLException {
-//        ResultSet resultSet = connection.createStatement().executeQuery(sql);
-//        while (resultSet.next()) {
-//
-//        }
-//    }
-//
-//    public void Update() throws SQLException {
-//
-//    }
-//
-//    public void Delete() throws SQLException {
-//
-//    }
+    public Collection<Job> getQueuedJobs() throws SQLException {
+        String query = "SELECT Url, SaveTargetPath, FileName FROM FILE WHERE State = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, FileState.QUEUED.ordinal());
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<Job> jobs = new ArrayList<>();
+
+        while (resultSet.next()) {
+            String url = resultSet.getString("Url");
+            String saveTargetPath = resultSet.getString("SaveTargetPath");
+            String fileName = resultSet.getString("FileName");
+
+            jobs.add(new Job(url, saveTargetPath, fileName, null));
+        }
+        return jobs;
+    }
+
+    public void deleteQueuedFile(String url, String saveTargetPath, String fileName) throws SQLException {
+        String deleteFileQuery = "DELETE FROM FILE WHERE Url = ? AND SaveTargetPath = ? AND FileName = ? AND State = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery);
+        preparedStatement.setString(1, url);
+        preparedStatement.setString(2, saveTargetPath);
+        preparedStatement.setString(3, fileName);
+        preparedStatement.setInt(4, FileState.QUEUED.ordinal());
+
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("File successfully deleted from the database.");
+        }
+    }
+
+    public void deleteFilesHistory() throws SQLException {
+        String deleteFileQuery = "DELETE FROM FILE WHERE State IN (?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery);
+        preparedStatement.setInt(1, FileState.COMPLETED.ordinal());
+        preparedStatement.setInt(2, FileState.FAILED.ordinal());
+        preparedStatement.setInt(3, FileState.PAUSED.ordinal());
+
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Files successfully deleted from the database.");
+        }
+    }
 }

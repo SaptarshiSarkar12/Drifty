@@ -59,7 +59,7 @@ public class Drifty_CLI {
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
-        jobHistory = AppSettings.GET.jobHistory();
+        jobHistory = AppSettings.GET.jobHistory2();
         printBanner();
         if (args.length > 0) {
             link = null;
