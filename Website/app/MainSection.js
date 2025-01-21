@@ -7,7 +7,7 @@ export default function MainSection() {
       <div className="lg:w-1/2">
         <div className="lg:flex lg:flex-col text-white px-4 py-4 sm:pl-[5rem] md:text">
           <div className="flex lg:ml-4 lg:items-center border-b-4 pb-3 gap-2 ">
-            <h1 className="lg:text-8xl xs:text-7xl font-bold">Drifty</h1>
+            <h1 className="text-6xl lg:text-7xl font-bold">Drifty</h1>
           </div>
           <p className="text-lg lg:text-2xl lg:ml-4 md:pr-20 font-sans my-4 xs:pb-2">
             Drifty is an Open-Source interactive File Downloader system built
@@ -19,14 +19,14 @@ export default function MainSection() {
 
           <div className="flex space-x-2 justify-start lg:ml-4 lg:mt-2 lg:mb-8">
             <Link
-              className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
+              className="px-3 py-2 bg-[#035792] text-white rounded-lg hover:border-[#191B33] hover:bg-[#191B33] duration-500 text-sm md:text-base xl:text-xl"
               href={"/download"}
               role="button"
             >
               Download
             </Link>
             <Link
-              className="border-2 px-3 py-2 text-white rounded hover:border-[#191B33] hover:bg-[#191B33] hover:scale-105 duration-500 text-sm lg:text-base"
+              className="px-3 py-2 bg-[#1d356333] text-white rounded-lg hover:border-[#191B33] hover:bg-[#004f6a7d] duration-500 text-sm md:text-base xl:text-xl"
               href={"/#demo"}
               role="button"
             >
