@@ -35,7 +35,8 @@ public final class DbConnection {
         String createSessionTableQuery = "CREATE TABLE IF NOT EXISTS SESSION (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, StartDate TEXT NOT NULL, EndDate TEXT);";
         String createFileTableQuery = "CREATE TABLE IF NOT EXISTS FILE (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, FileName TEXT NOT NULL, Url TEXT NOT NULL, SaveTargetPath TEXT NOT NULL, Size INTEGER, DownloadStartTime TEXT, DownloadEndTime TEXT, State INTEGER NOT NULL, SessionId INTEGER NOT NULL, FOREIGN KEY(SessionId) REFERENCES Session(Id));";
         try (PreparedStatement createSessionTableStatement = connection.prepareStatement(createSessionTableQuery);
-                PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery)) {
+             PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery))
+        {
             createSessionTableStatement.executeUpdate();
             createFileTableStatement.executeUpdate();
         }
