@@ -4,6 +4,7 @@ config/*.o
 target/
 Website/.next
 Website/node_modules
+*.db
 
 ### IntelliJ IDEA ###
 .idea/

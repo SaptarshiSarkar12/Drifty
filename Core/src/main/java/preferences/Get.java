@@ -35,7 +35,7 @@ public class Get {
         return preferences.get(LAST_FOLDER, defaultPath);
     }
 
-    public JobHistory jobHistory2() {
+    public JobHistory jobHistory() {
         JobHistory jobHistory = new JobHistory();
         try {
             DbConnection dbConnection = DbConnection.getInstance();
@@ -112,7 +112,7 @@ public class Get {
         return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
     }
 
-    public Jobs jobs2() {
+    public Jobs jobs() {
         Jobs jobs = new Jobs();
         try {
             DbConnection dbConnection = DbConnection.getInstance();

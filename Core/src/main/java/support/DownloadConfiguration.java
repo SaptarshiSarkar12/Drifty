@@ -237,7 +237,7 @@ public class DownloadConfiguration {
 
     public void updateJobList() {
         Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
-        for (Job job : AppSettings.GET.jobs2().jobList()) {
+        for (Job job : AppSettings.GET.jobs().jobList()) {
             distinctJobList.put(job.hashCode(), job);
         }
         if (fileData.isEmpty()) {
@@ -267,7 +267,7 @@ public class DownloadConfiguration {
                 throw new RuntimeException(e);
             }
         }
-        AppSettings.GET.jobs2().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
+        AppSettings.GET.jobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {
