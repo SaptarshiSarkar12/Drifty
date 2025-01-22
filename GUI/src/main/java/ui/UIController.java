@@ -219,7 +219,6 @@ public final class UIController {
                     filename = renameFile(filename, dir);
                 }
             }
-            //removeJobFromList(selectedJob);
             addJob(new Job(link, dir, filename, selectedJob.getDownloadLink()));
             clearLink();
             clearFilename();
@@ -441,30 +440,11 @@ public final class UIController {
                         while (downloadFile.notDone()) {
                             sleep(500);
                         }
-                        //String startDownloadingTime;
-                        //String endDownloadingTime;
-                        //startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         int exitCode = downloadFile.getExitCode();
-                        //endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         removeJobFromList(job);
                         setDownloadInfoColor(GREEN);
                         if (exitCode == 0) { // Success
                             getHistory().addJob(job, false);
-                            //removeJobFromList(job);
-                            //public void updateFileState(String url, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime)
-                            /*try {
-                                DbConnection dbConnection = DbConnection.getInstance();
-                                dbConnection.updateFileState(
-                                        job.getSourceLink(),
-                                        job.getDir(),
-                                        job.getFilename(),
-                                        FileState.COMPLETED,
-                                        startDownloadingTime,
-                                        endDownloadingTime
-                                );
-                            } catch(SQLException e) {
-                                throw new RuntimeException(e);
-                            }*/
                         }
                     }
                 }
@@ -513,16 +493,6 @@ public final class UIController {
         }
         if (oldJob != null) {
             getJobs().remove(oldJob);
-            /*try {
-                DbConnection dbConnection = DbConnection.getInstance();
-                dbConnection.deleteQueuedFile(
-                        oldJob.getSourceLink(),
-                        oldJob.getDir(),
-                        oldJob.getFilename()
-                );
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
-            }*/
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
@@ -916,11 +886,11 @@ public final class UIController {
     }
 
     private Jobs getJobs() {
-        return AppSettings.GET.jobs2();
+        return AppSettings.GET.jobs();
     }
 
     private JobHistory getHistory() {
-        return AppSettings.GET.jobHistory2();
+        return AppSettings.GET.jobHistory();
     }
 
     private void selectJob(Job job) {
