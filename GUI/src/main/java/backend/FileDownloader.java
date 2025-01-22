@@ -118,7 +118,7 @@ public class FileDownloader extends Task<Integer> {
                         0
                 );
             }
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         switch (type) {

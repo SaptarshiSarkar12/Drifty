@@ -95,6 +95,9 @@ public class FileDownloader implements Runnable {
                         for (File tempFile : tempFiles) {
                             Files.deleteIfExists(tempFile.toPath());
                         }
+                        for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                            fileOutputStream.close();
+                        }
                     } else {
                         InputStream urlStream = url.openStream();
                         readableByteChannel = Channels.newChannel(urlStream);
@@ -281,8 +284,7 @@ public class FileDownloader implements Runnable {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
             }

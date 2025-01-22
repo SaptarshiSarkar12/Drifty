@@ -500,12 +500,11 @@ public final class UIController {
                         oldJob.getSourceLink(),
                         newJob.getDir()
                 );
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             System.out.println("Job Updated: " + newJob.getFilename());
-        }
-        else {
+        } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(
@@ -514,7 +513,7 @@ public final class UIController {
                         newJob.getDir(),
                         currentSessionId
                 );
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
             System.out.println("Job Added: " + newJob.getFilename());
@@ -532,7 +531,7 @@ public final class UIController {
                     oldJob.getDir(),
                     oldJob.getFilename()
             );
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         commitJobListToListView();
@@ -632,7 +631,7 @@ public final class UIController {
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteFilesHistory();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
