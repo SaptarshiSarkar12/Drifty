@@ -263,7 +263,7 @@ public class DownloadConfiguration {
                         directory,
                         currentSessionId
                 );
-            } catch(SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
