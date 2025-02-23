@@ -75,6 +75,7 @@ jobs:
           chmod +x Core/src/main/resources/yt-dlp
           Core/src/main/resources/yt-dlp -U
       - name: Set up GraalVM JDK 23
+        if: ${{ matrix.docker_context == 'CLI' }}
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '23'
@@ -82,6 +83,14 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           set-java-home: true
           cache: 'maven'
+      - name: Set up Gluon's GraalVM JDK 23
+        if: ${{ matrix.docker_context == 'GUI' }}
+        uses: gluonhq/setup-graalvm@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          arch: 'amd64'
+          jdk: 'java23'
       - name: Package Drifty CLI with GraalVM
         if: matrix.docker_context == 'CLI'
         run: mvn -P build-drifty-cli-for-ubuntu-latest package

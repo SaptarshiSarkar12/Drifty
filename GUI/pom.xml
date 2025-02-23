@@ -13,8 +13,8 @@
     <description>GUI module of Drifty</description>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gui.main-class>main.Drifty_GUI</gui.main-class>
         <system-linker-arg/>
@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
-                <version>1.0.23</version>
+                <version>1.0.25</version>
                 <configuration>
                     <enableSWRendering>true</enableSWRendering>
                     <mainClass>${gui.main-class}</mainClass>
