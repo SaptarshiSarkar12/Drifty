@@ -56,9 +56,10 @@ function MobileNav({ open, setOpen }) {
         </NavLink>
         <NavLink
           to="/docs"
-          cn="text-2xl font-bold my-6 text-white hover:text-blue-700 hover:transition hover:ease-in-out delay-75 hover:-translate-y-1 hover:scale-110 duration-300"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
+          setOpen={setOpen}
         >
-          <button className="">Docs</button>
+          <button>Docs</button>
         </NavLink>
         <NavLink
           to="/contact"
