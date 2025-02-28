@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@eslint/config-array": "^0.19.2",
     "@headlessui/react": "^2.2.0",
     "autoprefixer": "10.4.20",
-    "eslint": "8.57.0",
-    "eslint-config-next": "15.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.2.0",
+    "glob": "^10.4.5",
     "next": "15.2.0",
     "postcss": "8.5.3",
     "react": "19.0.0",
