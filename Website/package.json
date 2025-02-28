@@ -22,5 +22,8 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "tailwindcss": "3.4.17"
+  },
+  "devDependencies": {
+    "eslint-plugin-next": "^0.0.0"
   }
 }
