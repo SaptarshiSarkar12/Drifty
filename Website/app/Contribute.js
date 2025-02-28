@@ -8,7 +8,7 @@ export default function Contribute({ props }) {
   const [values, setValues] = useState([]);
   useEffect(() => {
     fetch(
-      "https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty",
+      "https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty"
     )
       .then((res) => res.json())
       .then((data) => {
@@ -76,6 +76,7 @@ export default function Contribute({ props }) {
           <a
             href="https://github.com/SaptarshiSarkar12/Drifty/graphs/contributors"
             target="_blank"
+            rel="noreferrer"
           >
             <div className="py-2 px-3.5 gap-1 rounded-full h-16 w-16 text-xl font-semibold flex items-center justify-center text-center xs:transition ease-in-out delay-150 bg-blue-500 hover:bg-[#2e51ab] duration-300">
               {totalNoOfContributors - 6}+

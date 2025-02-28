@@ -70,7 +70,11 @@ function MobileNav({ open, setOpen }) {
         </NavLink>
         {/* Social Icons */}
         <div className="flex justify-center items-center pt-10 z-50">
-          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+          <a
+            href="https://discord.gg/DeT4jXPfkG"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-discord text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-violet-600 z-50"
@@ -78,7 +82,11 @@ function MobileNav({ open, setOpen }) {
             ></i>
           </a>
 
-          <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
+          <a
+            href="https://github.com/SaptarshiSarkar12/Drifty"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-github text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-black z-50"
@@ -138,6 +146,11 @@ export default function Header({ props }) {
             setOpen(!open);
           }}
           role={"button"}
+          tabIndex="0" // Fix: jsx-a11y/interactive-supports-focus
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") setOpen(!open);
+          }} // Handle key events 'Fix : jsx-a11y/click-events-have-key-events'
+          aria-label="Toggle menu"
         >
           {/* hamburger button */}
           <span
@@ -184,7 +197,11 @@ export default function Header({ props }) {
               CONTACT
             </button>
           </NavLink>
-          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+          <a
+            href="https://discord.gg/DeT4jXPfkG"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-discord text-2xl text-white mx-4 duration-100 hover:text-violet-700"
@@ -192,7 +209,11 @@ export default function Header({ props }) {
             ></i>
           </a>
 
-          <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
+          <a
+            href="https://github.com/SaptarshiSarkar12/Drifty"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-github text-2xl text-white mx-4 duration-100 hover:text-black"

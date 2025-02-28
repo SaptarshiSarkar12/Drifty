@@ -8,49 +8,49 @@ function downloadLatestRelease(OSName, applicationType) {
   if (applicationType === "CLI") {
     if (OSName === "Windows exe") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI.exe"
       );
     } else if (OSName === "Linux") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_linux"
       );
     } else if (OSName === "MacOS") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos"
       );
     } else if (OSName === "MacOS Apple Silicon") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_aarch64",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_aarch64"
       );
     } else if (OSName === "MacOS Intel") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_x86_64",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-CLI_macos_x86_64"
       );
     }
   } else {
     if (OSName === "Windows exe") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.exe"
       );
     } else if (OSName === "Windows msi") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.msi",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.msi"
       );
     } else if (OSName === "Linux") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_linux"
       );
     } else if (OSName === "MacOS") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI.pkg"
       );
     } else if (OSName === "MacOS Apple Silicon") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_aarch64.pkg",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_aarch64.pkg"
       );
     } else if (OSName === "MacOS Intel") {
       window.open(
-        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_x86_64.pkg",
+        "https://github.com/SaptarshiSarkar12/Drifty/releases/latest/download/Drifty-GUI_x86_64.pkg"
       );
     }
   }
@@ -62,31 +62,31 @@ function downloadOlderReleases(OSName, applicationType, version) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI.exe",
+          "/Drifty-CLI.exe"
       );
     } else if (OSName === "Linux") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_linux",
+          "/Drifty-CLI_linux"
       );
     } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_macos",
+          "/Drifty-CLI_macos"
       );
     } else if (OSName === "MacOS Apple Silicon") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_macos_aarch64",
+          "/Drifty-CLI_macos_aarch64"
       );
     } else if (OSName === "MacOS Intel") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-CLI_macos_x86_64",
+          "/Drifty-CLI_macos_x86_64"
       );
     }
   } else {
@@ -94,37 +94,37 @@ function downloadOlderReleases(OSName, applicationType, version) {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.exe",
+          "/Drifty-GUI.exe"
       );
     } else if (OSName === "Windows msi") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.msi",
+          "/Drifty-GUI.msi"
       );
     } else if (OSName === "Linux") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI_linux",
+          "/Drifty-GUI_linux"
       );
     } else if (OSName === "MacOS") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI.pkg",
+          "/Drifty-GUI.pkg"
       );
     } else if (OSName === "MacOS Apple Silicon") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI_aarch64.pkg",
+          "/Drifty-GUI_aarch64.pkg"
       );
     } else if (OSName === "MacOS Intel") {
       window.open(
         "https://github.com/SaptarshiSarkar12/Drifty/releases/download/" +
           version +
-          "/Drifty-GUI_x86_64.pkg",
+          "/Drifty-GUI_x86_64.pkg"
       );
     }
   }
@@ -151,10 +151,10 @@ export default function Releases({ props }) {
 
     // Get the latest stable version
     const sortedReleases = [...props.release].sort(
-      (a, b) => new Date(b.published_at) - new Date(a.published_at),
+      (a, b) => new Date(b.published_at) - new Date(a.published_at)
     );
     let latestStableVersion = sortedReleases.find(
-      (item) => !item.prerelease,
+      (item) => !item.prerelease
     )?.tag_name;
 
     props.release.forEach((item) => {
@@ -237,14 +237,14 @@ export default function Releases({ props }) {
       await markerToHtml(
         item.body,
         item.tag_name,
-        index + filteredPreReleases.length,
+        index + filteredPreReleases.length
       );
     });
     filterOlderReleases.forEach(async (item, index) => {
       await markerToHtml(
         item.body,
         item.tag_name,
-        index + filteredPreReleases.length + filteredReleases.length,
+        index + filteredPreReleases.length + filteredReleases.length
       );
     });
   }, [filteredPreReleases, filteredReleases, filterOlderReleases]);
@@ -393,7 +393,7 @@ export default function Releases({ props }) {
                   {new Date(item.published_at).toString()} with{" "}
                   {item.assets?.reduce(
                     (sum, asset) => sum + (asset.download_count || 0),
-                    0,
+                    0
                   )}{" "}
                   Downloads
                 </p>
@@ -418,7 +418,7 @@ export default function Releases({ props }) {
                         downloadOlderReleases(
                           "Windows exe",
                           applicationType,
-                          item.tag_name,
+                          item.tag_name
                         )
                       }
                     >
@@ -434,7 +434,7 @@ export default function Releases({ props }) {
                             downloadOlderReleases(
                               "Windows msi",
                               applicationType,
-                              item.tag_name,
+                              item.tag_name
                             )
                           }
                         >
@@ -449,7 +449,7 @@ export default function Releases({ props }) {
                       downloadOlderReleases(
                         "Linux",
                         applicationType,
-                        item.tag_name,
+                        item.tag_name
                       )
                     }
                   >
@@ -462,7 +462,7 @@ export default function Releases({ props }) {
                         downloadOlderReleases(
                           "MacOS Apple Silicon",
                           applicationType,
-                          item.tag_name,
+                          item.tag_name
                         )
                       }
                     >
@@ -476,7 +476,7 @@ export default function Releases({ props }) {
                         downloadOlderReleases(
                           "MacOS Intel",
                           applicationType,
-                          item.tag_name,
+                          item.tag_name
                         )
                       }
                     >
@@ -541,7 +541,7 @@ export default function Releases({ props }) {
                       downloadOlderReleases(
                         "Windows exe",
                         applicationType,
-                        item.tag_name,
+                        item.tag_name
                       )
                     }
                   >
@@ -556,7 +556,7 @@ export default function Releases({ props }) {
                         downloadOlderReleases(
                           "Windows msi",
                           applicationType,
-                          item.tag_name,
+                          item.tag_name
                         )
                       }
                     >
@@ -570,7 +570,7 @@ export default function Releases({ props }) {
                     downloadOlderReleases(
                       "Linux",
                       applicationType,
-                      item.tag_name,
+                      item.tag_name
                     )
                   }
                 >
@@ -585,7 +585,7 @@ export default function Releases({ props }) {
                           ? "MacOS Apple Silicon"
                           : "MacOS",
                         applicationType,
-                        item.tag_name,
+                        item.tag_name
                       )
                     }
                   >
@@ -600,7 +600,7 @@ export default function Releases({ props }) {
                         downloadOlderReleases(
                           "MacOS Intel",
                           applicationType,
-                          item.tag_name,
+                          item.tag_name
                         )
                       }
                     >
@@ -671,6 +671,7 @@ export default function Releases({ props }) {
           target={"_blank"}
           href={"https://github.com/SaptarshiSarkar12/Drifty/releases"}
           className={"text-center text-sm font-bold text-blue-500"}
+          rel="noreferrer"
         >
           View all releases
         </a>
