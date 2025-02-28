@@ -8,7 +8,7 @@ export default function Contribute({ props }) {
   const [values, setValues] = useState([]);
   useEffect(() => {
     fetch(
-      "https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty"
+      "https://api.github.com/search/repositories?q=user:SaptarshiSarkar12+repo:Drifty+Drifty",
     )
       .then((res) => res.json())
       .then((data) => {
