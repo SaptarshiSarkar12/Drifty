@@ -256,15 +256,15 @@ export default function Releases({ props }) {
   return (
     <div
       id="download"
-      className="bg-gradient-to-b from-top from-8% via-cyan-300 to-bottom to-12% -mt-2"
+      className="py-8 bg-gradient-to-b from-top from-8% via-[#288fe6] to-bottom to-12% -mt-2"
     >
-      <h2 className="select-none text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5">
+      <h2 className="text-white select-none text-5xl text-center sm:text-4xl font-bold md:mt-2 sm:pt-10 sm:mb-10 xs:p-5">
         Download Drifty
       </h2>
 
       {/* Application Type Selection */}
-      <div className="select-none grid-cols-1 justify-items-center">
-        <h2 className="text-center block text-xl font-medium leading-6 text-gray-900">
+      <div className="select-none flex flex-col gap-2 justify-center items-center">
+        <h2 className="text-center block text-lg font-medium leading-6 text-white">
           Select Application Type
         </h2>
         <div className="grid grid-cols-1 justify-items-center pb-2">
@@ -281,30 +281,31 @@ export default function Releases({ props }) {
         </div>
       </div>
 
-      <h1 className="select-none text-center font-bold text-2xl pt-10">
+      <h1 className="select-none text-center font-bold text-2xl pt-10 text-white">
         Latest Release
       </h1>
       {/* Download Buttons */}
-      <div className="flex flex-col items-center md:flex-row md:items-start justify-center space-y-4 md:space-y-0 gap-5 pt-10">
+      <div className="flex flex-col flex-wrap items-center md:flex-row md:items-start justify-center gap-y-8 gap-x-10 pt-10">
         {/* First Download Now Button */}
-        <div className="xs:mr-0 xs:mb-4">
+        <div className="flex flex-col gap-4 justify-center items-center">
           <div className="">
-            <div className="text-center">
+            <div className="flex flex-col gap-4 justify-center items-center">
               <button
-                className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+                className="px-12 py-4 md:px-20 bg-[#1559f0] hover:bg-[#0e2ba3] text-white text-xl font-semibold md:text-2xl rounded-full transition duration-500 hover:drop-shadow-md focus:shadow-md focus:outline-none active:bg-[#60a5fa7a] active:shadow-md"
                 onClick={() =>
                   downloadLatestRelease("Windows exe", applicationType)
                 }
               >
-                Download Now <i className="fab fa-brands fa-windows"></i>
-                <div className="text-lg md:text-sm text-gray-700 font-semibold">
+                Download Now 
+                <div className="flex gap-2 items-center justify-center text-xl md:text-sm text-white font-semibold">
+                  <i className="fab fa-brands fa-windows fa-lg"></i>
                   {latestVersion}
                 </div>
               </button>
               {applicationType === "GUI" && (
                 <div className="text-center">
                   <button
-                    className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                    className="text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
                     onClick={() => downloadLatestRelease("Windows msi")}
                   >
                     Prefer the msi?
@@ -316,34 +317,37 @@ export default function Releases({ props }) {
         </div>
 
         {/* Second Download Now Button */}
-        <div className="md:ml-4 xs:ml-0">
+        <div className="flex flex-col gap-4 justify-center items-center">
           <button
-            className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+            className="px-12 py-4 md:px-20 bg-[#1559f0] hover:bg-[#0e2ba3] text-white text-xl font-semibold md:text-2xl rounded-full transition duration-500 hover:drop-shadow-md focus:shadow-md focus:outline-none active:bg-[#60a5fa7a] active:shadow-md"
             onClick={() => downloadLatestRelease("Linux", applicationType)}
           >
-            Download Now <i className="fab fa-brands fa-linux"></i>
-            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+            Download Now
+            <div className="flex gap-2 items-center justify-center text-xl md:text-sm text-white font-semibold">
+              <i className="fab fa-brands fa-linux fa-lg"></i>
               {latestVersion}
             </div>
+
           </button>
         </div>
 
         {/* Third Download Now Button */}
-        <div className="md:ml-4 xs:ml-0">
+        <div className="flex flex-col gap-4 justify-center items-center">
           <button
-            className="xs:w-80 xs:py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white xs:text-3xl font-semibold md:text-3xl rounded-full hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:from-pink-500 hover:to-yellow-500 hover:drop-shadow-lg focus:shadow-lg focus:outline-none active:bg-blue-400 active:shadow-lg transition"
+            className="px-12 py-4 md:px-20 bg-[#1559f0] hover:bg-[#0e2ba3] text-white text-xl font-semibold md:text-2xl rounded-full transition duration-500 hover:drop-shadow-md focus:shadow-md focus:outline-none active:bg-[#60a5fa7a] active:shadow-md"
             onClick={() =>
               downloadLatestRelease("MacOS Apple Silicon", applicationType)
             }
           >
-            Download Now <i className="fab fa-brands fa-apple"></i>
-            <div className="text-lg md:text-sm text-gray-700 font-semibold">
+            Download Now 
+            <div className="flex gap-2 items-center justify-center text-xl md:text-sm text-white font-semibold">
+              <i className="fab fa-brands fa-apple fa-lg"></i>
               {latestVersion}
             </div>
           </button>
           <div className={"text-center"}>
             <button
-              className="text-lg select-none text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+              className="text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
               onClick={() =>
                 downloadLatestRelease("MacOS Intel", applicationType)
               }
@@ -386,10 +390,10 @@ export default function Releases({ props }) {
             return (
               <div
                 key={index}
-                className="text-center p-5 text-base font-normal"
+                className="text-center p-5 text-base font-normal flex flex-col gap-[0.3em]"
               >
                 <span className="font-bold">{item.tag_name} </span>
-                <p>
+                <p className="max-w-md lg:max-w-xl mx-auto">
                   {new Date(item.published_at).toString()} with{" "}
                   {item.assets?.reduce(
                     (sum, asset) => sum + (asset.download_count || 0),
@@ -399,7 +403,7 @@ export default function Releases({ props }) {
                 </p>
                 <button
                   onClick={() => handleButtonClick(index)}
-                  className="text-slate-800/50"
+                  className="text-[#002843ba]"
                 >
                   {buttonStates[index] ? "Hide" : "Learn More"}
                 </button>
@@ -428,7 +432,7 @@ export default function Releases({ props }) {
                       <div className={"text-center"}>
                         <button
                           className={
-                            "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                            "text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
                           }
                           onClick={() =>
                             downloadOlderReleases(
@@ -470,7 +474,7 @@ export default function Releases({ props }) {
                     </button>
                     <button
                       className={
-                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                        "text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
                       }
                       onClick={() =>
                         downloadOlderReleases(
@@ -488,18 +492,17 @@ export default function Releases({ props }) {
             );
           }
         })}
-        <h1 className="select-none text-center font-bold text-2xl pt-10">
-          Past Releases
-        </h1>
-        <p className="text-center text-base pt-1 font-semibold text-gray-700">
-          Download older releases of Drifty
-        </p>
+        <hr class="m-auto w-[80%] border-[#00437b3b] my-6"></hr>
+        <div class="flex flex-col gap-2 pt-8 pb-4">
+          <h1 class="select-none text-center font-bold text-2xl">Past Releases</h1>
+          <p class="text-center text-base font-semibold text-gray-700">Download older releases of Drifty</p>
+        </div>
         {filteredReleases.map((item, index) => {
           index = index + filteredPreReleases.length;
           return (
-            <div key={index} className="text-center p-5 text-base font-normal">
+            <div key={index} className="text-center p-5 text-base font-normal flex flex-col gap-[0.3em]">
               <span className="font-bold">{item.tag_name} </span>
-              <p>
+              <p className="max-w-md lg:max-w-xl mx-auto">
                 {new Date(item.published_at).toString()} with{" "}
                 {item.tag_name >= "v2.1.0"
                   ? item.assets[0].download_count +
@@ -522,7 +525,7 @@ export default function Releases({ props }) {
               </p>
               <button
                 onClick={() => handleButtonClick(index)}
-                className="text-slate-800/50"
+                className="text-[#002843ba]"
               >
                 {buttonStates[index] ? "Hide" : "Learn More"}
               </button>
@@ -550,7 +553,7 @@ export default function Releases({ props }) {
                   {applicationType === "GUI" && (
                     <button
                       className={
-                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                        "text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
                       }
                       onClick={() =>
                         downloadOlderReleases(
@@ -594,7 +597,7 @@ export default function Releases({ props }) {
                   {item.tag_name >= "v2.1.0" && ( // If the version of the past release is greater than or equal to v2.1.0, then show the download button for macOS (Intel)
                     <button
                       className={
-                        "text-sm text-violet-900 font-semibold hover:underline hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-0.5 hover:scale-110"
+                        "text-lg select-none text-white font-semibold hover:underline duration-500 ease-in-out"
                       }
                       onClick={() =>
                         downloadOlderReleases(
@@ -618,10 +621,10 @@ export default function Releases({ props }) {
             return (
               <div
                 key={index}
-                className="text-center p-5 text-base font-normal"
+                className="text-center p-5 text-base font-normal flex flex-col gap-[0.3em]"
               >
                 <span className="font-bold">{item.tag_name} </span>
-                <p>
+                <p className="max-w-md lg:max-w-xl mx-auto">
                   {new Date(item.published_at).toString()} with{" "}
                   {item.assets[0].download_count +
                     item.assets[1].download_count}{" "}
@@ -629,7 +632,7 @@ export default function Releases({ props }) {
                 </p>
                 <button
                   onClick={() => handleButtonClick(index)}
-                  className="text-slate-800/50"
+                  className="text-[#002843ba]"
                 >
                   {buttonStates[index] ? "Hide" : "Learn More"}
                 </button>
@@ -641,7 +644,7 @@ export default function Releases({ props }) {
                 )}
                 <div className="grid md:grid-flow-col md:gap-52 xs:gap-8 justify-center text-white mt-3 font-semibold">
                   <button
-                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    className="select-none py-2.5 px-5 w-auto h-auto text-xl bg-[#3115f0] hover:bg-[#0e2ba3] transition duration-500 rounded-full shadow-none ease-in-out hover:drop-shadow-xl"
                     onClick={() =>
                       window.open(item.assets[1].browser_download_url)
                     }
@@ -649,7 +652,7 @@ export default function Releases({ props }) {
                     Download <i className="fab fa-brands fa-windows"></i>
                   </button>
                   <button
-                    className="select-none pl-3 pr-3 w-auto h-auto text-2xl bg-gradient-to-r from-blue-600 to-green-500 hover:from-pink-500 hover:to-yellow-500 rounded-full p-1 shadow-none hover:transition ease-in-out duration-300 delay-80 hover:-translate-y-1 hover:scale-110 hover:drop-shadow-2xl"
+                    className="select-none py-2.5 px-5 w-auto h-auto text-xl bg-[#1559f08c] hover:bg-[#0e2ba3] transition duration-500 rounded-full shadow-none ease-in-out hover:drop-shadow-xl"
                     onClick={() =>
                       window.open(item.assets[0].browser_download_url)
                     }
