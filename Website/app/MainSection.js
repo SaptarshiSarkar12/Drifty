@@ -17,16 +17,16 @@ export default function MainSection() {
             including YouTube, Instagram, and many more.
           </p>
 
-          <div className="flex space-x-2 justify-start lg:ml-4 lg:mt-2 lg:mb-8">
+          <div className="flex gap-4 justify-start lg:ml-4 lg:mt-2 lg:mb-8">
             <Link
-              className="px-3 py-2 bg-[#035792] text-white rounded-lg hover:border-[#191B33] hover:bg-[#191B33] duration-500 text-sm md:text-base xl:text-xl"
+              className="px-3 py-2 text-sm md:text-base xl:text-xl bg-[#035792] hover:border-[#191B33] hover:bg-[#191B33] duration-500 rounded-lg"
               href={"/download"}
               role="button"
             >
               Download
             </Link>
             <Link
-              className="px-3 py-2 bg-[#1d356333] text-white rounded-lg hover:border-[#191B33] hover:bg-[#004f6a7d] duration-500 text-sm md:text-base xl:text-xl"
+              className="px-3 py-2 text-sm md:text-base xl:text-xl bg-[#1d356333] hover:border-[#191B33] hover:bg-[#004f6a7d] duration-500 rounded-lg"
               href={"/#demo"}
               role="button"
             >
