@@ -492,10 +492,10 @@ export default function Releases({ props }) {
             );
           }
         })}
-        <hr class="m-auto w-[80%] border-[#00437b3b] my-6"></hr>
-        <div class="flex flex-col gap-2 pt-8 pb-4">
-          <h1 class="select-none text-center font-bold text-2xl">Past Releases</h1>
-          <p class="text-center text-base font-semibold text-gray-700">Download older releases of Drifty</p>
+        <hr className="m-auto w-[80%] border-[#00437b3b] my-6"></hr>
+        <div className="flex flex-col gap-2 pt-8 pb-4">
+          <h1 className="select-none text-center font-bold text-2xl">Past Releases</h1>
+          <p className="text-center text-base font-semibold text-gray-700">Download older releases of Drifty</p>
         </div>
         {filteredReleases.map((item, index) => {
           index = index + filteredPreReleases.length;
