@@ -25,7 +25,6 @@ export default function contact() {
             <div className="flex justify-between gap-2 mt-6  max-md:flex-col">
               <input
                 type="text"
-                autoFocus={true}
                 inputMode="text"
                 required
                 placeholder="Name"

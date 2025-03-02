@@ -671,6 +671,7 @@ export default function Releases({ props }) {
           target={"_blank"}
           href={"https://github.com/SaptarshiSarkar12/Drifty/releases"}
           className={"text-center text-sm font-bold text-blue-500"}
+          rel="noreferrer"
         >
           View all releases
         </a>

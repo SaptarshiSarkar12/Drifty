@@ -55,6 +55,13 @@ function MobileNav({ open, setOpen }) {
           <button>Download</button>
         </NavLink>
         <NavLink
+          to="/docs"
+          cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
+          setOpen={setOpen}
+        >
+          <button>Docs</button>
+        </NavLink>
+        <NavLink
           to="/contact"
           cn="flex py-2.5 px-3.5 text-white rounded-lg hover:bg-[#004f6a7d] duration-500 font-semibold text-xl"
           setOpen={setOpen}
@@ -63,7 +70,11 @@ function MobileNav({ open, setOpen }) {
         </NavLink>
         {/* Social Icons */}
         <div className="flex justify-center items-center pt-10 z-50">
-          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+          <a
+            href="https://discord.gg/DeT4jXPfkG"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-discord text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-violet-600 z-50"
@@ -71,7 +82,11 @@ function MobileNav({ open, setOpen }) {
             ></i>
           </a>
 
-          <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
+          <a
+            href="https://github.com/SaptarshiSarkar12/Drifty"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-github text-3xl text-white mx-4 hover:transition hover:ease-in-out delay-75 duration-300 hover:text-black z-50"
@@ -131,6 +146,11 @@ export default function Header({ props }) {
             setOpen(!open);
           }}
           role={"button"}
+          tabIndex="0" // Fix: jsx-a11y/interactive-supports-focus
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") setOpen(!open);
+          }} // Handle key events 'Fix : jsx-a11y/click-events-have-key-events'
+          aria-label="Toggle menu"
         >
           {/* hamburger button */}
           <span
@@ -167,12 +187,21 @@ export default function Header({ props }) {
               DOWNLOAD
             </button>
           </NavLink>
-          <NavLink to="/contact" cn="flex" setOpen={setOpen}>
-            <button className="py-2 px-3.5 text-white hover:bg-[#004f6a7d] hover:transition rounded-lg font-bold tracking-wider text-base lg:text-lg duration-300">
+          <NavLink to="/docs" cn="mx-4 flex">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
+              DOCS
+            </button>
+          </NavLink>
+          <NavLink to="/contact" cn="mx-4 flex">
+            <button className="text-white hover:transition text-xl hover:scale-105 duration-300 font-extrabold">
               CONTACT
             </button>
           </NavLink>
-          <a href="https://discord.gg/DeT4jXPfkG" target="_blank">
+          <a
+            href="https://discord.gg/DeT4jXPfkG"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-discord text-2xl text-white mx-4 duration-100 hover:text-violet-700"
@@ -180,7 +209,11 @@ export default function Header({ props }) {
             ></i>
           </a>
 
-          <a href="https://github.com/SaptarshiSarkar12/Drifty" target="_blank">
+          <a
+            href="https://github.com/SaptarshiSarkar12/Drifty"
+            target="_blank"
+            rel="noreferrer"
+          >
             <i
               className={
                 "fab fa-github text-2xl text-white mx-4 duration-100 hover:text-black"
