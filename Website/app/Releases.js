@@ -296,7 +296,7 @@ export default function Releases({ props }) {
                   downloadLatestRelease("Windows exe", applicationType)
                 }
               >
-                Download Now 
+                Download Now
                 <div className="flex gap-2 items-center justify-center text-xl md:text-sm text-white font-semibold">
                   <i className="fab fa-brands fa-windows fa-lg"></i>
                   {latestVersion}
@@ -327,7 +327,6 @@ export default function Releases({ props }) {
               <i className="fab fa-brands fa-linux fa-lg"></i>
               {latestVersion}
             </div>
-
           </button>
         </div>
 
@@ -339,7 +338,7 @@ export default function Releases({ props }) {
               downloadLatestRelease("MacOS Apple Silicon", applicationType)
             }
           >
-            Download Now 
+            Download Now
             <div className="flex gap-2 items-center justify-center text-xl md:text-sm text-white font-semibold">
               <i className="fab fa-brands fa-apple fa-lg"></i>
               {latestVersion}
@@ -494,13 +493,20 @@ export default function Releases({ props }) {
         })}
         <hr className="m-auto w-[80%] border-[#00437b3b] my-6"></hr>
         <div className="flex flex-col gap-2 pt-8 pb-4">
-          <h1 className="select-none text-center font-bold text-2xl">Past Releases</h1>
-          <p className="text-center text-base font-semibold text-gray-700">Download older releases of Drifty</p>
+          <h1 className="select-none text-center font-bold text-2xl">
+            Past Releases
+          </h1>
+          <p className="text-center text-base font-semibold text-gray-700">
+            Download older releases of Drifty
+          </p>
         </div>
         {filteredReleases.map((item, index) => {
           index = index + filteredPreReleases.length;
           return (
-            <div key={index} className="text-center p-5 text-base font-normal flex flex-col gap-[0.3em]">
+            <div
+              key={index}
+              className="text-center p-5 text-base font-normal flex flex-col gap-[0.3em]"
+            >
               <span className="font-bold">{item.tag_name} </span>
               <p className="max-w-md lg:max-w-xl mx-auto">
                 {new Date(item.published_at).toString()} with{" "}
