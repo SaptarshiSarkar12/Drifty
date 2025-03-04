@@ -97,14 +97,23 @@ jobs:
         retry_wait_seconds: '30'
         command: |
           Core/src/main/resources/yt-dlp.exe -U
-    - name: Set up GraalVM JDK 21
+    - name: Set up GraalVM JDK 23
+      if: ${{ matrix.mode == 'CLI' }}
       uses: graalvm/setup-graalvm@v1
       with:
-        java-version: '21'
+        java-version: '23'
         distribution: 'graalvm'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         set-java-home: true
         cache: 'maven'
+    - name: Set up Gluon's GraalVM JDK 23
+      if: ${{ matrix.mode == 'GUI' }}
+      uses: gluonhq/setup-graalvm@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        arch: ${{ matrix.os == 'macos-14' && 'aarch64' || 'x86_64' }}
+        jdk: 'java23'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
       shell: bash
