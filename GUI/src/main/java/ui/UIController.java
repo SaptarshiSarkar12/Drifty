@@ -36,6 +36,7 @@ import properties.OS;
 import support.Job;
 import support.JobHistory;
 import support.Jobs;
+import utils.DbConnection;
 import utils.Utility;
 
 import java.io.File;
@@ -43,10 +44,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.concurrent.*;
 
 import static gui.support.Colors.*;
+import static init.Environment.currentSessionId;
 import static utils.Utility.renameFile;
 import static utils.Utility.sleep;
 
@@ -216,7 +219,6 @@ public final class UIController {
                     filename = renameFile(filename, dir);
                 }
             }
-            removeJobFromList(selectedJob);
             addJob(new Job(link, dir, filename, selectedJob.getDownloadLink()));
             clearLink();
             clearFilename();
@@ -491,15 +493,47 @@ public final class UIController {
         }
         if (oldJob != null) {
             getJobs().remove(oldJob);
-            System.out.println("Job Removed: " + oldJob.getFilename());
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.updateFile(
+                        newJob.getFilename(),
+                        oldJob.getSourceLink(),
+                        newJob.getDir()
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Job Updated: " + newJob.getFilename());
+        } else {
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.addFileRecordToQueue(
+                        newJob.getFilename(),
+                        newJob.getSourceLink(),
+                        newJob.getDir(),
+                        currentSessionId
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Job Added: " + newJob.getFilename());
         }
         getJobs().add(newJob);
-        System.out.println("Job Added: " + newJob.getFilename());
         commitJobListToListView();
     }
 
     private void removeJobFromList(Job oldJob) {
         getJobs().remove(oldJob);
+        try {
+            DbConnection dbConnection = DbConnection.getInstance();
+            dbConnection.deleteQueuedFile(
+                    oldJob.getSourceLink(),
+                    oldJob.getDir(),
+                    oldJob.getFilename()
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
@@ -594,6 +628,12 @@ public final class UIController {
         Called from the Edit menu, this wipes out the job history that is stored in the users file system
          */
         INSTANCE.getHistory().clear();
+        try {
+            DbConnection dbConnection = DbConnection.getInstance();
+            dbConnection.deleteFilesHistory();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void pasteFromClipboard(String text) {
