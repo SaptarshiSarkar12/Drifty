@@ -13,8 +13,9 @@
     <description>GUI module of Drifty</description>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <gluonfx-maven-plugin.version>1.0.25</gluonfx-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gui.main-class>main.Drifty_GUI</gui.main-class>
         <system-linker-arg/>
@@ -48,7 +49,7 @@
             <plugin>
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
-                <version>1.0.23</version>
+                <version>${gluonfx-maven-plugin.version}</version>
                 <configuration>
                     <enableSWRendering>true</enableSWRendering>
                     <mainClass>${gui.main-class}</mainClass>
@@ -125,6 +126,9 @@
         <profile>
             <id>build-drifty-gui-for-windows-latest</id>
             <properties>
+                <!-- Error: Building a native image is not yet supported on Windows with this (v1.0.25) version.
+                     Please use GluonFX plugin version 1.0.23 instead.-->
+                <gluonfx-maven-plugin.version>1.0.23</gluonfx-maven-plugin.version>
                 <package.type>msi</package.type>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-windows.json</resource-config-file>

@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./Docker/dev/commons/base/Dockerfile
       args:
-        - GRAALVM_VERSION_MAJOR=21
+        - GRAALVM_VERSION_MAJOR=23
         - MAVEN_MAJOR=3
         - MAVEN_VERSION=3.8.8
     container_name: drifty-base
