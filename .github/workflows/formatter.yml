@@ -20,11 +20,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Setup JDK 21
+      - name: Setup JDK 23
         uses: actions/setup-java@v4
         with:
           distribution: 'oracle'
-          java-version: 21
+          java-version: 23
       - name: Format Java files
         run: mvn rewrite:run
       - name: Install prettier
