@@ -1,62 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer utilities {
-  @keyframes move {
-    0% {
-      transform: translateZ(0px) scale(1);
-      filter: blur(2px) brightness(100%) hue-rotate(360deg);
-    }
+@custom-variant dark (&:where(.dark, .dark *));
 
-    100% {
-      transform: translateZ(-100px) scale(1.5);
-      filter: blur(0px) brightness(150%);
-    }
-  }
-  @keyframes pulse {
-    0%,
-    100% {
-      @apply text-slate-100;
-    }
-    50% {
-      @apply text-slate-100/50;
-    }
-  }
-  .img-layer {
-    width: 500px;
-    pointer-events: none;
-    display: inherit;
-    align-items: center;
-    transform: rotateX(0deg) rotateY(335deg);
-    transform-style: preserve-3d;
-  }
-  .img-layer > img:nth-child(1) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0s infinite alternate;
+/* Defining custom colors for both light and dark themes */
+@layer base {
+  :root {
+    --dark-bg: #262626;
+    --dark-accent: #2d2e2e;
+    --text: #fff;
+    --light-bg: #fffff2;
+    --light-accent: #daddd8;
+    --button-bg: #d52941;
+    --button-text: #f7ebe8;
   }
 
-  .img-layer > img:nth-child(2) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.25s infinite
-      alternate;
+  /* Light theme (default) */
+  body {
+    background-color: var(--light-bg);
+    color: var(--dark-bg);
   }
-  .img-layer > img:nth-child(3) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.5s infinite alternate;
+
+  .button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
   }
-  .img-layer > img:nth-child(4) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 0.75s infinite
-      alternate;
+
+  /* Applying colors for text */
+  .text-color {
+    color: var(--text);
   }
-  .img-layer > img:nth-child(5) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 1s infinite alternate;
+}
+
+/* Dark Mode Styles: When dark class is added to <html> */
+@layer base {
+  html.dark {
+    --bg-color: var(--dark-bg);
+    --accent-color: var(--dark-accent);
+    --text-color: var(--text);
   }
-  .img-layer > img:nth-child(6) {
-    animation: move 1.5s cubic-bezier(0.77, 0, 0.175, 1) 1.25s infinite
-      alternate;
-  }
-  .animate-own {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  .animate-no {
-    animation: none;
-  }
+}
+
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
