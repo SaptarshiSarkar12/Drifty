@@ -36,7 +36,7 @@ export default function DownloadPage() {
     const fetchReleases = async () => {
       try {
         const response = await fetch(
-          "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases"
+          "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases",
         );
         if (!response.ok) throw new Error("Failed to fetch releases");
         const data: Release[] = await response.json();
@@ -51,9 +51,9 @@ export default function DownloadPage() {
               sum +
               release.assets.reduce(
                 (aSum, asset) => aSum + (asset.download_count || 0),
-                0
+                0,
               ),
-            0
+            0,
           );
           setTotalDownloads(total);
         }
@@ -76,7 +76,7 @@ export default function DownloadPage() {
 
   const filteredAssets = selectedRelease
     ? selectedRelease.assets.filter((asset) =>
-        asset.name.toLowerCase().includes(searchQuery.toLowerCase())
+        asset.name.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : [];
 

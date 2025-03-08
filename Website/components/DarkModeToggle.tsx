@@ -7,7 +7,7 @@ export default function DarkModeToggle() {
   useEffect(() => {
     // Check system preference
     const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     setDarkMode(prefersDarkMode);
 

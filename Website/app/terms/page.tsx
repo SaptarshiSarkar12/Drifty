@@ -1,6 +1,6 @@
 export default async function TermsandConditions() {
   const response = await fetch(
-    "https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/master/LICENSE"
+    "https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/master/LICENSE",
   );
   const content = await response.text();
 

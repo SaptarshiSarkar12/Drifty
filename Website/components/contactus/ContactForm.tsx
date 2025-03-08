@@ -6,7 +6,7 @@ import { submitContactForm } from "./submitForm";
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
-    null
+    null,
   );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

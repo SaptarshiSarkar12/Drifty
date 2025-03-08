@@ -1,6 +1,6 @@
 export default async function PrivacyPolicy() {
   const response = await fetch(
-    "https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/c86ce85731008f20ec5a67d423a5047d49ebc40d/Privacy%20Policy.txt"
+    "https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/c86ce85731008f20ec5a67d423a5047d49ebc40d/Privacy%20Policy.txt",
   );
   const content = await response.text();
 
