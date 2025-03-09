@@ -1,36 +1,137 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Drifty Web
+
+## Features
+
+- 🚀 **Built with Next.js** – Fast, server-rendered React framework.
+- 🎨 **Styled with Tailwind CSS** – Utility-first approach for easy customization.
+- 📱 **Fully Responsive** – Works seamlessly across all devices.
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```sh
+git clone https://github.com/SaptarshiSarkar12/Drifty.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Navigate into the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+cd Drifty
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Install dependencies
 
-## Learn More
+```sh
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+#### Potential Issues & Fixes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- If you encounter `ERR! could not resolve dependency`, try deleting `node_modules` and `package-lock.json` before reinstalling:
+  ```sh
+  rm -rf node_modules package-lock.json
+  npm install
+  ```
+- Ensure you're using the correct Node.js version. You can check your version with:
+  ```sh
+  node -v
+  ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Start the development server
 
-## Deploy on Vercel
+```sh
+npm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Potential Issues & Fixes:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- If you see an error related to ports being in use, stop any conflicting process:
+  ```sh
+  lsof -i :3000  # Find the process using port 3000
+  kill -9 <PID>   # Replace <PID> with the actual process ID
+  ```
+- If changes are not reflecting, restart the server and clear Next.js cache:
+  ```sh
+  rm -rf .next && npm run dev
+  ```
+
+This will start the app on [`http://localhost:3000`](http://localhost:3000).
+
+## Contributing
+
+We welcome contributions! Follow these steps to get started:
+
+### Contribution Steps
+
+1. [Fork the repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) on GitHub.
+2. Clone your forked repository:
+   ```sh
+   git clone https://github.com/<username>/Drifty.git
+   cd Drifty
+   ```
+   > **NOTE:** Your github username should be updated in the command above.
+3. Create a new branch:
+   ```sh
+   git checkout -b feature-name
+   ```
+4. Make your changes and sign your commits:
+   ```sh
+   git commit -S -m "Add new feature"
+   ```
+5. Push your branch to GitHub:
+   ```sh
+   git push origin feature-name
+   ```
+6. Follow the [Pre-Submission Checklist](#pre-submission-checklist) and [Open a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) on GitHub.
+
+### Pre-Submission Checklist
+
+Before creating a pull request, ensure you follow these steps to minimize review issues:
+
+1. **Build the project** to catch any build-related errors:
+   ```sh
+   npm run build
+   ```
+2. **Check for linting issues** and auto-fix where possible:
+   ```sh
+   npm run lint --fix
+   ```
+3. **Run Prettier** to format your code:
+   ```sh
+   npx prettier --write .
+   ```
+4. **Test the application** to confirm everything works as expected:
+   ```sh
+   npm start
+   ```
+
+### Contribution Guidelines
+
+- Follow the existing code style and naming conventions.
+- Keep your pull requests focused and concise.
+- Ensure your changes do not break existing functionality.
+- Test thoroughly before submitting.
+
+## Deployment
+
+This web app can be deployed on platforms like Vercel, Netlify, or any cloud provider supporting Next.js.
+
+### Deploy on Vercel
+
+```sh
+npm run build
+vercel deploy
+```
+
+## License
+
+This project is licensed under the Apache 2.0 License. See the [LICENSE](../LICENSE) file for details.
+
+## Support
+
+If you encounter any issues, feel free to open an [issue](https://github.com/SaptarshiSarkar12/Drifty/issues) in the repository.
+
+---
+
+Happy coding! 🚀
