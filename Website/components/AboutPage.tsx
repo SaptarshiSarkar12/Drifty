@@ -41,7 +41,7 @@ const getKey = (pageIndex: number, previousPageData: Contributor[]) => {
 export default function AboutPage() {
   const { data: repoData, error: repoError } = useSWR<RepoData>(
     "https://api.github.com/repos/SaptarshiSarkar12/Drifty",
-    fetcher,
+    fetcher
   );
 
   const {
@@ -119,30 +119,45 @@ export default function AboutPage() {
 
           <div className="p-6 rounded-xl shadow-md">
             <h3 className="text-sm font-medium mb-2 ">Technology</h3>
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-                <FaJava className="text-purple-600 dark:text-purple-300" />
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center space-x-2">
+                <div className="h-8 w-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
+                  <FaJava className="text-purple-600 dark:text-purple-300" />
+                </div>
+                <span className="text-gray-900 dark:text-white">
+                  Java + GluonFX + GraalVM
+                </span>
               </div>
-              <span className="text-lg font-medium text-gray-900 dark:text-white">
-                Java
-              </span>
             </div>
           </div>
-
           <div className="p-6 rounded-xl shadow-md">
             <h3 className="text-sm font-medium mb-2 ">Website</h3>
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <div className="h-8 w-8 bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                   <RiNextjsFill className="text-gray-800 dark:text-gray-200" />
                 </div>
-                <span className="text-gray-900 dark:text-white">Next.js</span>
+                <a
+                  href="https://nextjs.org/"
+                  className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
+                  aria-label="View Apache 2.0 License"
+                  target="_blank"
+                >
+                  Next.js
+                </a>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="h-8 w-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                <div className="h-8 w-8 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
                   <RiTailwindCssFill className="text-blue-400 dark:text-blue-300" />
                 </div>
-                <span className="text-gray-900 dark:text-white">Tailwind</span>
+                <a
+                  href="https://tailwindcss.com/"
+                  className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
+                  aria-label="View Apache 2.0 License"
+                  target="_blank"
+                >
+                  tailwindcss
+                </a>
               </div>
             </div>
           </div>
@@ -193,7 +208,7 @@ export default function AboutPage() {
             <section className="p-8 rounded-2xl shadow-md flex-1 flex items-center min-h-[200px]">
               <div className="flex items-center space-x-4 w-full justify-around">
                 <div className="flex items-center space-x-2">
-                  <div className="h-10 md:h-16 w-10 md:w-16 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <div className="h-10 md:h-16 w-10 md:w-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                     <FaStar
                       className="text-gray-600 dark:text-gray-100 md:text-3xl"
                       aria-label="Stars"
@@ -205,7 +220,7 @@ export default function AboutPage() {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="h-10 md:h-16 w-10 md:w-16 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                  <div className="h-10 md:h-16 w-10 md:w-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
                     <FaCodeBranch
                       className="text-gray-600 dark:text-gray-100 md:text-3xl"
                       aria-label="Forks"
