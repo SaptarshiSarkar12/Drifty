@@ -11,7 +11,7 @@
   "dependencies": {
     "@eslint/config-array": "^0.19.2",
     "@headlessui/react": "^2.2.0",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "10.4.21",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.2.1",
     "glob": "^11.0.1",
