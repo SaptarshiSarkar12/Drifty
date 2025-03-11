@@ -26,13 +26,13 @@ cd Drifty
 cd Website
 ```
 
-### 4. Install dependencies:
+### 4. Install dependencies
 
 ```sh
 npm ci
 ```
 
-#### Potential Issues & Fixes:
+#### Potential Issues & Fixes
 
 - If you encounter `ERR! could not resolve dependency`, try deleting `node_modules` and `package-lock.json` before reinstalling:
   ```sh
@@ -44,13 +44,13 @@ npm ci
   node -v
   ```
 
-### 5. Start the development server:
+### 5. Start the development server
 
 ```sh
 npm run dev
 ```
 
-#### Potential Issues & Fixes:
+#### Potential Issues & Fixes
 
 - If you see an error related to ports being in use, stop any conflicting process:
   ```sh
