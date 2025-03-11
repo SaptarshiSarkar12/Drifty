@@ -23,6 +23,27 @@ jobs:
           # list of changed files within `super-linter`
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: "npm"
+          cache-dependency-path: "./Website/package-lock.json"
+      - name: Restore Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/Website/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/Website/package-lock.json') }}-
+      - name: Run the linter on website code
+        run: |
+          cd Website
+          npm ci
+          npm run lint
       - name: Lint Code Base
         id: lint
         uses: super-linter/super-linter/slim@v7
@@ -40,6 +61,9 @@ jobs:
           VALIDATE_JSX: false
           VALIDATE_JAVASCRIPT_ES: false
           VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_TSX: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
           VALIDATE_JSON: false
           VALIDATE_CLANG_FORMAT: false
           VALIDATE_CSHARP: false
