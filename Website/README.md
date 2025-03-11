@@ -20,10 +20,16 @@ git clone https://github.com/SaptarshiSarkar12/Drifty.git
 cd Drifty
 ```
 
-### 3. Install dependencies
+### 3. Navigate into the `Website` directory
 
 ```sh
-npm install
+cd Website
+```
+
+### 4. Install dependencies:
+
+```sh
+npm ci
 ```
 
 #### Potential Issues & Fixes:
@@ -33,12 +39,12 @@ npm install
   rm -rf node_modules package-lock.json
   npm install
   ```
-- Ensure you're using the correct Node.js version. You can check your version with:
+- Ensure you're using the correct Node.js version (the recommended version is the **latest LTS version**). You can check your version with:
   ```sh
   node -v
   ```
 
-### 4. Start the development server
+### 5. Start the development server:
 
 ```sh
 npm run dev
@@ -70,7 +76,7 @@ We welcome contributions! Follow these steps to get started:
    git clone https://github.com/<username>/Drifty.git
    cd Drifty
    ```
-   > **NOTE:** Your github username should be updated in the command above.
+   > **NOTE:** Your GitHub username should be updated in the command above.
 3. Create a new branch:
    ```sh
    git checkout -b feature-name
