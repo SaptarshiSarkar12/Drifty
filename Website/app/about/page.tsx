@@ -1,5 +1,5 @@
+import AboutPage from "@/components/AboutPage";
 import { Metadata } from "next";
-import AboutPage from "../../components/AboutPage";
 
 export const metadata: Metadata = {
   title: "About | Drifty",

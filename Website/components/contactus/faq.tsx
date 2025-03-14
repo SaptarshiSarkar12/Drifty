@@ -16,7 +16,14 @@ export default function FAQs() {
         Visit Documentation →
       </Link>
       <p className="text-red-500 dark:text-red-400 italic text-sm">
-        ☝️Page not accessible, currently under development.
+        ☝️Page not accessible, currently{" "}
+        <a
+          href="https://github.com/SaptarshiSarkar12/Drifty/issues/273"
+          className="underline-offset-2 underline hover:underline-offset-4 "
+        >
+          under development
+        </a>
+        .
       </p>
     </div>
   );
