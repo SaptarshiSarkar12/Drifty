@@ -19,6 +19,10 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   const navItems = {
     "/": "Home",
     "/about": "About",
@@ -28,7 +32,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full p-4 z-99 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full p-4 z-50 transition-all duration-300 ${
         scrolled
           ? "shadow-md dark:bg-(--dark-accent) bg-(--light-accent)"
           : "bg-transparent shadow-none"
@@ -48,13 +52,14 @@ export default function Navbar() {
             </span>
           </Link>
         </div>
+
+        {/* Mobile Nav */}
         <ul
-          className={`md:flex md:items-center md:space-x-6 absolute md:static top-16 left-0 w-full md:w-auto ${
-            scrolled
-              ? "dark:bg-(--dark-accent) bg-(--light-accent)"
-              : "bg-transparent"
-          } md:bg-transparent md:dark:bg-transparent transition-transform duration-300 ease-in-out ${
-            isOpen ? "block" : "hidden"
+          className={`md:flex md:items-center md:space-x-6 absolute md:static top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out transform"
+          } ${
+            isOpen
+              ? "opacity-100 translate-y-0 visible dark:bg-(--light-accent) bg-(--light-accent)"
+              : "opacity-0 -translate-y-5 invisible md:visible md:opacity-100 md:translate-y-0 bg-transparent"
           }`}
         >
           {Object.entries(navItems).map(([path, label]) => (
@@ -70,6 +75,8 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+
+        {/* Mobile Menu Toggle Button */}
         <div className="md:hidden ml-auto">
           <button onClick={() => setIsOpen(!isOpen)} className="">
             {isOpen ? <IoClose size={24} /> : <IoMenu size={24} />}
