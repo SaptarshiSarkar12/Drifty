@@ -25,14 +25,23 @@ export default function ContactForm() {
   const validateForm = () => {
     let isValid = true;
     const newErrors = { name: "", email: "", message: "" };
-    if (!formData.name.trim())
-      (newErrors.name = "Name is required."), (isValid = false);
-    if (!formData.email.trim())
-      (newErrors.email = "Email is required."), (isValid = false);
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      (newErrors.email = "Invalid email format."), (isValid = false);
-    if (!formData.message.trim())
-      (newErrors.message = "Message is required."), (isValid = false);
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required.";
+      isValid = false;
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Invalid email format.";
+      isValid = false;
+    }
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required.";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
