@@ -1,4 +1,4 @@
-import { FaGithub, FaDiscord, FaXTwitter } from "react-icons/fa6";
+import { FaGithub, FaDiscord, FaXTwitter, FaLinkedin } from "react-icons/fa6";
 
 export default function SocialLinks() {
   return (
@@ -24,13 +24,22 @@ export default function SocialLinks() {
           <FaGithub className="h-8 w-8" />
         </a>
         <a
-          href="https://www.twitter.com/SSarkar2007"
+          href="https://www.x.com/SSarkar2007"
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-500 hover:text-[#000000] dark:text-gray-400 dark:hover:text-[#ffffff]"
-          aria-label="Twitter"
+          aria-label="X"
         >
           <FaXTwitter className="h-8 w-8" />
+        </a>
+        <a
+          href="https://www.linkedin.com/in/saptarshisarkar12/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-500 hover:text-[#000000] dark:text-gray-400 dark:hover:text-[#ffffff]"
+          aria-label="X"
+        >
+          <FaLinkedin className="h-8 w-8" />
         </a>
       </div>
     </div>

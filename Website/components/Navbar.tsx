@@ -47,7 +47,7 @@ export default function Navbar() {
                 width={100}
                 height={100}
                 alt="Logo"
-                className="w-18 sm:w-26 md:w-34 lg:w-40 xl:w-46 h-auto"
+                className="w-30 md:w-34 lg:w-40 xl:w-46 h-auto"
               />
             </span>
           </Link>
@@ -58,7 +58,7 @@ export default function Navbar() {
           className={`md:flex md:items-center md:space-x-6 absolute md:static top-16 left-0 w-full md:w-auto transition-all duration-300 ease-in-out transform"
           } ${
             isOpen
-              ? "opacity-100 translate-y-0 visible dark:bg-(--light-accent) bg-(--light-accent)"
+              ? "opacity-100 translate-y-0 visible dark:bg-(--dark-accent) bg-(--light-accent)"
               : "opacity-0 -translate-y-5 invisible md:visible md:opacity-100 md:translate-y-0 bg-transparent"
           }`}
         >
