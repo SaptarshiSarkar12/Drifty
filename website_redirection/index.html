@@ -101,22 +101,6 @@
         }
       }
     </style>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var countdownElement = document.getElementById("countdown");
-        var secondsLeft = 5;
-        var interval = setInterval(function () {
-          secondsLeft--;
-          countdownElement.textContent = secondsLeft;
-          if (secondsLeft <= 0) {
-            clearInterval(interval);
-            // Instant redirect
-            // var target = "https://drifty.vercel.app";
-            // window.location.replace(target);
-          }
-        }, 1000);
-      });
-    </script>
   </head>
   <body>
     <div class="container">
@@ -140,5 +124,21 @@
         >.
       </p>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var countdownElement = document.getElementById("countdown");
+        var secondsLeft = 5;
+        var interval = setInterval(function () {
+          secondsLeft--;
+          countdownElement.textContent = secondsLeft;
+          if (secondsLeft <= 0) {
+            clearInterval(interval);
+            // Instant redirect
+            // var target = "https://drifty.vercel.app";
+            // window.location.replace(target);
+          }
+        }, 1000);
+      });
+    </script>
   </body>
 </html>
