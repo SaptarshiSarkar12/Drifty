@@ -206,22 +206,24 @@ export default function AboutPage() {
         {repoData && (
           <div className="flex flex-col md:flex-row items-stretch gap-4 w-full">
             {/* Maintainer Card */}
-            <section className="p-8 rounded-2xl shadow-md flex-1 flex items-center min-h-[200px]">
-              <div className="flex items-center space-x-6 w-full">
+            <section className="p-6 rounded-2xl shadow-md flex-1 flex items-center min-h-[200px]">
+              <div className="flex flex-col sm:flex-row items-center sm:space-x-6 w-full text-center sm:text-left">
                 <Image
                   src={repoData.owner.avatar_url}
                   alt={`${repoData.owner.login}'s profile picture`}
-                  className="w-24 h-24 rounded-full shadow-lg"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full shadow-lg"
                   width={96}
                   height={96}
                   loading="lazy"
                 />
-                <div>
-                  <h2 className="text-2xl font-bold">Saptarshi Sarkar</h2>
-                  <p className="text-lg mt-1">Maintainer</p>
+                <div className="mt-4 sm:mt-0">
+                  <h2 className="text-xl sm:text-2xl font-bold">
+                    Saptarshi Sarkar
+                  </h2>
+                  <p className="text-base sm:text-lg mt-1">Maintainer</p>
                   <a
                     href={repoData.owner.html_url}
-                    className="inline-flex items-center hover:underline mt-2"
+                    className="inline-flex items-center justify-center sm:justify-start hover:underline mt-2"
                     aria-label="View GitHub profile"
                   >
                     <span>@{repoData.owner.login}</span>
