@@ -124,7 +124,13 @@ export default function AboutPage() {
                 <div className="h-8 w-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
                   <FaJava className="text-purple-600 dark:text-purple-300" />
                 </div>
-                <span className="text-gray-900 dark:text-white">Java</span>
+                <a
+                  href="https://www.java.com/en/"
+                  className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
+                  target="_blank"
+                >
+                  Java
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="h-8 w-8 bg-[#c3f9ff] dark:bg-[#e6f4f1] rounded-lg flex items-center justify-center">
@@ -135,12 +141,16 @@ export default function AboutPage() {
                     height={50}
                   ></Image>
                 </div>
-                <span className="text-gray-900 dark:text-white">
+                <a
+                  href="https://graalvm.org/"
+                  className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
+                  target="_blank"
+                >
                   Graal
                   <span className="text-[#f29111]">
                     VM <sub className="text-[0.40rem]">TM</sub>
                   </span>
-                </span>
+                </a>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="h-8 w-8  bg-slate-400 dark:bg-slate-900 rounded-lg flex items-center justify-center">
@@ -151,7 +161,13 @@ export default function AboutPage() {
                     height={100}
                   ></Image>
                 </div>
-                <span className="text-gray-900 dark:text-white">GluonFX</span>
+                <a
+                  href="https://github.com/gluonhq/gluonfx-maven-plugin/"
+                  className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
+                  target="_blank"
+                >
+                  GluonFX
+                </a>
               </div>
             </div>
           </div>
@@ -165,7 +181,6 @@ export default function AboutPage() {
                 <a
                   href="https://nextjs.org/"
                   className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
-                  aria-label="View Apache 2.0 License"
                   target="_blank"
                 >
                   Next.js
@@ -178,7 +193,6 @@ export default function AboutPage() {
                 <a
                   href="https://tailwindcss.com/"
                   className="text-lg font-medium hover:underline text-gray-900 dark:text-white"
-                  aria-label="View Apache 2.0 License"
                   target="_blank"
                 >
                   tailwindcss
