@@ -21,8 +21,8 @@ export default function RootLayout({
         <Navbar />
         <main className="container mx-auto p-4 pt-16 flex-grow">
           {children}
-          <Analytics/>
-          <SpeedInsights/>
+          <Analytics />
+          <SpeedInsights />
         </main>
         <Footer />
       </body>
