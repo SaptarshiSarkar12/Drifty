@@ -1,5 +1,5 @@
 const sendToDiscord = async (name: string, email: string, message: string) => {
-  const webhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL; // Store in .env.local
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
   if (!webhookUrl) {
     throw new Error("Discord webhook URL is missing");
