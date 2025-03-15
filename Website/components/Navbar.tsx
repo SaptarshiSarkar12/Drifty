@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { IoMenu, IoClose } from "react-icons/io5";
 import Image from "next/image";
-import { Search } from "nextra/components";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,11 +73,6 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Search Component - Visible on Desktop */}
-          <div className="hidden md:block">
-            <Search />
-          </div>
-
           {/* Mobile Menu Toggle Button */}
           <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)} className="">
@@ -107,11 +101,6 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-
-          {/* Search Component - Visible on Mobile when Menu is Open */}
-          <li className="p-2 md:p-0">
-            <Search />
-          </li>
         </ul>
       </div>
     </nav>
