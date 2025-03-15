@@ -57,3 +57,16 @@ html {
     color: #fff !important;
   }
 }
+
+/* Dark Mode Styles: When dark class is added to <html> */
+@layer base {
+  html.dark {
+    --bg-color: var(--dark-bg);
+    --accent-color: var(--dark-accent);
+    --text-color: var(--text);
+  }
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
