@@ -41,7 +41,7 @@ const getKey = (pageIndex: number, previousPageData: Contributor[]) => {
 export default function AboutPage() {
   const { data: repoData, error: repoError } = useSWR<RepoData>(
     "https://api.github.com/repos/SaptarshiSarkar12/Drifty",
-    fetcher
+    fetcher,
   );
 
   const {
