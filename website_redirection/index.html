@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Drifty Has Moved!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- For responsive design -->
+    <meta http-equiv="refresh" content="5;url=https://drifty.vercel.app" /> <!-- Redirect after 5 seconds -->
+    <link rel="icon" href="https://drifty.vercel.app/favicon.ico" /> <!-- For SEO -->
+    <link rel="canonical" href="https://drifty.vercel.app" /> <!-- For SEO -->
+    <style>
+        :root {
+            --light-bg: #fffff2;
+            --light-accent: #daddd8;
+            --dark-bg: #262626;
+            --dark-accent: #2d2e2e;
+            --text: #fff;
+            --button-bg: #d52941;
+            --button-text: #f7ebe8;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: var(--dark-bg);
+                --container-bg: var(--dark-accent);
+                --heading-color: var(--light-accent);
+                --text-color: var(--light-bg);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-color: var(--light-bg);
+                --container-bg: var(--light-accent);
+                --heading-color: var(--dark-accent);
+                --text-color: var(--dark-accent);
+            }
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            margin: 0 1rem;
+        }
+
+        h1 {
+            color: var(--heading-color);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-color);
+            line-height: 1.5;
+            margin: 0.8rem 0;
+        }
+
+        a {
+            color: var(--button-bg);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .loader {
+            border: 4px solid var(--light-accent);
+            border-top: 4px solid var(--button-bg);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var countdownElement = document.getElementById("countdown");
+            var secondsLeft = 5;
+            var interval = setInterval(function () {
+                secondsLeft--;
+                countdownElement.textContent = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(interval);
+                    // Instant redirect
+                    // var target = "https://drifty.vercel.app";
+                    // window.location.replace(target);
+                }
+            }, 1000);
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>We've Moved!</h1>
+    <p>
+        Welcome to the new home of Drifty. You are being redirected to
+        <a href="https://drifty.vercel.app">drifty.vercel.app</a>.
+    </p>
+    <p>Redirecting in <span id="countdown">5</span> seconds.</p>
+    <div class="loader"></div>
+    <p>
+        If you're not redirected automatically, please click the link above.
+    </p>
+    <p>
+        For details about this migration, see our discussion in
+        <a
+                href="https://github.com/SaptarshiSarkar12/Drifty/issues/819"
+                target="_blank"
+                rel="noopener noreferrer"
+        >issue #819</a
+        >.
+    </p>
+</div>
+</body>
+</html>
