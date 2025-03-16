@@ -54,12 +54,12 @@ https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/8a32ca07-1922-4c21-
 
 The _Application_ **Drifty** is built using the following technologies :
 
-- [Java](https://www.oracle.com/java/#rc30p1) - A programming language for building machine-independent applications.
+- [Java](https://www.oracle.com/java/#rc30p1) — A programming language for building machine-independent applications.
 
 The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
 
-- [Next.js](https://nextjs.org/) - A JavaScript framework for building server-rendered React applications.
-- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework.
+- [Next.js](https://nextjs.org/) — A JavaScript framework for building server-rendered React applications.
+- [Tailwind CSS](https://tailwindcss.com/) — A utility-first CSS framework.
 
 ## Join the Drifty Testing Program 🚀
 
@@ -73,12 +73,13 @@ For **Users** :
 ### Using Drifty Application executable 📦
 
 1. Visit the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) </p>
-   ![Homepage of Drifty Website](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/b3a63e16-7cb7-4ad9-b00e-ed4d4d690bd3)
-2. Click on [`Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
-   ![Download Button in Drifty Website pointed out](https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/7b850e1c-a034-4085-ae25-9e5090891faa)
-3. Choose the **Application Type** from the dropdown menu (_Default option is GUI_). To download _Drifty CLI_, select **CLI** and to download _Drifty GUI_, select **GUI**. Then, click on the **Download Now** button based on your Operating System (_Windows, Linux, macOS_). For **_Windows_** user, there is an MSI file available for **Drifty GUI**. You can click on the **_Prefer the msi?_** text to download the latest MSI file 🎉. If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can click on the download button of the respective phase. </p>
+   ![Homepage of Drifty Website (Light Mode)](https://github.com/user-attachments/assets/2194dfd6-4f39-45d9-a287-eb35c534bc33)
+2. Click on [`Get Started or Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
+   ![Download Button in Drifty Website (Dark mode) pointed out](https://github.com/user-attachments/assets/d97a6142-55eb-43b7-91e9-96537f6b5507)
+3. The latest released version of Drifty will be selected by default. You can also select other previous versions from the dropdown menu. You can download the executable for your operating system by clicking on the **Download** icon next to the file you wish to download. Check the operating system icons to ensure you are downloading the correct file. </p>
 
-   ![Download Webpage of Drifty](https://github.com/user-attachments/assets/aeef6d00-4020-4611-bc78-5f22ed5ac4dc)
+   ![Download page of Drifty showing latest release](https://github.com/user-attachments/assets/52ad60e4-0361-40c0-90be-8857bd09e7b8)
+   ![Download page of Drifty showing available versions](https://github.com/user-attachments/assets/61e58316-4e0b-4d6c-ba15-c38205beccd4)
 
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
 5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application. </p>
@@ -193,6 +194,13 @@ You can also provide your feedback to Microsoft Defender by reporting it to be S
 ## Stats 📊
 
 ![Repo analysis](https://repobeats.axiom.co/api/embed/9b39d68e1ca7e9523e4454b352930d61109915a1.svg)
+
+## Contact Us 📞
+
+If you have any questions or need further assistance,
+please visit our [Contact Page](https://drifty.vercel.app/contact).
+
+![Contact Us](https://github.com/user-attachments/assets/8ed584c7-91ef-45da-8486-a9854fe7b7b7)
 
 ## Support 🙏
 
