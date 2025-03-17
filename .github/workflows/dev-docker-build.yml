@@ -59,7 +59,7 @@ jobs:
           docker compose build ${{ matrix.image_name_suffix }}
       - name: Run Trivy security scan
         if: matrix.os == 'ubuntu-latest'
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.30.0
         continue-on-error: true
         with:
           image-ref: "drifty-${{ matrix.image_name_suffix }}"
