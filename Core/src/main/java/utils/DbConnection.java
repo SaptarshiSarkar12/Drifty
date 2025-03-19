@@ -1,6 +1,7 @@
 package utils;
 
 import properties.FileState;
+import properties.Program;
 import support.Job;
 
 import java.sql.*;
@@ -19,7 +20,7 @@ public final class DbConnection {
     }
 
     private Connection getConnection() throws SQLException {
-        String url = "jdbc:sqlite:drifty.db";
+        String url = "jdbc:sqlite:" + Program.get(Program.DATABASE_PATH);
         return DriverManager.getConnection(url);
     }
 
