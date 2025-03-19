@@ -37,13 +37,34 @@ public final class DbConnection {
     }
 
     public void createTables() throws SQLException {
-        String createSessionTableQuery = "CREATE TABLE IF NOT EXISTS SESSION (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, StartDate TEXT NOT NULL, EndDate TEXT);";
-        String createFileTableQuery = "CREATE TABLE IF NOT EXISTS FILE (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, FileName TEXT NOT NULL, Url TEXT NOT NULL, SaveTargetPath TEXT NOT NULL, Size INTEGER, DownloadStartTime TEXT, DownloadEndTime TEXT, State INTEGER NOT NULL, SessionId INTEGER NOT NULL, FOREIGN KEY(SessionId) REFERENCES Session(Id));";
-        try (PreparedStatement createSessionTableStatement = connection.prepareStatement(createSessionTableQuery);
-             PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery))
+        final String CREATE_SESSION_TABLE_QUERY = """
+            CREATE TABLE IF NOT EXISTS SESSION (
+                Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                StartDate TEXT NOT NULL,
+                EndDate TEXT
+            );
+        """;
+        final String CREATE_FILE_TABLE_QUERY = """
+            CREATE TABLE IF NOT EXISTS FILE (
+                Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                FileName TEXT NOT NULL,
+                Url TEXT NOT NULL,
+                SaveTargetPath TEXT NOT NULL,
+                Size INTEGER,
+                DownloadStartTime TEXT,
+                DownloadEndTime TEXT,
+                State INTEGER NOT NULL,
+                SessionId INTEGER NOT NULL,
+                FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
+            );
+        """;
+        try (PreparedStatement createSessionTableStatement = connection.prepareStatement(CREATE_SESSION_TABLE_QUERY);
+             PreparedStatement createFileTableStatement = connection.prepareStatement(CREATE_FILE_TABLE_QUERY))
         {
             createSessionTableStatement.executeUpdate();
             createFileTableStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new SQLException("Failed to create tables: " + e.getMessage());
         }
     }
 
@@ -71,7 +92,7 @@ public final class DbConnection {
         }
     }
 
-    public int addFileRecordToQueue(String fileName, String url, String saveTargetPath, int sessionId) throws SQLException {
+    public void addFileRecordToQueue(String fileName, String url, String saveTargetPath, int sessionId) throws SQLException {
         String insertFileQuery = "INSERT INTO FILE (FileName, Url, SaveTargetPath, State, SessionId) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, fileName);
@@ -83,7 +104,7 @@ public final class DbConnection {
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                return generatedKeys.getInt(1);
+                generatedKeys.getInt(1);
             } else {
                 throw new SQLException("Failed to insert record into FILE table, no ID generated.");
             }
