@@ -10,7 +10,7 @@ import java.util.Collection;
 
 public final class DbConnection {
     private static Connection connection;
-    private static DbConnection dbConnection;
+    private static volatile DbConnection dbConnection; // volatile keyword ensures that multiple threads handle the uniqueInstance variable correctly when it is being initialized to the DbConnection instance. This way we can avoid race conditions and ensure consistency in our database operations.
 
     private DbConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
@@ -25,10 +25,14 @@ public final class DbConnection {
     }
 
     public static DbConnection getInstance() throws SQLException {
-        if (dbConnection != null) {
-            return dbConnection;
+        if (dbConnection == null) {
+            // Synchronizing the block inside the if statement to make sure only one thread can enter at a time when the instance is null.
+            synchronized (DbConnection.class) {
+                if (dbConnection == null) {
+                    dbConnection = new DbConnection();
+                }
+            }
         }
-        dbConnection = new DbConnection();
         return dbConnection;
     }
 
