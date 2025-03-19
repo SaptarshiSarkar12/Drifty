@@ -29,6 +29,7 @@ public class Environment {
     private static boolean isAdministrator;
     private static DbConnection dbConnection;
     public static int currentSessionId;
+
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
     It first determines which yt-dlp program to copy out of resources based on the OS.
