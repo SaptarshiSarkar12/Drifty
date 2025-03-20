@@ -44,6 +44,7 @@ fileNames: [""] # Will be auto-retrieved if not provided
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
 directories: [""] # Use 'directories' when the download folder is different for each of the files
 ```
+
 </details>
 
 ### Drifty GUI
