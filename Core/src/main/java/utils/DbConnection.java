@@ -37,29 +37,29 @@ public final class DbConnection {
     }
 
     public void createTables() throws SQLException {
-        final String CREATE_SESSION_TABLE_QUERY = """
-            CREATE TABLE IF NOT EXISTS SESSION (
-                Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                StartDate TEXT NOT NULL,
-                EndDate TEXT
-            );
-        """;
-        final String CREATE_FILE_TABLE_QUERY = """
-            CREATE TABLE IF NOT EXISTS FILE (
-                Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                FileName TEXT NOT NULL,
-                Url TEXT NOT NULL,
-                SaveTargetPath TEXT NOT NULL,
-                Size INTEGER,
-                DownloadStartTime TEXT,
-                DownloadEndTime TEXT,
-                State INTEGER NOT NULL,
-                SessionId INTEGER NOT NULL,
-                FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
-            );
-        """;
-        try (PreparedStatement createSessionTableStatement = connection.prepareStatement(CREATE_SESSION_TABLE_QUERY);
-             PreparedStatement createFileTableStatement = connection.prepareStatement(CREATE_FILE_TABLE_QUERY))
+        final String createSessionTableQuery = """
+                CREATE TABLE IF NOT EXISTS SESSION (
+                    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    StartDate TEXT NOT NULL,
+                    EndDate TEXT
+                );
+            """;
+        final String createFileTableQuery = """
+                CREATE TABLE IF NOT EXISTS FILE (
+                    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    FileName TEXT NOT NULL,
+                    Url TEXT NOT NULL,
+                    SaveTargetPath TEXT NOT NULL,
+                    Size INTEGER,
+                    DownloadStartTime TEXT,
+                    DownloadEndTime TEXT,
+                    State INTEGER NOT NULL,
+                    SessionId INTEGER NOT NULL,
+                    FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
+                );
+            """;
+        try (PreparedStatement createSessionTableStatement = connection.prepareStatement(createSessionTableQuery);
+             PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery))
         {
             createSessionTableStatement.executeUpdate();
             createFileTableStatement.executeUpdate();
