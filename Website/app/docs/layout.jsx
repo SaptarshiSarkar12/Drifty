@@ -16,13 +16,6 @@ const banner = (
   </Banner>
 );
 
-const navbar = (
-  <Navbar
-    logo={<span></span>}
-    className="opacity-100 translate-y-0 visible"
-  ></Navbar>
-);
-
 export default async function DocsLayout({ children }) {
   return (
     <>
