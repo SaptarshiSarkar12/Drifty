@@ -41,7 +41,19 @@
 }
 
 html {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .nextra-mobile-nav {
+    background: var(--dark-bg) !important;
+    background-image: none !important; /* Remove gradient */
+  }
+
+  .nextra-mobile-nav a,
+  .nextra-mobile-nav span,
+  .nextra-mobile-nav button,
+  .nextra-mobile-nav li {
+    color: #fff !important;
+  }
 }

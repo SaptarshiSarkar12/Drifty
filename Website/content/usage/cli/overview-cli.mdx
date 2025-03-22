@@ -1,9 +1,14 @@
+import { Callout } from "nextra/components";
+
 # Drifty CLI Overview
 
 Drifty CLI is the command-line interface for Drifty that allows you to download files from the internet with just a few commands. You can integrate Drifty CLI into your scripts and automate the download process. So, it is important to understand the different commands and options available in Drifty CLI.
 
-> [!NOTE]
-> We have assumed that the name of the executable for Drifty CLI is `drifty`. Replace `drifty` with the actual executable name if it is different in your case.
+<Callout type="info">
+  We have assumed that the name of the executable for Drifty CLI is `drifty`.
+  Replace `drifty` with the actual executable name if it is different in your
+  case.
+</Callout>
 
 ![Drifty CLI Help](https://github.com/user-attachments/assets/b695f3b4-c695-4dfe-a431-9742671488f9)
 
@@ -122,9 +127,11 @@ drifty --get
 
 ### Destination Download Folder
 
-> [!NOTE]
-> This command is not a standalone command. It must be used with the URL of the file you want to download.
-> You can also use the `--name` command in conjunction with this command.
+<Callout type="info">
+  This command is not a standalone command. It must be used with the URL of the
+  file you want to download. You can also use the `--name` command in
+  conjunction with this command.
+</Callout>
 
 **Command**: `--location <path>` or `-l <path>`
 
@@ -138,9 +145,11 @@ drifty https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz --
 
 ### File Name
 
-> [!NOTE]
-> This command is not a standalone command. It must be used with the URL of the file you want to download.
-> You can also use the `--location` command in conjunction with this command.
+<Callout type="info">
+  This command is not a standalone command. It must be used with the URL of the
+  file you want to download. You can also use the `--location` command in
+  conjunction with this command.
+</Callout>
 
 **Command**: `--name <filename>` or `-n <filename>`
 
