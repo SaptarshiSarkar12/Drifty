@@ -35,7 +35,7 @@ public class Drifty_GUI extends Application {
     public static void main(String[] args) {
         Mode.setGUIMode();
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
-        launch(args);
+        launch(args); // First init() is called, then start()
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Drifty_GUI extends Application {
         scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
-        primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+        primaryStage.focusedProperty().addListener(((_, _, _) -> {
             if (UIController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
@@ -105,9 +105,9 @@ public class Drifty_GUI extends Application {
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
-        website.setOnAction(e -> openWebsite(DRIFTY_WEBSITE_URL));
+        website.setOnAction(_ -> openWebsite(DRIFTY_WEBSITE_URL));
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(e -> {
+        exit.setOnAction(_ -> {
             msgBroker.msgLogInfo(GUI_APPLICATION_TERMINATED);
             Environment.terminate(0);
         });
@@ -126,7 +126,7 @@ public class Drifty_GUI extends Application {
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
-        fullScreen.setOnAction(e -> toggleFullScreen());
+        fullScreen.setOnAction(_ -> toggleFullScreen());
         menu.getItems().setAll(fullScreen);
         return menu;
     }
@@ -140,12 +140,12 @@ public class Drifty_GUI extends Application {
         MenuItem feature = new MenuItem("Suggest a Feature");
         MenuItem checkForUpdates = new MenuItem("Check for Updates");
         MenuItem about = new MenuItem("About Drifty");
-        contactUs.setOnAction(e -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
-        contribute.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
-        securityVulnerability.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(e -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
-        checkForUpdates.setOnAction(e -> new Thread(() -> {
+        contactUs.setOnAction(_ -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
+        contribute.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
+        bug.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
+        securityVulnerability.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
+        feature.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        checkForUpdates.setOnAction(_ -> new Thread(() -> {
             if (Utility.isOffline()) {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
                 noInternet.getResponse();
@@ -153,7 +153,7 @@ public class Drifty_GUI extends Application {
                 checkForUpdates();
             }
         }).start());
-        about.setOnAction(event -> {
+        about.setOnAction(_ -> {
             if (aboutInstance == null) {
                 aboutInstance = new About();
             }
@@ -176,13 +176,13 @@ public class Drifty_GUI extends Application {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
-        wipeHistory.setOnAction(e -> {
+        wipeHistory.setOnAction(_ -> {
             ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false, false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }
         });
-        settings.setOnAction(e -> settingsInstance.show());
+        settings.setOnAction(_ -> settingsInstance.show());
         menu.getItems().addAll(wipeHistory, settings);
         return menu;
     }
@@ -190,8 +190,8 @@ public class Drifty_GUI extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(e -> UIController.getDirectory());
-        miDir.setOnAction(e -> {
+        miAdd.setOnAction(_ -> UIController.getDirectory());
+        miDir.setOnAction(_ -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
             UIController.resetDownloadFoldersToActiveList();
