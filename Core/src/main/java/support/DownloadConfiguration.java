@@ -23,9 +23,9 @@ import static utils.Utility.randomString;
 public class DownloadConfiguration {
     private final String directory;
     private final ArrayList<HashMap<String, Object>> fileData;
-    private final LinkType linkType;
     private final String filename;
     private final MessageBroker msgBroker = Environment.getMessageBroker();
+    private LinkType linkType;
     private String link;
     private int fileCount;
     private int filesProcessed;
@@ -247,6 +247,7 @@ public class DownloadConfiguration {
             String link = data.get("link").toString();
             String filename = data.get("filename").toString();
             String directory = data.get("directory").toString();
+            linkType = LinkType.getLinkType(link);
             Job job;
             if (linkType.equals(LinkType.SPOTIFY)) {
                 String downloadLink = data.get("downloadLink").toString();
@@ -259,7 +260,7 @@ public class DownloadConfiguration {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(
                         filename,
-                        link,
+                        job.getDownloadLink(),
                         directory,
                         currentSessionId
                 );

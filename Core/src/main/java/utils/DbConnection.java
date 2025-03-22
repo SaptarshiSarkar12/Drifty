@@ -131,6 +131,15 @@ public final class DbConnection {
         }
     }
 
+    public void updateFileName(int fileId, String fileName) throws SQLException {
+        String updateFileQuery = "UPDATE FILE SET FileName = ? WHERE Id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
+            preparedStatement.setString(1, fileName);
+            preparedStatement.setInt(2, fileId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
     public void updateFileInfo(int fileId, FileState state, String endDownloadingTime, int size) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ?, Size = ? WHERE Id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {

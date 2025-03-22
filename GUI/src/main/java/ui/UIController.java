@@ -16,7 +16,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -187,7 +186,7 @@ public final class UIController {
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
         form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
-        form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
+        form.tfDir.textProperty().addListener(((_, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
                 if (newValue.isEmpty()) {
@@ -208,7 +207,7 @@ public final class UIController {
     }
 
     private void setControlActions() {
-        form.btnSave.setOnAction(e -> new Thread(() -> {
+        form.btnSave.setOnAction(_ -> new Thread(() -> {
             UPDATING_BATCH.setValue(true);
             String link = getLink();
             filename = getFilename();
@@ -225,7 +224,7 @@ public final class UIController {
             setDir(folders.getDownloadFolder());
             UPDATING_BATCH.setValue(false);
         }).start());
-        form.btnStart.setOnAction(e -> new Thread(() -> {
+        form.btnStart.setOnAction(_ -> new Thread(() -> {
             if (PROCESSING_BATCH.getValue().equals(true)) {
                 return;
             }
@@ -236,9 +235,9 @@ public final class UIController {
                 new Thread(batchDownloader()).start();
             }
         }).start());
-        form.tfDir.setOnAction(e -> updateBatch());
-        form.tfFilename.setOnAction(e -> updateBatch());
-        form.tfLink.setOnKeyTyped(e -> processLink());
+        form.tfDir.setOnAction(_ -> updateBatch());
+        form.tfFilename.setOnAction(_ -> updateBatch());
+        form.tfLink.setOnKeyTyped(_ -> processLink());
         form.listView.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
                 if (UPDATING_BATCH.getValue().equals(true)) {
@@ -307,7 +306,7 @@ public final class UIController {
     These methods are the meat of this class. They handle all the various processing that happens when the
     user engages the form and attempts to download links.
 
-    Runnables are used to prevent the form from pin-wheeling (macs) or hour-glassing(others) so that the appearance
+    Runnables are used to prevent the form from pin-wheeling (Macs) or hour-glassing(others) so that the appearance
     application freeze never happens. Runnables are assigned to Tasks.
      */
     private Runnable verifyLink(String link) {
@@ -390,10 +389,10 @@ public final class UIController {
                 These bindings allow the Worker thread to post relevant information to the UI, including the progress bar which
                 accurately depicts the remaining number of filenames to extract from the link. However, if there is only one filename
                 to extract, the progress bar goes through a static animation to indicate that the program is not frozen.
-                The controls that are bound to the thread cannot have their text updated while they are bound or else an error will be thrown and possibly the program execution halted.
+                The controls that are bound to the thread cannot have their text updated while they are bound, or else an error will be thrown and possibly the program execution halted.
                 */
-                form.lblDownloadInfo.textProperty().bind(((Worker<Void>) task).messageProperty());
-                form.pBar.progressProperty().bind(((Worker<Void>) task).progressProperty());
+                form.lblDownloadInfo.textProperty().bind(task.messageProperty());
+                form.pBar.progressProperty().bind(task.progressProperty());
             });
             setLink(config.getLink());
             Thread retrieveFileData = new Thread(task);
@@ -415,7 +414,7 @@ public final class UIController {
             UPDATING_BATCH.setValue(false);
             form.lblDownloadInfo.setTextFill(GREEN);
             IntegerProperty speedValueProperty = new SimpleIntegerProperty();
-            speedValueProperty.addListener(((observable, oldValue, newValue) -> {
+            speedValueProperty.addListener(((_, oldValue, newValue) -> {
                 if (!oldValue.equals(newValue)) {
                     speedValue += (int) newValue;
                     speedValueUpdateCount++;
@@ -486,8 +485,6 @@ public final class UIController {
         for (Job job : getJobs().jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
-                System.out.println("Old Job: " + oldJob.getFilename() + " " + oldJob.getSourceLink());
-                System.out.println("New Job: " + newJob.getFilename() + " " + newJob.getSourceLink());
                 break;
             }
         }
@@ -497,13 +494,12 @@ public final class UIController {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
                         newJob.getFilename(),
-                        oldJob.getSourceLink(),
+                        oldJob.getDownloadLink(),
                         newJob.getDir()
                 );
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("Job Updated: " + newJob.getFilename());
         } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
@@ -550,8 +546,8 @@ public final class UIController {
 
     private void delayFolderSave(String folderString, File folder) {
         /*
-        If the user is typing a file path into the field, we don't want to save every folder 'hit' so we wait 3 seconds
-        and if the String is still the same value, then we commit the folder to the list.
+        If the user is typing a file path into the field, we don't want to save every folder 'hit'
+        so we wait 3 seconds, and if the String is still the same value, then we commit the folder to the list.
         */
         new Thread(() -> {
             sleep(3000);
@@ -569,14 +565,14 @@ public final class UIController {
         MenuItem miClear = new MenuItem("Clear");
         MenuItem miHelp = new MenuItem("Help");
         SeparatorMenuItem separator = new SeparatorMenuItem();
-        miDel.setOnAction(e -> {
+        miDel.setOnAction(_ -> {
             Job job = form.listView.getSelectionModel().getSelectedItem();
             if (job != null) {
                 removeJobFromList(job);
                 clearControls();
             }
         });
-        miClear.setOnAction(e -> {
+        miClear.setOnAction(_ -> {
             getJobs().clear();
             commitJobListToListView();
             clearLink();
@@ -588,7 +584,7 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miHelp.setOnAction(e -> handleHelpWindow());
+        miHelp.setOnAction(_ -> handleHelpWindow());
         return new ContextMenu(miDel, miClear, separator, miHelp);
     }
 
@@ -597,11 +593,11 @@ public final class UIController {
         ContextMenu cm = new ContextMenu();
         for (String folder : folders.getFolders()) {
             MenuItem mi = new MenuItem(folder);
-            mi.setOnAction(e -> setDir(folder));
+            mi.setOnAction(_ -> setDir(folder));
             cm.getItems().add(mi);
         }
         MenuItem mi = new MenuItem("Add Folder");
-        mi.setOnAction(e -> getDirectory());
+        mi.setOnAction(_ -> getDirectory());
         cm.getItems().add(mi);
         cm.getStyleClass().add("rightClick");
         form.tfDir.setContextMenu(cm);
@@ -625,7 +621,7 @@ public final class UIController {
 
     public static void clearJobHistory() {
         /*
-        Called from the Edit menu, this wipes out the job history that is stored in the users file system
+        Called from the Edit menu, this wipes out the job history which is stored in the users file system
          */
         INSTANCE.getHistory().clear();
         try {
@@ -845,7 +841,7 @@ public final class UIController {
         helpStage.setScene(infoScene);
         helpStage.setAlwaysOnTop(true);
         helpStage.setTitle("Help");
-        helpStage.setOnCloseRequest(e -> helpStage.close());
+        helpStage.setOnCloseRequest(_ -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
         scrollPane.setVvalue(0.0);

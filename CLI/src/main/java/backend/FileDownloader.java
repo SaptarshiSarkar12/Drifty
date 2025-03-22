@@ -15,6 +15,7 @@ import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -47,7 +48,7 @@ public class FileDownloader implements Runnable {
         this.linkType = LinkType.getLinkType(link);
         this.fileName = job.getFilename();
         this.dir = job.getDir();
-        this.directoryPath = Paths.get(dir);
+        this.directoryPath = Paths.get(dir).toAbsolutePath();
         this.downloadMetrics = new DownloadMetrics();
         this.numberOfThreads = downloadMetrics.getThreadCount();
         this.threadMaxDataSize = downloadMetrics.getMultiThreadingThreshold();
@@ -181,6 +182,8 @@ public class FileDownloader implements Runnable {
                         String conversionProcessMessage = utils.Utility.convertToMp3(directoryPath.resolve(fileName).toAbsolutePath());
                         if (conversionProcessMessage.contains("Failed")) {
                             M.msgDownloadError(conversionProcessMessage);
+                            fileName = fileName.replace("mp3", "webm"); // If mp3 conversion fails, then the file name will be changed to the webm file.
+                            db.updateFileName(fileId, fileName);
                             throw new Exception(conversionProcessMessage);
                         } else {
                             endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
@@ -250,7 +253,7 @@ public class FileDownloader implements Runnable {
             DbConnection db = DbConnection.getInstance();
             String endDownloadingTime;
             try {
-                fileId = db.addFileRecord(fileName, link, directoryPath.resolve(fileName).toString(), startDownloadingTime, sessionId);
+                fileId = db.addFileRecord(fileName, link, directoryPath.toString(), startDownloadingTime, sessionId);
 
                 // If the link is of a YouTube or Instagram video, then the following block of code will execute.
                 if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
@@ -278,6 +281,10 @@ public class FileDownloader implements Runnable {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgLinkError(INVALID_LINK);
+            } catch (InvalidPathException e) {
+                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
+                M.msgDownloadError("The downloaded file path (" + directoryPath.resolve(fileName) + ") is invalid! " + e.getMessage());
             } catch (IOException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
@@ -287,7 +294,7 @@ public class FileDownloader implements Runnable {
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            M.msgDownloadError("An error occurred while trying to connect to the database! " + e.getMessage());
         }
     }
 }
