@@ -1,4 +1,4 @@
-<a href="https://saptarshisarkar12.github.io/Drifty/">
+<a href="https://drifty.vercel.app/">
     <p align="center">
         <img src="https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/92b11509-2115-4f80-8188-19821b258332" alt="Drifty Banner with App Icon">
     </p>
@@ -12,7 +12,7 @@
 
 <p align="center">
     <a href="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml"><img src="https://github.com/SaptarshiSarkar12/Drifty/actions/workflows/build.yml/badge.svg" alt="Build Workflow Status"/></a> 
-    <a href="https://saptarshisarkar12.github.io/Drifty/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/github-pages?label=Website Deployment" alt="GitHub Pages Deployment Status"></a>
+    <a href="https://drifty.vercel.app/"><img src="https://img.shields.io/github/deployments/SaptarshiSarkar12/Drifty/production?logo=Vercel&label=Website%20Deployment" alt="Vercel Website Deployment Status"></a>
 </p>
 
 <p align="center">
@@ -30,6 +30,9 @@
 
 See the video below to know how to use the application. For any help, you can open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose/).
 
+<details>
+<summary>YAML configuration for Batch Downloading via Drifty CLI</summary>
+
 For **Batch Downloading** via **Drifty CLI**, the path to a YAML file has to be provided to it.
 It should have the following structure :
 
@@ -41,6 +44,8 @@ fileNames: [""] # Will be auto-retrieved if not provided
 directory: [""] # Use 'directory' when all the files to be downloaded in the same folder.
 directories: [""] # Use 'directories' when the download folder is different for each of the files
 ```
+
+</details>
 
 ### Drifty GUI
 
@@ -56,14 +61,14 @@ The _Application_ **Drifty** is built using the following technologies :
 
 - [Java](https://www.oracle.com/java/#rc30p1) — A programming language for building machine-independent applications.
 
-The [_Website_](https://saptarshisarkar12.github.io/Drifty/) of **Drifty** is built using the following technologies :
+The [_Website_](https://drifty.vercel.app/) of **Drifty** is built using the following technologies :
 
 - [Next.js](https://nextjs.org/) — A JavaScript framework for building server-rendered React applications.
 - [Tailwind CSS](https://tailwindcss.com/) — A utility-first CSS framework.
 
 ## Join the Drifty Testing Program 🚀
 
-Drifty is released in _4 phases_, namely **Alpha**, **Beta**, **Release Candidate**, and **Stable**. If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can download the executables for the respective phases from the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) or try the Docker images for the respective phases. </br>
+Drifty is released in _4 phases_, namely **Alpha**, **Beta**, **Release Candidate**, and **Stable**. If you want to test the unstable (**Alpha** or **Beta**) or the mostly stable versions (**Release Candidate**), you can download the executables for the respective phases from the [`Drifty website`](https://drifty.vercel.app/download) or try the Docker images for the respective phases. </br>
 If you find any issues during the testing period, please open an [`issue`](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) or join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) to share your feedback.
 
 ## Quickstart 🚀🚀
@@ -72,9 +77,9 @@ For **Users** :
 
 ### Using Drifty Application executable 📦
 
-1. Visit the [`Drifty website`](https://saptarshisarkar12.github.io/Drifty/) </p>
+1. Visit the [`Drifty website`](https://drifty.vercel.app/) </p>
    ![Homepage of Drifty Website (Light Mode)](https://github.com/user-attachments/assets/2194dfd6-4f39-45d9-a287-eb35c534bc33)
-2. Click on [`Get Started or Download`](https://saptarshisarkar12.github.io/Drifty/#download) </p>
+2. Click on [`Get Started or Download`](https://drifty.vercel.app/download) </p>
    ![Download Button in Drifty Website (Dark mode) pointed out](https://github.com/user-attachments/assets/d97a6142-55eb-43b7-91e9-96537f6b5507)
 3. The latest released version of Drifty will be selected by default. You can also select other previous versions from the dropdown menu. You can download the executable for your operating system by clicking on the **Download** icon next to the file you wish to download. Check the operating system icons to ensure you are downloading the correct file. </p>
 
@@ -82,7 +87,7 @@ For **Users** :
    ![Download page of Drifty showing available versions](https://github.com/user-attachments/assets/61e58316-4e0b-4d6c-ba15-c38205beccd4)
 
 4. Navigate to the Downloads folder and execute the downloaded file. If you are installing Drifty GUI, complete the steps in the macOS or Windows MSI installer wizard that appears on your screen. </p>
-5. Check out the [`Demo`](https://saptarshisarkar12.github.io/Drifty/#demo) section for examples of how to use the application. </p>
+5. Check out the [`Demo`](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#demo-) section for examples of how to use the application. </p>
 6. If you like the project, please leave a [`star`](https://github.com/SaptarshiSarkar12/Drifty/stargazers) on GitHub. </p>
 7. For any issues or feature requests, you can join our [`Discord Server`](https://discord.gg/DeT4jXPfkG) and share your feedback.
 
