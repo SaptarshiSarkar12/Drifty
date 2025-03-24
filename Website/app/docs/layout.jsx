@@ -22,7 +22,7 @@ const version = await (async () => {
 
     const res = await fetch(
       "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest",
-      { headers }
+      { headers },
     );
 
     if (res.status === 304) {
