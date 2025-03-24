@@ -13,7 +13,7 @@ export const metadata = {
 const version = await (async () => {
   try {
     const res = await fetch(
-      "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest",
+      "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest"
     );
     const data = await res.json();
     return data.tag_name || "Unknown";
@@ -23,7 +23,7 @@ const version = await (async () => {
 })();
 
 const banner = (
-  <Banner storageKey="drifty-banner-key-01">
+  <Banner storageKey="drifty-banner-storage-01">
     👋 Welcome to Drifty Docs! Now supporting {version} -- need help? Ask the{" "}
     <a
       href="https://discord.gg/DeT4jXPfkG"
