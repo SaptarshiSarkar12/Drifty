@@ -1,4 +1,4 @@
-export default {
+const meta = {
   index: { display: "hidden" },
   about: { display: "hidden" },
   contact: { display: "hidden" },
@@ -12,3 +12,5 @@ export default {
     },
   },
 };
+
+export default meta;
