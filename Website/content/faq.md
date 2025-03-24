@@ -34,4 +34,5 @@
    ➡️ Currently, Beta features are available only through Docker images. You can check the official [GitHub Docs for Drifty](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-).
 
 8. **Do you require any detailed explanations of Drifty?**
+
    ➡️ For more queries related to the further improvement to this project, you can raise an [issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) or reach out to the maintainers on the [discord server](https://discord.com/invite/DeT4jXPfkG). We will be happy to help you out.
