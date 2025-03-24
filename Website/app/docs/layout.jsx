@@ -10,9 +10,35 @@ export const metadata = {
   description: "Documentation page for Drifty",
 };
 
+const version = await (async () => {
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest"
+    );
+    const data = await res.json();
+    return data.tag_name || "Unknown";
+  } catch {
+    return "Unknown";
+  }
+})();
+
 const banner = (
   <Banner storageKey="drifty-banner-key-01">
-    Welcome to Drifty Documentation!
+    👋 Welcome to Drifty Docs! Now supporting {version} -- need help? Ask the{" "}
+    <a
+      href="https://discord.gg/DeT4jXPfkG"
+      className="underline underline-offset-2"
+    >
+      community
+    </a>{" "}
+    or report an{" "}
+    <a
+      href="https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose"
+      className="underline underline-offset-2"
+    >
+      issue
+    </a>
+    !
   </Banner>
 );
 
