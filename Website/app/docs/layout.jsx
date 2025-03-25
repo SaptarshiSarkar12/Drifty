@@ -22,7 +22,7 @@ const version = await (async () => {
 
     const res = await fetch(
       "https://api.github.com/repos/SaptarshiSarkar12/Drifty/releases/latest",
-      { headers },
+      { headers }
     );
 
     if (res.status === 304) {
@@ -106,6 +106,10 @@ export default async function DocsLayout({ children }) {
           autoCollapse: true,
           defaultMenuCollapseLevel: 1,
         }}
+        feedback={{
+          content: "Something Wrong? Help Us Improve!",
+        }}
+        editLink={null}
       >
         {children}
       </Layout>

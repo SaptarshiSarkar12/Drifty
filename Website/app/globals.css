@@ -41,9 +41,7 @@
 }
 
 html {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -70,22 +68,22 @@ html {
 }
 
 html {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .nextra-banner,
 html.dark .nextra-banner {
-  position: relative; /* Ensures it stays in normal flow */
-  width: 100vw;
-  margin-left: calc(-50vw + 50%); /* Centers it properly */
-  background: inherit;
+  position: relative;
+  width: 98vw;
+  margin-left: calc(-49vw + 50%);
+  background: var(--light-accent);
   color: currentColor;
-  box-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.08),
-    0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.15);
   backdrop-filter: brightness(1.08) contrast(1.02);
   border-radius: 6px;
+}
+
+html.dark .nextra-banner {
+  background: var(--dark-accent);
 }
