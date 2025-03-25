@@ -1,3 +1,5 @@
+import VideoPopup from "../../../components/docs/VideoPopup";
+
 # Drifty GUI Overview
 
 Drifty GUI is a graphical user interface for Drifty that allows you to download files from the internet with just a few clicks. It provides a simple and intuitive interface that makes downloading files easy and convenient.
@@ -26,7 +28,21 @@ The link input field is located at the top-center portion of the window and is w
 ## The Directory Input Field
 
 The directory input field is located in the middle-center portion of the window and is where you can specify the directory where you want to save the downloaded file. By default, the directory is set to `{user_home}/Downloads`. You can manage directories by right-clicking on the directory input field to open a context menu that lists all previously used download directories. You can also **Add** a new directory by clicking on **Add Folder**.
+
 ![Directory Context Menu](https://github.com/user-attachments/assets/303a593b-392f-46ea-891b-fe8e5a02fe49)
+
+If you click above the directory input field just beside the Directory label, it will open the context menu to manage directories.
+
+![Directory Context Menu](https://github.com/user-attachments/assets/9a6e19ee-3733-4569-9219-898c6dc74625)
+
+You can select a directory from the directory list by clicking on it and deselect it by clicking on it again with the Ctrl key pressed. You can also Remove a directory from the list by right-clicking on it and selecting the Remove option.
+
+<br />
+
+<VideoPopup
+  videoUrl="https://github.com/user-attachments/assets/11ff7b69-a926-492b-83aa-f032c6cde376"
+  buttonText="How to manage directories Demo"
+/>
 
 ## The File Name Input Field
 
@@ -44,3 +60,32 @@ The start button is located at the bottom-right portion of the window and is use
 
 The download queue is located on the left side of the window and displays the list of files that are currently in the download queue. You can manage the download queue by right-clicking on a file to open the context menu, which allows you to **Delete** the selected file from the queue or **Clear** files from the queue. The menu also has the **Information** option to show the **Help** window.
 ![Download Queue Context Menu](https://github.com/user-attachments/assets/f719d2f5-7ed9-4f4a-b29f-b3c1254a89c5)
+
+## Check for Updates
+
+Drifty GUI automatically checks for updates when you start the application. If a new version is available, a popup will appear with the option to update to the latest version. By clicking on Yes button, Drifty GUI will download the latest version and install it automatically.
+
+![Download Update Auto](https://github.com/user-attachments/assets/e262b9cf-bae2-4574-9e2f-ad0c2abb6062)
+
+Alternatively, you can manually check for updates by clicking on the Check for Updates button under the Help menu.
+
+![Download Update Manual](https://github.com/user-attachments/assets/4e19c874-60eb-49d4-a3f1-0a959b75e885)
+
+## Settings
+
+The settings window allows you to configure various options related to the application. You can open the settings window by clicking on the Settings option under the Edit menu.
+
+![Drifty Settings](https://github.com/user-attachments/assets/e96966f7-1e9a-4598-86a8-572ef899f8d5)
+
+In the settings window, you can configure the following options:
+
+- **Auto-paste**: Enable or disable the auto-paste feature.
+- **Get Early Access Updates**: Enable or disable early access updates.
+- **Theme**: Choose between Light and Dark themes.
+- **Default Download Directory**: Set the default download directory.
+
+## About Drifty
+
+The **About Drifty** window provides information about the application, including the version number and links to the project website, the source code repository and discord server. You can open the **About Drifty** window by clicking on the **About Drifty** option under the **Help** menu.
+
+![About Drifty](https://github.com/user-attachments/assets/b24171df-3763-4ae0-ba72-a902d4912465)

@@ -14,9 +14,9 @@ Drifty CLI allows you to download files from the internet using a simple command
 3. Enter the URL of the video you want to download.
 4. After validating the URL, Drifty will prompt you to choose a download destination folder. Enter
 
-   - `.` if you want to download the video in the default download directory (which is `{user_home}/Downloads` in most cases).
+   - `.` if you want to download the video in the default download directory (which is `{user_home}/Downloads{:sh}` in most cases).
    - `L` if you want to use the last used directory.
-   - the absolute path of the directory where you want to save the video, e.g., `/home/user/Videos`.
+   - the absolute path of the directory where you want to save the video, e.g., `/home/user/Videos{:sh}`.
 
    ![Download Destination Prompt](https://github.com/user-attachments/assets/1eb90bd7-1ae8-47f3-8a16-e4b8d5c214e6)
 
@@ -57,25 +57,38 @@ Drifty CLI allows you to download files from the internet using a simple command
 ## Using Drifty CLI Queue
 
 1. Open your terminal in the directory containing the Drifty CLI executable.
-2. Check if any URLs are already in the download queue by using the `--list` command.
+2. Check if any URLs are already in the download queue by using the `--list{:sh}` command.
+
    ```bash
    drifty --list
    ```
+
    ![List Command](https://github.com/user-attachments/assets/bc109432-43ef-461a-bc2e-751ce78e87b4)
-3. Add URLs to the download queue using the `--add` command.
+
+3. Add URLs to the download queue using the `--add{:sh}` command.
+
    ```bash
    drifty --add "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz" "https://www.youtube.com/watch?v=pBy1zgt0XPc"
    ```
+
    ![Add Command](https://github.com/user-attachments/assets/5043cfe3-adcf-45a1-aead-33f3dec8a8cd)
-4. You can view the URLs just added to the queue by using the `--list` command.
+
+4. You can view the URLs just added to the queue by using the `--list{:sh}` command.
+
    ```bash
    drifty --list
    ```
+
    ![List Command](https://github.com/user-attachments/assets/b675b9e2-2159-4125-8996-535ba03f6cfe)
-5. Start downloading the URLs in the download queue using the `--get` command.
+
+5. Start downloading the URLs in the download queue using the `--get{:sh}` command.
+
    ```bash
    drifty --get
    ```
+
    ![Get Command](https://github.com/user-attachments/assets/0481a556-fea1-4d4f-9383-8e1d842ee388)
+
 6. The files will be downloaded sequentially to the default download directory. After the download is complete, Drifty CLI will automatically remove the URLs from the queue and exit.
+
    ![Queue Download Done](https://github.com/user-attachments/assets/6ecea884-9587-4a7a-9a62-8b3052ac3a1d)
