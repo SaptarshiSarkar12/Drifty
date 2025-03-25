@@ -47,8 +47,6 @@ directories: [""] # Use 'directories' when the download folder is different for 
 
 </details>
 
-</details>
-
 ### Drifty GUI
 
 https://github.com/SaptarshiSarkar12/Drifty/assets/105960032/aa7ea548-f312-4345-a053-d3ee13e67c8e
