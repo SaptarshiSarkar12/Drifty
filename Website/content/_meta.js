@@ -1,6 +1,8 @@
-export default {
-  index: "Overview",
+const meta = {
+  index: "",
   quickstart: "",
   usage: "",
   development: "",
 };
+
+export default meta;
