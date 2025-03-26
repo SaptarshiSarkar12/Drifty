@@ -40,7 +40,7 @@ For the purposes of this Privacy Policy:
   * Company (referred to as either "the Company", "We", "Us" or "Our" in this
     Agreement) refers to Drifty.
 
-  * Country refers to: West Bengal, India
+  * Country refers to: India
 
   * Device means any device that can access the Service such as a computer, a
     cellphone or a digital tablet.
@@ -301,4 +301,4 @@ If you have any questions about this Privacy Policy, You can contact us:
 
   * By email: saptarshi.programmer@gmail.com
 
-  * By visiting this page on our website: https://saptarshisarkar12.github.io/Drifty/
+  * By visiting this page on our website: https://drifty.vercel.app/contact

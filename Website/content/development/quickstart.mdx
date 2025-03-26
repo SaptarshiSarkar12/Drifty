@@ -24,7 +24,7 @@ After the project has been cloned successfully, the **`Drifty`** directory will 
 
 ### Prerequisites
 
-- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
+- [Java 23](https://www.oracle.com/java/technologies/downloads/#java23)
 - [Maven](https://maven.apache.org/download.cgi)
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/) (**Recommended**)
 
@@ -42,8 +42,8 @@ This command will install all the dependencies required for the maven project.
 
 1. Open the project in IntelliJ IDEA.
 2. Follow the below steps to run the project:
-   - Open the `Drifty_CLI` Java class in the `CLI/src/main/java/main` directory and click on the run button. This will start the Drifty CLI application.
-   - Open the `Drifty_GUI` Java class in the `GUI/src/main/java/main` directory and click on the run button. This will start the Drifty GUI application.
+   - Open the `Drifty_CLI` Java class in the `CLI/src/main/java/main{:sh}` directory and click on the run button. This will start the **Drifty CLI** application.
+   - Open the `Drifty_GUI` Java class in the `GUI/src/main/java/main{:sh}` directory and click on the run button. This will start the **Drifty GUI** application.
 3. Make changes to the code and see them reflected in the application. Re-run the project after each change to see the updated output.
 
 ### Debugging Drifty Application
@@ -55,7 +55,7 @@ To debug the project, you can set breakpoints in the code and run the project in
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/en/download/)
-- [npm](https://www.npmjs.com/get-npm)
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [WebStorm](https://www.jetbrains.com/webstorm/) (**Recommended**) (You can also use any other IDE of your choice)
 
 ### Install Dependencies
@@ -73,6 +73,10 @@ To run the website locally in development mode, use the following command:
 ```bash
 npm run dev
 ```
+
+<Callout type="info">
+   You need to run `npm run build{:sh}` before running the website in development mode for the first time to generate the required files for the search bar in documentation, to work properly.
+</Callout>
 
 This will start the development server, and you can access the website at [`http://localhost:3000{:sh}`](http://localhost:3000) in your browser.
 Make changes to the website code from your IDE and see them reflected in real-time in the browser.

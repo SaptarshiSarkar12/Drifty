@@ -56,12 +56,11 @@ directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
 
 - **links** (**Required**): List of URLs to download.
 - **fileNames** (**Optional**): List of file names to save the downloaded files. The order should match the order of URLs. If not specified, the file name will be automatically detected from the URL.
-- **directory** or **directories** (**Optional**): Specify the directory where the files will be saved. Use **directory** to save all files in the same directory. Use **directories** to save each file in the corresponding directory specified in the order of URLs. By default, files are saved in the last used directory or the default download directory (`{user_home}/Downloads`) if not specified.
+- **directory** or **directories** (**Optional**): Specify the directory where the files will be saved. Use **directory** to save all files in the same directory. Use **directories** to save each file in the corresponding directory specified in the order of URLs. By default, files are saved in the last used directory or the default download directory (`user_home/Downloads{:sh}`) if not specified.
 
 **Example Configuration**:
 
 ```yaml filename="batch.yaml" showLineNumbers
-# batch.yaml (You can name the file as you like)
 links:
   [
     "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz",

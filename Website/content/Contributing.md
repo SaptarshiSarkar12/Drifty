@@ -24,7 +24,7 @@ To report any bugs or any difficulties you are facing, you can create an issue b
 1. **Bug Report for Application**:
    You can create a **Bug Report for Application** to report any bug related to the application, including installation problems and crashes.
 2. **Bug report for Website**:
-   You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://saptarshisarkar12.github.io/Drifty/).
+   You can create an issue in this category if you encounter any bugs or issues in the [official website of Drifty](https://drifty.vercel.app/).
 3. **Documentation Change Request**:
    Raise an issue if you think any improvements can be made in the Documentation of Drifty.
 4. **Feature Request for Drifty Application**:
@@ -38,31 +38,38 @@ If none of the above categories applies to your case, feel free to create an iss
 
 [Pull requests](https://github.com/SaptarshiSarkar12/Drifty/pulls) are a fantastic way to bring your ideas to life in this project! Start by opening an issue to describe your proposed changes and discuss them with the maintainers. Once the issue is assigned to you, you can go ahead and submit your pull request.
 
+### Things to keep in mind while creating a Pull Request
+
+1. Before opening a pull request, please ensure that **each commit is signed off** using the **Developer Certificate of Origin (DCO)** (i.e., by using the `-s{:sh}` or `--signoff{:sh}` flag with `-S{:sh}` or `--gpg-sign{:sh}`). This confirms that _**you have the rights to contribute the code under the project's licensing terms**_. For more information, please see [**GitHub's guide on commit signoffs**](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits).
+2. Please ensure that your pull request is **linked to an issue**. If the issue does not exist, please create one.
+3. If your task is not yet complete, please mark it as a [**draft** pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft). This will help the maintainers to understand that the task is still in progress.
+4. Please fill out the [**Pull Request Template**](https://github.com/SaptarshiSarkar12/Drifty/blob/master/.github/pull_request_template.md) while creating a Pull Request. This will help the maintainers to understand the changes you have made and the purpose of the Pull Request.
+
 ## What does each Label mean in Issues and Pull Requests?
 
-1. **App 💻**
+1. **App 💻** ᠆
    This label indicates that changes are made in the Application code
-2. **bug 🐛**
+2. **bug 🐛** ᠆
    This label indicates that changes are made to fix a bug
-3. **dependencies 📦️**
+3. **dependencies 📦️** ᠆
    This label indicates that dependencies are updated in a Pull Request
-4. **docker 🐋**
+4. **docker 🐋** ᠆
    This label indicates that changes are made in the Dockerfiles
-5. **documentation 📝**
+5. **documentation 📝** ᠆
    This label indicates that changes are made in the documentation
-6. **good first issue**
+6. **good first issue** ᠆
    This label indicates that the issue is suitable for beginners to start contributing
-7. **help wanted**
+7. **help wanted** ᠆
    This label indicates that the issue requires help from the community
-8. **invalid**
+8. **invalid** ᠆
    This label is used to mark an issue or Pull Request as invalid, meaning it does not meet the project's guidelines or is not relevant to the project's goals.
-9. **CI/CD 🔁**
+9. **CI/CD 🔁** ᠆
    This label indicates that changes are made in the CI/CD workflows (GitHub Actions)
-10. **duplicate**
+10. **duplicate** ᠆
     This label indicates that the issue / Pull Request is duplicate
-11. **hacktoberfest**
+11. **hacktoberfest** ᠆
     This label indicates that the issue is a part of [Hacktoberfest](https://hacktoberfest.com/)
-12. **hacktoberfest-accepted**
+12. **hacktoberfest-accepted** ᠆
     This label indicates that the Pull Request is accepted for [Hacktoberfest](https://hacktoberfest.com/) and will count towards your participation
 
 ## Project Insights: Status and Task Progress

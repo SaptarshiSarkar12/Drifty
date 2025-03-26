@@ -6,7 +6,7 @@ There are some steps to follow if you're going to run the Drifty GUI Docker imag
 
 You will need these programs to follow these instructions:
 
-- [**Docker**](https://docs.docker.com/desktop/install/mac-install)
+- [**Docker**](https://docs.docker.com/desktop/setup/install/mac-install/)
 - [**HomeBrew**](https://brew.sh/)
 - **Socat** (will be installed later in the instructions)
 - **XQuartz** (will be installed later in the instructions)

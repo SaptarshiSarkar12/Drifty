@@ -9,12 +9,12 @@ Drifty CLI allows you to download files from the internet using a simple command
 ## Single file download
 
 1. Open Drifty CLI in your terminal.
-2. You will be prompted to choose the download option. Enter `1` for **Single File download**.
+2. You will be prompted to choose the download option. Enter `2{:js}` for **Single File download**.
    ![Download Options Prompt](https://github.com/user-attachments/assets/c1bb0da0-e36c-4229-9e8a-a473a973beaa)
 3. Enter the URL of the video you want to download.
 4. After validating the URL, Drifty will prompt you to choose a download destination folder. Enter
 
-   - `.` if you want to download the video in the default download directory (which is `{user_home}/Downloads{:sh}` in most cases).
+   - `.` if you want to download the video in the default download directory (which is `user_home/Downloads{:sh}` in most cases).
    - `L` if you want to use the last used directory.
    - the absolute path of the directory where you want to save the video, e.g., `/home/user/Videos{:sh}`.
 
@@ -29,7 +29,7 @@ Drifty CLI allows you to download files from the internet using a simple command
 ## Batch download
 
 1. Open Drifty CLI in your terminal.
-2. You will be prompted to choose the download option. Enter `2` for **Batch download**.
+2. You will be prompted to choose the download option. Enter `1` for **Batch download**.
    ![Download Options Prompt](https://github.com/user-attachments/assets/c1bb0da0-e36c-4229-9e8a-a473a973beaa)
 3. Enter the path to the YAML file containing the list of URLs you want to download.
    For this example, we are going to use the following data:
