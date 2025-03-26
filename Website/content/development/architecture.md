@@ -9,7 +9,7 @@ The project is organized into the following directories:
 - [`GUI`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/GUI): Maven child module containing the source code for the Drifty GUI.
 - [`Core`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Core): Maven child module containing the shared code between the CLI and GUI.
 - [`Website`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Website): Contains the source code for the Drifty website (A Next.js application).
-- [`website_redirection`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/website_redirection): Contains the source code for the redirection page for [the old Drifty website](https://saptarshisarkar12.github.io/Drifty/). 
+- [`website_redirection`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/website_redirection): Contains the source code for the redirection page for [the old Drifty website](https://saptarshisarkar12.github.io/Drifty/).
 - [`config`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/config): Contains the configuration files for building the native installers and executables.
 - [`Docker`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Docker): Contains the Dockerfile to build and run the Drifty application in a Docker container.
   - [`dev`](https://github.com/SaptarshiSarkar12/Drifty/tree/master/Docker/dev): Contains the Dockerfiles to build and run the Drifty application in a Docker container for development purposes.
