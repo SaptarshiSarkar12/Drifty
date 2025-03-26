@@ -10,7 +10,7 @@ Drifty CLI is the command-line interface for Drifty that allows you to download 
   case.
 </Callout>
 
-![Drifty CLI Help](https://github.com/user-attachments/assets/b695f3b4-c695-4dfe-a431-9742671488f9)
+![Drifty CLI Help](https://github.com/user-attachments/assets/1a1a305f-b3c5-4b92-98fd-5af00675039e)
 
 ## Commands
 
@@ -63,10 +63,10 @@ directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
 ```yaml filename="batch.yaml" showLineNumbers
 links:
   [
-    "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz",
+    "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz",
     "https://www.youtube.com/watch?v=pBy1zgt0XPc",
   ]
-fileNames: ["jdk-22.tar.gz", "What is GitHub?.mp4"]
+fileNames: ["jdk-21.tar.gz", "What is GitHub?.mp4"]
 directories: ["/home/user/Downloads", "/home/user/Videos"]
 ```
 
@@ -85,7 +85,7 @@ drifty --batch batch.yaml
 **Usage**:
 
 ```bash
-drifty --add "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz" "https://www.youtube.com/watch?v=pBy1zgt0XPc"
+drifty --add "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz" "https://www.youtube.com/watch?v=pBy1zgt0XPc"
 ```
 
 ### List links in Queue
@@ -139,7 +139,7 @@ drifty --get
 **Usage**:
 
 ```bash
-drifty https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz --location /home/user/Downloads
+drifty https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz --location /home/user/Downloads
 ```
 
 ### File Name
@@ -157,5 +157,5 @@ drifty https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz --
 **Usage**:
 
 ```bash
-drifty https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz --name jdk-22.tar.gz
+drifty https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz --name jdk-21.tar.gz
 ```
