@@ -96,126 +96,141 @@ Replace `<path-to-graalvm>{:js}` with the actual path to the GraalVM installatio
 
 </Callout>
 
-1.  Open the terminal and navigate to the project directory
-2.  Assuming you have installed the necessary project dependencies, run the below command to generate the C object file required only for building executable binaries for Drifty GUI
+1. Open the terminal and navigate to the project directory
+2. Assuming you have installed the necessary project dependencies, run the below command to generate the C object file required only for building executable binaries for Drifty GUI
 
     <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
       <Tabs.Tab>
-        ```shell gcc -c config/missing_symbols.c -o
-        config/missing_symbols-ubuntu-latest.o ```
+        ```shell
+        gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
+        ```
       </Tabs.Tab>
       <Tabs.Tab>
-        ```shell gcc -c config/missing_symbols.c -o
-        config/missing_symbols-windows-latest.o ```
+        ```shell
+        gcc -c config/missing_symbols.c -o config/missing_symbols-windows-latest.o
+        ```
       </Tabs.Tab>
       <Tabs.Tab>
-        ```shell gcc -c config/missing_symbols.c -o
-        config/missing_symbols-macos-14.o ```
+        ```shell
+        gcc -c config/missing_symbols.c -o config/missing_symbols-macos-14.o
+        ```
       </Tabs.Tab>
       <Tabs.Tab>
-        ```shell gcc -c config/missing_symbols.c -o
-        config/missing_symbols-macos-13.o ```
+        ```shell
+        gcc -c config/missing_symbols.c -o config/missing_symbols-macos-13.o
+        ```
       </Tabs.Tab>
     </Tabs>
 
     Replace `gcc{:sh}` with the path to the GCC compiler if it is not in the system path.
 
-3.  Run the below command to build the installer or executable binaries
+3. Run the below command to build the installer or executable binaries
 
     <Tabs items={["GUI", "CLI"]}>
       <Tabs.Tab>
         <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build
-            gluonfx:package -rf :GUI -U ```
+            ```shell
+            mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI -U
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-gui-for-windows-latest gluonfx:build
-            gluonfx:package -rf :GUI -U ```
+            ```shell
+            mvn -P build-drifty-gui-for-windows-latest gluonfx:build gluonfx:package -rf :GUI -U
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-gui-for-macos-14 gluonfx:build
-            gluonfx:package -rf :GUI -U ```
+            ```shell
+            mvn -P build-drifty-gui-for-macos-14 gluonfx:build gluonfx:package -rf :GUI -U
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-gui-for-macos-13 gluonfx:build
-            gluonfx:package -rf :GUI -U ```
+            ```shell
+            mvn -P build-drifty-gui-for-macos-13 gluonfx:build gluonfx:package -rf :GUI -U
+            ```
           </Tabs.Tab>
         </Tabs>
       </Tabs.Tab>
       <Tabs.Tab>
         <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-cli-for-ubuntu-latest package ```
+            ```shell
+            mvn -P build-drifty-cli-for-ubuntu-latest package
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-cli-for-windows-latest package ```
+            ```shell
+            mvn -P build-drifty-cli-for-windows-latest package
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-cli-for-macos-14 package ```
+            ```shell
+            mvn -P build-drifty-cli-for-macos-14 package
+            ```
           </Tabs.Tab>
           <Tabs.Tab>
-            ```shell mvn -P build-drifty-cli-for-macos-13 package ```
+            ```shell
+            mvn -P build-drifty-cli-for-macos-13 package
+            ```
           </Tabs.Tab>
         </Tabs>
       </Tabs.Tab>
     </Tabs>
 
-4.  Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below.
+4. Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below.
 
-    <Tabs items={['GUI', 'CLI']}>
-  <Tabs.Tab>
-    <Tabs items={['Linux', 'Windows', 'macOS Aarch64', 'macOS x86_64']}>
-    <Tabs.Tab>
-      ```shell
-      GUI/target/gluonfx/{arch}-linux
-      ```
-      The placeholder `{arch}` should be replaced with either `x86_64{:sh}` or `aarch64{:sh}`, depending on your system's architecture.
+   <Tabs items={['GUI', 'CLI']}>
+     <Tabs.Tab>
+      <Tabs items={['Linux', 'Windows', 'macOS Aarch64', 'macOS x86_64']}>
+      <Tabs.Tab>
+        ```shell
+        GUI/target/gluonfx/{arch}-linux
+        ```
+        The placeholder `{arch}` should be replaced with either `x86_64{:sh}` or `aarch64{:sh}`, depending on your system's architecture.
+      </Tabs.Tab>
+      <Tabs.Tab>
+        ```shell
+        GUI/target/gluonfx/x86_64-windows
+        ```
+      </Tabs.Tab>
+      <Tabs.Tab>
+        ```shell
+        GUI/target/gluonfx/aarch64-darwin
+        ```
+      </Tabs.Tab>
+      <Tabs.Tab>
+        ```shell
+        GUI/target/gluonfx/x86_64-darwin
+        ```
+      </Tabs.Tab>
+      </Tabs>
     </Tabs.Tab>
-    <Tabs.Tab>
-      ```shell
-      GUI/target/gluonfx/x86_64-windows
-      ```
+     <Tabs.Tab>
+      <Tabs items={['Linux', 'Windows', 'macOS']}>
+      <Tabs.Tab>
+        ```shell
+        CLI/target/CLI/linux
+        ```
+      </Tabs.Tab>
+      <Tabs.Tab>
+        ```shell
+        CLI/target/CLI/windows
+        ```
+      </Tabs.Tab>
+      <Tabs.Tab>
+        ```shell
+        CLI/target/CLI/macos
+        ```
+      </Tabs.Tab>
+      </Tabs>
     </Tabs.Tab>
-    <Tabs.Tab>
-      ```shell
-      GUI/target/gluonfx/aarch64-darwin
-      ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-      ```shell
-      GUI/target/gluonfx/x86_64-darwin
-      ```
-    </Tabs.Tab>
-    </Tabs>
-  </Tabs.Tab>
-  <Tabs.Tab>
-    <Tabs items={['Linux', 'Windows', 'macOS']}>
-    <Tabs.Tab>
-      ```shell
-      CLI/target/CLI/linux
-      ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-      ```shell
-      CLI/target/CLI/windows
-      ```
-    </Tabs.Tab>
-    <Tabs.Tab>
-      ```shell
-      CLI/target/CLI/macos
-      ```
-    </Tabs.Tab>
-    </Tabs>
-  </Tabs.Tab>
-</Tabs>
+   </Tabs>
 
-5.  You can now run the installer or executable binaries to use the application.
-6.  To remove the generated files, run the below command from the project directory
-    ```shell
-    mvn clean
-    ```
-
+5. You can now run the installer or executable binaries to use the application.
+6. To remove the generated files, run the below command from the project directory
+   ```shell
+   mvn clean
+   ```
 </Tabs.Tab>
 
 <Tabs.Tab>
@@ -230,27 +245,30 @@ Replace `<path-to-graalvm>{:js}` with the actual path to the GraalVM installatio
 1.  Open the terminal and navigate to the project directory
 2.  Follow the below instructions to build and start the Drifty application in a Docker container
     <Tabs items={['GUI', 'CLI']}>
-    <Tabs.Tab>
-    <Tabs items={['Linux and Windows', 'macOS']}>
-    <Tabs.Tab> 1. Run the below command to add access to the X server (required for GUI applications running in Docker)
-    `shell
-                xhost +local:docker
-                ` 2. Run the below command to build and start the Drifty GUI native executable in a Docker container
-    `shell
-                docker compose run gui
-                `
-    </Tabs.Tab>
-    <Tabs.Tab>
-    Please follow [these instructions](macOS-docker-build-instructions.md) to build and start the Drifty GUI native executable in a Docker container
-    </Tabs.Tab>
+      <Tabs.Tab>
+      <Tabs items={['Linux and Windows', 'macOS']}>
+        <Tabs.Tab>
+          1. Run the below command to add access to the X server (required for GUI applications running in Docker)
+             ```shell
+             xhost +local:docker
+             ```
+          2. Run the below command to build and start the Drifty GUI native executable in a Docker container
+             ```shell
+             docker compose run gui
+             ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+          Please follow [these instructions](macOS-docker-build-instructions.md) to build and start the Drifty GUI native executable in a Docker container
+        </Tabs.Tab>
+      </Tabs>
+      </Tabs.Tab>
+      <Tabs.Tab>
+      Run the below command to build and start the Drifty CLI native executable in a Docker container
+      ```shell
+      docker compose run cli
+      ```
+      </Tabs.Tab>
     </Tabs>
-    </Tabs.Tab>
-    <Tabs.Tab>
-    Run the below command to build and start the Drifty CLI native executable in a Docker container
-    `shell
-        docker compose run cli
-        `
-    </Tabs.Tab>
-    </Tabs>
-    </Tabs.Tab>
+
+</Tabs.Tab>
 </Tabs>
