@@ -484,6 +484,8 @@ public class Drifty_CLI {
                 }
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
+                } else {
+                    fileName = null;
                 }
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                     handleSpotifyPlaylist();
