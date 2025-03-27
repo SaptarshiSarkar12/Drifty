@@ -111,7 +111,7 @@ public class ConfirmationDialog {
         text.setFont(Constants.getMonaco(16));
         text.setTextAlignment(TextAlignment.LEFT);
         text.setWrappingWidth(width * .85);
-        Hyperlink downloadLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Download the Latest Version", Font.font("Verdana", FontWeight.BOLD, 16), new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0.25, Color.valueOf("#4158D0")), new Stop(1, Color.valueOf("#C850C0"))), "https://saptarshisarkar12.github.io/Drifty/download");
+        Hyperlink downloadLink = Constants.UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Download the Latest Version", Font.font("Verdana", FontWeight.BOLD, 16), new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, new Stop(0.25, Color.valueOf("#4158D0")), new Stop(1, Color.valueOf("#C850C0"))), "https://drifty.vercel.app/download");
         btnYes = newButton("Yes", e -> {
             answer.setAnswer(true);
             stage.close();
