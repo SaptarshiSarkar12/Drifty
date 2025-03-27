@@ -145,7 +145,10 @@ export default function DownloadPage() {
 
       {/* Release Details */}
       {selectedRelease && (
-        <div className=" shadow-lg rounded-lg p-6 w-full max-w-5xl mb-6">
+        <div
+          className=" shadow-lg rounded-lg p-6 w-full max-w-5xl mb-6"
+          id="download-assets"
+        >
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">
               {selectedRelease.name}
