@@ -10,7 +10,7 @@ import java.net.URL;
 public class Constants {
     public static final String APPLICATION_NAME = "Drifty";
     public static final String VERSION_NUMBER = "v2.1.0";
-    public static final String DRIFTY_WEBSITE_URL = "https://saptarshisarkar12.github.io/Drifty/";
+    public static final String DRIFTY_WEBSITE_URL = "https://drifty.vercel.app/";
     public static final String INVALID_LINK = "Link is invalid! Please check the link and try again.";
     public static final String FILENAME_DETECTION_ERROR = "Failed to detect the filename! A default name will be used instead.";
     public static final String TRYING_TO_AUTO_DETECT_DOWNLOADS_FOLDER = "Trying to automatically detect default Downloads folder...";

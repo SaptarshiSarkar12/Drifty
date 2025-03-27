@@ -88,7 +88,7 @@ public class About {
     }
 
     private void createHyperlinks() {
-        websiteLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://saptarshisarkar12.github.io/Drifty");
+        websiteLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://drifty.vercel.app/");
         discordLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Join Discord", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"), "https://discord.gg/DeT4jXPfkG");
         githubLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Contribute to Drifty", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"), "https://github.com/SaptarshiSarkar12/Drifty");
     }
