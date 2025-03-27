@@ -89,6 +89,7 @@ const navbar = (
     logo={
       <span style={{ marginLeft: ".4em", fontWeight: 600 }}>Drifty Docs</span>
     }
+    logoLink="/docs"
   />
 );
 
