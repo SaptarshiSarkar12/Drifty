@@ -629,7 +629,9 @@ public final class UIController {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteFilesHistory();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            ConfirmationDialog ask = new ConfirmationDialog("Error", "Failed to clear job history! " + e.getMessage(), true, false);
+            ask.getResponse();
+            M.msgLogError("SQL Exception: " + e.getMessage());
         }
     }
 

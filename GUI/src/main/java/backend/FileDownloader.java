@@ -119,6 +119,7 @@ public class FileDownloader extends Task<Integer> {
                 );
             }
         } catch (SQLException e) {
+            M.msgDownloadError("Failed to update database: " + e.getMessage());
             throw new RuntimeException(e);
         }
         switch (type) {
