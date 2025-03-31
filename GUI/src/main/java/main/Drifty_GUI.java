@@ -140,11 +140,11 @@ public class Drifty_GUI extends Application {
         MenuItem feature = new MenuItem("Suggest a Feature");
         MenuItem checkForUpdates = new MenuItem("Check for Updates");
         MenuItem about = new MenuItem("About Drifty");
-        contactUs.setOnAction(_ -> openWebsite("https://saptarshisarkar12.github.io/Drifty/contact"));
+        contactUs.setOnAction(_ -> openWebsite("https://drifty.vercel.app/contact"));
         contribute.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=bug+%F0%9F%90%9B%2CApp+%F0%9F%92%BB&projects=&template=Bug-for-application.yaml&title=%5BBUG%5D+"));
+        bug.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=Bug-for-application.yaml"));
         securityVulnerability.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?assignees=&labels=feature+%E2%9C%A8%2CApp+%F0%9F%92%BB&projects=&template=feature-request-application.yaml&title=%5BFEATURE%5D+"));
+        feature.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=feature-request-application.yaml"));
         checkForUpdates.setOnAction(_ -> new Thread(() -> {
             if (Utility.isOffline()) {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
