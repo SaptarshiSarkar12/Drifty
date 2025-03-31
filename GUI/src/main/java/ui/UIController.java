@@ -494,7 +494,7 @@ public final class UIController {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
                         newJob.getFilename(),
-                        oldJob.getDownloadLink(),
+                        oldJob.getSourceLink(),
                         newJob.getDir()
                 );
             } catch (SQLException e) {
@@ -506,6 +506,7 @@ public final class UIController {
                 dbConnection.addFileRecordToQueue(
                         newJob.getFilename(),
                         newJob.getSourceLink(),
+                        newJob.getDownloadLink(),
                         newJob.getDir(),
                         currentSessionId
                 );

@@ -260,6 +260,7 @@ public class DownloadConfiguration {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(
                         filename,
+                        job.getSourceLink(),
                         job.getDownloadLink(),
                         directory,
                         currentSessionId

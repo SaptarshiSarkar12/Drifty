@@ -35,7 +35,8 @@ public class FileDownloader implements Runnable {
     private final int numberOfThreads;
     private final long threadMaxDataSize;
     private final String dir;
-    private final String link;
+    private final String fileLink;
+    private final String downloadLink;
     private final Path directoryPath;
     private final LinkType linkType;
     private String fileName;
@@ -44,8 +45,9 @@ public class FileDownloader implements Runnable {
 
     public FileDownloader(Job job) {
         this.job = job;
-        this.link = job.getDownloadLink();
-        this.linkType = LinkType.getLinkType(link);
+        this.fileLink = job.getSourceLink();
+        this.downloadLink = job.getDownloadLink();
+        this.linkType = LinkType.getLinkType(this.downloadLink);
         this.fileName = job.getFilename();
         this.dir = job.getDir();
         this.directoryPath = Paths.get(dir).toAbsolutePath();
@@ -140,7 +142,7 @@ public class FileDownloader implements Runnable {
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
-        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, link, "-o", fileName, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
+        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, downloadLink, "-o", fileName, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
@@ -253,13 +255,13 @@ public class FileDownloader implements Runnable {
             DbConnection db = DbConnection.getInstance();
             String endDownloadingTime;
             try {
-                fileId = db.addFileRecord(fileName, link, directoryPath.toString(), startDownloadingTime, sessionId);
+                fileId = db.addFileRecord(fileName, fileLink, downloadLink, directoryPath.toString(), startDownloadingTime, sessionId);
 
                 // If the link is of a YouTube or Instagram video, then the following block of code will execute.
                 if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
                     downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
                 } else {
-                    url = new URI(link).toURL();
+                    url = new URI(downloadLink).toURL();
                     URLConnection openConnection = url.openConnection();
                     openConnection.connect();
                     long totalSize = openConnection.getHeaderFieldLong("Content-Length", 0);
