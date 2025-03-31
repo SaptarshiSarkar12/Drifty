@@ -3,9 +3,11 @@ module Core {
     requires org.apache.commons.text;
     requires org.hildan.fxgson;
     requires org.apache.commons.io;
+    requires org.slf4j;
     requires jproc;
     requires java.prefs;
     requires java.net.http;
+    requires java.sql;
     exports init;
     exports preferences;
     exports properties;

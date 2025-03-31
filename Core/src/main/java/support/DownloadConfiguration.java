@@ -8,21 +8,24 @@ import init.Environment;
 import preferences.AppSettings;
 import properties.LinkType;
 import properties.Mode;
+import utils.DbConnection;
 import utils.MessageBroker;
 import utils.Utility;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static init.Environment.currentSessionId;
 import static utils.Utility.cleanFilename;
 import static utils.Utility.randomString;
 
 public class DownloadConfiguration {
     private final String directory;
     private final ArrayList<HashMap<String, Object>> fileData;
-    private final LinkType linkType;
     private final String filename;
     private final MessageBroker msgBroker = Environment.getMessageBroker();
+    private LinkType linkType;
     private String link;
     private int fileCount;
     private int filesProcessed;
@@ -244,6 +247,7 @@ public class DownloadConfiguration {
             String link = data.get("link").toString();
             String filename = data.get("filename").toString();
             String directory = data.get("directory").toString();
+            linkType = LinkType.getLinkType(link);
             Job job;
             if (linkType.equals(LinkType.SPOTIFY)) {
                 String downloadLink = data.get("downloadLink").toString();
@@ -252,6 +256,18 @@ public class DownloadConfiguration {
                 job = new Job(link, directory, filename, null);
             }
             distinctJobList.put(job.hashCode(), job);
+            try {
+                DbConnection dbConnection = DbConnection.getInstance();
+                dbConnection.addFileRecordToQueue(
+                        filename,
+                        job.getSourceLink(),
+                        job.getDownloadLink(),
+                        directory,
+                        currentSessionId
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
         AppSettings.GET.jobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
