@@ -168,8 +168,8 @@ public class ProgressBarThread extends Thread {
             if (fos != null) {
                 fos.close();
             } else {
-                for (FileOutputStream fos : fileOutputStreams) {
-                    fos.close();
+                for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                    fileOutputStream.close();
                 }
             }
         } catch (IOException e) {
