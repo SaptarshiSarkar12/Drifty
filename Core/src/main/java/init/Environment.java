@@ -5,6 +5,7 @@ import properties.OS;
 import properties.Program;
 import updater.UpdateChecker;
 import utils.CopyExecutables;
+import utils.DbConnection;
 import utils.MessageBroker;
 import utils.Utility;
 
@@ -15,6 +16,9 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -23,6 +27,8 @@ import static properties.Program.YT_DLP;
 public class Environment {
     private static MessageBroker msgBroker;
     private static boolean isAdministrator;
+    private static DbConnection dbConnection;
+    public static int currentSessionId;
 
     /*
     This method is called by both CLI.Main and GUI.Forms.Main classes.
@@ -68,6 +74,16 @@ public class Environment {
                 msgBroker.msgInitError("Failed to copy yt-dlp executable! " + e.getMessage());
             }
         }
+        try {
+            dbConnection = DbConnection.getInstance();
+            dbConnection.createTables();
+
+            String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            currentSessionId = dbConnection.addSessionRecord(startDate);
+        } catch (SQLException e) {
+            msgBroker.msgInitError("Failed to setup the database: " + e.getMessage());
+            Environment.terminate(1);
+        }
         File folder = new File(driftyFolderPath);
         if (!folder.exists()) {
             try {
@@ -82,6 +98,13 @@ public class Environment {
     }
 
     public static void terminate(int exitCode) {
+        String endDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        try {
+            dbConnection.updateSessionEndDate(currentSessionId, endDate);
+        } catch (SQLException e) {
+            msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
+        }
+
         AppSettings.CLEAR.spotifyAccessToken();
         System.exit(exitCode);
     }

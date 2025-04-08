@@ -1,8 +1,5 @@
 package support;
 
-import preferences.AppSettings;
-
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class JobHistory {
@@ -15,7 +12,6 @@ public class JobHistory {
     public void addJob(Job newJob, boolean isCLI) {
         if (isCLI) {
             jobHistoryList.addLast(newJob);
-            AppSettings.SET.jobHistory(this);
         } else {
             for (Job job : jobHistoryList) {
                 if (job.matchesLink(newJob)) {
@@ -23,13 +19,11 @@ public class JobHistory {
                 }
             }
             jobHistoryList.addLast(newJob);
-            save();
         }
     }
 
     public void clear() {
         jobHistoryList = new ConcurrentLinkedDeque<>();
-        save();
     }
 
     public boolean exists(String link) {
@@ -48,29 +42,5 @@ public class JobHistory {
             }
         }
         return null;
-    }
-
-    private void save() {
-        removeDuplicates();
-        AppSettings.SET.jobHistory(this);
-    }
-
-    private void removeDuplicates() {
-        LinkedList<Job> removeList = new LinkedList<>();
-        for (Job jobSource : jobHistoryList) {
-            int dupeCount = 0;
-            for (Job job : jobHistoryList) {
-                boolean duplicateFound = jobSource.matchesLink(job);
-                if (duplicateFound) {
-                    dupeCount++;
-                }
-                if (duplicateFound && dupeCount > 1) {
-                    removeList.addLast(job);
-                }
-            }
-        }
-        for (Job job : removeList) {
-            jobHistoryList.remove(job);
-        }
     }
 }

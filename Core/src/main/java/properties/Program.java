@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public enum Program {
-    DRIFTY_PATH, JOB_FILE, JOB_HISTORY_FILE, YT_DLP, YT_DLP_EXECUTABLE_NAME, FFMPEG_EXECUTABLE_NAME, FFMPEG;
+    DRIFTY_PATH, JOB_FILE, JOB_HISTORY_FILE, YT_DLP, YT_DLP_EXECUTABLE_NAME, FFMPEG_EXECUTABLE_NAME, FFMPEG, DATABASE_PATH;
 
     private static String ytDLPExecutableName;
     private static String ffmpegExecutableName;
@@ -27,6 +27,7 @@ public enum Program {
             case YT_DLP_EXECUTABLE_NAME -> ytDLPExecutableName;
             case FFMPEG_EXECUTABLE_NAME -> ffmpegExecutableName;
             case DRIFTY_PATH -> driftyPath;
+            case DATABASE_PATH -> Paths.get(Program.get(Program.DRIFTY_PATH)).resolve("drifty_" + Mode.getMode().name().toLowerCase() + ".db").toAbsolutePath().toString();
             case YT_DLP -> Paths.get(driftyPath, ytDLPExecutableName).toAbsolutePath().toString();
             case FFMPEG -> Paths.get(driftyPath, ffmpegExecutableName).toAbsolutePath().toString();
             case JOB_HISTORY_FILE -> Paths.get(driftyPath, "JobHistory.json").toAbsolutePath().toString();

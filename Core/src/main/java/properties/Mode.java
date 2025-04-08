@@ -16,4 +16,8 @@ public enum Mode {
     public static boolean isCLI() {
         return mode.equals(Mode.CLI);
     }
+
+    public static Mode getMode() {
+        return mode;
+    }
 }

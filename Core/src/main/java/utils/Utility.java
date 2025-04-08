@@ -278,6 +278,7 @@ public class Utility {
                 File jsonFile = Program.getJsonDataPath().resolve("spotify-metadata.json").toFile();
                 FileUtils.writeStringToFile(jsonFile, json, Charset.defaultCharset());
                 msgBroker.msgLogInfo("Spotify metadata retrieved successfully!");
+                jsonFile.deleteOnExit(); // Delete the file on exit
                 return songMetadataMap;
             } catch (URISyntaxException e) {
                 msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());
@@ -430,13 +431,13 @@ public class Utility {
         if (songName.isEmpty()) {
             songName = "Unknown_Spotify_Song_".concat(randomString(5));
         }
-        String filename = songName.concat(".webm");
+        String filename = songName.concat(".mp3");
         String downloadLink = Utility.getSpotifyDownloadLink(songMetadata);
         if (downloadLink == null) {
             if (Mode.isGUI()) {
                 msgBroker.msgLinkError("Song is exclusive to Spotify and cannot be downloaded!");
             } else {
-                System.out.println("\nSong (" + filename.replace(".webm", "") + ") is exclusive to Spotify and cannot be downloaded!");
+                System.out.println("\nSong (" + filename.replace(".mp3", "") + ") is exclusive to Spotify and cannot be downloaded!");
             }
             return null;
         }
