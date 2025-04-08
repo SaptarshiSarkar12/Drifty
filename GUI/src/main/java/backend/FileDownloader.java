@@ -9,12 +9,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import properties.FileState;
 import properties.LinkType;
 import properties.MessageCategory;
 import properties.Program;
 import support.DownloadMetrics;
 import support.Job;
 import ui.UIController;
+import utils.DbConnection;
 import utils.UnitConverter;
 import utils.Utility;
 
@@ -24,6 +26,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -79,10 +84,31 @@ public class FileDownloader extends Task<Integer> {
     protected Integer call() {
         updateProgress(0, 1);
         sendInfoMessage(String.format(TRYING_TO_DOWNLOAD_F, filename));
-        switch (type) {
-            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
-            case OTHER -> splitDecision();
-            default -> sendFinalMessage(INVALID_LINK);
+        String startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        try {
+            DbConnection db = DbConnection.getInstance();
+            switch (type) {
+                case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
+                case OTHER -> splitDecision();
+                default -> sendFinalMessage(INVALID_LINK);
+            }
+            long downloadedSize = 0;
+            if (exitCode == 0) {
+                downloadedSize = new File(Paths.get(dir).resolve(filename).toString()).length();
+            }
+            String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            db.updateFileState(
+                    job.getSourceLink(),
+                    job.getDir(),
+                    job.getFilename(),
+                    FileState.COMPLETED,
+                    startDownloadingTime,
+                    endDownloadingTime,
+                    (int) downloadedSize
+            );
+        } catch (SQLException e) {
+            M.msgDownloadError("Failed to update database: " + e.getMessage());
+            throw new RuntimeException(e);
         }
         updateProgress(0.0, 1.0);
         done = true;
