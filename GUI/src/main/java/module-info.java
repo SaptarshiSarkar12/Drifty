@@ -8,6 +8,7 @@ module GUI {
     requires org.hildan.fxgson;
     requires java.prefs;
     requires jproc;
+    requires java.sql;
 
     exports gui.support;
     exports gui.utils;

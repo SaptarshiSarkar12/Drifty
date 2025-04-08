@@ -1,7 +1,5 @@
 package support;
 
-import preferences.AppSettings;
-
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Jobs {
@@ -25,7 +23,6 @@ public class Jobs {
             }
         }
         jobList.addLast(newJob);
-        save();
     }
 
     public void remove(Job oldJob) {
@@ -37,12 +34,10 @@ public class Jobs {
             }
         }
         jobList.remove(removeJob);
-        save();
     }
 
     public void setList(ConcurrentLinkedDeque<Job> jobList) {
         this.jobList = jobList;
-        save();
     }
 
     public boolean notNull() {
@@ -55,10 +50,5 @@ public class Jobs {
 
     public void clear() {
         jobList.clear();
-        save();
-    }
-
-    private void save() {
-        AppSettings.SET.jobs(this);
     }
 }
