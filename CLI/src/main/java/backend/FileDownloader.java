@@ -205,6 +205,7 @@ public class FileDownloader implements Runnable {
             } catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
+                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
                 throw new RuntimeException(e);
             }
         } catch (SQLException e) {
