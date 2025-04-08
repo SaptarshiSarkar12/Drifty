@@ -98,13 +98,13 @@ public class FileDownloader extends Task<Integer> {
             }
             String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
             db.updateFileState(
-                job.getSourceLink(),
-                job.getDir(),
-                job.getFilename(),
-                FileState.COMPLETED,
-                startDownloadingTime,
-                endDownloadingTime,
-                (int) downloadedSize
+                    job.getSourceLink(),
+                    job.getDir(),
+                    job.getFilename(),
+                    FileState.COMPLETED,
+                    startDownloadingTime,
+                    endDownloadingTime,
+                    (int) downloadedSize
             );
         } catch (SQLException e) {
             M.msgDownloadError("Failed to update database: " + e.getMessage());
@@ -384,7 +384,7 @@ public class FileDownloader extends Task<Integer> {
     }
 
     private void setProperties() {
-        progressProperty.addListener(((_, _, newValue) -> {
+        progressProperty.addListener(((_,  _, newValue) -> {
             Matcher m1 = PERCENTAGE_PATTERN.matcher(newValue);
             Matcher m2 = ETA_PATTERN.matcher(newValue);
             double value = 0.0;
