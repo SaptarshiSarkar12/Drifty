@@ -384,7 +384,7 @@ public class FileDownloader extends Task<Integer> {
     }
 
     private void setProperties() {
-        progressProperty.addListener(((_,  _, newValue) -> {
+        progressProperty.addListener(((_,   _, newValue) -> {
             Matcher m1 = PERCENTAGE_PATTERN.matcher(newValue);
             Matcher m2 = ETA_PATTERN.matcher(newValue);
             double value = 0.0;
