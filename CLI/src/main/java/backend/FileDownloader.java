@@ -98,7 +98,9 @@ public class FileDownloader implements Runnable {
                         for (File tempFile : tempFiles) {
                             Files.deleteIfExists(tempFile.toPath());
                         }
-                        fileOutputStreams.stream().close();
+                        for (FileOutputStream fos : fileOutputStreams) {
+                            fos.close();
+                        }
                     } else {
                         InputStream urlStream = url.openStream();
                         readableByteChannel = Channels.newChannel(urlStream);

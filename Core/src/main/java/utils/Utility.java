@@ -278,6 +278,7 @@ public class Utility {
                 File jsonFile = Program.getJsonDataPath().resolve("spotify-metadata.json").toFile();
                 FileUtils.writeStringToFile(jsonFile, json, Charset.defaultCharset());
                 msgBroker.msgLogInfo("Spotify metadata retrieved successfully!");
+                jsonFile.deleteOnExit(); // Delete the file on exit
                 return songMetadataMap;
             } catch (URISyntaxException e) {
                 msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());

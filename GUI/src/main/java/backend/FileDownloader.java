@@ -87,45 +87,28 @@ public class FileDownloader extends Task<Integer> {
         String startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         try {
             DbConnection db = DbConnection.getInstance();
-
             switch (type) {
                 case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
                 case OTHER -> splitDecision();
                 default -> sendFinalMessage(INVALID_LINK);
             }
-
+            long downloadedSize = 0;
             if (exitCode == 0) {
-                long downloadedSize = new File(Paths.get(dir, filename).toString()).length();
-                String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileState(
-                        job.getSourceLink(),
-                        job.getDir(),
-                        job.getFilename(),
-                        FileState.COMPLETED,
-                        startDownloadingTime,
-                        endDownloadingTime,
-                        (int) downloadedSize
-                );
-            } else {
-                String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileState(
-                        job.getSourceLink(),
-                        job.getDir(),
-                        job.getFilename(),
-                        FileState.COMPLETED,
-                        startDownloadingTime,
-                        endDownloadingTime,
-                        0
-                );
+                downloadedSize = new File(Paths.get(dir).resolve(filename).toString()).length();
             }
+            String endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+            db.updateFileState(
+                job.getSourceLink(),
+                job.getDir(),
+                job.getFilename(),
+                FileState.COMPLETED,
+                startDownloadingTime,
+                endDownloadingTime,
+                (int) downloadedSize
+            );
         } catch (SQLException e) {
             M.msgDownloadError("Failed to update database: " + e.getMessage());
             throw new RuntimeException(e);
-        }
-        switch (type) {
-            case YOUTUBE, INSTAGRAM -> downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
-            case OTHER -> splitDecision();
-            default -> sendFinalMessage(INVALID_LINK);
         }
         updateProgress(0.0, 1.0);
         done = true;
@@ -401,7 +384,7 @@ public class FileDownloader extends Task<Integer> {
     }
 
     private void setProperties() {
-        progressProperty.addListener(((observable, oldValue, newValue) -> {
+        progressProperty.addListener(((_, _, newValue) -> {
             Matcher m1 = PERCENTAGE_PATTERN.matcher(newValue);
             Matcher m2 = ETA_PATTERN.matcher(newValue);
             double value = 0.0;

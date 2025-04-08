@@ -55,7 +55,7 @@ public final class DbConnection {
                     Size INTEGER,
                     DownloadStartTime TEXT,
                     DownloadEndTime TEXT,
-                    State INTEGER NOT NULL,
+                    State TEXT NOT NULL,
                     SessionId INTEGER NOT NULL,
                     FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
                 );
@@ -101,7 +101,7 @@ public final class DbConnection {
             preparedStatement.setString(2, fileUrl);
             preparedStatement.setString(3, downloadUrl);
             preparedStatement.setString(4, saveTargetPath);
-            preparedStatement.setInt(5, FileState.QUEUED.ordinal());
+            preparedStatement.setString(5, FileState.QUEUED.name());
             preparedStatement.setInt(6, sessionId);
             preparedStatement.executeUpdate();
 
@@ -122,7 +122,7 @@ public final class DbConnection {
             preparedStatement.setString(3, downloadUrl);
             preparedStatement.setString(4, saveTargetPath);
             preparedStatement.setString(5, startDownloadingTime);
-            preparedStatement.setInt(6, FileState.QUEUED.ordinal());
+            preparedStatement.setString(6, FileState.QUEUED.name());
             preparedStatement.setInt(7, sessionId);
             preparedStatement.executeUpdate();
 
@@ -147,7 +147,7 @@ public final class DbConnection {
     public void updateFileInfo(int fileId, FileState state, String endDownloadingTime, int size) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ?, Size = ? WHERE Id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
-            preparedStatement.setInt(1, state.ordinal());
+            preparedStatement.setString(1, state.name());
             preparedStatement.setString(2, endDownloadingTime);
             preparedStatement.setInt(3, size);
             preparedStatement.setInt(4, fileId);
@@ -158,7 +158,7 @@ public final class DbConnection {
     public void updateFileState(String fileUrl, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime, int size) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadStartTime = ?, DownloadEndTime = ?, Size = ? WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
-            preparedStatement.setInt(1, state.ordinal());
+            preparedStatement.setString(1, state.name());
             preparedStatement.setString(2, startDownloadingTime);
             preparedStatement.setString(3, endDownloadingTime);
             preparedStatement.setInt(4, size);
@@ -175,7 +175,7 @@ public final class DbConnection {
             preparedStatement.setString(1, fileName);
             preparedStatement.setString(2, saveTargetPath);
             preparedStatement.setString(3, fileUrl);
-            preparedStatement.setInt(4, FileState.QUEUED.ordinal());
+            preparedStatement.setString(4, FileState.QUEUED.name());
             preparedStatement.executeUpdate();
         }
     }
@@ -183,7 +183,7 @@ public final class DbConnection {
     public Collection<Job> getCompletedJobs() throws SQLException {
         String query = "SELECT FileUrl, DownloadUrl, SaveTargetPath, FileName FROM FILE WHERE State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, FileState.COMPLETED.ordinal());
+            preparedStatement.setString(1, FileState.COMPLETED.name());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<Job> jobs = new ArrayList<>();
@@ -203,7 +203,7 @@ public final class DbConnection {
     public Collection<Job> getQueuedJobs() throws SQLException {
         String query = "SELECT FileUrl, DownloadUrl, SaveTargetPath, FileName FROM FILE WHERE State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, FileState.QUEUED.ordinal());
+            preparedStatement.setString(1, FileState.QUEUED.name());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<Job> jobs = new ArrayList<>();
@@ -230,7 +230,7 @@ public final class DbConnection {
             preparedStatement.setString(1, fileUrl);
             preparedStatement.setString(2, saveTargetPath);
             preparedStatement.setString(3, fileName);
-            preparedStatement.setInt(4, FileState.QUEUED.ordinal());
+            preparedStatement.setString(4, FileState.QUEUED.name());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
@@ -242,9 +242,9 @@ public final class DbConnection {
     public void deleteFilesHistory() throws SQLException {
         String deleteFileQuery = "DELETE FROM FILE WHERE State IN (?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery)) {
-            preparedStatement.setInt(1, FileState.COMPLETED.ordinal());
-            preparedStatement.setInt(2, FileState.FAILED.ordinal());
-            preparedStatement.setInt(3, FileState.PAUSED.ordinal());
+            preparedStatement.setString(1, FileState.COMPLETED.name());
+            preparedStatement.setString(2, FileState.FAILED.name());
+            preparedStatement.setString(3, FileState.PAUSED.name());
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
