@@ -261,6 +261,7 @@ public final class UIController {
                 if (job != null) {
                     removeJobFromList(job);
                     clearControls();
+                    UPDATING_BATCH.setValue(false);
                 }
             }
         });
