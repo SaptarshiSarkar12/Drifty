@@ -45,7 +45,7 @@ public class Drifty_CLI {
     private static String fileName;
     private static boolean batchDownloading;
     private static String batchDownloadingFile;
-    private static final String MSG_FILE_EXISTS_NO_HISTORY = "\"%s\" exists in \"%s\" folder. It will be renamed to \"%s\".";
+    private static final String MSG_FILE_EXISTS_NO_HISTORY = "The file \"%s\" already exists in \"%s\" folder.\nSince the file being downloaded has the same name, it will be renamed to \"%s\" to avoid overwriting.";
     private static final String MSG_FILE_EXISTS_HAS_HISTORY = "You have previously downloaded \"%s\" and it exists in \"%s\" folder.\nDo you want to download it again? ";
     private static final String YAML_FILENAME = "links.yml";
     private static String yamlFilePath;
@@ -401,7 +401,7 @@ public class Drifty_CLI {
                 fileName = songData.get("filename").toString();
                 String downloadLink = songData.get("downloadLink").toString();
                 messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
-                checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink));
+                checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink)); // TODO: Add support for adding the parent playlist link to history
             }
         } else {
             messageBroker.msgLinkError("Failed to retrieve playlist metadata!");
@@ -484,6 +484,8 @@ public class Drifty_CLI {
                 }
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
+                } else {
+                    fileName = null;
                 }
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                     handleSpotifyPlaylist();
@@ -635,7 +637,7 @@ public class Drifty_CLI {
             messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_NO_HISTORY + "\n", job.getFilename(), job.getDir(), fileName), false);
             renameFilenameIfRequired();
             if (link != null) {
-                job = new Job(link, downloadsFolder, fileName, null);
+                job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
                 jobHistory.addJob(job, true);
                 FileDownloader downloader = new FileDownloader(job);
                 downloader.run();
@@ -649,7 +651,7 @@ public class Drifty_CLI {
                 messageBroker.msgFilenameInfo("New file name : " + fileName);
                 renameFilenameIfRequired();
                 if (link != null) {
-                    job = new Job(link, downloadsFolder, fileName, null);
+                    job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
                     jobHistory.addJob(job, true);
                     FileDownloader downloader = new FileDownloader(job);
                     downloader.run();
@@ -744,7 +746,7 @@ public class Drifty_CLI {
             if (data == null) {
                 data = new HashMap<>();
             }
-            data.computeIfAbsent("links", k -> new ArrayList<>()); // Ensure 'links' list exists
+            data.computeIfAbsent("links", _ -> new ArrayList<>()); // Ensure 'links' list exists
         } catch (YAMLException e) {
             String errorMessage = e.getMessage();
             if (errorMessage.contains("duplicate key")) {

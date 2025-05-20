@@ -35,7 +35,7 @@ public class Drifty_GUI extends Application {
     public static void main(String[] args) {
         Mode.setGUIMode();
         System.setProperty("javafx.preloader", Splash.class.getCanonicalName());
-        launch(args);
+        launch(args); // First init() is called, then start()
     }
 
     @Override

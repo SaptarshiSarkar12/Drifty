@@ -109,6 +109,9 @@
       ]
     },
     {
+      "type": "com.sun.javafx.PreviewFeature"
+    },
+    {
       "type": "com.sun.javafx.font.freetype.FTFactory",
       "methods": [
         {
@@ -198,6 +201,14 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
@@ -222,6 +233,14 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
@@ -232,6 +251,14 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
+            "java.io.InputStream"
+          ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
             "java.io.InputStream"
           ]
         }
@@ -246,11 +273,39 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
     {
       "type": "com.sun.prism.shader.Mask_TextureSuper_Loader",
+      "methods": [
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.io.InputStream"
+          ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.prism.shader.Solid_Color_Loader",
       "methods": [
         {
           "name": "loadShader",
@@ -270,6 +325,14 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
@@ -280,6 +343,14 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
+            "java.io.InputStream"
+          ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
             "java.io.InputStream"
           ]
         }
@@ -294,6 +365,14 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
@@ -306,6 +385,14 @@
             "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
+            "java.io.InputStream"
+          ]
         }
       ]
     },
@@ -316,6 +403,14 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
+            "java.io.InputStream"
+          ]
+        },
+        {
+          "name": "loadShader",
+          "parameterTypes": [
+            "com.sun.prism.ps.ShaderFactory",
+            "java.lang.String",
             "java.io.InputStream"
           ]
         }
@@ -458,6 +553,15 @@
     },
     {
       "type": "java.lang.String"
+    },
+    {
+      "type": "java.lang.System",
+      "methods": [
+        {
+          "name": "getSecurityManager",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.lang.Thread",
@@ -610,6 +714,9 @@
       ]
     },
     {
+      "type": "javafx.animation.Interpolator"
+    },
+    {
       "type": "javafx.scene.Camera"
     },
     {
@@ -679,6 +786,9 @@
       "type": "javafx.scene.text.Text"
     },
     {
+      "type": "javafx.scene.text.TextFlow"
+    },
+    {
       "type": "javafx.scene.transform.Transform"
     },
     {
@@ -723,6 +833,15 @@
           ]
         }
       ]
+    },
+    {
+      "type": "org.slf4j.Logger"
+    },
+    {
+      "type": "org.slf4j.simple.SimpleServiceProvider"
+    },
+    {
+      "type": "org.sqlite.JDBC"
     },
     {
       "type": "sun.misc.Unsafe",
@@ -1152,6 +1271,9 @@
     },
     {
       "type": "[Ljava.lang.String;"
+    },
+    {
+      "type": "[Z"
     },
     {
       "type": "com.sun.glass.ui.Clipboard",
@@ -1638,6 +1760,15 @@
       ]
     },
     {
+      "type": "java.lang.Throwable",
+      "methods": [
+        {
+          "name": "toString",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "java.nio.ByteBuffer",
       "methods": [
         {
@@ -1799,6 +1930,164 @@
             "int",
             "int",
             "double"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.BusyHandler",
+      "methods": [
+        {
+          "name": "callback",
+          "parameterTypes": [
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.Collation",
+      "methods": [
+        {
+          "name": "xCompare",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.Function",
+      "fields": [
+        {
+          "name": "args"
+        },
+        {
+          "name": "context"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "methods": [
+        {
+          "name": "xFunc",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.Function$Aggregate",
+      "methods": [
+        {
+          "name": "clone",
+          "parameterTypes": []
+        },
+        {
+          "name": "xFinal",
+          "parameterTypes": []
+        },
+        {
+          "name": "xStep",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.Function$Window",
+      "methods": [
+        {
+          "name": "xInverse",
+          "parameterTypes": []
+        },
+        {
+          "name": "xValue",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.ProgressHandler",
+      "methods": [
+        {
+          "name": "progress",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.core.DB",
+      "methods": [
+        {
+          "name": "onCommit",
+          "parameterTypes": [
+            "boolean"
+          ]
+        },
+        {
+          "name": "onUpdate",
+          "parameterTypes": [
+            "int",
+            "java.lang.String",
+            "java.lang.String",
+            "long"
+          ]
+        },
+        {
+          "name": "throwex",
+          "parameterTypes": []
+        },
+        {
+          "name": "throwex",
+          "parameterTypes": [
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.core.DB$ProgressObserver",
+      "methods": [
+        {
+          "name": "progress",
+          "parameterTypes": [
+            "int",
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "org.sqlite.core.NativeDB",
+      "fields": [
+        {
+          "name": "busyHandler"
+        },
+        {
+          "name": "commitListener"
+        },
+        {
+          "name": "pointer"
+        },
+        {
+          "name": "progressHandler"
+        },
+        {
+          "name": "updateListener"
+        }
+      ],
+      "methods": [
+        {
+          "name": "stringToUtf8ByteArray",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "throwex",
+          "parameterTypes": [
+            "java.lang.String"
           ]
         }
       ]
