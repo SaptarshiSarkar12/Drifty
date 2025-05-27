@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>25-ea+17</version>
+            <version>25-ea+18</version>
         </dependency>
     </dependencies>
 
