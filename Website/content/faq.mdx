@@ -22,15 +22,9 @@ import { Tabs, Callout } from "nextra/components";
 
     - **[Java](https://www.java.com/en/)** - for the backend part of the application
     - **[JavaFX](https://openjfx.io/)** - for the GUI part of the application
-    - **[Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/)** - for building the official [Website of Drifty](https://drifty.vercel.app/)
+    - **[Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/)** + **[Nextra](https://nextra.site/)** - for building the official [Website of Drifty](https://drifty.vercel.app/)
 
-    Drifty also uses the following tools to enhance the development process:
-
-    - **[Docker](https://www.docker.com/)** - for containerizing Drifty to add support for more platforms and help in faster local development
-    - **[GraalVM](https://www.graalvm.org/) + [GluonFX Maven Plugin](https://github.com/gluonhq/gluonfx-maven-plugin/)** - for compiling Java applications to native executables
-    - **[Nextra](https://nextra.site/)** - for building this documentation
-    - **[GitHub Actions](https://github.com/features/actions)** - for automating the CI/CD process
-    - **[Vercel](https://vercel.com/)** - for hosting the official website of Drifty
+    For more information about the technologies used in Drifty, you can refer to the [technologies used](development/architecture.md#technologies-used) section of the documentation.
 
 ## 5. **How can I contribute to Drifty?**
 
@@ -62,29 +56,29 @@ import { Tabs, Callout } from "nextra/components";
    3. If there is an update available, you will be prompted to download and install it.
    </Tabs.Tab>
 
-{" "}
+  {" "}
 
-<Tabs.Tab>
-  - Open the terminal.
-  - You can pull the latest version of the Drifty Docker image by running the below commands:
-<Callout type="info">
-    Replace `<tag>` with the docker image tag you want to pull. If you don't know the tag, you can use the `latest` tag to pull the _latest version_ of the Drifty Docker image. Alternatively, you can also pull the `beta` tag to get the _latest beta version_ of the Drifty Docker image.
-</Callout>
-<Tabs items={['GUI', 'CLI']}>
-<Tabs.Tab>
-```sh
-docker pull ghcr.io/saptarshisarkar12/drifty-gui:<tag>
-```
-</Tabs.Tab>
-<Tabs.Tab>
-```sh
-docker pull ghcr.io/saptarshisarkar12/drifty-cli:<tag>
-```
-</Tabs.Tab>
-</Tabs>
-Once you have pulled the latest version of the Drifty Docker image, you can refer to [this documentation](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-) to run those images in a container.
+  <Tabs.Tab>
+    - Open the terminal.
+    - You can pull the latest version of the Drifty Docker image by running the below commands:
+      <Callout type="info">
+        For available Docker image tags and their status, refer to the [Available Version Tags](./usage/docker/drifty-in-docker#available-version-tags) section in the Docker documentation.
+      </Callout>
 
-</Tabs.Tab>
+      <Tabs items={['GUI', 'CLI']}>
+        <Tabs.Tab>
+        ```sh
+        docker pull ghcr.io/saptarshisarkar12/drifty-gui:<tag>
+        ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+        ```sh
+        docker pull ghcr.io/saptarshisarkar12/drifty-cli:<tag>
+        ```
+        </Tabs.Tab>
+      </Tabs>
+    Once you have pulled the latest version of the Drifty Docker image, you can refer to [this documentation](./usage/docker/drifty-in-docker) to run those images in a container.
+  </Tabs.Tab>
 
 </Tabs>
 
@@ -143,35 +137,26 @@ drifty -u
 
 </Tabs.Tab>
    <Tabs.Tab>
-Drifty Docker image currently have only the Beta among other pre-release versions. Follow the steps mentioned below to access the Beta version of the Drifty Docker image:
+     Drifty Docker images support various pre-release versions. For information about available versions and how to use them, please refer to the [Available Version Tags](./usage/docker/drifty-in-docker#available-version-tags) section in the Docker documentation.
 
-#### Pull the Beta Version of Drifty Docker Image
+     To use the Beta version:
 
-You can pull the Beta version of the Drifty Docker image by running the following command:
+     <Tabs items={["GUI", "CLI"]}>
+       <Tabs.Tab>
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-gui:beta
+         ```
+       </Tabs.Tab>
+       <Tabs.Tab>
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-cli:beta
+         ```
+       </Tabs.Tab>
+     </Tabs>
 
-<Tabs items={["GUI", "CLI"]}>
-  <Tabs.Tab>
-    
-    ```sh 
-    docker pull ghcr.io/saptarshisarkar12/drifty-gui:beta 
-    ```
-
-  </Tabs.Tab>
-  <Tabs.Tab>
-    
-    ```sh 
-    docker pull ghcr.io/saptarshisarkar12/drifty-cli:beta 
-    ```
-    
-  </Tabs.Tab>
-</Tabs>
-
-#### Run the Drifty Docker Image
-
-Once you have pulled the **Beta** version of the Drifty Docker image, you can refer to [this documentation](https://github.com/SaptarshiSarkar12/Drifty?tab=readme-ov-file#using-drifty-application-via-docker-) to run those images in a container.
-
+     Once you have pulled the Beta version, refer to the [Docker documentation](./usage/docker/drifty-in-docker#running-drifty-in-docker) for instructions on running the container.
    </Tabs.Tab>
-   </Tabs>
+</Tabs>
 
 ## 8. **Need More Information About Drifty?**
 

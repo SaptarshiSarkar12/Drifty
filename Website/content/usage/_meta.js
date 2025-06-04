@@ -1,6 +1,7 @@
 const meta = {
-  cli: "CLI",
-  gui: "GUI",
-};
+  cli: 'CLI',
+  gui: 'GUI',
+  docker: 'Docker'
+}
 
-export default meta;
+export default meta

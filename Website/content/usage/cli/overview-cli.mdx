@@ -2,15 +2,37 @@ import { Callout } from "nextra/components";
 
 # Drifty CLI Overview
 
-Drifty CLI is the command-line interface for Drifty that allows you to download files from the internet with just a few commands. You can integrate Drifty CLI into your scripts and automate the download process. So, it is important to understand the different commands and options available in Drifty CLI.
+## Introduction
+
+The Drifty Command Line Interface (CLI) lets you download files quickly without using a graphical interface. It's perfect for:
+
+- Downloading files from scripts or terminal
+- Automating download tasks
+- Working on servers or systems without a GUI
+- Power users who prefer keyboard commands
+
+This guide covers all available commands with examples to help you get started.
 
 <Callout type="info">
-  We have assumed that the name of the executable for Drifty CLI is `drifty`.
-  Replace `drifty` with the actual executable name if it is different in your
-  case.
+  Throughout this documentation, we use `drifty` as the command name. If you've renamed your executable or are using a different path, replace `drifty` with your actual command.
 </Callout>
 
-![Drifty CLI Help](https://github.com/user-attachments/assets/1a1a305f-b3c5-4b92-98fd-5af00675039e)
+## Quick Reference
+
+| Command               | Short Form      | Description                              |
+|-----------------------|-----------------|------------------------------------------|
+| `--help`              | `-h`            | Show help information                    |
+| `--version`           | `-v`            | Show version information                 |
+| `--batch <file>`      | `-b <file>`     | Download multiple files from a YAML file |
+| `--add <URL>...`      |                 | Add URLs to download queue               |
+| `--list`              |                 | Show URLs in download queue              |
+| `--remove <index>...` |                 | Remove URLs from download queue          |
+| `--get`               |                 | Download all URLs in queue               |
+| `--location <path>`   | `-l <path>`     | Set download location                    |
+| `--name <filename>`   | `-n <filename>` | Set custom filename                      |
+| `--update`            | `-u`            | Check for updates                        |
+
+![Drifty CLI Help Screen](https://github.com/user-attachments/assets/1a1a305f-b3c5-4b92-98fd-5af00675039e)
 
 ## Commands
 

@@ -1,8 +1,8 @@
 const meta = {
-  index: "",
-  quickstart: "",
-  usage: "",
-  development: "",
-};
+  index: '',
+  quickstart: '',
+  usage: '',
+  development: ''
+}
 
-export default meta;
+export default meta

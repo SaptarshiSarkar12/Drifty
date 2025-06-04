@@ -1,6 +1,6 @@
 import { Tabs, Callout, Steps } from "nextra/components";
 
-# Building Installer or Executable Binaries for Drifty
+# Building Executables for Drifty
 
 ## Generating GraalVM Metadata
 
@@ -57,6 +57,10 @@ Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
   </Tabs>
 
 </Steps>
+
+## Building Installer or Executable Binaries
+
+There are two ways to build the installer or executable binaries for Drifty GUI and CLI applications:
 
 <Tabs items={['Local Build', 'Docker Build']} defaultIndex={0}>
   <Tabs.Tab>
@@ -247,35 +251,35 @@ Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
 
     ### Steps
 
-    1.  Open the terminal and navigate to the project directory
-    2.  Follow the below instructions to build and start the Drifty application in a Docker container
-    <Tabs items={['GUI', 'CLI']}>
-      <Tabs.Tab>
-        <Tabs items={['Linux and Windows', 'macOS']}>
-          <Tabs.Tab>
-            {/* prettier-ignore */}
-            1. Run the below command to add access to the X server (required for GUI applications running in Docker)
-            ```shell
-            xhost +local:docker
-            ```
-            2. Run the below command to build and start the Drifty GUI native executable in a Docker container
-            ```shell
-            docker compose run gui
-            ```
-          </Tabs.Tab>
-          <Tabs.Tab>
-            Please follow [these instructions](macOS-docker-build-instructions.md) to build and start the Drifty GUI native executable in a Docker container
-          </Tabs.Tab>
-        </Tabs>
-      </Tabs.Tab>
-      <Tabs.Tab>
-        {/* prettier-ignore */}
-        Run the below command to build and start the Drifty CLI native executable in a Docker container
-        ```shell
-        docker compose run cli
-        ```
-      </Tabs.Tab>
-    </Tabs>
+    1. Open the terminal and navigate to the project directory
+    2. Follow the below instructions to build and start the Drifty application in a Docker container
+       <Tabs items={['GUI', 'CLI']}>
+        <Tabs.Tab>
+          <Tabs items={['Linux and Windows', 'macOS']}>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              1. Run the below command to add access to the X server (required for GUI applications running in Docker)
+              ```shell
+              xhost +local:docker
+              ```
+              2. Run the below command to build and start the Drifty GUI native executable in a Docker container
+              ```shell
+              docker compose run gui
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              Please follow [these instructions](macOS-docker-build-instructions.md) to build and start the Drifty GUI native executable in a Docker container
+            </Tabs.Tab>
+          </Tabs>
+        </Tabs.Tab>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          Run the below command to build and start the Drifty CLI native executable in a Docker container
+          ```shell
+          docker compose run cli
+          ```
+        </Tabs.Tab>
+       </Tabs>
 
   </Tabs.Tab>
 </Tabs>
