@@ -43,7 +43,7 @@ graph LR
         subgraph DevEnv[Development Environment]
             Commons[Common Base Images]
             CDC[CLI Development Container]
-            GDC[GUI Development Container]            
+            GDC[GUI Development Container]
         end
         subgraph ProdEnv[Production Environment]
             CPC[CLI Production Container]
@@ -59,6 +59,7 @@ graph LR
 ```
 
 This diagram illustrates the relationships between the different components of Drifty:
+
 - **Core Module**: Contains shared code used by both CLI and GUI applications
 - **CLI and GUI Applications**: Independent applications that depend on the Core module
 - **Docker Containers**: Built in layers, with development containers extending common base images and production containers containing the final applications
@@ -68,20 +69,24 @@ This diagram illustrates the relationships between the different components of D
 Drifty uses a variety of technologies to provide a robust and efficient downloading experience. Here's a breakdown of the key technologies:
 
 ### Core Technologies
+
 - [**Java**](https://www.java.com/): The main programming language that powers Drifty's functionality
 - [**JavaFX**](https://openjfx.io/): Framework for building the GUI application, providing a rich user interface
 - [**Maven**](https://maven.apache.org/): Build automation tool that manages dependencies and builds the project
 
 ### Build & Development
+
 - [**GraalVM**](https://www.graalvm.org/): High-performance runtime that allows Drifty to be compiled into native images for faster startup and lower memory usage
 - [**GluonFX Maven Plugin**](https://github.com/gluonhq/gluonfx-maven-plugin): Plugin that simplifies building JavaFX applications for multiple platforms
 - [**Docker**](https://www.docker.com/): Containerization platform that packages Drifty into portable containers for easy deployment
 
 ### Website
+
 - [**Next.js**](https://nextjs.org/): Modern framework for building the documentation website
 - [**Tailwind CSS**](https://tailwindcss.com/): Styling system that makes the website look good
 - [**Nextra**](https://nextra.site/): Documentation framework that simplifies writing and managing documentation content
 
 ### DevOps
+
 - [**GitHub Actions**](https://docs.github.com/en/actions): Continuous integration and deployment (CI/CD) tool that automates testing, building, and releasing Drifty
 - [**GitHub Packages**](https://docs.github.com/en/packages): Package registry for storing and distributing Drifty's Docker images
