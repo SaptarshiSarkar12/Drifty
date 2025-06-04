@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "Drifty",
-  description: "Drifty - Open source Project",
+  description: "Drifty - Open-Source Interactive File Downloader",
 };
 
 export default function RootLayout({

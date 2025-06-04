@@ -1,0 +1,165 @@
+import { Tabs, Callout } from "nextra/components";
+
+# Frequently Asked Questions
+
+## 1. **Why does Drifty GUI not open on my Windows machine?**
+
+    Your Windows machine must have Microsoft Visual C++ Redistributable installed on your machine. You can download and install it from its [official download page](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version)
+
+## 2. **Which IDE (Integrated Development Environment) should I use to open Drifty App Code in my Local environment?**
+
+    You can use any IDE you prefer. It is recommended to use [IntelliJ IDEA](https://www.jetbrains.com/idea/). You can use the free Community version of IntelliJ IDEA if you do not have an active JetBrains subscription.
+
+## 3. **How can I get updates related to this project?**
+
+    You can join our [Discord server](https://discord.com/invite/DeT4jXPfkG) to get updates on this project. You can also watch this repository by clicking on the watch button [here](https://github.com/SaptarshiSarkar12/Drifty) and select notification types to **All Activity** to get all updates on this project.
+
+    ![Updates](https://github.com/user-attachments/assets/6a35aca7-9263-4614-9339-e1fe0062ba2d)
+
+## 4. **What technologies does Drifty use?**
+
+    The technologies that Drifty primarily uses are as follows:
+
+    - **[Java](https://www.java.com/en/)** - for the backend part of the application
+    - **[JavaFX](https://openjfx.io/)** - for the GUI part of the application
+    - **[Next.js](https://nextjs.org/) + [Tailwind CSS](https://tailwindcss.com/)** + **[Nextra](https://nextra.site/)** - for building the official [Website of Drifty](https://drifty.vercel.app/)
+
+    For more information about the technologies used in Drifty, you can refer to the [technologies used](development/architecture.md#technologies-used) section of the documentation.
+
+## 5. **How can I contribute to Drifty?**
+
+    You can check the [Contribution](Contributing.md) section of this documentation to learn how to contribute to this project.
+
+## 6. **How can I update Drifty to the latest version?**
+
+<Tabs items={["GUI", "CLI", "Docker"]}>
+   <Tabs.Tab>
+    1. Open Drifty GUI.
+    2. Click on the **Help** menu.
+    ![Drifty Help Menu](https://github.com/user-attachments/assets/de66eb43-c517-4f89-88c7-ecdc6231d8e0)
+    3. Click on the **Check for Updates** option.
+    4. If there is an update available, you will be prompted to download and install it. Click on __Yes__ to download and install the update.
+    ![Drifty Update](https://github.com/user-attachments/assets/e262b9cf-bae2-4574-9e2f-ad0c2abb6062)
+    5. Once the update is installed, you will need to restart the application to apply the changes.
+
+   </Tabs.Tab>
+   <Tabs.Tab>
+   1. Open the terminal in the directory where **Drifty CLI** is present.
+   2. Run the following command to check for updates:
+     ```sh
+     drifty --update
+     ```
+     or, you can also use the shorthand version:
+     ```sh
+     drifty -u
+     ```
+   3. If there is an update available, you will be prompted to download and install it.
+   </Tabs.Tab>
+
+{" "}
+
+  <Tabs.Tab>
+    - Open the terminal.
+    - You can pull the latest version of the Drifty Docker image by running the below commands:
+      <Callout type="info">
+        For available Docker image tags and their status, refer to the [Available Version Tags](./usage/docker/drifty-in-docker#available-version-tags) section in the Docker documentation.
+      </Callout>
+
+      <Tabs items={['GUI', 'CLI']}>
+        <Tabs.Tab>
+        ```sh
+        docker pull ghcr.io/saptarshisarkar12/drifty-gui:<tag>
+        ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+        ```sh
+        docker pull ghcr.io/saptarshisarkar12/drifty-cli:<tag>
+        ```
+        </Tabs.Tab>
+      </Tabs>
+    Once you have pulled the latest version of the Drifty Docker image, you can refer to [this documentation](./usage/docker/drifty-in-docker) to run those images in a container.
+
+  </Tabs.Tab>
+
+</Tabs>
+
+## 7. **How can I access the Beta features in Drifty?**
+
+You can access the Beta features in Drifty by following the steps mentioned below:
+
+<Tabs items={['GUI', 'CLI','Docker']}>
+
+<Tabs.Tab>
+#### Enable Early Access Updates
+
+1. Click on the Edit menu.
+   ![Edit Menu](https://github.com/user-attachments/assets/1c990f41-7c96-4b0b-bf7b-b577e171b487)
+2. Click on the Settings option.
+3. Check the Early Access Updates checkbox in the settings window.
+   ![Early Access Updates checkbox checked](https://github.com/user-attachments/assets/e96966f7-1e9a-4598-86a8-572ef899f8d5)
+
+#### Check for Beta Updates
+
+Once you enable this option, you will receive updates for the Beta features of Drifty GUI as soon as they are released. Alternatively, you can also check for Beta updates already available by clicking on the **Check for Updates** button under the **Help** menu.
+
+![Check for Updates](https://github.com/user-attachments/assets/4e19c874-60eb-49d4-a3f1-0a959b75e885)
+
+</Tabs.Tab>
+<Tabs.Tab>
+Open the terminal in the directory where Drifty CLI is present and follow the steps mentioned below:
+
+#### Enable Early Access Updates
+
+Run the following command to toggle the Early Access Updates:
+
+```sh
+drifty --early-access
+```
+
+or, you can also use the shorthand version:
+
+```sh
+drifty -ea
+```
+
+#### Check for Beta Updates
+
+Once you enable this option, you will receive updates for the Beta features of Drifty CLI as soon as they are released. Alternatively, you can also check for Beta updates already available by running the following command:
+
+```sh
+drifty --update
+```
+
+or, you can also use the shorthand version:
+
+```sh
+drifty -u
+```
+
+</Tabs.Tab>
+   <Tabs.Tab>
+     Drifty Docker images support various pre-release versions. For information about available versions and how to use them, please refer to the [Available Version Tags](./usage/docker/drifty-in-docker#available-version-tags) section in the Docker documentation.
+
+     To use the Beta version:
+
+     <Tabs items={["GUI", "CLI"]}>
+       <Tabs.Tab>
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-gui:beta
+         ```
+       </Tabs.Tab>
+       <Tabs.Tab>
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-cli:beta
+         ```
+       </Tabs.Tab>
+     </Tabs>
+
+     Once you have pulled the Beta version, refer to the [Docker documentation](./usage/docker/drifty-in-docker#running-drifty-in-docker) for instructions on running the container.
+
+   </Tabs.Tab>
+</Tabs>
+
+## 8. **Need More Information About Drifty?**
+
+For more queries related to the further improvement to this project, you can raise an [issue](https://github.com/SaptarshiSarkar12/Drifty/issues/new/choose) or reach out to the maintainers on the [discord server](https://discord.com/invite/DeT4jXPfkG). We will be happy to help you out.
