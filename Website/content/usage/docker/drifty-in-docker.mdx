@@ -1,4 +1,4 @@
-import { Callout, Tabs } from "nextra/components";
+import { Callout, Tabs } from 'nextra/components'
 
 # Using Drifty in Docker
 
@@ -18,30 +18,38 @@ Ensure you have Docker installed on your system. You can download it from the [o
 ## Running Drifty in Docker
 
 <Tabs items={["GUI", "CLI"]}>
-  <Tabs.Tab>
-    1. Open your terminal. 2. Pull the latest version of the Drifty Docker image
-    by running the following command: ```sh docker pull
-    ghcr.io/saptarshisarkar12/drifty-gui:latest ``` 3. If you are a **Linux**
-    user or using **WSL2**, you may need to allow Docker to access your X
-    server. You can do this by running the following command: ```sh xhost
-    +local:docker ``` 4. Once the image is pulled, you can run it using the
-    following command: ```sh docker run -e DISPLAY=$DISPLAY --net=host -v
-    /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
-    ``` 5. Drifty GUI should now open on your screen.
-  </Tabs.Tab>
-  <Tabs.Tab>
-    1. Open your terminal. 2. Pull the latest version of the Drifty Docker image
-    by running the following command: ```sh docker pull
-    ghcr.io/saptarshisarkar12/drifty-cli:latest ``` 3. Once the image is pulled,
-    you can run it using the following command: ```sh docker run -it
-    ghcr.io/saptarshisarkar12/drifty-cli:latest ```
-  </Tabs.Tab>
+   <Tabs.Tab>
+      1. Open your terminal.
+      2. Pull the latest version of the Drifty Docker image by running the following command:
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-gui:latest
+         ```
+      3. If you are a **Linux** user or using **WSL2**, you may need to allow Docker to access your X server. You can do this by running the following command:
+         ```sh
+         xhost +local:docker
+         ```
+      4. Once the image is pulled, you can run it using the following command:
+         ```sh
+         docker run -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
+         ```
+      5. Drifty GUI should now open on your screen.
+   </Tabs.Tab>
+   <Tabs.Tab>
+      1. Open your terminal.
+      2. Pull the latest version of the Drifty Docker image by running the following command:
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-cli:latest
+         ```
+      3. Once the image is pulled, you can run it using the following command:
+         ```sh
+         docker run -it ghcr.io/saptarshisarkar12/drifty-cli:latest
+         ```
+   </Tabs.Tab>
 </Tabs>
 
 ## Important Notes
 
 - To download files to a specific local directory, you need to mount that directory as a volume for Drifty. For example:
-
   ```sh
   # For GUI version
   docker run -e DISPLAY=$DISPLAY --net=host -v /home/username/Downloads:/root/Downloads -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
@@ -51,7 +59,6 @@ Ensure you have Docker installed on your system. You can download it from the [o
   ```
 
 - For persistent data storage and faster initialization, you can mount the Drifty configuration directory:
-
   ```sh
   # For GUI version
   docker run -e DISPLAY=$DISPLAY --net=host -v /home/username/.drifty:/root/.drifty -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
@@ -63,7 +70,7 @@ Ensure you have Docker installed on your system. You can download it from the [o
 ### Available Version Tags
 
 | Version Type      | Tag                  | Status        | Example Usage                                      |
-| ----------------- | -------------------- | ------------- | -------------------------------------------------- |
+|-------------------|----------------------|---------------|----------------------------------------------------|
 | Latest Stable     | `latest{:sh}`        | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:latest{:sh}` |
 | Release Candidate | `rc{:sh}`            | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:rc{:sh}`     |
 | Beta              | `beta{:sh}`          | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:beta{:sh}`   |
@@ -73,17 +80,13 @@ Ensure you have Docker installed on your system. You can download it from the [o
 ## Troubleshooting
 
 ### Permission Issues
-
 If you encounter permission issues when mounting volumes, ensure that:
-
 - The target directories exist on your host machine
 - You have the correct permissions for the directories
 - For Linux users, remember to use `sudo{:sh}` with docker commands
 
 ### Display Issues (GUI Version)
-
 If the GUI doesn't appear:
-
 - Ensure X11 forwarding is properly configured
 - Check if the DISPLAY environment variable is set correctly
 - For WSL2 users, verify that an X server is running on Windows
@@ -91,17 +94,14 @@ If the GUI doesn't appear:
 ### Platform-Specific Considerations
 
 #### Linux
-
 - Use Docker Engine directly instead of Docker Desktop
 - Always prefix docker commands with `sudo{:sh}`
 - The mounted paths should match your actual system paths
 
 #### Windows (WSL2)
-
 - Ensure paths are in Linux format when mounting volumes
 - Use Windows paths in WSL2 format (e.g., `/mnt/c/Users/...{:sh}`)
 
 #### macOS
-
 - XQuartz must be running before starting the GUI version
 - Consider using absolute paths when mounting volumes
