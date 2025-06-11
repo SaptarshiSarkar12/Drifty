@@ -2,7 +2,7 @@ import AboutPage from "@/components/AboutPage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About | Drifty",
+  title: "About",
 };
 
 export default function Page() {

@@ -1,0 +1,285 @@
+import { Tabs, Callout, Steps } from "nextra/components";
+
+# Building Executables for Drifty
+
+## Generating GraalVM Metadata
+
+<Callout type="info">
+  This step is required only if you want to see your changes reflected in Drifty
+  CLI or GUI executables. If you are only interested in building the installer
+  or executable binaries, you can skip this step.
+</Callout>
+
+### Prerequisites
+
+- [Java 23](https://www.oracle.com/java/technologies/downloads/#java23)
+- [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** ([Maven v3.8.8 is required for generating GraalVM metadata for Drifty GUI](https://github.com/gluonhq/gluonfx-maven-plugin/issues/462))
+- [GraalVM 23](https://www.oracle.com/java/technologies/downloads/#graalvmjava23)
+
+### Steps
+
+<Steps>
+
+### Navigate to the project directory
+
+Open the terminal and navigate to the project directory
+
+### Generate GraalVM metadata
+
+Follow the below instructions to generate GraalVM metadata for Drifty CLI or GUI
+
+  <Tabs items={['GUI', 'CLI']} defaultIndex={0}>
+    <Tabs.Tab>
+      - Navigate to the `GUI{:sh}` directory
+        ```shell
+        cd GUI
+        ```
+      - Run the below command to generate GraalVM metadata for Drifty GUI. You'll need to perform the new actions which you want to reflect in the executable binaries.
+        ```shell
+        mvn gluonfx:runagent
+        ```
+
+      Upon completion of the command, the GraalVM metadata will be generated in `GUI/src/main/resources/META-INF/native-image{:sh}` directory.
+    </Tabs.Tab>
+    <Tabs.Tab>
+      - Navigate to the `CLI{:sh}` directory
+        ```shell
+        cd CLI
+        ```
+      - Run the below command to generate GraalVM metadata for Drifty CLI. You'll need to perform the new actions which you want to reflect in the executable binaries.
+        ```shell
+        mvn -P generate-graalvm-metadata exec:exec@java-agent
+        ```
+
+      Upon completion of the command, the GraalVM metadata will be generated in `CLI/src/main/resources/META-INF/native-image{:sh}` directory.
+    </Tabs.Tab>
+
+  </Tabs>
+
+</Steps>
+
+## Building Installer or Executable Binaries
+
+There are two ways to build the installer or executable binaries for Drifty GUI and CLI applications:
+
+<Tabs items={['Local Build', 'Docker Build']} defaultIndex={0}>
+  <Tabs.Tab>
+
+    ### Prerequisites
+
+    - [Java 23](https://www.oracle.com/java/technologies/downloads/#java23)
+    - [Download](https://maven.apache.org/download.cgi#previous-stable-3-8-x-release) and [install](https://maven.apache.org/install.html) **Maven** ([Maven v3.8.8 is required](https://github.com/gluonhq/gluonfx-maven-plugin/issues/462) for building installer or executable binaries for Drifty GUI, locally)
+    - [GraalVM 23](https://www.oracle.com/java/technologies/downloads/#graalvmjava23)
+    - [GCC](https://gcc.gnu.org/install/)
+
+    ### Steps
+
+    <Callout type="info">
+      Check if GraalVM is added to the system path by running `native-image --version{:sh}` in the terminal.
+      If the command is not recognized, add the GraalVM `bin{:sh}` directory to the system path.
+
+      ```shell
+      PATH=$GRAALVM_HOME/bin
+      ```
+
+      Set the following environment variable to point to your GraalVM installation directory.
+
+      ```shell
+      GRAALVM_HOME=<path-to-graalvm>
+      ```
+
+      Replace `<path-to-graalvm>{:js}` with the actual path to the GraalVM installation directory.
+
+    </Callout>
+
+    1. Open the terminal and navigate to the project directory
+    2. Assuming you have installed the necessary project dependencies, run the below command to generate the C object file required only for building executable binaries for Drifty GUI
+       <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          ```shell
+          gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
+          ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          ```shell
+          gcc -c config/missing_symbols.c -o config/missing_symbols-windows-latest.o
+          ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          ```shell
+          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-14.o
+          ```
+        </Tabs.Tab>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          ```shell
+          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-13.o
+          ```
+        </Tabs.Tab>
+       </Tabs>
+       Replace `gcc{:sh}` with the path to the GCC compiler if it is not in the system path.
+    3. Run the below command to build the installer or executable binaries
+       <Tabs items={["GUI", "CLI"]}>
+         <Tabs.Tab>
+          <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              mvn -P build-drifty-gui-for-ubuntu-latest gluonfx:build gluonfx:package -rf :GUI -U
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              mvn -P build-drifty-gui-for-windows-latest gluonfx:build gluonfx:package -rf :GUI -U
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              mvn -P build-drifty-gui-for-macos-14 gluonfx:build gluonfx:package -rf :GUI -U
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              mvn -P build-drifty-gui-for-macos-13 gluonfx:build gluonfx:package -rf :GUI -U
+              ```
+            </Tabs.Tab>
+          </Tabs>
+        </Tabs.Tab>
+         <Tabs.Tab>
+          <Tabs items={["Linux", "Windows", "macOS Aarch64", "macOS x86_64"]}>
+          <Tabs.Tab>
+            {/* prettier-ignore */}
+            ```shell
+            mvn -P build-drifty-cli-for-ubuntu-latest package
+            ```
+          </Tabs.Tab>
+          <Tabs.Tab>
+            {/* prettier-ignore */}
+            ```shell
+            mvn -P build-drifty-cli-for-windows-latest package
+            ```
+          </Tabs.Tab>
+          <Tabs.Tab>
+            {/* prettier-ignore */}
+            ```shell
+            mvn -P build-drifty-cli-for-macos-14 package
+            ```
+          </Tabs.Tab>
+          <Tabs.Tab>
+            {/* prettier-ignore */}
+            ```shell
+            mvn -P build-drifty-cli-for-macos-13 package
+            ```
+          </Tabs.Tab>
+          </Tabs>
+         </Tabs.Tab>
+       </Tabs>
+    4. Upon completion of the build, the installer or executable binaries will be neatly organized in the directories listed below.
+       <Tabs items={['GUI', 'CLI']}>
+         <Tabs.Tab>
+            <Tabs items={['Linux', 'Windows', 'macOS Aarch64', 'macOS x86_64']}>
+              <Tabs.Tab>
+                {/* prettier-ignore */}
+                ```shell
+                GUI/target/gluonfx/{arch}-linux
+                ```
+                The placeholder `{arch}` should be replaced with either `x86_64{:sh}` or `aarch64{:sh}`, depending on your system's architecture.
+              </Tabs.Tab>
+              <Tabs.Tab>
+                {/* prettier-ignore */}
+                ```shell
+                GUI/target/gluonfx/x86_64-windows
+                ```
+              </Tabs.Tab>
+              <Tabs.Tab>
+                {/* prettier-ignore */}
+                ```shell
+                GUI/target/gluonfx/aarch64-darwin
+                ```
+              </Tabs.Tab>
+              <Tabs.Tab>
+                {/* prettier-ignore */}
+                ```shell
+                GUI/target/gluonfx/x86_64-darwin
+                ```
+              </Tabs.Tab>
+            </Tabs>
+          </Tabs.Tab>
+         <Tabs.Tab>
+          <Tabs items={['Linux', 'Windows', 'macOS']}>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              CLI/target/CLI/linux
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              CLI/target/CLI/windows
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              ```shell
+              CLI/target/CLI/macos
+              ```
+            </Tabs.Tab>
+          </Tabs>
+        </Tabs.Tab>
+       </Tabs>
+    5. You can now run the installer or executable binaries to use the application.
+    6. To remove the generated files, run the below command from the project directory
+       ```shell
+       mvn clean
+       ```
+
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+
+    ### Prerequisites
+
+    - [Docker](https://docs.docker.com/get-started/get-docker/)
+    - [Docker Compose](https://docs.docker.com/compose/install/)
+
+    ### Steps
+
+    1. Open the terminal and navigate to the project directory
+    2. Follow the below instructions to build and start the Drifty application in a Docker container
+       <Tabs items={['GUI', 'CLI']}>
+        <Tabs.Tab>
+          <Tabs items={['Linux and Windows', 'macOS']}>
+            <Tabs.Tab>
+              {/* prettier-ignore */}
+              1. Run the below command to add access to the X server (required for GUI applications running in Docker)
+              ```shell
+              xhost +local:docker
+              ```
+              2. Run the below command to build and start the Drifty GUI native executable in a Docker container
+              ```shell
+              docker compose run gui
+              ```
+            </Tabs.Tab>
+            <Tabs.Tab>
+              Please follow [these instructions](macOS-docker-build-instructions.md) to build and start the Drifty GUI native executable in a Docker container
+            </Tabs.Tab>
+          </Tabs>
+        </Tabs.Tab>
+        <Tabs.Tab>
+          {/* prettier-ignore */}
+          Run the below command to build and start the Drifty CLI native executable in a Docker container
+          ```shell
+          docker compose run cli
+          ```
+        </Tabs.Tab>
+       </Tabs>
+
+  </Tabs.Tab>
+</Tabs>

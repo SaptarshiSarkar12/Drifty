@@ -1,0 +1,107 @@
+import { Callout, Tabs } from 'nextra/components'
+
+# Using Drifty in Docker
+
+Drifty can be run in a Docker container, which allows you to use it without installing it directly on your system. This is particularly useful for testing or running Drifty in isolated environments.
+
+## Prerequisites
+
+Ensure you have Docker installed on your system. You can download it from the [official Docker website](https://www.docker.com/get-started).
+
+<Callout type="info">
+  ### Platform-Specific Requirements
+  - **Windows Users**: Ensure WSL2 is installed and configured. See the [WSL2 installation guide](https://docs.microsoft.com/en-us/windows/wsl/install).
+  - **Linux Users**: Use Docker Engine directly via command line. Follow the [Docker Engine installation guide](https://docs.docker.com/engine/install/). Commands require `sudo{:sh}` privileges.
+  - **Mac Users**: For GUI version, install `XQuartz{:sh}` for X11 forwarding. See our [macOS guide](../../development/macOS-docker-build-instructions.md).
+</Callout>
+
+## Running Drifty in Docker
+
+<Tabs items={["GUI", "CLI"]}>
+   <Tabs.Tab>
+      1. Open your terminal.
+      2. Pull the latest version of the Drifty Docker image by running the following command:
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-gui:latest
+         ```
+      3. If you are a **Linux** user or using **WSL2**, you may need to allow Docker to access your X server. You can do this by running the following command:
+         ```sh
+         xhost +local:docker
+         ```
+      4. Once the image is pulled, you can run it using the following command:
+         ```sh
+         docker run -e DISPLAY=$DISPLAY --net=host -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
+         ```
+      5. Drifty GUI should now open on your screen.
+   </Tabs.Tab>
+   <Tabs.Tab>
+      1. Open your terminal.
+      2. Pull the latest version of the Drifty Docker image by running the following command:
+         ```sh
+         docker pull ghcr.io/saptarshisarkar12/drifty-cli:latest
+         ```
+      3. Once the image is pulled, you can run it using the following command:
+         ```sh
+         docker run -it ghcr.io/saptarshisarkar12/drifty-cli:latest
+         ```
+   </Tabs.Tab>
+</Tabs>
+
+## Important Notes
+
+- To download files to a specific local directory, you need to mount that directory as a volume for Drifty. For example:
+  ```sh
+  # For GUI version
+  docker run -e DISPLAY=$DISPLAY --net=host -v /home/username/Downloads:/root/Downloads -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
+
+  # For CLI version
+  docker run -it -v /home/username/Downloads:/root/Downloads ghcr.io/saptarshisarkar12/drifty-cli:latest
+  ```
+
+- For persistent data storage and faster initialization, you can mount the Drifty configuration directory:
+  ```sh
+  # For GUI version
+  docker run -e DISPLAY=$DISPLAY --net=host -v /home/username/.drifty:/root/.drifty -v /tmp/.X11-unix:/tmp/.X11-unix ghcr.io/saptarshisarkar12/drifty-gui:latest
+
+  # For CLI version
+  docker run -it -v /home/username/.drifty:/root/.drifty ghcr.io/saptarshisarkar12/drifty-cli:latest
+  ```
+
+### Available Version Tags
+
+| Version Type      | Tag                  | Status        | Example Usage                                      |
+|-------------------|----------------------|---------------|----------------------------------------------------|
+| Latest Stable     | `latest{:sh}`        | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:latest{:sh}` |
+| Release Candidate | `rc{:sh}`            | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:rc{:sh}`     |
+| Beta              | `beta{:sh}`          | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:beta{:sh}`   |
+| Alpha             | `alpha{:sh}`         | Not Available | -                                                  |
+| Branch-specific   | `<branch-name>{:sh}` | Available     | `ghcr.io/saptarshisarkar12/drifty-cli:master{:sh}` |
+
+## Troubleshooting
+
+### Permission Issues
+If you encounter permission issues when mounting volumes, ensure that:
+- The target directories exist on your host machine
+- You have the correct permissions for the directories
+- For Linux users, remember to use `sudo{:sh}` with docker commands
+
+### Display Issues (GUI Version)
+If the GUI doesn't appear:
+- Ensure X11 forwarding is properly configured
+- Check if the DISPLAY environment variable is set correctly
+- For WSL2 users, verify that an X server is running on Windows
+
+### Platform-Specific Considerations
+
+#### Linux
+- Use Docker Engine directly instead of Docker Desktop
+- Always prefix docker commands with `sudo{:sh}`
+- The mounted paths should match your actual system paths
+
+#### Windows (WSL2)
+- Ensure paths are in Linux format when mounting volumes
+- Use Windows paths in WSL2 format (e.g., `/mnt/c/Users/...{:sh}`)
+
+#### macOS
+- XQuartz must be running before starting the GUI version
+- Consider using absolute paths when mounting volumes
