@@ -31,9 +31,9 @@ public class Environment {
     public static int currentSessionId;
 
     /*
-    This method is called by both CLI.Main and GUI.Forms.Main classes.
+    This method is called by both main.Drifty_CLI and main.Drifty_GUI classes.
     It first determines which yt-dlp program to copy out of resources based on the OS.
-    Next, it figures out which path to use to store yt-dlp and the users batch list.
+    Next, it figures out which path to use to store yt-dlp and the user's batch list.
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
