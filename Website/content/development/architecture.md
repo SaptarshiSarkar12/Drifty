@@ -28,35 +28,41 @@ The project is organized into several key directories, each with a specific purp
 
 Drifty's architecture is designed to be modular and flexible, allowing for easy development and deployment. The main parts are:
 
-```mermaid
-graph LR
-    subgraph Drifty
-        subgraph CLI
-            CLIApp[CLI Application]
-        end
-        subgraph GUI
-            GUIApp[GUI Application]
-        end
-        Core[Core Module]
-    end
-    subgraph Docker
-        subgraph DevEnv[Development Environment]
-            Commons[Common Base Images]
-            CDC[CLI Development Container]
-            GDC[GUI Development Container]
-        end
-        subgraph ProdEnv[Production Environment]
-            CPC[CLI Production Container]
-            GPC[GUI Production Container]
-        end
-    end
-    CLI --depends on--> Core
-    GUI --depends on--> Core
-    CDC --extends--> Commons
-    GDC --extends--> Commons
-    CPC --contains--> CLIApp
-    GPC --contains--> GUIApp
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../../public/docs_images/drifty-architecture-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="../../public/docs_images/drifty-architecture-light.png">
+  <img alt="Drifty Architecture" src="../../public/docs_images/drifty-architecture-light.png">
+</picture>
+
+[//]: # (```mermaid)
+[//]: # (graph LR)
+[//]: # (    subgraph Drifty)
+[//]: # (        subgraph CLI)
+[//]: # (            CLIApp[CLI Application])
+[//]: # (        end)
+[//]: # (        subgraph GUI)
+[//]: # (            GUIApp[GUI Application])
+[//]: # (        end)
+[//]: # (        Core[Core Module])
+[//]: # (    end)
+[//]: # (    subgraph Docker)
+[//]: # (        subgraph DevEnv[Development Environment])
+[//]: # (            Commons[Common Base Images])
+[//]: # (            CDC[CLI Development Container])
+[//]: # (            GDC[GUI Development Container])
+[//]: # (        end)
+[//]: # (        subgraph ProdEnv[Production Environment])
+[//]: # (            CPC[CLI Production Container])
+[//]: # (            GPC[GUI Production Container])
+[//]: # (        end)
+[//]: # (    end)
+[//]: # (    CLI --depends on--> Core)
+[//]: # (    GUI --depends on--> Core)
+[//]: # (    CDC --extends--> Commons)
+[//]: # (    GDC --extends--> Commons)
+[//]: # (    CPC --contains--> CLIApp)
+[//]: # (    GPC --contains--> GUIApp)
+[//]: # (```)
 
 This diagram illustrates the relationships between the different components of Drifty:
 
