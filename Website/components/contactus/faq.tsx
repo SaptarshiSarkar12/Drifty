@@ -10,21 +10,11 @@ export default function FAQs() {
         Check out our documentation for more information about Drifty.
       </p>
       <Link
-        href="#"
+        href="/docs"
         className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
       >
         Visit Documentation →
       </Link>
-      <p className="text-red-500 dark:text-red-400 italic text-sm">
-        ☝️Page not accessible, currently{" "}
-        <a
-          href="https://github.com/SaptarshiSarkar12/Drifty/issues/273"
-          className="underline-offset-2 underline hover:underline-offset-4 "
-        >
-          under development
-        </a>
-        .
-      </p>
     </div>
   );
 }

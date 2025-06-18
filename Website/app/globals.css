@@ -45,3 +45,51 @@ html {
     background-color 0.3s ease,
     color 0.3s ease;
 }
+
+@media (max-width: 768px) {
+  .nextra-mobile-nav {
+    background: var(--dark-bg) !important;
+    background-image: none !important; /* Remove gradient */
+  }
+
+  .nextra-mobile-nav a,
+  .nextra-mobile-nav span,
+  .nextra-mobile-nav button,
+  .nextra-mobile-nav li {
+    color: #fff !important;
+  }
+}
+
+/* Dark Mode Styles: When dark class is added to <html> */
+@layer base {
+  html.dark {
+    --bg-color: var(--dark-bg);
+    --accent-color: var(--dark-accent);
+    --text-color: var(--text);
+  }
+}
+
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.nextra-banner,
+html.dark .nextra-banner {
+  position: relative;
+  width: 98vw;
+  margin-left: calc(-49vw + 50%);
+  background: var(--light-accent);
+  color: currentColor;
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  backdrop-filter: brightness(1.08) contrast(1.02);
+  border-radius: 6px;
+}
+
+html.dark .nextra-banner {
+  background: var(--dark-accent);
+}

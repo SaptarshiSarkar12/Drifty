@@ -1,0 +1,185 @@
+import { Callout } from "nextra/components";
+
+# Drifty CLI Overview
+
+## Introduction
+
+The Drifty Command Line Interface (CLI) lets you download files quickly without using a graphical interface. It's perfect for:
+
+- Downloading files from scripts or terminal
+- Automating download tasks
+- Working on servers or systems without a GUI
+- Power users who prefer keyboard commands
+
+This guide covers all available commands with examples to help you get started.
+
+<Callout type="info">
+  Throughout this documentation, we use `drifty` as the command name. If you've
+  renamed your executable or are using a different path, replace `drifty` with
+  your actual command.
+</Callout>
+
+## Quick Reference
+
+| Command               | Short Form      | Description                              |
+| --------------------- | --------------- | ---------------------------------------- |
+| `--help`              | `-h`            | Show help information                    |
+| `--version`           | `-v`            | Show version information                 |
+| `--batch <file>`      | `-b <file>`     | Download multiple files from a YAML file |
+| `--add <URL>...`      |                 | Add URLs to download queue               |
+| `--list`              |                 | Show URLs in download queue              |
+| `--remove <index>...` |                 | Remove URLs from download queue          |
+| `--get`               |                 | Download all URLs in queue               |
+| `--location <path>`   | `-l <path>`     | Set download location                    |
+| `--name <filename>`   | `-n <filename>` | Set custom filename                      |
+| `--update`            | `-u`            | Check for updates                        |
+
+![Drifty CLI Help Screen](https://github.com/user-attachments/assets/1a1a305f-b3c5-4b92-98fd-5af00675039e)
+
+## Commands
+
+Drifty CLI supports the following commands:
+
+### Help
+
+**Command**: `--help{:sh}` or `-h{:sh}`
+
+**Description**: Display the help message with all the available commands and options.
+
+**Usage**:
+
+```bash
+drifty --help
+```
+
+### Version
+
+**Command**: `--version{:sh}` or `-v{:sh}`
+
+**Description**: Display the version of Drifty CLI along with its components.
+
+**Usage**:
+
+```bash
+drifty --version
+```
+
+### Batch Download
+
+**Command**: `--batch <file>{:sh}` or `-b <file>{:sh}`
+
+**Description**: Download multiple files without the need to specify the URL each time. You need to create an YAML file with the list of URLs you want to download. You can also specify the directory and file name for each URL. The YAML file should have the following format:
+
+```yaml filename="sample.yaml" showLineNumbers
+links: ["<URL1>", "<URL2>", "<URL3>", ...]
+# Optional: Specify the directory and file name for each URL
+fileNames: ["<FileName1>", "<FileName2>", "<FileName3>", ...]
+directory: ["<SameDirectoryForAll>"]
+directories: ["<Directory1>", "<Directory2>", "<Directory3>", ...]
+```
+
+- **links** (**Required**): List of URLs to download.
+- **fileNames** (**Optional**): List of file names to save the downloaded files. The order should match the order of URLs. If not specified, the file name will be automatically detected from the URL.
+- **directory** or **directories** (**Optional**): Specify the directory where the files will be saved. Use **directory** to save all files in the same directory. Use **directories** to save each file in the corresponding directory specified in the order of URLs. By default, files are saved in the last used directory or the default download directory (`user_home/Downloads{:sh}`) if not specified.
+
+**Example Configuration**:
+
+```yaml filename="batch.yaml" showLineNumbers
+links:
+  [
+    "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz",
+    "https://www.youtube.com/watch?v=pBy1zgt0XPc",
+  ]
+fileNames: ["jdk-21.tar.gz", "What is GitHub?.mp4"]
+directories: ["/home/user/Downloads", "/home/user/Videos"]
+```
+
+**Usage**:
+
+```bash
+drifty --batch batch.yaml
+```
+
+### Add links to Queue
+
+**Command**: `--add <URL1> <URL2> ...{:sh}`
+
+**Description**: Add one or more URLs to the download queue. The URLs will be downloaded sequentially.
+
+**Usage**:
+
+```bash
+drifty --add "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz" "https://www.youtube.com/watch?v=pBy1zgt0XPc"
+```
+
+### List links in Queue
+
+**Command**: `--list{:sh}`
+
+**Description**: List all the URLs in the download queue.
+
+**Usage**:
+
+```bash
+drifty --list
+```
+
+### Remove links from Queue
+
+**Command**: `--remove <index1> <index2> ...{:sh}` or `--remove all{:sh}`
+
+**Description**: Remove one or more URLs from the download queue. You can specify the index of the URLs to remove, or use `all` to clear the entire queue.
+
+**Usage**:
+
+```bash
+drifty --remove 1 3
+```
+
+### Download from Queue
+
+**Command**: `--get{:sh}`
+
+**Description**: Start downloading the URLs in the download queue. The URLs will be downloaded sequentially.
+
+**Usage**:
+
+```bash
+drifty --get
+```
+
+### Destination Download Folder
+
+<Callout type="warning">
+  This command is not a standalone command. It must be used with the URL of the
+  file you want to download. You can also use the `--name{:sh}` command in
+  conjunction with this command.
+</Callout>
+
+**Command**: `--location <path>{:sh}` or `-l <path>{:sh}`
+
+**Description**: Specify a custom download location for the files. If not specified, you will be prompted to choose the download location each time you download a file (Default download location, Last-used directory, or Custom directory).
+
+**Usage**:
+
+```bash
+drifty https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz --location /home/user/Downloads
+```
+
+### File Name
+
+<Callout type="info">
+  This command is not a standalone command. It must be used with the URL of the
+  file you want to download. You can also use the `--location{:sh}` command in
+  conjunction with this command.
+</Callout>
+
+**Command**: `--name <filename>{:sh}` or `-n <filename>{:sh}`
+
+**Description**: Specify a custom file name, including the extension if applicable. If not provided, the file name will be automatically detected from the URL.
+
+**Usage**:
+
+```bash
+drifty https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz --name jdk-21.tar.gz
+```
