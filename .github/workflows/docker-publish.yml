@@ -94,11 +94,6 @@ jobs:
       - name: Package Drifty CLI with GraalVM
         if: matrix.docker_context == 'CLI'
         run: mvn -P build-drifty-cli-for-ubuntu-latest package
-      - name: Set Up Maven version 3.8.8 # For GUI build issues, maven version 3.8.8 needs to be used
-        if: matrix.docker_context == 'GUI'
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.8.8
       - name: Build platform-specific C object for missing jdk libraries
         if: matrix.docker_context == 'GUI'
         run: gcc -c config/missing_symbols.c -o config/missing_symbols-ubuntu-latest.o
