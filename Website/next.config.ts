@@ -1,12 +1,18 @@
-import type { NextConfig } from "next";
+import nextra from "nextra";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const withNextra = nextra({
+  search: true,
+  contentDirBasePath: "/docs",
+  defaultShowCopyCode: true,
+  codeHighlight: true,
+});
+
+// You can include other Next.js configuration options here, in addition to Nextra settings:
+export default withNextra({
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },
-};
-
-export default nextConfig;
+  reactStrictMode: true,
+});

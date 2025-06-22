@@ -3,3 +3,4 @@ CLI/src/main/resources/META-INF/native-image
 .idea
 .github/workflows
 config/
+Website/content/usage/docker/drifty-in-docker.mdx
