@@ -15,7 +15,7 @@
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
-        <gluonfx-maven-plugin.version>1.0.26</gluonfx-maven-plugin.version>
+        <gluonfx-maven-plugin.version>1.0.25</gluonfx-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gui.main-class>main.Drifty_GUI</gui.main-class>
         <system-linker-arg/>
@@ -128,7 +128,7 @@
             <properties>
                 <!-- Error: Building a native image is not yet supported on Windows with this (v1.0.25) version.
                      Please use GluonFX plugin version 1.0.23 instead.-->
-                <gluonfx-maven-plugin.version>1.0.23</gluonfx-maven-plugin.version>
+<!--                 <gluonfx-maven-plugin.version>1.0.23</gluonfx-maven-plugin.version> -->
                 <package.type>msi</package.type>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
                 <resource-config-file>resource-config-windows.json</resource-config-file>
