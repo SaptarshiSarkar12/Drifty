@@ -130,7 +130,7 @@ jobs:
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.10.0
+        uses: docker/setup-buildx-action@v3.11.1
 
       # Login to GitHub Container Registry
       # https://github.com/docker/login-action
@@ -197,7 +197,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v6.15.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: build/${{ matrix.docker_context }}
           push: ${{ github.event_name != 'pull_request' && github.repository == 'SaptarshiSarkar12/Drifty' && !contains(github.ref_name, 'dependabot') }}
@@ -216,7 +216,7 @@ jobs:
         run: docker build -t ${{ matrix.image_name }} -f Docker/prod/${{ matrix.docker_context }}/Dockerfile build/${{ matrix.docker_context }}
 
       - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@0.31.0
         continue-on-error: true
         with:
           image-ref: ${{ matrix.image_name }}

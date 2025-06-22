@@ -22,7 +22,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
+            <version>2.19.0</version>
         </dependency>
         <dependency>
             <groupId>org.hildan.fxgson</groupId>
@@ -32,12 +32,12 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.12.1</version>
+            <version>2.13.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.13.0</version>
+            <version>1.13.1</version>
         </dependency>
         <dependency>
             <groupId>org.buildobjects</groupId>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.49.1.0</version>
+            <version>3.50.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

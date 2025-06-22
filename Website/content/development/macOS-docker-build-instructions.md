@@ -6,7 +6,7 @@ There are some steps to follow if you're going to run the Drifty GUI Docker imag
 
 You will need these programs to follow these instructions:
 
-- [**Docker**](https://docs.docker.com/desktop/install/mac-install)
+- [**Docker**](https://docs.docker.com/desktop/setup/install/mac-install/)
 - [**HomeBrew**](https://brew.sh/)
 - **Socat** (will be installed later in the instructions)
 - **XQuartz** (will be installed later in the instructions)
@@ -55,13 +55,13 @@ After the Docker image of Drifty GUI has been built/pulled, we need to provide a
 >
 > DHCP services are also designed to make that assigned IP address expire after some time (usually three days). In case a device that was on the network is no longer on the network, it can pull that IP address back and put it into the pool so that it doesn't run out of IP addresses. This means that it is possible your local IP address might change in a short period of time. We cannot build a command to run Drifty when your IP address is changing because docker needs to send the graphics to a known IP address.
 >
-> There are usually two generic ways to refer to your local ip address in a linux or Windows environment. The first way is to simply use the word `localhost` and the second way is to use the default home IP address of `127.0.0.1`. Unfortunately, neither of those generics will work in this case, so we have to give the command the exact IP address of your Mac.
+> There are usually two generic ways to refer to your local ip address in a linux or Windows environment. The first way is to simply use the word `localhost{:sh}` and the second way is to use the default home IP address of `127.0.0.1{:sh}`. Unfortunately, neither of those generics will work in this case, so we have to give the command the exact IP address of your Mac.
 >
 > </details>
 
 ### Manually assigning an IP address to your Mac
 
-We first need to know the IP address that the router has assigned to your Mac. Most of the routers will use an IP address that starts with `192.168` so let's see if we have that kind of address assigned to our Mac, by running this command:
+We first need to know the IP address that the router has assigned to your Mac. Most of the routers will use an IP address that starts with `192.168{:sh}` so let's see if we have that kind of address assigned to our Mac, by running this command:
 
 ```bash
 ifconfig | grep 192.168
@@ -69,9 +69,11 @@ ifconfig | grep 192.168
 
 You should see something like this:
 
-> inet 192.168.1.123 netmask 0xffffff00 broadcast 192.168.1.255
+```sh
+inet 192.168.1.123 netmask 0xffffff00 broadcast 192.168.1.255
+```
 
-The **IP address** that is after the word `inet` will be the address that your router assigned to your Mac. Since that address exists in the router's pool of IP addresses, so we cannot statically assign that address to your Mac. So I recommend assigning an address that is lower in value, which has a better chance of being outside the router's address pool. I would use an address like `192.168.1.10`, so we will go with that.
+The **IP address** that is after the word `inet{:sh}` will be the address that your router assigned to your Mac. Since that address exists in the router's pool of IP addresses, so we cannot statically assign that address to your Mac. So I recommend assigning an address that is lower in value, which has a better chance of being outside the router's address pool. I would use an address like `192.168.1.10{:sh}`, so we will go with that.
 
 If you are not running at **_least macOS version 13 (Ventura)_**, then refer to [**this article**](https://www.macinstruct.com/tutorials/how-to-set-a-static-ip-address-on-a-mac/) to get the instructions for **statically assigning your IP address**. Otherwise, follow these instructions:
 
@@ -108,7 +110,7 @@ We have finally set up everything required to run the Docker image of **Drifty G
   docker run -e DISPLAY=192.168.1.10:0 ghcr.io/saptarshisarkar12/drifty-gui:master
   ```
   Ensure to update the tag to the desired version/branch.
-- To run the **docker image built from your changed source code** (using `docker compose`), execute the following commands:
+- To run the **docker image built from your changed source code** (using `docker compose{:sh}`), execute the following commands:
   ```bash
   socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
   open -a Xquartz
