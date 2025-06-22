@@ -15,7 +15,7 @@
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
-        <gluonfx-maven-plugin.version>1.0.25</gluonfx-maven-plugin.version>
+        <gluonfx-maven-plugin.version>1.0.26</gluonfx-maven-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gui.main-class>main.Drifty_GUI</gui.main-class>
         <system-linker-arg/>
