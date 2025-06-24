@@ -13,7 +13,6 @@ Drifty CLI allows you to download files from the internet using a simple command
    ![Download Options Prompt](https://github.com/user-attachments/assets/c41e73d3-5181-4d20-b708-4d3c63ded67f)
 3. Enter the URL of the video you want to download.
 4. After validating the URL, Drifty will prompt you to choose a download destination folder. Enter
-
    - `.` if you want to download the video in the default download directory (which is `user_home/Downloads{:sh}` in most cases).
    - `L` if you want to use the last used directory.
    - the absolute path of the directory where you want to save the video, e.g., `/home/user/Videos{:sh}`.
@@ -43,7 +42,6 @@ Drifty CLI allows you to download files from the internet using a simple command
    ```
    ![Batch File Prompt](https://github.com/user-attachments/assets/86d884ff-dd4c-40f1-a6b6-e2f3d98411e0)
 4. The batch file will be processed, and if any of those files exist with the same name, or you have previously downloaded any, you will be prompted to skip or re-download them.
-
    - Enter `Y` to continue downloading the file. A new file name will be generated, and you will be prompted to confirm the file name.
    - Enter `N` to skip downloading the file.
 
