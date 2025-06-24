@@ -5,7 +5,7 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
+  - package-ecosystem: "npm"
     directory: "/Website" # Location of package manifests
     schedule:
       interval: "daily"
@@ -27,10 +27,8 @@ updates:
     labels:
       - "dependencies 📦️"
       - "npm 📦️"
-    reviewers:
-      - SaptarshiSarkar12
 
-  - package-ecosystem: "maven" # See documentation for possible values
+  - package-ecosystem: "maven"
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
@@ -38,13 +36,14 @@ updates:
       openrewrite-dependencies:
         patterns:
           - "org.openrewrite*"
+      javafx-dependencies:
+        patterns:
+          - "org.openjfx*"
     commit-message:
       prefix: "chore(maven)"
     labels:
       - "dependencies 📦️"
       - "maven 📦️"
-    reviewers:
-      - SaptarshiSarkar12
 
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
@@ -56,8 +55,6 @@ updates:
     labels:
       - "dependencies 📦️"
       - "CI/CD 🔁"
-    reviewers:
-      - SaptarshiSarkar12
 
   - package-ecosystem: "docker"
     directories:
@@ -75,5 +72,3 @@ updates:
     labels:
       - "dependencies 📦️"
       - "docker 🐋"
-    reviewers:
-      - SaptarshiSarkar12
