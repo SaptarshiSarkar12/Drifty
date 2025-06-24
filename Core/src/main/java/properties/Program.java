@@ -9,6 +9,7 @@ public enum Program {
     private static String ytDLPExecutableName;
     private static String ffmpegExecutableName;
     private static String driftyPath;
+    private static String databaseName;
 
     public static void setYtDlpExecutableName(String name) {
         Program.ytDLPExecutableName = name;
@@ -27,7 +28,12 @@ public enum Program {
             case YT_DLP_EXECUTABLE_NAME -> ytDLPExecutableName;
             case FFMPEG_EXECUTABLE_NAME -> ffmpegExecutableName;
             case DRIFTY_PATH -> driftyPath;
-            case DATABASE_PATH -> Paths.get(Program.get(Program.DRIFTY_PATH)).resolve("drifty_" + Mode.getMode().name().toLowerCase() + ".db").toAbsolutePath().toString();
+            case DATABASE_PATH -> {
+                if (databaseName.isBlank()) {
+                    databaseName = "drifty_" + Mode.getMode().name().toLowerCase() + ".db";
+                }
+                yield Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(databaseName).toAbsolutePath().toString();
+            }
             case YT_DLP -> Paths.get(driftyPath, ytDLPExecutableName).toAbsolutePath().toString();
             case FFMPEG -> Paths.get(driftyPath, ffmpegExecutableName).toAbsolutePath().toString();
             case JOB_HISTORY_FILE -> Paths.get(driftyPath, "JobHistory.json").toAbsolutePath().toString();
@@ -41,5 +47,9 @@ public enum Program {
 
     public static Path getJsonDataPath() {
         return Paths.get(driftyPath, "JsonData");
+    }
+
+    public static void setDatabaseName(String name) {
+        Program.databaseName = name;
     }
 }
