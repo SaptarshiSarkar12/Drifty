@@ -248,7 +248,9 @@ public final class DbConnection {
 
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Files successfully deleted from the database.");
+                System.out.println(rowsAffected + " files successfully deleted from the database.");
+            } else {
+                System.out.println("No files found to delete from the database.");
             }
         }
     }
