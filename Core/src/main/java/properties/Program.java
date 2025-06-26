@@ -29,7 +29,7 @@ public enum Program {
             case FFMPEG_EXECUTABLE_NAME -> ffmpegExecutableName;
             case DRIFTY_PATH -> driftyPath;
             case DATABASE_PATH -> {
-                if (databaseName.isBlank()) {
+                if (databaseName == null || databaseName.isEmpty()) {
                     databaseName = "drifty_" + Mode.getMode().name().toLowerCase() + ".db";
                 }
                 yield Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(databaseName).toAbsolutePath().toString();
