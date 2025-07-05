@@ -10,12 +10,15 @@ updates:
     schedule:
       interval: "daily"
     groups:
-      next-eslint-dependencies:
+      next-tailwindcss-types-node-eslint-dependencies:
         patterns:
           - "@next*"
           - "next*"
           - "@eslint-config-next*"
           - "eslint-config-next*"
+          - "tailwindcss*"
+          - "@tailwindcss/postcss*"
+          - "@types/node*"
       react-dependencies:
         patterns:
           - "@react*"
