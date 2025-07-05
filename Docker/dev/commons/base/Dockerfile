@@ -17,7 +17,7 @@ ARG MAVEN_VERSION
 
 # Certificates are not checked to avoid issues with SSL. Both the domains are trusted and are not malicious.
 # Also, this is a development environment and not a production environment.
-RUN wget --progress=bar:force --no-check-certificate https://dlcdn.apache.org/maven/maven-${MAVEN_MAJOR}/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+RUN wget --progress=bar:force --no-check-certificate https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
     wget --progress=bar:force --no-check-certificate https://download.oracle.com/graalvm/${GRAALVM_VERSION_MAJOR}/latest/graalvm-jdk-${GRAALVM_VERSION_MAJOR}_linux-x64_bin.tar.gz && \
     tar -xzf apache-maven-*.tar.gz -C /opt && \
     tar -xzf graalvm-jdk-*.tar.gz -C /opt &&\
