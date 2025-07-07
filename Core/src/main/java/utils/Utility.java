@@ -624,8 +624,7 @@ public class Utility {
                     matchedVideoId = (String) searchResult.get("videoId");
                 }
             }
-            @SuppressWarnings("unchecked")
-            ArrayList<String> artistsFromSearchResult = (ArrayList<String>) searchResult.get("artists");
+            @SuppressWarnings("unchecked") ArrayList<String> artistsFromSearchResult = (ArrayList<String>) searchResult.get("artists");
             if (artistsFromSearchResult == null) {
                 msgBroker.msgLinkError("Failed to get artists from search result!");
                 continue;
