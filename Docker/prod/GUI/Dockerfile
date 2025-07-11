@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 oraclelinux:9-slim
+FROM --platform=linux/amd64 oraclelinux:10-slim
 
 WORKDIR /app
 COPY . .
