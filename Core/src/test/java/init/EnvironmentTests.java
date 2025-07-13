@@ -36,21 +36,21 @@ public class EnvironmentTests {
 
         switch (OS.getOSType()) {
             case WIN -> {
-                assert ytDlpExecName.equals("yt-dlp.exe") : "yt-dlp executable name is not correct for Windows!";
-                assert ffmpegExecName.equals("ffmpeg.exe") : "ffmpeg executable name is not correct for Windows!";
+                assert "yt-dlp.exe".equals(ytDlpExecName) : "yt-dlp executable name is not correct for Windows!";
+                assert "ffmpeg.exe".equals(ffmpegExecName) : "ffmpeg executable name is not correct for Windows!";
             }
             case MAC -> {
-                assert ytDlpExecName.equals("yt-dlp_macos") : "yt-dlp executable name is not correct for macOS!";
+                assert "yt-dlp_macos".equals(ytDlpExecName) : "yt-dlp executable name is not correct for macOS!";
                 String osArch = System.getProperty("os.arch");
                 if (osArch.contains("arm") || osArch.contains("aarch64")) {
-                    assert ffmpegExecName.equals("ffmpeg_macos-arm64") : "ffmpeg executable name is not correct for macOS ARM architecture!";
+                    assert "ffmpeg_macos-arm64".equals(ffmpegExecName) : "ffmpeg executable name is not correct for macOS ARM architecture!";
                 } else {
-                    assert ffmpegExecName.equals("ffmpeg_macos-x64") : "ffmpeg executable name is not correct for macOS x64 architecture!";
+                    assert "ffmpeg_macos-x64".equals(ffmpegExecName) : "ffmpeg executable name is not correct for macOS x64 architecture!";
                 }
             }
             case LINUX -> {
-                assert ytDlpExecName.equals("yt-dlp") : "yt-dlp executable name is not correct for Linux!";
-                assert ffmpegExecName.equals("ffmpeg") : "ffmpeg executable name is not correct for Linux!";
+                assert "yt-dlp".equals(ytDlpExecName) : "yt-dlp executable name is not correct for Linux!";
+                assert "ffmpeg".equals(ffmpegExecName) : "ffmpeg executable name is not correct for Linux!";
             }
             default -> {
                 assert false : "OS type is not supported!";
