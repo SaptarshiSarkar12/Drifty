@@ -10,7 +10,7 @@ import utils.MessageBroker;
 import java.io.File;
 
 @DisplayName("Environment Tests")
-public class EnvironmentTests {
+public class EnvironmentTest {
     @BeforeAll
     public static void setUp() {
         Environment.setMessageBroker(new MessageBroker());
