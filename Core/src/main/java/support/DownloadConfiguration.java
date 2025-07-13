@@ -32,21 +32,21 @@ public class DownloadConfiguration {
     private int statusCode;
 
     public DownloadConfiguration(String link, String directory, String filename) {
-        this.link = link;
+        this.link = link.trim().replace("\\", "/"); // Normalize the link by replacing backslashes with forward slashes
         this.directory = directory;
         this.filename = filename;
-        this.linkType = LinkType.getLinkType(link);
+        this.linkType = LinkType.getLinkType(this.link);
         this.fileData = new ArrayList<>();
     }
 
     public void sanitizeLink() {
-        link = link.trim();
-        link = link.replace('\\', '/');
-        link = link.replaceFirst("^(?!https?:)", "https://");
         if (link.startsWith("https://github.com/") || (link.startsWith("http://github.com/"))) {
             if (!link.endsWith("?raw=true")) {
                 link = link + "?raw=true";
             }
+        }
+        if (!(this.linkType.equals(LinkType.OTHER))) {
+            this.link = this.link.replaceFirst("^https?://", "https://");
         }
         if (this.linkType.equals(LinkType.INSTAGRAM)) {
             this.link = Utility.formatInstagramLink(link);
@@ -274,6 +274,10 @@ public class DownloadConfiguration {
 
     public String getLink() {
         return link;
+    }
+
+    public LinkType getLinkType() {
+        return linkType;
     }
 
     public int getFileCount() {
