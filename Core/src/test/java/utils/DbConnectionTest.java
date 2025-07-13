@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @DisplayName("Database Connection Tests")
-public class DbConnectionTests {
+public class DbConnectionTest {
     static DbConnection dbConnection;
     static String fileName = "Know Your Java.mp4";
     static String fileUrl = "https://www.youtube.com/watch?v=v5Q7TC5u5Co";
