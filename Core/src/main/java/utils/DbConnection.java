@@ -4,6 +4,10 @@ import properties.FileState;
 import properties.Program;
 import support.Job;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +25,16 @@ public final class DbConnection {
     }
 
     private Connection getConnection() throws SQLException {
-        String url = "jdbc:sqlite:" + Program.get(Program.DATABASE_PATH);
+        Path dbPath = Paths.get(Program.get(Program.DATABASE_PATH));
+        try {
+            Files.createDirectories(dbPath.getParent());
+            if (!Files.exists(dbPath)) {
+                Files.createFile(dbPath);
+            }
+        } catch (IOException e) {
+            throw new SQLException("Failed to create database file or directory: " + e.getMessage());
+        }
+        String url = "jdbc:sqlite:" + dbPath.toAbsolutePath();
         return DriverManager.getConnection(url);
     }
 
