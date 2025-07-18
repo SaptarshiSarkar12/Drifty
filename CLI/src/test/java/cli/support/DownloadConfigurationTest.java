@@ -70,27 +70,33 @@ public class DownloadConfigurationTest extends TestEnvironment {
     private static Stream<Arguments> linkAndExpectedFileDataProvider() {
         return Stream.of(
                 Arguments.of("https://youtu.be/pBy1zgt0XPc?feature=shared",
-                        new ArrayList<>(List.of(new HashMap<String, Object>() {{
-                            put("link", "https://youtu.be/pBy1zgt0XPc?feature=shared");
-                            put("filename", "What is GitHub?.mp4");
-                            put("directory", tempDir.toString());
-                        }}))
+                        new ArrayList<>(List.of(new HashMap<String, Object>() {
+                            {
+                                put("link", "https://youtu.be/pBy1zgt0XPc?feature=shared");
+                                put("filename", "What is GitHub?.mp4");
+                                put("directory", tempDir.toString());
+                            }
+                        }))
                 ),
                 Arguments.of("https://www.youtube.com/playlist?list=PL0lo9MOBetEFGPccyxyfex8BYF_PQUQWn", getYTPlaylistFileData()),
                 Arguments.of("https://open.spotify.com/playlist/2Vc2dyNFvVTbjCMmb4SbMA", getSpotifyPlaylistFileData()),
                 Arguments.of("https://github.com/SaptarshiSarkar12/Drifty/blob/master/.github/workflows/static.yml",
-                        new ArrayList<>(List.of(new HashMap<String, Object>() {{
-                            put("link", "https://github.com/SaptarshiSarkar12/Drifty/blob/master/.github/workflows/static.yml?raw=true");
-                            put("filename", "static.yml");
-                            put("directory", tempDir.toString());
-                        }}))
+                        new ArrayList<>(List.of(new HashMap<String, Object>() {
+                            {
+                                put("link", "https://github.com/SaptarshiSarkar12/Drifty/blob/master/.github/workflows/static.yml?raw=true");
+                                put("filename", "static.yml");
+                                put("directory", tempDir.toString());
+                            }
+                        }))
                 ),
                 Arguments.of("https://www.instagram.com/reel/DLJLsjaJrXI/",
-                        new ArrayList<>(List.of(new HashMap<String, Object>() {{
-                            put("link", "https://www.instagram.com/reel/DLJLsjaJrXI/?utm_source=ig_embed");
-                            put("filename", "Video by github.mp4");
-                            put("directory", tempDir.toString());
-                        }}))
+                        new ArrayList<>(List.of(new HashMap<String, Object>() {
+                            {
+                                put("link", "https://www.instagram.com/reel/DLJLsjaJrXI/?utm_source=ig_embed");
+                                put("filename", "Video by github.mp4");
+                                put("directory", tempDir.toString());
+                            }
+                        }))
                 )
         );
     }
