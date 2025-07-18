@@ -67,6 +67,10 @@ public class UpdateChecker {
     private static String getReleaseTag(HttpRequest request) {
         try (HttpClient client = HttpClient.newHttpClient()) {
             String responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+            if (responseBody.isEmpty()) {
+                M.msgUpdateError("Failed to check for updates! No response from GitHub API.");
+                return "";
+            }
             String tag = responseBody.split("\"tag_name\":\"")[1].split("\"")[0];
             AppSettings.SET.newDriftyVersionName(responseBody.split("\"name\":\"")[1].split("\"")[0]);
             AppSettings.SET.latestDriftyVersionTag(tag);
