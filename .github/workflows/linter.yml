@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: read
-      pull-requests: write
       statuses: write
     steps:
       - name: Checkout Code
@@ -22,7 +20,6 @@ jobs:
           # Full git history is necessary to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
