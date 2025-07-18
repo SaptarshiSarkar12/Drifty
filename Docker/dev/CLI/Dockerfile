@@ -15,7 +15,7 @@ RUN gcc -c /build/config/missing_symbols.c -o /build/config/missing_symbols-ubun
 RUN mvn clean install
 RUN mvn -P build-drifty-cli-for-ubuntu-latest package
 
-FROM oraclelinux:9-slim
+FROM oraclelinux:10-slim
 
 WORKDIR /app
 COPY --from=build /app/CLI/target/CLI/linux /app
