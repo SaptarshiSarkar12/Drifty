@@ -173,7 +173,7 @@ jobs:
             echo "IMAGE_DESCRIPTION_PREFIX=The" >> $GITHUB_ENV
           fi
       - name: Pull runtime os image # to patch vulnerabilities
-        run: docker pull oraclelinux:9-slim
+        run: docker pull oraclelinux:10-slim
       - name: Build latest version of Copa # to support Oracle Linux yum packages
         run: |
           git clone https://github.com/project-copacetic/copacetic
@@ -189,7 +189,7 @@ jobs:
           retry_on: error
           command: |
             docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
-            copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --timeout 10m
+            copa patch -i oraclelinux:10-slim -t 10-slim --addr docker-container://buildkitd --timeout 10m
           retry_wait_seconds: '10'
           on_retry_command: |
             docker stop buildkitd
@@ -216,7 +216,7 @@ jobs:
         run: docker build -t ${{ matrix.image_name }} -f Docker/prod/${{ matrix.docker_context }}/Dockerfile build/${{ matrix.docker_context }}
 
       - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@0.31.0
+        uses: aquasecurity/trivy-action@0.32.0
         continue-on-error: true
         with:
           image-ref: ${{ matrix.image_name }}
