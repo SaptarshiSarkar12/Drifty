@@ -86,6 +86,14 @@ To mark Drifty as safe:
   ```
   Try running Drifty again.
 
+## 🛡️ Legal Disclaimer
+
+This software is provided for downloading content that **you have legal rights to access**. Usage of Drifty must comply with all applicable copyright laws and the Terms of Service of any platforms involved.
+
+The developers and contributors are **not responsible for misuse**. This tool is intended solely for educational and personal use.
+
+By using Drifty, you agree to use it **legally and responsibly**.
+
 ## 🤝 Contributing
 
 We welcome all contributions! Here’s how you can help:
