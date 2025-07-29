@@ -1,6 +1,6 @@
 export default async function Disclaimer() {
   const response = await fetch(
-    "https://raw.githubusercontent.com/AvinashAbbigeri/Drifty/disclaimers/disclaimer.txt",
+    "https://raw.githubusercontent.com/SaptarshiSarkar12/Drifty/master/disclaimer.txt",
   );
   const content = await response.text();
 
