@@ -120,14 +120,14 @@ public class FileDownloader extends Task<Integer> {
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
-        int exitCode=-1;
+        int exitCode = -1;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
             M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
             return;
         } catch (Exception e) {
-            String msg = e.getMessage() !=null ? e.getMessage():"";
+            String msg = e.getMessage() != null ? e.getMessage() : "";
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                 M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
