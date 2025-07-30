@@ -112,7 +112,7 @@ public class FileDownloader extends Task<Integer> {
         }
         updateProgress(0.0, 1.0);
         done = true;
-        return exitCode;
+        return   exitCode;
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
@@ -120,12 +120,14 @@ public class FileDownloader extends Task<Integer> {
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
+        int exitCode=-1;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
             M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
+            return;
         } catch (Exception e) {
-            String msg = e.getMessage();
+            String msg = e.getMessage() !=null ? e.getMessage():"";
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                 M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
@@ -136,8 +138,9 @@ public class FileDownloader extends Task<Integer> {
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
+            return;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(process).getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 progressProperty.setValue(line);
@@ -146,9 +149,10 @@ public class FileDownloader extends Task<Integer> {
             M.msgDownloadError("Failed to read download process status for \"" + filename + "\"");
         }
         try {
-            exitCode = Objects.requireNonNull(process).waitFor();
+            exitCode = process.waitFor();
         } catch (InterruptedException e) {
             M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
+            return;
         }
         if (isSpotifySong && exitCode == 0) {
             sendInfoMessage("Converting to mp3 ...");
