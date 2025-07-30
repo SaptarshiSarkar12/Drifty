@@ -13,7 +13,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <ul className="flex-1 flex flex-wrap justify-center md:justify-center space-x-6 text-sm font-medium">
+        <ul className="flex-auto flex flex-wrap justify-center md:justify-center space-x-4 text-sm font-medium">
           <li>
             <DarkModeToggle />
           </li>
@@ -39,6 +39,14 @@ export default function Footer() {
               className="hover:underline transition-all transform hover:scale-105"
             >
               Contact
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/disclaimer"
+              className="hover:underline transition-all transform hover:scale-105"
+            >
+              Disclaimer
             </Link>
           </li>
         </ul>
