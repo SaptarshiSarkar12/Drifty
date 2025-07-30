@@ -112,7 +112,7 @@ public class FileDownloader extends Task<Integer> {
         }
         updateProgress(0.0, 1.0);
         done = true;
-        return   exitCode;
+        return exitCode;
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
