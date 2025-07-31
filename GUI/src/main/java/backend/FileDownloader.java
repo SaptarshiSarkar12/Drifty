@@ -113,7 +113,6 @@ public class FileDownloader extends Task<Integer> {
         updateProgress(0.0, 1.0);
         done = true;
         return exitCode;
-        //no extra space
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
@@ -121,7 +120,6 @@ public class FileDownloader extends Task<Integer> {
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
         Process process = null;
-        int exitCode = -1;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
