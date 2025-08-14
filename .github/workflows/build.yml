@@ -25,7 +25,7 @@ jobs:
       VERSION: ${{ steps.get-drifty-version.outputs.VERSION }} # The full version of Drifty with the release stage and revision number
       SHORT_VERSION: ${{ steps.get-drifty-short-version.outputs.SHORT_VERSION }} # The short version of Drifty without the release stage and revision number
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get Drifty version from version.json file
@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         ref: ${{ github.event.pull_request.head.sha }}
       # Setup the Windows build environment
@@ -200,7 +200,7 @@ jobs:
     env:
       VERSION: ${{ needs.fetch-drifty-version.outputs.VERSION }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: Split up Version into semantic parts
