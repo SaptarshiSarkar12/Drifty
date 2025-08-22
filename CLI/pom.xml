@@ -50,7 +50,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.6</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -90,7 +90,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.6</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -130,7 +130,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.6</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
@@ -170,7 +170,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.6</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>Drifty CLI</imageName>
