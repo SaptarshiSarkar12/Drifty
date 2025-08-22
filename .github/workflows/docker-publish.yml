@@ -35,7 +35,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Get Drifty version
@@ -135,7 +135,7 @@ jobs:
       # Login to GitHub Container Registry
       # https://github.com/docker/login-action
       - name: Log into registry
-        uses: docker/login-action@v3.4.0
+        uses: docker/login-action@v3.5.0
         if: github.event_name != 'pull_request'
         with:
           registry: ${{ env.REGISTRY }}
@@ -146,7 +146,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5.7.0
+        uses: docker/metadata-action@v5.8.0
         with:
           images: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.image_name }}
@@ -173,7 +173,7 @@ jobs:
             echo "IMAGE_DESCRIPTION_PREFIX=The" >> $GITHUB_ENV
           fi
       - name: Pull runtime os image # to patch vulnerabilities
-        run: docker pull oraclelinux:9-slim
+        run: docker pull oraclelinux:10-slim
       - name: Build latest version of Copa # to support Oracle Linux yum packages
         run: |
           git clone https://github.com/project-copacetic/copacetic
@@ -189,7 +189,7 @@ jobs:
           retry_on: error
           command: |
             docker run --detach --rm --privileged --name buildkitd --entrypoint buildkitd moby/buildkit:latest
-            copa patch -i oraclelinux:9-slim -t 9-slim --addr docker-container://buildkitd --timeout 10m
+            copa patch -i oraclelinux:10-slim -t 10-slim --addr docker-container://buildkitd --timeout 10m
           retry_wait_seconds: '10'
           on_retry_command: |
             docker stop buildkitd
