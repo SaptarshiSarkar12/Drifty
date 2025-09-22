@@ -3,6 +3,7 @@
     "**/.idea/**",
     "**/.git/**",
     "**/Website/app/Releases.js",
+    "**/Website/node_modules/**",
     "**/pom.xml",
     "CLI/src/main/java/backend/ProgressBarThread.java",
     "CLI/src/main/java/main/Drifty_CLI.java",
