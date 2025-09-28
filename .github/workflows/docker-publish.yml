@@ -216,7 +216,7 @@ jobs:
         run: docker build -t ${{ matrix.image_name }} -f Docker/prod/${{ matrix.docker_context }}/Dockerfile build/${{ matrix.docker_context }}
 
       - name: Run Trivy security scan
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.1
         continue-on-error: true
         with:
           image-ref: ${{ matrix.image_name }}
