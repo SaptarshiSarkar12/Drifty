@@ -74,7 +74,7 @@ public class Get {
                 secretKey = Set.getInstance().secretKey;
             }
             byte[] decoded = Base64.getDecoder().decode(storedToken);
-            if (decoded.length <= Set.GCM_IV_LENGTH) {
+            if (decoded.length < Set.GCM_IV_LENGTH + Set.GCM_TAG_LENGTH / 8) {
                 Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! Stored token is invalid!");
                 return "";
             }
