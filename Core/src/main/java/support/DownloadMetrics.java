@@ -10,14 +10,10 @@ public class DownloadMetrics {
     private boolean active;
     private float progressPercent;
     private long totalSize;
-    private boolean multithreading;
+    private boolean multithreadingEnabled;
 
     public int getThreadCount() {
         return 6;
-    }
-
-    public boolean isMultithreadingEnabled() {
-        return multithreading;
     }
 
     public long getMultiThreadingThreshold() {
