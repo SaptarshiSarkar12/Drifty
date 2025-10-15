@@ -3,8 +3,13 @@ package preferences;
 import init.Environment;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.prefs.Preferences;
 
@@ -12,7 +17,10 @@ import static preferences.Labels.*;
 
 public class Set {
     private static final Set INSTANCE = new Set();
-    private final Preferences preferences = Labels.PREFERENCES;
+    private static final Preferences PREFERENCES = Labels.PREFERENCES;
+    static final int GCM_IV_LENGTH = 12;
+    static final int GCM_TAG_LENGTH = 128;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     SecretKey secretKey;
 
     protected Set() {
@@ -24,22 +32,22 @@ public class Set {
 
     public void lastYtDlpUpdateTime(long value) {
         AppSettings.CLEAR.lastYtDlpUpdateTime();
-        preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);
+        PREFERENCES.putLong(LAST_YT_DLP_UPDATE_TIME, value);
     }
 
     public void lastFolder(String lastFolderPath) {
         AppSettings.CLEAR.lastFolder();
-        preferences.put(LAST_FOLDER, lastFolderPath);
+        PREFERENCES.put(LAST_FOLDER, lastFolderPath);
     }
 
     public void ytDlpVersion(String version) {
         AppSettings.CLEAR.ytDlpVersion();
-        preferences.put(YT_DLP_VERSION, version);
+        PREFERENCES.put(YT_DLP_VERSION, version);
     }
 
     public void ffmpegVersion(String version) {
         AppSettings.CLEAR.ffmpegVersion();
-        preferences.put(FFMPEG_VERSION, version);
+        PREFERENCES.put(FFMPEG_VERSION, version);
     }
 
     public void spotifyAccessToken(String token) {
@@ -48,10 +56,16 @@ public class Set {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(256);
             INSTANCE.secretKey = keyGenerator.generateKey();
-            // Encrypt the access token
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, INSTANCE.secretKey);
-            token = Base64.getEncoder().encodeToString(cipher.doFinal(token.getBytes()));
+            // Encrypt the access token using AES-GCM with a random IV
+            byte[] iv = new byte[GCM_IV_LENGTH];
+            SECURE_RANDOM.nextBytes(iv);
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, INSTANCE.secretKey, new GCMParameterSpec(GCM_TAG_LENGTH, iv));
+            byte[] ciphertext = cipher.doFinal(token.getBytes(StandardCharsets.UTF_8));
+            ByteBuffer buffer = ByteBuffer.allocate(iv.length + ciphertext.length);
+            buffer.put(iv);
+            buffer.put(ciphertext);
+            token = Base64.getEncoder().encodeToString(buffer.array());
         } catch (NoSuchAlgorithmException e) {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such algorithm exists! " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
@@ -62,43 +76,45 @@ public class Set {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! Failed to generate secret key! " + e.getMessage());
         } catch (NoSuchPaddingException e) {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such padding exists! " + e.getMessage());
+        } catch (InvalidAlgorithmParameterException e) {
+            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! Invalid algorithm parameters! " + e.getMessage());
         }
         AppSettings.CLEAR.spotifyAccessToken();
-        preferences.put(SPOTIFY_ACCESS_TOKEN, token);
+        PREFERENCES.put(SPOTIFY_ACCESS_TOKEN, token);
     }
 
     public void ytDlpUpdating(boolean isInitializing) {
         AppSettings.CLEAR.ytDlpUpdating();
-        preferences.putBoolean(YT_DLP_UPDATING, isInitializing);
+        PREFERENCES.putBoolean(YT_DLP_UPDATING, isInitializing);
     }
 
     public void isFfmpegWorking(boolean isWorking) {
         AppSettings.CLEAR.isFfmpegWorking();
-        preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
+        PREFERENCES.putBoolean(IS_FFMPEG_WORKING, isWorking);
     }
 
     public void earlyAccess(boolean isEarlyAccess) {
         AppSettings.CLEAR.earlyAccess();
-        preferences.putBoolean(EARLY_ACCESS, isEarlyAccess);
+        PREFERENCES.putBoolean(EARLY_ACCESS, isEarlyAccess);
     }
 
     public void newDriftyVersionName(String versionName) {
         AppSettings.CLEAR.newDriftyVersionName();
-        preferences.put(NEW_DRIFTY_VERSION_NAME, versionName);
+        PREFERENCES.put(NEW_DRIFTY_VERSION_NAME, versionName);
     }
 
     public void lastDriftyUpdateTime(long value) {
         AppSettings.CLEAR.lastDriftyUpdateTime();
-        preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
+        PREFERENCES.putLong(LAST_DRIFTY_UPDATE_TIME, value);
     }
 
     public void latestDriftyVersionTag(String tag) {
         AppSettings.CLEAR.latestDriftyVersionTag();
-        preferences.put(LATEST_DRIFTY_VERSION_TAG, tag);
+        PREFERENCES.put(LATEST_DRIFTY_VERSION_TAG, tag);
     }
 
     public void driftyUpdateAvailable(boolean isUpdateAvailable) {
         AppSettings.CLEAR.driftyUpdateAvailable();
-        preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
+        PREFERENCES.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
     }
 }
