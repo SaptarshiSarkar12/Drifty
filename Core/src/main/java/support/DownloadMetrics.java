@@ -3,9 +3,6 @@ package support;
 import lombok.Data;
 
 @Data
-/*
- * Last Modified : @kuntal1461
- */
 public class DownloadMetrics {
     private boolean active;
     private float progressPercent;

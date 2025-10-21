@@ -38,15 +38,6 @@ import java.util.regex.Pattern;
 import static gui.support.Colors.GREEN;
 import static gui.support.Colors.DARK_RED;
 import static gui.support.Constants.*;
-import static support.Constants.DOWNLOADING_F;
-import static support.Constants.DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR;
-import static support.Constants.FAILED_CONNECTION_F;
-import static support.Constants.FAILED_TO_DOWNLOAD_F;
-import static support.Constants.FILE_NOT_FOUND_ERROR;
-import static support.Constants.INVALID_LINK;
-import static support.Constants.PERMISSION_DENIED_ERROR;
-import static support.Constants.SUCCESSFULLY_DOWNLOADED_F;
-import static support.Constants.VIDEO_UNAVAILABLE_ERROR;
 
 public class FileDownloader extends Task<Integer> {
     private static final MessageBroker M = Environment.getMessageBroker();
@@ -124,49 +115,42 @@ public class FileDownloader extends Task<Integer> {
         return exitCode;
     }
 
-    private void downloadYoutubeOrInstagram(boolean isSpotifySong){
+    private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
         String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, downloadLink, "-o", filename, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
-        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand)
-                .redirectErrorStream(true);//merge stderr -> stdout to avoid deadlocks
+        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
-        final Process process ;
+        Process process = null;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
             M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
-            exitCode = 1;
             return;
         } catch (Exception e) {
-           handleStartFailure(e);
-            exitCode = 1;
+            String msg = e.getMessage() != null ? e.getMessage() : "";
+            String[] messageArray = msg.split(",");
+            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
+            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+                M.msgDownloadError(PERMISSION_DENIED_ERROR);
+            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+                M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
+            } else {
+                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
+            }
             return;
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (Thread.currentThread().isInterrupted()) {
-                    process.destroyForcibly();
-                    throw new InterruptedException("Interrupted while reading download progress");
-                }
                 progressProperty.setValue(line);
             }
-            // Wait with timeout to avoid hanging forever (tune as needed)
-        boolean finished = process.waitFor(30, java.util.concurrent.TimeUnit.MINUTES);
-        if (!finished) {
-            process.destroyForcibly();
-            M.msgDownloadError("Download timed out for \"" + filename + "\"");
-            exitCode = 1;
-            return;
-        }
-        exitCode = process.exitValue();
-        } catch (IOException io) {
+        } catch (IOException e) {
             M.msgDownloadError("Failed to read download process status for \"" + filename + "\"");
         }
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            process.destroyForcibly();
+        try {
+            exitCode = process.waitFor();
+        } catch (InterruptedException e) {
             M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
-            exitCode = 1;
             return;
         }
         if (isSpotifySong && exitCode == 0) {
@@ -181,22 +165,6 @@ public class FileDownloader extends Task<Integer> {
         }
         sendFinalMessage("");
     }
-    private void handleStartFailure(Exception e) {
-    String msg = e.getMessage() != null ? e.getMessage() : "";
-    String[] parts = msg.split(",");
-    String p0 = parts.length > 0 ? parts[0] : "";
-    String p1 = parts.length > 1 ? parts[1] : "";
-
-    if (p0.toLowerCase().replace(" ", "").contains("cannotrunprogram")) {
-        M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-    } else if ("permissiondenied".equalsIgnoreCase(p1.trim().replace(" ", ""))) {
-        M.msgDownloadError(PERMISSION_DENIED_ERROR);
-    } else if ("videounavailable".equalsIgnoreCase(p0.trim().replace(" ", ""))) {
-        M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
-    } else {
-        M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
-    }
-}
 
     private void splitDecision() {
         long fileSize;

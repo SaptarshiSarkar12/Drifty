@@ -8,13 +8,10 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 @Slf4j
 @NoArgsConstructor
 public class Jobs {
-
     private ConcurrentLinkedDeque<Job> jobList = new ConcurrentLinkedDeque<>();
-
     public ConcurrentLinkedDeque<Job> jobList() {
         return new ConcurrentLinkedDeque<>(jobList);
     }
-
     public void add(Job newJob) {
         for (Job job : jobList) {
             if (job.equals(newJob)) {

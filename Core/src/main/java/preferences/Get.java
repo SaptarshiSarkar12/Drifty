@@ -47,7 +47,7 @@ public class Get {
                 jobHistory.addJob(job, true);
             }
         } catch (SQLException e) {
-             log.error("Error fetching completed jobs", e);
+            log.error("Error fetching completed jobs", e);
             throw new RuntimeException(e);
         }
         return jobHistory;
@@ -125,7 +125,7 @@ public class Get {
                 jobs.add(job);
             }
         } catch (SQLException e) {
-             log.error("Error fetching queued jobs from the database", e);
+            log.error("Error fetching queued jobs from the database", e);
             throw new RuntimeException("Error fetching queued jobs from the database: " + e.getMessage(), e);
         }
         return jobs;

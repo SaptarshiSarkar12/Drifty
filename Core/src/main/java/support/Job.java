@@ -2,7 +2,6 @@ package support;
 
 import java.io.File;
 import java.nio.file.Paths;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-/*
- * last ModifiedBy : @kuntal1461
- */
 public class Job {
-
     @EqualsAndHashCode.Include
     private final String link;
 
@@ -33,14 +28,18 @@ public class Job {
     public boolean matchesLink(String link) {
         return this.link.equals(link);
     }
-
     public String getSourceLink() {
         return link;
     }
-
     public String getDownloadLink() {
-        if (downloadLink != null) return downloadLink;
-        if (link != null) return link;
+        if (downloadLink != null) 
+        {
+            return downloadLink;
+        }
+        if (link != null) {
+             return link;
+        }
+       
         throw new IllegalStateException("Both link and downloadLink are null");
     }
 
