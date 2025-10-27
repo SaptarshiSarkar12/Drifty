@@ -188,7 +188,7 @@ jobs:
       run: |
         tar -cvf ${{ matrix.os }}-${{ matrix.mode }}.tar build/${{ matrix.mode }}
     - name: Push generated artifacts for ${{ matrix.os }} for ${{ matrix.mode }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: ${{ matrix.os }}-${{ matrix.mode }}-Build-Files
         path: ${{ matrix.os }}-${{ matrix.mode }}.tar
