@@ -849,7 +849,11 @@ public final class UIController {
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
         scrollPane.setVvalue(0.0);
-        helpStage.showAndWait();
+        try {
+            helpStage.showAndWait();
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error displaying Help window: " + e.getMessage());
+        }
     }
 
     public void handleHelpWindow() {
@@ -874,13 +878,17 @@ public final class UIController {
     }
 
     public static void getDirectory() {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.GET.folders().getDownloadFolder();
-        String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
-        directoryChooser.setInitialDirectory(new File(initFolder));
-        File directory = directoryChooser.showDialog(null);
-        if (directory != null) {
-            setDir(directory.getAbsolutePath());
+        try {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            String lastFolder = AppSettings.GET.folders().getDownloadFolder();
+            String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
+            directoryChooser.setInitialDirectory(new File(initFolder));
+            File directory = directoryChooser.showDialog(null);
+            if (directory != null) {
+                setDir(directory.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
         }
     }
 

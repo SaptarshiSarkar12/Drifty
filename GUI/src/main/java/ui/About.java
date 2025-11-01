@@ -1,6 +1,7 @@
 package ui;
 
 import gui.preferences.AppSettings;
+import gui.init.Environment;
 import gui.support.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import gui.utils.MessageBroker;
 
 import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 import static support.Constants.VERSION_NUMBER;
@@ -72,12 +74,32 @@ public class About {
     }
 
     public void show() {
-        if (stage != null && stage.isShowing()) {
-            stage.toFront();
-        } else {
-            setupLayout();
-            stage.setScene(aboutScene);
-            stage.showAndWait();
+        try {
+            if (stage != null && stage.isShowing()) {
+                stage.toFront();
+            } else {
+                setupLayout();
+                stage.setScene(aboutScene);
+                stage.showAndWait();
+            }
+        } catch (Exception e) {
+            MessageBroker broker = Environment.getMessageBroker();
+            if (broker != null) {
+                broker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
+            } else {
+                System.err.println("Error displaying About Drifty window: " + e.getMessage());
+            }
+            // Notify user with a dialog so the failure is visible
+            try {
+                new ConfirmationDialog(
+                        "Failed to open About window",
+                        "An error occurred while opening the About window.\n\n" + String.valueOf(e.getMessage()),
+                        true,
+                        false
+                ).getResponse();
+            } catch (Exception ignored) {
+                // If even the dialog fails, we already logged the root cause above
+            }
         }
     }
 
