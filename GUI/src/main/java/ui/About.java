@@ -30,7 +30,7 @@ public class About {
     private Hyperlink discordLink;
     private Hyperlink githubLink;
     private Stage stage;
-        private static MessageBroker msgBroker;
+    private static MessageBroker msgBroker;
 
     private void setupLayout() {
         VBox aboutRoot = new VBox(10);
@@ -41,8 +41,11 @@ public class About {
         createHyperlinks();
         setupStage();
         aboutRoot.getChildren().addAll(IV_SPLASH, lblDescription, lblDriftyVersion, lblYtDlpVersion);
-        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
-            Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("FFMPEG version: " + AppSettings.GET.ffmpegVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null
+                && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+            Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
+                    "FFMPEG version: " + AppSettings.GET.ffmpegVersion(), Font.font("Arial", FontWeight.BOLD, 14),
+                    LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
             aboutRoot.getChildren().add(lblFfmpegVersion);
         }
         aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
@@ -83,20 +86,32 @@ public class About {
                 stage.showAndWait();
             }
         } catch (Exception e) {
-        msgBroker.msgLogError("Error displaying About Drifty window");
-    }
+            msgBroker.msgLogError("Error displaying About Drifty window");
+        }
     }
 
     private void createLabels() {
-        lblDescription = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("An Open-Source Interactive File Downloader System", Font.font("Arial", FontWeight.BOLD, 24), LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
-        lblDriftyVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Drifty " + VERSION_NUMBER, Font.font("Arial", FontWeight.BOLD, 20), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
-        lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("yt-dlp version: " + AppSettings.GET.ytDlpVersion(), Font.font("Arial", FontWeight.BOLD, 14), LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        lblDescription = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("An Open-Source Interactive File Downloader System",
+                Font.font("Arial", FontWeight.BOLD, 24),
+                LinearGradient.valueOf("linear-gradient(to right, #8e2de2, #4a00e0)"));
+        lblDriftyVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("Drifty " + VERSION_NUMBER,
+                Font.font("Arial", FontWeight.BOLD, 20),
+                LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
+        lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel("yt-dlp version: " + AppSettings.GET.ytDlpVersion(),
+                Font.font("Arial", FontWeight.BOLD, 14),
+                LinearGradient.valueOf("linear-gradient(to right, #0f0c29, #302b63, #24243e)"));
     }
 
     private void createHyperlinks() {
-        websiteLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://drifty.vercel.app/");
-        discordLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Join Discord", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"), "https://discord.gg/DeT4jXPfkG");
-        githubLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Contribute to Drifty", Font.font("Arial", FontWeight.BOLD, 18), LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"), "https://github.com/SaptarshiSarkar12/Drifty");
+        websiteLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Website", Font.font("Arial", FontWeight.BOLD, 18),
+                LinearGradient.valueOf("linear-gradient(to right, #fc466b, #3f5efb)"), "https://drifty.vercel.app/");
+        discordLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Join Discord",
+                Font.font("Arial", FontWeight.BOLD, 18),
+                LinearGradient.valueOf("linear-gradient(to right, #00d956, #0575e6)"), "https://discord.gg/DeT4jXPfkG");
+        githubLink = UI_COMPONENT_BUILDER_INSTANCE.buildHyperlink("Contribute to Drifty",
+                Font.font("Arial", FontWeight.BOLD, 18),
+                LinearGradient.valueOf("linear-gradient(to right, #009fff, #ec2f4b)"),
+                "https://github.com/SaptarshiSarkar12/Drifty");
     }
 
     public static Scene getScene() {
