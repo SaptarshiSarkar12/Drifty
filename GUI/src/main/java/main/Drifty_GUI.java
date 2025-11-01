@@ -76,7 +76,8 @@ public class Drifty_GUI extends Application {
         if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Constants.addCSS(scene, Constants.DARK_THEME_CSS);
         }
-        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
+        scene.setOnContextMenuRequested(
+                e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
         primaryStage.focusedProperty().addListener(((_, _, _) -> {
@@ -147,12 +148,16 @@ public class Drifty_GUI extends Application {
         MenuItem about = new MenuItem("About Drifty");
         contactUs.setOnAction(_ -> openWebsite("https://drifty.vercel.app/contact"));
         contribute.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=Bug-for-application.yaml"));
-        securityVulnerability.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=feature-request-application.yaml"));
+        bug.setOnAction(_ -> openWebsite(
+                "https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=Bug-for-application.yaml"));
+        securityVulnerability
+                .setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
+        feature.setOnAction(_ -> openWebsite(
+                "https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=feature-request-application.yaml"));
         checkForUpdates.setOnAction(_ -> new Thread(() -> {
             if (Utility.isOffline()) {
-                ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection", "You are currently offline! Please check your internet connection and try again.", true, false);
+                ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection",
+                        "You are currently offline! Please check your internet connection and try again.", true, false);
                 noInternet.getResponse();
             } else {
                 checkForUpdates();
@@ -180,7 +185,8 @@ public class Drifty_GUI extends Application {
                 msgBroker.msgLogError("Error displaying Update Available dialog");
             }
         } else {
-            ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
+            ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available",
+                    "You are already using the latest version of Drifty!", true, false);
             noUpdate.getResponse();
         }
     }
@@ -190,7 +196,9 @@ public class Drifty_GUI extends Application {
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
         wipeHistory.setOnAction(_ -> {
-            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History", "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)", false, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Clear Download History",
+                    "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)",
+                    false, false);
             if (ask.getResponse().isYes()) {
                 UIController.clearJobHistory();
             }
@@ -226,7 +234,7 @@ public class Drifty_GUI extends Application {
         } catch (Exception e) {
             msgBroker.msgLogError("Error opening website: " + websiteURL);
         }
-        
+
     }
 
     public void toggleFullScreen() {
