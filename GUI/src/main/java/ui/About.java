@@ -48,9 +48,8 @@ public class About {
                 lblYtDlpVersion
         );
 
-        if (AppSettings.GET.isFfmpegWorking()
-                && AppSettings.GET.ffmpegVersion() != null
-                && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) 
+        {
             Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
                     "FFMPEG version: " + AppSettings.GET.ffmpegVersion(),
                     Font.font("Arial", FontWeight.BOLD, 14),
