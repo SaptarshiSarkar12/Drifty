@@ -852,7 +852,7 @@ public final class UIController {
         try {
             helpStage.showAndWait();
         } catch (Exception e) {
-            Environment.getMessageBroker().msgLogError("Error displaying Help window: " + e.getMessage());
+            Environment.getMessageBroker().msgLogError("Error displaying Help window");
         }
     }
 
@@ -878,17 +878,13 @@ public final class UIController {
     }
 
     public static void getDirectory() {
-        try {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            String lastFolder = AppSettings.GET.folders().getDownloadFolder();
-            String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
-            directoryChooser.setInitialDirectory(new File(initFolder));
-            File directory = directoryChooser.showDialog(null);
-            if (directory != null) {
-                setDir(directory.getAbsolutePath());
-            }
-        } catch (Exception e) {
-            Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        String lastFolder = AppSettings.GET.folders().getDownloadFolder();
+        String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
+        directoryChooser.setInitialDirectory(new File(initFolder));
+        File directory = directoryChooser.showDialog(null);
+        if (directory != null) {
+            setDir(directory.getAbsolutePath());
         }
     }
 

@@ -5,7 +5,6 @@ import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -51,17 +50,17 @@ public class Drifty_GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try{
-        this.primaryStage = Constants.getStage("Drifty GUI", true);
-        this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
-        this.primaryStage.setMinHeight(Constants.SCREEN_HEIGHT * .8125);
-        createScene();
-        this.primaryStage.setScene(scene);
-        this.primaryStage.show();
-    }
-    catch (Exception e){
-        msgBroker.msgLogError("Error starting Drifty GUI Application: " + e.getMessage());
-    }
+
+        try {
+            this.primaryStage = Constants.getStage("Drifty GUI", true);
+            this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
+            this.primaryStage.setMinHeight(Constants.SCREEN_HEIGHT * .8125);
+            createScene();
+            this.primaryStage.setScene(scene);
+            this.primaryStage.show();
+        } catch (Exception e) {
+            msgBroker.msgLogError("Error starting Drifty GUI Application");
+        }
     }
 
     private void createScene() {
@@ -77,16 +76,7 @@ public class Drifty_GUI extends Application {
         if ("Dark".equals(AppSettings.GET.mainTheme())) {
             Constants.addCSS(scene, Constants.DARK_THEME_CSS);
         }
-        scene.setOnContextMenuRequested(e -> {
-            try {
-                getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY());
-            } catch (Exception ex) {
-                msgBroker.msgLogError("Error showing context menu: " + ex.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to open context menu", "An error occurred while opening the context menu.\n\n" + String.valueOf(ex.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
-            }
-        });
+        scene.setOnContextMenuRequested(e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
         primaryStage.focusedProperty().addListener(((_, _, _) -> {
@@ -172,13 +162,10 @@ public class Drifty_GUI extends Application {
             if (aboutInstance == null) {
                 aboutInstance = new About();
             }
-            try{
+            try {
                 aboutInstance.show();
-            } catch (Exception e){
-                msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to open About window", "An error occurred while opening the About window.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
+            } catch (Exception e) {
+                msgBroker.msgLogError("Error displaying About Drifty window");
             }
         });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
@@ -187,22 +174,10 @@ public class Drifty_GUI extends Application {
 
     private void checkForUpdates() {
         if (UpdateChecker.isUpdateAvailable()) {
-            try{
-                Platform.runLater(() -> {
-                    try {
-                        UIController.INSTANCE.showUpdateDialog();
-                    } catch (Exception ex) {
-                        msgBroker.msgLogError("Error displaying Update Available dialog: " + ex.getMessage());
-                        try {
-                            new ConfirmationDialog("Failed to show update dialog", "An error occurred while opening the Update dialog.\n\n" + String.valueOf(ex.getMessage()), true, false).getResponse();
-                        } catch (Exception ignored) {}
-                    }
-                });
-            } catch (Exception e){
-                msgBroker.msgLogError("Error scheduling Update Available dialog: " + e.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to schedule update dialog", "An error occurred while scheduling the Update dialog.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
+            try {
+                UIController.INSTANCE.showUpdateDialog();
+            } catch (Exception e) {
+                msgBroker.msgLogError("Error displaying Update Available dialog");
             }
         } else {
             ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available", "You are already using the latest version of Drifty!", true, false);
@@ -220,45 +195,25 @@ public class Drifty_GUI extends Application {
                 UIController.clearJobHistory();
             }
         });
-        settings.setOnAction(_ -> {
-            try {
-                settingsInstance.show();
-            } catch (Exception e) {
-                msgBroker.msgLogError("Failed to open Settings window: " + e.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
-            }
-        });
+        try {
+            settings.setOnAction(_ -> settingsInstance.show());
 
-        menu.getItems().addAll(wipeHistory, settings);
-        return menu;
+            menu.getItems().addAll(wipeHistory, settings);
+            return menu;
+        } catch (Exception e) {
+            msgBroker.msgLogError("Error displaying Settings window");
+            return menu;
+        }
     }
 
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(_ -> {
-            try {
-                UIController.getDirectory();
-            } catch (Exception e) {
-                msgBroker.msgLogError("Error opening directory chooser: " + e.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to open directory chooser", "An error occurred while opening the Directory Chooser.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
-            }
-        });
+        miAdd.setOnAction(_ -> UIController.getDirectory());
         miDir.setOnAction(_ -> {
-            try {
-                ManageFolders manage = new ManageFolders();
-                manage.showScene();
-                UIController.resetDownloadFoldersToActiveList();
-            } catch (Exception e) {
-                msgBroker.msgLogError("Error opening Manage Directories window: " + e.getMessage());
-                try {
-                    new ConfirmationDialog("Failed to open Manage Directories", "An error occurred while opening Manage Directories.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
-                } catch (Exception ignored) {}
-            }
+            ManageFolders manage = new ManageFolders();
+            manage.showScene();
+            UIController.resetDownloadFoldersToActiveList();
         });
         ContextMenu contextMenu = new ContextMenu(miAdd, miDir);
         contextMenu.getStyleClass().add("rightClick");
@@ -266,10 +221,10 @@ public class Drifty_GUI extends Application {
     }
 
     public void openWebsite(String websiteURL) {
-        try{
+        try {
             getHostServices().showDocument(websiteURL);
-        } catch (Exception e){
-            msgBroker.msgLogError("Error opening website: " + websiteURL + ": " + e.getMessage());
+        } catch (Exception e) {
+            msgBroker.msgLogError("Error opening website: " + websiteURL);
         }
         
     }

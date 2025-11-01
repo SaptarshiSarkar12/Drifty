@@ -1,7 +1,6 @@
 package ui;
 
 import gui.preferences.AppSettings;
-import gui.init.Environment;
 import gui.support.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -31,6 +30,7 @@ public class About {
     private Hyperlink discordLink;
     private Hyperlink githubLink;
     private Stage stage;
+        private static MessageBroker msgBroker;
 
     private void setupLayout() {
         VBox aboutRoot = new VBox(10);
@@ -83,24 +83,8 @@ public class About {
                 stage.showAndWait();
             }
         } catch (Exception e) {
-            MessageBroker broker = Environment.getMessageBroker();
-            if (broker != null) {
-                broker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
-            } else {
-                System.err.println("Error displaying About Drifty window: " + e.getMessage());
-            }
-            // Notify user with a dialog so the failure is visible
-            try {
-                new ConfirmationDialog(
-                        "Failed to open About window",
-                        "An error occurred while opening the About window.\n\n" + String.valueOf(e.getMessage()),
-                        true,
-                        false
-                ).getResponse();
-            } catch (Exception ignored) {
-                // If even the dialog fails, we already logged the root cause above
-            }
-        }
+        msgBroker.msgLogError("Error displaying About Drifty window");
+    }
     }
 
     private void createLabels() {
