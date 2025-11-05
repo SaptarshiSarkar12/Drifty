@@ -182,7 +182,7 @@ public class ConfirmationDialog {
         try {
             stage.showAndWait();
         } catch (Exception e) {
-            Environment.getMessageBroker().msgLogError("Error displaying Confirmation Dialog");
+            Environment.getMessageBroker().msgLogError("Error displaying Confirmation Dialog: " + e.getMessage());
         }
     }
 

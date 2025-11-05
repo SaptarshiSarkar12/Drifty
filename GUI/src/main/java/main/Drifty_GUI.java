@@ -50,7 +50,6 @@ public class Drifty_GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         try {
             this.primaryStage = Constants.getStage("Drifty GUI", true);
             this.primaryStage.setMinWidth(Constants.SCREEN_WIDTH * .46);
@@ -59,7 +58,7 @@ public class Drifty_GUI extends Application {
             this.primaryStage.setScene(scene);
             this.primaryStage.show();
         } catch (Exception e) {
-            msgBroker.msgLogError("Error starting Drifty GUI Application");
+            msgBroker.msgLogError("Error starting Drifty GUI Application: "+ e.getMessage());
         }
     }
 
@@ -170,7 +169,7 @@ public class Drifty_GUI extends Application {
             try {
                 aboutInstance.show();
             } catch (Exception e) {
-                msgBroker.msgLogError("Error displaying About Drifty window");
+                msgBroker.msgLogError("Error displaying About Drifty window: "+ e.getMessage());
             }
         });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
@@ -182,7 +181,7 @@ public class Drifty_GUI extends Application {
             try {
                 UIController.INSTANCE.showUpdateDialog();
             } catch (Exception e) {
-                msgBroker.msgLogError("Error displaying Update Available dialog");
+                msgBroker.msgLogError("Error displaying Update Available dialog : " + e.getMessage());
             }
         } else {
             ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available",
@@ -209,7 +208,7 @@ public class Drifty_GUI extends Application {
             menu.getItems().addAll(wipeHistory, settings);
             return menu;
         } catch (Exception e) {
-            msgBroker.msgLogError("Error displaying Settings window");
+            msgBroker.msgLogError("Error displaying Settings window: " + e.getMessage());
             return menu;
         }
     }
@@ -232,7 +231,7 @@ public class Drifty_GUI extends Application {
         try {
             getHostServices().showDocument(websiteURL);
         } catch (Exception e) {
-            msgBroker.msgLogError("Error opening website: " + websiteURL);
+            msgBroker.msgLogError("Error opening website: " + websiteURL + " : " + e.getMessage());
         }
 
     }

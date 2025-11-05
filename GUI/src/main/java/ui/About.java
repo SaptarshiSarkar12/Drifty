@@ -97,7 +97,7 @@ public class About {
                 stage.showAndWait();
             }
         } catch (Exception e) {
-            msgBroker.msgLogError("Error displaying About Drifty window");
+            msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
         }
     }
 

@@ -852,7 +852,7 @@ public final class UIController {
         try {
             helpStage.showAndWait();
         } catch (Exception e) {
-            Environment.getMessageBroker().msgLogError("Error displaying Help window");
+            Environment.getMessageBroker().msgLogError("Error displaying Help window: " + e.getMessage());
         }
     }
 
