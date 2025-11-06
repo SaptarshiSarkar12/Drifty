@@ -206,11 +206,10 @@ public class Drifty_GUI extends Application {
             settings.setOnAction(_ -> settingsInstance.show());
 
             menu.getItems().addAll(wipeHistory, settings);
-            return menu;
         } catch (Exception e) {
             msgBroker.msgLogError("Error displaying Settings window: " + e.getMessage());
-            return menu;
         }
+        return menu;
     }
 
     private ContextMenu getRightClickContextMenu() {
