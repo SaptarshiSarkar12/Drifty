@@ -58,7 +58,7 @@ public class Drifty_GUI extends Application {
             this.primaryStage.setScene(scene);
             this.primaryStage.show();
         } catch (Exception e) {
-            msgBroker.msgLogError("Error starting Drifty GUI Application: "+ e.getMessage());
+            msgBroker.msgLogError("Error starting Drifty GUI Application: " + e.getMessage());
         }
     }
 
@@ -169,7 +169,7 @@ public class Drifty_GUI extends Application {
             try {
                 aboutInstance.show();
             } catch (Exception e) {
-                msgBroker.msgLogError("Error displaying About Drifty window: "+ e.getMessage());
+                msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
             }
         });
         menu.getItems().setAll(contactUs, contribute, bug, securityVulnerability, feature, checkForUpdates, about);
