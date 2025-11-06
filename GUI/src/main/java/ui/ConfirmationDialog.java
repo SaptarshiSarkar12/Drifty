@@ -179,7 +179,11 @@ public class ConfirmationDialog {
             stage.close();
         });
         stage.setResizable(false);
-        stage.showAndWait();
+        try {
+            stage.showAndWait();
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error displaying Confirmation Dialog: " + e.getMessage());
+        }
     }
 
     public String getFilename() {
