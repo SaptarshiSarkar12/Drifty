@@ -849,7 +849,11 @@ public final class UIController {
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
         scrollPane.setVvalue(0.0);
-        helpStage.showAndWait();
+        try {
+            helpStage.showAndWait();
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error displaying Help window: " + e.getMessage());
+        }
     }
 
     public void handleHelpWindow() {
