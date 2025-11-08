@@ -8,7 +8,11 @@ import utils.DbConnection;
 import utils.Utility;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -20,7 +24,7 @@ import static preferences.Labels.*;
 
 public class Get {
     private static final Get INSTANCE = new Get();
-    private final Preferences preferences = Labels.PREFERENCES;
+    private static final  Preferences preferences = Labels.PREFERENCES;
 
     static Get getInstance() {
         return INSTANCE;
@@ -45,7 +49,7 @@ public class Get {
                 jobHistory.addJob(job, true);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Unable to load completed job history from the database", e);
         }
         return jobHistory;
     }
@@ -59,17 +63,29 @@ public class Get {
     }
 
     public String spotifyAccessToken() {
+        String storedToken = preferences.get(SPOTIFY_ACCESS_TOKEN, "");
+        if (storedToken.isEmpty()) {
+            return storedToken;
+        }
         try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            keyGenerator.init(256);
-            Cipher cipher = Cipher.getInstance("AES");
             SecretKey secretKey = Set.getInstance().secretKey;
             while (secretKey == null) { // Sometimes, the encryption of token takes time and the key doesn't get generated in time
                 Utility.sleep(10);
                 secretKey = Set.getInstance().secretKey;
             }
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-            return new String(cipher.doFinal(Base64.getDecoder().decode(preferences.get(SPOTIFY_ACCESS_TOKEN, ""))));
+            byte[] decoded = Base64.getDecoder().decode(storedToken);
+            if (decoded.length < Set.GCM_IV_LENGTH + Set.GCM_TAG_LENGTH / 8) {
+                Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! Stored token is invalid!");
+                return "";
+            }
+            ByteBuffer buffer = ByteBuffer.wrap(decoded);
+            byte[] iv = new byte[Set.GCM_IV_LENGTH];
+            buffer.get(iv);
+            byte[] ciphertext = new byte[buffer.remaining()];
+            buffer.get(ciphertext);
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(Set.GCM_TAG_LENGTH, iv));
+            return new String(cipher.doFinal(ciphertext), StandardCharsets.UTF_8);
         } catch (NoSuchAlgorithmException e) {
             Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! No such algorithm exists! " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
@@ -80,8 +96,12 @@ public class Get {
             Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! Failed to generate secret key! " + e.getMessage());
         } catch (NoSuchPaddingException e) {
             Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! No such padding exists! " + e.getMessage());
+        } catch (InvalidAlgorithmParameterException e) {
+            Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! Invalid algorithm parameters! " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            Environment.getMessageBroker().msgInitError("Failed to decrypt Spotify access token! Stored token is corrupted! " + e.getMessage());
         }
-        return preferences.get(SPOTIFY_ACCESS_TOKEN, "");
+        return storedToken;
     }
 
     public boolean ytDlpUpdating() {
@@ -122,7 +142,7 @@ public class Get {
                 jobs.add(job);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching queued jobs from the database: " + e.getMessage(), e);
+            throw new IllegalStateException("Error fetching queued jobs from the database: " + e.getMessage(), e);
         }
         return jobs;
     }
