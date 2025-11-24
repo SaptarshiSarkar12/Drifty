@@ -1,6 +1,7 @@
 package ui;
 
 import gui.preferences.AppSettings;
+import gui.init.Environment;
 import gui.support.Constants;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -80,12 +81,20 @@ public class Settings {
     }
 
     public void show() {
-        if (stage != null && stage.isShowing()) {
-            stage.toFront();
-        } else {
-            initializeComponents();
-            stage.setScene(settingsScene);
-            stage.showAndWait();
+        try {
+            if (stage != null && stage.isShowing()) {
+                stage.toFront();
+            } else {
+                initializeComponents();
+                stage.setScene(settingsScene);
+                stage.showAndWait();
+            }
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error displaying Settings window: " + e.getMessage());
+            try {
+                new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -181,12 +190,20 @@ public class Settings {
     }
 
     private void handleDirectorySelection() {
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        File selectedDirectory = chooser.showDialog(this.stage);
-        String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
-        UIController.form.tfDir.setText(directoryPath);
-        tfCurrentDirectory.setText(directoryPath);
+        try {
+            DirectoryChooser chooser = new DirectoryChooser();
+            chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            File selectedDirectory = chooser.showDialog(this.stage);
+            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
+            UIController.form.tfDir.setText(directoryPath);
+            tfCurrentDirectory.setText(directoryPath);
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
+            try {
+                new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     public static TextField getTfCurrentDirectory() {
