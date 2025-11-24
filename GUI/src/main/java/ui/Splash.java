@@ -1,6 +1,7 @@
 package ui;
 
 import gui.support.Constants;
+import gui.init.Environment;
 import javafx.animation.PauseTransition;
 import javafx.application.Preloader;
 import javafx.geometry.Pos;
@@ -41,7 +42,15 @@ public class Splash extends Preloader {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
-        stage.show();
+        try {
+            stage.show();
+        } catch (Exception e) {
+            if (Environment.getMessageBroker() != null) {
+                Environment.getMessageBroker().msgLogError("Error showing splash window: " + e.getMessage());
+            } else {
+                System.err.println("Error showing splash window: " + e.getMessage());
+            }
+        }
     }
 
     @Override

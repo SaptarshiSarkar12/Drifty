@@ -1,6 +1,7 @@
 package ui;
 
 import gui.preferences.AppSettings;
+import gui.init.Environment;
 import gui.support.Constants;
 import gui.support.Folders;
 import javafx.beans.binding.BooleanBinding;
@@ -109,7 +110,11 @@ public class ManageFolders {
         stage.setHeight(height);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
-        stage.showAndWait();
+        try {
+            stage.showAndWait();
+        } catch (Exception e) {
+            Environment.getMessageBroker().msgLogError("Error displaying Manage Directories window: " + e.getMessage());
+        }
     }
 
     private void remove() {

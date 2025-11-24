@@ -15,13 +15,13 @@ jobs:
       statuses: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           # Full git history is necessary to get a proper
           # list of changed files within `super-linter`
           fetch-depth: 0
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
           cache: "npm"
@@ -71,11 +71,13 @@ jobs:
           VALIDATE_GIT_MERGE_CONFLICT_MARKERS: false
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_TRIVY: false
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
       - name: Set read and write permission in super linter log
         run: sudo chmod 777 super-linter.log
       - name: Upload Lint Result
         id: upload-lint-result
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: linter-result
           path: super-linter.log
