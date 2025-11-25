@@ -1,10 +1,7 @@
 package utils;
 
 import init.Environment;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import properties.FileState;
 import properties.Program;
 import support.Job;
@@ -40,10 +37,10 @@ public class DbConnectionTest {
     @DisplayName("Test if SQLite file exists")
     public void testDatabaseConnection() {
         File dbFile = new File(Program.get(Program.DATABASE_PATH));
-        assert dbFile.exists() : "Database file does not exist!";
-        assert dbFile.isFile() : "Database path is not a file!";
-        assert dbFile.canRead() : "Database file is not readable!";
-        assert dbFile.canWrite() : "Database file is not writable!";
+        Assertions.assertTrue(dbFile.exists(), "Database file does not exist!");
+        Assertions.assertTrue(dbFile.isFile(), "Database path is not a file!");
+        Assertions.assertTrue(dbFile.canRead(), "Database file is not readable!");
+        Assertions.assertTrue(dbFile.canWrite(), "Database file is not writable!");
     }
 
     @Test
@@ -59,7 +56,7 @@ public class DbConnectionTest {
             }
         }
         for (String expectedTable : expectedTables) {
-            assert foundTables.contains(expectedTable) : "Expected table missing: " + expectedTable;
+            Assertions.assertTrue(foundTables.contains(expectedTable), "Expected table missing: " + expectedTable);
         }
     }
 
@@ -69,7 +66,7 @@ public class DbConnectionTest {
         String[] expectedColumns = {"Id", "StartDate", "EndDate"};
         Set<String> foundColumns = getTableColumns("SESSION");
         for (String expectedColumn : expectedColumns) {
-            assert foundColumns.contains(expectedColumn) : "Expected column missing: " + expectedColumn;
+            Assertions.assertTrue(foundColumns.contains(expectedColumn), "Expected column missing: " + expectedColumn);
         }
     }
 
@@ -79,7 +76,7 @@ public class DbConnectionTest {
         String[] expectedColumns = {"Id", "FileName", "FileUrl", "DownloadUrl", "SaveTargetPath", "Size", "DownloadStartTime", "DownloadEndTime", "State", "SessionId"};
         Set<String> foundColumns = getTableColumns("FILE");
         for (String expectedColumn : expectedColumns) {
-            assert foundColumns.contains(expectedColumn) : "Expected column missing: " + expectedColumn;
+            Assertions.assertTrue(foundColumns.contains(expectedColumn), "Expected column missing: " + expectedColumn);
         }
     }
 
@@ -91,8 +88,8 @@ public class DbConnectionTest {
         QueryResult result = runQuery("SELECT * FROM SESSION WHERE StartDate = ?", startDate);
         try (ResultSet resultSet = result.resultSet()) {
             boolean hasRecord = resultSet.next();
-            assert hasRecord : "Session record not found in the database!";
-            assert resultSet.getString("StartDate").equals(startDate) : "Session start data does not match!";
+            Assertions.assertTrue(hasRecord, "Session record not found in the database!");
+            Assertions.assertEquals(startDate, resultSet.getString("StartDate"), "Session start data does not match!");
         }
     }
 
@@ -104,11 +101,11 @@ public class DbConnectionTest {
         QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName);
         try (ResultSet resultSet = result.resultSet()) {
             while (resultSet.next()) {
-                assert resultSet.getString("FileName").equals(fileName) : "File name does not match!";
-                assert resultSet.getString("FileUrl").equals(fileUrl) : "File URL does not match!";
-                assert resultSet.getString("DownloadUrl").equals(fileUrl) : "Download URL does not match!";
-                assert resultSet.getString("SaveTargetPath").equals(saveTargetPath) : "Save target path does not match!";
-                assert resultSet.getString("DownloadStartTime").equals(downloadStartTime) : "Download start time does not match!";
+                Assertions.assertEquals(fileName, resultSet.getString("FileName"), "File name does not match!");
+                Assertions.assertEquals(fileUrl, resultSet.getString("FileUrl"), "File URL does not match!");
+                Assertions.assertEquals(fileUrl, resultSet.getString("DownloadUrl"), "Download URL does not match!");
+                Assertions.assertEquals(saveTargetPath, resultSet.getString("SaveTargetPath"), "Save target path does not match!");
+                Assertions.assertEquals(downloadStartTime, resultSet.getString("DownloadStartTime"), "Download start time does not match!");
             }
         }
     }

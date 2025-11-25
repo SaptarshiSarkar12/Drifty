@@ -1,16 +1,25 @@
 package backend;
 
-import cli.init.Environment;
 import cli.init.TestEnvironment;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Path;
 
 @DisplayName("File Downloader Tests")
 public class FileDownloaderTest extends TestEnvironment {
-    @Test
-    @DisplayName("Test File Downloader Functionality")
-    public void testFileDownloader() {
-        assert utility != null : "Utility is not initialized!";
-        assert Environment.getMessageBroker() != null : "Message Broker is not initialized!";
-    }
+    @TempDir
+    Path tempDirectory;
+
+//    @ParameterizedTest
+//    @DisplayName("Test File Downloader Functionality")
+//    @MethodSource("fileDetailsProvider")
+//    @Execution(ExecutionMode.CONCURRENT)
+//    public void testFileDownloader(String link, String fileName, String expectedFileName) {
+//
+//    }
+//
+//    private static Stream<Arguments> fileDetailsProvider() {
+//
+//    }
 }

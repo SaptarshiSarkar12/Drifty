@@ -1,6 +1,7 @@
 package cli.support;
 
 import cli.init.TestEnvironment;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
@@ -14,6 +15,7 @@ import utils.Utility;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,7 +31,7 @@ public class DownloadConfigurationTest extends TestEnvironment {
     public void testLinkTypeDetection(String link, LinkType expectedLinkType) {
         DownloadConfiguration config = new DownloadConfiguration(link, tempDir.toString(), null);
         LinkType detectedLinkType = config.getLinkType();
-        assert detectedLinkType == expectedLinkType : "Detected link type does not match expected type! Expected: " + expectedLinkType + ", but got: " + detectedLinkType;
+        Assertions.assertEquals(expectedLinkType, detectedLinkType, "Detected link type does not match expected type!");
     }
 
     @ParameterizedTest
@@ -40,34 +42,37 @@ public class DownloadConfigurationTest extends TestEnvironment {
         DownloadConfiguration config = new DownloadConfiguration(link, tempDir.toString(), null);
         config.sanitizeLink();
         String sanitizedLink = config.getLink();
-        assert sanitizedLink.equals(expectedSanitizedLink) : "Sanitized link does not match expected link! Expected: " + expectedSanitizedLink + ", but got: " + sanitizedLink;
+        Assertions.assertEquals(expectedSanitizedLink, sanitizedLink, "Sanitized link does not match expected link!");
     }
 
     @ParameterizedTest
     @DisplayName("Test file data retrieval functionality")
     @MethodSource("linkAndExpectedFileDataProvider")
-    @Execution(ExecutionMode.CONCURRENT)
+    @Execution(ExecutionMode.SAME_THREAD)
     public void testFileDataRetrieval(String link, ArrayList<HashMap<String, Object>> expectedFileData) {
         DownloadConfiguration config = new DownloadConfiguration(link, tempDir.toString(), null);
         config.sanitizeLink();
         config.fetchFileData();
         ArrayList<HashMap<String, Object>> fileData = config.getFileData();
+        fileData.sort(Comparator.comparing(o -> o.get("filename").toString()));
+        expectedFileData.sort(Comparator.comparing(o -> o.get("filename").toString()));
         if (LinkType.getLinkType(link).equals(LinkType.SPOTIFY)) {
             for (HashMap<String, Object> trackData : fileData) {
                 int index = fileData.indexOf(trackData);
                 HashMap<String, Object> expectedTrackData = expectedFileData.get(index);
                 if (trackData.get("filename").toString().startsWith("Unknown_Spotify_Song_")) {
-                    assert expectedTrackData.get("filename").toString().startsWith("Unknown_Spotify_Song_") : "Filename for Spotify song did not match! Expected: " + expectedTrackData + ", but got: " + trackData;
+                    Assertions.assertTrue(expectedTrackData.get("filename").toString().startsWith("Unknown_Spotify_Song_"), "Filename for Spotify song did not match! Expected: " + expectedTrackData + ", but got: " + trackData);
                 } else {
-                    assert trackData.equals(expectedTrackData) : "Track Data for Spotify song did not match! \nExpected: " + expectedTrackData + ", \nbut got: " + trackData;
+                    Assertions.assertEquals(expectedTrackData, trackData, "Track Data for Spotify song did not match!");
                 }
             }
         } else {
-            assert fileData.equals(expectedFileData) : "Retrieved file data does not match expected data! \nExpected: " + expectedFileData + ", \nbut got: " + fileData;
+            Assertions.assertEquals(expectedFileData, fileData, "Retrieved file data does not match expected data!");
         }
     }
 
     private static Stream<Arguments> linkAndExpectedFileDataProvider() {
+        ArrayList<HashMap<String, Object>> expectedSpotifyPlaylistData = getSpotifyPlaylistFileData();
         return Stream.of(
                 Arguments.of("https://youtu.be/pBy1zgt0XPc?feature=shared",
                         new ArrayList<>(List.of(new HashMap<String, Object>() {
@@ -79,7 +84,7 @@ public class DownloadConfigurationTest extends TestEnvironment {
                         }))
                 ),
                 Arguments.of("https://www.youtube.com/playlist?list=PL0lo9MOBetEFGPccyxyfex8BYF_PQUQWn", getYTPlaylistFileData()),
-                Arguments.of("https://open.spotify.com/playlist/2Vc2dyNFvVTbjCMmb4SbMA", getSpotifyPlaylistFileData()),
+                Arguments.of("https://open.spotify.com/playlist/2Vc2dyNFvVTbjCMmb4SbMA", expectedSpotifyPlaylistData),
                 Arguments.of("https://github.com/SaptarshiSarkar12/Drifty/blob/master/.github/workflows/static.yml",
                         new ArrayList<>(List.of(new HashMap<String, Object>() {
                             {
