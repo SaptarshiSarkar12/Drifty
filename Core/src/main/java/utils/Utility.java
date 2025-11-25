@@ -702,6 +702,9 @@ public class Utility {
                         if (!"song".equalsIgnoreCase(resultType) && !"video".equalsIgnoreCase(resultType)) {
                             continue;
                         }
+                        if (Objects.isNull(musicCardShelfRenderer.get("header"))) {
+                            continue;
+                        }
                         String category = musicCardShelfRenderer.get("header").getAsJsonObject().get("musicCardShelfHeaderBasicRenderer").getAsJsonObject().get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
                         HashMap<String, Object> searchResult = new HashMap<>();
                         searchResult.put("category", category);
@@ -728,6 +731,9 @@ public class Utility {
                         searchResults.add(searchResult);
                     } else if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicShelfRenderer")) {
                         JsonObject musicShelfRenderer = collectionOfMusicShelfRenderers.get(i).getAsJsonObject().get("musicShelfRenderer").getAsJsonObject();
+                        if (Objects.isNull(musicShelfRenderer.get("title"))) {
+                            continue;
+                        }
                         String category = musicShelfRenderer.get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
                         if (!"Songs".equalsIgnoreCase(category)) {
                             continue;
