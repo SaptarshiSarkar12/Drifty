@@ -137,14 +137,10 @@ public class DownloadConfiguration {
                         msgBroker.msgLinkInfo("[" + filesProcessed + "/" + fileCount + "] Processing Spotify Playlist...");
                     }
                     HashMap<String, Object> data = Utility.getSpotifySongDownloadData(songMetadata, this.directory);
-                    if (data == null) {
-                        msgBroker.msgLogError("Failed to process Spotify Playlist");
+                    if (data != null) {
+                        fileData.add(data);
                         filesProcessed++;
-                        statusCode = -1;
-                        return -1;
                     }
-                    fileData.add(data);
-                    filesProcessed++;
                 }
                 if (Mode.isCLI()) {
                     System.out.println("\rSpotify Playlist processed successfully");

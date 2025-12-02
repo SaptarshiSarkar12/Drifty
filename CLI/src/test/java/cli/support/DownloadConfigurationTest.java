@@ -54,21 +54,7 @@ public class DownloadConfigurationTest extends TestEnvironment {
         config.sanitizeLink();
         config.fetchFileData();
         ArrayList<HashMap<String, Object>> fileData = config.getFileData();
-        fileData.sort(Comparator.comparing(o -> o.get("filename").toString()));
-        expectedFileData.sort(Comparator.comparing(o -> o.get("filename").toString()));
-        if (LinkType.getLinkType(link).equals(LinkType.SPOTIFY)) {
-            for (HashMap<String, Object> trackData : fileData) {
-                int index = fileData.indexOf(trackData);
-                HashMap<String, Object> expectedTrackData = expectedFileData.get(index);
-                if (trackData.get("filename").toString().startsWith("Unknown_Spotify_Song_")) {
-                    Assertions.assertTrue(expectedTrackData.get("filename").toString().startsWith("Unknown_Spotify_Song_"), "Filename for Spotify song did not match! Expected: " + expectedTrackData + ", but got: " + trackData);
-                } else {
-                    Assertions.assertEquals(expectedTrackData, trackData, "Track Data for Spotify song did not match!");
-                }
-            }
-        } else {
-            Assertions.assertEquals(expectedFileData, fileData, "Retrieved file data does not match expected data!");
-        }
+        Assertions.assertEquals(expectedFileData, fileData, "Retrieved file data does not match expected file data!");
     }
 
     private static Stream<Arguments> linkAndExpectedFileDataProvider() {
