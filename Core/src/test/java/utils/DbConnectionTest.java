@@ -27,7 +27,6 @@ public class DbConnectionTest {
     @BeforeAll
     @DisplayName("Initialize Environment")
     public static void setup() throws SQLException {
-        Program.setDatabaseName("drifty_test.db");
         MessageBroker messageBroker = new MessageBroker();
         Environment.setMessageBroker(messageBroker);
         Environment.initializeEnvironment();

@@ -701,7 +701,7 @@ public class Utility {
                     for (int i = 0; i < correctedQueryArray.size(); i++) {
                         correctedQuery.append(correctedQueryArray.get(i).getAsJsonObject().get("text").getAsString());
                     }
-                    System.out.println("Retrying search with corrected query: " + correctedQuery);
+                    msgBroker.msgLogInfo("Retrying search with corrected query: " + correctedQuery);
                     ArrayList<HashMap<String, Object>> correctedSearchResults = getYoutubeSearchResults(correctedQuery.toString().replace("-", " "), searchWithFilters);
                     if (correctedSearchResults != null) {
                         return correctedSearchResults;
