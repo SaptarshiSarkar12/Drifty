@@ -104,7 +104,11 @@ public class Environment {
         } catch (SQLException e) {
             msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
         }
-
+        try {
+            dbConnection.closeConnection();
+        } catch (SQLException e) {
+            msgBroker.msgLogError("Failed to close database connection: " + e.getMessage());
+        }
         AppSettings.CLEAR.spotifyAccessToken();
         System.exit(exitCode);
     }
