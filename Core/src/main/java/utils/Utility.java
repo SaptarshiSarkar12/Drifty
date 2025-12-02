@@ -695,6 +695,18 @@ public class Utility {
                 JsonObject jsonObject = JsonParser.parseString(responseContent).getAsJsonObject();
                 JsonArray collectionOfMusicShelfRenderers = jsonObject.get("contents").getAsJsonObject().get("tabbedSearchResultsRenderer").getAsJsonObject().get("tabs").getAsJsonArray().get(0).getAsJsonObject().get("tabRenderer").getAsJsonObject().get("content").getAsJsonObject().get("sectionListRenderer").getAsJsonObject().get("contents").getAsJsonArray();
                 ArrayList<HashMap<String, Object>> searchResults = new ArrayList<>();
+                if (collectionOfMusicShelfRenderers.size() == 1 && collectionOfMusicShelfRenderers.get(0).getAsJsonObject().has("itemSectionRenderer")) {
+                    JsonArray correctedQueryArray = collectionOfMusicShelfRenderers.get(0).getAsJsonObject().get("itemSectionRenderer").getAsJsonObject().get("contents").getAsJsonArray().get(0).getAsJsonObject().get("didYouMeanRenderer").getAsJsonObject().get("correctedQuery").getAsJsonObject().get("runs").getAsJsonArray();
+                    StringBuilder correctedQuery = new StringBuilder();
+                    for (int i = 0; i < correctedQueryArray.size(); i++) {
+                        correctedQuery.append(correctedQueryArray.get(i).getAsJsonObject().get("text").getAsString());
+                    }
+                    System.out.println("Retrying search with corrected query: " + correctedQuery);
+                    ArrayList<HashMap<String, Object>> correctedSearchResults = getYoutubeSearchResults(correctedQuery.toString().replace("-", " "), searchWithFilters);
+                    if (correctedSearchResults != null) {
+                        return correctedSearchResults;
+                    }
+                }
                 for (int i = 0; i < collectionOfMusicShelfRenderers.size(); i++) {
                     if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicCardShelfRenderer")) {
                         JsonObject musicCardShelfRenderer = collectionOfMusicShelfRenderers.get(i).getAsJsonObject().get("musicCardShelfRenderer").getAsJsonObject();
