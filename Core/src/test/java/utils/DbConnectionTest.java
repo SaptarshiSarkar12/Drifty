@@ -214,33 +214,6 @@ public class DbConnectionTest {
         }
     }
 
-    @AfterAll
-    @DisplayName("Clean up Test Environment")
-    public static void cleanup() {
-        // If DbConnection exposes a close method, call it to release any held resources.
-        try {
-            if (dbConnection != null) {
-                try {
-                    dbConnection.closeConnection();
-                } catch (Exception ignored) {
-                }
-            }
-        } finally {
-            // Delete the test database file
-            File dbFile = new File(Program.get(Program.DATABASE_PATH));
-            if (dbFile.exists()) {
-                try {
-                    Files.delete(dbFile.toPath());
-                } catch (Exception e) {
-                    System.err.println("Could not delete test database file: " + dbFile.getAbsolutePath() + ". Will attempt deletion on JVM exit. " + e.getMessage());
-                    dbFile.deleteOnExit();
-                }
-            } else {
-                System.out.println("Test database file does not exist, nothing to delete.");
-            }
-        }
-    }
-
     private boolean addQueuedFile(String fileName, String fileUrl, String saveTargetPath) throws Exception {
         String downloadStartTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         dbConnection.addFileRecord(fileName, fileUrl, fileUrl, saveTargetPath, downloadStartTime, 1); // Assuming session ID 1 exists for the test
