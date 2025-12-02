@@ -50,6 +50,13 @@ public final class DbConnection {
         return dbConnection;
     }
 
+    public void closeConnection() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+            System.out.println("Database connection closed.");
+        }
+    }
+
     public void createTables() throws SQLException {
         final String createSessionTableQuery = """
                 CREATE TABLE IF NOT EXISTS SESSION (

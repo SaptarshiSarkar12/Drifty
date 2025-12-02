@@ -7,6 +7,7 @@ import properties.Program;
 import support.Job;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -49,12 +50,14 @@ public class DbConnectionTest {
         String[] expectedTables = {"SESSION", "FILE"};
         Set<String> foundTables = new HashSet<>();
 
-        QueryResult result = runQuery("SELECT name FROM sqlite_master WHERE type='table'");
-        try (ResultSet resultSet = result.resultSet()) {
-            while (resultSet.next()) {
-                foundTables.add(resultSet.getString("name"));
+        try (QueryResult result = runQuery("SELECT name FROM sqlite_master WHERE type='table'")) {
+            try (ResultSet resultSet = result.resultSet()) {
+                while (resultSet.next()) {
+                    foundTables.add(resultSet.getString("name"));
+                }
             }
         }
+
         for (String expectedTable : expectedTables) {
             Assertions.assertTrue(foundTables.contains(expectedTable), "Expected table missing: " + expectedTable);
         }
@@ -85,11 +88,12 @@ public class DbConnectionTest {
     public void testSessionRecorded() throws Exception {
         String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         dbConnection.addSessionRecord(startDate);
-        QueryResult result = runQuery("SELECT * FROM SESSION WHERE StartDate = ?", startDate);
-        try (ResultSet resultSet = result.resultSet()) {
-            boolean hasRecord = resultSet.next();
-            Assertions.assertTrue(hasRecord, "Session record not found in the database!");
-            Assertions.assertEquals(startDate, resultSet.getString("StartDate"), "Session start data does not match!");
+        try (QueryResult result = runQuery("SELECT * FROM SESSION WHERE StartDate = ?", startDate)) {
+            try (ResultSet resultSet = result.resultSet()) {
+                boolean hasRecord = resultSet.next();
+                Assertions.assertTrue(hasRecord, "Session record not found in the database!");
+                Assertions.assertEquals(startDate, resultSet.getString("StartDate"), "Session start data does not match!");
+            }
         }
     }
 
@@ -98,14 +102,15 @@ public class DbConnectionTest {
     public void testFileRecorded() throws Exception {
         dbConnection.addFileRecord(fileName, fileUrl, fileUrl, saveTargetPath, downloadStartTime, 1);
 
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName);
-        try (ResultSet resultSet = result.resultSet()) {
-            while (resultSet.next()) {
-                Assertions.assertEquals(fileName, resultSet.getString("FileName"), "File name does not match!");
-                Assertions.assertEquals(fileUrl, resultSet.getString("FileUrl"), "File URL does not match!");
-                Assertions.assertEquals(fileUrl, resultSet.getString("DownloadUrl"), "Download URL does not match!");
-                Assertions.assertEquals(saveTargetPath, resultSet.getString("SaveTargetPath"), "Save target path does not match!");
-                Assertions.assertEquals(downloadStartTime, resultSet.getString("DownloadStartTime"), "Download start time does not match!");
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName)) {
+            try (ResultSet resultSet = result.resultSet()) {
+                while (resultSet.next()) {
+                    Assertions.assertEquals(fileName, resultSet.getString("FileName"), "File name does not match!");
+                    Assertions.assertEquals(fileUrl, resultSet.getString("FileUrl"), "File URL does not match!");
+                    Assertions.assertEquals(fileUrl, resultSet.getString("DownloadUrl"), "Download URL does not match!");
+                    Assertions.assertEquals(saveTargetPath, resultSet.getString("SaveTargetPath"), "Save target path does not match!");
+                    Assertions.assertEquals(downloadStartTime, resultSet.getString("DownloadStartTime"), "Download start time does not match!");
+                }
             }
         }
     }
@@ -115,13 +120,14 @@ public class DbConnectionTest {
     public void testFileStateUpdated() throws Exception {
         String downloadEndTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         dbConnection.updateFileState(fileUrl, saveTargetPath, fileName, FileState.COMPLETED, downloadStartTime, downloadEndTime, 89192775);
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName);
-        try (ResultSet resultSet = result.resultSet()) {
-            boolean hasRecord = resultSet.next();
-            assert hasRecord : "File record not found in the database!";
-            assert resultSet.getString("State").equals(FileState.COMPLETED.name()) : "File state was not updated correctly!";
-            assert resultSet.getString("DownloadEndTime").equals(downloadEndTime) : "Download end time does not match!";
-            assert resultSet.getInt("Size") == 89192775 : "File size does not match!";
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName)) {
+            try (ResultSet resultSet = result.resultSet()) {
+                boolean hasRecord = resultSet.next();
+                Assertions.assertTrue(hasRecord, "File record not found in the database!");
+                Assertions.assertEquals(FileState.COMPLETED.name(), resultSet.getString("State"), "File state was not updated correctly!");
+                Assertions.assertEquals(downloadEndTime, resultSet.getString("DownloadEndTime"), "Download end time does not match!");
+                Assertions.assertEquals(89192775, resultSet.getInt("Size"), "File size does not match!");
+            }
         }
     }
 
@@ -133,16 +139,17 @@ public class DbConnectionTest {
         dbConnection.updateFileState(fileUrl, saveTargetPath, fileName, FileState.COMPLETED, downloadStartTime, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")), 89192775);
 
         Collection<Job> completedJobs = dbConnection.getCompletedJobs();
-        assert !completedJobs.isEmpty() : "Completed jobs collection is empty!";
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.COMPLETED.name());
-        Set<String> completedFileNames = new HashSet<>();
-        try (ResultSet resultSet = result.resultSet()) {
-            while (resultSet.next()) {
-                completedFileNames.add(resultSet.getString("FileName"));
+        Assertions.assertFalse(completedJobs.isEmpty(), "Completed jobs collection is empty!");
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.COMPLETED.name())) {
+            Set<String> completedFileNames = new HashSet<>();
+            try (ResultSet resultSet = result.resultSet()) {
+                while (resultSet.next()) {
+                    completedFileNames.add(resultSet.getString("FileName"));
+                }
             }
-        }
-        for (Job job : completedJobs) {
-            assert completedFileNames.contains(job.getFilename()) : "Completed job file name not found in database: " + job.getFilename();
+            for (Job job : completedJobs) {
+                Assertions.assertTrue(completedFileNames.contains(job.getFilename()), "Completed job file name not found in database: " + job.getFilename());
+            }
         }
     }
 
@@ -151,19 +158,20 @@ public class DbConnectionTest {
     public void testQueuedJobsList() throws Exception {
         // Add a queued job record to test
         boolean isFileQueued = addQueuedFile("queued_file.mp4", "https://example.com/queued_file.mp4", saveTargetPath);
-        assert isFileQueued : "Failed to add queued file record!";
+        Assertions.assertTrue(isFileQueued, "Failed to add queued file record!");
 
         Collection<Job> queuedJobs = dbConnection.getQueuedJobs();
-        assert !queuedJobs.isEmpty() : "Queued jobs collection is empty!";
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.QUEUED.name());
-        Set<String> queuedFileNames = new HashSet<>();
-        try (ResultSet resultSet = result.resultSet()) {
-            while (resultSet.next()) {
-                queuedFileNames.add(resultSet.getString("FileName"));
+        Assertions.assertFalse(queuedJobs.isEmpty(), "Queued jobs collection is empty!");
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.QUEUED.name())) {
+            Set<String> queuedFileNames = new HashSet<>();
+            try (ResultSet resultSet = result.resultSet()) {
+                while (resultSet.next()) {
+                    queuedFileNames.add(resultSet.getString("FileName"));
+                }
             }
-        }
-        for (Job job : queuedJobs) {
-            assert queuedFileNames.contains(job.getFilename()) : "Queued job file name not found in database: " + job.getFilename();
+            for (Job job : queuedJobs) {
+                Assertions.assertTrue(queuedFileNames.contains(job.getFilename()), "Queue file name not found in database: " + job.getFilename());
+            }
         }
     }
 
@@ -172,16 +180,17 @@ public class DbConnectionTest {
     public void testQueuedFilesDeletion() throws Exception {
         // Add a queued file record to delete
         boolean isFileQueued = addQueuedFile("file_to_delete.mp4", "https://example.com/file_to_delete.mp4", saveTargetPath);
-        assert isFileQueued : "Failed to add queued file record for deletion!";
+        Assertions.assertTrue(isFileQueued, "Failed to add queued file record!");
 
         // Delete the queued file
         dbConnection.deleteQueuedFile("https://example.com/file_to_delete.mp4", saveTargetPath, "file_to_delete.mp4");
 
         // Verify the file record is deleted
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", "file_to_delete.mp4");
-        try (ResultSet resultSet = result.resultSet()) {
-            boolean hasRecord = resultSet.next();
-            assert !hasRecord : "Queued file was not deleted!";
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", "file_to_delete.mp4")) {
+            try (ResultSet resultSet = result.resultSet()) {
+                boolean hasRecord = resultSet.next();
+                Assertions.assertFalse(hasRecord, "Queued file record was not deleted!");
+            }
         }
     }
 
@@ -190,7 +199,7 @@ public class DbConnectionTest {
     public void testFileHistoryDeletion() throws Exception {
         // Add a file record to delete
         boolean isFileQueued = addQueuedFile("files_to_delete.mp4", "https://example.com/files_to_delete.mp4", saveTargetPath);
-        assert isFileQueued : "Failed to add queued file record for deletion!";
+        Assertions.assertTrue(isFileQueued, "Failed to add queued file record!");
         // Mark the file as completed
         dbConnection.updateFileState("https://example.com/files_to_delete.mp4", saveTargetPath, "files_to_delete.mp4", FileState.COMPLETED, downloadStartTime, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")), 89192775);
 
@@ -198,41 +207,58 @@ public class DbConnectionTest {
         dbConnection.deleteFilesHistory();
 
         // Verify all file records are deleted
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.COMPLETED.name());
-        try (ResultSet resultSet = result.resultSet()) {
-            boolean hasRecord = resultSet.next();
-            assert !hasRecord : "File history was not deleted!";
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE State = ?", FileState.COMPLETED.name())) {
+            try (ResultSet resultSet = result.resultSet()) {
+                boolean hasRecord = resultSet.next();
+                Assertions.assertFalse(hasRecord, "File history records were not deleted!");
+            }
         }
     }
 
     @AfterAll
     @DisplayName("Clean up Test Environment")
     public static void cleanup() {
-        // Delete the test database file
-        File dbFile = new File(Program.get(Program.DATABASE_PATH));
-        if (dbFile.exists()) {
-            boolean deleted = dbFile.delete();
-            assert deleted : "Failed to delete test database file!";
-        } else {
-            System.out.println("Test database file does not exist, nothing to delete.");
+        // If DbConnection exposes a close method, call it to release any held resources.
+        try {
+            if (dbConnection != null) {
+                try {
+                    dbConnection.closeConnection();
+                } catch (Exception ignored) {
+                }
+            }
+        } finally {
+            // Delete the test database file
+            File dbFile = new File(Program.get(Program.DATABASE_PATH));
+            if (dbFile.exists()) {
+                try {
+                    Files.delete(dbFile.toPath());
+                } catch (Exception e) {
+                    System.err.println("Could not delete test database file: " + dbFile.getAbsolutePath() + ". Will attempt deletion on JVM exit. " + e.getMessage());
+                    dbFile.deleteOnExit();
+                }
+            } else {
+                System.out.println("Test database file does not exist, nothing to delete.");
+            }
         }
     }
 
     private boolean addQueuedFile(String fileName, String fileUrl, String saveTargetPath) throws Exception {
         String downloadStartTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         dbConnection.addFileRecord(fileName, fileUrl, fileUrl, saveTargetPath, downloadStartTime, 1); // Assuming session ID 1 exists for the test
-        QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName);
-        try (ResultSet resultSet = result.resultSet()) {
-            return resultSet.next();
+        try (QueryResult result = runQuery("SELECT * FROM FILE WHERE FileName = ?", fileName)) {
+            try (ResultSet resultSet = result.resultSet()) {
+                return resultSet.next();
+            }
         }
     }
 
     private Set<String> getTableColumns(String tableName) throws Exception {
         Set<String> columns = new HashSet<>();
-        QueryResult result = runQuery("PRAGMA table_info(" + tableName + ")");
-        try (ResultSet resultSet = result.resultSet()) {
-            while (resultSet.next()) {
-                columns.add(resultSet.getString("name"));
+        try (QueryResult result = runQuery("PRAGMA table_info(" + tableName + ")")) {
+            try (ResultSet resultSet = result.resultSet()) {
+                while (resultSet.next()) {
+                    columns.add(resultSet.getString("name"));
+                }
             }
         }
         return columns;
@@ -245,9 +271,22 @@ public class DbConnectionTest {
         for (int i = 0; i < parameters.length; i++) {
             preparedStatement.setObject(i + 1, parameters[i]);
         }
-        return new QueryResult(preparedStatement.executeQuery());
+        ResultSet rs = preparedStatement.executeQuery();
+        return new QueryResult(rs, preparedStatement, connection);
     }
 }
 
-record QueryResult(ResultSet resultSet) {
+record QueryResult(ResultSet resultSet, PreparedStatement preparedStatement, Connection connection) implements AutoCloseable {
+    @Override
+    public void close() throws Exception {
+        if (resultSet != null && !resultSet.isClosed()) {
+            resultSet.close();
+        }
+        if (preparedStatement != null && !preparedStatement.isClosed()) {
+            preparedStatement.close();
+        }
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+    }
 }
