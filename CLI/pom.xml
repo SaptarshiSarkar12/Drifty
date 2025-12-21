@@ -113,7 +113,7 @@
         </profile>
         <!-- [macOS ARM] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-14</id>
+            <id>build-drifty-cli-for-macos-15</id>
             <properties>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
             </properties>
@@ -153,7 +153,7 @@
         </profile>
         <!-- [macOS Intel] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-13</id>
+            <id>build-drifty-cli-for-macos-15-intel</id>
             <properties>
                 <resource-config-file>resource-config-macos-x64.json</resource-config-file>
             </properties>
