@@ -110,13 +110,13 @@ There are two ways to build the installer or executable binaries for Drifty GUI 
         <Tabs.Tab>
           {/* prettier-ignore */}
           ```shell
-          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-14.o
+          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-15.o
           ```
         </Tabs.Tab>
         <Tabs.Tab>
           {/* prettier-ignore */}
           ```shell
-          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-13.o
+          gcc -c config/missing_symbols.c -o config/missing_symbols-macos-15-intel.o
           ```
         </Tabs.Tab>
        </Tabs>
@@ -140,13 +140,13 @@ There are two ways to build the installer or executable binaries for Drifty GUI 
             <Tabs.Tab>
               {/* prettier-ignore */}
               ```shell
-              mvn -P build-drifty-gui-for-macos-14 gluonfx:build gluonfx:package -rf :GUI -U
+              mvn -P build-drifty-gui-for-macos-15 gluonfx:build gluonfx:package -rf :GUI -U
               ```
             </Tabs.Tab>
             <Tabs.Tab>
               {/* prettier-ignore */}
               ```shell
-              mvn -P build-drifty-gui-for-macos-13 gluonfx:build gluonfx:package -rf :GUI -U
+              mvn -P build-drifty-gui-for-macos-15-intel gluonfx:build gluonfx:package -rf :GUI -U
               ```
             </Tabs.Tab>
           </Tabs>
@@ -168,13 +168,13 @@ There are two ways to build the installer or executable binaries for Drifty GUI 
           <Tabs.Tab>
             {/* prettier-ignore */}
             ```shell
-            mvn -P build-drifty-cli-for-macos-14 package
+            mvn -P build-drifty-cli-for-macos-15 package
             ```
           </Tabs.Tab>
           <Tabs.Tab>
             {/* prettier-ignore */}
             ```shell
-            mvn -P build-drifty-cli-for-macos-13 package
+            mvn -P build-drifty-cli-for-macos-15-intel package
             ```
           </Tabs.Tab>
           </Tabs>
