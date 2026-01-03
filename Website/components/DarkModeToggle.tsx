@@ -9,6 +9,7 @@ export default function DarkModeToggle() {
     const prefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)",
     ).matches;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDarkMode(prefersDarkMode);
 
     // Listen for changes in system preference

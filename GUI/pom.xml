@@ -86,11 +86,11 @@
     <profiles>
         <!-- [macOS ARM64] GUI native image builder profile -->
         <profile>
-            <id>build-drifty-gui-for-macos-14</id>
+            <id>build-drifty-gui-for-macos-15</id>
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
-                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-14.o</system-linker-arg>
+                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-15.o</system-linker-arg>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
                 <capcache-arg1>-H:CAPCacheDir=/tmp/cap</capcache-arg1>
@@ -100,11 +100,11 @@
         </profile>
         <!-- [macOS x86_64] GUI native image builder profile -->
         <profile>
-            <id>build-drifty-gui-for-macos-13</id>
+            <id>build-drifty-gui-for-macos-15-intel</id>
             <properties>
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
-                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-13.o</system-linker-arg>
+                <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-15-intel.o</system-linker-arg>
                 <resource-config-file>resource-config-macos-x64.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
                 <mac.app.store>true</mac.app.store>
