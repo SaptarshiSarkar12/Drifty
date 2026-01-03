@@ -118,7 +118,7 @@
         </profile>
         <!-- [macOS ARM] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-14</id>
+            <id>build-drifty-cli-for-macos-15</id>
             <properties>
                 <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
             </properties>
@@ -158,7 +158,7 @@
         </profile>
         <!-- [macOS Intel] CLI native image builder profile -->
         <profile>
-            <id>build-drifty-cli-for-macos-13</id>
+            <id>build-drifty-cli-for-macos-15-intel</id>
             <properties>
                 <resource-config-file>resource-config-macos-x64.json</resource-config-file>
             </properties>
@@ -203,7 +203,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.6.1</version>
+                        <version>3.6.2</version>
                         <executions>
                             <execution>
                                 <id>java-agent</id>

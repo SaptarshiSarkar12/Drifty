@@ -40,7 +40,7 @@ jobs:
     needs: fetch-drifty-version
     strategy:
       matrix:
-        os: ["windows-latest", "macos-14", "ubuntu-latest", "macos-13"] # macOS 14 is Apple Silicon, macOS 13 is Intel
+        os: ["windows-latest", "macos-15", "ubuntu-latest", "macos-15-intel"]
         mode: ["CLI", "GUI"]
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -112,7 +112,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        arch: ${{ matrix.os == 'macos-14' && 'aarch64' || 'x86_64' }}
+        arch: ${{ matrix.os == 'macos-15' && 'aarch64' || 'x86_64' }}
         jdk: 'java23'
     - name: Package Drifty CLI for ${{ matrix.os }} with GraalVM
       if: ${{ matrix.mode == 'CLI' }}
@@ -161,7 +161,7 @@ jobs:
             mv "GUI/target/gluonfx/x86_64-windows/Drifty-GUI.exe" build/GUI
         fi
     - name: Categorise build artifacts for macOS (Apple Silicon)
-      if: ${{ matrix.os == 'macos-14' }}
+      if: ${{ matrix.os == 'macos-15' }}
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_aarch64"
@@ -173,7 +173,7 @@ jobs:
             mv "GUI/target/gluonfx/aarch64-darwin/Drifty-GUI_aarch64.app" build/GUI
         fi
     - name: Categorise build artifacts for macOS (Intel)
-      if: ${{ matrix.os == 'macos-13' }}
+      if: ${{ matrix.os == 'macos-15-intel' }}
       run: |
         if ${{ matrix.mode == 'CLI' }}; then
             mv "CLI/target/CLI/macos/Drifty CLI" "CLI/target/CLI/macos/Drifty-CLI_macos_x86_64"
@@ -188,7 +188,7 @@ jobs:
       run: |
         tar -cvf ${{ matrix.os }}-${{ matrix.mode }}.tar build/${{ matrix.mode }}
     - name: Push generated artifacts for ${{ matrix.os }} for ${{ matrix.mode }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.os }}-${{ matrix.mode }}-Build-Files
         path: ${{ matrix.os }}-${{ matrix.mode }}.tar
@@ -239,7 +239,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Download Build artifacts
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
     - name: Make OS specific build directories
       run: |
         mkdir linux
@@ -250,10 +250,10 @@ jobs:
       run: |
         tar -xvf ubuntu-latest-CLI-Build-Files/ubuntu-latest-CLI.tar -C linux
         tar -xvf ubuntu-latest-GUI-Build-Files/ubuntu-latest-GUI.tar -C linux
-        tar -xvf macos-14-CLI-Build-Files/macos-14-CLI.tar -C macos_aarch64
-        tar -xvf macos-14-GUI-Build-Files/macos-14-GUI.tar -C macos_aarch64
-        tar -xvf macos-13-CLI-Build-Files/macos-13-CLI.tar -C macos_x86_64
-        tar -xvf macos-13-GUI-Build-Files/macos-13-GUI.tar -C macos_x86_64
+        tar -xvf macos-15-CLI-Build-Files/macos-15-CLI.tar -C macos_aarch64
+        tar -xvf macos-15-GUI-Build-Files/macos-15-GUI.tar -C macos_aarch64
+        tar -xvf macos-15-intel-CLI-Build-Files/macos-15-intel-CLI.tar -C macos_x86_64
+        tar -xvf macos-15-intel-GUI-Build-Files/macos-15-intel-GUI.tar -C macos_x86_64
         tar -xvf windows-latest-CLI-Build-Files/windows-latest-CLI.tar -C windows
         tar -xvf windows-latest-GUI-Build-Files/windows-latest-GUI.tar -C windows
     - name: Get Size of Build Artifacts
