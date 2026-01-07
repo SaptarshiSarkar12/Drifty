@@ -46,7 +46,8 @@ public class DriftyGUITest extends GUITestEnvironment {
                 }
                 oldJobsFileRenamed = true;
             }
-        } catch (NullPointerException ignored) {} // Ignore if jobs file does not exist
+        } catch (NullPointerException ignored) {
+        } // Ignore if jobs file does not exist
     }
 
     @Test
