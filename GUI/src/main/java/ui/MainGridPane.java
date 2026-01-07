@@ -45,6 +45,11 @@ public class MainGridPane extends GridPane {
     private void addGUI() {
         this.setHgap(20);
         this.setVgap(10);
+        tfLink.setId("tfLink");
+        tfDir.setId("tfDir");
+        tfFilename.setId("tfFilename");
+        btnSave.setId("btnSave");
+        btnStart.setId("btnStart");
         setColumnSpan(boxLogo, 4);
         setColumnSpan(pBar, 4);
         setColumnSpan(boxAutoPaste, 2);
@@ -104,6 +109,7 @@ public class MainGridPane extends GridPane {
 
     private ListView<Job> listView() {
         ListView<Job> listView = new ListView<>();
+        listView.setId("jobListView");
         listView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Job item, boolean empty) {

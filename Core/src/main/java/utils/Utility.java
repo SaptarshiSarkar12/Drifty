@@ -343,6 +343,10 @@ public class Utility {
                 return null;
             }
             // extract the JSON part of the list in the response body;
+            if (playlistMetadataResponseBody.equalsIgnoreCase("Too Many Requests")) {
+                msgBroker.msgDownloadError("Failed to get playlist metadata! Spotify API rate limit exceeded!");
+                return null;
+            }
             JsonObject playlistMetadata = JsonParser.parseString(playlistMetadataResponseBody.replace("[\n{", "{").replace("}\n]", "}")).getAsJsonObject();
             if (offset == 0) {
                 totalNumberOfTracks = playlistMetadata.get("total").getAsInt();
