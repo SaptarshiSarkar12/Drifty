@@ -235,6 +235,11 @@ public class Utility {
                     songMetadataResponse = client.send(getSongMetadata, HttpResponse.BodyHandlers.ofByteArray());
                 }
                 String songMetadataResponseBody = extractContent(songMetadataResponse);
+                if(songMetadataResponse.statusCode() == 429){
+                    msgBroker.msgDownloadError("Failed to get song metadata! "
+                            + songMetadataResponseBody + "!\n" + "Retry after 1 hour or 24 hours");
+                    return null;
+                }
                 // extract the JSON part of the list in the response body;
                 JsonObject songMetadata = JsonParser.parseString(songMetadataResponseBody.replace("[\n{", "{").replace("}\n]", "}")).getAsJsonObject();
                 if (songMetadata.has("error")) {
@@ -306,7 +311,13 @@ public class Utility {
             HttpResponse<byte[]> songMetadataResponse;
             try (HttpClient client = HttpClient.newHttpClient()) {
                 songMetadataResponse = client.send(getPlaylistMetadata, HttpResponse.BodyHandlers.ofByteArray());
-                return extractContent(songMetadataResponse);
+                String songMetadataResponseBody = extractContent(songMetadataResponse);
+                if(songMetadataResponse.statusCode() == 429){
+                    msgBroker.msgDownloadError("Failed to get song metadata! "
+                            + songMetadataResponseBody + "!\n" + "Retry after 1 hour or 24 hours");
+                    return null;
+                }
+                return songMetadataResponseBody;
             } catch (UnknownHostException e) {
                 msgBroker.msgLinkError("You are not connected to the Internet!");
                 return null;
