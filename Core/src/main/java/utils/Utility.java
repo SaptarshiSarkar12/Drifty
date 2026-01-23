@@ -235,6 +235,11 @@ public class Utility {
                     songMetadataResponse = client.send(getSongMetadata, HttpResponse.BodyHandlers.ofByteArray());
                 }
                 String songMetadataResponseBody = extractContent(songMetadataResponse);
+                if (songMetadataResponse.statusCode() == 429) {
+                    String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("unknown");
+                    msgBroker.msgDownloadError("Rate limited by Spotify API. Retry after " + retryAfter + " seconds.");
+                    return null;
+                }
                 // extract the JSON part of the list in the response body;
                 JsonObject songMetadata = JsonParser.parseString(songMetadataResponseBody.replace("[\n{", "{").replace("}\n]", "}")).getAsJsonObject();
                 if (songMetadata.has("error")) {
@@ -306,7 +311,13 @@ public class Utility {
             HttpResponse<byte[]> songMetadataResponse;
             try (HttpClient client = HttpClient.newHttpClient()) {
                 songMetadataResponse = client.send(getPlaylistMetadata, HttpResponse.BodyHandlers.ofByteArray());
-                return extractContent(songMetadataResponse);
+                String songMetadataResponseBody = extractContent(songMetadataResponse);
+                if (songMetadataResponse.statusCode() == 429) {
+                    String retryAfter = songMetadataResponse.headers().firstValue("retry-after").orElse("unknown");
+                    msgBroker.msgDownloadError("Rate limited by Spotify API. Retry after " + retryAfter + " seconds.");
+                    return null;
+                }
+                return songMetadataResponseBody;
             } catch (UnknownHostException e) {
                 msgBroker.msgLinkError("You are not connected to the Internet!");
                 return null;
