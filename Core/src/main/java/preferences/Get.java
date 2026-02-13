@@ -1,9 +1,6 @@
 package preferences;
 
-import data.JobService;
 import init.Environment;
-import support.JobHistory;
-import support.Jobs;
 import utils.Utility;
 
 import javax.crypto.*;

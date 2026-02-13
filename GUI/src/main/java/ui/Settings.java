@@ -92,7 +92,7 @@ public class Settings {
         } catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Settings window: " + e.getMessage());
             try {
-                new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+                new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + e.getMessage(), true, false).getResponse();
             } catch (Exception ignored) {
             }
         }
@@ -200,7 +200,7 @@ public class Settings {
         } catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
             try {
-                new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+                new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + e.getMessage(), true, false).getResponse();
             } catch (Exception ignored) {
             }
         }

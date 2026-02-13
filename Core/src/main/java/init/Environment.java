@@ -37,7 +37,6 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
-        msgBroker = Environment.getMessageBroker();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         isAdministrator = hasAdminPrivileges();
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class

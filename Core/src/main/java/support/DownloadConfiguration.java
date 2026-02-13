@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import data.JobService;
 import init.Environment;
-import preferences.AppSettings;
 import properties.LinkType;
 import properties.Mode;
 import utils.DbConnection;
