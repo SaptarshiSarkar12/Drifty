@@ -41,7 +41,7 @@ public class Environment {
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         isAdministrator = hasAdminPrivileges();
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
-        new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
+        new Thread(() -> AppSettings.SET.setDriftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
@@ -51,7 +51,7 @@ public class Environment {
                 ffmpegExecName = "ffmpeg_macos-arm64";
             } else {
                 msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
-                AppSettings.SET.isFfmpegWorking(false);
+                AppSettings.SET.setFfmpegWorking(false);
             }
         } else {
             ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
@@ -114,7 +114,7 @@ public class Environment {
     }
 
     public static void checkAndUpdateYtDlp() {
-        AppSettings.SET.ytDlpUpdating(true);
+        AppSettings.SET.setYtDlpUpdating(true);
         msgBroker.msgInitInfo("Checking for component (yt-dlp) update ...");
         String command = Program.get(YT_DLP);
         ProcessBuilder ytDlpUpdateProcess = new ProcessBuilder(command, "-U");
@@ -122,20 +122,20 @@ public class Environment {
         try {
             Process ytDlpUpdateTask = ytDlpUpdateProcess.start();
             ytDlpUpdateTask.waitFor();
-            AppSettings.SET.lastYtDlpUpdateTime(System.currentTimeMillis());
+            AppSettings.SET.setLastYtDlpUpdateTime(System.currentTimeMillis());
         } catch (IOException e) {
             msgBroker.msgInitError("Failed to update yt-dlp! " + e.getMessage());
         } catch (InterruptedException e) {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
         } finally {
-            AppSettings.SET.ytDlpUpdating(false);
+            AppSettings.SET.setYtDlpUpdating(false);
             Utility.setYtDlpVersion().run();
         }
     }
 
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.getLastYtDlpUpdateTime();
         return timeSinceLastUpdate <= oneDay;
     }
 

@@ -118,7 +118,7 @@ public class Utility {
             executableNames = new String[]{"Drifty-CLI_macos_" + arch, "Drifty-CLI.exe", "Drifty-CLI_linux"};
         }
         String updateURLMiddle;
-        if (AppSettings.GET.earlyAccess()) {
+        if (AppSettings.GET.isEarlyAccessEnabled()) {
             updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
         } else {
             updateURLMiddle = "latest/download/";
@@ -226,7 +226,7 @@ public class Utility {
                 HttpRequest getSongMetadata = HttpRequest.newBuilder()
                         .uri(new URI("https://api.spotify.com/v1/tracks/" + trackId))
                         .GET()
-                        .header("Authorization", "Bearer " + AppSettings.GET.spotifyAccessToken())
+                        .header("Authorization", "Bearer " + AppSettings.GET.getSpotifyAccessToken())
                         .header("accept-encoding", "gzip, deflate")
                         .header("content-encoding", "gzip")
                         .build();
@@ -299,7 +299,7 @@ public class Utility {
             HttpRequest getPlaylistMetadata = HttpRequest.newBuilder()
                     .uri(new URI(spotifyPlaylistAPIUrl))
                     .GET()
-                    .header("Authorization", "Bearer " + AppSettings.GET.spotifyAccessToken())
+                    .header("Authorization", "Bearer " + AppSettings.GET.getSpotifyAccessToken())
                     .header("accept-encoding", "gzip, deflate")
                     .header("content-encoding", "gzip")
                     .build();
@@ -832,7 +832,7 @@ public class Utility {
         Path ffmpegPath = Paths.get(Program.get(Program.FFMPEG));
         if (!Files.exists(ffmpegPath)) {
             msgBroker.msgLogError("FFMPEG not found at " + ffmpegPath);
-            AppSettings.SET.isFfmpegWorking(false);
+            AppSettings.SET.setFfmpegWorking(false);
         } else {
             msgBroker.msgLogInfo("FFMPEG found at " + ffmpegPath);
             ProcessBuilder getFfmpegVersion = new ProcessBuilder(ffmpegPath.toString(), "-version");
@@ -845,14 +845,14 @@ public class Utility {
                             String version = line.split(" ")[2];
                             msgBroker.msgLogInfo("FFMPEG version: " + version);
                             msgBroker.msgLogInfo(line);
-                            AppSettings.SET.isFfmpegWorking(true);
-                            AppSettings.SET.ffmpegVersion(version);
+                            AppSettings.SET.setFfmpegWorking(true);
+                            AppSettings.SET.setFfmpegVersion(version);
                         }
                     }
                 }
             } catch (IOException e) {
                 msgBroker.msgLogError("Failed to get FFMPEG version : " + e.getMessage());
-                AppSettings.SET.isFfmpegWorking(false);
+                AppSettings.SET.setFfmpegWorking(false);
             }
         }
     }
@@ -871,7 +871,7 @@ public class Utility {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(ytDlpVersionTask).getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    AppSettings.SET.ytDlpVersion(line);
+                    AppSettings.SET.setYtDlpVersion(line);
                 }
             } catch (IOException e) {
                 msgBroker.msgInitError("Failed to get yt-dlp version! " + e.getMessage());
@@ -901,7 +901,7 @@ public class Utility {
                     }
                 }
                 JsonObject jsonObject = JsonParser.parseString(responseContent.toString()).getAsJsonObject();
-                AppSettings.SET.spotifyAccessToken(jsonObject.get("access_token").getAsString());
+                AppSettings.SET.setSpotifyAccessToken(jsonObject.get("access_token").getAsString());
             } catch (UnknownHostException e) {
                 msgBroker.msgLogError("You are not connected to the Internet!");
                 ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();

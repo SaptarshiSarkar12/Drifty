@@ -1,24 +1,21 @@
 package preferences;
 
+import data.JobService;
 import init.Environment;
-import support.Job;
 import support.JobHistory;
 import support.Jobs;
-import utils.DbConnection;
 import utils.Utility;
 
 import javax.crypto.*;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.Base64;
-import java.util.Collection;
 import java.util.prefs.Preferences;
 
 import static preferences.Labels.*;
 
-public class Get {
+public class Get implements SettingsService {
     private static final Get INSTANCE = new Get();
     private final Preferences preferences = Labels.PREFERENCES;
 
@@ -26,39 +23,29 @@ public class Get {
         return INSTANCE;
     }
 
-    public long lastYtDlpUpdateTime() {
+    @Override
+    public long getLastYtDlpUpdateTime() {
         return preferences.getLong(LAST_YT_DLP_UPDATE_TIME, 1000L);
     }
 
-    public String lastDownloadFolder() {
+    @Override
+    public String getLastDownloadFolder() {
         String defaultPath = Paths.get(System.getProperty("user.home"), "Downloads").toAbsolutePath().toString();
         return preferences.get(LAST_FOLDER, defaultPath);
     }
 
-    public JobHistory jobHistory() {
-        JobHistory jobHistory = new JobHistory();
-        try {
-            DbConnection dbConnection = DbConnection.getInstance();
-            Collection<Job> completedJobs = dbConnection.getCompletedJobs();
-
-            for (Job job : completedJobs) {
-                jobHistory.addJob(job, true);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return jobHistory;
-    }
-
-    public String ytDlpVersion() {
+    @Override
+    public String getYtDlpVersion() {
         return preferences.get(YT_DLP_VERSION, "");
     }
 
-    public String ffmpegVersion() {
+    @Override
+    public String getFfmpegVersion() {
         return preferences.get(FFMPEG_VERSION, "");
     }
 
-    public String spotifyAccessToken() {
+    @Override
+    public String getSpotifyAccessToken() {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(256);
@@ -84,47 +71,39 @@ public class Get {
         return preferences.get(SPOTIFY_ACCESS_TOKEN, "");
     }
 
-    public boolean ytDlpUpdating() {
+    @Override
+    public boolean isYtDlpUpdating() {
         return preferences.getBoolean(YT_DLP_UPDATING, false);
     }
 
+    @Override
     public boolean isFfmpegWorking() {
         return preferences.getBoolean(IS_FFMPEG_WORKING, false);
     }
 
-    public boolean earlyAccess() {
+    @Override
+    public boolean isEarlyAccessEnabled() {
         return preferences.getBoolean(EARLY_ACCESS, false);
     }
 
-    public String newDriftyVersionName() {
+    @Override
+    public String getNewDriftyVersionName() {
         return preferences.get(NEW_DRIFTY_VERSION_NAME, "");
     }
 
+    @Override
     public long lastDriftyUpdateTime() {
         return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
     }
 
+    @Override
     public String latestDriftyVersionTag() {
         return preferences.get(LATEST_DRIFTY_VERSION_TAG, "");
     }
 
+    @Override
     public boolean driftyUpdateAvailable() {
         return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
-    }
-
-    public Jobs jobs() {
-        Jobs jobs = new Jobs();
-        try {
-            DbConnection dbConnection = DbConnection.getInstance();
-            Collection<Job> queuedJobs = dbConnection.getQueuedJobs();
-
-            for (Job job : queuedJobs) {
-                jobs.add(job);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching queued jobs from the database: " + e.getMessage(), e);
-        }
-        return jobs;
     }
 
 }

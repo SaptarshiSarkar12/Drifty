@@ -157,9 +157,9 @@ public class Settings {
 
     private void createEarlyAccessCheck() {
         earlyAccessCheckbox = new CheckBox();
-        earlyAccessCheckbox.setSelected(AppSettings.GET.earlyAccess());
+        earlyAccessCheckbox.setSelected(AppSettings.GET.isEarlyAccessEnabled());
         earlyAccessCheckbox.setMaxWidth(5.0);
-        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.earlyAccess(newValue)));
+        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setEarlyAccess(newValue)));
     }
 
     private void createLabels() {
@@ -194,7 +194,7 @@ public class Settings {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
             File selectedDirectory = chooser.showDialog(this.stage);
-            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
+            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.getLastDownloadFolder();
             UIController.form.tfDir.setText(directoryPath);
             tfCurrentDirectory.setText(directoryPath);
         } catch (Exception e) {

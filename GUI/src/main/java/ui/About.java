@@ -48,9 +48,9 @@ public class About {
                 lblYtDlpVersion
         );
 
-        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.getFfmpegVersion() != null && !AppSettings.GET.getFfmpegVersion().isEmpty()) {
             Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                    "FFMPEG version: " + AppSettings.GET.ffmpegVersion(),
+                    "FFMPEG version: " + AppSettings.GET.getFfmpegVersion(),
                     Font.font("Arial", FontWeight.BOLD, 14),
                     LinearGradient.valueOf(
                             "linear-gradient(to right, #0f0c29, #302b63, #24243e)"
@@ -119,7 +119,7 @@ public class About {
         );
 
         lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                "yt-dlp version: " + AppSettings.GET.ytDlpVersion(),
+                "yt-dlp version: " + AppSettings.GET.getYtDlpVersion(),
                 Font.font("Arial", FontWeight.BOLD, 14),
                 LinearGradient.valueOf(
                         "linear-gradient(to right, #0f0c29, #302b63, #24243e)"

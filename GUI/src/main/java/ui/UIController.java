@@ -1,6 +1,7 @@
 package ui;
 
 import backend.FileDownloader;
+import data.JobService;
 import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
@@ -105,12 +106,12 @@ public final class UIController {
 
     public void showUpdateDialog() {
         if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.getNewDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
             if (ask.getResponse().isYes()) {
                 downloadUpdate();
             }
         } else {
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.getNewDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
             ask.getResponse();
         }
     }
@@ -142,7 +143,7 @@ public final class UIController {
                 sleep(500);
             }
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
-            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.SET.setLastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
             getJobs().setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
@@ -889,11 +890,11 @@ public final class UIController {
     }
 
     private Jobs getJobs() {
-        return AppSettings.GET.jobs();
+        return JobService.getJobs();
     }
 
     private JobHistory getHistory() {
-        return AppSettings.GET.jobHistory();
+        return JobService.getJobHistory();
     }
 
     private void selectJob(Job job) {

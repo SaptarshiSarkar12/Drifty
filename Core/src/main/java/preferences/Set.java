@@ -10,7 +10,7 @@ import java.util.prefs.Preferences;
 
 import static preferences.Labels.*;
 
-public class Set {
+public class Set implements SettingsServiceSetters {
     private static final Set INSTANCE = new Set();
     private final Preferences preferences = Labels.PREFERENCES;
     SecretKey secretKey;
@@ -22,27 +22,32 @@ public class Set {
         return INSTANCE;
     }
 
-    public void lastYtDlpUpdateTime(long value) {
+    @Override
+    public void setLastYtDlpUpdateTime(long value) {
         AppSettings.CLEAR.lastYtDlpUpdateTime();
         preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);
     }
 
-    public void lastFolder(String lastFolderPath) {
+    @Override
+    public void setLastFolder(String lastFolderPath) {
         AppSettings.CLEAR.lastFolder();
         preferences.put(LAST_FOLDER, lastFolderPath);
     }
 
-    public void ytDlpVersion(String version) {
+    @Override
+    public void setYtDlpVersion(String version) {
         AppSettings.CLEAR.ytDlpVersion();
         preferences.put(YT_DLP_VERSION, version);
     }
 
-    public void ffmpegVersion(String version) {
+    @Override
+    public void setFfmpegVersion(String version) {
         AppSettings.CLEAR.ffmpegVersion();
         preferences.put(FFMPEG_VERSION, version);
     }
 
-    public void spotifyAccessToken(String token) {
+    @Override
+    public void setSpotifyAccessToken(String token) {
         try {
             // Generate a secret key for encryption and decryption of the access token
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
@@ -67,37 +72,44 @@ public class Set {
         preferences.put(SPOTIFY_ACCESS_TOKEN, token);
     }
 
-    public void ytDlpUpdating(boolean isInitializing) {
+    @Override
+    public void setYtDlpUpdating(boolean isInitializing) {
         AppSettings.CLEAR.ytDlpUpdating();
         preferences.putBoolean(YT_DLP_UPDATING, isInitializing);
     }
 
-    public void isFfmpegWorking(boolean isWorking) {
+    @Override
+    public void setFfmpegWorking(boolean isWorking) {
         AppSettings.CLEAR.isFfmpegWorking();
         preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
     }
 
-    public void earlyAccess(boolean isEarlyAccess) {
+    @Override
+    public void setEarlyAccess(boolean isEarlyAccess) {
         AppSettings.CLEAR.earlyAccess();
         preferences.putBoolean(EARLY_ACCESS, isEarlyAccess);
     }
 
-    public void newDriftyVersionName(String versionName) {
+    @Override
+    public void setNewDriftyVersionName(String versionName) {
         AppSettings.CLEAR.newDriftyVersionName();
         preferences.put(NEW_DRIFTY_VERSION_NAME, versionName);
     }
 
-    public void lastDriftyUpdateTime(long value) {
+    @Override
+    public void setLastDriftyUpdateTime(long value) {
         AppSettings.CLEAR.lastDriftyUpdateTime();
         preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
     }
 
-    public void latestDriftyVersionTag(String tag) {
+    @Override
+    public void setLatestDriftyVersionTag(String tag) {
         AppSettings.CLEAR.latestDriftyVersionTag();
         preferences.put(LATEST_DRIFTY_VERSION_TAG, tag);
     }
 
-    public void driftyUpdateAvailable(boolean isUpdateAvailable) {
+    @Override
+    public void setDriftyUpdateAvailable(boolean isUpdateAvailable) {
         AppSettings.CLEAR.driftyUpdateAvailable();
         preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
     }

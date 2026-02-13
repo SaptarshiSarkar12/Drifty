@@ -17,7 +17,7 @@ public class Folders {
         folders.remove(folder);
         folders.addLast(folder);
         AppSettings.SET.folders(this);
-        AppSettings.SET.lastFolder(folder);
+        AppSettings.SET.setLastFolder(folder);
     }
 
     public void removeFolder(String folder) {
@@ -26,7 +26,7 @@ public class Folders {
     }
 
     public String getDownloadFolder() {
-        return AppSettings.GET.lastDownloadFolder();
+        return AppSettings.GET.getLastDownloadFolder();
     }
 
     public void checkFolders() {
