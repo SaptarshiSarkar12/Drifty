@@ -62,7 +62,7 @@ public class Settings {
         configureLayout();
         settingsScene = Constants.getScene(root);
         Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
-        setInitialTheme(AppSettings.GET.mainTheme());
+        setInitialTheme(AppSettings.GET.getGuiTheme());
     }
 
     private void configureLayout() {
@@ -144,13 +144,13 @@ public class Settings {
     private void setupThemeChoice() {
         themeChoiceBox = new ChoiceBox<>();
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
-        themeChoiceBox.setValue("Dark".equals(AppSettings.GET.mainTheme()) ? "Dark Theme" : "Light Theme");
+        themeChoiceBox.setValue("Dark".equals(AppSettings.GET.getGuiTheme()) ? "Dark Theme" : "Light Theme");
         themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ManageFolders.scene, ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
         autoPasteCheckbox = new CheckBox();
-        autoPasteCheckbox.setSelected(AppSettings.GET.mainAutoPaste());
+        autoPasteCheckbox.setSelected(AppSettings.GET.isGuiAutoPasteEnabled());
         autoPasteCheckbox.setMaxWidth(5.0);
         autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setGuiAutoPasteEnabled(newValue)));
     }
@@ -179,7 +179,7 @@ public class Settings {
 
     private void createDirectoryButton() {
         selectDirectoryButton = new Button("Select Directory");
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
             selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED);
             selectDirectoryButton.setOnMousePressed(e -> selectDirectoryButton.setStyle(Constants.BUTTON_PRESSED));
             selectDirectoryButton.setOnMouseReleased(e -> selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED));

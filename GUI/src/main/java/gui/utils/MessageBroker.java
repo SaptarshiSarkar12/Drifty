@@ -26,7 +26,7 @@ public class MessageBroker extends utils.MessageBroker {
             ui = null;
         }
         Color color = switch (messageType) {
-            case ERROR -> "Dark".equals(AppSettings.GET.mainTheme()) ? BRIGHT_RED : DARK_RED;
+            case ERROR -> "Dark".equals(AppSettings.GET.getGuiTheme()) ? BRIGHT_RED : DARK_RED;
             case INFO -> GREEN;
             default -> YELLOW;
         };

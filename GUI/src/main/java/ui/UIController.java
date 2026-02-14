@@ -84,7 +84,7 @@ public final class UIController {
     Single instance model-only constructor
     */
     private UIController() {
-        folders = AppSettings.GET.folders();
+        folders = new Folders();
     }
 
     /*
@@ -176,7 +176,7 @@ public final class UIController {
         form.tfLink.disableProperty().bind(disableLinkInput);
         form.listView.setContextMenu(getListMenu());
 
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -186,7 +186,7 @@ public final class UIController {
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
-        form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
+        form.cbAutoPaste.setSelected(AppSettings.GET.isGuiAutoPasteEnabled());
         form.tfDir.textProperty().addListener(((_, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
@@ -459,7 +459,7 @@ public final class UIController {
     }
 
     private String fileExists(String filename) {
-        for (String folder : AppSettings.GET.folders().getFolders()) {
+        for (String folder : folders.getFolders()) {
             CheckFile checkFile = new CheckFile(folder, filename);
             Thread thread = new Thread(checkFile);
             thread.start();
@@ -592,7 +592,6 @@ public final class UIController {
     }
 
     private void setDirContextMenu() {
-        Folders folders = AppSettings.GET.folders();
         ContextMenu cm = new ContextMenu();
         for (String folder : folders.getFolders()) {
             MenuItem mi = new MenuItem(folder);
@@ -615,11 +614,11 @@ public final class UIController {
     }
 
     public static void resetDownloadFoldersToActiveList() {
-        INSTANCE.folders = AppSettings.GET.folders();
+        INSTANCE.folders = new Folders();
     }
 
     public static boolean isAutoPaste() {
-        return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste();
+        return form.cbAutoPaste.isSelected();
     }
 
     public static void clearJobHistory() {
@@ -793,8 +792,8 @@ public final class UIController {
     }
 
     private void help() {
-        Color textColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.WHITE : Color.BLACK;
-        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color textColor = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Color.WHITE : Color.BLACK;
+        Color headingsColor = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
         INFO_TF.getChildren().add(text("Link:\n", true, headingsColor, h));
@@ -840,7 +839,7 @@ public final class UIController {
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
         infoScene.setFill(Color.TRANSPARENT);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
         helpStage.setScene(infoScene);
@@ -880,7 +879,7 @@ public final class UIController {
 
     public static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.GET.folders().getDownloadFolder();
+        String lastFolder = AppSettings.GET.getLastDownloadFolder();
         String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);

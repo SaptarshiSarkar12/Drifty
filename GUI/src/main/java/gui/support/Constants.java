@@ -35,7 +35,7 @@ public class Constants extends support.Constants {
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
 
     // Graphics Files
-    public static final URL DRIFTY_MAIN_PNG = "Dark".equals(AppSettings.GET.mainTheme()) ? Constants.class.getResource("/Backgrounds/DriftyMainDark.png") : Constants.class.getResource("/Backgrounds/DriftyMainLight.png");
+    public static final URL DRIFTY_MAIN_PNG = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Constants.class.getResource("/Backgrounds/DriftyMainDark.png") : Constants.class.getResource("/Backgrounds/DriftyMainLight.png");
     public static final URL SAVE_UP_LIGHT_PNG = Constants.class.getResource("/Buttons/Save/SaveUpLight.png");
     public static final URL SAVE_UP_DARK_PNG = Constants.class.getResource("/Buttons/Save/SaveUpDark.png");
     public static final URL SAVE_DOWN_LIGHT_PNG = Constants.class.getResource("/Buttons/Save/SaveDownLight.png");
@@ -49,7 +49,7 @@ public class Constants extends support.Constants {
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/Labels/Filename.png");
     public static final URL DRIFTY_ICON = Constants.class.getResource("/Icons/AppIcon.png");
-    public static final URL SPLASH = "Dark".equals(AppSettings.GET.mainTheme()) ? Constants.class.getResource("/SplashDark.png") : Constants.class.getResource("/SplashLight.png");
+    public static final URL SPLASH = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Constants.class.getResource("/SplashDark.png") : Constants.class.getResource("/SplashLight.png");
 
     // Stylesheets
     public static final URL LIGHT_THEME_CSS = Constants.class.getResource("/CSS/LightTheme.css");
