@@ -19,13 +19,13 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        AppSettings.SET.folders(foldersToString());
+        AppSettings.SET.setFolders(foldersToString());
         AppSettings.SET.setLastFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        AppSettings.SET.folders(foldersToString());
+        AppSettings.SET.setFolders(foldersToString());
     }
 
     public String getDownloadFolder() {
@@ -47,7 +47,7 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        AppSettings.SET.folders(foldersToString());
+        AppSettings.SET.setFolders(foldersToString());
     }
 
     public ObservableList<String> getFolders() {

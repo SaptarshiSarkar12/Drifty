@@ -30,11 +30,11 @@ public class Get extends preferences.Get {
     }
 
     public boolean mainAutoPaste() {
-        return preferences.getBoolean(MAIN_AUTO_PASTE.toString(), false);
+        return preferences.getBoolean(GUI_AUTO_PASTE.toString(), false);
     }
 
     public String mainTheme() {
-        return preferences.get(MAIN_THEME.toString(), "Light");
+        return preferences.get(GUI_THEME.toString(), "Light");
     }
 
     public boolean alwaysAutoPaste() {

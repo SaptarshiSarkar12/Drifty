@@ -15,18 +15,15 @@ public final class Set extends preferences.Set {
         return INSTANCE;
     }
 
-    public void folders(String value) {
-        AppSettings.CLEAR.folders();
+    public void setFolders(String value) {
         preferences.put(FOLDERS.toString(), value);
     }
 
-    public void mainAutoPaste(boolean isMainAutoPasteEnabled) {
-        AppSettings.CLEAR.mainAutoPaste();
-        preferences.putBoolean(MAIN_AUTO_PASTE.toString(), isMainAutoPasteEnabled);
+    public void setGuiAutoPasteEnabled(boolean enabled) {
+        preferences.putBoolean(GUI_AUTO_PASTE.toString(), enabled);
     }
 
-    public void mainTheme(String theme) {
-        AppSettings.CLEAR.mainTheme();
-        preferences.put(MAIN_THEME.toString(), theme);
+    public void setGuiTheme(String theme) {
+        preferences.put(GUI_THEME.toString(), theme);
     }
 }

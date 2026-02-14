@@ -152,7 +152,7 @@ public class Settings {
         autoPasteCheckbox = new CheckBox();
         autoPasteCheckbox.setSelected(AppSettings.GET.mainAutoPaste());
         autoPasteCheckbox.setMaxWidth(5.0);
-        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
+        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setGuiAutoPasteEnabled(newValue)));
     }
 
     private void createEarlyAccessCheck() {

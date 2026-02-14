@@ -17,10 +17,10 @@ public class Clear extends preferences.Clear {
     }
 
     public void mainAutoPaste() {
-        preferences.remove(MAIN_AUTO_PASTE.toString());
+        preferences.remove(GUI_AUTO_PASTE.toString());
     }
 
     public void mainTheme() {
-        preferences.remove(MAIN_THEME.toString());
+        preferences.remove(GUI_THEME.toString());
     }
 }

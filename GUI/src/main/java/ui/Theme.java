@@ -21,7 +21,7 @@ import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 public class Theme {
     public static void applyTheme(String theme, Scene... scenes) {
         boolean isDark = "Dark".equals(theme);
-        AppSettings.SET.mainTheme(theme);
+        AppSettings.SET.setGuiTheme(theme);
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
         changeImages(theme);
