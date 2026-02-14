@@ -1,8 +1,11 @@
 package gui.support;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gui.preferences.AppSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.hildan.fxgson.FxGson;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,13 +19,13 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        AppSettings.SET.folders(this);
+        AppSettings.SET.folders(foldersToString());
         AppSettings.SET.setLastFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        AppSettings.SET.folders(this);
+        AppSettings.SET.folders(foldersToString());
     }
 
     public String getDownloadFolder() {
@@ -44,10 +47,17 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        AppSettings.SET.folders(this);
+        AppSettings.SET.folders(foldersToString());
     }
 
     public ObservableList<String> getFolders() {
         return FXCollections.observableArrayList(folders);
     }
+
+    private String foldersToString() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
+        return gson.toJson(this);
+    }
+
 }
