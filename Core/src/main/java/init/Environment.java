@@ -104,7 +104,7 @@ public class Environment {
             msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
         }
 
-        AppSettings.CLEAR.spotifyAccessToken();
+        AppSettings.SET.setSpotifyAccessToken("");
         System.exit(exitCode);
     }
 

@@ -3,6 +3,7 @@ package ui;
 import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 import static support.Constants.VERSION_NUMBER;
 
+import gui.init.Environment;
 import gui.preferences.AppSettings;
 import gui.support.Constants;
 import gui.utils.MessageBroker;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 public class About {
     private static Scene aboutScene;
     private static final ImageView IV_SPLASH = new ImageView(Constants.imgSplash);
-    private static MessageBroker msgBroker;
+    private static final MessageBroker msgBroker = Environment.getMessageBroker();
     private Label lblDescription;
     private Label lblDriftyVersion;
     private Label lblYtDlpVersion;

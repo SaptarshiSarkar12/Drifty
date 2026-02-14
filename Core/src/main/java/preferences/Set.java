@@ -24,25 +24,21 @@ public class Set implements SettingsServiceSetters {
 
     @Override
     public void setLastYtDlpUpdateTime(long value) {
-        AppSettings.CLEAR.lastYtDlpUpdateTime();
         preferences.putLong(LAST_YT_DLP_UPDATE_TIME, value);
     }
 
     @Override
     public void setLastFolder(String lastFolderPath) {
-        AppSettings.CLEAR.lastFolder();
         preferences.put(LAST_FOLDER, lastFolderPath);
     }
 
     @Override
     public void setYtDlpVersion(String version) {
-        AppSettings.CLEAR.ytDlpVersion();
         preferences.put(YT_DLP_VERSION, version);
     }
 
     @Override
     public void setFfmpegVersion(String version) {
-        AppSettings.CLEAR.ffmpegVersion();
         preferences.put(FFMPEG_VERSION, version);
     }
 
@@ -68,49 +64,41 @@ public class Set implements SettingsServiceSetters {
         } catch (NoSuchPaddingException e) {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such padding exists! " + e.getMessage());
         }
-        AppSettings.CLEAR.spotifyAccessToken();
         preferences.put(SPOTIFY_ACCESS_TOKEN, token);
     }
 
     @Override
     public void setYtDlpUpdating(boolean isInitializing) {
-        AppSettings.CLEAR.ytDlpUpdating();
         preferences.putBoolean(YT_DLP_UPDATING, isInitializing);
     }
 
     @Override
     public void setFfmpegWorking(boolean isWorking) {
-        AppSettings.CLEAR.isFfmpegWorking();
         preferences.putBoolean(IS_FFMPEG_WORKING, isWorking);
     }
 
     @Override
     public void setEarlyAccess(boolean isEarlyAccess) {
-        AppSettings.CLEAR.earlyAccess();
         preferences.putBoolean(EARLY_ACCESS, isEarlyAccess);
     }
 
     @Override
     public void setNewDriftyVersionName(String versionName) {
-        AppSettings.CLEAR.newDriftyVersionName();
         preferences.put(NEW_DRIFTY_VERSION_NAME, versionName);
     }
 
     @Override
     public void setLastDriftyUpdateTime(long value) {
-        AppSettings.CLEAR.lastDriftyUpdateTime();
         preferences.putLong(LAST_DRIFTY_UPDATE_TIME, value);
     }
 
     @Override
     public void setLatestDriftyVersionTag(String tag) {
-        AppSettings.CLEAR.latestDriftyVersionTag();
         preferences.put(LATEST_DRIFTY_VERSION_TAG, tag);
     }
 
     @Override
     public void setDriftyUpdateAvailable(boolean isUpdateAvailable) {
-        AppSettings.CLEAR.driftyUpdateAvailable();
         preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
     }
 }

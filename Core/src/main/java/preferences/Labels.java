@@ -16,5 +16,7 @@ public interface Labels {
     String LAST_DRIFTY_UPDATE_TIME = "LAST_DRIFTY_UPDATE_TIME";
     String EARLY_ACCESS = "EARLY_ACCESS";
     String DRIFTY_UPDATE_AVAILABLE = "DRIFTY_UPDATE_AVAILABLE";
-    String JOBS = "JOBS";
+    String FOLDERS = "FOLDERS";
+    String GUI_AUTO_PASTE = "GUI_AUTO_PASTE";
+    String GUI_THEME = "GUI_THEME";
 }
