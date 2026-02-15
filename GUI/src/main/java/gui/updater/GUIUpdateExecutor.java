@@ -1,7 +1,7 @@
 package gui.updater;
 
 import gui.init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;

@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import preferences.AppSettings;
+import settings.AppSettings;
 
 import java.util.Objects;
 

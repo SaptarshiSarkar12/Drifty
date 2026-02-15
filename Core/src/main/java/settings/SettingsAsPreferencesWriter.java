@@ -1,4 +1,4 @@
-package preferences;
+package settings;
 
 import init.Environment;
 
@@ -8,17 +8,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.prefs.Preferences;
 
-import static preferences.Labels.*;
+import static settings.PreferenceNames.*;
 
-public class Set implements SettingsServiceSetters {
-    private static final Set INSTANCE = new Set();
-    private final Preferences preferences = Labels.PREFERENCES;
+public class SettingsAsPreferencesWriter implements SettingsWriter {
+    private static final SettingsAsPreferencesWriter INSTANCE = new SettingsAsPreferencesWriter();
+    private final Preferences preferences = PreferenceNames.PREFERENCES;
     SecretKey secretKey;
 
-    protected Set() {
+    protected SettingsAsPreferencesWriter() {
     }
 
-    protected static Set getInstance() {
+    protected static SettingsAsPreferencesWriter getInstance() {
         return INSTANCE;
     }
 

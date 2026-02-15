@@ -3,7 +3,7 @@ package ui;
 import backend.FileDownloader;
 import data.JobService;
 import gui.init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.GUIDownloadConfiguration;

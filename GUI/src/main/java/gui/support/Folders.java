@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import gui.init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hildan.fxgson.FxGson;

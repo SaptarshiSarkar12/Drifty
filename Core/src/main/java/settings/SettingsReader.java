@@ -1,7 +1,7 @@
-package preferences;
+package settings;
 
 
-public interface SettingsService {
+public interface SettingsReader {
 
     long getLastYtDlpUpdateTime();
 
@@ -32,5 +32,5 @@ public interface SettingsService {
     boolean isGuiAutoPasteEnabled();
 
     String getGuiTheme();
-    
+
 }

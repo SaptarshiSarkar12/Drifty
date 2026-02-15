@@ -9,7 +9,7 @@ import cli.utils.Utility;
 import data.JobService;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.LinkType;
 import properties.MessageType;
 import properties.OS;

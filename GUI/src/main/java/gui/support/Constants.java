@@ -1,7 +1,7 @@
 package gui.support;
 
 import gui.init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import gui.utils.UIComponentBuilder;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;

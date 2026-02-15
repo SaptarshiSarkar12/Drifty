@@ -1,4 +1,4 @@
-package preferences;
+package settings;
 
 import init.Environment;
 import utils.Utility;
@@ -10,13 +10,13 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.prefs.Preferences;
 
-import static preferences.Labels.*;
+import static settings.PreferenceNames.*;
 
-public class Get implements SettingsService {
-    private static final Get INSTANCE = new Get();
-    private final Preferences preferences = Labels.PREFERENCES;
+public class SettingsAsPreferencesReader implements SettingsReader {
+    private static final SettingsAsPreferencesReader INSTANCE = new SettingsAsPreferencesReader();
+    private final Preferences preferences = PreferenceNames.PREFERENCES;
 
-    static Get getInstance() {
+    static SettingsAsPreferencesReader getInstance() {
         return INSTANCE;
     }
 
@@ -47,10 +47,10 @@ public class Get implements SettingsService {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             keyGenerator.init(256);
             Cipher cipher = Cipher.getInstance("AES");
-            SecretKey secretKey = Set.getInstance().secretKey;
+            SecretKey secretKey = SettingsAsPreferencesWriter.getInstance().secretKey;
             while (secretKey == null) { // Sometimes, the encryption of token takes time and the key doesn't get generated in time
                 Utility.sleep(10);
-                secretKey = Set.getInstance().secretKey;
+                secretKey = SettingsAsPreferencesWriter.getInstance().secretKey;
             }
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.getDecoder().decode(preferences.get(SPOTIFY_ACCESS_TOKEN, ""))));

@@ -1,7 +1,7 @@
 package updater;
 
 import init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.OS;
 import utils.MessageBroker;
 

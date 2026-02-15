@@ -1,6 +1,6 @@
 package ui;
 
-import preferences.AppSettings;
+import settings.AppSettings;
 import gui.init.Environment;
 import gui.support.Constants;
 import gui.support.Folders;

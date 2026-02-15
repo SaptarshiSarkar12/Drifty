@@ -9,7 +9,7 @@ module Core {
     requires java.net.http;
     requires java.sql;
     exports init;
-    exports preferences;
+    exports settings;
     exports properties;
     exports support;
     exports updater;

@@ -1,6 +1,6 @@
 package init;
 
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.OS;
 import properties.Program;
 import updater.UpdateChecker;

@@ -1,6 +1,6 @@
-package preferences;
+package settings;
 
-public interface SettingsServiceSetters {
+public interface SettingsWriter {
     void setLastYtDlpUpdateTime(long value);
 
     void setLastFolder(String lastFolderPath);

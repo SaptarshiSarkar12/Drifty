@@ -5,7 +5,7 @@ import init.Environment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.MessageCategory;
 import properties.Mode;
 import properties.OS;
