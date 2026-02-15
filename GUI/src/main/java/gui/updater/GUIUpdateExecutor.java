@@ -1,7 +1,7 @@
 package gui.updater;
 
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
 import properties.OS;
@@ -50,7 +50,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
             M.msgUpdateError("Failed to open the installer for the latest version of Drifty! Error code: " + executionResult.getExitValue());
             return false;
         } else {
-            AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+            AppSettings.SET.setDriftyUpdateAvailable(false); // Reset the update flag
             Environment.terminate(0);
         }
         return true;

@@ -24,4 +24,10 @@ public interface SettingsServiceSetters {
     void setLatestDriftyVersionTag(String tag);
 
     void setDriftyUpdateAvailable(boolean isUpdateAvailable);
+
+    void setFolders(String value);
+
+    void setGuiAutoPasteEnabled(boolean enabled);
+
+    void setGuiTheme(String theme);
 }

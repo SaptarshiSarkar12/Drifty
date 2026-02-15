@@ -3,7 +3,7 @@ package ui;
 import backend.FileDownloader;
 import data.JobService;
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.GUIDownloadConfiguration;
@@ -92,7 +92,7 @@ public final class UIController {
      */
     private void start(MainGridPane pane) {
         new Thread(() -> {
-            if (AppSettings.GET.driftyUpdateAvailable()) {
+            if (AppSettings.GET.isDriftyUpdateAvailable()) {
                 M.msgLogInfo("A new version of Drifty is available!");
                 showUpdateDialog();
             }

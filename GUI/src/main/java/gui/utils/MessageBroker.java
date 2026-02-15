@@ -1,6 +1,6 @@
 package gui.utils;
 
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import javafx.scene.paint.Color;
 import properties.MessageCategory;
 import properties.MessageType;

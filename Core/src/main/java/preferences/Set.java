@@ -101,4 +101,19 @@ public class Set implements SettingsServiceSetters {
     public void setDriftyUpdateAvailable(boolean isUpdateAvailable) {
         preferences.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
     }
+
+    @Override
+    public void setFolders(String value) {
+        preferences.put(FOLDERS, value);
+    }
+
+    @Override
+    public void setGuiAutoPasteEnabled(boolean enabled) {
+        preferences.putBoolean(GUI_AUTO_PASTE, enabled);
+    }
+
+    @Override
+    public void setGuiTheme(String theme) {
+        preferences.put(GUI_THEME, theme);
+    }
 }

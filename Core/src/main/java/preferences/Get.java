@@ -89,18 +89,32 @@ public class Get implements SettingsService {
     }
 
     @Override
-    public long lastDriftyUpdateTime() {
+    public long getLastDriftyUpdateTime() {
         return preferences.getLong(LAST_DRIFTY_UPDATE_TIME, 1000L);
     }
 
     @Override
-    public String latestDriftyVersionTag() {
+    public String getLatestDriftyVersionTag() {
         return preferences.get(LATEST_DRIFTY_VERSION_TAG, "");
     }
 
     @Override
-    public boolean driftyUpdateAvailable() {
+    public boolean isDriftyUpdateAvailable() {
         return preferences.getBoolean(DRIFTY_UPDATE_AVAILABLE, false);
     }
 
+    @Override
+    public String getFolders() {
+        return preferences.get(FOLDERS, "");
+    }
+
+    @Override
+    public boolean isGuiAutoPasteEnabled() {
+        return preferences.getBoolean(GUI_AUTO_PASTE, false);
+    }
+
+    @Override
+    public String getGuiTheme() {
+        return preferences.get(GUI_THEME, "Light");
+    }
 }

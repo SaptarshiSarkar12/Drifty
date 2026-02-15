@@ -1,6 +1,6 @@
 package ui;
 
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.geometry.Insets;

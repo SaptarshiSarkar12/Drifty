@@ -1,6 +1,8 @@
 package preferences;
 
+
 public interface SettingsService {
+
     long getLastYtDlpUpdateTime();
 
     String getLastDownloadFolder();
@@ -19,9 +21,16 @@ public interface SettingsService {
 
     String getNewDriftyVersionName();
 
-    long lastDriftyUpdateTime();
+    long getLastDriftyUpdateTime();
 
-    String latestDriftyVersionTag();
+    String getLatestDriftyVersionTag();
 
-    boolean driftyUpdateAvailable();
+    boolean isDriftyUpdateAvailable();
+
+    String getFolders();
+
+    boolean isGuiAutoPasteEnabled();
+
+    String getGuiTheme();
+    
 }

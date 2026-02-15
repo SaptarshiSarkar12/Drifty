@@ -286,7 +286,7 @@ public class Drifty_CLI {
 
     private static void handleUpdateAvailable(boolean askForInstallingUpdate) {
         messageBroker.msgUpdateInfo("Update available!");
-        messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.getNewDriftyVersionName() + ")");
+        messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.getLatestDriftyVersionTag() + " (" + AppSettings.GET.getNewDriftyVersionName() + ")");
         if (Environment.hasAdminPrivileges()) {
             boolean choice = true;
             if (askForInstallingUpdate) {
@@ -332,7 +332,7 @@ public class Drifty_CLI {
     }
 
     private static boolean isDriftyUpdateChecked() {
-        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.getLastDriftyUpdateTime();
         return timeSinceLastUpdate <= ONE_DAY;
     }
 

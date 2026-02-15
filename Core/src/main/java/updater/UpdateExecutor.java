@@ -54,7 +54,7 @@ public abstract class UpdateExecutor {
             M.msgUpdateError("Failed to delete the old version of Drifty!\n" + e.getMessage());
         } finally {
             if (!deleteImmediately) {
-                AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
+                AppSettings.SET.setDriftyUpdateAvailable(false); // Reset the update flag
             }
         }
     }

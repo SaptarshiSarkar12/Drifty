@@ -119,7 +119,7 @@ public class Utility {
         }
         String updateURLMiddle;
         if (AppSettings.GET.isEarlyAccessEnabled()) {
-            updateURLMiddle = "download/" + AppSettings.GET.latestDriftyVersionTag() + "/";
+            updateURLMiddle = "download/" + AppSettings.GET.getLatestDriftyVersionTag() + "/";
         } else {
             updateURLMiddle = "latest/download/";
         }

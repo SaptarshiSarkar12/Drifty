@@ -4,7 +4,7 @@ import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 import static support.Constants.VERSION_NUMBER;
 
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.geometry.Insets;

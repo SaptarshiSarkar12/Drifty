@@ -1,7 +1,7 @@
 package ui;
 
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import preferences.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
