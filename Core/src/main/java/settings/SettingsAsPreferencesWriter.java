@@ -1,11 +1,8 @@
 package settings;
 
-import init.Environment;
+import utils.SpotifyTokenEncryptor;
 
 import javax.crypto.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.prefs.Preferences;
 
 import static settings.PreferenceNames.*;
@@ -13,12 +10,8 @@ import static settings.PreferenceNames.*;
 public class SettingsAsPreferencesWriter implements SettingsWriter {
     private static final SettingsAsPreferencesWriter INSTANCE = new SettingsAsPreferencesWriter();
     private final Preferences preferences = PreferenceNames.PREFERENCES;
-    SecretKey secretKey;
 
-    protected SettingsAsPreferencesWriter() {
-    }
-
-    protected static SettingsAsPreferencesWriter getInstance() {
+    static SettingsAsPreferencesWriter getInstance() {
         return INSTANCE;
     }
 
@@ -44,27 +37,8 @@ public class SettingsAsPreferencesWriter implements SettingsWriter {
 
     @Override
     public void setSpotifyAccessToken(String token) {
-        try {
-            // Generate a secret key for encryption and decryption of the access token
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-            keyGenerator.init(256);
-            INSTANCE.secretKey = keyGenerator.generateKey();
-            // Encrypt the access token
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, INSTANCE.secretKey);
-            token = Base64.getEncoder().encodeToString(cipher.doFinal(token.getBytes()));
-        } catch (NoSuchAlgorithmException e) {
-            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such algorithm exists! " + e.getMessage());
-        } catch (IllegalBlockSizeException e) {
-            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! Block size of the data is incorrect! " + e.getMessage());
-        } catch (BadPaddingException e) {
-            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! Data is not padded correctly! " + e.getMessage());
-        } catch (InvalidKeyException e) {
-            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! Failed to generate secret key! " + e.getMessage());
-        } catch (NoSuchPaddingException e) {
-            Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such padding exists! " + e.getMessage());
-        }
-        preferences.put(SPOTIFY_ACCESS_TOKEN, token);
+        String encrypted = SpotifyTokenEncryptor.encryptToken(token);
+        preferences.put(SPOTIFY_ACCESS_TOKEN, encrypted);
     }
 
     @Override
