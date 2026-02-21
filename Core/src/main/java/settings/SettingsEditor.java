@@ -1,6 +1,38 @@
 package settings;
 
-public interface SettingsWriter {
+
+public interface SettingsEditor {
+
+    long getLastYtDlpUpdateTime();
+
+    String getLastDownloadFolder();
+
+    String getYtDlpVersion();
+
+    String getFfmpegVersion();
+
+    String getSpotifyAccessToken();
+
+    boolean isYtDlpUpdating();
+
+    boolean isFfmpegWorking();
+
+    boolean isEarlyAccessEnabled();
+
+    String getNewDriftyVersionName();
+
+    long getLastDriftyUpdateTime();
+
+    String getLatestDriftyVersionTag();
+
+    boolean isDriftyUpdateAvailable();
+
+    String getFolders();
+
+    boolean isGuiAutoPasteEnabled();
+
+    String getGuiTheme();
+
     void setLastYtDlpUpdateTime(long value);
 
     void setLastDownloadFolder(String lastFolderPath);

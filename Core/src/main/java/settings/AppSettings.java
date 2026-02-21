@@ -3,8 +3,7 @@ package settings;
 public class AppSettings {
     private final static AppSettings instance = new AppSettings();
 
-    public static final SettingsReader GET = SettingsAsPreferencesReader.getInstance();
-    public static final SettingsWriter SET = SettingsAsPreferencesWriter.getInstance();
+    public static final SettingsEditor EDITOR = SettingsAsPreferencesEditor.getInstance();
 
     private long lastDriftyUpdateTime;
     private boolean isDriftyUpdateAvailable;
@@ -29,7 +28,7 @@ public class AppSettings {
 
     public static void setLastYtDlpUpdateTime(long lastYtDlpUpdateTime) {
         instance.lastYtDlpUpdateTime = lastYtDlpUpdateTime;
-        SET.setLastYtDlpUpdateTime(lastYtDlpUpdateTime);
+        EDITOR.setLastYtDlpUpdateTime(lastYtDlpUpdateTime);
     }
 
     public static String getLastDownloadFolder() {
@@ -38,7 +37,7 @@ public class AppSettings {
 
     public static void setLastDownloadFolder(String lastDownloadFolder) {
         instance.lastDownloadFolder = lastDownloadFolder;
-        SET.setLastDownloadFolder(lastDownloadFolder);
+        EDITOR.setLastDownloadFolder(lastDownloadFolder);
     }
 
     public static String getYtDlpVersion() {
@@ -47,7 +46,7 @@ public class AppSettings {
 
     public static void setYtDlpVersion(String ytDlpVersion) {
         instance.ytDlpVersion = ytDlpVersion;
-        SET.setYtDlpVersion(ytDlpVersion);
+        EDITOR.setYtDlpVersion(ytDlpVersion);
     }
 
     public static String getFfmpegVersion() {
@@ -56,7 +55,7 @@ public class AppSettings {
 
     public static void setFfmpegVersion(String ffmpegVersion) {
         instance.ffmpegVersion = ffmpegVersion;
-        SET.setFfmpegVersion(ffmpegVersion);
+        EDITOR.setFfmpegVersion(ffmpegVersion);
     }
 
     public static String getSpotifyAccessToken() {
@@ -65,7 +64,7 @@ public class AppSettings {
 
     public static void setSpotifyAccessToken(String spotifyAccessToken) {
         instance.spotifyAccessToken = spotifyAccessToken;
-        SET.setSpotifyAccessToken(spotifyAccessToken);
+        EDITOR.setSpotifyAccessToken(spotifyAccessToken);
     }
 
     public static boolean isYtDlpUpdating() {
@@ -74,7 +73,7 @@ public class AppSettings {
 
     public static void setYtDlpUpdating(boolean ytDlpUpdating) {
         instance.isYtDlpUpdating = ytDlpUpdating;
-        SET.setYtDlpUpdating(ytDlpUpdating);
+        EDITOR.setYtDlpUpdating(ytDlpUpdating);
     }
 
     public static boolean isFfmpegWorking() {
@@ -83,7 +82,7 @@ public class AppSettings {
 
     public static void setFfmpegWorking(boolean ffmpegWorking) {
         instance.isFfmpegWorking = ffmpegWorking;
-        SET.setFfmpegWorking(ffmpegWorking);
+        EDITOR.setFfmpegWorking(ffmpegWorking);
     }
 
     public static boolean isEarlyAccessEnabled() {
@@ -92,7 +91,7 @@ public class AppSettings {
 
     public static void setEarlyAccessEnabled(boolean earlyAccessEnabled) {
         instance.isEarlyAccessEnabled = earlyAccessEnabled;
-        SET.setEarlyAccessEnabled(earlyAccessEnabled);
+        EDITOR.setEarlyAccessEnabled(earlyAccessEnabled);
     }
 
     public static String getNewDriftyVersionName() {
@@ -101,7 +100,7 @@ public class AppSettings {
 
     public static void setNewDriftyVersionName(String newDriftyVersionName) {
         instance.newDriftyVersionName = newDriftyVersionName;
-        SET.setNewDriftyVersionName(newDriftyVersionName);
+        EDITOR.setNewDriftyVersionName(newDriftyVersionName);
     }
 
     public static long getLastDriftyUpdateTime() {
@@ -110,7 +109,7 @@ public class AppSettings {
 
     public static void setLastDriftyUpdateTime(long lastDriftyUpdateTime) {
         instance.lastDriftyUpdateTime = lastDriftyUpdateTime;
-        SET.setLastDriftyUpdateTime(lastDriftyUpdateTime);
+        EDITOR.setLastDriftyUpdateTime(lastDriftyUpdateTime);
     }
 
     public static String getLatestDriftyVersionTag() {
@@ -119,7 +118,7 @@ public class AppSettings {
 
     public static void setLatestDriftyVersionTag(String latestDriftyVersionTag) {
         instance.latestDriftyVersionTag = latestDriftyVersionTag;
-        SET.setLatestDriftyVersionTag(latestDriftyVersionTag);
+        EDITOR.setLatestDriftyVersionTag(latestDriftyVersionTag);
     }
 
     public static boolean isDriftyUpdateAvailable() {
@@ -128,7 +127,7 @@ public class AppSettings {
 
     public static void setDriftyUpdateAvailable(boolean driftyUpdateAvailable) {
         instance.isDriftyUpdateAvailable = driftyUpdateAvailable;
-        SET.setDriftyUpdateAvailable(driftyUpdateAvailable);
+        EDITOR.setDriftyUpdateAvailable(driftyUpdateAvailable);
     }
 
     public static String getFolders() {
@@ -137,7 +136,7 @@ public class AppSettings {
 
     public static void setFolders(String folders) {
         instance.folders = folders;
-        SET.setFolders(folders);
+        EDITOR.setFolders(folders);
     }
 
     public static boolean isGuiAutoPasteEnabled() {
@@ -146,7 +145,7 @@ public class AppSettings {
 
     public static void setGuiAutoPasteEnabled(boolean guiAutoPasteEnabled) {
         instance.isGuiAutoPasteEnabled = guiAutoPasteEnabled;
-        SET.setGuiAutoPasteEnabled(guiAutoPasteEnabled);
+        EDITOR.setGuiAutoPasteEnabled(guiAutoPasteEnabled);
     }
 
     public static String getGuiTheme() {
@@ -155,26 +154,26 @@ public class AppSettings {
 
     public static void setGuiTheme(String guiTheme) {
         instance.guiTheme = guiTheme;
-        SET.setGuiTheme(guiTheme);
+        EDITOR.setGuiTheme(guiTheme);
     }
 
 
     private AppSettings() {
-        lastDriftyUpdateTime = GET.getLastDriftyUpdateTime();
-        isDriftyUpdateAvailable = GET.isDriftyUpdateAvailable();
-        latestDriftyVersionTag = GET.getLatestDriftyVersionTag();
-        newDriftyVersionName = GET.getNewDriftyVersionName();
-        ytDlpVersion = GET.getYtDlpVersion();
-        lastYtDlpUpdateTime = GET.getLastYtDlpUpdateTime();
-        isYtDlpUpdating = GET.isYtDlpUpdating();
-        ffmpegVersion = GET.getFfmpegVersion();
-        isFfmpegWorking = GET.isFfmpegWorking();
-        lastDownloadFolder = GET.getLastDownloadFolder();
-        folders = GET.getFolders();
-        spotifyAccessToken = GET.getSpotifyAccessToken();
-        isEarlyAccessEnabled = GET.isEarlyAccessEnabled();
-        isGuiAutoPasteEnabled = GET.isGuiAutoPasteEnabled();
-        guiTheme = GET.getGuiTheme();
+        lastDriftyUpdateTime = EDITOR.getLastDriftyUpdateTime();
+        isDriftyUpdateAvailable = EDITOR.isDriftyUpdateAvailable();
+        latestDriftyVersionTag = EDITOR.getLatestDriftyVersionTag();
+        newDriftyVersionName = EDITOR.getNewDriftyVersionName();
+        ytDlpVersion = EDITOR.getYtDlpVersion();
+        lastYtDlpUpdateTime = EDITOR.getLastYtDlpUpdateTime();
+        isYtDlpUpdating = EDITOR.isYtDlpUpdating();
+        ffmpegVersion = EDITOR.getFfmpegVersion();
+        isFfmpegWorking = EDITOR.isFfmpegWorking();
+        lastDownloadFolder = EDITOR.getLastDownloadFolder();
+        folders = EDITOR.getFolders();
+        spotifyAccessToken = EDITOR.getSpotifyAccessToken();
+        isEarlyAccessEnabled = EDITOR.isEarlyAccessEnabled();
+        isGuiAutoPasteEnabled = EDITOR.isGuiAutoPasteEnabled();
+        guiTheme = EDITOR.getGuiTheme();
     }
 
 
