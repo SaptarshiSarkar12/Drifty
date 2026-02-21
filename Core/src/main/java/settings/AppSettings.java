@@ -1,25 +1,24 @@
 package settings;
 
 public class AppSettings {
+    private static final SettingsEditor EDITOR = SettingsAsPreferencesEditor.getInstance();
     private static final AppSettings INSTANCE = new AppSettings();
 
-    public static final SettingsEditor EDITOR = SettingsAsPreferencesEditor.getInstance();
-
-    private long lastDriftyUpdateTime;
-    private boolean isDriftyUpdateAvailable;
-    private String latestDriftyVersionTag;
-    private String newDriftyVersionName;
-    private String ytDlpVersion;
-    private long lastYtDlpUpdateTime;
-    private boolean isYtDlpUpdating;
-    private String ffmpegVersion;
-    private boolean isFfmpegWorking;
-    private String lastDownloadFolder;
-    private String folders;
-    private String spotifyAccessToken;
-    private boolean isEarlyAccessEnabled;
-    private boolean isGuiAutoPasteEnabled;
-    private String guiTheme;
+    private volatile long lastDriftyUpdateTime;
+    private volatile boolean isDriftyUpdateAvailable;
+    private volatile String latestDriftyVersionTag;
+    private volatile String newDriftyVersionName;
+    private volatile String ytDlpVersion;
+    private volatile long lastYtDlpUpdateTime;
+    private volatile boolean isYtDlpUpdating;
+    private volatile String ffmpegVersion;
+    private volatile boolean isFfmpegWorking;
+    private volatile String lastDownloadFolder;
+    private volatile String folders;
+    private volatile String spotifyAccessToken;
+    private volatile boolean isEarlyAccessEnabled;
+    private volatile boolean isGuiAutoPasteEnabled;
+    private volatile String guiTheme;
 
 
     public static long getLastYtDlpUpdateTime() {
