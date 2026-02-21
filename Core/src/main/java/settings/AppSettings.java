@@ -1,7 +1,7 @@
 package settings;
 
 public class AppSettings {
-    private final static AppSettings instance = new AppSettings();
+    private static final AppSettings INSTANCE = new AppSettings();
 
     public static final SettingsEditor EDITOR = SettingsAsPreferencesEditor.getInstance();
 
@@ -23,137 +23,137 @@ public class AppSettings {
 
 
     public static long getLastYtDlpUpdateTime() {
-        return instance.lastYtDlpUpdateTime;
+        return INSTANCE.lastYtDlpUpdateTime;
     }
 
     public static void setLastYtDlpUpdateTime(long lastYtDlpUpdateTime) {
-        instance.lastYtDlpUpdateTime = lastYtDlpUpdateTime;
+        INSTANCE.lastYtDlpUpdateTime = lastYtDlpUpdateTime;
         EDITOR.setLastYtDlpUpdateTime(lastYtDlpUpdateTime);
     }
 
     public static String getLastDownloadFolder() {
-        return instance.lastDownloadFolder;
+        return INSTANCE.lastDownloadFolder;
     }
 
     public static void setLastDownloadFolder(String lastDownloadFolder) {
-        instance.lastDownloadFolder = lastDownloadFolder;
+        INSTANCE.lastDownloadFolder = lastDownloadFolder;
         EDITOR.setLastDownloadFolder(lastDownloadFolder);
     }
 
     public static String getYtDlpVersion() {
-        return instance.ytDlpVersion;
+        return INSTANCE.ytDlpVersion;
     }
 
     public static void setYtDlpVersion(String ytDlpVersion) {
-        instance.ytDlpVersion = ytDlpVersion;
+        INSTANCE.ytDlpVersion = ytDlpVersion;
         EDITOR.setYtDlpVersion(ytDlpVersion);
     }
 
     public static String getFfmpegVersion() {
-        return instance.ffmpegVersion;
+        return INSTANCE.ffmpegVersion;
     }
 
     public static void setFfmpegVersion(String ffmpegVersion) {
-        instance.ffmpegVersion = ffmpegVersion;
+        INSTANCE.ffmpegVersion = ffmpegVersion;
         EDITOR.setFfmpegVersion(ffmpegVersion);
     }
 
     public static String getSpotifyAccessToken() {
-        return instance.spotifyAccessToken;
+        return INSTANCE.spotifyAccessToken;
     }
 
     public static void setSpotifyAccessToken(String spotifyAccessToken) {
-        instance.spotifyAccessToken = spotifyAccessToken;
+        INSTANCE.spotifyAccessToken = spotifyAccessToken;
         EDITOR.setSpotifyAccessToken(spotifyAccessToken);
     }
 
     public static boolean isYtDlpUpdating() {
-        return instance.isYtDlpUpdating;
+        return INSTANCE.isYtDlpUpdating;
     }
 
     public static void setYtDlpUpdating(boolean ytDlpUpdating) {
-        instance.isYtDlpUpdating = ytDlpUpdating;
+        INSTANCE.isYtDlpUpdating = ytDlpUpdating;
         EDITOR.setYtDlpUpdating(ytDlpUpdating);
     }
 
     public static boolean isFfmpegWorking() {
-        return instance.isFfmpegWorking;
+        return INSTANCE.isFfmpegWorking;
     }
 
     public static void setFfmpegWorking(boolean ffmpegWorking) {
-        instance.isFfmpegWorking = ffmpegWorking;
+        INSTANCE.isFfmpegWorking = ffmpegWorking;
         EDITOR.setFfmpegWorking(ffmpegWorking);
     }
 
     public static boolean isEarlyAccessEnabled() {
-        return instance.isEarlyAccessEnabled;
+        return INSTANCE.isEarlyAccessEnabled;
     }
 
     public static void setEarlyAccessEnabled(boolean earlyAccessEnabled) {
-        instance.isEarlyAccessEnabled = earlyAccessEnabled;
+        INSTANCE.isEarlyAccessEnabled = earlyAccessEnabled;
         EDITOR.setEarlyAccessEnabled(earlyAccessEnabled);
     }
 
     public static String getNewDriftyVersionName() {
-        return instance.newDriftyVersionName;
+        return INSTANCE.newDriftyVersionName;
     }
 
     public static void setNewDriftyVersionName(String newDriftyVersionName) {
-        instance.newDriftyVersionName = newDriftyVersionName;
+        INSTANCE.newDriftyVersionName = newDriftyVersionName;
         EDITOR.setNewDriftyVersionName(newDriftyVersionName);
     }
 
     public static long getLastDriftyUpdateTime() {
-        return instance.lastDriftyUpdateTime;
+        return INSTANCE.lastDriftyUpdateTime;
     }
 
     public static void setLastDriftyUpdateTime(long lastDriftyUpdateTime) {
-        instance.lastDriftyUpdateTime = lastDriftyUpdateTime;
+        INSTANCE.lastDriftyUpdateTime = lastDriftyUpdateTime;
         EDITOR.setLastDriftyUpdateTime(lastDriftyUpdateTime);
     }
 
     public static String getLatestDriftyVersionTag() {
-        return instance.latestDriftyVersionTag;
+        return INSTANCE.latestDriftyVersionTag;
     }
 
     public static void setLatestDriftyVersionTag(String latestDriftyVersionTag) {
-        instance.latestDriftyVersionTag = latestDriftyVersionTag;
+        INSTANCE.latestDriftyVersionTag = latestDriftyVersionTag;
         EDITOR.setLatestDriftyVersionTag(latestDriftyVersionTag);
     }
 
     public static boolean isDriftyUpdateAvailable() {
-        return instance.isDriftyUpdateAvailable;
+        return INSTANCE.isDriftyUpdateAvailable;
     }
 
     public static void setDriftyUpdateAvailable(boolean driftyUpdateAvailable) {
-        instance.isDriftyUpdateAvailable = driftyUpdateAvailable;
+        INSTANCE.isDriftyUpdateAvailable = driftyUpdateAvailable;
         EDITOR.setDriftyUpdateAvailable(driftyUpdateAvailable);
     }
 
     public static String getFolders() {
-        return instance.folders;
+        return INSTANCE.folders;
     }
 
     public static void setFolders(String folders) {
-        instance.folders = folders;
+        INSTANCE.folders = folders;
         EDITOR.setFolders(folders);
     }
 
     public static boolean isGuiAutoPasteEnabled() {
-        return instance.isGuiAutoPasteEnabled;
+        return INSTANCE.isGuiAutoPasteEnabled;
     }
 
     public static void setGuiAutoPasteEnabled(boolean guiAutoPasteEnabled) {
-        instance.isGuiAutoPasteEnabled = guiAutoPasteEnabled;
+        INSTANCE.isGuiAutoPasteEnabled = guiAutoPasteEnabled;
         EDITOR.setGuiAutoPasteEnabled(guiAutoPasteEnabled);
     }
 
     public static String getGuiTheme() {
-        return instance.guiTheme;
+        return INSTANCE.guiTheme;
     }
 
     public static void setGuiTheme(String guiTheme) {
-        instance.guiTheme = guiTheme;
+        INSTANCE.guiTheme = guiTheme;
         EDITOR.setGuiTheme(guiTheme);
     }
 

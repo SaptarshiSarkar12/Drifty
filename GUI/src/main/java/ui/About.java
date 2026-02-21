@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class About {
     private static Scene aboutScene;
     private static final ImageView IV_SPLASH = new ImageView(Constants.imgSplash);
-    private static final MessageBroker msgBroker = Environment.getMessageBroker();
+    private static final MessageBroker MSG_BROKER = Environment.getMessageBroker();
     private Label lblDescription;
     private Label lblDriftyVersion;
     private Label lblYtDlpVersion;
@@ -98,7 +98,7 @@ public class About {
                 stage.showAndWait();
             }
         } catch (Exception e) {
-            msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
+            MSG_BROKER.msgLogError("Error displaying About Drifty window: " + e.getMessage());
         }
     }
 

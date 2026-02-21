@@ -71,8 +71,7 @@ public class Folders {
             try {
                 String[] folderArray = gson.fromJson(json, String[].class);
                 folders.addAll(Arrays.asList(folderArray));
-            }
-            catch(JsonSyntaxException e) {
+            } catch (JsonSyntaxException e) {
                 Environment.getMessageBroker().msgLogError("Syntax Error in Folders Json: " + e.getMessage());
             }
         }
