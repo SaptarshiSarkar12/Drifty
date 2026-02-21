@@ -101,7 +101,7 @@ public class Drifty_CLI {
                         }
                     }
                     case EARLY_ACCESS_FLAG, EARLY_ACCESS_FLAG_SHORT -> {
-                        AppSettings.SET.setEarlyAccess(!AppSettings.GET.isEarlyAccessEnabled());
+                        AppSettings.SET.setEarlyAccessEnabled(!AppSettings.GET.isEarlyAccessEnabled());
                         messageBroker.msgInitInfo("Early access mode " + (AppSettings.GET.isEarlyAccessEnabled() ? "enabled!" : "disabled!"));
                         Environment.terminate(0);
                     }
@@ -552,7 +552,7 @@ public class Drifty_CLI {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
-        AppSettings.SET.setLastFolder(downloadsFolder);
+        AppSettings.SET.setLastDownloadFolder(downloadsFolder);
         return downloadsFolder;
     }
 

@@ -159,7 +159,7 @@ public class Settings {
         earlyAccessCheckbox = new CheckBox();
         earlyAccessCheckbox.setSelected(AppSettings.GET.isEarlyAccessEnabled());
         earlyAccessCheckbox.setMaxWidth(5.0);
-        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setEarlyAccess(newValue)));
+        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setEarlyAccessEnabled(newValue)));
     }
 
     private void createLabels() {

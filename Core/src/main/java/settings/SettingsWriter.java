@@ -3,7 +3,7 @@ package settings;
 public interface SettingsWriter {
     void setLastYtDlpUpdateTime(long value);
 
-    void setLastFolder(String lastFolderPath);
+    void setLastDownloadFolder(String lastFolderPath);
 
     void setYtDlpVersion(String version);
 
@@ -15,7 +15,7 @@ public interface SettingsWriter {
 
     void setFfmpegWorking(boolean isWorking);
 
-    void setEarlyAccess(boolean isEarlyAccess);
+    void setEarlyAccessEnabled(boolean isEarlyAccess);
 
     void setNewDriftyVersionName(String versionName);
 

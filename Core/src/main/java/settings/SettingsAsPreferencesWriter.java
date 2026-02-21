@@ -21,7 +21,7 @@ public class SettingsAsPreferencesWriter implements SettingsWriter {
     }
 
     @Override
-    public void setLastFolder(String lastFolderPath) {
+    public void setLastDownloadFolder(String lastFolderPath) {
         preferences.put(LAST_FOLDER, lastFolderPath);
     }
 
@@ -52,7 +52,7 @@ public class SettingsAsPreferencesWriter implements SettingsWriter {
     }
 
     @Override
-    public void setEarlyAccess(boolean isEarlyAccess) {
+    public void setEarlyAccessEnabled(boolean isEarlyAccess) {
         preferences.putBoolean(EARLY_ACCESS, isEarlyAccess);
     }
 
