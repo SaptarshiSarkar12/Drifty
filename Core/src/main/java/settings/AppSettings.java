@@ -160,21 +160,21 @@ public class AppSettings {
 
 
     private AppSettings() {
-        GET.getLastDriftyUpdateTime();
-        GET.isDriftyUpdateAvailable();
-        GET.getLatestDriftyVersionTag();
-        GET.getNewDriftyVersionName();
-        GET.getYtDlpVersion();
-        GET.getLastYtDlpUpdateTime();
-        GET.isYtDlpUpdating();
-        GET.getFfmpegVersion();
-        GET.isFfmpegWorking();
-        GET.getLastDownloadFolder();
-        GET.getFolders();
-        GET.getSpotifyAccessToken();
-        GET.isEarlyAccessEnabled();
-        GET.isGuiAutoPasteEnabled();
-        GET.getGuiTheme();
+        lastDriftyUpdateTime = GET.getLastDriftyUpdateTime();
+        isDriftyUpdateAvailable = GET.isDriftyUpdateAvailable();
+        latestDriftyVersionTag = GET.getLatestDriftyVersionTag();
+        newDriftyVersionName = GET.getNewDriftyVersionName();
+        ytDlpVersion = GET.getYtDlpVersion();
+        lastYtDlpUpdateTime = GET.getLastYtDlpUpdateTime();
+        isYtDlpUpdating = GET.isYtDlpUpdating();
+        ffmpegVersion = GET.getFfmpegVersion();
+        isFfmpegWorking = GET.isFfmpegWorking();
+        lastDownloadFolder = GET.getLastDownloadFolder();
+        folders = GET.getFolders();
+        spotifyAccessToken = GET.getSpotifyAccessToken();
+        isEarlyAccessEnabled = GET.isEarlyAccessEnabled();
+        isGuiAutoPasteEnabled = GET.isGuiAutoPasteEnabled();
+        guiTheme = GET.getGuiTheme();
     }
 
 
