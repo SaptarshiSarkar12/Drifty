@@ -100,7 +100,7 @@ public class ManageFolders {
     public void showScene() {
         stage = new Stage();
         scene = Constants.getScene(vBox);
-        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Constants.addCSS(scene, Constants.DARK_THEME_CSS);
             Theme.changeButtonStyle(true, ManageFolders.getBtnClose());
             Theme.changeButtonStyle(true, ManageFolders.getBtnRemove());

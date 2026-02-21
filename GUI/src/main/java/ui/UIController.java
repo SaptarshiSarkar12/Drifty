@@ -92,7 +92,7 @@ public final class UIController {
      */
     private void start(MainGridPane pane) {
         new Thread(() -> {
-            if (AppSettings.GET.isDriftyUpdateAvailable()) {
+            if (AppSettings.isDriftyUpdateAvailable()) {
                 M.msgLogInfo("A new version of Drifty is available!");
                 showUpdateDialog();
             }
@@ -106,12 +106,12 @@ public final class UIController {
 
     public void showUpdateDialog() {
         if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.getNewDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.getNewDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
             if (ask.getResponse().isYes()) {
                 downloadUpdate();
             }
         } else {
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.getNewDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.getNewDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
             ask.getResponse();
         }
     }
@@ -143,7 +143,7 @@ public final class UIController {
                 sleep(500);
             }
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
-            AppSettings.SET.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
             getJobs().setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
@@ -176,7 +176,7 @@ public final class UIController {
         form.tfLink.disableProperty().bind(disableLinkInput);
         form.listView.setContextMenu(getListMenu());
 
-        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -186,7 +186,7 @@ public final class UIController {
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
-        form.cbAutoPaste.setSelected(AppSettings.GET.isGuiAutoPasteEnabled());
+        form.cbAutoPaste.setSelected(AppSettings.isGuiAutoPasteEnabled());
         form.tfDir.textProperty().addListener(((_, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
@@ -792,8 +792,8 @@ public final class UIController {
     }
 
     private void help() {
-        Color textColor = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Color.WHITE : Color.BLACK;
-        Color headingsColor = "Dark".equals(AppSettings.GET.getGuiTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color textColor = "Dark".equals(AppSettings.getGuiTheme()) ? Color.WHITE : Color.BLACK;
+        Color headingsColor = "Dark".equals(AppSettings.getGuiTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
         INFO_TF.getChildren().add(text("Link:\n", true, headingsColor, h));
@@ -839,7 +839,7 @@ public final class UIController {
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
         infoScene.setFill(Color.TRANSPARENT);
-        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
         helpStage.setScene(infoScene);
@@ -879,7 +879,7 @@ public final class UIController {
 
     public static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.GET.getLastDownloadFolder();
+        String lastFolder = AppSettings.getLastDownloadFolder();
         String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);

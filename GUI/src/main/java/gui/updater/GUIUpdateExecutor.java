@@ -50,7 +50,7 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
             M.msgUpdateError("Failed to open the installer for the latest version of Drifty! Error code: " + executionResult.getExitValue());
             return false;
         } else {
-            AppSettings.SET.setDriftyUpdateAvailable(false); // Reset the update flag
+            AppSettings.setDriftyUpdateAvailable(false); // Reset the update flag
             Environment.terminate(0);
         }
         return true;

@@ -27,17 +27,17 @@ public class Folders {
     public void addFolder(String folder) {
         folders.remove(folder);
         folders.addLast(folder);
-        AppSettings.SET.setFolders(foldersToString());
-        AppSettings.SET.setLastDownloadFolder(folder);
+        AppSettings.setFolders(foldersToString());
+        AppSettings.setLastDownloadFolder(folder);
     }
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        AppSettings.SET.setFolders(foldersToString());
+        AppSettings.setFolders(foldersToString());
     }
 
     public String getDownloadFolder() {
-        return AppSettings.GET.getLastDownloadFolder();
+        return AppSettings.getLastDownloadFolder();
     }
 
     private void cleanupFolders() {
@@ -55,7 +55,7 @@ public class Folders {
         for (String folder : removeList) {
             folders.remove(folder);
         }
-        AppSettings.SET.setFolders(foldersToString());
+        AppSettings.setFolders(foldersToString());
     }
 
     public ObservableList<String> getFolders() {
@@ -66,7 +66,7 @@ public class Folders {
         folders.clear();
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        String json = AppSettings.GET.getFolders();
+        String json = AppSettings.getFolders();
         if (!json.isEmpty()) {
             try {
                 String[] folderArray = gson.fromJson(json, String[].class);

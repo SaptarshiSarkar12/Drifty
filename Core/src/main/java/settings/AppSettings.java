@@ -3,6 +3,9 @@ package settings;
 public class AppSettings {
     private final static AppSettings instance = new AppSettings();
 
+    public static final SettingsReader GET = SettingsAsPreferencesReader.getInstance();
+    public static final SettingsWriter SET = SettingsAsPreferencesWriter.getInstance();
+
     private long lastDriftyUpdateTime;
     private boolean isDriftyUpdateAvailable;
     private String latestDriftyVersionTag;
@@ -174,7 +177,5 @@ public class AppSettings {
         GET.getGuiTheme();
     }
 
-    public static final SettingsReader GET = SettingsAsPreferencesReader.getInstance();
-    public static final SettingsWriter SET = SettingsAsPreferencesWriter.getInstance();
 
 }

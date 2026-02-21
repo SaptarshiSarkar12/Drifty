@@ -49,9 +49,9 @@ public class About {
                 lblYtDlpVersion
         );
 
-        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.getFfmpegVersion() != null && !AppSettings.GET.getFfmpegVersion().isEmpty()) {
+        if (AppSettings.isFfmpegWorking() && AppSettings.getFfmpegVersion() != null && !AppSettings.getFfmpegVersion().isEmpty()) {
             Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                    "FFMPEG version: " + AppSettings.GET.getFfmpegVersion(),
+                    "FFMPEG version: " + AppSettings.getFfmpegVersion(),
                     Font.font("Arial", FontWeight.BOLD, 14),
                     LinearGradient.valueOf(
                             "linear-gradient(to right, #0f0c29, #302b63, #24243e)"
@@ -78,7 +78,7 @@ public class About {
     }
 
     private void applyThemeSettings(VBox aboutRoot) {
-        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Constants.addCSS(aboutScene, Constants.DARK_THEME_CSS);
             for (Node node : aboutRoot.getChildren()) {
                 if (node instanceof Label) {
@@ -120,7 +120,7 @@ public class About {
         );
 
         lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                "yt-dlp version: " + AppSettings.GET.getYtDlpVersion(),
+                "yt-dlp version: " + AppSettings.getYtDlpVersion(),
                 Font.font("Arial", FontWeight.BOLD, 14),
                 LinearGradient.valueOf(
                         "linear-gradient(to right, #0f0c29, #302b63, #24243e)"

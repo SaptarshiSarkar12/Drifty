@@ -62,7 +62,7 @@ public class Settings {
         configureLayout();
         settingsScene = Constants.getScene(root);
         Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
-        setInitialTheme(AppSettings.GET.getGuiTheme());
+        setInitialTheme(AppSettings.getGuiTheme());
     }
 
     private void configureLayout() {
@@ -144,22 +144,22 @@ public class Settings {
     private void setupThemeChoice() {
         themeChoiceBox = new ChoiceBox<>();
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
-        themeChoiceBox.setValue("Dark".equals(AppSettings.GET.getGuiTheme()) ? "Dark Theme" : "Light Theme");
+        themeChoiceBox.setValue("Dark".equals(AppSettings.getGuiTheme()) ? "Dark Theme" : "Light Theme");
         themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ManageFolders.scene, ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
         autoPasteCheckbox = new CheckBox();
-        autoPasteCheckbox.setSelected(AppSettings.GET.isGuiAutoPasteEnabled());
+        autoPasteCheckbox.setSelected(AppSettings.isGuiAutoPasteEnabled());
         autoPasteCheckbox.setMaxWidth(5.0);
-        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setGuiAutoPasteEnabled(newValue)));
+        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.setGuiAutoPasteEnabled(newValue)));
     }
 
     private void createEarlyAccessCheck() {
         earlyAccessCheckbox = new CheckBox();
-        earlyAccessCheckbox.setSelected(AppSettings.GET.isEarlyAccessEnabled());
+        earlyAccessCheckbox.setSelected(AppSettings.isEarlyAccessEnabled());
         earlyAccessCheckbox.setMaxWidth(5.0);
-        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.setEarlyAccessEnabled(newValue)));
+        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.setEarlyAccessEnabled(newValue)));
     }
 
     private void createLabels() {
@@ -179,7 +179,7 @@ public class Settings {
 
     private void createDirectoryButton() {
         selectDirectoryButton = new Button("Select Directory");
-        if ("Dark".equals(AppSettings.GET.getGuiTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED);
             selectDirectoryButton.setOnMousePressed(e -> selectDirectoryButton.setStyle(Constants.BUTTON_PRESSED));
             selectDirectoryButton.setOnMouseReleased(e -> selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED));
@@ -194,7 +194,7 @@ public class Settings {
             DirectoryChooser chooser = new DirectoryChooser();
             chooser.setInitialDirectory(new File(System.getProperty("user.home")));
             File selectedDirectory = chooser.showDialog(this.stage);
-            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.getLastDownloadFolder();
+            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.getLastDownloadFolder();
             UIController.form.tfDir.setText(directoryPath);
             tfCurrentDirectory.setText(directoryPath);
         } catch (Exception e) {
