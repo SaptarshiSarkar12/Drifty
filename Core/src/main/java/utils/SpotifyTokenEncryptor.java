@@ -29,15 +29,15 @@ public class SpotifyTokenEncryptor {
             return token;
         }
         try {
-                byte[] iv = new byte[12];
-                new java.security.SecureRandom().nextBytes(iv);
-                Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-                cipher.init(Cipher.ENCRYPT_MODE, secretKey, new javax.crypto.spec.GCMParameterSpec(128, iv));
-                byte[] ciphertext = cipher.doFinal(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                byte[] combined = new byte[iv.length + ciphertext.length];
-                System.arraycopy(iv, 0, combined, 0, iv.length);
-                System.arraycopy(ciphertext, 0, combined, iv.length, ciphertext.length);
-                return Base64.getEncoder().encodeToString(combined);
+            byte[] iv = new byte[12];
+            new java.security.SecureRandom().nextBytes(iv);
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, new javax.crypto.spec.GCMParameterSpec(128, iv));
+            byte[] ciphertext = cipher.doFinal(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            byte[] combined = new byte[iv.length + ciphertext.length];
+            System.arraycopy(iv, 0, combined, 0, iv.length);
+            System.arraycopy(ciphertext, 0, combined, iv.length, ciphertext.length);
+            return Base64.getEncoder().encodeToString(combined);
         } catch (NoSuchAlgorithmException e) {
             Environment.getMessageBroker().msgInitError("Failed to encrypt Spotify access token! No such algorithm exists! " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
