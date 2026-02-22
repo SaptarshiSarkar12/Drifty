@@ -584,7 +584,6 @@ public final class UIController {
             clearFilename();
             UPDATING_BATCH.setValue(false);
             form.listView.getItems().clear();
-            form.listView.getItems();
             M.msgLinkInfo("");
             M.msgFilenameInfo("");
             M.msgDirInfo("");
