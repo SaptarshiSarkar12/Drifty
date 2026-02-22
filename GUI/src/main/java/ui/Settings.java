@@ -192,9 +192,14 @@ public class Settings {
     private void handleDirectorySelection() {
         try {
             DirectoryChooser chooser = new DirectoryChooser();
-            chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            String userHome =  System.getProperty("user.home");
+            chooser.setInitialDirectory(new File(userHome));
+            String defaultPath = AppSettings.getLastDownloadFolder();
+            if (defaultPath == null) {
+                defaultPath = userHome;
+            }
             File selectedDirectory = chooser.showDialog(this.stage);
-            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.getLastDownloadFolder();
+            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : defaultPath;
             UIController.form.tfDir.setText(directoryPath);
             tfCurrentDirectory.setText(directoryPath);
         } catch (Exception e) {

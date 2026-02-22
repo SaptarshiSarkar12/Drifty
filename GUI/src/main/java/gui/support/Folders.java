@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Folders {
+    private static final Gson GSON = FxGson.addFxSupport(new GsonBuilder()).setPrettyPrinting().create();
     private final LinkedList<String> folders = new LinkedList<>();
 
     public Folders() {
@@ -64,12 +65,10 @@ public class Folders {
 
     private void readFolders() {
         folders.clear();
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
         String json = AppSettings.getFolders();
-        if (!json.isEmpty()) {
+        if (json != null && !json.isEmpty()) {
             try {
-                String[] folderArray = gson.fromJson(json, String[].class);
+                String[] folderArray = GSON.fromJson(json, String[].class);
                 folders.addAll(Arrays.asList(folderArray));
             } catch (JsonSyntaxException e) {
                 Environment.getMessageBroker().msgLogError("Syntax Error in Folders Json: " + e.getMessage());
@@ -78,9 +77,7 @@ public class Folders {
     }
 
     private String foldersToString() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = FxGson.addFxSupport(gsonBuilder).setPrettyPrinting().create();
-        return gson.toJson(folders);
+        return GSON.toJson(folders);
     }
 
 }

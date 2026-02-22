@@ -24,8 +24,8 @@ public class MainGridPane extends GridPane {
     public final ImageView ivDir = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_DIR_LABEL, .7);
     public final ImageView ivFilename = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_FILENAME_LABEL, .7);
     public final ImageView ivAutoPaste = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.IMG_AUTO_PASTE_LABEL, .7);
-    public final Button btnStart = "Dark".equals(AppSettings.getGuiTheme()) ? newButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK) : newButton(Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
-    public final Button btnSave = "Dark".equals(AppSettings.getGuiTheme()) ? newButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK) : newButton(Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
+    public final Button btnStart = initButton(Constants.IMG_START_UP_DARK, Constants.IMG_START_DOWN_DARK, Constants.IMG_START_UP_LIGHT, Constants.IMG_START_DOWN_LIGHT);
+    public final Button btnSave = initButton(Constants.IMG_SAVE_UP_DARK,  Constants.IMG_SAVE_DOWN_DARK,  Constants.IMG_SAVE_UP_LIGHT,  Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
     public static HBox boxLogo = UI_COMPONENT_BUILDER_INSTANCE.buildHBox(ivLogo);
@@ -37,9 +37,16 @@ public class MainGridPane extends GridPane {
     public final TextField tfDir = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
     public final TextField tfFilename = UI_COMPONENT_BUILDER_INSTANCE.buildTextField();
 
+
     public MainGridPane() {
         super();
         addGUI();
+    }
+
+    private Button initButton(Image darkUp, Image darkDown, Image lightUp, Image lightDown) {
+        return "Dark".equals(AppSettings.getGuiTheme())
+                ? newButton(darkUp, darkDown)
+                : newButton(lightUp, lightDown);
     }
 
     private void addGUI() {

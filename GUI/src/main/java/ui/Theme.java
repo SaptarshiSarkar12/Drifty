@@ -74,13 +74,13 @@ public class Theme {
                 }
             }
         }
-        changeInfoTextFlow(color);
+        changeInfoTextFlow(color, isDark);
         updateTextFields(isDark, false, UIController.form.tfDir, UIController.form.tfFilename, UIController.form.tfLink);
         updateTextFields(isDark, true, Settings.getTfCurrentDirectory());
     }
 
-    private static void changeInfoTextFlow(Paint color) {
-        Color headingsColor = "Dark".equals(AppSettings.getGuiTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
+    private static void changeInfoTextFlow(Paint color, boolean isDark) {
+        Color headingsColor = isDark ? Color.LIGHTGREEN : Color.DARKBLUE;
         for (int i = 0; i < UIController.getInfoTf().getChildren().size(); i++) {
             if (UIController.getInfoTf().getChildren().get(i) instanceof Text text) {
                 if (text.getFont().getSize() == 16) {

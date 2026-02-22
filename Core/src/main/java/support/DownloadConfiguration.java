@@ -236,10 +236,6 @@ public class DownloadConfiguration {
     }
 
     public void updateJobList() {
-        Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
-        for (Job job : JobService.getJobs().jobList()) {
-            distinctJobList.put(job.hashCode(), job);
-        }
         if (fileData.isEmpty()) {
             return;
         }
@@ -255,7 +251,6 @@ public class DownloadConfiguration {
             } else {
                 job = new Job(link, directory, filename, null);
             }
-            distinctJobList.put(job.hashCode(), job);
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(

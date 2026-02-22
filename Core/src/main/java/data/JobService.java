@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class JobService {
 
-    public JobService() {
+    private JobService() {
     }
 
     public static JobHistory getJobHistory() {
