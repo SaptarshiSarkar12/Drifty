@@ -192,7 +192,7 @@ public class Settings {
     private void handleDirectorySelection() {
         try {
             DirectoryChooser chooser = new DirectoryChooser();
-            String userHome =  System.getProperty("user.home");
+            String userHome = System.getProperty("user.home");
             chooser.setInitialDirectory(new File(userHome));
             String defaultPath = AppSettings.getLastDownloadFolder();
             if (defaultPath == null) {
