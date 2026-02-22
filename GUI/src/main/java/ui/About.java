@@ -119,8 +119,12 @@ public class About {
                 )
         );
 
+        String ytDlpVersion = AppSettings.getYtDlpVersion();
+        if (ytDlpVersion == null || ytDlpVersion.isEmpty()) {
+            ytDlpVersion = "N/A";
+        }
         lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                "yt-dlp version: " + AppSettings.getYtDlpVersion(),
+                "yt-dlp version: " + ytDlpVersion,
                 Font.font("Arial", FontWeight.BOLD, 14),
                 LinearGradient.valueOf(
                         "linear-gradient(to right, #0f0c29, #302b63, #24243e)"

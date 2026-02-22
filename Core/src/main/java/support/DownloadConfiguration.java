@@ -237,8 +237,7 @@ public class DownloadConfiguration {
 
     public void updateJobList() {
         Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
-        Jobs oldJobs = JobService.getJobs();
-        for (Job job : oldJobs.jobList()) {
+        for (Job job : JobService.getJobs().jobList()) {
             distinctJobList.put(job.hashCode(), job);
         }
         if (fileData.isEmpty()) {
@@ -267,10 +266,9 @@ public class DownloadConfiguration {
                         currentSessionId
                 );
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
             }
         }
-        oldJobs.setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {

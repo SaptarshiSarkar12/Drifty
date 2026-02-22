@@ -119,6 +119,7 @@ public final class UIController {
     private void downloadUpdate() {
         String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
+            Jobs jobs = getJobs();
             // "Current executable" means the executable currently running i.e., the one that is outdated.
             File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
@@ -130,9 +131,9 @@ public final class UIController {
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
             // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
-            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = jobs.jobList();
             // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
-            getJobs().clear();
+            jobs.clear();
 
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), Constants.updateURL.toString());
@@ -145,7 +146,7 @@ public final class UIController {
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             AppSettings.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
-            getJobs().setList(currentDownloadQueue);
+            jobs.setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
@@ -880,7 +881,7 @@ public final class UIController {
     public static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         String lastFolder = AppSettings.getLastDownloadFolder();
-        String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
+        String initFolder = (lastFolder == null || lastFolder.isEmpty()) ? Utility.getHomeDownloadFolder() : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);
         if (directory != null) {

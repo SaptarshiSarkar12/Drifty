@@ -1,6 +1,5 @@
 package settings;
 
-import utils.SpotifyTokenEncryptor;
 import java.nio.file.Paths;
 import java.util.prefs.Preferences;
 
@@ -54,8 +53,7 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
 
     @Override
     public String getSpotifyAccessToken() {
-        String encrypted = PREFERENCES.get(SPOTIFY_ACCESS_TOKEN, "");
-        return SpotifyTokenEncryptor.decrypt(encrypted);
+        return PREFERENCES.get(SPOTIFY_ACCESS_TOKEN, "");
     }
 
     @Override
@@ -131,8 +129,7 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
 
     @Override
     public void setSpotifyAccessToken(String token) {
-        String encrypted = SpotifyTokenEncryptor.encryptToken(token);
-        PREFERENCES.put(SPOTIFY_ACCESS_TOKEN, encrypted);
+        PREFERENCES.put(SPOTIFY_ACCESS_TOKEN, token);
     }
 
     @Override

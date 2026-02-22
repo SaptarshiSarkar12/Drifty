@@ -63,7 +63,7 @@ public class AppSettings {
 
     public static void setSpotifyAccessToken(String spotifyAccessToken) {
         INSTANCE.spotifyAccessToken = spotifyAccessToken;
-        EDITOR.setSpotifyAccessToken(spotifyAccessToken);
+        //EDITOR.setSpotifyAccessToken(spotifyAccessToken); not to be saved, will refresh on startup
     }
 
     public static boolean isYtDlpUpdating() {
