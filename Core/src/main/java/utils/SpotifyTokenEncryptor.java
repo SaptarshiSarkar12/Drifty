@@ -5,12 +5,14 @@ import javax.crypto.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 
 
 public class SpotifyTokenEncryptor {
 
     private static SecretKey secretKey;
+    private static final SecureRandom SECURE_RANDOM =  new SecureRandom();
 
     static {
         // Generate a secret key for encryption and decryption of the access token
@@ -30,7 +32,7 @@ public class SpotifyTokenEncryptor {
         }
         try {
             byte[] iv = new byte[12];
-            new java.security.SecureRandom().nextBytes(iv);
+            SECURE_RANDOM.nextBytes(iv);
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, new javax.crypto.spec.GCMParameterSpec(128, iv));
             byte[] ciphertext = cipher.doFinal(token.getBytes(java.nio.charset.StandardCharsets.UTF_8));
