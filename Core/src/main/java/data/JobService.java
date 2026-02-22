@@ -1,5 +1,6 @@
 package data;
 
+import init.Environment;
 import support.Job;
 import support.JobHistory;
 import support.Jobs;
@@ -23,7 +24,7 @@ public class JobService {
                 jobHistory.addJob(job, true);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            Environment.getMessageBroker().msgInitError("Could not load Job history! SQLException! " + e.getMessage());
         }
         return jobHistory;
     }
@@ -38,7 +39,7 @@ public class JobService {
                 jobs.add(job);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching queued jobs from the database: " + e.getMessage(), e);
+            Environment.getMessageBroker().msgInitError("Could not load Jobs from database! SQLException! " + e.getMessage());
         }
         return jobs;
     }
