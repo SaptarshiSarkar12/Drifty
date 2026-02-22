@@ -71,6 +71,7 @@ public final class UIController {
     private String filename;
     private Folders folders;
     private Job selectedJob;
+    private Jobs jobs;
 
     public static Scene getInfoScene() {
         return infoScene;
@@ -119,7 +120,7 @@ public final class UIController {
     private void downloadUpdate() {
         String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
-            Jobs jobs = getJobs();
+            getJobs();
             // "Current executable" means the executable currently running i.e., the one that is outdated.
             File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
@@ -429,10 +430,10 @@ public final class UIController {
                     }
                 }
             }));
-            if (getJobs().notNull() && !getJobs().isEmpty()) {
-                final int totalFiles = getJobs().jobList().size();
+            if (jobs.notNull() && !jobs.isEmpty()) {
+                final int totalFiles = jobs.jobList().size();
                 int fileCount = 0;
-                LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
+                LinkedList<Job> tempJobList = new LinkedList<>(jobs.jobList());
                 for (Job job : tempJobList) {
                     fileCount++;
                     M.msgBatchInfo("Processing file " + fileCount + " of " + totalFiles + ": " + job);
@@ -475,7 +476,7 @@ public final class UIController {
     }
 
     private boolean linkInJobList(String link) {
-        for (Job job : getJobs().jobList()) {
+        for (Job job : jobs.jobList()) {
             if (job.getSourceLink().equals(link)) {
                 return true;
             }
@@ -485,14 +486,14 @@ public final class UIController {
 
     private void addJob(Job newJob) {
         Job oldJob = null;
-        for (Job job : getJobs().jobList()) {
+        for (Job job : jobs.jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
                 break;
             }
         }
         if (oldJob != null) {
-            getJobs().remove(oldJob);
+            jobs.remove(oldJob);
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
@@ -518,12 +519,12 @@ public final class UIController {
             }
             System.out.println("Job Added: " + newJob.getFilename());
         }
-        getJobs().add(newJob);
+        jobs.add(newJob);
         commitJobListToListView();
     }
 
     private void removeJobFromList(Job oldJob) {
-        getJobs().remove(oldJob);
+        jobs.remove(oldJob);
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteQueuedFile(
@@ -577,7 +578,7 @@ public final class UIController {
             }
         });
         miClear.setOnAction(_ -> {
-            getJobs().clear();
+            jobs.clear();
             commitJobListToListView();
             clearLink();
             clearFilename();
@@ -781,12 +782,12 @@ public final class UIController {
 
     private void commitJobListToListView() {
         Platform.runLater(() -> {
-            if (getJobs().notNull()) {
-                if (getJobs().isEmpty()) {
+            if (jobs.notNull()) {
+                if (jobs.isEmpty()) {
                     form.listView.getItems().clear();
                 } else {
                     // Assign the jobList to the ListView
-                    form.listView.getItems().setAll(getJobs().jobList());
+                    form.listView.getItems().setAll(jobs.jobList());
                 }
             }
         });
@@ -889,8 +890,8 @@ public final class UIController {
         }
     }
 
-    private Jobs getJobs() {
-        return JobService.getJobs();
+    private void getJobs() {
+        jobs = JobService.getJobs();
     }
 
     private JobHistory getHistory() {
