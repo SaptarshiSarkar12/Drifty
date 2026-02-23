@@ -607,7 +607,7 @@ public class Drifty_CLI {
             messageBroker.msgLinkError("Failed to fetch file data!");
             return;
         }
-        List<HashMap<String, Object>> fileData =  config.getFileData();
+        List<HashMap<String, Object>> fileData = config.getFileData();
         if (fileData != null && !fileData.isEmpty()) {
             for (HashMap<String, Object> data : fileData) {
                 link = data.get("link").toString();
