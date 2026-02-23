@@ -21,7 +21,7 @@ import static utils.Utility.randomString;
 
 public class DownloadConfiguration {
     private final String directory;
-    private final ArrayList<HashMap<String, Object>> fileData;
+    private final List<HashMap<String, Object>> fileData;
     private final String filename;
     private final MessageBroker msgBroker = Environment.getMessageBroker();
     private LinkType linkType;
@@ -35,7 +35,7 @@ public class DownloadConfiguration {
         this.directory = directory;
         this.filename = filename;
         this.linkType = LinkType.getLinkType(link);
-        this.fileData = new ArrayList<>();
+        this.fileData = new CopyOnWriteArrayList<>();
     }
 
     public void sanitizeLink() {
@@ -234,9 +234,9 @@ public class DownloadConfiguration {
         }
     }
 
-    public void updateJobList() {
+    public boolean updateJobList() {
         if (fileData.isEmpty()) {
-            return;
+            return true;
         }
         for (HashMap<String, Object> data : fileData) {
             String link = data.get("link").toString();
@@ -245,7 +245,8 @@ public class DownloadConfiguration {
             linkType = LinkType.getLinkType(link);
             Job job;
             if (linkType.equals(LinkType.SPOTIFY)) {
-                String downloadLink = data.get("downloadLink").toString();
+                Object downloadLinkObj = data.get("downloadLink");
+                String downloadLink = downloadLinkObj != null ? downloadLinkObj.toString() : null;
                 job = new Job(link, directory, filename, downloadLink);
             } else {
                 job = new Job(link, directory, filename, null);
@@ -261,8 +262,10 @@ public class DownloadConfiguration {
                 );
             } catch (SQLException e) {
                 msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
+                return false;
             }
         }
+        return true;
     }
 
     public String getLink() {
@@ -277,7 +280,7 @@ public class DownloadConfiguration {
         return filesProcessed;
     }
 
-    public ArrayList<HashMap<String, Object>> getFileData() {
+    public List<HashMap<String, Object>> getFileData() {
         return fileData;
     }
 

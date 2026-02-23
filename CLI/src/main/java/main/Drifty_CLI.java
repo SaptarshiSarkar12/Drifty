@@ -392,7 +392,7 @@ public class Drifty_CLI {
         } catch (InterruptedException e) {
             messageBroker.msgLinkError("User interrupted the process of retrieving spotify playlist metadata! " + e.getMessage());
         }
-        ArrayList<HashMap<String, Object>> playlistData = config.getFileData();
+        List<HashMap<String, Object>> playlistData = config.getFileData();
         if (playlistData != null && !playlistData.isEmpty()) {
             int numberOfTracks = playlistData.size();
             for (HashMap<String, Object> songData : playlistData) {
@@ -607,7 +607,7 @@ public class Drifty_CLI {
             messageBroker.msgLinkError("Failed to fetch file data!");
             return;
         }
-        ArrayList<HashMap<String, Object>> fileData = config.getFileData();
+        List<HashMap<String, Object>> fileData =  config.getFileData();
         if (fileData != null && !fileData.isEmpty()) {
             for (HashMap<String, Object> data : fileData) {
                 link = data.get("link").toString();
