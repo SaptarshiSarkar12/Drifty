@@ -86,6 +86,7 @@ public final class UIController {
     */
     private UIController() {
         folders = new Folders();
+        jobs = JobService.getJobs();
     }
 
     /*
