@@ -234,9 +234,9 @@ public class DownloadConfiguration {
         }
     }
 
-    public boolean updateJobList() {
+    public void updateJobList() {
         if (fileData.isEmpty()) {
-            return true;
+            return;
         }
         for (HashMap<String, Object> data : fileData) {
             String link = data.get("link").toString();
@@ -262,10 +262,9 @@ public class DownloadConfiguration {
                 );
             } catch (SQLException e) {
                 msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
-                return false;
+                throw new RuntimeException(e.getMessage());
             }
         }
-        return true;
     }
 
     public String getLink() {
