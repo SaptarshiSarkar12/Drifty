@@ -1,6 +1,7 @@
 package settings;
 
 import java.nio.file.Paths;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 
@@ -165,7 +166,9 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
     @Override
     public void setDriftyUpdateAvailable(boolean isUpdateAvailable) {
         PREFERENCES.putBoolean(DRIFTY_UPDATE_AVAILABLE, isUpdateAvailable);
+        flush();
     }
+
 
     @Override
     public void setFolders(String value) {
@@ -180,5 +183,14 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
     @Override
     public void setGuiTheme(String theme) {
         PREFERENCES.put(GUI_THEME, theme);
+    }
+
+
+    private void flush() {
+        try {
+            PREFERENCES.flush();
+        } catch (BackingStoreException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

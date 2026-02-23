@@ -503,7 +503,8 @@ public final class UIController {
                         newJob.getDir()
                 );
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                M.msgLogError("Failed to update job in database: " + e.getMessage());
+                return;
             }
         } else {
             try {
@@ -516,7 +517,8 @@ public final class UIController {
                         currentSessionId
                 );
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                M.msgLogError("Failed to add job to database: " + e.getMessage());
+                return;
             }
             System.out.println("Job Added: " + newJob.getFilename());
         }
