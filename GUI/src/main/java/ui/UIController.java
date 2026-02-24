@@ -494,7 +494,6 @@ public final class UIController {
             }
         }
         if (oldJob != null) {
-            jobs.remove(oldJob);
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
@@ -506,6 +505,7 @@ public final class UIController {
                 M.msgLogError("Failed to update job in database: " + e.getMessage());
                 return;
             }
+            jobs.remove(oldJob);
         } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
@@ -527,7 +527,6 @@ public final class UIController {
     }
 
     private void removeJobFromList(Job oldJob) {
-        jobs.remove(oldJob);
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteQueuedFile(
@@ -536,8 +535,10 @@ public final class UIController {
                     oldJob.getFilename()
             );
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            M.msgLogError("Failed to remove job from database: " + e.getMessage());
+            return;
         }
+        jobs.remove(oldJob);
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
