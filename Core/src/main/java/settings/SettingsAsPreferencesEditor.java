@@ -1,5 +1,7 @@
 package settings;
 
+import init.Environment;
+
 import java.nio.file.Paths;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -134,8 +136,8 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
     }
 
     @Override
-    public void setYtDlpUpdating(boolean isInitializing) {
-        PREFERENCES.putBoolean(YT_DLP_UPDATING, isInitializing);
+    public void setYtDlpUpdating(boolean isYtDlpUpdating) {
+        PREFERENCES.putBoolean(YT_DLP_UPDATING, isYtDlpUpdating);
     }
 
     @Override
@@ -190,7 +192,7 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
         try {
             PREFERENCES.flush();
         } catch (BackingStoreException e) {
-            throw new RuntimeException(e);
+            Environment.getMessageBroker().msgUpdateError("Could not complete storage of Preference after update: " + e.getMessage());
         }
     }
 }

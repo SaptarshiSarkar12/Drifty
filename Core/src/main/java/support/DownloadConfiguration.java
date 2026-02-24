@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import data.JobService;
 import init.Environment;
 import properties.LinkType;
 import properties.Mode;
@@ -235,6 +236,11 @@ public class DownloadConfiguration {
     }
 
     public void updateJobList() {
+        Jobs jobs = JobService.getJobs();
+        Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
+        for (Job job : jobs.jobList()) {
+            distinctJobList.put(job.hashCode(), job);
+        }
         if (fileData.isEmpty()) {
             return;
         }
@@ -251,6 +257,7 @@ public class DownloadConfiguration {
             } else {
                 job = new Job(link, directory, filename, null);
             }
+            distinctJobList.put(job.hashCode(), job);
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(
@@ -262,9 +269,10 @@ public class DownloadConfiguration {
                 );
             } catch (SQLException e) {
                 msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
-                throw new RuntimeException(e.getMessage());
+                throw new RuntimeException(e);
             }
         }
+        jobs.setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {
