@@ -21,7 +21,9 @@
             <property name="option" value="nlow"/>
         </module>
         <module name="NeedBraces"/>
-        <module name="RightCurly"/>
+        <module name="RightCurly">
+            <property name="options" value="alone_or_singleline"/>
+        </module>
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>
         <module name="FallThrough"/>
@@ -72,7 +74,7 @@
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBeforeCaseDefaultColon"/>
         <module name="OperatorWrap">
-            <property name="option" value="eol"/>
+            <property name="option" value="nl"/>
         </module>
         <module name="ParenPad"/>
         <module name="SingleSpaceSeparator"/>
