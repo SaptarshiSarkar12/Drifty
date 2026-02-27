@@ -12,7 +12,7 @@ public class JobHistory {
     public void addJob(Job newJob, boolean isCLI) {
         if (isCLI) {
             jobHistoryList.addLast(newJob);
-        }else {
+        } else {
             for (Job job : jobHistoryList) {
                 if (job.matchesLink(newJob)) {
                     return;

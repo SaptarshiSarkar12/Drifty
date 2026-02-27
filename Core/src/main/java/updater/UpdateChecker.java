@@ -26,7 +26,7 @@ public class UpdateChecker {
         String latestVersion;
         if (AppSettings.isEarlyAccessEnabled()) {
             latestVersion = getLatestPreReleaseVersion();
-        }else {
+        } else {
             latestVersion = getLatestStableVersion();
         }
         M.msgLogInfo("Latest version : " + latestVersion);
@@ -45,7 +45,7 @@ public class UpdateChecker {
                     .header("Accept", "application/vnd.github.v3+json")
                     .build();
             return getReleaseTag(request);
-        }catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             M.msgUpdateError("Failed to fetch stable release data from GitHub api! " + e.getMessage());
             return "";
         }
@@ -58,7 +58,7 @@ public class UpdateChecker {
                     .header("Accept", "application/vnd.github.v3+json")
                     .build();
             return getReleaseTag(request);
-        }catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             M.msgUpdateError("Failed to fetch pre-release data from GitHub api! " + e.getMessage());
             return "";
         }
@@ -71,18 +71,18 @@ public class UpdateChecker {
             AppSettings.setNewDriftyVersionName(responseBody.split("\"name\":\"")[1].split("\"")[0]);
             AppSettings.setLatestDriftyVersionTag(tag);
             return tag.replace("v", "");
-        }catch (IOException e) {
+        } catch (IOException e) {
             if (e.getMessage() == null) {
                 M.msgLogError("Failed to check for updates! You may be offline.");
-            }else {
+            } else {
                 if (e.getMessage().contains("403")) {
                     M.msgUpdateError("Failed to check for updates! GitHub API rate limit exceeded. " + e.getMessage());
-                }else {
+                } else {
                     M.msgUpdateError("Failed to check for updates! " + e.getMessage());
                 }
             }
             return "";
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             M.msgUpdateError("User interrupted the update check! " + e.getMessage());
             return "";
         }
@@ -101,7 +101,7 @@ public class UpdateChecker {
 
             if (cvPart < lvPart) {
                 return true;
-            }else if (cvPart > lvPart) {
+            } else if (cvPart > lvPart) {
                 return false;
             }
         }
@@ -111,12 +111,12 @@ public class UpdateChecker {
             // currentVersion is a stable release version, and the latestVersion is a pre-release version
             // So, the currentVersion is greater than latestVersion as currentVersion is a stable version
             return false;
-        }else if (currentVersionParts.length == 5 && latestVersionParts.length == 3) {
+        } else if (currentVersionParts.length == 5 && latestVersionParts.length == 3) {
             // Example: currentVersion = v2.1.0-beta.1 and latestVersion = v2.1.0
             // currentVersion is a pre-release version, and the latestVersion is a release version
             // So, the currentVersion is less than latestVersion as latestVersion is a stable version
             return true;
-        }else if (currentVersionParts.length == 5 && latestVersionParts.length == 5) {
+        } else if (currentVersionParts.length == 5 && latestVersionParts.length == 5) {
             if (AppSettings.isEarlyAccessEnabled()) { // If the user has enabled early access, then pre-release versions are considered
                 // Both versions are pre-release versions
                 int comparePreReleaseType = currentVersionParts[3].compareTo(latestVersionParts[3]); // alpha < beta < rc (compared lexicographically)
@@ -126,9 +126,9 @@ public class UpdateChecker {
                 // beta < rc, so the currentVersion is less than the latestVersion. Return true
                 if (comparePreReleaseType < 0) {
                     return true;
-                }else if (comparePreReleaseType > 0) {
+                } else if (comparePreReleaseType > 0) {
                     return false;
-                }else {
+                } else {
                     // Both versions have the same pre-release type (alpha, beta, rc)
                     // Higher Revision number means a newer version
                     int cvRevisionNumber = Utility.parseStringToInt(currentVersionParts[4], "Failed to parse current version's revision number", MessageCategory.UPDATE);
@@ -146,7 +146,7 @@ public class UpdateChecker {
             String[] releaseTypeAndNumber = versionAndReleaseCode[1].split("\\."); // Example: beta.1 => [beta, 1]
             String[] versionParts = versionAndReleaseCode[0].split("\\."); // Example: 2.1.0 => [2, 1, 0]
             return new String[]{versionParts[0], versionParts[1], versionParts[2], releaseTypeAndNumber[0], releaseTypeAndNumber[1]};
-        }else {
+        } else {
             return tag.replace("v", "").split("\\."); // Example: v2.1.0 => [2, 1, 0]
         }
     }

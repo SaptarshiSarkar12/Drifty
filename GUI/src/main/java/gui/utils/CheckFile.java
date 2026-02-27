@@ -34,7 +34,7 @@ public class CheckFile implements Runnable {
         try {
             folderWalker = new FolderWalker(searchList, findOneFile);
             Files.walkFileTree(rootPath, folderWalker);
-        }catch (IOException e) {
+        } catch (IOException e) {
             M.msgLogError("Failed to walk through folders! " + e.getMessage());
         }
     }
@@ -74,7 +74,7 @@ public class CheckFile implements Runnable {
                     if (findOneFile) {
                         fileFound = true;
                         return FileVisitResult.TERMINATE;
-                    }else {
+                    } else {
                         if (!fileList.contains(fullPath)) {
                             fileList.addLast(fullPath);
                         }

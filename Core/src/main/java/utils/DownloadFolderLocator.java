@@ -26,7 +26,7 @@ public final class DownloadFolderLocator {
             result = result.substring(p + REG_TOKEN.length()).trim();
             result = result.replace("%USERPROFILE%", System.getProperty("user.home"));
             return result;
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -47,7 +47,7 @@ public final class DownloadFolderLocator {
                 while ((c = is.read()) != -1) {
                     sw.write(c);
                 }
-            }catch (IOException ignored) {
+            } catch (IOException ignored) {
             }
         }
 

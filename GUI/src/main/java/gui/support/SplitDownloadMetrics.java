@@ -40,7 +40,7 @@ public class SplitDownloadMetrics {
             file = Files.createTempFile(filename.hashCode() + "_" + id, ".tmp").toFile();
             file.deleteOnExit();
             fos = new FileOutputStream(file);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return fos;

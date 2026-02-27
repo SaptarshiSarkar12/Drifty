@@ -98,7 +98,7 @@ public class MessageBroker {
         if (!messageCategory.equals(LOG)) {
             if (endWithNewLine) {
                 output.println(message);
-            }else {
+            } else {
                 output.print(message);
                 this.endWithNewLine = true; // Reset to default
             }

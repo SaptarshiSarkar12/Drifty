@@ -106,7 +106,7 @@ public class FileDownloader extends Task<Integer> {
                     endDownloadingTime,
                     (int) downloadedSize
             );
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             M.msgDownloadError("Failed to update database: " + e.getMessage());
             throw new RuntimeException(e);
         }
@@ -122,19 +122,19 @@ public class FileDownloader extends Task<Integer> {
         Process process = null;
         try {
             process = processBuilder.start();
-        }catch (IOException e) {
+        } catch (IOException e) {
             M.msgDownloadError("Failed to start download process for \"" + filename + "\"");
             return;
-        }catch (Exception e) {
+        } catch (Exception e) {
             String msg = e.getMessage() != null ? e.getMessage() : "";
             String[] messageArray = msg.split(",");
             if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                 M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-            }else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                 M.msgDownloadError(PERMISSION_DENIED_ERROR);
-            }else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
                 M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
-            }else {
+            } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
             }
             return;
@@ -144,12 +144,12 @@ public class FileDownloader extends Task<Integer> {
             while ((line = reader.readLine()) != null) {
                 progressProperty.setValue(line);
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             M.msgDownloadError("Failed to read download process status for \"" + filename + "\"");
         }
         try {
             exitCode = process.waitFor();
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
             return;
         }
@@ -159,7 +159,7 @@ public class FileDownloader extends Task<Integer> {
             if (conversionProcessMessage.contains("Failed")) {
                 sendFinalMessage(conversionProcessMessage);
                 exitCode = 1;
-            }else {
+            } else {
                 sendFinalMessage("Successfully converted to mp3!");
             }
         }
@@ -173,22 +173,22 @@ public class FileDownloader extends Task<Integer> {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.connect();
             fileSize = con.getHeaderFieldLong("Content-Length", -1);
-        }catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             M.msgLinkError(INVALID_LINK);
             exitCode = 1;
             return;
-        }catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             M.msgDownloadError("You are not connected to the internet!");
             exitCode = 1;
             return;
-        }catch (IOException e) {
+        } catch (IOException e) {
             M.msgDownloadError(String.format(FAILED_CONNECTION_F, downloadLink));
             exitCode = 1;
             return;
         }
         if (UnitConverter.getValue(fileSize, UnitConverter.MB) > 50) {
             splitDownload();
-        }else {
+        } else {
             downloadFile();
         }
     }
@@ -219,13 +219,13 @@ public class FileDownloader extends Task<Integer> {
                     }
                 }
                 sdm.setSuccess();
-            }catch (IOException ignored) {
+            } catch (IOException ignored) {
                 sdm.setFailed();
-            }finally {
+            } finally {
                 try {
                     Objects.requireNonNull(fos).close();
                     Objects.requireNonNull(in).close();
-                }catch (IOException ignored) {
+                } catch (IOException ignored) {
                 }
             }
         };
@@ -304,22 +304,22 @@ public class FileDownloader extends Task<Integer> {
             }
             fos.close();
             exitCode = 0;
-        }catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             M.msgLinkError(INVALID_LINK);
             exitCode = 1;
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
-        }catch (UnknownHostException e) {
+        } catch (UnknownHostException e) {
             message = "You are not connected to the internet!";
             exitCode = 1;
-        }catch (IOException e) {
+        } catch (IOException e) {
             message = String.format(FAILED_CONNECTION_F, url);
             exitCode = 1;
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             message = FAILED_READING_STREAM;
             exitCode = 1;
         }
@@ -367,19 +367,19 @@ public class FileDownloader extends Task<Integer> {
                 }
                 exitCode = 0;
             }
-        }catch (MalformedURLException | URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             M.msgLinkError(INVALID_LINK);
             exitCode = 1;
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             message = String.format(WRITE_ACCESS_DENIED_F, path);
             exitCode = 1;
-        }catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             message = FILE_NOT_FOUND_ERROR;
             exitCode = 1;
-        }catch (IOException e) {
+        } catch (IOException e) {
             message = String.format(FAILED_CONNECTION_F, url);
             exitCode = 1;
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             message = FAILED_READING_STREAM;
             exitCode = 1;
         }
@@ -449,7 +449,7 @@ public class FileDownloader extends Task<Integer> {
             UIController.setDownloadInfoColor(GREEN);
             msg = message.isEmpty() ? String.format(SUCCESSFULLY_DOWNLOADED_F, filename) : message;
             M.msgDownloadInfo(msg);
-        }else {
+        } else {
             UIController.setDownloadInfoColor(DARK_RED);
             msg = message.isEmpty() ? String.format(FAILED_TO_DOWNLOAD_F, filename) : message;
             M.msgDownloadError(msg);
@@ -468,7 +468,7 @@ public class FileDownloader extends Task<Integer> {
     private double parseStringToDouble(String value) {
         try {
             return Double.parseDouble(value);
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return 0.0;
         }
     }

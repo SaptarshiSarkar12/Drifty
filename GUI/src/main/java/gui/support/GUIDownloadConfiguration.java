@@ -19,7 +19,7 @@ public class GUIDownloadConfiguration extends DownloadConfiguration {
             messageBroker.msgLinkInfo("Adding file(s) to batch...");
             updateJobList();
             messageBroker.msgLinkInfo("File(s) added to batch successfully");
-        }else {
+        } else {
             messageBroker.msgLogError("Failed to fetch file data");
         }
     }

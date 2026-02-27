@@ -44,10 +44,10 @@ public class Splash extends Preloader {
         stage.setScene(scene);
         try {
             stage.show();
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (Environment.getMessageBroker() != null) {
                 Environment.getMessageBroker().msgLogError("Error showing splash window: " + e.getMessage());
-            }else {
+            } else {
                 System.err.println("Error showing splash window: " + e.getMessage());
             }
         }
@@ -60,7 +60,7 @@ public class Splash extends Preloader {
             double time;
             if (AppSettings.isYtDlpUpdating()) {
                 time = 2.0;
-            }else {
+            } else {
                 time = 1.0;
             }
             PauseTransition delay = new PauseTransition(Duration.seconds(time));

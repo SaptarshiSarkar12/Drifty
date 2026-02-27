@@ -191,7 +191,7 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
     private void flush() {
         try {
             PREFERENCES.flush();
-        }catch (BackingStoreException e) {
+        } catch (BackingStoreException e) {
             Environment.getMessageBroker().msgUpdateError("Could not complete storage of Preference after update: " + e.getMessage());
         }
     }

@@ -65,7 +65,7 @@ public final class DbConnection {
         {
             createSessionTableStatement.executeUpdate();
             createFileTableStatement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new SQLException("Failed to create tables: " + e.getMessage());
         }
     }
@@ -79,7 +79,7 @@ public final class DbConnection {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
-            }else {
+            } else {
                 throw new SQLException("Failed to retrieve session ID.");
             }
         }
@@ -108,7 +108,7 @@ public final class DbConnection {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 generatedKeys.getInt(1);
-            }else {
+            } else {
                 throw new SQLException("Failed to insert record into FILE table, no ID generated.");
             }
         }
@@ -129,7 +129,7 @@ public final class DbConnection {
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 return generatedKeys.getInt(1);
-            }else {
+            } else {
                 throw new SQLException("Failed to insert record into FILE table, no ID generated.");
             }
         }
@@ -216,7 +216,7 @@ public final class DbConnection {
 
                 if (!Objects.equals(downloadUrl, fileUrl)) {
                     jobs.add(new Job(fileUrl, saveTargetPath, fileName, downloadUrl));
-                }else {
+                } else {
                     jobs.add(new Job(fileUrl, saveTargetPath, fileName, null));
                 }
             }
