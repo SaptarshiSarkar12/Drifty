@@ -1,6 +1,7 @@
 package preferences;
 
 import init.Environment;
+import lombok.extern.slf4j.Slf4j;
 import support.Job;
 import support.JobHistory;
 import support.Jobs;
@@ -18,6 +19,7 @@ import java.util.prefs.Preferences;
 
 import static preferences.Labels.*;
 
+@Slf4j
 public class Get {
     private static final Get INSTANCE = new Get();
     private final Preferences preferences = Labels.PREFERENCES;
@@ -45,6 +47,7 @@ public class Get {
                 jobHistory.addJob(job, true);
             }
         } catch (SQLException e) {
+            log.error("Error fetching completed jobs", e);
             throw new RuntimeException(e);
         }
         return jobHistory;
@@ -122,6 +125,7 @@ public class Get {
                 jobs.add(job);
             }
         } catch (SQLException e) {
+            log.error("Error fetching queued jobs from the database", e);
             throw new RuntimeException("Error fetching queued jobs from the database: " + e.getMessage(), e);
         }
         return jobs;

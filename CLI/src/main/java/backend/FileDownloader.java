@@ -54,7 +54,7 @@ public class FileDownloader implements Runnable {
         this.downloadMetrics = new DownloadMetrics();
         this.numberOfThreads = downloadMetrics.getThreadCount();
         this.threadMaxDataSize = downloadMetrics.getMultiThreadingThreshold();
-        downloadMetrics.setMultithreading(false);
+        downloadMetrics.setMultithreadingEnabled(false);
     }
 
     private void downloadFile() {
@@ -267,7 +267,7 @@ public class FileDownloader implements Runnable {
                     long totalSize = openConnection.getHeaderFieldLong("Content-Length", 0);
                     downloadMetrics.setTotalSize(totalSize);
                     String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                    downloadMetrics.setMultithreading((totalSize > threadMaxDataSize) && ("bytes".equalsIgnoreCase(acceptRange)));
+                    downloadMetrics.setMultithreadingEnabled((totalSize > threadMaxDataSize) && ("bytes".equalsIgnoreCase(acceptRange)));
                     if (fileName.isEmpty()) {
                         String[] webPaths = url.getFile().trim().split("/");
                         fileName = webPaths[webPaths.length - 1];
