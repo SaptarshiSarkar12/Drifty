@@ -45,13 +45,15 @@ public abstract class UpdateExecutor {
         try {
             if (deleteImmediately || !OS.isWindows()) {
                 Files.deleteIfExists(oldExecutableFile.toPath());
-            }else {
+            }
+else {
                 oldExecutableFile.deleteOnExit();
             }
             if (!deleteImmediately) {
                 Environment.terminate(0);
             }
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             M.msgUpdateError("Failed to delete the old version of Drifty!\n" + e.getMessage());
         }
     }
@@ -60,10 +62,12 @@ public abstract class UpdateExecutor {
         try {
             Files.move(latestExecutableFile.toPath(), currentExecutableFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             M.msgUpdateInfo("Update successful!");
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             try {
                 Files.copy(latestExecutableFile.toPath(), currentExecutableFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            }catch (Exception ex) {
+            }
+catch (Exception ex) {
                 M.msgUpdateError("Failed to replace the current version of Drifty!\n" + ex.getMessage());
                 return false;
             }

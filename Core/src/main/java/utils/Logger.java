@@ -25,7 +25,8 @@ public final class Logger {
     private Logger() {
         if (Mode.isCLI()) {
             logFilename = "Drifty CLI.log";
-        }else {
+        }
+else {
             logFilename = "Drifty GUI.log";
         }
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -38,7 +39,8 @@ public final class Logger {
         }
         try {
             return Files.createTempFile(logFilename.split("\\.")[0], ".log").toFile(); // Log file will be created in the temp directory
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             System.err.println(FAILED_TO_CREATE_LOG_ERROR + logFilename);
         }
         return new File(logFilename);
@@ -51,7 +53,8 @@ public final class Logger {
             }
             cliLoggerInstance = new Logger();
             return cliLoggerInstance;
-        }else {
+        }
+else {
             if (guiLoggerInstance != null) {
                 return guiLoggerInstance;
             }
@@ -64,7 +67,8 @@ public final class Logger {
         try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, false))))) {
             isLogEmpty = true;
             logWriter.write("");
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             System.err.println(FAILED_TO_CLEAR_LOG_ERROR);
         }
     }
@@ -77,7 +81,8 @@ public final class Logger {
         try (PrintWriter logWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(logFile, true))))) {
             isLogEmpty = true;
             logWriter.println(dateAndTime + " " + messageType.toString() + " - " + logMessage);
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             System.err.println(FAILED_TO_CREATE_LOG_ERROR + logMessage);
         }
     }

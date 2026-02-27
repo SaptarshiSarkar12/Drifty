@@ -42,16 +42,19 @@ public class CopyExecutables {
                     if (!Files.isExecutable(executablePath)) {
                         if (executablePath.toFile().setExecutable(true)) {
                             M.msgLogInfo(executableName + " is now executable!");
-                        }else {
+                        }
+else {
                             M.msgLogError("Failed to make " + executableName + " executable!");
                         }
                     }
                     if (executableName.startsWith("ffmpeg")) {
                         new Thread(Utility::setFfmpegVersion).start();
                     }
-                }catch (FileAlreadyExistsException e) {
+                }
+catch (FileAlreadyExistsException e) {
                     M.msgLogWarning(executableName + " not copied to " + Program.get(Program.DRIFTY_PATH) + " because it already exists!");
-                }catch (IOException e) {
+                }
+catch (IOException e) {
                     M.msgInitError("Failed to copy " + executableName + " executable: " + e.getMessage());
                 }
             }

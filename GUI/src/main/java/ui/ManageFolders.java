@@ -80,7 +80,8 @@ public class ManageFolders {
                     // Make empty cells not selectable
                     setDisable(true);
                     setText("");
-                }else {
+                }
+else {
                     // Set the text for non-empty cells
                     setDisable(false);
                     setText(item);
@@ -112,7 +113,8 @@ public class ManageFolders {
         stage.setAlwaysOnTop(true);
         try {
             stage.showAndWait();
-        }catch (Exception e) {
+        }
+catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Manage Directories window: " + e.getMessage());
         }
     }

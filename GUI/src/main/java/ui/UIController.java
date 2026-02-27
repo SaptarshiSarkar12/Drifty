@@ -112,7 +112,8 @@ public final class UIController {
             if (ask.getResponse().isYes()) {
                 downloadUpdate();
             }
-        }else {
+        }
+else {
             ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.getNewDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
             ask.getResponse();
         }
@@ -153,14 +154,18 @@ public final class UIController {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
                 updateExecutor.execute();
-            }else {
+            }
+else {
                 M.msgUpdateError("Failed to download update!");
             }
-        }catch (IOException e) {
+        }
+catch (IOException e) {
             M.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
-        }catch (URISyntaxException e) {
+        }
+catch (URISyntaxException e) {
             M.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
-        }catch (Exception e) {
+        }
+catch (Exception e) {
             M.msgUpdateError("Failed to update! An unknown error occurred! " + e.getMessage());
         }
     }
@@ -195,13 +200,15 @@ public final class UIController {
                 DIRECTORY_EXISTS.setValue(false);
                 if (newValue.isEmpty()) {
                     M.msgDirError("Directory cannot be empty!");
-                }else {
+                }
+else {
                     File folder = new File(newValue);
                     if (folder.exists() && folder.isDirectory()) {
                         delayFolderSave(newValue, folder);
                         M.msgDirInfo("Directory exists!");
                         DIRECTORY_EXISTS.setValue(true);
-                    }else {
+                    }
+else {
                         M.msgDirError("Directory does not exist or is not a directory!");
                     }
                 }
@@ -248,7 +255,8 @@ public final class UIController {
                     clearControls();
                     setDir(folders.getDownloadFolder());
                     UPDATING_BATCH.setValue(false);
-                }else {
+                }
+else {
                     Job job = form.listView.getSelectionModel().getSelectedItem();
                     if (job != null) {
                         selectJob(job);
@@ -285,7 +293,8 @@ public final class UIController {
                 String[] links;
                 if (userText.contains(" ")) {
                     links = userText.trim().split(" ");
-                }else {
+                }
+else {
                     links = new String[]{userText};
                 }
                 VERIFYING_LINKS.setValue(true);
@@ -351,7 +360,8 @@ public final class UIController {
                         if (!folder.isEmpty()) {
                             message = intro + "The file already exists in the selected download folder:" + nl + folder + nl.repeat(2) + "Choose 'YES' to download and automatically rename the file to avoid overwriting the existing one. Alternatively, you can manually change the filename below to your preference." + nl.repeat(2) + "Choose 'NO' if you do not wish to download the file again.";
                             windowTitle = "File Already Exists";
-                        }else {
+                        }
+else {
                             message = intro + "The file does not exist in any of your designated download folders." + nl.repeat(2) + "This is a good opportunity to download it without concerns of duplicating existing files. Click 'YES' to proceed with the download, or 'NO' if you decide not to download.";
                             windowTitle = "File Already Downloaded";
                         }
@@ -360,7 +370,8 @@ public final class UIController {
                             filename = ask.getFilename();
                             downloadConfig = new GUIDownloadConfiguration(link, dir, filename);
                         }
-                    }else {
+                    }
+else {
                         downloadConfig = new GUIDownloadConfiguration(link, getDir(), null); // Filename is null because it will be retrieved from the link
                     }
                     downloadConfig.sanitizeLink();
@@ -377,7 +388,8 @@ public final class UIController {
                 clearLink();
                 clearLinkOutput();
                 clearFilenameOutput();
-            }else {
+            }
+else {
                 M.msgLinkError("Link already in job list");
                 clearLink();
                 UPDATING_BATCH.setValue(false);
@@ -501,12 +513,14 @@ public final class UIController {
                         oldJob.getSourceLink(),
                         newJob.getDir()
                 );
-            }catch (SQLException e) {
+            }
+catch (SQLException e) {
                 M.msgLogError("Failed to update job in database: " + e.getMessage());
                 return;
             }
             jobs.remove(oldJob);
-        }else {
+        }
+else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.addFileRecordToQueue(
@@ -516,7 +530,8 @@ public final class UIController {
                         newJob.getDir(),
                         currentSessionId
                 );
-            }catch (SQLException e) {
+            }
+catch (SQLException e) {
                 M.msgLogError("Failed to add job to database: " + e.getMessage());
                 return;
             }
@@ -534,7 +549,8 @@ public final class UIController {
                     oldJob.getDir(),
                     oldJob.getFilename()
             );
-        }catch (SQLException e) {
+        }
+catch (SQLException e) {
             M.msgLogError("Failed to remove job from database: " + e.getMessage());
             return;
         }
@@ -634,7 +650,8 @@ public final class UIController {
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteFilesHistory();
-        }catch (SQLException e) {
+        }
+catch (SQLException e) {
             ConfirmationDialog ask = new ConfirmationDialog("Error", "Failed to clear job history! " + e.getMessage(), true, false);
             ask.getResponse();
             M.msgLogError("SQL Exception: " + e.getMessage());
@@ -788,7 +805,8 @@ public final class UIController {
             if (jobs.notNull()) {
                 if (jobs.isEmpty()) {
                     form.listView.getItems().clear();
-                }else {
+                }
+else {
                     // Assign the jobList to the ListView
                     form.listView.getItems().setAll(jobs.jobList());
                 }
@@ -856,7 +874,8 @@ public final class UIController {
         scrollPane.setVvalue(0.0);
         try {
             helpStage.showAndWait();
-        }catch (Exception e) {
+        }
+catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Help window: " + e.getMessage());
         }
     }
@@ -864,7 +883,8 @@ public final class UIController {
     public void handleHelpWindow() {
         if (helpStage != null && helpStage.isShowing()) {
             helpStage.toFront();
-        }else {
+        }
+else {
             help();
         }
     }

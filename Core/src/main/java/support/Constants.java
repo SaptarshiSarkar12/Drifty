@@ -30,7 +30,8 @@ public class Constants {
     static {
         try {
             updateURL = Utility.getUpdateURL();
-        }catch (MalformedURLException | URISyntaxException e) {
+        }
+catch (MalformedURLException | URISyntaxException e) {
             Environment.getMessageBroker().msgUpdateError("Drifty update URL is invalid! " + e.getMessage());
             updateURL = null;
         }

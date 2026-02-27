@@ -93,10 +93,12 @@ public class DownloadConfiguration {
             }
             if (Mode.isCLI()) {
                 System.out.println("\rYoutube Playlist processed successfully");
-            }else {
+            }
+else {
                 msgBroker.msgLinkInfo("Youtube Playlist processed successfully");
             }
-        }else {
+        }
+else {
             msgBroker.msgLinkInfo("Processing Youtube Video...");
             fileCount = 1;
             HashMap<String, Object> data = new HashMap<>();
@@ -115,7 +117,8 @@ public class DownloadConfiguration {
         if (fileData.isEmpty()) {
             statusCode = -1;
             return -1;
-        }else {
+        }
+else {
             statusCode = 0;
             return 0;
         }
@@ -133,7 +136,8 @@ public class DownloadConfiguration {
                 for (HashMap<String, Object> songMetadata : playlistMetadata) {
                     if (Mode.isCLI()) {
                         System.out.print("\r[" + filesProcessed + "/" + fileCount + "] Processing Spotify Playlist...");
-                    }else {
+                    }
+else {
                         msgBroker.msgLinkInfo("[" + filesProcessed + "/" + fileCount + "] Processing Spotify Playlist...");
                     }
                     HashMap<String, Object> data = Utility.getSpotifySongDownloadData(songMetadata, this.directory);
@@ -148,14 +152,16 @@ public class DownloadConfiguration {
                 }
                 if (Mode.isCLI()) {
                     System.out.println("\rSpotify Playlist processed successfully");
-                }else {
+                }
+else {
                     msgBroker.msgLinkInfo("Spotify Playlist processed successfully");
                 }
                 if (Mode.isGUI()) {
                     executor.shutdown();
                 }
             }
-        }else {
+        }
+else {
             HashMap<String, Object> songMetadata = Utility.getSpotifySongMetadata(link);
             fileCount = 1;
             if (songMetadata != null && !songMetadata.isEmpty()) {
@@ -178,7 +184,8 @@ public class DownloadConfiguration {
         if (fileData.isEmpty()) {
             statusCode = -1;
             return -1;
-        }else {
+        }
+else {
             statusCode = 0;
             return 0;
         }
@@ -206,7 +213,8 @@ public class DownloadConfiguration {
         if (fileData.isEmpty()) {
             statusCode = -1;
             return -1;
-        }else {
+        }
+else {
             statusCode = 0;
             return 0;
         }
@@ -229,7 +237,8 @@ public class DownloadConfiguration {
         if (fileData.isEmpty()) {
             statusCode = -1;
             return -1;
-        }else {
+        }
+else {
             statusCode = 0;
             return 0;
         }
@@ -254,7 +263,8 @@ public class DownloadConfiguration {
                 Object downloadLinkObj = data.get("downloadLink");
                 String downloadLink = downloadLinkObj != null ? downloadLinkObj.toString() : null;
                 job = new Job(link, directory, filename, downloadLink);
-            }else {
+            }
+else {
                 job = new Job(link, directory, filename, null);
             }
             distinctJobList.put(job.hashCode(), job);
@@ -267,7 +277,8 @@ public class DownloadConfiguration {
                         directory,
                         currentSessionId
                 );
-            }catch (SQLException e) {
+            }
+catch (SQLException e) {
                 msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
                 throw new RuntimeException(e);
             }
