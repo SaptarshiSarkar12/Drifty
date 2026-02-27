@@ -22,7 +22,7 @@
         </module>
         <module name="NeedBraces"/>
         <module name="RightCurly">
-            <property name="options" value="alone_or_singleline"/>
+            <property name="option" value="alone_or_singleline"/>
         </module>
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>
