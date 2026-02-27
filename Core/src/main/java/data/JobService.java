@@ -23,8 +23,7 @@ public class JobService {
             for (Job job : completedJobs) {
                 jobHistory.addJob(job, true);
             }
-        }
-catch (SQLException e) {
+        }catch (SQLException e) {
             Environment.getMessageBroker().msgInitError("Could not load Job history! SQLException! " + e.getMessage());
         }
         return jobHistory;
@@ -39,8 +38,7 @@ catch (SQLException e) {
             for (Job job : queuedJobs) {
                 jobs.add(job);
             }
-        }
-catch (SQLException e) {
+        }catch (SQLException e) {
             Environment.getMessageBroker().msgInitError("Could not load Jobs from database! SQLException! " + e.getMessage());
         }
         return jobs;

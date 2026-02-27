@@ -18,8 +18,7 @@ public class Utility extends utils.Utility {
             msgBroker.msgLogError(ENTER_Y_OR_N);
             if (isWarning) {
                 Environment.getMessageBroker().msgHistoryWarning(printMessage, false);
-            }
-else {
+            }else {
                 Environment.getMessageBroker().msgInputInfo(printMessage, false);
             }
             input = SC.nextLine().toLowerCase();
@@ -27,17 +26,14 @@ else {
         char choice = input.charAt(0);
         if (choice == 'y') {
             return true;
-        }
-else if (choice == 'n') {
+        }else if (choice == 'n') {
             return false;
-        }
-else {
+        }else {
             Environment.getMessageBroker().msgInputError("Invalid input!", true);
             msgBroker.msgLogError("Invalid input!");
             if (isWarning) {
                 Environment.getMessageBroker().msgHistoryWarning(printMessage, false);
-            }
-else {
+            }else {
                 Environment.getMessageBroker().msgInputInfo(printMessage, false);
             }
             input = SC.nextLine().toLowerCase();

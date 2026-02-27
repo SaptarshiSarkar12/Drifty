@@ -8,14 +8,11 @@ public enum LinkType {
     public static LinkType getLinkType(String link) {
         if (Utility.isYoutube(link)) {
             return YOUTUBE;
-        }
-else if (Utility.isInstagram(link)) {
+        }else if (Utility.isInstagram(link)) {
             return INSTAGRAM;
-        }
-else if (Utility.isSpotify(link)) {
+        }else if (Utility.isSpotify(link)) {
             return SPOTIFY;
-        }
-else {
+        }else {
             return OTHER;
         }
     }

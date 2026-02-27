@@ -74,8 +74,7 @@ public class Drifty_CLI {
                         if (i + 1 < args.length) {
                             fileName = args[i + 1];
                             i++; // Skip the next iteration as we have already processed this argument
-                        }
-else {
+                        }else {
                             messageBroker.msgInitError("No filename specified!");
                             Environment.terminate(1);
                         }
@@ -84,8 +83,7 @@ else {
                         if (i + 1 < args.length) {
                             downloadsFolder = args[i + 1];
                             i++; // Skip the next iteration as we have already processed this argument
-                        }
-else {
+                        }else {
                             messageBroker.msgInitError("No download directory specified!");
                             Environment.terminate(1);
                         }
@@ -98,8 +96,7 @@ else {
                         if (Utility.isOffline()) {
                             messageBroker.msgUpdateError("Failed to check for updates! You are not connected to the internet.");
                             Environment.terminate(1);
-                        }
-else {
+                        }else {
                             checkAndUpdateDrifty(false);
                         }
                     }
@@ -116,8 +113,7 @@ else {
                             }
                             i = args.length; // Skip the remaining iterations as we have already processed these arguments
                             Environment.terminate(0);
-                        }
-else {
+                        }else {
                             messageBroker.msgBatchError("No URL(s) provided for adding!");
                             Environment.terminate(1);
                         }
@@ -151,8 +147,7 @@ else {
                             if (choice) {
                                 removeAllUrls();
                             }
-                        }
-else {
+                        }else {
                             String[] indexStr = Arrays.copyOfRange(args, i + 1, args.length);
                             removeUrl(indexStr);
                         }
@@ -172,8 +167,7 @@ else {
                             }
                             i++; // Skip the next iteration as we have already processed this argument
                             batchDownloader();
-                        }
-else {
+                        }else {
                             messageBroker.msgInitError("No batch file specified!");
                             Environment.terminate(1);
                         }
@@ -181,8 +175,7 @@ else {
                     default -> {
                         if (isURL(args[i])) {
                             link = args[i];
-                        }
-else {
+                        }else {
                             messageBroker.msgInitError("Invalid argument(s) passed!");
                             Environment.terminate(1);
                         }
@@ -197,8 +190,7 @@ else {
                 boolean isUrlValid;
                 if (Utility.isURL(link)) {
                     isUrlValid = Utility.isLinkValid(link);
-                }
-else {
+                }else {
                     isUrlValid = false;
                     messageBroker.msgLinkError(INVALID_LINK);
                 }
@@ -207,8 +199,7 @@ else {
                     downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                     if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                         handleSpotifyPlaylist();
-                    }
-else {
+                    }else {
                         verifyJobAndDownload();
                     }
                 }
@@ -228,20 +219,17 @@ else {
                     batchDownloadingFile = SC.nextLine().split(" ")[0];
                     if (!(batchDownloadingFile.endsWith(".yml") || batchDownloadingFile.endsWith(".yaml"))) {
                         messageBroker.msgBatchError("The data file should be a YAML file!");
-                    }
-else {
+                    }else {
                         if (!Paths.get(batchDownloadingFile).toFile().exists()) {
                             messageBroker.msgBatchError("YAML data file \"" + batchDownloadingFile + "\" does not exist!");
                         }
                         batchDownloader();
                         break;
                     }
-                }
-else if ("2".equals(choice)) {
+                }else if ("2".equals(choice)) {
                     batchDownloading = false;
                     break;
-                }
-else {
+                }else {
                     messageBroker.msgInputError("Invalid Input!", true);
                 }
             }
@@ -251,8 +239,7 @@ else {
                 messageBroker.msgInputInfo("Validating link...", true);
                 if (Utility.isURL(link)) {
                     Utility.isLinkValid(link);
-                }
-else {
+                }else {
                     messageBroker.msgLinkError(INVALID_LINK);
                     continue;
                 }
@@ -262,8 +249,7 @@ else {
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                     handleSpotifyPlaylist();
-                }
-else {
+                }else {
                     verifyJobAndDownload();
                 }
             }
@@ -287,11 +273,9 @@ else {
                 if (!askForInstallingUpdate) { // For the case when updates are checked in the background
                     Environment.terminate(1);
                 }
-            }
-else if (UpdateChecker.isUpdateAvailable()) {
+            }else if (UpdateChecker.isUpdateAvailable()) {
                 handleUpdateAvailable(askForInstallingUpdate);
-            }
-else {
+            }else {
                 messageBroker.msgUpdateInfo("Drifty is up to date!");
                 if (!askForInstallingUpdate) { // For the case when updates are checked in the background
                     Environment.terminate(0);
@@ -310,12 +294,10 @@ else {
             }
             if (!choice) {
                 messageBroker.msgUpdateInfo("Drifty update cancelled!");
-            }
-else {
+            }else {
                 downloadAndUpdate();
             }
-        }
-else {
+        }else {
             handleAdminPrivilegesRequired(askForInstallingUpdate);
         }
     }
@@ -331,8 +313,7 @@ else {
         if (!downloadUpdate()) {
             messageBroker.msgUpdateError("Failed to update Drifty!");
             Environment.terminate(1);
-        }
-else {
+        }else {
             messageBroker.msgUpdateInfo("Update successful!");
             messageBroker.msgUpdateInfo("Please restart Drifty to see the changes!");
             Environment.terminate(0);
@@ -343,8 +324,7 @@ else {
         if (askForInstallingUpdate) {
             messageBroker.msgUpdateWarning("Drifty update requires administrator privileges!");
             messageBroker.msgUpdateWarning("Please run Drifty with administrator privileges to update!");
-        }
-else {
+        }else {
             messageBroker.msgUpdateError("Drifty update requires administrator privileges!");
             messageBroker.msgUpdateError("Please run Drifty with administrator privileges to update!");
             Environment.terminate(1);
@@ -371,19 +351,15 @@ else {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 CLIUpdateExecutor updateExecutor = new CLIUpdateExecutor(currentExecutableFile, latestExecutableFile);
                 return updateExecutor.execute();
-            }
-else {
+            }else {
                 messageBroker.msgUpdateError("Failed to download update!");
                 return false;
             }
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             messageBroker.msgUpdateError("Failed to create temporary folder for downloading update! " + e.getMessage());
-        }
-catch (URISyntaxException e) {
+        }catch (URISyntaxException e) {
             messageBroker.msgUpdateError("Failed to get the location of the current executable! " + e.getMessage());
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgUpdateError("Failed to update Drifty! " + e.getMessage());
         }
         return false;
@@ -411,11 +387,9 @@ catch (Exception e) {
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Future<Integer> future = executor.submit(config::fetchFileData);
             future.get();
-        }
-catch (ExecutionException e) {
+        }catch (ExecutionException e) {
             messageBroker.msgLinkError("Failed to retrieve spotify playlist metadata! " + e.getMessage());
-        }
-catch (InterruptedException e) {
+        }catch (InterruptedException e) {
             messageBroker.msgLinkError("User interrupted the process of retrieving spotify playlist metadata! " + e.getMessage());
         }
         List<HashMap<String, Object>> playlistData = config.getFileData();
@@ -430,8 +404,7 @@ catch (InterruptedException e) {
                 messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
                 checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink)); // TODO: Add support for adding the parent playlist link to history
             }
-        }
-else {
+        }else {
             messageBroker.msgLinkError("Failed to retrieve playlist metadata!");
         }
     }
@@ -445,16 +418,14 @@ else {
             int numberOfLinks;
             try {
                 numberOfLinks = data.get("links").size();
-            }
-catch (NullPointerException e) {
+            }catch (NullPointerException e) {
                 messageBroker.msgLinkInfo("No links specified. Exiting...");
                 return;
             }
             int numberOfFileNames;
             if (data.containsKey("fileNames")) {
                 numberOfFileNames = data.get("fileNames").size();
-            }
-else {
+            }else {
                 messageBroker.msgFilenameInfo("No filename specified. Filename will be retrieved from the link.");
                 numberOfFileNames = 0;
             }
@@ -463,15 +434,12 @@ else {
                 numberOfDirectories = 1;
                 if (data.get("directory").getFirst().isEmpty()) {
                     downloadsFolder = ".";
-                }
-else {
+                }else {
                     downloadsFolder = data.get("directory").getFirst();
                 }
-            }
-else if (data.containsKey("directories")) {
+            }else if (data.containsKey("directories")) {
                 numberOfDirectories = data.get("directories").size();
-            }
-else {
+            }else {
                 messageBroker.msgDirInfo("No directory specified. Default downloads folder will be used.");
                 numberOfDirectories = 0;
                 downloadsFolder = ".";
@@ -479,22 +447,19 @@ else {
             String linkMessage;
             if (numberOfLinks == 1) {
                 linkMessage = numberOfLinks + " link";
-            }
-else {
+            }else {
                 linkMessage = numberOfLinks + " links";
             }
             String directoryMessage;
             if (numberOfDirectories == 1) {
                 directoryMessage = numberOfDirectories + " directory";
-            }
-else {
+            }else {
                 directoryMessage = numberOfDirectories + " directories";
             }
             String fileNameMessage;
             if (numberOfFileNames == 1) {
                 fileNameMessage = numberOfFileNames + " filename";
-            }
-else {
+            }else {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
             messageBroker.msgBatchInfo("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage);
@@ -509,44 +474,35 @@ else {
                 linkType = LinkType.getLinkType(link);
                 if (".".equals(downloadsFolder)) {
                     downloadsFolder = Utility.getHomeDownloadFolder();
-                }
-else if ("L".equalsIgnoreCase(downloadsFolder)) {
+                }else if ("L".equalsIgnoreCase(downloadsFolder)) {
                     downloadsFolder = AppSettings.getLastDownloadFolder();
-                }
-else if (downloadsFolder.isEmpty()) {
+                }else if (downloadsFolder.isEmpty()) {
                     try {
                         downloadsFolder = data.get("directories").get(i);
-                    }
-catch (Exception e) {
+                    }catch (Exception e) {
                         downloadsFolder = AppSettings.getLastDownloadFolder();
                     }
                 }
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
                     fileName = data.get("fileNames").get(i);
-                }
-else {
+                }else {
                     fileName = null;
                 }
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
                     handleSpotifyPlaylist();
-                }
-else {
+                }else {
                     verifyJobAndDownload();
                 }
             }
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             messageBroker.msgDownloadError("Failed to load YAML data file (" + batchDownloadingFile + ") ! " + e.getMessage());
-        }
-catch (YAMLException e) {
+        }catch (YAMLException e) {
             String errorMessage = e.getMessage();
             if (errorMessage.contains("duplicate key")) {
                 messageBroker.msgBatchError("Duplicate keys are not allowed in the YAML file!");
-            }
-else if (errorMessage.contains("recursive key")) {
+            }else if (errorMessage.contains("recursive key")) {
                 messageBroker.msgBatchError("Recursive keys are not allowed in the YAML file!");
-            }
-else {
+            }else {
                 messageBroker.msgBatchError("An unknown error occurred while parsing the YAML file! " + errorMessage);
             }
         }
@@ -556,8 +512,7 @@ else {
         if ((fileName == null || (fileName.isEmpty())) && linkType.equals(LinkType.OTHER)) {
             messageBroker.msgInputInfo(ENTER_FILE_NAME_WITH_EXTENSION, false);
             fileName = SC.nextLine();
-        }
-else {
+        }else {
             messageBroker.msgInputInfo("Would you like to use this filename? (Enter Y for yes and N for no) : ", false);
             String choiceString = SC.nextLine().toLowerCase();
             boolean choice = utility.yesNoValidation(choiceString, "Would you like to use this filename? (Enter Y for yes and N for no) : ", false);
@@ -566,8 +521,7 @@ else {
                 String tempFileName = SC.nextLine();
                 if (tempFileName.isEmpty()) {
                     messageBroker.msgFilenameError("No filename specified! Using the detected filename.");
-                }
-else {
+                }else {
                     fileName = tempFileName;
                 }
             }
@@ -577,14 +531,11 @@ else {
     private static String getProperDownloadsFolder(String downloadsFolder) {
         if (downloadsFolder == null) {
             downloadsFolder = Utility.getHomeDownloadFolder();
-        }
-else if ("L".equalsIgnoreCase(downloadsFolder)) {
+        }else if ("L".equalsIgnoreCase(downloadsFolder)) {
             downloadsFolder = AppSettings.getLastDownloadFolder();
-        }
-else if (".".equals(downloadsFolder)) {
+        }else if (".".equals(downloadsFolder)) {
             downloadsFolder = Utility.getHomeDownloadFolder();
-        }
-else {
+        }else {
             downloadsFolder = Paths.get(downloadsFolder).toAbsolutePath().toString();
             if (OS.isWindows()) {
                 downloadsFolder = downloadsFolder.replace('/', '\\');
@@ -592,14 +543,12 @@ else {
         }
         if (new File(downloadsFolder).exists()) {
             messageBroker.msgDirInfo("Download folder exists!");
-        }
-else {
+        }else {
             messageBroker.msgDirError("Download folder does not exist!");
             try {
                 Files.createDirectory(Path.of(downloadsFolder));
                 messageBroker.msgDirInfo("Download folder created successfully!");
-            }
-catch (IOException e) {
+            }catch (IOException e) {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
@@ -649,11 +598,9 @@ catch (IOException e) {
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Future<Integer> future = executor.submit(config::fetchFileData);
             future.get();
-        }
-catch (ExecutionException e) {
+        }catch (ExecutionException e) {
             messageBroker.msgLinkError("Failed to retrieve file metadata! " + e.getMessage());
-        }
-catch (InterruptedException e) {
+        }catch (InterruptedException e) {
             messageBroker.msgLinkError("User interrupted the process of retrieving file metadata! " + e.getMessage());
         }
         if (config.getStatusCode() != 0) {
@@ -676,8 +623,7 @@ catch (InterruptedException e) {
                 messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
                 checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink));
             }
-        }
-else {
+        }else {
             checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, null));
         }
     }
@@ -697,8 +643,7 @@ else {
                 FileDownloader downloader = new FileDownloader(job);
                 downloader.run();
             }
-        }
-else if (fileExistsHasHistory) {
+        }else if (fileExistsHasHistory) {
             messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()), false);
             String choiceString = SC.nextLine().toLowerCase();
             boolean choice = utility.yesNoValidation(choiceString, String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()), true);
@@ -712,13 +657,11 @@ else if (fileExistsHasHistory) {
                     FileDownloader downloader = new FileDownloader(job);
                     downloader.run();
                 }
-            }
-else {
+            }else {
                 messageBroker.msgHistoryWarning("Download cancelled!", false);
                 System.out.println();
             }
-        }
-else {
+        }else {
             jobHistory.addJob(job, true);
             renameFilenameIfRequired();
             if (link != null) {
@@ -752,12 +695,10 @@ else {
                 normalizedUrl = normalizedUrl.substring(0, normalizedUrl.length() - 1);
             }
             return normalizedUrl;
-        }
-catch (URISyntaxException e) {
+        }catch (URISyntaxException e) {
             messageBroker.msgLinkError("Invalid URL: " + e.getMessage());
             return urlString;
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgLinkError("An unexpected error occurred during URL normalization: " + e.getMessage());
             return urlString;
         }
@@ -774,17 +715,14 @@ catch (Exception e) {
                 boolean isWritable = yamlFile.setWritable(true, true);
                 if (isNewFileCreated && isReadable && isWritable) {
                     messageBroker.msgLogInfo("New links queue file created: " + yamlFilePath);
-                }
-else if (!isNewFileCreated) {
+                }else if (!isNewFileCreated) {
                     messageBroker.msgBatchError("Failed to create links queue file: " + yamlFilePath);
                     Environment.terminate(1);
-                }
-else {
+                }else {
                     messageBroker.msgBatchError("Failed to set file permissions for the links queue file: " + yamlFilePath);
                     Environment.terminate(1);
                 }
-            }
-catch (IOException e) {
+            }catch (IOException e) {
                 messageBroker.msgBatchError("Error creating links queue file: " + e.getMessage());
                 Environment.terminate(1);
             }
@@ -810,20 +748,16 @@ catch (IOException e) {
                 data = new HashMap<>();
             }
             data.computeIfAbsent("links", _ -> new ArrayList<>()); // Ensure 'links' list exists
-        }
-catch (YAMLException e) {
+        }catch (YAMLException e) {
             String errorMessage = e.getMessage();
             if (errorMessage.contains("duplicate key")) {
                 messageBroker.msgBatchError("Duplicate keys are not allowed in the YAML file!");
-            }
-else if (errorMessage.contains("recursive key")) {
+            }else if (errorMessage.contains("recursive key")) {
                 messageBroker.msgBatchError("Recursive keys are not allowed in the YAML file!");
-            }
-else {
+            }else {
                 messageBroker.msgBatchError("An unknown error occurred while parsing the YAML file! " + errorMessage);
             }
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             messageBroker.msgBatchError("Error reading YAML file: " + e.getMessage());
         }
         return data;
@@ -837,8 +771,7 @@ catch (IOException e) {
         // Create a backup of the original file
         try {
             Files.copy(originalFile.toPath(), backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             messageBroker.msgLinkError("Failed to create a backup of the YAML file: " + e.getMessage());
             messageBroker.msgLinkError("Aborting the operation to prevent data loss!");
             Environment.terminate(1);
@@ -847,19 +780,16 @@ catch (IOException e) {
         // Proceed with writing the updated data to the YAML file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(originalFile))) {
             yaml.dump(data, writer);
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             messageBroker.msgBatchError("An error occurred while writing to the YAML file: " + e.getMessage());
             // Attempt to restore from backup in case of write error
             try {
                 Files.copy(backupFile.toPath(), originalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 messageBroker.msgBatchError("Restored the original YAML file from backup due to write error.");
-            }
-catch (IOException restoreException) {
+            }catch (IOException restoreException) {
                 messageBroker.msgBatchError("Failed to restore the original YAML file from backup: " + restoreException.getMessage());
             }
-        }
-finally {
+        }finally {
             // Clean up: Delete the backup file if everything went smoothly
             if (backupFile.exists() && !backupFile.delete()) {
                 messageBroker.msgLogError("Failed to delete the backup file: " + backupFile.getName());
@@ -879,8 +809,7 @@ finally {
                 messageBroker.msgLinkInfo((i + 1) + ". " + urls.get(i));
             }
             Environment.terminate(0);
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgBatchError("An error occurred while listing the links: " + e.getMessage());
             Environment.terminate(1);
         }
@@ -901,16 +830,14 @@ catch (Exception e) {
                     if (index < 0 || index > urls.size()) {
                         if (urls.size() == 1) {
                             messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide '1' to remove the only link in the list!", true);
-                        }
-else {
+                        }else {
                             messageBroker.msgInputError("Invalid line number '" + index + "'. Please provide a number between 1 and " + urls.size() + "!", true);
                         }
                         Environment.terminate(1); // Exit the program if the input is invalid
                         return;
                     }
                     uniqueIndices.add(index);
-                }
-catch (NumberFormatException e) {
+                }catch (NumberFormatException e) {
                     messageBroker.msgInputError("Invalid format. Please provide a numeric input.", true);
                     return;
                 }
@@ -920,8 +847,7 @@ catch (NumberFormatException e) {
                 messageBroker.msgLinkInfo("Removed URL: " + removedUrl);
             }
             saveYamlData(data); // Save updated YAML data
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgBatchError("An error occurred while removing a link: " + e.getMessage());
             Environment.terminate(1);
         }
@@ -936,22 +862,18 @@ catch (Exception e) {
                 if (yamlFile.delete()) {
                     if (batchDownloading) {
                         messageBroker.msgLogInfo("All links removed successfully from the YAML file.");
-                    }
-else {
+                    }else {
                         messageBroker.msgLinkInfo("All links removed successfully.");
                     }
-                }
-else {
+                }else {
                     messageBroker.msgLinkError("Failed to remove all links!");
                     Environment.terminate(1);
                 }
-            }
-else {
+            }else {
                 messageBroker.msgLinkError("No links to remove!");
                 Environment.terminate(1);
             }
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgLinkError("An error occurred while removing all URLs: " + e.getMessage());
             Environment.terminate(1);
         }
@@ -970,16 +892,13 @@ catch (Exception e) {
                 urls.add(urlString); // Add the URL if it doesn't exist
                 saveYamlData(data); // Save the updated data back to the YAML file
                 messageBroker.msgLinkInfo("Link added: " + urlString);
-            }
-else {
+            }else {
                 messageBroker.msgInputError("Link already exists: \"" + urlString + "\"", true);
             }
-        }
-catch (NullPointerException e) {
+        }catch (NullPointerException e) {
             messageBroker.msgBatchError("Failed to add link to the YAML file! The YAML data is null.");
             Environment.terminate(1);
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             messageBroker.msgBatchError("An unknown error occurred while adding URL to the YAML file: " + e.getMessage());
             Environment.terminate(1);
         }
@@ -988,8 +907,7 @@ catch (Exception e) {
     private static void setYamlFilePath() {
         try {
             yamlFilePath = Paths.get(Program.get(Program.DRIFTY_PATH)).resolve(YAML_FILENAME).toString();
-        }
-catch (InvalidPathException e) {
+        }catch (InvalidPathException e) {
             messageBroker.msgBatchError("Failed to initialize YAML file path! Invalid path: " + e.getMessage());
             Environment.terminate(1);
         }

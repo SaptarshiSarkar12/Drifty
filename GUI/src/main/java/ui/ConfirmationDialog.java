@@ -54,8 +54,7 @@ public class ConfirmationDialog {
         this.isUpdateError = isUpdateError;
         if (isUpdateError) {
             this.msg = message + "\n\nPlease try again later or download the latest version from the below link :";
-        }
-else {
+        }else {
             this.msg = message;
         }
         finish();
@@ -152,8 +151,7 @@ else {
     public GetConfirmationDialogResponse getResponse() {
         if (Platform.isFxApplicationThread()) {
             showScene();
-        }
-else {
+        }else {
             Platform.runLater(this::showScene);
             while (answer.isUnanswered()) {
                 sleep(50);
@@ -184,8 +182,7 @@ else {
         stage.setResizable(false);
         try {
             stage.showAndWait();
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Confirmation Dialog: " + e.getMessage());
         }
     }

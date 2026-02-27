@@ -84,19 +84,16 @@ public class Settings {
         try {
             if (stage != null && stage.isShowing()) {
                 stage.toFront();
-            }
-else {
+            }else {
                 initializeComponents();
                 stage.setScene(settingsScene);
                 stage.showAndWait();
             }
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Settings window: " + e.getMessage());
             try {
                 new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + e.getMessage(), true, false).getResponse();
-            }
-catch (Exception ignored) {
+            }catch (Exception ignored) {
             }
         }
     }
@@ -186,8 +183,7 @@ catch (Exception ignored) {
             selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED);
             selectDirectoryButton.setOnMousePressed(e -> selectDirectoryButton.setStyle(Constants.BUTTON_PRESSED));
             selectDirectoryButton.setOnMouseReleased(e -> selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED));
-        }
-else {
+        }else {
             selectDirectoryButton.getStyleClass().add("button");
         }
         selectDirectoryButton.setOnAction(e -> handleDirectorySelection());
@@ -206,13 +202,11 @@ else {
             String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : defaultPath;
             UIController.form.tfDir.setText(directoryPath);
             tfCurrentDirectory.setText(directoryPath);
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
             try {
                 new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + e.getMessage(), true, false).getResponse();
-            }
-catch (Exception ignored) {
+            }catch (Exception ignored) {
             }
         }
     }

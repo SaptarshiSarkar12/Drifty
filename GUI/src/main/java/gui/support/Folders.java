@@ -50,8 +50,7 @@ public class Folders {
             Path path = Paths.get(folder);
             if (!path.toFile().exists()) {
                 removeList.add(folder);
-            }
-else {
+            }else {
                 if (!path.toFile().isDirectory()) {
                     removeList.add(folder);
                 }
@@ -74,8 +73,7 @@ else {
             try {
                 String[] folderArray = GSON.fromJson(json, String[].class);
                 folders.addAll(Arrays.asList(folderArray));
-            }
-catch (JsonSyntaxException e) {
+            }catch (JsonSyntaxException e) {
                 Environment.getMessageBroker().msgLogError("Syntax Error in Folders Json: " + e.getMessage());
             }
         }

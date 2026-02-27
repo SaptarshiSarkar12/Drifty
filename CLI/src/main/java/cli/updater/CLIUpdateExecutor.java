@@ -12,8 +12,7 @@ public class CLIUpdateExecutor extends updater.UpdateExecutor {
         M.msgLogInfo("Setting executable permission for the latest version of Drifty...");
         if (setLatestExecutablePermissions()) {
             M.msgLogInfo("Executable permission set! Executing update...");
-        }
-else {
+        }else {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
             return false;
         }

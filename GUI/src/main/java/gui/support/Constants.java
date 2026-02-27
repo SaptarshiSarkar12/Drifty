@@ -96,8 +96,7 @@ public class Constants extends support.Constants {
                 Environment.terminate(0);
             });
             stage.setResizable(true);
-        }
-else {
+        }else {
             stage.centerOnScreen();
         }
         return stage;

@@ -117,8 +117,7 @@ public class MainGridPane extends GridPane {
                     // Make empty cells not selectable
                     setDisable(true);
                     Platform.runLater(() -> setText(""));
-                }
-else {
+                }else {
                     // Set the text for non-empty cells
                     setDisable(false);
                     Platform.runLater(() -> setText(item.toString()));

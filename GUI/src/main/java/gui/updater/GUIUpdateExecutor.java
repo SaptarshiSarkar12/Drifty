@@ -20,23 +20,20 @@ public class GUIUpdateExecutor extends updater.UpdateExecutor {
         M.msgLogInfo("Download successful! Setting executable permission...");
         if (setLatestExecutablePermissions()) {
             M.msgLogInfo("Executable permission set! Executing update...");
-        }
-else {
+        }else {
             M.msgUpdateError("Failed to set executable permission for the latest version of Drifty!");
             return false;
         }
         if (OS.isMac()) {
             return executeMacUpdate();
-        }
-else {
+        }else {
             ProcessBuilder runCurrentExecutable = new ProcessBuilder(currentExecutableFile.getAbsolutePath());
             cleanup(true); // This will delete the old executable created previously
             if (renameCurrentExecutable()) {
                 if (replaceCurrentExecutable()) {
                     try {
                         runCurrentExecutable.start();
-                    }
-catch (IOException e) {
+                    }catch (IOException e) {
                         M.msgUpdateError("Failed to start the latest version of Drifty!");
                     }
                     cleanup(false);
@@ -52,8 +49,7 @@ catch (IOException e) {
         if (executionResult.getExitValue() != 0) {
             M.msgUpdateError("Failed to open the installer for the latest version of Drifty! Error code: " + executionResult.getExitValue());
             return false;
-        }
-else {
+        }else {
             AppSettings.setDriftyUpdateAvailable(false); // Reset the update flag
             Environment.terminate(0);
         }

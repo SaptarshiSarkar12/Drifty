@@ -48,13 +48,11 @@ public class Environment {
         if (osArch.contains("arm") || osArch.contains("aarch64")) {
             if (OS.isMac()) {
                 ffmpegExecName = "ffmpeg_macos-arm64";
-            }
-else {
+            }else {
                 msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
                 AppSettings.setFfmpegWorking(false);
             }
-        }
-else {
+        }else {
             ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
         }
         Program.setFfmpegExecutableName(ffmpegExecName);
@@ -68,12 +66,10 @@ else {
             if (!isYtDLPUpdated() && !Utility.isOffline()) {
                 checkAndUpdateYtDlp();
             }
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             if (AppSettings.isFfmpegWorking()) {
                 msgBroker.msgInitError("Failed to copy yt-dlp and ffmpeg executables! " + e.getMessage());
-            }
-else {
+            }else {
                 msgBroker.msgInitError("Failed to copy yt-dlp executable! " + e.getMessage());
             }
         }
@@ -83,8 +79,7 @@ else {
 
             String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
             currentSessionId = dbConnection.addSessionRecord(startDate);
-        }
-catch (SQLException e) {
+        }catch (SQLException e) {
             msgBroker.msgInitError("Failed to setup the database: " + e.getMessage());
             Environment.terminate(1);
         }
@@ -93,12 +88,10 @@ catch (SQLException e) {
             try {
                 Files.createDirectory(folder.toPath());
                 msgBroker.msgInitInfo("Created Drifty folder : " + driftyFolderPath);
-            }
-catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgInitError("Failed to create Drifty folder: " + driftyFolderPath + " - " + e.getMessage());
             }
-        }
-else {
+        }else {
             msgBroker.msgInitInfo("Drifty folder already exists : " + driftyFolderPath);
         }
     }
@@ -107,8 +100,7 @@ else {
         String endDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         try {
             dbConnection.updateSessionEndDate(currentSessionId, endDate);
-        }
-catch (SQLException e) {
+        }catch (SQLException e) {
             msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
         }
 
@@ -130,14 +122,11 @@ catch (SQLException e) {
             Process ytDlpUpdateTask = ytDlpUpdateProcess.start();
             ytDlpUpdateTask.waitFor();
             AppSettings.setLastYtDlpUpdateTime(System.currentTimeMillis());
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgInitError("Failed to update yt-dlp! " + e.getMessage());
-        }
-catch (InterruptedException e) {
+        }catch (InterruptedException e) {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
-        }
-finally {
+        }finally {
             AppSettings.setYtDlpUpdating(false);
             Utility.setYtDlpVersion().run();
         }
@@ -156,16 +145,13 @@ finally {
             Files.createFile(adminTestFilePath);
             Files.deleteIfExists(adminTestFilePath);
             return true;
-        }
-catch (URISyntaxException e) {
+        }catch (URISyntaxException e) {
             System.out.println("Failed to get the current executable path! " + e.getMessage());
             return false;
-        }
-catch (AccessDeniedException e) {
+        }catch (AccessDeniedException e) {
             System.out.println("You are not running Drifty as an administrator! " + e.getMessage());
             return false;
-        }
-catch (IOException e) {
+        }catch (IOException e) {
             System.out.println("Failed to create a file in the current executable folder! " + e.getMessage());
             return false;
         }

@@ -68,8 +68,7 @@ public class Theme {
                 for (Node node : scene.getRoot().getChildrenUnmodifiable()) {
                     if (node instanceof Label) {
                         ((Label) node).setTextFill(color);
-                    }
-else if (node instanceof Text) {
+                    }else if (node instanceof Text) {
                         ((Text) node).setFill(color);
                     }
                 }
@@ -86,8 +85,7 @@ else if (node instanceof Text) {
             if (UIController.getInfoTf().getChildren().get(i) instanceof Text text) {
                 if (text.getFont().getSize() == 16) {
                     ((Text) UIController.getInfoTf().getChildren().get(i)).setFill(color);
-                }
-else {
+                }else {
                     ((Text) UIController.getInfoTf().getChildren().get(i)).setFill(headingsColor);
 
                 }
@@ -111,8 +109,7 @@ else {
                 button.setStyle(Constants.BUTTON_RELEASED);
                 button.setOnMousePressed(ev -> button.setStyle(Constants.BUTTON_PRESSED));
                 button.setOnMouseReleased(ev -> button.setStyle(Constants.BUTTON_RELEASED));
-            }
-else {
+            }else {
                 String style = "-fx-text-fill: Black;";
                 String backColorReleased = "-fx-background-color: linear-gradient(rgb(54,151,225) 18%, rgb(121,218,232) 90%, rgb(126,223,255) 95%);";
                 String backColorPressed = "-fx-background-color: linear-gradient(rgb(126,223,255) 20%, rgb(121,218,232) 20%, rgb(54,151,225) 100%);";

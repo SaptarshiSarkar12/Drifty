@@ -92,14 +92,12 @@ public class About {
         try {
             if (stage != null && stage.isShowing()) {
                 stage.toFront();
-            }
-else {
+            }else {
                 setupLayout();
                 stage.setScene(aboutScene);
                 stage.showAndWait();
             }
-        }
-catch (Exception e) {
+        }catch (Exception e) {
             MSG_BROKER.msgLogError("Error displaying About Drifty window: " + e.getMessage());
         }
     }
