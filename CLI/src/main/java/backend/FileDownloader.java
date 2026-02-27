@@ -98,7 +98,7 @@ public class FileDownloader implements Runnable {
                         for (File tempFile : tempFiles) {
                             Files.deleteIfExists(tempFile.toPath());
                         }
-                    } else {
+                    }else {
                         InputStream urlStream = url.openStream();
                         readableByteChannel = Channels.newChannel(urlStream);
                         FileOutputStream fos = new FileOutputStream(directoryPath.resolve(fileName).toFile());
@@ -117,25 +117,25 @@ public class FileDownloader implements Runnable {
                     long downloadedSize = Files.size(downloadedFilePath);
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                     db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
-                } catch (SecurityException e) {
+                }catch (SecurityException e) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                     db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                     M.msgDownloadError("Write access to the download directory is DENIED! " + e.getMessage());
-                } catch (FileNotFoundException fileNotFoundException) {
+                }catch (FileNotFoundException fileNotFoundException) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                     db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                     M.msgDownloadError(FILE_NOT_FOUND_ERROR);
-                } catch (IOException e) {
+                }catch (IOException e) {
                     endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                     db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                     M.msgDownloadError(FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
                 }
-            } catch (NullPointerException e) {
+            }catch (NullPointerException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError(FAILED_READING_STREAM);
             }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -154,22 +154,22 @@ public class FileDownloader implements Runnable {
                 process = processBuilder.start();
                 process.waitFor();
                 exitValueOfYtDlp = process.exitValue();
-            } catch (IOException e) {
+            }catch (IOException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError("Failed to start download process for \"" + fileName + "\"");
-            } catch (Exception e) {
+            }catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 String msg = e.getMessage();
                 String[] messageArray = msg.split(",");
                 if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                     M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-                } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+                }else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                     M.msgDownloadError(PERMISSION_DENIED_ERROR);
-                } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+                }else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
                     M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
-                } else {
+                }else {
                     M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
                 }
             }
@@ -186,26 +186,26 @@ public class FileDownloader implements Runnable {
                             fileName = fileName.replace("mp3", "webm"); // If mp3 conversion fails, then the file name will be changed to the webm file.
                             db.updateFileName(fileId, fileName);
                             throw new Exception(conversionProcessMessage);
-                        } else {
+                        }else {
                             endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                             db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
                             M.msgDownloadInfo("Successfully converted to mp3!");
                         }
                     }
-                } else if (exitValueOfYtDlp == 1) {
+                }else if (exitValueOfYtDlp == 1) {
                     M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
                     throw new Exception(String.format(FAILED_TO_DOWNLOAD_F, fileName));
-                } else {
+                }else {
                     M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
                     throw new Exception("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
                 }
-            } catch (Exception e) {
+            }catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
                 throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -224,7 +224,7 @@ public class FileDownloader implements Runnable {
                 if (!downloaderThread.isAlive()) {
                     M.msgDownloadError("Error encountered while downloading the file! Please try again.");
                 }
-            } else if (!downloaderThread.isAlive()) {
+            }else if (!downloaderThread.isAlive()) {
                 completed++;
             }
         }
@@ -260,7 +260,7 @@ public class FileDownloader implements Runnable {
                 // If the link is of a YouTube or Instagram video, then the following block of code will execute.
                 if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
                     downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
-                } else {
+                }else {
                     url = new URI(downloadLink).toURL();
                     URLConnection openConnection = url.openConnection();
                     openConnection.connect();
@@ -279,23 +279,23 @@ public class FileDownloader implements Runnable {
                 long downloadedSize = Files.size(downloadedFilePath);
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
-            } catch (MalformedURLException | URISyntaxException e) {
+            }catch (MalformedURLException | URISyntaxException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgLinkError(INVALID_LINK);
-            } catch (InvalidPathException e) {
+            }catch (InvalidPathException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError("The downloaded file path (" + directoryPath.resolve(fileName) + ") is invalid! " + e.getMessage());
-            } catch (IOException e) {
+            }catch (IOException e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
-            } catch (Exception e) {
+            }catch (Exception e) {
                 endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
             }
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             M.msgDownloadError("An error occurred while trying to connect to the database! " + e.getMessage());
         }
     }

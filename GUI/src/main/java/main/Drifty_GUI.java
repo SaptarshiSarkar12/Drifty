@@ -57,7 +57,7 @@ public class Drifty_GUI extends Application {
             createScene();
             this.primaryStage.setScene(scene);
             this.primaryStage.show();
-        } catch (Exception e) {
+        }catch (Exception e) {
             msgBroker.msgLogError("Error starting Drifty GUI Application: " + e.getMessage());
         }
     }
@@ -158,7 +158,7 @@ public class Drifty_GUI extends Application {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection",
                         "You are currently offline! Please check your internet connection and try again.", true, false);
                 noInternet.getResponse();
-            } else {
+            }else {
                 checkForUpdates();
             }
         }).start());
@@ -168,7 +168,7 @@ public class Drifty_GUI extends Application {
             }
             try {
                 aboutInstance.show();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
             }
         });
@@ -180,10 +180,10 @@ public class Drifty_GUI extends Application {
         if (UpdateChecker.isUpdateAvailable()) {
             try {
                 UIController.INSTANCE.showUpdateDialog();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 msgBroker.msgLogError("Error displaying Update Available dialog : " + e.getMessage());
             }
-        } else {
+        }else {
             ConfirmationDialog noUpdate = new ConfirmationDialog("No Updates Available",
                     "You are already using the latest version of Drifty!", true, false);
             noUpdate.getResponse();
@@ -206,7 +206,7 @@ public class Drifty_GUI extends Application {
             settings.setOnAction(_ -> settingsInstance.show());
 
             menu.getItems().addAll(wipeHistory, settings);
-        } catch (Exception e) {
+        }catch (Exception e) {
             msgBroker.msgLogError("Error displaying Settings window: " + e.getMessage());
         }
         return menu;
@@ -229,7 +229,7 @@ public class Drifty_GUI extends Application {
     public void openWebsite(String websiteURL) {
         try {
             getHostServices().showDocument(websiteURL);
-        } catch (Exception e) {
+        }catch (Exception e) {
             msgBroker.msgLogError("Error opening website: " + websiteURL + " : " + e.getMessage());
         }
 

@@ -29,7 +29,7 @@ public class DownloaderThread extends Thread {
             con.connect();
             readableByteChannel = Channels.newChannel(con.getInputStream());
             file.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -92,13 +92,13 @@ public class ProgressBarThread extends Thread {
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = parseStringToFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
-            } else {
+            }else {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
             bar = bar.substring(0, charAmt / 2 - 2) + formattedTotalDownloadPercent + "%" + bar.substring(charAmt / 2 + 1);
             return "[" + spinner + "]  " + fileName + "  [" + bar + "](" + UnitConverter.format(totalDownloadedBytes, 2) + ")  " + downloadSpeedWithoutUnit + " " + downloadSpeedUnit + "/s";
-        } else {
+        }else {
             int numberOfThreads = fileOutputStreams.size();
             StringBuilder result = new StringBuilder("[" + spinner + "]  " + UnitConverter.format(totalDownloadedBytes, 2));
             float filled;
@@ -140,7 +140,7 @@ public class ProgressBarThread extends Thread {
                 int indexOfDownloadSpeedUnit = downloadSpeedWithUnit.indexOf(" ") + 1;
                 downloadSpeedWithoutUnit = parseStringToFloat(downloadSpeedWithUnit.substring(0, indexOfDownloadSpeedUnit - 1));
                 downloadSpeedUnit = downloadSpeedWithUnit.substring(indexOfDownloadSpeedUnit);
-            } else {
+            }else {
                 downloadSpeedWithoutUnit = 0;
                 downloadSpeedUnit = "bytes";
             }
@@ -156,23 +156,23 @@ public class ProgressBarThread extends Thread {
             String sizeWithUnit = UnitConverter.format(totalDownloadedBytes, 2);
             System.out.print("\r");
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
-        } else if (downloadedBytes == totalDownloadedBytes) {
+        }else if (downloadedBytes == totalDownloadedBytes) {
             String sizeWithUnit = UnitConverter.format(downloadedBytes, 2);
             System.out.print("\r");
             M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + sizeWithUnit + " at \"" + path + "\"");
-        } else {
+        }else {
             System.out.println();
             M.msgDownloadError(DOWNLOAD_FAILED);
         }
         try {
             if (fos != null) {
                 fos.close();
-            } else {
+            }else {
                 for (FileOutputStream fileOutputStream : fileOutputStreams) {
                     fileOutputStream.close();
                 }
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             M.msgLogError("Error while closing the file output stream for " + fileName + " : " + e.getMessage());
         }
     }
@@ -194,7 +194,7 @@ public class ProgressBarThread extends Thread {
                         System.out.print("\033[2K");
                         System.out.print("\r" + generateProgressBar());
                     }
-                } else {
+                }else {
                     for (int i = 0; i <= fileOutputStreams.size(); i++) {
                         for (int j = 0; j < fileOutputStreams.size(); j++) {
                             initialMeasurements.add(j, fileOutputStreams.get(j).getChannel().size());
@@ -210,9 +210,9 @@ public class ProgressBarThread extends Thread {
                         System.out.print("\r" + generateProgressBar());
                     }
                 }
-            } catch (IOException e) {
+            }catch (IOException e) {
                 M.msgDownloadError("Error while downloading \"" + fileName + "\" : " + e.getMessage());
-            } finally {
+            }finally {
                 downloading = downloadMetrics.isActive();
             }
         }
@@ -222,7 +222,7 @@ public class ProgressBarThread extends Thread {
     private float parseStringToFloat(String str) {
         try {
             return Float.parseFloat(str);
-        } catch (NumberFormatException e) {
+        }catch (NumberFormatException e) {
             M.msgLogError("Error while parsing \"" + str + "\" to float : " + e.getMessage());
             return 0;
         }

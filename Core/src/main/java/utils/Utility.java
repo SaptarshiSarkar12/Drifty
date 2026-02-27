@@ -65,11 +65,11 @@ public class Utility {
             HttpURLConnection connectProjectWebsite = (HttpURLConnection) projectWebsite.openConnection();
             connectProjectWebsite.connect();
             return false;
-        } catch (UnknownHostException e) {
+        }catch (UnknownHostException e) {
             msgBroker.msgLogError("You are not connected to the Internet!");
-        } catch (MalformedURLException e) {
+        }catch (MalformedURLException e) {
             msgBroker.msgLogError("The link is not correctly formatted! " + e.getMessage());
-        } catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgLogError("Failed to connect to the project website! " + e.getMessage());
         }
         return true;
@@ -83,21 +83,21 @@ public class Utility {
             connection.connect();
             msgBroker.msgLinkInfo("Link is valid!");
             return true;
-        } catch (ConnectException e) {
+        }catch (ConnectException e) {
             msgBroker.msgLinkError("Connection to the link timed out! Please check your internet connection. " + e.getMessage());
-        } catch (UnknownHostException unknownHost) {
+        }catch (UnknownHostException unknownHost) {
             if (isOffline()) {
                 msgBroker.msgLinkError("You are not connected to the Internet!");
-            } else {
+            }else {
                 msgBroker.msgLinkError(INVALID_LINK);
             }
-        } catch (ProtocolException e) {
+        }catch (ProtocolException e) {
             msgBroker.msgLinkError("An error occurred with the protocol! " + e.getMessage());
-        } catch (MalformedURLException e) {
+        }catch (MalformedURLException e) {
             msgBroker.msgLinkError("The link is not correctly formatted! " + e.getMessage());
-        } catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgLinkError("Failed to connect to " + link + " ! " + e.getMessage());
-        } catch (IllegalArgumentException e) {
+        }catch (IllegalArgumentException e) {
             msgBroker.msgLinkError(link + " is not a URL; Error: " + e.getMessage());
         }
         return false;
@@ -109,25 +109,25 @@ public class Utility {
         String arch = System.getProperty("os.arch");
         if ("amd64".equals(arch) || "x86_64".equals(arch)) {
             arch = "x86_64";
-        } else if ("aarch64".equals(arch)) {
+        }else if ("aarch64".equals(arch)) {
             arch = "aarch64";
         }
         if (Mode.isGUI()) {
             executableNames = new String[]{"Drifty-GUI_" + arch + ".pkg", "Drifty-GUI.exe", "Drifty-GUI_linux"};
-        } else {
+        }else {
             executableNames = new String[]{"Drifty-CLI_macos_" + arch, "Drifty-CLI.exe", "Drifty-CLI_linux"};
         }
         String updateURLMiddle;
         if (AppSettings.isEarlyAccessEnabled()) {
             updateURLMiddle = "download/" + AppSettings.getLatestDriftyVersionTag() + "/";
-        } else {
+        }else {
             updateURLMiddle = "latest/download/";
         }
         if (OS.isMac()) {
             updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[0]).toURL();
-        } else if (OS.isWindows()) {
+        }else if (OS.isWindows()) {
             updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[1]).toURL();
-        } else {
+        }else {
             updateURL = new URI("https://github.com/SaptarshiSarkar12/Drifty/releases/" + updateURLMiddle + executableNames[2]).toURL();
         }
         return updateURL;
@@ -146,7 +146,7 @@ public class Utility {
             Thread linkThread = new Thread(ytDLPJsonData(driftyJsonFolder.getAbsolutePath(), link));
             try {
                 linkThread.start();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 msgBroker.msgLinkError("Failed to start thread to get link metadata! " + e.getMessage());
                 return null;
             }
@@ -169,7 +169,7 @@ public class Utility {
                     }
                 }
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgLinkError("Failed to perform I/O operations on link metadata! " + e.getMessage());
             return null;
         }
@@ -182,13 +182,13 @@ public class Utility {
         if (!OS.isWindows()) {
             String home = System.getProperty("user.home");
             downloadsFolder = home + FileSystems.getDefault().getSeparator() + "Downloads" + FileSystems.getDefault().getSeparator();
-        } else {
+        }else {
             downloadsFolder = DownloadFolderLocator.findPath() + FileSystems.getDefault().getSeparator();
         }
         if (downloadsFolder.equals(FileSystems.getDefault().getSeparator())) {
             downloadsFolder = System.getProperty("user.home");
             msgBroker.msgDirError(FAILED_TO_RETRIEVE_DEFAULT_DOWNLOAD_FOLDER_ERROR);
-        } else {
+        }else {
             msgBroker.msgDirInfo(FOLDER_DETECTED + downloadsFolder);
         }
         return downloadsFolder;
@@ -217,7 +217,7 @@ public class Utility {
         String trackId;
         if (trackMatcher.find()) {
             trackId = trackMatcher.group(1);
-        } else {
+        }else {
             msgBroker.msgLinkError("Failed to extract track ID from Spotify link!");
             return null;
         }
@@ -251,18 +251,18 @@ public class Utility {
                         for (long i = timeToWait; i >= 0; i -= 1000) {
                             if (Mode.isCLI()) {
                                 System.out.print("\r" + "Retrying in " + i / 1000 + " seconds...");
-                            } else {
+                            }else {
                                 msgBroker.msgLinkInfo("Retrying in " + i / 1000 + " seconds...");
                             }
                             sleep(1000);
                         }
                         if (Mode.isCLI()) {
                             System.out.println("\r" + "Retrying now...");
-                        } else {
+                        }else {
                             msgBroker.msgLinkInfo("Retrying now...");
                         }
                         continue;
-                    } else {
+                    }else {
                         return null;
                     }
                 }
@@ -285,13 +285,13 @@ public class Utility {
                 msgBroker.msgLogInfo("Spotify metadata retrieved successfully!");
                 jsonFile.deleteOnExit(); // Delete the file on exit
                 return songMetadataMap;
-            } catch (URISyntaxException e) {
+            }catch (URISyntaxException e) {
                 msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());
                 break;
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgLinkError("Failed to send request to Spotify API! " + e.getMessage());
                 break;
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e) {
                 msgBroker.msgLinkError("The request to Spotify API was interrupted! " + e.getMessage());
                 break;
             }
@@ -318,17 +318,17 @@ public class Utility {
                     return null;
                 }
                 return songMetadataResponseBody;
-            } catch (UnknownHostException e) {
+            }catch (UnknownHostException e) {
                 msgBroker.msgLinkError("You are not connected to the Internet!");
                 return null;
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgLinkError("Failed to send request to Spotify API! " + e.getMessage());
                 return null;
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e) {
                 msgBroker.msgLinkError("The request to Spotify API was interrupted! " + e.getMessage());
                 return null;
             }
-        } catch (URISyntaxException e) {
+        }catch (URISyntaxException e) {
             msgBroker.msgLinkError("Spotify API URI is incorrect! " + e.getMessage());
             return null;
         }
@@ -340,7 +340,7 @@ public class Utility {
         String playlistId;
         if (playlistMatcher.find()) {
             playlistId = playlistMatcher.group(1);
-        } else {
+        }else {
             msgBroker.msgLinkError("Failed to extract playlist ID from Spotify link!");
             return null;
         }
@@ -404,7 +404,7 @@ public class Utility {
             while ((line = br.readLine()) != null) {
                 content.append(line);
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgLinkError("Failed to extract content from Spotify API response! " + e.getMessage());
         }
         return content.toString();
@@ -447,7 +447,7 @@ public class Utility {
         if (downloadLink == null) {
             if (Mode.isGUI()) {
                 msgBroker.msgLinkError("Song is exclusive to Spotify and cannot be downloaded!");
-            } else {
+            }else {
                 System.out.println("\nSong (" + filename.replace(".mp3", "") + ") is exclusive to Spotify and cannot be downloaded!");
             }
             return null;
@@ -473,14 +473,14 @@ public class Utility {
             for (int i = 0; i < artists.size(); i++) {
                 artistNames.add(artists.get(i).getAsString());
             }
-        } else {
+        }else {
             // Safe casting with type check
             ArrayList<?> rawList = (ArrayList<?>) songMetadata.get("artists");
             artistNames = new ArrayList<>();
             for (Object obj : rawList) {
                 if (obj instanceof String) {
                     artistNames.add((String) obj);
-                } else {
+                }else {
                     // Handle the case where an element is not a String
                     msgBroker.msgLinkError("Failed to cast artist names to String in Spotify song metadata!");
                     return null;
@@ -513,7 +513,7 @@ public class Utility {
                     msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
                     return null;
                 }
-            } else {
+            }else {
                 msgBroker.msgDownloadError("Song is exclusive to Spotify and cannot be downloaded!");
                 return null;
             }
@@ -550,24 +550,24 @@ public class Utility {
                             if (line.contains("unable to extract username")) {
                                 ytDlpErrorMessage = "The Instagram post/reel is private!";
                                 break;
-                            } else if (line.contains("The playlist does not exist")) {
+                            }else if (line.contains("The playlist does not exist")) {
                                 ytDlpErrorMessage = "The YouTube playlist does not exist or is private!";
                                 break;
-                            } else if (line.contains("Video unavailable")) {
+                            }else if (line.contains("Video unavailable")) {
                                 ytDlpErrorMessage = "The YouTube video is unavailable ".concat(line.substring(line.indexOf("because")));
                                 break;
-                            } else if (line.contains("Skipping player responses from android clients")) {
+                            }else if (line.contains("Skipping player responses from android clients")) {
                                 msgBroker.msgLogWarning(line);
-                            } else if (line.contains("Unable to download webpage") && line.contains("Temporary failure in name resolution")) {
+                            }else if (line.contains("Unable to download webpage") && line.contains("Temporary failure in name resolution")) {
                                 ytDlpErrorMessage = "You are not connected to the Internet!";
                                 break;
-                            } else if (line.contains("unable to extract shared data; please report this issue on")) {
+                            }else if (line.contains("unable to extract shared data; please report this issue on")) {
                                 ytDlpErrorMessage = "Instagram post/reel is not accessible due to temporary blockage by Instagram!";
                                 break;
-                            } else {
+                            }else {
                                 if (line.contains("ERROR")) {
                                     msgBroker.msgLogError(line);
-                                } else {
+                                }else {
                                     msgBroker.msgLogWarning(line);
                                 }
                             }
@@ -577,7 +577,7 @@ public class Utility {
                         msgBroker.msgLinkError(ytDlpErrorMessage);
                     }
                 }
-            } catch (Exception e) {
+            }catch (Exception e) {
                 ytDlpErrorMessage = "Failed to get link metadata! " + e.getMessage();
                 msgBroker.msgLinkError(ytDlpErrorMessage);
             }
@@ -594,7 +594,7 @@ public class Utility {
     public static void sleep(long time) {
         try {
             TimeUnit.MILLISECONDS.sleep(time);
-        } catch (InterruptedException e) {
+        }catch (InterruptedException e) {
             msgBroker.msgLinkError("The calling method failed to sleep for " + time + " milliseconds. It got interrupted. " + e.getMessage());
         }
     }
@@ -614,7 +614,7 @@ public class Utility {
         if (!link.contains("?utm_source=ig_embed")) {
             if (link.contains("?")) {
                 link = link.substring(0, link.indexOf("?")) + "?utm_source=ig_embed";
-            } else {
+            }else {
                 link = link + "?utm_source=ig_embed";
             }
         }
@@ -662,7 +662,7 @@ public class Utility {
     private static boolean isDurationMatched(int actualDuration, int expectedDuration, boolean strictMatch) {
         if (strictMatch) {
             return (double) expectedDuration / actualDuration >= 0.98 && (double) expectedDuration / actualDuration <= 1.01; // 98% - 101% match
-        } else {
+        }else {
             return (double) expectedDuration / actualDuration >= 0.9 && (double) expectedDuration / actualDuration <= 1.1; // 90% - 110% match
         }
     }
@@ -692,16 +692,16 @@ public class Utility {
             HttpResponse<byte[]> response;
             try (HttpClient client = HttpClient.newHttpClient()) {
                 response = client.send(req, HttpResponse.BodyHandlers.ofByteArray());
-            } catch (UnknownHostException e) {
+            }catch (UnknownHostException e) {
                 msgBroker.msgDownloadError("You are not connected to the Internet!");
                 return null;
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgDownloadError("Failed to get search results! " + e.getMessage());
                 return null;
             }
             if (response.statusCode() != 200) {
                 msgBroker.msgDownloadError("Failed to get search results! " + response.statusCode() + " " + response.uri());
-            } else {
+            }else {
                 String responseContent = extractContent(response);
                 JsonObject jsonObject = JsonParser.parseString(responseContent).getAsJsonObject();
                 JsonArray collectionOfMusicShelfRenderers = jsonObject.get("contents").getAsJsonObject().get("tabbedSearchResultsRenderer").getAsJsonObject().get("tabs").getAsJsonArray().get(0).getAsJsonObject().get("tabRenderer").getAsJsonObject().get("content").getAsJsonObject().get("sectionListRenderer").getAsJsonObject().get("contents").getAsJsonArray();
@@ -729,15 +729,15 @@ public class Utility {
                                 try (BufferedReader in = new BufferedReader(new InputStreamReader(getVideoDurationProcess.getInputStream()))) {
                                     String duration = in.readLine();
                                     searchResult.put("duration", duration);
-                                } catch (IOException e) {
+                                }catch (IOException e) {
                                     msgBroker.msgDownloadError("Failed to get video duration! " + e.getMessage());
                                 }
-                            } catch (IOException e) {
+                            }catch (IOException e) {
                                 msgBroker.msgDownloadError("Failed to get video duration! " + e.getMessage());
                             }
                         }
                         searchResults.add(searchResult);
-                    } else if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicShelfRenderer")) {
+                    }else if (collectionOfMusicShelfRenderers.get(i).getAsJsonObject().has("musicShelfRenderer")) {
                         JsonObject musicShelfRenderer = collectionOfMusicShelfRenderers.get(i).getAsJsonObject().get("musicShelfRenderer").getAsJsonObject();
                         String category = musicShelfRenderer.get("title").getAsJsonObject().get("runs").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
                         if (!"Songs".equalsIgnoreCase(category)) {
@@ -762,7 +762,7 @@ public class Utility {
                                     continue;
                                 }
                                 searchResult.put("videoId", videoId.getAsString());
-                            } else {
+                            }else {
                                 searchResult.put("resultType", "video");
                             }
                             searchResults.add(searchResult);
@@ -771,7 +771,7 @@ public class Utility {
                 }
                 return searchResults;
             }
-        } catch (URISyntaxException | InterruptedException e) {
+        }catch (URISyntaxException | InterruptedException e) {
             msgBroker.msgDownloadError("Failed to get search results! " + e.getMessage());
         }
         return null;
@@ -788,7 +788,7 @@ public class Utility {
                 if ("MUSIC_PAGE_TYPE_ARTIST".equalsIgnoreCase(pageType)) {
                     artists.add(text);
                 }
-            } else {
+            }else {
                 duration.put("duration", text);
             }
         }
@@ -831,9 +831,9 @@ public class Utility {
             if (matcher2.find()) {
                 return matcher2.group(1); // return the visitor ID (aka "X-Goog-Visitor-Id")
             }
-        } catch (UnknownHostException e) {
+        }catch (UnknownHostException e) {
             msgBroker.msgDownloadError("You are not connected to the Internet!");
-        } catch (URISyntaxException | IOException | InterruptedException e) {
+        }catch (URISyntaxException | IOException | InterruptedException e) {
             msgBroker.msgDownloadError("Failed to get Google Visitor ID! " + e.getMessage());
         }
         return null;
@@ -844,7 +844,7 @@ public class Utility {
         if (!Files.exists(ffmpegPath)) {
             msgBroker.msgLogError("FFMPEG not found at " + ffmpegPath);
             AppSettings.setFfmpegWorking(false);
-        } else {
+        }else {
             msgBroker.msgLogInfo("FFMPEG found at " + ffmpegPath);
             ProcessBuilder getFfmpegVersion = new ProcessBuilder(ffmpegPath.toString(), "-version");
             try {
@@ -861,7 +861,7 @@ public class Utility {
                         }
                     }
                 }
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgLogError("Failed to get FFMPEG version : " + e.getMessage());
                 AppSettings.setFfmpegWorking(false);
             }
@@ -875,7 +875,7 @@ public class Utility {
             Process ytDlpVersionTask;
             try {
                 ytDlpVersionTask = getYtDlpVersion.start();
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgInitError("Failed to get yt-dlp version! " + e.getMessage());
                 return;
             }
@@ -884,7 +884,7 @@ public class Utility {
                 while ((line = reader.readLine()) != null) {
                     AppSettings.setYtDlpVersion(line);
                 }
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgInitError("Failed to get yt-dlp version! " + e.getMessage());
             }
         };
@@ -913,13 +913,13 @@ public class Utility {
                 }
                 JsonObject jsonObject = JsonParser.parseString(responseContent.toString()).getAsJsonObject();
                 AppSettings.setSpotifyAccessToken(jsonObject.get("access_token").getAsString());
-            } catch (UnknownHostException e) {
+            }catch (UnknownHostException e) {
                 msgBroker.msgLogError("You are not connected to the Internet!");
                 ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
                 executor.schedule(setSpotifyAccessToken(), 5, TimeUnit.SECONDS); // retry after 5 seconds
-            } catch (IOException e) {
+            }catch (IOException e) {
                 msgBroker.msgInitError("Failed to get Spotify access token! Failed to read response from Spotify API! " + e.getMessage());
-            } catch (URISyntaxException e) {
+            }catch (URISyntaxException e) {
                 msgBroker.msgInitError("Failed to get Spotify access token! Spotify API URI is incorrect! " + e.getMessage());
             }
         };
@@ -947,18 +947,18 @@ public class Utility {
                 if (outputFilePath.toFile().renameTo(renamedFile)) {
                     msgBroker.msgLogInfo("Converted to mp3 successfully!");
                     return "Converted to mp3 successfully!";
-                } else {
+                }else {
                     msgBroker.msgLogError("Failed to rename the converted file!");
                     return "Failed to rename the converted file!";
                 }
-            } else {
+            }else {
                 msgBroker.msgLogError("Failed to convert to mp3!");
                 return "Failed to convert to mp3!";
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             msgBroker.msgLogError("Failed to convert to mp3! IOException: " + e.getMessage());
             return "Failed to convert to mp3! IOException: " + e.getMessage();
-        } catch (InterruptedException e) {
+        }catch (InterruptedException e) {
             msgBroker.msgLogError("Failed to convert to mp3! User interrupted the process. " + e.getMessage());
             return "Failed to convert to mp3! User interrupted the process. " + e.getMessage();
         }
@@ -967,7 +967,7 @@ public class Utility {
     public static int parseStringToInt(String string, String errorMessage, MessageCategory messageCategory) {
         try {
             return Integer.parseInt(string);
-        } catch (NumberFormatException e) {
+        }catch (NumberFormatException e) {
             msgBroker.msgError(errorMessage + " " + e.getMessage(), messageCategory);
             return 0;
         }

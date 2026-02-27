@@ -22,7 +22,7 @@ public class MessageBroker extends utils.MessageBroker {
         UIController ui;
         if (!messageCategory.equals(LOG)) {
             ui = UIController.INSTANCE;
-        } else {
+        }else {
             ui = null;
         }
         Color color = switch (messageType) {
