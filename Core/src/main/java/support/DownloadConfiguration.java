@@ -272,7 +272,7 @@ public class DownloadConfiguration {
                 throw new RuntimeException(e);
             }
         }
-        jobs.setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
+        JobService.getJobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {
