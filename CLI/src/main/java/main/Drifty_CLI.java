@@ -6,9 +6,10 @@ import cli.updater.CLIUpdateExecutor;
 import cli.utils.MessageBroker;
 import cli.utils.ScannerFactory;
 import cli.utils.Utility;
+import data.JobService;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.LinkType;
 import properties.MessageType;
 import properties.OS;
@@ -59,7 +60,7 @@ public class Drifty_CLI {
         messageBroker.msgInitInfo("Initializing environment...");
         Environment.initializeEnvironment();
         messageBroker.msgInitInfo("Environment initialized successfully!");
-        jobHistory = AppSettings.GET.jobHistory();
+        jobHistory = JobService.getJobHistory();
         printBanner();
         if (args.length > 0) {
             link = null;
@@ -100,8 +101,8 @@ public class Drifty_CLI {
                         }
                     }
                     case EARLY_ACCESS_FLAG, EARLY_ACCESS_FLAG_SHORT -> {
-                        AppSettings.SET.earlyAccess(!AppSettings.GET.earlyAccess());
-                        messageBroker.msgInitInfo("Early access mode " + (AppSettings.GET.earlyAccess() ? "enabled!" : "disabled!"));
+                        AppSettings.setEarlyAccessEnabled(!AppSettings.isEarlyAccessEnabled());
+                        messageBroker.msgInitInfo("Early access mode " + (AppSettings.isEarlyAccessEnabled() ? "enabled!" : "disabled!"));
                         Environment.terminate(0);
                     }
                     case ADD_FLAG -> {
@@ -243,7 +244,7 @@ public class Drifty_CLI {
                     continue;
                 }
                 linkType = LinkType.getLinkType(link);
-                messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.GET.lastDownloadFolder() + ") : ", false);
+                messageBroker.msgInputInfo("Download directory (\".\" for default or \"L\" for " + AppSettings.getLastDownloadFolder() + ") : ", false);
                 downloadsFolder = SC.nextLine().split(" ")[0];
                 downloadsFolder = getProperDownloadsFolder(downloadsFolder);
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
@@ -285,7 +286,7 @@ public class Drifty_CLI {
 
     private static void handleUpdateAvailable(boolean askForInstallingUpdate) {
         messageBroker.msgUpdateInfo("Update available!");
-        messageBroker.msgUpdateInfo("Latest version : " + AppSettings.GET.latestDriftyVersionTag() + " (" + AppSettings.GET.newDriftyVersionName() + ")");
+        messageBroker.msgUpdateInfo("Latest version : " + AppSettings.getLatestDriftyVersionTag() + " (" + AppSettings.getNewDriftyVersionName() + ")");
         if (Environment.hasAdminPrivileges()) {
             boolean choice = true;
             if (askForInstallingUpdate) {
@@ -331,7 +332,7 @@ public class Drifty_CLI {
     }
 
     private static boolean isDriftyUpdateChecked() {
-        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastDriftyUpdateTime();
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.getLastDriftyUpdateTime();
         return timeSinceLastUpdate <= ONE_DAY;
     }
 
@@ -366,18 +367,18 @@ public class Drifty_CLI {
 
     private static void printVersion() {
         System.out.println("\033[1m" + APPLICATION_NAME + " " + VERSION_NUMBER + ANSI_RESET);
-        if (AppSettings.GET.ytDlpVersion().isEmpty()) {
+        if (AppSettings.getYtDlpVersion().isEmpty()) {
             Utility.setYtDlpVersion().run();
         }
-        System.out.println("yt-dlp version : " + AppSettings.GET.ytDlpVersion());
-        if (AppSettings.GET.ffmpegVersion().isEmpty()) {
+        System.out.println("yt-dlp version : " + AppSettings.getYtDlpVersion());
+        if (AppSettings.getFfmpegVersion().isEmpty()) {
             Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
             ffmpegVersion.start();
             while (ffmpegVersion.isAlive()) {
                 sleep(100);
             }
         }
-        System.out.println("FFMPEG version : " + AppSettings.GET.ffmpegVersion());
+        System.out.println("FFMPEG version : " + AppSettings.getFfmpegVersion());
     }
 
     private static void handleSpotifyPlaylist() {
@@ -391,7 +392,7 @@ public class Drifty_CLI {
         } catch (InterruptedException e) {
             messageBroker.msgLinkError("User interrupted the process of retrieving spotify playlist metadata! " + e.getMessage());
         }
-        ArrayList<HashMap<String, Object>> playlistData = config.getFileData();
+        List<HashMap<String, Object>> playlistData = config.getFileData();
         if (playlistData != null && !playlistData.isEmpty()) {
             int numberOfTracks = playlistData.size();
             for (HashMap<String, Object> songData : playlistData) {
@@ -474,12 +475,12 @@ public class Drifty_CLI {
                 if (".".equals(downloadsFolder)) {
                     downloadsFolder = Utility.getHomeDownloadFolder();
                 } else if ("L".equalsIgnoreCase(downloadsFolder)) {
-                    downloadsFolder = AppSettings.GET.lastDownloadFolder();
+                    downloadsFolder = AppSettings.getLastDownloadFolder();
                 } else if (downloadsFolder.isEmpty()) {
                     try {
                         downloadsFolder = data.get("directories").get(i);
                     } catch (Exception e) {
-                        downloadsFolder = AppSettings.GET.lastDownloadFolder();
+                        downloadsFolder = AppSettings.getLastDownloadFolder();
                     }
                 }
                 if (data.containsKey("fileNames") && !data.get("fileNames").get(i).isEmpty()) {
@@ -531,7 +532,7 @@ public class Drifty_CLI {
         if (downloadsFolder == null) {
             downloadsFolder = Utility.getHomeDownloadFolder();
         } else if ("L".equalsIgnoreCase(downloadsFolder)) {
-            downloadsFolder = AppSettings.GET.lastDownloadFolder();
+            downloadsFolder = AppSettings.getLastDownloadFolder();
         } else if (".".equals(downloadsFolder)) {
             downloadsFolder = Utility.getHomeDownloadFolder();
         } else {
@@ -551,7 +552,7 @@ public class Drifty_CLI {
                 messageBroker.msgDirError("Failed to create download folder! " + e.getMessage());
             }
         }
-        AppSettings.SET.lastFolder(downloadsFolder);
+        AppSettings.setLastDownloadFolder(downloadsFolder);
         return downloadsFolder;
     }
 
@@ -606,7 +607,7 @@ public class Drifty_CLI {
             messageBroker.msgLinkError("Failed to fetch file data!");
             return;
         }
-        ArrayList<HashMap<String, Object>> fileData = config.getFileData();
+        List<HashMap<String, Object>> fileData = config.getFileData();
         if (fileData != null && !fileData.isEmpty()) {
             for (HashMap<String, Object> data : fileData) {
                 link = data.get("link").toString();

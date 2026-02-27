@@ -1,7 +1,7 @@
 package updater;
 
 import init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.MessageCategory;
 import support.Constants;
 import utils.MessageBroker;
@@ -24,7 +24,7 @@ public class UpdateChecker {
             return false;
         }
         String latestVersion;
-        if (AppSettings.GET.earlyAccess()) {
+        if (AppSettings.isEarlyAccessEnabled()) {
             latestVersion = getLatestPreReleaseVersion();
         } else {
             latestVersion = getLatestStableVersion();
@@ -34,7 +34,7 @@ public class UpdateChecker {
         if (latestVersion.isEmpty()) {
             return false;
         }
-        AppSettings.SET.lastDriftyUpdateTime(System.currentTimeMillis());
+        AppSettings.setLastDriftyUpdateTime(System.currentTimeMillis());
         return compareVersions(CURRENT_VERSION, latestVersion);
     }
 
@@ -68,8 +68,8 @@ public class UpdateChecker {
         try (HttpClient client = HttpClient.newHttpClient()) {
             String responseBody = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             String tag = responseBody.split("\"tag_name\":\"")[1].split("\"")[0];
-            AppSettings.SET.newDriftyVersionName(responseBody.split("\"name\":\"")[1].split("\"")[0]);
-            AppSettings.SET.latestDriftyVersionTag(tag);
+            AppSettings.setNewDriftyVersionName(responseBody.split("\"name\":\"")[1].split("\"")[0]);
+            AppSettings.setLatestDriftyVersionTag(tag);
             return tag.replace("v", "");
         } catch (IOException e) {
             if (e.getMessage() == null) {
@@ -117,7 +117,7 @@ public class UpdateChecker {
             // So, the currentVersion is less than latestVersion as latestVersion is a stable version
             return true;
         } else if (currentVersionParts.length == 5 && latestVersionParts.length == 5) {
-            if (AppSettings.GET.earlyAccess()) { // If the user has enabled early access, then pre-release versions are considered
+            if (AppSettings.isEarlyAccessEnabled()) { // If the user has enabled early access, then pre-release versions are considered
                 // Both versions are pre-release versions
                 int comparePreReleaseType = currentVersionParts[3].compareTo(latestVersionParts[3]); // alpha < beta < rc (compared lexicographically)
                 // Example: currentVersion = v2.1.0-beta.1 and latestVersion = v2.1.0-alpha.1

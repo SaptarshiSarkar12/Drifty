@@ -1,8 +1,9 @@
 package ui;
 
 import backend.FileDownloader;
+import data.JobService;
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.support.Constants;
 import gui.support.Folders;
 import gui.support.GUIDownloadConfiguration;
@@ -70,6 +71,7 @@ public final class UIController {
     private String filename;
     private Folders folders;
     private Job selectedJob;
+    private Jobs jobs;
 
     public static Scene getInfoScene() {
         return infoScene;
@@ -83,7 +85,8 @@ public final class UIController {
     Single instance model-only constructor
     */
     private UIController() {
-        folders = AppSettings.GET.folders();
+        folders = new Folders();
+        jobs = JobService.getJobs();
     }
 
     /*
@@ -91,7 +94,7 @@ public final class UIController {
      */
     private void start(MainGridPane pane) {
         new Thread(() -> {
-            if (AppSettings.GET.driftyUpdateAvailable()) {
+            if (AppSettings.isDriftyUpdateAvailable()) {
                 M.msgLogInfo("A new version of Drifty is available!");
                 showUpdateDialog();
             }
@@ -105,12 +108,12 @@ public final class UIController {
 
     public void showUpdateDialog() {
         if (OS.isMac() || Environment.isAdministrator()) { // If the user is running as an administrator, they can update the application. Otherwise, they will be prompted to run as an administrator. For Mac, the user will always be prompted to update the application as a `.pkg` file will just be opened to install the update (the user has to manually install the update).
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.getNewDriftyVersionName() + nl.repeat(2) + "Do you want to download and install the update?", false, false);
             if (ask.getResponse().isYes()) {
                 downloadUpdate();
             }
         } else {
-            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.GET.newDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
+            ConfirmationDialog ask = new ConfirmationDialog("Update Available", "A new version of Drifty is available!" + nl.repeat(2) + AppSettings.getNewDriftyVersionName() + nl.repeat(2) + "Unfortunately, you do not have the necessary permissions to update the application." + nl.repeat(2) + "Please run Drifty as an administrator to update the application.", true, false);
             ask.getResponse();
         }
     }
@@ -118,6 +121,7 @@ public final class UIController {
     private void downloadUpdate() {
         String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
+            getJobs();
             // "Current executable" means the executable currently running i.e., the one that is outdated.
             File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
@@ -129,9 +133,9 @@ public final class UIController {
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
             // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
-            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = jobs.jobList();
             // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
-            getJobs().clear();
+            jobs.clear();
 
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), Constants.updateURL.toString());
@@ -142,9 +146,9 @@ public final class UIController {
                 sleep(500);
             }
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
-            AppSettings.SET.lastFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
+            AppSettings.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
-            getJobs().setList(currentDownloadQueue);
+            jobs.setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
@@ -175,7 +179,7 @@ public final class UIController {
         form.tfLink.disableProperty().bind(disableLinkInput);
         form.listView.setContextMenu(getListMenu());
 
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             form.tfDir.setStyle("-fx-text-fill: White;");
             form.tfFilename.setStyle("-fx-text-fill: White;");
             form.tfLink.setStyle("-fx-text-fill: White;");
@@ -185,7 +189,7 @@ public final class UIController {
         Tooltip.install(form.tfLink, new Tooltip("URL must be a valid URL without spaces." + nl + " Add multiple URLs by pasting them in from the clipboard and separating each URL with a space."));
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
-        form.cbAutoPaste.setSelected(AppSettings.GET.mainAutoPaste());
+        form.cbAutoPaste.setSelected(AppSettings.isGuiAutoPasteEnabled());
         form.tfDir.textProperty().addListener(((_, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
@@ -427,10 +431,10 @@ public final class UIController {
                     }
                 }
             }));
-            if (getJobs().notNull() && !getJobs().isEmpty()) {
-                final int totalFiles = getJobs().jobList().size();
+            if (jobs.notNull() && !jobs.isEmpty()) {
+                final int totalFiles = jobs.jobList().size();
                 int fileCount = 0;
-                LinkedList<Job> tempJobList = new LinkedList<>(getJobs().jobList());
+                LinkedList<Job> tempJobList = new LinkedList<>(jobs.jobList());
                 for (Job job : tempJobList) {
                     fileCount++;
                     M.msgBatchInfo("Processing file " + fileCount + " of " + totalFiles + ": " + job);
@@ -458,7 +462,7 @@ public final class UIController {
     }
 
     private String fileExists(String filename) {
-        for (String folder : AppSettings.GET.folders().getFolders()) {
+        for (String folder : folders.getFolders()) {
             CheckFile checkFile = new CheckFile(folder, filename);
             Thread thread = new Thread(checkFile);
             thread.start();
@@ -473,7 +477,7 @@ public final class UIController {
     }
 
     private boolean linkInJobList(String link) {
-        for (Job job : getJobs().jobList()) {
+        for (Job job : jobs.jobList()) {
             if (job.getSourceLink().equals(link)) {
                 return true;
             }
@@ -483,14 +487,13 @@ public final class UIController {
 
     private void addJob(Job newJob) {
         Job oldJob = null;
-        for (Job job : getJobs().jobList()) {
+        for (Job job : jobs.jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
                 break;
             }
         }
         if (oldJob != null) {
-            getJobs().remove(oldJob);
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
                 dbConnection.updateFile(
@@ -499,8 +502,10 @@ public final class UIController {
                         newJob.getDir()
                 );
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                M.msgLogError("Failed to update job in database: " + e.getMessage());
+                return;
             }
+            jobs.remove(oldJob);
         } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
@@ -512,16 +517,16 @@ public final class UIController {
                         currentSessionId
                 );
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                M.msgLogError("Failed to add job to database: " + e.getMessage());
+                return;
             }
             System.out.println("Job Added: " + newJob.getFilename());
         }
-        getJobs().add(newJob);
+        jobs.add(newJob);
         commitJobListToListView();
     }
 
     private void removeJobFromList(Job oldJob) {
-        getJobs().remove(oldJob);
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteQueuedFile(
@@ -530,8 +535,10 @@ public final class UIController {
                     oldJob.getFilename()
             );
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            M.msgLogError("Failed to remove job from database: " + e.getMessage());
+            return;
         }
+        jobs.remove(oldJob);
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
@@ -575,13 +582,12 @@ public final class UIController {
             }
         });
         miClear.setOnAction(_ -> {
-            getJobs().clear();
+            jobs.clear();
             commitJobListToListView();
             clearLink();
             clearFilename();
             UPDATING_BATCH.setValue(false);
             form.listView.getItems().clear();
-            form.listView.getItems();
             M.msgLinkInfo("");
             M.msgFilenameInfo("");
             M.msgDirInfo("");
@@ -591,7 +597,6 @@ public final class UIController {
     }
 
     private void setDirContextMenu() {
-        Folders folders = AppSettings.GET.folders();
         ContextMenu cm = new ContextMenu();
         for (String folder : folders.getFolders()) {
             MenuItem mi = new MenuItem(folder);
@@ -614,11 +619,11 @@ public final class UIController {
     }
 
     public static void resetDownloadFoldersToActiveList() {
-        INSTANCE.folders = AppSettings.GET.folders();
+        INSTANCE.folders = new Folders();
     }
 
     public static boolean isAutoPaste() {
-        return form.cbAutoPaste.isSelected() || AppSettings.GET.alwaysAutoPaste();
+        return form.cbAutoPaste.isSelected();
     }
 
     public static void clearJobHistory() {
@@ -780,20 +785,20 @@ public final class UIController {
 
     private void commitJobListToListView() {
         Platform.runLater(() -> {
-            if (getJobs().notNull()) {
-                if (getJobs().isEmpty()) {
+            if (jobs.notNull()) {
+                if (jobs.isEmpty()) {
                     form.listView.getItems().clear();
                 } else {
                     // Assign the jobList to the ListView
-                    form.listView.getItems().setAll(getJobs().jobList());
+                    form.listView.getItems().setAll(jobs.jobList());
                 }
             }
         });
     }
 
     private void help() {
-        Color textColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.WHITE : Color.BLACK;
-        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
+        Color textColor = "Dark".equals(AppSettings.getGuiTheme()) ? Color.WHITE : Color.BLACK;
+        Color headingsColor = "Dark".equals(AppSettings.getGuiTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
         double h = 20;
         double n = 16;
         INFO_TF.getChildren().add(text("Link:\n", true, headingsColor, h));
@@ -839,7 +844,7 @@ public final class UIController {
         scrollPane.setFitToWidth(true);
         infoScene = Constants.getScene(scrollPane);
         infoScene.setFill(Color.TRANSPARENT);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Theme.applyTheme("Dark", infoScene);
         }
         helpStage.setScene(infoScene);
@@ -879,8 +884,8 @@ public final class UIController {
 
     public static void getDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        String lastFolder = AppSettings.GET.folders().getDownloadFolder();
-        String initFolder = lastFolder.isEmpty() ? Utility.getHomeDownloadFolder() : lastFolder;
+        String lastFolder = AppSettings.getLastDownloadFolder();
+        String initFolder = (lastFolder == null || lastFolder.isEmpty()) ? Utility.getHomeDownloadFolder() : lastFolder;
         directoryChooser.setInitialDirectory(new File(initFolder));
         File directory = directoryChooser.showDialog(null);
         if (directory != null) {
@@ -888,12 +893,12 @@ public final class UIController {
         }
     }
 
-    private Jobs getJobs() {
-        return AppSettings.GET.jobs();
+    private void getJobs() {
+        jobs = JobService.getJobs();
     }
 
     private JobHistory getHistory() {
-        return AppSettings.GET.jobHistory();
+        return JobService.getJobHistory();
     }
 
     private void selectJob(Job job) {

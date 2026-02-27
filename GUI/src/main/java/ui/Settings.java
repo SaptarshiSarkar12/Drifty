@@ -1,6 +1,6 @@
 package ui;
 
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.init.Environment;
 import gui.support.Constants;
 import javafx.geometry.HPos;
@@ -62,7 +62,7 @@ public class Settings {
         configureLayout();
         settingsScene = Constants.getScene(root);
         Constants.addCSS(settingsScene, Constants.LIGHT_THEME_CSS);
-        setInitialTheme(AppSettings.GET.mainTheme());
+        setInitialTheme(AppSettings.getGuiTheme());
     }
 
     private void configureLayout() {
@@ -92,7 +92,7 @@ public class Settings {
         } catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error displaying Settings window: " + e.getMessage());
             try {
-                new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+                new ConfirmationDialog("Failed to open Settings", "An error occurred while opening Settings.\n\n" + e.getMessage(), true, false).getResponse();
             } catch (Exception ignored) {
             }
         }
@@ -144,22 +144,22 @@ public class Settings {
     private void setupThemeChoice() {
         themeChoiceBox = new ChoiceBox<>();
         themeChoiceBox.getItems().addAll("Dark Theme", "Light Theme");
-        themeChoiceBox.setValue("Dark".equals(AppSettings.GET.mainTheme()) ? "Dark Theme" : "Light Theme");
+        themeChoiceBox.setValue("Dark".equals(AppSettings.getGuiTheme()) ? "Dark Theme" : "Light Theme");
         themeChoiceBox.setOnAction(e -> Theme.applyTheme("Dark Theme".equals(themeChoiceBox.getValue()) ? "Dark" : "Light", settingsScene, Drifty_GUI.getScene(), About.getScene(), UIController.getInfoScene(), ManageFolders.scene, ConfirmationDialog.getScene()));
     }
 
     private void createAutoPasteCheck() {
         autoPasteCheckbox = new CheckBox();
-        autoPasteCheckbox.setSelected(AppSettings.GET.mainAutoPaste());
+        autoPasteCheckbox.setSelected(AppSettings.isGuiAutoPasteEnabled());
         autoPasteCheckbox.setMaxWidth(5.0);
-        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.mainAutoPaste(newValue)));
+        autoPasteCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.setGuiAutoPasteEnabled(newValue)));
     }
 
     private void createEarlyAccessCheck() {
         earlyAccessCheckbox = new CheckBox();
-        earlyAccessCheckbox.setSelected(AppSettings.GET.earlyAccess());
+        earlyAccessCheckbox.setSelected(AppSettings.isEarlyAccessEnabled());
         earlyAccessCheckbox.setMaxWidth(5.0);
-        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.SET.earlyAccess(newValue)));
+        earlyAccessCheckbox.selectedProperty().addListener(((observable, oldValue, newValue) -> AppSettings.setEarlyAccessEnabled(newValue)));
     }
 
     private void createLabels() {
@@ -179,7 +179,7 @@ public class Settings {
 
     private void createDirectoryButton() {
         selectDirectoryButton = new Button("Select Directory");
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED);
             selectDirectoryButton.setOnMousePressed(e -> selectDirectoryButton.setStyle(Constants.BUTTON_PRESSED));
             selectDirectoryButton.setOnMouseReleased(e -> selectDirectoryButton.setStyle(Constants.BUTTON_RELEASED));
@@ -192,15 +192,20 @@ public class Settings {
     private void handleDirectorySelection() {
         try {
             DirectoryChooser chooser = new DirectoryChooser();
-            chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            String userHome = System.getProperty("user.home");
+            chooser.setInitialDirectory(new File(userHome));
+            String defaultPath = AppSettings.getLastDownloadFolder();
+            if (defaultPath == null) {
+                defaultPath = userHome;
+            }
             File selectedDirectory = chooser.showDialog(this.stage);
-            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : AppSettings.GET.lastDownloadFolder();
+            String directoryPath = selectedDirectory != null ? selectedDirectory.getAbsolutePath() : defaultPath;
             UIController.form.tfDir.setText(directoryPath);
             tfCurrentDirectory.setText(directoryPath);
         } catch (Exception e) {
             Environment.getMessageBroker().msgLogError("Error selecting directory: " + e.getMessage());
             try {
-                new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + String.valueOf(e.getMessage()), true, false).getResponse();
+                new ConfirmationDialog("Failed to select directory", "An error occurred while opening the Directory Chooser.\n\n" + e.getMessage(), true, false).getResponse();
             } catch (Exception ignored) {
             }
         }

@@ -1,7 +1,7 @@
 package ui;
 
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -163,8 +163,9 @@ public class ConfirmationDialog {
     private void showScene() {
         stage = Constants.getStage(windowTitle, false);
         scene = Constants.getScene(vbox);
-        Theme.applyTheme(AppSettings.GET.mainTheme(), scene);
-        boolean isDark = "Dark".equals(AppSettings.GET.mainTheme());
+        String theme = AppSettings.getGuiTheme();
+        Theme.applyTheme(theme, scene);
+        boolean isDark = "Dark".equals(theme);
         Theme.changeButtonStyle(isDark, btnYes);
         Theme.changeButtonStyle(isDark, btnNo);
         Theme.changeButtonStyle(isDark, btnOk);
