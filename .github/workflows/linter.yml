@@ -69,7 +69,7 @@ jobs:
         run: sudo chmod 777 super-linter.log
       - name: Upload Lint Result
         id: upload-lint-result
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: linter-result
           path: super-linter.log
