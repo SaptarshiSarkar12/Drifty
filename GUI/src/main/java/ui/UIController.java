@@ -71,7 +71,6 @@ public final class UIController {
     private String filename;
     private Folders folders;
     private Job selectedJob;
-    private Jobs jobs;
 
     public static Scene getInfoScene() {
         return infoScene;
@@ -86,7 +85,6 @@ public final class UIController {
     */
     private UIController() {
         folders = new Folders();
-        jobs = JobService.getJobs();
     }
 
     /*
@@ -121,7 +119,6 @@ public final class UIController {
     private void downloadUpdate() {
         String previouslySelectedDir = getDir(); // Save the download folder selected before the update was initiated.
         try {
-            getJobs();
             // "Current executable" means the executable currently running i.e., the one that is outdated.
             File currentExecutableFile = new File(Drifty_GUI.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             // "Latest executable" means the executable that is to be downloaded and installed i.e., the latest version.
@@ -133,9 +130,9 @@ public final class UIController {
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
             // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
-            ConcurrentLinkedDeque<Job> currentDownloadQueue = jobs.jobList();
+            ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
             // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
-            jobs.clear();
+            getJobs().clear();
 
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), Constants.updateURL.toString());
@@ -148,7 +145,7 @@ public final class UIController {
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             AppSettings.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             // Reset the download queue to the previous state.
-            jobs.setList(currentDownloadQueue);
+            getJobs().setList(currentDownloadQueue);
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
@@ -431,6 +428,7 @@ public final class UIController {
                     }
                 }
             }));
+            Jobs jobs = getJobs();
             if (jobs.notNull() && !jobs.isEmpty()) {
                 final int totalFiles = jobs.jobList().size();
                 int fileCount = 0;
@@ -477,7 +475,7 @@ public final class UIController {
     }
 
     private boolean linkInJobList(String link) {
-        for (Job job : jobs.jobList()) {
+        for (Job job : getJobs().jobList()) {
             if (job.getSourceLink().equals(link)) {
                 return true;
             }
@@ -487,7 +485,7 @@ public final class UIController {
 
     private void addJob(Job newJob) {
         Job oldJob = null;
-        for (Job job : jobs.jobList()) {
+        for (Job job : getJobs().jobList()) {
             if (job.matchesLink(newJob)) {
                 oldJob = job;
                 break;
@@ -505,7 +503,7 @@ public final class UIController {
                 M.msgLogError("Failed to update job in database: " + e.getMessage());
                 return;
             }
-            jobs.remove(oldJob);
+            getJobs().remove(oldJob);
         } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
@@ -522,7 +520,7 @@ public final class UIController {
             }
             System.out.println("Job Added: " + newJob.getFilename());
         }
-        jobs.add(newJob);
+        getJobs().add(newJob);
         commitJobListToListView();
     }
 
@@ -538,7 +536,7 @@ public final class UIController {
             M.msgLogError("Failed to remove job from database: " + e.getMessage());
             return;
         }
-        jobs.remove(oldJob);
+        getJobs().remove(oldJob);
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
@@ -582,7 +580,7 @@ public final class UIController {
             }
         });
         miClear.setOnAction(_ -> {
-            jobs.clear();
+            getJobs().clear();
             commitJobListToListView();
             clearLink();
             clearFilename();
@@ -785,6 +783,7 @@ public final class UIController {
 
     private void commitJobListToListView() {
         Platform.runLater(() -> {
+            Jobs jobs = getJobs();
             if (jobs.notNull()) {
                 if (jobs.isEmpty()) {
                     form.listView.getItems().clear();
@@ -893,8 +892,8 @@ public final class UIController {
         }
     }
 
-    private void getJobs() {
-        jobs = JobService.getJobs();
+    private Jobs getJobs() {
+        return JobService.getJobs();
     }
 
     private JobHistory getHistory() {
