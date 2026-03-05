@@ -124,7 +124,7 @@ jobs:
           mv "GUI/target/gluonfx/x86_64-linux/Drifty_GUI" -t build/GUI
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
