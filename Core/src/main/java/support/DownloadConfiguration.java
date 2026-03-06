@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import data.JobService;
 import init.Environment;
-import preferences.AppSettings;
 import properties.LinkType;
 import properties.Mode;
 import utils.DbConnection;
@@ -22,7 +22,7 @@ import static utils.Utility.randomString;
 
 public class DownloadConfiguration {
     private final String directory;
-    private final ArrayList<HashMap<String, Object>> fileData;
+    private final List<HashMap<String, Object>> fileData;
     private final String filename;
     private final MessageBroker msgBroker = Environment.getMessageBroker();
     private LinkType linkType;
@@ -36,7 +36,7 @@ public class DownloadConfiguration {
         this.directory = directory;
         this.filename = filename;
         this.linkType = LinkType.getLinkType(link);
-        this.fileData = new ArrayList<>();
+        this.fileData = new CopyOnWriteArrayList<>();
     }
 
     public void sanitizeLink() {
@@ -236,8 +236,9 @@ public class DownloadConfiguration {
     }
 
     public void updateJobList() {
+        Jobs jobs = JobService.getJobs();
         Map<Integer, Job> distinctJobList = new ConcurrentHashMap<>();
-        for (Job job : AppSettings.GET.jobs().jobList()) {
+        for (Job job : jobs.jobList()) {
             distinctJobList.put(job.hashCode(), job);
         }
         if (fileData.isEmpty()) {
@@ -250,7 +251,8 @@ public class DownloadConfiguration {
             linkType = LinkType.getLinkType(link);
             Job job;
             if (linkType.equals(LinkType.SPOTIFY)) {
-                String downloadLink = data.get("downloadLink").toString();
+                Object downloadLinkObj = data.get("downloadLink");
+                String downloadLink = downloadLinkObj != null ? downloadLinkObj.toString() : null;
                 job = new Job(link, directory, filename, downloadLink);
             } else {
                 job = new Job(link, directory, filename, null);
@@ -266,10 +268,11 @@ public class DownloadConfiguration {
                         currentSessionId
                 );
             } catch (SQLException e) {
+                msgBroker.msgLogError("Failed to record job to database during playlist processing: " + e.getMessage());
                 throw new RuntimeException(e);
             }
         }
-        AppSettings.GET.jobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
+        JobService.getJobs().setList(new ConcurrentLinkedDeque<>(distinctJobList.values()));
     }
 
     public String getLink() {
@@ -284,7 +287,7 @@ public class DownloadConfiguration {
         return filesProcessed;
     }
 
-    public ArrayList<HashMap<String, Object>> getFileData() {
+    public List<HashMap<String, Object>> getFileData() {
         return fileData;
     }
 
