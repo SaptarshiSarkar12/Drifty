@@ -53,6 +53,10 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    groups:
+      docker-gh-actions-dependencies:
+        patterns:
+          - "docker*"
     commit-message:
       prefix: "chore(ci)"
     labels:
