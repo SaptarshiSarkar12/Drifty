@@ -188,7 +188,7 @@ jobs:
       run: |
         tar -cvf ${{ matrix.os }}-${{ matrix.mode }}.tar build/${{ matrix.mode }}
     - name: Push generated artifacts for ${{ matrix.os }} for ${{ matrix.mode }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.os }}-${{ matrix.mode }}-Build-Files
         path: ${{ matrix.os }}-${{ matrix.mode }}.tar
@@ -239,7 +239,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Download Build artifacts
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
     - name: Make OS specific build directories
       run: |
         mkdir linux
