@@ -131,8 +131,10 @@ public final class UIController {
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
             // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
             ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
-            // Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
+            /* Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
             getJobs().clear();
+            no effect. Clears only a newly created queue
+             */
 
             // Download the latest executable
             Job updateJob = new Job(Constants.updateURL.toString(), latestExecutableFile.getParent(), latestExecutableFile.getName(), Constants.updateURL.toString());
@@ -144,8 +146,10 @@ public final class UIController {
             }
             setDir(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
             AppSettings.setLastDownloadFolder(previouslySelectedDir); // Reset the download folder to the one that was selected before the update was initiated.
-            // Reset the download queue to the previous state.
+            /* Reset the download queue to the previous state.
             getJobs().setList(currentDownloadQueue);
+            no effect. Manipulation of a newly created object that is dropped immediately
+             */
             if (latestExecutableFile.exists() && latestExecutableFile.isFile() && latestExecutableFile.length() > 0) {
                 // If the latest executable was successfully downloaded, set the executable permission and execute the update.
                 GUIUpdateExecutor updateExecutor = new GUIUpdateExecutor(currentExecutableFile, latestExecutableFile);
@@ -445,9 +449,10 @@ public final class UIController {
                         int exitCode = downloadFile.getExitCode();
                         removeJobFromList(job);
                         setDownloadInfoColor(GREEN);
+                        /* no effect, list with added job is dropped immediately
                         if (exitCode == 0) { // Success
                             getHistory().addJob(job, false);
-                        }
+                        }*/
                     }
                 }
             }
@@ -503,7 +508,9 @@ public final class UIController {
                 M.msgLogError("Failed to update job in database: " + e.getMessage());
                 return;
             }
+            /* no effect. Manipulates a newly created list that is dropped immediately
             getJobs().remove(oldJob);
+             */
         } else {
             try {
                 DbConnection dbConnection = DbConnection.getInstance();
@@ -520,7 +527,9 @@ public final class UIController {
             }
             System.out.println("Job Added: " + newJob.getFilename());
         }
-        getJobs().add(newJob);
+        /* getJobs().add(newJob);
+        no effect. Manipulates a newly created list that is dropped immediately
+         */
         commitJobListToListView();
     }
 
@@ -536,7 +545,9 @@ public final class UIController {
             M.msgLogError("Failed to remove job from database: " + e.getMessage());
             return;
         }
+        /* no effect. Manipulates a newly created list that is dropped immediately
         getJobs().remove(oldJob);
+         */
         commitJobListToListView();
         M.msgBatchInfo("Job Removed: " + oldJob.getSourceLink());
     }
@@ -580,7 +591,9 @@ public final class UIController {
             }
         });
         miClear.setOnAction(_ -> {
+            /* no effect. Manipulates a newly created list that is dropped immediately
             getJobs().clear();
+             */
             commitJobListToListView();
             clearLink();
             clearFilename();
@@ -628,7 +641,9 @@ public final class UIController {
         /*
         Called from the Edit menu, this wipes out the job history which is stored in the users file system
          */
+        /* no effect, cleared history list is dropped immediately
         INSTANCE.getHistory().clear();
+         */
         try {
             DbConnection dbConnection = DbConnection.getInstance();
             dbConnection.deleteFilesHistory();
