@@ -129,9 +129,9 @@ public final class UIController {
             // For other OS, the latest executable name along with the extension is the same as that of the current executable.
             String latestExecutableName = OS.isMac() ? "Drifty_GUI.pkg" : currentExecutableFile.getName();
             File latestExecutableFile = Paths.get(tmpFolder.getPath()).resolve(latestExecutableName).toFile();
-            // Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
+            /* Get the download queue already present in the application before adding the latest executable to it. This is done to ensure that the latest executable is downloaded first and alone.
             ConcurrentLinkedDeque<Job> currentDownloadQueue = getJobs().jobList();
-            /* Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
+            Clear the download queue to download only the latest executable to prevent any other downloads from interfering with the update process.
             getJobs().clear();
             no effect. Clears only a newly created queue
              */
@@ -446,7 +446,7 @@ public final class UIController {
                         while (downloadFile.notDone()) {
                             sleep(500);
                         }
-                        int exitCode = downloadFile.getExitCode();
+                        // int exitCode = downloadFile.getExitCode();
                         removeJobFromList(job);
                         setDownloadInfoColor(GREEN);
                         /* no effect, list with added job is dropped immediately
