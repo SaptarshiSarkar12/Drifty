@@ -1,7 +1,7 @@
 package gui.support;
 
 import gui.init.Environment;
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.utils.UIComponentBuilder;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -17,15 +17,15 @@ import java.util.Objects;
 public class Constants extends support.Constants {
     public static final UIComponentBuilder UI_COMPONENT_BUILDER_INSTANCE = UIComponentBuilder.getInstance();
     public static final String BUTTON_RELEASED =
-            "-fx-text-fill: white;" +
-                    "-fx-font-weight: Bold;" +
-                    "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);" +
-                    "-fx-border-color: white;";
+            "-fx-text-fill: white;"
+                    + "-fx-font-weight: Bold;"
+                    + "-fx-background-color: linear-gradient(rgb(0, 53, 105) 20%, rgb(26, 21, 129) 65%, rgb(0, 0, 65) 100%);"
+                    + "-fx-border-color: white;";
     public static final String BUTTON_PRESSED =
-            "-fx-text-fill: white;" +
-                    "-fx-font-weight: Bold;" +
-                    " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n" +
-                    "-fx-border-color: white;";
+            "-fx-text-fill: white;"
+                    + "-fx-font-weight: Bold;"
+                    + " -fx-background-color: linear-gradient(rgb(11, 118, 220) 20%, rgb(33, 31, 131) 65%, rgb(2, 2, 168) 100%);\n"
+                    + "-fx-border-color: white;";
     public static final String GUI_APPLICATION_TERMINATED = "Drifty GUI (Graphical User Interface) Application Terminated!";
     public static final String TRYING_TO_DOWNLOAD_F = "Trying to download \"%s\" ...";
     public static final String WRITE_ACCESS_DENIED_F = "Write Access To \"%s\" DENIED!";
@@ -35,7 +35,7 @@ public class Constants extends support.Constants {
     public static final double SCREEN_HEIGHT = SCREEN_SIZE.getHeight();
 
     // Graphics Files
-    public static final URL DRIFTY_MAIN_PNG = "Dark".equals(AppSettings.GET.mainTheme()) ? Constants.class.getResource("/Backgrounds/DriftyMainDark.png") : Constants.class.getResource("/Backgrounds/DriftyMainLight.png");
+    public static final URL DRIFTY_MAIN_PNG = "Dark".equals(AppSettings.getGuiTheme()) ? Constants.class.getResource("/Backgrounds/DriftyMainDark.png") : Constants.class.getResource("/Backgrounds/DriftyMainLight.png");
     public static final URL SAVE_UP_LIGHT_PNG = Constants.class.getResource("/Buttons/Save/SaveUpLight.png");
     public static final URL SAVE_UP_DARK_PNG = Constants.class.getResource("/Buttons/Save/SaveUpDark.png");
     public static final URL SAVE_DOWN_LIGHT_PNG = Constants.class.getResource("/Buttons/Save/SaveDownLight.png");
@@ -49,7 +49,7 @@ public class Constants extends support.Constants {
     public static final URL DIRECTORY_PNG = Constants.class.getResource("/Labels/Directory.png");
     public static final URL FILENAME_PNG = Constants.class.getResource("/Labels/Filename.png");
     public static final URL DRIFTY_ICON = Constants.class.getResource("/Icons/AppIcon.png");
-    public static final URL SPLASH = "Dark".equals(AppSettings.GET.mainTheme()) ? Constants.class.getResource("/SplashDark.png") : Constants.class.getResource("/SplashLight.png");
+    public static final URL SPLASH = "Dark".equals(AppSettings.getGuiTheme()) ? Constants.class.getResource("/SplashDark.png") : Constants.class.getResource("/SplashLight.png");
 
     // Stylesheets
     public static final URL LIGHT_THEME_CSS = Constants.class.getResource("/CSS/LightTheme.css");

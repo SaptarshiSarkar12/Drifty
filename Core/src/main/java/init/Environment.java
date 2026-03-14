@@ -1,6 +1,6 @@
 package init;
 
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.OS;
 import properties.Program;
 import updater.UpdateChecker;
@@ -37,11 +37,10 @@ public class Environment {
     Finally, it updates yt-dlp if it has not been updated in the last 24 hours.
     */
     public static void initializeEnvironment() {
-        msgBroker = Environment.getMessageBroker();
         msgBroker.msgLogInfo("OS : " + OS.getOSName());
         isAdministrator = hasAdminPrivileges();
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
-        new Thread(() -> AppSettings.SET.driftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
+        new Thread(() -> AppSettings.setDriftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String ffmpegExecName = "";
@@ -51,7 +50,7 @@ public class Environment {
                 ffmpegExecName = "ffmpeg_macos-arm64";
             } else {
                 msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
-                AppSettings.SET.isFfmpegWorking(false);
+                AppSettings.setFfmpegWorking(false);
             }
         } else {
             ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
@@ -68,7 +67,7 @@ public class Environment {
                 checkAndUpdateYtDlp();
             }
         } catch (IOException e) {
-            if (AppSettings.GET.isFfmpegWorking()) {
+            if (AppSettings.isFfmpegWorking()) {
                 msgBroker.msgInitError("Failed to copy yt-dlp and ffmpeg executables! " + e.getMessage());
             } else {
                 msgBroker.msgInitError("Failed to copy yt-dlp executable! " + e.getMessage());
@@ -105,7 +104,7 @@ public class Environment {
             msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
         }
 
-        AppSettings.CLEAR.spotifyAccessToken();
+        AppSettings.setSpotifyAccessToken("");
         System.exit(exitCode);
     }
 
@@ -114,7 +113,7 @@ public class Environment {
     }
 
     public static void checkAndUpdateYtDlp() {
-        AppSettings.SET.ytDlpUpdating(true);
+        AppSettings.setYtDlpUpdating(true);
         msgBroker.msgInitInfo("Checking for component (yt-dlp) update ...");
         String command = Program.get(YT_DLP);
         ProcessBuilder ytDlpUpdateProcess = new ProcessBuilder(command, "-U");
@@ -122,20 +121,20 @@ public class Environment {
         try {
             Process ytDlpUpdateTask = ytDlpUpdateProcess.start();
             ytDlpUpdateTask.waitFor();
-            AppSettings.SET.lastYtDlpUpdateTime(System.currentTimeMillis());
+            AppSettings.setLastYtDlpUpdateTime(System.currentTimeMillis());
         } catch (IOException e) {
             msgBroker.msgInitError("Failed to update yt-dlp! " + e.getMessage());
         } catch (InterruptedException e) {
             msgBroker.msgInitError("Component (yt-dlp) update process was interrupted! " + e.getMessage());
         } finally {
-            AppSettings.SET.ytDlpUpdating(false);
+            AppSettings.setYtDlpUpdating(false);
             Utility.setYtDlpVersion().run();
         }
     }
 
     public static boolean isYtDLPUpdated() {
         final long oneDay = 1000 * 60 * 60 * 24; // Value of one day (24 Hours) in milliseconds
-        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.GET.lastYtDlpUpdateTime();
+        long timeSinceLastUpdate = System.currentTimeMillis() - AppSettings.getLastYtDlpUpdateTime();
         return timeSinceLastUpdate <= oneDay;
     }
 
