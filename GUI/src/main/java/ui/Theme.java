@@ -1,6 +1,6 @@
 package ui;
 
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.support.Constants;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 public class Theme {
     public static void applyTheme(String theme, Scene... scenes) {
         boolean isDark = "Dark".equals(theme);
-        AppSettings.SET.mainTheme(theme);
+        AppSettings.setGuiTheme(theme);
         updateCSS(isDark, scenes);
         updateTextColors(isDark, scenes);
         changeImages(theme);
@@ -74,13 +74,13 @@ public class Theme {
                 }
             }
         }
-        changeInfoTextFlow(color);
+        changeInfoTextFlow(color, isDark);
         updateTextFields(isDark, false, UIController.form.tfDir, UIController.form.tfFilename, UIController.form.tfLink);
         updateTextFields(isDark, true, Settings.getTfCurrentDirectory());
     }
 
-    private static void changeInfoTextFlow(Paint color) {
-        Color headingsColor = "Dark".equals(AppSettings.GET.mainTheme()) ? Color.LIGHTGREEN : Color.DARKBLUE;
+    private static void changeInfoTextFlow(Paint color, boolean isDark) {
+        Color headingsColor = isDark ? Color.LIGHTGREEN : Color.DARKBLUE;
         for (int i = 0; i < UIController.getInfoTf().getChildren().size(); i++) {
             if (UIController.getInfoTf().getChildren().get(i) instanceof Text text) {
                 if (text.getFont().getSize() == 16) {

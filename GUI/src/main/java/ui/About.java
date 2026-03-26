@@ -3,7 +3,8 @@ package ui;
 import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
 import static support.Constants.VERSION_NUMBER;
 
-import gui.preferences.AppSettings;
+import gui.init.Environment;
+import settings.AppSettings;
 import gui.support.Constants;
 import gui.utils.MessageBroker;
 import javafx.geometry.Insets;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 public class About {
     private static Scene aboutScene;
     private static final ImageView IV_SPLASH = new ImageView(Constants.imgSplash);
-    private static MessageBroker msgBroker;
+    private static final MessageBroker MSG_BROKER = Environment.getMessageBroker();
     private Label lblDescription;
     private Label lblDriftyVersion;
     private Label lblYtDlpVersion;
@@ -48,9 +49,9 @@ public class About {
                 lblYtDlpVersion
         );
 
-        if (AppSettings.GET.isFfmpegWorking() && AppSettings.GET.ffmpegVersion() != null && !AppSettings.GET.ffmpegVersion().isEmpty()) {
+        if (AppSettings.isFfmpegWorking() && AppSettings.getFfmpegVersion() != null && !AppSettings.getFfmpegVersion().isEmpty()) {
             Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                    "FFMPEG version: " + AppSettings.GET.ffmpegVersion(),
+                    "FFMPEG version: " + AppSettings.getFfmpegVersion(),
                     Font.font("Arial", FontWeight.BOLD, 14),
                     LinearGradient.valueOf(
                             "linear-gradient(to right, #0f0c29, #302b63, #24243e)"
@@ -77,7 +78,7 @@ public class About {
     }
 
     private void applyThemeSettings(VBox aboutRoot) {
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Constants.addCSS(aboutScene, Constants.DARK_THEME_CSS);
             for (Node node : aboutRoot.getChildren()) {
                 if (node instanceof Label) {
@@ -97,7 +98,7 @@ public class About {
                 stage.showAndWait();
             }
         } catch (Exception e) {
-            msgBroker.msgLogError("Error displaying About Drifty window: " + e.getMessage());
+            MSG_BROKER.msgLogError("Error displaying About Drifty window: " + e.getMessage());
         }
     }
 
@@ -118,8 +119,12 @@ public class About {
                 )
         );
 
+        String ytDlpVersion = AppSettings.getYtDlpVersion();
+        if (ytDlpVersion == null || ytDlpVersion.isEmpty()) {
+            ytDlpVersion = "N/A";
+        }
         lblYtDlpVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                "yt-dlp version: " + AppSettings.GET.ytDlpVersion(),
+                "yt-dlp version: " + ytDlpVersion,
                 Font.font("Arial", FontWeight.BOLD, 14),
                 LinearGradient.valueOf(
                         "linear-gradient(to right, #0f0c29, #302b63, #24243e)"

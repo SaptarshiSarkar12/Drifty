@@ -1,7 +1,7 @@
 package updater;
 
 import init.Environment;
-import preferences.AppSettings;
+import settings.AppSettings;
 import properties.OS;
 import utils.MessageBroker;
 
@@ -41,6 +41,7 @@ public abstract class UpdateExecutor {
     }
 
     protected void cleanup(boolean deleteImmediately) {
+        AppSettings.setDriftyUpdateAvailable(false); // Reset the update flag
         try {
             if (deleteImmediately || !OS.isWindows()) {
                 Files.deleteIfExists(oldExecutableFile.toPath());
@@ -52,10 +53,6 @@ public abstract class UpdateExecutor {
             }
         } catch (IOException e) {
             M.msgUpdateError("Failed to delete the old version of Drifty!\n" + e.getMessage());
-        } finally {
-            if (!deleteImmediately) {
-                AppSettings.CLEAR.driftyUpdateAvailable(); // Reset the update flag
-            }
         }
     }
 

@@ -1,6 +1,6 @@
 package gui.utils;
 
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import javafx.scene.paint.Color;
 import properties.MessageCategory;
 import properties.MessageType;
@@ -26,7 +26,7 @@ public class MessageBroker extends utils.MessageBroker {
             ui = null;
         }
         Color color = switch (messageType) {
-            case ERROR -> "Dark".equals(AppSettings.GET.mainTheme()) ? BRIGHT_RED : DARK_RED;
+            case ERROR -> "Dark".equals(AppSettings.getGuiTheme()) ? BRIGHT_RED : DARK_RED;
             case INFO -> GREEN;
             default -> YELLOW;
         };

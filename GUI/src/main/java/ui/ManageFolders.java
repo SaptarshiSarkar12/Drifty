@@ -1,6 +1,6 @@
 package ui;
 
-import gui.preferences.AppSettings;
+import settings.AppSettings;
 import gui.init.Environment;
 import gui.support.Constants;
 import gui.support.Folders;
@@ -37,7 +37,7 @@ public class ManageFolders {
     }
 
     public ManageFolders() {
-        this.folders = AppSettings.GET.folders();
+        this.folders = new Folders();
         createControls();
         setControls();
     }
@@ -100,7 +100,7 @@ public class ManageFolders {
     public void showScene() {
         stage = new Stage();
         scene = Constants.getScene(vBox);
-        if ("Dark".equals(AppSettings.GET.mainTheme())) {
+        if ("Dark".equals(AppSettings.getGuiTheme())) {
             Constants.addCSS(scene, Constants.DARK_THEME_CSS);
             Theme.changeButtonStyle(true, ManageFolders.getBtnClose());
             Theme.changeButtonStyle(true, ManageFolders.getBtnRemove());
