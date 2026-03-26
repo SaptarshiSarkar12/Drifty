@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import preferences.AppSettings;
+import settings.AppSettings;
 
 import java.util.Objects;
 
@@ -58,7 +58,7 @@ public class Splash extends Preloader {
         StateChangeNotification.Type type = info.getType();
         if (Objects.requireNonNull(type) == StateChangeNotification.Type.BEFORE_START) {
             double time;
-            if (AppSettings.GET.ytDlpUpdating()) {
+            if (AppSettings.isYtDlpUpdating()) {
                 time = 2.0;
             } else {
                 time = 1.0;
