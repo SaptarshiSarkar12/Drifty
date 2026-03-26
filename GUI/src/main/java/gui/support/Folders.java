@@ -34,7 +34,7 @@ public class Folders {
 
     public void removeFolder(String folder) {
         folders.remove(folder);
-        if (folder.equals(AppSettings.getLastDownloadFolder())){
+        if (folder.equals(AppSettings.getLastDownloadFolder())) {
             AppSettings.setLastDownloadFolder("");
         }
         AppSettings.setFolders(foldersToString());

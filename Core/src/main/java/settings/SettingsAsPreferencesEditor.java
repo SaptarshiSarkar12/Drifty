@@ -26,7 +26,7 @@ public class SettingsAsPreferencesEditor implements SettingsEditor {
     private static final String FOLDERS = "FOLDERS";
     private static final String GUI_AUTO_PASTE = "GUI_AUTO_PASTE";
     private static final String GUI_THEME = "GUI_THEME";
-    
+
     private static final SettingsAsPreferencesEditor INSTANCE = new SettingsAsPreferencesEditor();
 
     static SettingsAsPreferencesEditor getInstance() {
