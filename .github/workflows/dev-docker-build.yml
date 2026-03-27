@@ -41,7 +41,7 @@ jobs:
       - name: Run Copa to patch vulnerabilities
         if: matrix.os == 'ubuntu-latest'
         continue-on-error: true # to handle cases where the image does not have vulnerabilities
-        uses: nick-fields/retry@v3 # Retry action to handle network issues
+        uses: nick-fields/retry@v4 # Retry action to handle network issues
         with:
           timeout_minutes: 15
           max_attempts: 3
