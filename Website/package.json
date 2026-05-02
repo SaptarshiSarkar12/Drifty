@@ -31,7 +31,7 @@
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.2.4",
     "pagefind": "^1.5.0",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.13",
     "standard": "^17.1.2",
     "tailwindcss": "^4.1.10",
     "typescript": "^6.0.2"
