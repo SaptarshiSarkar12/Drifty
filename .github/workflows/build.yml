@@ -2,15 +2,15 @@ name: Build and Package Drifty
 
 on:
   push:
-    paths-ignore:
-      - "Website/**"
-      - "*.md"
-      - "*.txt"
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/build.yml'
   pull_request:
-    paths-ignore:
-      - "Website/**"
-      - "*.md"
-      - "*.txt"
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+      - '.github/workflows/build.yml'
   workflow_dispatch:
 
 concurrency:
