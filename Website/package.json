@@ -20,7 +20,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-icons": "^5.7.0",
-    "swr": "^2.4.1"
+    "swr": "^2.4.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
