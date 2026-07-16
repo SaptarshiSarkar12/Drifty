@@ -116,10 +116,10 @@ public class FileDownloader extends Task<Integer> {
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
-        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, downloadLink, "-o", filename, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
+        String[] fullCommand = new String[]{YT_DLP, "--quiet", "--progress", "-P", dir, downloadLink, "-o", filename, "-t", (isSpotifySong ? "mp3" : "mp4"), "--js-runtimes", "deno:" + Program.get(Program.DENO)};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         sendInfoMessage(String.format(DOWNLOADING_F, filename));
-        Process process = null;
+        Process process;
         try {
             process = processBuilder.start();
         } catch (IOException e) {
@@ -128,11 +128,11 @@ public class FileDownloader extends Task<Integer> {
         } catch (Exception e) {
             String msg = e.getMessage() != null ? e.getMessage() : "";
             String[] messageArray = msg.split(",");
-            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+            if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replace(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                 M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+            } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replace(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                 M.msgDownloadError(PERMISSION_DENIED_ERROR);
-            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+            } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replace(" ", ""))) { // If YouTube / Instagram video is unavailable
                 M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
             } else {
                 M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
@@ -152,16 +152,6 @@ public class FileDownloader extends Task<Integer> {
         } catch (InterruptedException e) {
             M.msgDownloadError("Failed to wait for download process to finish for \"" + filename + "\"");
             return;
-        }
-        if (isSpotifySong && exitCode == 0) {
-            sendInfoMessage("Converting to mp3 ...");
-            String conversionProcessMessage = Utility.convertToMp3(Paths.get(dir, filename).toAbsolutePath());
-            if (conversionProcessMessage.contains("Failed")) {
-                sendFinalMessage(conversionProcessMessage);
-                exitCode = 1;
-            } else {
-                sendFinalMessage("Successfully converted to mp3!");
-            }
         }
         sendFinalMessage("");
     }

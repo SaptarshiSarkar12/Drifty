@@ -371,14 +371,6 @@ public class Drifty_CLI {
             Utility.setYtDlpVersion().run();
         }
         System.out.println("yt-dlp version : " + AppSettings.getYtDlpVersion());
-        if (AppSettings.getFfmpegVersion().isEmpty()) {
-            Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
-            ffmpegVersion.start();
-            while (ffmpegVersion.isAlive()) {
-                sleep(100);
-            }
-        }
-        System.out.println("FFMPEG version : " + AppSettings.getFfmpegVersion());
     }
 
     private static void handleSpotifyPlaylist() {

@@ -1,37 +1,7 @@
 {
   "reflection": [
     {
-      "type": "[B"
-    },
-    {
-      "type": "[Ljava.lang.String;"
-    },
-    {
-      "type": "[Lsun.security.pkcs.SignerInfo;"
-    },
-    {
-      "type": "com.intellij.rt.execution.application.AppMainV2$Agent",
-      "methods": [
-        {
-          "name": "premain",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.instrument.Instrumentation"
-          ]
-        }
-      ]
-    },
-    {
       "type": "com.sun.crypto.provider.AESCipher$General",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "com.sun.crypto.provider.AESKeyGenerator",
       "methods": [
         {
           "name": "<init>",
@@ -139,23 +109,15 @@
       ]
     },
     {
-      "type": "java.beans.Introspector"
-    },
-    {
-      "type": "java.lang.Class",
+      "type": "java.io.FileNotFoundException",
       "methods": [
         {
-          "name": "getRecordComponents",
-          "parameterTypes": []
-        },
-        {
-          "name": "isRecord",
-          "parameterTypes": []
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
-    },
-    {
-      "type": "java.lang.String"
     },
     {
       "type": "java.lang.Thread",
@@ -166,26 +128,10 @@
       ]
     },
     {
-      "type": "java.lang.reflect.RecordComponent",
-      "methods": [
-        {
-          "name": "getName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getType",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "java.security.AlgorithmParametersSpi"
     },
     {
       "type": "java.security.KeyStoreSpi"
-    },
-    {
-      "type": "java.security.SecureRandomParameters"
     },
     {
       "type": "java.security.interfaces.ECPrivateKey"
@@ -198,30 +144,6 @@
     },
     {
       "type": "java.security.interfaces.RSAPublicKey"
-    },
-    {
-      "type": "java.sql.Date"
-    },
-    {
-      "type": "java.sql.Timestamp"
-    },
-    {
-      "type": "java.util.ArrayList"
-    },
-    {
-      "type": "java.util.Date"
-    },
-    {
-      "type": "java.util.HashMap"
-    },
-    {
-      "type": "java.util.concurrent.ConcurrentLinkedDeque",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
     },
     {
       "type": "java.util.concurrent.ForkJoinTask",
@@ -243,14 +165,6 @@
       ]
     },
     {
-      "type": "java.util.concurrent.atomic.AtomicReference",
-      "fields": [
-        {
-          "name": "value"
-        }
-      ]
-    },
-    {
       "type": "java.util.concurrent.atomic.Striped64",
       "fields": [
         {
@@ -258,22 +172,6 @@
         },
         {
           "name": "cellsBusy"
-        }
-      ]
-    },
-    {
-      "type": "javax.security.auth.x500.X500Principal",
-      "fields": [
-        {
-          "name": "thisX500Name"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "sun.security.x509.X500Name"
-          ]
         }
       ]
     },
@@ -288,22 +186,6 @@
     },
     {
       "type": "org.sqlite.JDBC"
-    },
-    {
-      "type": "sun.misc.Unsafe",
-      "fields": [
-        {
-          "name": "theUnsafe"
-        }
-      ],
-      "methods": [
-        {
-          "name": "allocateInstance",
-          "parameterTypes": [
-            "java.lang.Class"
-          ]
-        }
-      ]
     },
     {
       "type": "sun.security.pkcs12.PKCS12KeyStore",
@@ -362,10 +244,6 @@
     {
       "type": "sun.security.provider.NativePRNG",
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
         {
           "name": "<init>",
           "parameterTypes": [
@@ -510,9 +388,6 @@
       ]
     },
     {
-      "type": "sun.security.util.ObjectIdentifier"
-    },
-    {
       "type": "sun.security.x509.AuthorityInfoAccessExtension",
       "methods": [
         {
@@ -559,9 +434,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "sun.security.x509.CertificateExtensions"
     },
     {
       "type": "sun.security.x509.CertificatePoliciesExtension",
@@ -658,25 +530,90 @@
           ]
         }
       ]
+    }
+  ],
+  "resources": [
+    {
+      "glob": "META-INF/maven/org.xerial/sqlite-jdbc/pom.properties"
     },
     {
-      "type": "support.Job",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "glob": "META-INF/services/java.lang.System$LoggerFinder"
     },
     {
-      "type": "support.JobHistory",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
+      "glob": "META-INF/services/java.net.spi.InetAddressResolverProvider"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.URLStreamHandlerProvider"
+    },
+    {
+      "glob": "META-INF/services/java.nio.channels.spi.SelectorProvider"
+    },
+    {
+      "glob": "META-INF/services/java.nio.charset.spi.CharsetProvider"
+    },
+    {
+      "glob": "META-INF/services/java.sql.Driver"
+    },
+    {
+      "glob": "META-INF/services/java.time.zone.ZoneRulesProvider"
+    },
+    {
+      "glob": "META-INF/services/java.util.prefs.PreferencesFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.parsers.DocumentBuilderFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.transform.TransformerFactory"
+    },
+    {
+      "glob": "META-INF/services/org.slf4j.spi.SLF4JServiceProvider"
+    },
+    {
+      "glob": "org/sqlite/native/Linux/x86_64/libsqlitejdbc.so"
+    },
+    {
+      "glob": "simplelogger.properties"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt74b/nfkc.nrm"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt74b/uprops.icu"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/net/idn/uidna.spp"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/Encodings.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities_en.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities_en_IN.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "jdk/xml/internal/jdkcatalog/JDKCatalog.xml"
+    }
+  ],
+  
+  "bundles": [
+    {
+      "name": "com.sun.org.apache.xml.internal.serializer.XMLEntities",
+      "locales": [
+        "en-IN"
       ]
     }
   ],
@@ -689,17 +626,6 @@
       "methods": [
         {
           "name": "getBoolean",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "java.lang.InternalError",
-      "methods": [
-        {
-          "name": "<init>",
           "parameterTypes": [
             "java.lang.String"
           ]
@@ -880,46 +806,6 @@
           "name": "throwex",
           "parameterTypes": [
             "java.lang.String"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "sun.instrument.InstrumentationImpl",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "long",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        },
-        {
-          "name": "loadClassAndCallAgentmain",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "loadClassAndCallPremain",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String"
-          ]
-        },
-        {
-          "name": "transform",
-          "parameterTypes": [
-            "java.lang.Module",
-            "java.lang.ClassLoader",
-            "java.lang.String",
-            "java.lang.Class",
-            "java.security.ProtectionDomain",
-            "byte[]",
-            "boolean"
           ]
         }
       ]
