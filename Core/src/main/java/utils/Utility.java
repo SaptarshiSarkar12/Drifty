@@ -18,7 +18,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -839,33 +838,29 @@ public class Utility {
         return null;
     }
 
-    public static void setFfmpegVersion() {
-        Path ffmpegPath = Paths.get(Program.get(Program.FFMPEG));
-        if (!Files.exists(ffmpegPath)) {
-            msgBroker.msgLogError("FFMPEG not found at " + ffmpegPath);
-            AppSettings.setFfmpegWorking(false);
-        } else {
-            msgBroker.msgLogInfo("FFMPEG found at " + ffmpegPath);
-            ProcessBuilder getFfmpegVersion = new ProcessBuilder(ffmpegPath.toString(), "-version");
-            try {
-                Process process = getFfmpegVersion.start();
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        if (line.contains("ffmpeg version")) {
-                            String version = line.split(" ")[2];
-                            msgBroker.msgLogInfo("FFMPEG version: " + version);
-                            msgBroker.msgLogInfo(line);
-                            AppSettings.setFfmpegWorking(true);
-                            AppSettings.setFfmpegVersion(version);
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                msgBroker.msgLogError("Failed to get FFMPEG version : " + e.getMessage());
-                AppSettings.setFfmpegWorking(false);
+    public static boolean isFFmpegWorking() {
+        try {
+            String ffmpegPath = resolveFFmpegPath();
+            ProcessBuilder checkFFmpeg = new ProcessBuilder(ffmpegPath, "-version");
+            Process process = checkFFmpeg.start();
+            process.waitFor();
+            return process.exitValue() == 0;
+        } catch (IOException | InterruptedException e) {
+            msgBroker.msgInitError("Failed to check if ffmpeg is working! " + e.getMessage());
+            return false;
+        }
+    }
+
+    private static String resolveFFmpegPath() throws IOException, InterruptedException {
+        String command = OS.isWindows() ? "where" : "which";
+        Process process = new ProcessBuilder(command, "ffmpeg").start();
+        process.waitFor();
+        if (process.exitValue() == 0) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                return reader.readLine(); // first resolved path
             }
         }
+        throw new IOException("ffmpeg not found in PATH");
     }
 
     public static Runnable setYtDlpVersion() {
@@ -923,45 +918,6 @@ public class Utility {
                 msgBroker.msgInitError("Failed to get Spotify access token! Spotify API URI is incorrect! " + e.getMessage());
             }
         };
-    }
-
-    public static String convertToMp3(Path inputFilePath) {
-        String command = Program.get(Program.FFMPEG);
-        Path outputFilePath = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + " - converted.mp3").toAbsolutePath();
-        String newFilename;
-        if (outputFilePath.toFile().exists()) {
-            newFilename = renameFile(outputFilePath.getFileName().toString(), outputFilePath.getParent().toString()); // rename the file if it already exists, else ffmpeg conversion hangs indefinitely and tries to overwrite the file
-            outputFilePath = outputFilePath.getParent().resolve(newFilename);
-        }
-        ProcessBuilder convertToMp3 = new ProcessBuilder(command, "-i", inputFilePath.toString(), outputFilePath.toString());
-        try {
-            Process process = convertToMp3.start();
-            process.waitFor();
-            if (process.exitValue() == 0 && Files.exists(outputFilePath)) {
-                Files.delete(inputFilePath);
-                File renamedFile = inputFilePath.getParent().resolve(FilenameUtils.getBaseName(inputFilePath.toString()) + ".mp3").toFile();
-                if (renamedFile.exists()) {
-                    newFilename = renameFile(renamedFile.getName(), renamedFile.getParent());
-                    renamedFile = renamedFile.getParentFile().toPath().resolve(newFilename).toFile();
-                }
-                if (outputFilePath.toFile().renameTo(renamedFile)) {
-                    msgBroker.msgLogInfo("Converted to mp3 successfully!");
-                    return "Converted to mp3 successfully!";
-                } else {
-                    msgBroker.msgLogError("Failed to rename the converted file!");
-                    return "Failed to rename the converted file!";
-                }
-            } else {
-                msgBroker.msgLogError("Failed to convert to mp3!");
-                return "Failed to convert to mp3!";
-            }
-        } catch (IOException e) {
-            msgBroker.msgLogError("Failed to convert to mp3! IOException: " + e.getMessage());
-            return "Failed to convert to mp3! IOException: " + e.getMessage();
-        } catch (InterruptedException e) {
-            msgBroker.msgLogError("Failed to convert to mp3! User interrupted the process. " + e.getMessage());
-            return "Failed to convert to mp3! User interrupted the process. " + e.getMessage();
-        }
     }
 
     public static int parseStringToInt(String string, String errorMessage, MessageCategory messageCategory) {

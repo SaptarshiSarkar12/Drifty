@@ -75,10 +75,6 @@ public class AppSettings {
         EDITOR.setYtDlpUpdating(ytDlpUpdating);
     }
 
-    public static boolean isFfmpegWorking() {
-        return INSTANCE.isFfmpegWorking;
-    }
-
     public static void setFfmpegWorking(boolean ffmpegWorking) {
         INSTANCE.isFfmpegWorking = ffmpegWorking;
         EDITOR.setFfmpegWorking(ffmpegWorking);

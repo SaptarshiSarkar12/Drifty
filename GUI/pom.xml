@@ -58,7 +58,6 @@
                         <arg>--enable-url-protocols=http</arg>
                         <arg>--no-fallback</arg>
                         <arg>--verbose</arg>
-                        <arg>-H:ResourceConfigurationFiles=${pom.parent.basedir}/config/${resource-config-file}</arg>
                         <arg>--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED</arg>
                         <arg>${system-native-image-arg}</arg>
                         <arg>${compatibility-arg}</arg>
@@ -91,7 +90,6 @@
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AARCH64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-15.o</system-linker-arg>
-                <resource-config-file>resource-config-macos-aarch64.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
                 <capcache-arg1>-H:CAPCacheDir=/tmp/cap</capcache-arg1>
                 <capcache-arg3>-H:+NewCAPCache</capcache-arg3>
@@ -105,7 +103,6 @@
                 <package.type>pkg</package.type>
                 <system-native-image-arg>-Dsvm.platform=org.graalvm.nativeimage.Platform$MACOS_AMD64</system-native-image-arg>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-macos-15-intel.o</system-linker-arg>
-                <resource-config-file>resource-config-macos-x64.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
                 <mac.app.store>true</mac.app.store>
             </properties>
@@ -115,7 +112,6 @@
             <id>build-drifty-gui-for-ubuntu-latest</id>
             <properties>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-ubuntu-latest.o</system-linker-arg>
-                <resource-config-file>resource-config-linux.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
             </properties>
         </profile>
@@ -128,7 +124,6 @@
                 <gluonfx-maven-plugin.version>1.0.23</gluonfx-maven-plugin.version>
                 <package.type>msi</package.type>
                 <system-linker-arg>${pom.parent.basedir}/config/missing_symbols-windows-latest.o</system-linker-arg>
-                <resource-config-file>resource-config-windows.json</resource-config-file>
                 <compatibility-arg>-march=compatibility</compatibility-arg>
             </properties>
         </profile>

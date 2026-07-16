@@ -32,7 +32,6 @@ import java.util.concurrent.Future;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.isURL;
-import static cli.utils.Utility.sleep;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();
@@ -371,14 +370,6 @@ public class Drifty_CLI {
             Utility.setYtDlpVersion().run();
         }
         System.out.println("yt-dlp version : " + AppSettings.getYtDlpVersion());
-        if (AppSettings.getFfmpegVersion().isEmpty()) {
-            Thread ffmpegVersion = new Thread(utils.Utility::setFfmpegVersion);
-            ffmpegVersion.start();
-            while (ffmpegVersion.isAlive()) {
-                sleep(100);
-            }
-        }
-        System.out.println("FFMPEG version : " + AppSettings.getFfmpegVersion());
     }
 
     private static void handleSpotifyPlaylist() {

@@ -49,17 +49,6 @@ public class About {
                 lblYtDlpVersion
         );
 
-        if (AppSettings.isFfmpegWorking() && AppSettings.getFfmpegVersion() != null && !AppSettings.getFfmpegVersion().isEmpty()) {
-            Label lblFfmpegVersion = UI_COMPONENT_BUILDER_INSTANCE.buildLabel(
-                    "FFMPEG version: " + AppSettings.getFfmpegVersion(),
-                    Font.font("Arial", FontWeight.BOLD, 14),
-                    LinearGradient.valueOf(
-                            "linear-gradient(to right, #0f0c29, #302b63, #24243e)"
-                    )
-            );
-            aboutRoot.getChildren().add(lblFfmpegVersion);
-        }
-
         aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
         aboutScene = Constants.getScene(aboutRoot);
         applyThemeSettings(aboutRoot);

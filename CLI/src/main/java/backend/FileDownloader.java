@@ -9,6 +9,7 @@ import support.DownloadMetrics;
 import support.Job;
 import utils.DbConnection;
 import utils.MessageBroker;
+import utils.UnitConverter;
 
 import java.io.*;
 import java.net.*;
@@ -141,7 +142,7 @@ public class FileDownloader implements Runnable {
     }
 
     private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
-        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, downloadLink, "-o", fileName, "-f", (isSpotifySong ? "bestaudio" : "mp4")};
+        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, downloadLink, "-o", fileName, "-t", (isSpotifySong ? "mp3" : "mp4"), "--js-runtimes", "deno:" + Program.get(Program.DENO)};
         ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
         processBuilder.inheritIO();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
@@ -163,11 +164,11 @@ public class FileDownloader implements Runnable {
                 db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
                 String msg = e.getMessage();
                 String[] messageArray = msg.split(",");
-                if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replaceAll(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
+                if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replace(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                     M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-                } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replaceAll(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+                } else if (messageArray.length >= 2 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replace(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                     M.msgDownloadError(PERMISSION_DENIED_ERROR);
-                } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replaceAll(" ", ""))) { // If YouTube / Instagram video is unavailable
+                } else if (messageArray.length >= 1 && "videounavailable".equals(messageArray[0].toLowerCase().trim().replace(" ", ""))) { // If YouTube / Instagram video is unavailable
                     M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
                 } else {
                     M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
@@ -177,21 +178,7 @@ public class FileDownloader implements Runnable {
                 if (exitValueOfYtDlp == 0) {
                     Path downloadedFilePath = directoryPath.resolve(fileName);
                     long downloadedSize = Files.size(downloadedFilePath);
-                    M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName));
-                    if (isSpotifySong) {
-                        M.msgDownloadInfo("Converting to mp3 ...");
-                        String conversionProcessMessage = utils.Utility.convertToMp3(directoryPath.resolve(fileName).toAbsolutePath());
-                        if (conversionProcessMessage.contains("Failed")) {
-                            M.msgDownloadError(conversionProcessMessage);
-                            fileName = fileName.replace("mp3", "webm"); // If mp3 conversion fails, then the file name will be changed to the webm file.
-                            db.updateFileName(fileId, fileName);
-                            throw new Exception(conversionProcessMessage);
-                        } else {
-                            endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                            db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
-                            M.msgDownloadInfo("Successfully converted to mp3!");
-                        }
-                    }
+                    M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + " (" + UnitConverter.format(downloadedSize, 2) + ")");
                 } else if (exitValueOfYtDlp == 1) {
                     M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
                     throw new Exception(String.format(FAILED_TO_DOWNLOAD_F, fileName));

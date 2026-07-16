@@ -4,10 +4,7 @@ import settings.AppSettings;
 import properties.OS;
 import properties.Program;
 import updater.UpdateChecker;
-import utils.CopyExecutables;
-import utils.DbConnection;
-import utils.MessageBroker;
-import utils.Utility;
+import utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +16,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
 
 import static properties.Program.YT_DLP;
 
@@ -42,36 +38,29 @@ public class Environment {
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
         new Thread(() -> AppSettings.setDriftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
-        String ffmpegExecName = "";
-        String osArch = System.getProperty("os.arch");
-        if (osArch.contains("arm") || osArch.contains("aarch64")) {
-            if (OS.isMac()) {
-                ffmpegExecName = "ffmpeg_macos-arm64";
-            } else {
-                msgBroker.msgInitError("FFMPEG does not support ARM architecture!"); // TODO: Add support for ARM architecture via GitHub Actions
-                AppSettings.setFfmpegWorking(false);
-            }
-        } else {
-            ffmpegExecName = OS.isWindows() ? "ffmpeg.exe" : OS.isMac() ? "ffmpeg_macos-x64" : "ffmpeg";
-        }
-        Program.setFfmpegExecutableName(ffmpegExecName);
-        String ytDlpExecName = OS.isWindows() ? "yt-dlp.exe" : OS.isMac() ? "yt-dlp_macos" : "yt-dlp";
-        String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA"), "Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home"), ".drifty").toAbsolutePath().toString();
-        Program.setYtDlpExecutableName(ytDlpExecName);
+        executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
+        String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA")).resolve("Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home")).resolve(".drifty").toAbsolutePath().toString();
         Program.setDriftyPath(driftyFolderPath);
-        CopyExecutables copyExecutables = new CopyExecutables(new String[]{ytDlpExecName, ffmpegExecName});
-        try {
-            copyExecutables.start();
-            if (!isYtDLPUpdated() && !Utility.isOffline()) {
-                checkAndUpdateYtDlp();
+        boolean ffmpegWorking = Utility.isFFmpegWorking();
+        if (!ffmpegWorking) {
+            msgBroker.msgInitError("FFmpeg is not working! Please ensure that FFmpeg is installed and added to the system PATH.");
+        }
+        AppSettings.setFfmpegWorking(ffmpegWorking);
+        // run parallel download threads of two dependencies: YT_DLP and DENO
+        try (ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2)) {
+            msgBroker.msgInitInfo("Downloading yt-dlp and deno dependencies in parallel ...");
+            threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.YT_DLP));
+            threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.DENO));
+            threadPoolExecutor.shutdown();
+            if (!threadPoolExecutor.awaitTermination(10, TimeUnit.MINUTES)) {
+                msgBroker.msgLogError("Timeout while downloading dependencies.");
             }
-        } catch (IOException e) {
-            if (AppSettings.isFfmpegWorking()) {
-                msgBroker.msgInitError("Failed to copy yt-dlp and ffmpeg executables! " + e.getMessage());
-            } else {
-                msgBroker.msgInitError("Failed to copy yt-dlp executable! " + e.getMessage());
-            }
+            msgBroker.msgInitInfo("Finished downloading yt-dlp and deno dependencies.");
+        } catch (Exception e) {
+            msgBroker.msgInitError("Failed to download dependencies: " + e.getMessage());
+        }
+        if (!isYtDLPUpdated() && !Utility.isOffline()) {
+            checkAndUpdateYtDlp();
         }
         try {
             dbConnection = DbConnection.getInstance();

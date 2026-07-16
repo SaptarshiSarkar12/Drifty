@@ -1,25 +1,10 @@
 {
   "reflection": [
     {
-      "type": "[B"
-    },
-    {
       "type": "[Ljava.lang.String;"
     },
     {
-      "type": "[Lsun.security.pkcs.SignerInfo;"
-    },
-    {
       "type": "com.sun.crypto.provider.AESCipher$General",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "com.sun.crypto.provider.AESKeyGenerator",
       "methods": [
         {
           "name": "<init>",
@@ -150,9 +135,6 @@
       ]
     },
     {
-      "type": "com.sun.javafx.tk.quantum.OverlayWarning"
-    },
-    {
       "type": "com.sun.javafx.tk.quantum.QuantumToolkit",
       "methods": [
         {
@@ -199,26 +181,7 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.lang.String",
-            "java.io.InputStream"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "com.sun.prism.shader.DrawRoundRect_Color_Loader",
-      "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
         }
@@ -227,13 +190,6 @@
     {
       "type": "com.sun.prism.shader.FillPgram_Color_Loader",
       "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
         {
           "name": "loadShader",
           "parameterTypes": [
@@ -251,66 +207,7 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.lang.String",
-            "java.io.InputStream"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "com.sun.prism.shader.FillRoundRect_Color_Loader",
-      "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.lang.String",
-            "java.io.InputStream"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "com.sun.prism.shader.Mask_TextureSuper_Loader",
-      "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.lang.String",
-            "java.io.InputStream"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "com.sun.prism.shader.Solid_Color_Loader",
-      "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.io.InputStream"
           ]
         }
@@ -319,13 +216,6 @@
     {
       "type": "com.sun.prism.shader.Solid_TextureFirstPassLCD_Loader",
       "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
         {
           "name": "loadShader",
           "parameterTypes": [
@@ -343,13 +233,6 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.lang.String",
             "java.io.InputStream"
           ]
@@ -363,13 +246,6 @@
           "name": "loadShader",
           "parameterTypes": [
             "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
             "java.lang.String",
             "java.io.InputStream"
           ]
@@ -379,33 +255,6 @@
     {
       "type": "com.sun.prism.shader.Texture_Color_Loader",
       "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.lang.String",
-            "java.io.InputStream"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "com.sun.prism.shader.Texture_LinearGradient_PAD_Loader",
-      "methods": [
-        {
-          "name": "loadShader",
-          "parameterTypes": [
-            "com.sun.prism.ps.ShaderFactory",
-            "java.io.InputStream"
-          ]
-        },
         {
           "name": "loadShader",
           "parameterTypes": [
@@ -441,19 +290,6 @@
       ]
     },
     {
-      "type": "com.sun.scenario.effect.impl.prism.ps.PPSLinearConvolveShadowPeer",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "com.sun.scenario.effect.FilterContext",
-            "com.sun.scenario.effect.impl.Renderer",
-            "java.lang.String"
-          ]
-        }
-      ]
-    },
-    {
       "type": "com.sun.scenario.effect.impl.prism.ps.PPSRenderer",
       "methods": [
         {
@@ -461,26 +297,6 @@
           "parameterTypes": [
             "com.sun.scenario.effect.FilterContext"
           ]
-        }
-      ]
-    },
-    {
-      "type": "gui.support.Folders",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "gui.support.Jobs",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
         }
       ]
     },
@@ -504,37 +320,11 @@
             "java.lang.Module",
             "java.lang.String"
           ]
-        },
-        {
-          "name": "getModule",
-          "parameterTypes": []
-        },
-        {
-          "name": "getRecordComponents",
-          "parameterTypes": []
-        },
-        {
-          "name": "isRecord",
-          "parameterTypes": []
         }
       ]
     },
     {
-      "type": "java.lang.Module",
-      "methods": [
-        {
-          "name": "getDescriptor",
-          "parameterTypes": []
-        },
-        {
-          "name": "getLayer",
-          "parameterTypes": []
-        },
-        {
-          "name": "getName",
-          "parameterTypes": []
-        }
-      ]
+      "type": "java.lang.Module"
     },
     {
       "type": "java.lang.ModuleLayer",
@@ -550,9 +340,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "java.lang.String"
     },
     {
       "type": "java.lang.System",
@@ -572,17 +359,7 @@
       ]
     },
     {
-      "type": "java.lang.reflect.RecordComponent",
-      "methods": [
-        {
-          "name": "getName",
-          "parameterTypes": []
-        },
-        {
-          "name": "getType",
-          "parameterTypes": []
-        }
-      ]
+      "type": "java.lang.reflect.RecordComponent"
     },
     {
       "type": "java.nio.ByteBuffer",
@@ -611,9 +388,6 @@
       "type": "java.security.KeyStoreSpi"
     },
     {
-      "type": "java.security.SecureRandomParameters"
-    },
-    {
       "type": "java.security.interfaces.ECPrivateKey"
     },
     {
@@ -629,43 +403,7 @@
       "type": "java.sql.Date"
     },
     {
-      "type": "java.util.ArrayList",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.util.Date"
-    },
-    {
-      "type": "java.util.HashMap",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.util.LinkedList",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "java.util.concurrent.ConcurrentLinkedDeque",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "type": "java.util.LinkedList"
     },
     {
       "type": "java.util.concurrent.ForkJoinTask",
@@ -687,14 +425,6 @@
       ]
     },
     {
-      "type": "java.util.concurrent.atomic.AtomicReference",
-      "fields": [
-        {
-          "name": "value"
-        }
-      ]
-    },
-    {
       "type": "java.util.concurrent.atomic.Striped64",
       "fields": [
         {
@@ -706,15 +436,10 @@
       ]
     },
     {
-      "type": "java.util.concurrent.atomic.Striped64$Cell",
-      "fields": [
-        {
-          "name": "value"
-        }
-      ]
+      "type": "javafx.animation.Interpolator"
     },
     {
-      "type": "javafx.animation.Interpolator"
+      "type": "javafx.css.Rule"
     },
     {
       "type": "javafx.scene.Camera"
@@ -801,22 +526,6 @@
       "type": "javafx.stage.Window"
     },
     {
-      "type": "javax.security.auth.x500.X500Principal",
-      "fields": [
-        {
-          "name": "thisX500Name"
-        }
-      ],
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "sun.security.x509.X500Name"
-          ]
-        }
-      ]
-    },
-    {
       "type": "jdk.internal.misc.Unsafe"
     },
     {
@@ -842,22 +551,6 @@
     },
     {
       "type": "org.sqlite.JDBC"
-    },
-    {
-      "type": "sun.misc.Unsafe",
-      "fields": [
-        {
-          "name": "theUnsafe"
-        }
-      ],
-      "methods": [
-        {
-          "name": "allocateInstance",
-          "parameterTypes": [
-            "java.lang.Class"
-          ]
-        }
-      ]
     },
     {
       "type": "sun.security.pkcs12.PKCS12KeyStore",
@@ -925,10 +618,6 @@
     {
       "type": "sun.security.provider.NativePRNG",
       "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        },
         {
           "name": "<init>",
           "parameterTypes": [
@@ -1073,9 +762,6 @@
       ]
     },
     {
-      "type": "sun.security.util.ObjectIdentifier"
-    },
-    {
       "type": "sun.security.x509.AuthorityInfoAccessExtension",
       "methods": [
         {
@@ -1122,9 +808,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "sun.security.x509.CertificateExtensions"
     },
     {
       "type": "sun.security.x509.CertificatePoliciesExtension",
@@ -1223,42 +906,332 @@
       ]
     },
     {
-      "type": "support.Job",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "support.JobHistory",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
-      "type": "support.Jobs",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
-    },
-    {
       "type": "ui.Splash",
       "methods": [
         {
           "name": "<init>",
           "parameterTypes": []
         }
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "glob": "META-INF/fonts.mf"
+    },
+    {
+      "glob": "META-INF/maven/org.xerial/sqlite-jdbc/pom.properties"
+    },
+    {
+      "glob": "META-INF/services/java.lang.System$LoggerFinder"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.InetAddressResolverProvider"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.URLStreamHandlerProvider"
+    },
+    {
+      "glob": "META-INF/services/java.nio.channels.spi.SelectorProvider"
+    },
+    {
+      "glob": "META-INF/services/java.nio.charset.spi.CharsetProvider"
+    },
+    {
+      "glob": "META-INF/services/java.sql.Driver"
+    },
+    {
+      "glob": "META-INF/services/java.time.zone.ZoneRulesProvider"
+    },
+    {
+      "glob": "META-INF/services/java.util.prefs.PreferencesFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.parsers.DocumentBuilderFactory"
+    },
+    {
+      "glob": "META-INF/services/javax.xml.transform.TransformerFactory"
+    },
+    {
+      "glob": "META-INF/services/org.slf4j.spi.SLF4JServiceProvider"
+    },
+    {
+      "glob": "com/sun/javafx/scene/control/skin/resources/controls_en.properties"
+    },
+    {
+      "glob": "com/sun/javafx/scene/control/skin/resources/controls_en_IN.properties"
+    },
+    {
+      "glob": "com/sun/javafx/tk/quantum/QuantumMessagesBundle_en.properties"
+    },
+    {
+      "glob": "com/sun/javafx/tk/quantum/QuantumMessagesBundle_en_IN.properties"
+    },
+    {
+      "glob": "org/sqlite/native/Linux/x86_64/libsqlitejdbc.so"
+    },
+    {
+      "glob": "simplelogger.properties"
+    },
+    {
+      "module": "GUI",
+      "glob": "Backgrounds/DriftyMainDark.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Save/SaveDownDark.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Save/SaveDownLight.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Save/SaveUpDark.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Save/SaveUpLight.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Start/StartDownDark.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Start/StartDownLight.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Start/StartUpDark.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Buttons/Start/StartUpLight.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/Button.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/CheckBox.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/ContextMenu.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/DarkTheme.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/Label.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/LightTheme.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/ListView.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/Menu.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/ProgressBar.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/ScrollPane.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/TextField.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "CSS/VBox.css"
+    },
+    {
+      "module": "GUI",
+      "glob": "Fonts/Monaco.ttf"
+    },
+    {
+      "module": "GUI",
+      "glob": "Icons/AppIcon.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Labels/AutoPaste.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Labels/Directory.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Labels/Filename.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "Labels/Link.png"
+    },
+    {
+      "module": "GUI",
+      "glob": "SplashDark.png"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt74b/nfkc.nrm"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt74b/ubidi.icu"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt74b/uprops.icu"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/net/idn/uidna.spp"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/text/resources/WordBreakIteratorData"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/Encodings.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities_en.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "com/sun/org/apache/xml/internal/serializer/XMLEntities_en_IN.properties"
+    },
+    {
+      "module": "java.xml",
+      "glob": "jdk/xml/internal/jdkcatalog/JDKCatalog.xml"
+    },
+    {
+      "module": "javafx.controls",
+      "glob": "com/sun/javafx/scene/control/skin/modena/modena.bss"
+    },
+    {
+      "module": "javafx.controls",
+      "glob": "com/sun/javafx/scene/control/skin/resources/controls.properties"
+    },
+    {
+      "module": "javafx.controls",
+      "glob": "com/sun/javafx/scene/control/skin/resources/controls_en.properties"
+    },
+    {
+      "module": "javafx.controls",
+      "glob": "com/sun/javafx/scene/control/skin/resources/controls_en_IN.properties"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/glass/utils/NativeLibLoader.class"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/javafx/tk/quantum/QuantumMessagesBundle.properties"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/javafx/tk/quantum/QuantumMessagesBundle_en.properties"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/javafx/tk/quantum/QuantumMessagesBundle_en_IN.properties"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/DrawPgram_Color.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/FillPgram_Color.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/FillPgram_LinearGradient_PAD.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/Solid_TextureFirstPassLCD.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/Solid_TextureRGB.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/Solid_TextureSecondPassLCD.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/prism/es2/glsl/Texture_Color.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "com/sun/scenario/effect/impl/es2/glsl/Blend_SRC_IN.frag"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libglass.so"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libglassgtk3.so"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libjavafx_font.so"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libjavafx_font_freetype.so"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libjavafx_font_pango.so"
+    },
+    {
+      "module": "javafx.graphics",
+      "glob": "libprism_es2.so"
+    }
+  ],
+  
+  "bundles": [
+    {
+      "name": "com.sun.javafx.tk.quantum.QuantumMessagesBundle",
+      "locales": [
+        "en-IN"
+      ]
+    },
+    {
+      "name": "com.sun.org.apache.xml.internal.serializer.XMLEntities",
+      "locales": [
+        "en-IN"
+      ]
+    },
+    {
+      "name": "com/sun/javafx/scene/control/skin/resources/controls",
+      "locales": [
+        "en-IN"
       ]
     }
   ],
@@ -1386,18 +1359,6 @@
           "parameterTypes": [
             "int",
             "int",
-            "int",
-            "int",
-            "int"
-          ]
-        },
-        {
-          "name": "notifyInputMethod",
-          "parameterTypes": [
-            "java.lang.String",
-            "int[]",
-            "int[]",
-            "byte[]",
             "int",
             "int",
             "int"
@@ -1681,17 +1642,19 @@
       ]
     },
     {
-      "type": "com.sun.javafx.geom.Path2D",
-      "methods": [
+      "type": "com.sun.javafx.font.freetype.FT_Matrix",
+      "fields": [
         {
-          "name": "<init>",
-          "parameterTypes": [
-            "int",
-            "byte[]",
-            "int",
-            "float[]",
-            "int"
-          ]
+          "name": "xx"
+        },
+        {
+          "name": "xy"
+        },
+        {
+          "name": "yx"
+        },
+        {
+          "name": "yy"
         }
       ]
     },
