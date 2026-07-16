@@ -35,7 +35,8 @@ public class DependencyDownloader {
             urlConnection.setReadTimeout(30_000);
             Files.createDirectories(targetPath.getParent());
             try (ReadableByteChannel readableByteChannel = Channels.newChannel(urlConnection.getInputStream());
-                 FileOutputStream fos = new FileOutputStream(tempPath.toFile())) {
+                 FileOutputStream fos = new FileOutputStream(tempPath.toFile()))
+            {
                 fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             }
             Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
