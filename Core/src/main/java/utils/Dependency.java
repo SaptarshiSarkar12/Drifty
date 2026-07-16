@@ -21,8 +21,16 @@ public enum Dependency {
                     Program.setYtDlpExecutableName("yt-dlp_macos");
                     yield "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos";
                 } else {
-                    Program.setYtDlpExecutableName("yt-dlp_linux");
-                    yield "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux";
+                    if (isArm) {
+                        Program.setYtDlpExecutableName("yt-dlp_linux_aarch64");
+                        yield "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux_aarch64";
+                    } else if (isX64) {
+                        Program.setYtDlpExecutableName("yt-dlp_linux");
+                        yield "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux";
+                    } else {
+                        Program.setYtDlpExecutableName("yt-dlp");
+                        yield "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp";
+                    }
                 }
             }
             case DENO -> {

@@ -166,9 +166,9 @@ public class FileDownloader implements Runnable {
                 String[] messageArray = msg.split(",");
                 if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replace(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
                     M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-                } else if (messageArray.length >= 1 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replace(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
+                } else if (messageArray.length >= 2 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replace(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
                     M.msgDownloadError(PERMISSION_DENIED_ERROR);
-                } else if ("videounavailable".equals(messageArray[0].toLowerCase().trim().replace(" ", ""))) { // If YouTube / Instagram video is unavailable
+                } else if (messageArray.length >= 1 && "videounavailable".equals(messageArray[0].toLowerCase().trim().replace(" ", ""))) { // If YouTube / Instagram video is unavailable
                     M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
                 } else {
                     M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());

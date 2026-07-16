@@ -839,8 +839,9 @@ public class Utility {
     }
 
     public static boolean isFFmpegWorking() {
-        ProcessBuilder checkFFmpeg = new ProcessBuilder("ffmpeg", "-version");
         try {
+            String ffmpegPath = resolveFFmpegPath();
+            ProcessBuilder checkFFmpeg = new ProcessBuilder(ffmpegPath, "-version");
             Process process = checkFFmpeg.start();
             process.waitFor();
             return process.exitValue() == 0;
@@ -848,6 +849,18 @@ public class Utility {
             msgBroker.msgInitError("Failed to check if ffmpeg is working! " + e.getMessage());
             return false;
         }
+    }
+
+    private static String resolveFFmpegPath() throws IOException, InterruptedException {
+        String command = OS.isWindows() ? "where" : "which";
+        Process process = new ProcessBuilder(command, "ffmpeg").start();
+        process.waitFor();
+        if (process.exitValue() == 0) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                return reader.readLine(); // first resolved path
+            }
+        }
+        throw new IOException("ffmpeg not found in PATH");
     }
 
     public static Runnable setYtDlpVersion() {

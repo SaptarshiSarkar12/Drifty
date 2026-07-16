@@ -16,10 +16,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 import static properties.Program.YT_DLP;
 
@@ -41,7 +38,7 @@ public class Environment {
         Utility.initializeUtility(); // Lazy initialization of the MessageBroker in Utility class
         new Thread(() -> AppSettings.setDriftyUpdateAvailable(UpdateChecker.isUpdateAvailable())).start();
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, java.util.concurrent.TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
+        executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA")).resolve("Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home")).resolve(".drifty").toAbsolutePath().toString();
         Program.setDriftyPath(driftyFolderPath);
         boolean ffmpegWorking = Utility.isFFmpegWorking();
@@ -52,10 +49,12 @@ public class Environment {
         // run parallel download threads of two dependencies: YT_DLP and DENO
         try (ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(2)) {
             msgBroker.msgInitInfo("Downloading yt-dlp and deno dependencies in parallel ...");
-            Future<?> ytFuture = threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.YT_DLP));
-            Future<?> denoFuture = threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.DENO));
-            ytFuture.get(); // Wait for YT_DLP to finish
-            denoFuture.get(); // Wait for DENO to finish
+            threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.YT_DLP));
+            threadPoolExecutor.submit(() -> DependencyDownloader.downloadDependency(Dependency.DENO));
+            threadPoolExecutor.shutdown();
+            if (!threadPoolExecutor.awaitTermination(10, TimeUnit.MINUTES)) {
+                msgBroker.msgLogError("Timeout while downloading dependencies.");
+            }
             msgBroker.msgInitInfo("Finished downloading yt-dlp and deno dependencies.");
         } catch (Exception e) {
             msgBroker.msgInitError("Failed to download dependencies: " + e.getMessage());

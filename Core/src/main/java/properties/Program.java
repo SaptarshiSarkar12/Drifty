@@ -29,7 +29,12 @@ public enum Program {
             case DRIFTY_PATH -> driftyPath;
             case DATABASE_PATH -> Paths.get(Program.get(Program.DRIFTY_PATH)).resolve("drifty_" + Mode.getMode().name().toLowerCase() + ".db").toAbsolutePath().toString();
             case YT_DLP -> Paths.get(driftyPath).resolve(ytDLPExecutableName).toAbsolutePath().toString();
-            case DENO -> Paths.get(driftyPath).resolve(denoExecutableName).toAbsolutePath().toString();
+            case DENO -> {
+                if (denoExecutableName == null) {
+                    yield Paths.get(driftyPath).resolve("deno").toAbsolutePath().toString();
+                }
+                yield Paths.get(driftyPath).resolve(denoExecutableName).toAbsolutePath().toString();
+            }
             case JOB_HISTORY_FILE -> Paths.get(driftyPath).resolve("JobHistory.json").toAbsolutePath().toString();
             case JOB_FILE -> Paths.get(driftyPath).resolve("Jobs.json").toAbsolutePath().toString();
         };

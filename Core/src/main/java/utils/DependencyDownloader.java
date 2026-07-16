@@ -12,6 +12,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class DependencyDownloader {
     public static void downloadDependency(Dependency dependency) {
@@ -28,16 +29,20 @@ public class DependencyDownloader {
         }
         try {
             URL url = URI.create(downloadUrl).toURL();
+            Path tempPath = targetPath.resolveSibling(fileName + ".part");
             URLConnection urlConnection = url.openConnection();
-            ReadableByteChannel readableByteChannel = Channels.newChannel(urlConnection.getInputStream());
+            urlConnection.setConnectTimeout(10_000);
+            urlConnection.setReadTimeout(30_000);
             Files.createDirectories(targetPath.getParent());
-            try (FileOutputStream fos = new FileOutputStream(targetPath.toFile())) {
+            try (ReadableByteChannel readableByteChannel = Channels.newChannel(urlConnection.getInputStream());
+                 FileOutputStream fos = new FileOutputStream(tempPath.toFile())) {
                 fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
             }
+            Files.move(tempPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
             System.out.println("Downloaded " + dependency.name() + " to " + targetPath);
             try {
                 // Set executable permission for the downloaded file
-                boolean isExecutable = targetPath.toFile().setExecutable(true, false);
+                boolean isExecutable = targetPath.toFile().setExecutable(true, true);
                 if (!isExecutable) {
                     System.err.println("Failed to set executable permission for " + targetPath);
                 }
@@ -48,6 +53,14 @@ public class DependencyDownloader {
             System.err.println("Invalid URL: " + downloadUrl);
         } catch (IOException e) {
             System.err.println("Failed to download " + dependency.name() + ": " + e.getMessage());
+        } finally {
+            // Clean up the temporary file if it exists
+            Path tempPath = targetPath.resolveSibling(fileName + ".part");
+            try {
+                Files.deleteIfExists(tempPath);
+            } catch (IOException e) {
+                System.err.println("Failed to delete temporary file " + tempPath + ": " + e.getMessage());
+            }
         }
     }
 }
