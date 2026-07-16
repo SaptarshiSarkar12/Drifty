@@ -343,7 +343,7 @@ public class Utility {
                 return null;
             }
             // extract the JSON part of the list in the response body;
-            if (playlistMetadataResponseBody.equalsIgnoreCase("Too Many Requests")) {
+            if ("Too Many Requests".equalsIgnoreCase(playlistMetadataResponseBody)) {
                 msgBroker.msgDownloadError("Failed to get playlist metadata! Spotify API rate limit exceeded!");
                 return null;
             }
