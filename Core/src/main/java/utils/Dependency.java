@@ -29,30 +29,30 @@ public enum Dependency {
                 if (isWindows) {
                     if (isArm) {
                         Program.setDenoExecutableName("deno-aarch64-pc-windows-msvc.exe");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-aarch64-pc-windows-msvc.exe";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-aarch64-pc-windows-msvc.exe";
                     } else if (isX64) {
                         Program.setDenoExecutableName("deno-x86_64-pc-windows-msvc.exe");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-x86_64-pc-windows-msvc.exe";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-x86_64-pc-windows-msvc.exe";
                     } else {
                         yield null;
                     }
                 } else if (isMac) {
                     if (isArm) {
                         Program.setDenoExecutableName("deno-aarch64-apple-darwin");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-aarch64-apple-darwin";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-aarch64-apple-darwin";
                     } else if (isX64) {
                         Program.setDenoExecutableName("deno-x86_64-apple-darwin");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-x86_64-apple-darwin";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-x86_64-apple-darwin";
                     } else {
                         yield null;
                     }
                 } else {
                     if (isArm) {
                         Program.setDenoExecutableName("deno-aarch64-unknown-linux-gnu");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-aarch64-unknown-linux-gnu";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-aarch64-unknown-linux-gnu";
                     } else if (isX64) {
                         Program.setDenoExecutableName("deno-x86_64-unknown-linux-gnu");
-                        yield "https://github.com/SaptarshiSarkar12/dino-exec-release/releases/latest/download/deno-x86_64-unknown-linux-gnu";
+                        yield "https://github.com/SaptarshiSarkar12/deno-exec-releases/releases/latest/download/deno-x86_64-unknown-linux-gnu";
                     } else {
                         yield null;
                     }
