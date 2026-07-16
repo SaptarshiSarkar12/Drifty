@@ -32,7 +32,6 @@ import java.util.concurrent.Future;
 
 import static cli.support.Constants.*;
 import static cli.utils.Utility.isURL;
-import static cli.utils.Utility.sleep;
 
 public class Drifty_CLI {
     public static final Logger LOGGER = Logger.getInstance();

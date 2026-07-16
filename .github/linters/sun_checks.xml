@@ -21,10 +21,7 @@
             <property name="option" value="nlow"/>
         </module>
         <module name="NeedBraces"/>
-        <module name="RightCurly">
-            <property name="option" value="alone_or_singleline"/>
-            <property name="severity" value="info"/>
-        </module>
+        <module name="RightCurly" />
         <module name="DefaultComesLast"/>
         <module name="EmptyStatement"/>
         <module name="FallThrough"/>

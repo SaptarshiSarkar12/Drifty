@@ -26,8 +26,13 @@ public enum OS {
 
     private static void setOSArch() {
         osArch = System.getProperty("os.arch");
-        if (osArch.contains("arm") || osArch.contains("aarch64")) osArch = "arm"; else if (osArch.contains("amd64") || osArch.contains("x86_64")) osArch = "x64";
-        else osArch = "unknown";
+        if (osArch.contains("arm") || osArch.contains("aarch64")) {
+            osArch = "arm";
+        } else if (osArch.contains("amd64") || osArch.contains("x86_64")) {
+            osArch = "x64";
+        } else {
+            osArch = "unknown";
+        }
     }
 
     public static OS getOSType() {
