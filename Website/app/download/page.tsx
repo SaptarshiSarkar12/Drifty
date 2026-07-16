@@ -202,7 +202,7 @@ export default function DownloadPage() {
                   <div className="flex justify-between items-center">
                     <span>{asset.name}</span>
                     <div className="flex items-center space-x-2">
-                      {(asset.name.toLowerCase().includes("linux")) && (
+                      {asset.name.toLowerCase().includes("linux") && (
                         <FaLinux className="text-black dark:text-white h-6 w-6" />
                       )}
                       {(asset.name.toLowerCase().includes("mac") ||
