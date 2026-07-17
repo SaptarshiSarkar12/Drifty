@@ -541,7 +541,7 @@ public class Utility {
                 try (
                         InputStreamReader in = new InputStreamReader(p.getInputStream());
                         BufferedReader reader = new BufferedReader(in)
-                        )
+                )
                 {
                     String line;
                     while ((line = reader.readLine()) != null) {
