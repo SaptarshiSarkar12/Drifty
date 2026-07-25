@@ -8,23 +8,32 @@ updates:
   - package-ecosystem: "npm"
     directory: "/Website" # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
-      next-tailwindcss-types-node-eslint-dependencies:
+      website-core:
         patterns:
-          - "@next*"
-          - "next*"
-          - "@eslint-config-next*"
-          - "eslint-config-next*"
-          - "tailwindcss*"
-          - "@tailwindcss/postcss*"
-          - "@types/node*"
-      react-dependencies:
-        patterns:
-          - "@react*"
+          - "*next*"
+          - "nextra*"
           - "react*"
-          - "@react-dom*"
-          - "react-dom*"
+          - "@react*"
+          - "swr*"
+          - "react-icons*"
+          - "tailwindcss*"
+          - "@tailwindcss/*"
+          - "postcss*"
+          - "eslint*"
+          - "@eslint*"
+          - "@types/node*"
+          - "@types/react*"
+          - "@types/react-dom*"
+          - "typescript*"
+          - "dompurify*"
+      tooling-misc:
+        patterns:
+          - "pagefind*"
+          - "standard*"
+          - "@vercel/*"
+          - "@theguild/*"
     commit-message:
       prefix: "chore(npm)"
     labels:
@@ -34,7 +43,7 @@ updates:
   - package-ecosystem: "maven"
     directory: "/" # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       openrewrite-dependencies:
         patterns:
@@ -51,8 +60,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
     schedule:
-      # Check for updates to GitHub Actions every weekday
-      interval: "daily"
+      interval: "weekly"
     groups:
       docker-gh-actions-dependencies:
         patterns:
@@ -72,8 +80,7 @@ updates:
       - "/Docker/prod/CLI"
       - "/Docker/prod/GUI"
     schedule:
-      # Check for updates to Docker every day
-      interval: "daily"
+      interval: "weekly"
     commit-message:
       prefix: "chore(docker)"
     labels:
