@@ -39,27 +39,27 @@ public final class DbConnection {
 
     public void createTables() throws SQLException {
         final String createSessionTableQuery = """
-                CREATE TABLE IF NOT EXISTS SESSION (
-                    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    StartDate TEXT NOT NULL,
-                    EndDate TEXT
-                );
-            """;
+                    CREATE TABLE IF NOT EXISTS SESSION (
+                        Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        StartDate TEXT NOT NULL,
+                        EndDate TEXT
+                    );
+                """;
         final String createFileTableQuery = """
-                CREATE TABLE IF NOT EXISTS FILE (
-                    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                    FileName TEXT NOT NULL,
-                    FileUrl TEXT NOT NULL,
-                    DownloadUrl TEXT,
-                    SaveTargetPath TEXT NOT NULL,
-                    Size INTEGER,
-                    DownloadStartTime TEXT,
-                    DownloadEndTime TEXT,
-                    State TEXT NOT NULL,
-                    SessionId INTEGER NOT NULL,
-                    FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
-                );
-            """;
+                    CREATE TABLE IF NOT EXISTS FILE (
+                        Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                        FileName TEXT NOT NULL,
+                        FileUrl TEXT NOT NULL,
+                        DownloadUrl TEXT,
+                        SaveTargetPath TEXT NOT NULL,
+                        Size INTEGER,
+                        DownloadStartTime TEXT,
+                        DownloadEndTime TEXT,
+                        State TEXT NOT NULL,
+                        SessionId INTEGER NOT NULL,
+                        FOREIGN KEY (SessionId) REFERENCES SESSION(Id)
+                    );
+                """;
         try (PreparedStatement createSessionTableStatement = connection.prepareStatement(createSessionTableQuery);
              PreparedStatement createFileTableStatement = connection.prepareStatement(createFileTableQuery))
         {
