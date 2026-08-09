@@ -254,7 +254,7 @@ public final class DbConnection {
     }
 
     public synchronized int prepareFileForDownload(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
-        String selectQuery = "SELECT Id FROM FILE WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ? AND State = ? ORDER BY Id DESC LIMIT 1";
+        String selectQuery = "SELECT Id FROM FILE WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ? AND State = ? AND DownloadStartTime IS NULL ORDER BY Id DESC LIMIT 1";
         try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
             preparedStatement.setString(1, fileUrl);
             preparedStatement.setString(2, saveTargetPath);

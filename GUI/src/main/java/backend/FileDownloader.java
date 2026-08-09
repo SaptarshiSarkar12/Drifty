@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.TimeUnit;
 
 import static gui.support.Constants.*;
 import static init.Environment.currentSessionId;
@@ -87,7 +88,7 @@ public class FileDownloader implements Callable<DownloadResult> {
                     totalSize = con.getHeaderFieldLong("Content-Length", -1);
                     if (filename.isEmpty()) {
                         String[] webPaths = url.getFile().trim().split("/");
-                        filename = webPaths[webPaths.length - 1];
+                        filename = Utility.cleanFilename(webPaths[webPaths.length - 1]);
                         db.updateFileName(fileId, filename);
                     }
                     progressListener.onStart(job, totalSize);
@@ -148,16 +149,35 @@ public class FileDownloader implements Callable<DownloadResult> {
         M.msgDownloadInfo(String.format(DOWNLOADING_F, filename));
         Process process = processBuilder.start();
         try {
-            int exitCode = process.waitFor();
+            if (!process.waitFor(10, TimeUnit.MINUTES)) {
+                process.destroyForcibly();
+                throw new IOException(
+                        "Download process timed out for \"" + filename + "\""
+                );
+            }
+
+            int exitCode = process.exitValue();
+
             if (exitCode == 0) {
-                M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, filename));
+                M.msgDownloadInfo(
+                        String.format(SUCCESSFULLY_DOWNLOADED_F, filename)
+                );
                 return true;
             }
-            M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, filename));
+
+            M.msgDownloadError(
+                    String.format(FAILED_TO_DOWNLOAD_F, filename)
+            );
             return false;
+
         } catch (InterruptedException e) {
+            process.destroyForcibly();
             Thread.currentThread().interrupt();
-            throw new IOException("Failed to wait for download process to finish for \"" + filename + "\"", e);
+
+            throw new IOException(
+                    "Failed to wait for download process to finish for \"" + filename + "\"",
+                    e
+            );
         }
     }
 
@@ -166,10 +186,16 @@ public class FileDownloader implements Callable<DownloadResult> {
         long partSize = fileSize / numParts;
 
         LinkedList<SplitDownloadMetrics> list = new LinkedList<>();
+
         for (int x = 0; x < numParts; x++) {
             long startByte = x == 0 ? 0 : ((long) x * partSize) + 1;
-            long endByte = (numParts - 1) == x ? fileSize : ((long) x * partSize) + partSize;
-            SplitDownloadMetrics sdm = new SplitDownloadMetrics(x, startByte, endByte, filename, url);
+            long endByte = (numParts - 1) == x
+                    ? fileSize
+                    : ((long) x * partSize) + partSize;
+
+            SplitDownloadMetrics sdm =
+                    new SplitDownloadMetrics(x, startByte, endByte, filename, url);
+
             list.addLast(sdm);
             new Thread(split(sdm), "gui-split-download-" + x).start();
         }
@@ -177,46 +203,102 @@ public class FileDownloader implements Callable<DownloadResult> {
         long previousTotal = 0;
         boolean loop = true;
         boolean stopThreads = false;
+
         while (loop) {
             boolean allDone = true;
+
             for (SplitDownloadMetrics sdm : list) {
                 if (sdm.failed()) {
                     stopThreads = true;
                 }
+
                 if (sdm.running()) {
                     allDone = false;
                 }
             }
+
             if (stopThreads) {
                 for (SplitDownloadMetrics sdm : list) {
                     sdm.setStop();
                 }
+
+                boolean workersRunning;
+
+                do {
+                    workersRunning = false;
+
+                    for (SplitDownloadMetrics sdm : list) {
+                        if (sdm.running()) {
+                            workersRunning = true;
+                            break;
+                        }
+                    }
+
+                    if (workersRunning) {
+                        Utility.sleep(50);
+                    }
+                } while (workersRunning);
+
+                for (SplitDownloadMetrics sdm : list) {
+                    File tempFile = sdm.getFile();
+
+                    if (tempFile != null) {
+                        Files.deleteIfExists(tempFile.toPath());
+                    }
+                }
+
                 return false;
             }
 
             long currentTotal = totalTransferred.get();
+
             if (currentTotal > previousTotal) {
-                progressListener.onProgress(job, currentTotal - previousTotal, currentTotal, fileSize);
+                progressListener.onProgress(
+                        job,
+                        currentTotal - previousTotal,
+                        currentTotal,
+                        fileSize
+                );
+
                 previousTotal = currentTotal;
             }
+
             loop = !allDone;
+
             if (loop) {
                 Utility.sleep(250);
             }
         }
 
-        try (FileOutputStream fos = new FileOutputStream(job.getFile())) {
+        Path targetPath = Paths.get(dir, filename);
+
+        try (FileOutputStream fos = new FileOutputStream(targetPath.toFile())) {
             long position = 0;
+
             for (int i = 0; i < numParts; i++) {
                 File f = list.get(i).getFile();
-                try (FileInputStream fs = new FileInputStream(f); ReadableByteChannel rbs = Channels.newChannel(fs)) {
-                    fos.getChannel().transferFrom(rbs, position, f.length());
+
+                try (
+                        FileInputStream fs = new FileInputStream(f);
+                        ReadableByteChannel rbs = Channels.newChannel(fs)
+                ) {
+                    fos.getChannel().transferFrom(
+                            rbs,
+                            position,
+                            f.length()
+                    );
+
                     position += f.length();
                 }
+
                 Files.deleteIfExists(f.toPath());
             }
         }
-        M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, filename));
+
+        M.msgDownloadInfo(
+                String.format(SUCCESSFULLY_DOWNLOADED_F, filename)
+        );
+
         return true;
     }
 

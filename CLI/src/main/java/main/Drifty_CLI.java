@@ -381,9 +381,7 @@ public class Drifty_CLI {
     }
 
     private static void handleSpotifyPlaylist() {
-        for (Job job : resolveSpotifyPlaylistJobs()) {
-            executePreparedJob(job);
-        }
+         downloadJobsInParallel(resolveSpotifyPlaylistJobs());
     }
 
     private static List<Job> resolveSpotifyPlaylistJobs() {
@@ -604,9 +602,7 @@ public class Drifty_CLI {
     }
 
     private static void verifyJobAndDownload() {
-        for (Job job : resolvePreparedJobs()) {
-            executePreparedJob(job);
-        }
+        downloadJobsInParallel(resolvePreparedJobs());
     }
 
     private static List<Job> resolvePreparedJobs() {
@@ -691,12 +687,13 @@ public class Drifty_CLI {
                 return null;
             }
         } else {
-            jobHistory.addJob(job, true);
             renameFilenameIfRequired();
             if (link != null) {
                 job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
+                jobHistory.addJob(job, true);
                 return job;
             }
+            jobHistory.addJob(job, true);
         }
         return null;
     }

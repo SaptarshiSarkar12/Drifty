@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static cli.support.Constants.*;
 import static init.Environment.currentSessionId;
@@ -191,51 +192,119 @@ public class FileDownloader implements Runnable, Callable<DownloadResult> {
         List<Long> partSizes = new ArrayList<>(numberOfThreads);
         List<File> tempFiles = new ArrayList<>(numberOfThreads);
         List<DownloaderThread> downloaderThreads = new ArrayList<>(numberOfThreads);
+        Thread progressBarThread = null;
+
         long partSize = Math.floorDiv(totalSize, numberOfThreads);
 
-        for (int i = 0; i < numberOfThreads; i++) {
-            File file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
-            FileOutputStream fileOut = new FileOutputStream(file);
-            long start = i == 0 ? 0 : ((long) i * partSize) + 1;
-            long end = (numberOfThreads - 1) == i ? totalSize : ((long) i * partSize) + partSize;
-            DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
-            downloader.start();
-            fileOutputStreams.add(fileOut);
-            partSizes.add(end - start);
-            downloaderThreads.add(downloader);
-            tempFiles.add(file);
-        }
+        try {
+            for (int i = 0; i < numberOfThreads; i++) {
+                File file = Files.createTempFile(
+                        fileName.hashCode() + String.valueOf(i),
+                        ".tmp"
+                ).toFile();
 
-        if (!aggregateMode) {
-            ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, dir, totalSize, downloadMetrics);
-            progressBarThread.start();
-        }
+                FileOutputStream fileOut = new FileOutputStream(file);
 
-        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
-        boolean merged = false;
-        long previousTotal = 0;
-        while (!merged) {
-            long currentTotal = 0;
+                long start = i == 0 ? 0 : ((long) i * partSize) + 1;
+                long end = (numberOfThreads - 1) == i
+                        ? totalSize
+                        : ((long) i * partSize) + partSize;
+
+                DownloaderThread downloader = new DownloaderThread(
+                        url,
+                        fileOut,
+                        start,
+                        end
+                );
+
+                fileOutputStreams.add(fileOut);
+                partSizes.add(end - start);
+                downloaderThreads.add(downloader);
+                tempFiles.add(file);
+
+                downloader.start();
+            }
+
+            if (!aggregateMode) {
+                progressBarThread = new ProgressBarThread(
+                        fileOutputStreams,
+                        partSizes,
+                        fileName,
+                        dir,
+                        totalSize,
+                        downloadMetrics
+                );
+                progressBarThread.start();
+            }
+
+            M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+
+            boolean merged = false;
+            long previousTotal = 0;
+
+            while (!merged) {
+                long currentTotal = 0;
+
+                for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                    currentTotal += fileOutputStream.getChannel().size();
+                }
+
+                if (aggregateMode && currentTotal > previousTotal) {
+                    progressListener.onProgress(
+                            job,
+                            currentTotal - previousTotal,
+                            currentTotal,
+                            totalSize
+                    );
+                    previousTotal = currentTotal;
+                }
+
+                merged = mergeDownloadedFileParts(
+                        fileOutputStreams,
+                        partSizes,
+                        downloaderThreads,
+                        tempFiles
+                );
+
+                if (!merged) {
+                    sleep(250);
+                }
+            }
+
+            return true;
+
+        } finally {
+            downloadMetrics.setActive(false);
+
+            if (progressBarThread != null) {
+                progressBarThread.interrupt();
+                try {
+                    progressBarThread.join(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            for (DownloaderThread downloaderThread : downloaderThreads) {
+                if (downloaderThread.isAlive()) {
+                    downloaderThread.interrupt();
+                }
+            }
+
             for (FileOutputStream fileOutputStream : fileOutputStreams) {
-                currentTotal += fileOutputStream.getChannel().size();
+                try {
+                    fileOutputStream.close();
+                } catch (IOException ignored) {
+                }
             }
-            if (aggregateMode && currentTotal > previousTotal) {
-                progressListener.onProgress(job, currentTotal - previousTotal, currentTotal, totalSize);
-                previousTotal = currentTotal;
-            }
-            merged = mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles);
-            if (!merged) {
-                sleep(250);
+
+            for (File tempFile : tempFiles) {
+                try {
+                    Files.deleteIfExists(tempFile.toPath());
+                } catch (IOException ignored) {
+                }
             }
         }
-        downloadMetrics.setActive(false);
-        if (!aggregateMode) {
-            Utility.sleep(1800);
-        }
-        for (File tempFile : tempFiles) {
-            Files.deleteIfExists(tempFile.toPath());
-        }
-        return true;
     }
 
     public boolean mergeDownloadedFileParts(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
@@ -275,11 +344,15 @@ public class FileDownloader implements Runnable, Callable<DownloadResult> {
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
         Process process = processBuilder.start();
         try {
-            process.waitFor();
+            if(!process.waitFor(10, TimeUnit.MINUTES)){
+                process.destroyForcibly();
+                throw new IOException("Download process timed out for \""+ fileName + "\"");
+            }
         } catch (InterruptedException e) {
+            process.destroyForcibly();
             Thread.currentThread().interrupt();
             throw new IOException("Failed to wait for download process to finish for \"" + fileName + "\"", e);
-        }
+        } // Now yt-dlp has 10 mins of max runtime
 
         int exitValueOfYtDlp = process.exitValue();
         if (exitValueOfYtDlp == 0) {
