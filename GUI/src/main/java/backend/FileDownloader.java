@@ -281,7 +281,8 @@ public class FileDownloader implements Callable<DownloadResult> {
                 try (
                         FileInputStream fs = new FileInputStream(f);
                         ReadableByteChannel rbs = Channels.newChannel(fs)
-                ) {
+                )
+                {
                     fos.getChannel().transferFrom(
                             rbs,
                             position,
@@ -345,7 +346,8 @@ public class FileDownloader implements Callable<DownloadResult> {
         try (
                 InputStream in = url.openStream();
                 FileOutputStream out = new FileOutputStream(path.toFile())
-        ) {
+        )
+        {
             int bytesRead;
             long totalBytesRead = 0;
             byte[] buffer = new byte[8192];

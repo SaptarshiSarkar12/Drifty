@@ -10,5 +10,6 @@ public record BatchDownloadResult(
         long totalBytes,
         long elapsedMillis,
         List<DownloadResult> results
-) {
+)
+{
 }

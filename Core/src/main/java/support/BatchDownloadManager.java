@@ -134,8 +134,8 @@ public class BatchDownloadManager {
             AtomicLong downloadedBytes,
             AtomicLong knownTotalBytes,
             long startedAt
-    ) {
-        int doneJobs = completedJobs.get() + failedJobs.get();
+    )
+    {
         int queuedJobs = Math.max(0, totalJobs - startedJobs.get());
         long elapsedMillis = Math.max(1, System.currentTimeMillis() - startedAt);
         long speed = downloadedBytes.get() * 1000 / elapsedMillis;

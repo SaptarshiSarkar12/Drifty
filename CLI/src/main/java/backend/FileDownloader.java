@@ -157,7 +157,8 @@ public class FileDownloader implements Runnable, Callable<DownloadResult> {
                 InputStream in = url.openStream();
                 ReadableByteChannel readableByteChannel = Channels.newChannel(in);
                 FileOutputStream fos = new FileOutputStream(targetPath.toFile())
-        ) {
+        )
+        {
             if (aggregateMode) {
                 byte[] buffer = new byte[8192];
                 int bytesRead;
@@ -344,7 +345,7 @@ public class FileDownloader implements Runnable, Callable<DownloadResult> {
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
         Process process = processBuilder.start();
         try {
-            if(!process.waitFor(10, TimeUnit.MINUTES)){
+            if (!process.waitFor(10, TimeUnit.MINUTES)){
                 process.destroyForcibly();
                 throw new IOException("Download process timed out for \""+ fileName + "\"");
             }

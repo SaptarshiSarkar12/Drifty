@@ -6,5 +6,6 @@ public record DownloadResult(
         long downloadedBytes,
         long totalBytes,
         String message
-) {
+)
+{
 }

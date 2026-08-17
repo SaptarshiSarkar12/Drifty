@@ -381,7 +381,7 @@ public class Drifty_CLI {
     }
 
     private static void handleSpotifyPlaylist() {
-         downloadJobsInParallel(resolveSpotifyPlaylistJobs());
+        downloadJobsInParallel(resolveSpotifyPlaylistJobs());
     }
 
     private static List<Job> resolveSpotifyPlaylistJobs() {

@@ -10,7 +10,8 @@ public record BatchProgressSnapshot(
         long totalBytes,
         long bytesPerSecond,
         long elapsedMillis
-) {
+)
+{
     public double progress() {
         if (totalBytes > 0) {
             return Math.min(1.0d, (double) downloadedBytes / totalBytes);
