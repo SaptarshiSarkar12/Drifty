@@ -37,7 +37,7 @@ public final class DbConnection {
         return dbConnection;
     }
 
-    public void createTables() throws SQLException {
+    public synchronized void createTables() throws SQLException {
         final String createSessionTableQuery = """
                     CREATE TABLE IF NOT EXISTS SESSION (
                         Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -70,7 +70,7 @@ public final class DbConnection {
         }
     }
 
-    public int addSessionRecord(String startDate) throws SQLException {
+    public synchronized int addSessionRecord(String startDate) throws SQLException {
         String insertSessionQuery = "INSERT INTO SESSION (StartDate) VALUES (?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertSessionQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, startDate);
@@ -85,7 +85,7 @@ public final class DbConnection {
         }
     }
 
-    public void updateSessionEndDate(int sessionId, String endDate) throws SQLException {
+    public synchronized void updateSessionEndDate(int sessionId, String endDate) throws SQLException {
         String updateSessionQuery = "UPDATE SESSION SET EndDate = ? WHERE Id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateSessionQuery)) {
             preparedStatement.setString(1, endDate);
@@ -94,7 +94,7 @@ public final class DbConnection {
         }
     }
 
-    public void addFileRecordToQueue(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, int sessionId) throws SQLException {
+    public synchronized void addFileRecordToQueue(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, int sessionId) throws SQLException {
         String insertFileQuery = "INSERT INTO FILE (FileName, FileUrl, DownloadUrl, SaveTargetPath, State, SessionId) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, fileName);
@@ -114,7 +114,7 @@ public final class DbConnection {
         }
     }
 
-    public int addFileRecord(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
+    public synchronized int addFileRecord(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
         String insertFileQuery = "INSERT INTO FILE (FileName, FileUrl, DownloadUrl, SaveTargetPath, DownloadStartTime, State, SessionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertFileQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, fileName);
@@ -135,7 +135,7 @@ public final class DbConnection {
         }
     }
 
-    public void updateFileName(int fileId, String fileName) throws SQLException {
+    public synchronized void updateFileName(int fileId, String fileName) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET FileName = ? WHERE Id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
             preparedStatement.setString(1, fileName);
@@ -144,7 +144,7 @@ public final class DbConnection {
         }
     }
 
-    public void updateFileInfo(int fileId, FileState state, String endDownloadingTime, int size) throws SQLException {
+    public synchronized void updateFileInfo(int fileId, FileState state, String endDownloadingTime, int size) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadEndTime = ?, Size = ? WHERE Id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
             preparedStatement.setString(1, state.name());
@@ -155,7 +155,7 @@ public final class DbConnection {
         }
     }
 
-    public void updateFileState(String fileUrl, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime, int size) throws SQLException {
+    public synchronized void updateFileState(String fileUrl, String saveTargetPath, String fileName, FileState state, String startDownloadingTime, String endDownloadingTime, int size) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET State = ?, DownloadStartTime = ?, DownloadEndTime = ?, Size = ? WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
             preparedStatement.setString(1, state.name());
@@ -169,7 +169,7 @@ public final class DbConnection {
         }
     }
 
-    public void updateFile(String fileName, String fileUrl, String saveTargetPath) throws SQLException {
+    public synchronized void updateFile(String fileName, String fileUrl, String saveTargetPath) throws SQLException {
         String updateFileQuery = "UPDATE FILE SET FileName = ?, SaveTargetPath = ? WHERE FileUrl = ? AND State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateFileQuery)) {
             preparedStatement.setString(1, fileName);
@@ -180,7 +180,7 @@ public final class DbConnection {
         }
     }
 
-    public Collection<Job> getCompletedJobs() throws SQLException {
+    public synchronized Collection<Job> getCompletedJobs() throws SQLException {
         String query = "SELECT FileUrl, DownloadUrl, SaveTargetPath, FileName FROM FILE WHERE State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, FileState.COMPLETED.name());
@@ -200,7 +200,7 @@ public final class DbConnection {
         }
     }
 
-    public Collection<Job> getQueuedJobs() throws SQLException {
+    public synchronized Collection<Job> getQueuedJobs() throws SQLException {
         String query = "SELECT FileUrl, DownloadUrl, SaveTargetPath, FileName FROM FILE WHERE State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, FileState.QUEUED.name());
@@ -224,7 +224,7 @@ public final class DbConnection {
         }
     }
 
-    public void deleteQueuedFile(String fileUrl, String saveTargetPath, String fileName) throws SQLException {
+    public synchronized void deleteQueuedFile(String fileUrl, String saveTargetPath, String fileName) throws SQLException {
         String deleteFileQuery = "DELETE FROM FILE WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ? AND State = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery)) {
             preparedStatement.setString(1, fileUrl);
@@ -239,7 +239,7 @@ public final class DbConnection {
         }
     }
 
-    public void deleteFilesHistory() throws SQLException {
+    public synchronized void deleteFilesHistory() throws SQLException {
         String deleteFileQuery = "DELETE FROM FILE WHERE State IN (?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteFileQuery)) {
             preparedStatement.setString(1, FileState.COMPLETED.name());
@@ -251,5 +251,29 @@ public final class DbConnection {
                 System.out.println("Files successfully deleted from the database.");
             }
         }
+    }
+
+    public synchronized int prepareFileForDownload(String fileName, String fileUrl, String downloadUrl, String saveTargetPath, String startDownloadingTime, int sessionId) throws SQLException {
+        String selectQuery = "SELECT Id FROM FILE WHERE FileUrl = ? AND SaveTargetPath = ? AND FileName = ? AND State = ? AND DownloadStartTime IS NULL ORDER BY Id DESC LIMIT 1";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+            preparedStatement.setString(1, fileUrl);
+            preparedStatement.setString(2, saveTargetPath);
+            preparedStatement.setString(3, fileName);
+            preparedStatement.setString(4, FileState.QUEUED.name());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int fileId = resultSet.getInt("Id");
+                String updateQuery = "UPDATE FILE SET DownloadUrl = ?, DownloadStartTime = ?, DownloadEndTime = NULL, Size = NULL, SessionId = ? WHERE Id = ?";
+                try (PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                    updateStatement.setString(1, downloadUrl);
+                    updateStatement.setString(2, startDownloadingTime);
+                    updateStatement.setInt(3, sessionId);
+                    updateStatement.setInt(4, fileId);
+                    updateStatement.executeUpdate();
+                }
+                return fileId;
+            }
+        }
+        return addFileRecord(fileName, fileUrl, downloadUrl, saveTargetPath, startDownloadingTime, sessionId);
     }
 }

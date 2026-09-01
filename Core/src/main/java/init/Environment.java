@@ -6,7 +6,7 @@ import properties.Program;
 import updater.UpdateChecker;
 import utils.*;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.AccessDeniedException;
@@ -41,6 +41,17 @@ public class Environment {
         executor.scheduleAtFixedRate(Utility.setSpotifyAccessToken(), 0, 3480, TimeUnit.SECONDS); // Thread to refresh Spotify access token every 58 minutes
         String driftyFolderPath = OS.isWindows() ? Paths.get(System.getenv("LOCALAPPDATA")).resolve("Drifty").toAbsolutePath().toString() : Paths.get(System.getProperty("user.home")).resolve(".drifty").toAbsolutePath().toString();
         Program.setDriftyPath(driftyFolderPath);
+        Path driftyFolder = Paths.get(driftyFolderPath);
+        if (!Files.exists(driftyFolder)) {
+            try {
+                Files.createDirectories(driftyFolder);
+                msgBroker.msgInitInfo("Created Drifty folder : " + driftyFolderPath);
+            } catch (IOException e) {
+                msgBroker.msgInitError("Failed to create Drifty folder: " + driftyFolderPath + " - " + e.getMessage());
+            }
+        } else {
+            msgBroker.msgInitInfo("Drifty folder already exists : " + driftyFolderPath);
+        }
         boolean ffmpegWorking = Utility.isFFmpegWorking();
         if (!ffmpegWorking) {
             msgBroker.msgInitError("FFmpeg is not working! Please ensure that FFmpeg is installed and added to the system PATH.");
@@ -72,25 +83,16 @@ public class Environment {
             msgBroker.msgInitError("Failed to setup the database: " + e.getMessage());
             Environment.terminate(1);
         }
-        File folder = new File(driftyFolderPath);
-        if (!folder.exists()) {
-            try {
-                Files.createDirectory(folder.toPath());
-                msgBroker.msgInitInfo("Created Drifty folder : " + driftyFolderPath);
-            } catch (IOException e) {
-                msgBroker.msgInitError("Failed to create Drifty folder: " + driftyFolderPath + " - " + e.getMessage());
-            }
-        } else {
-            msgBroker.msgInitInfo("Drifty folder already exists : " + driftyFolderPath);
-        }
     }
 
     public static void terminate(int exitCode) {
         String endDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        try {
-            dbConnection.updateSessionEndDate(currentSessionId, endDate);
-        } catch (SQLException e) {
-            msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
+        if (dbConnection != null) {
+            try {
+                dbConnection.updateSessionEndDate(currentSessionId, endDate);
+            } catch (SQLException e) {
+                msgBroker.msgLogError("Failed to update session end date: " + e.getMessage());
+            }
         }
 
         AppSettings.setSpotifyAccessToken("");

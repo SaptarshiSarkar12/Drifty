@@ -79,7 +79,7 @@ public class Drifty_GUI extends Application {
                 e -> getRightClickContextMenu().show(scene.getWindow(), e.getScreenX(), e.getScreenY()));
         menu.setUseSystemMenuBar(true);
         UIController.initLogic(gridPane);
-        primaryStage.focusedProperty().addListener(((_, _, _) -> {
+        primaryStage.focusedProperty().addListener(((observable, oldValue, newValue) -> {
             if (UIController.isAutoPaste()) {
                 Clipboard clipboard = Clipboard.getSystemClipboard();
                 if (clipboard.hasString()) {
@@ -110,9 +110,9 @@ public class Drifty_GUI extends Application {
     private Menu getMenuItemsOfMenu() {
         Menu menu = new Menu("Menu");
         MenuItem website = new MenuItem("Project Website");
-        website.setOnAction(_ -> openWebsite(DRIFTY_WEBSITE_URL));
+        website.setOnAction(event -> openWebsite(DRIFTY_WEBSITE_URL));
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(_ -> {
+        exit.setOnAction(event -> {
             msgBroker.msgLogInfo(GUI_APPLICATION_TERMINATED);
             Environment.terminate(0);
         });
@@ -131,7 +131,7 @@ public class Drifty_GUI extends Application {
     private Menu getWindowMenu() {
         Menu menu = new Menu("Window");
         MenuItem fullScreen = new MenuItem("Toggle Full Screen");
-        fullScreen.setOnAction(_ -> toggleFullScreen());
+        fullScreen.setOnAction(event -> toggleFullScreen());
         menu.getItems().setAll(fullScreen);
         return menu;
     }
@@ -145,15 +145,15 @@ public class Drifty_GUI extends Application {
         MenuItem feature = new MenuItem("Suggest a Feature");
         MenuItem checkForUpdates = new MenuItem("Check for Updates");
         MenuItem about = new MenuItem("About Drifty");
-        contactUs.setOnAction(_ -> openWebsite("https://drifty.vercel.app/contact"));
-        contribute.setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
-        bug.setOnAction(_ -> openWebsite(
+        contactUs.setOnAction(event -> openWebsite("https://drifty.vercel.app/contact"));
+        contribute.setOnAction(event -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty"));
+        bug.setOnAction(event -> openWebsite(
                 "https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=Bug-for-application.yaml"));
         securityVulnerability
-                .setOnAction(_ -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
-        feature.setOnAction(_ -> openWebsite(
+                .setOnAction(event -> openWebsite("https://github.com/SaptarshiSarkar12/Drifty/security/advisories/new"));
+        feature.setOnAction(event -> openWebsite(
                 "https://github.com/SaptarshiSarkar12/Drifty/issues/new?template=feature-request-application.yaml"));
-        checkForUpdates.setOnAction(_ -> new Thread(() -> {
+        checkForUpdates.setOnAction(event -> new Thread(() -> {
             if (Utility.isOffline()) {
                 ConfirmationDialog noInternet = new ConfirmationDialog("No Internet Connection",
                         "You are currently offline! Please check your internet connection and try again.", true, false);
@@ -162,7 +162,7 @@ public class Drifty_GUI extends Application {
                 checkForUpdates();
             }
         }).start());
-        about.setOnAction(_ -> {
+        about.setOnAction(event -> {
             if (aboutInstance == null) {
                 aboutInstance = new About();
             }
@@ -194,7 +194,7 @@ public class Drifty_GUI extends Application {
         Menu menu = new Menu("Edit");
         MenuItem wipeHistory = new MenuItem("Clear Download History");
         MenuItem settings = new MenuItem("Settings");
-        wipeHistory.setOnAction(_ -> {
+        wipeHistory.setOnAction(event -> {
             ConfirmationDialog ask = new ConfirmationDialog("Clear Download History",
                     "Are you sure you wish to wipe out all of your download history?\n(This will NOT delete any downloaded files)",
                     false, false);
@@ -203,7 +203,7 @@ public class Drifty_GUI extends Application {
             }
         });
         try {
-            settings.setOnAction(_ -> settingsInstance.show());
+            settings.setOnAction(event -> settingsInstance.show());
 
             menu.getItems().addAll(wipeHistory, settings);
         } catch (Exception e) {
@@ -215,8 +215,8 @@ public class Drifty_GUI extends Application {
     private ContextMenu getRightClickContextMenu() {
         MenuItem miAdd = new MenuItem("Add Directory");
         MenuItem miDir = new MenuItem("Manage Directories");
-        miAdd.setOnAction(_ -> UIController.getDirectory());
-        miDir.setOnAction(_ -> {
+        miAdd.setOnAction(event -> UIController.getDirectory());
+        miDir.setOnAction(event -> {
             ManageFolders manage = new ManageFolders();
             manage.showScene();
             UIController.resetDownloadFoldersToActiveList();
