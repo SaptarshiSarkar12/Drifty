@@ -14,11 +14,18 @@ import properties.LinkType;
 import properties.MessageType;
 import properties.OS;
 import properties.Program;
+import support.BatchDownloadListener;
+import support.BatchDownloadManager;
+import support.BatchDownloadResult;
+import support.BatchProgressSnapshot;
 import support.DownloadConfiguration;
+import support.DownloadMetrics;
+import support.DownloadResult;
 import support.Job;
 import support.JobHistory;
 import updater.UpdateChecker;
 import utils.Logger;
+import utils.UnitConverter;
 
 import java.io.*;
 import java.net.URI;
@@ -54,6 +61,7 @@ public class Drifty_CLI {
         LOGGER.log(MessageType.INFO, CLI_APPLICATION_STARTED);
         messageBroker = new MessageBroker(System.out);
         Environment.setCLIMessageBroker(messageBroker);
+        utils.Utility.initializeUtility();
         utility = new Utility();
         checkAndUpdateDrifty(true);
         messageBroker.msgInitInfo("Initializing environment...");
@@ -373,6 +381,10 @@ public class Drifty_CLI {
     }
 
     private static void handleSpotifyPlaylist() {
+        downloadJobsInParallel(resolveSpotifyPlaylistJobs());
+    }
+
+    private static List<Job> resolveSpotifyPlaylistJobs() {
         messageBroker.msgFilenameInfo("Retrieving the number of tracks in the playlist...");
         DownloadConfiguration config = new DownloadConfiguration(link, downloadsFolder, null);
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
@@ -384,6 +396,7 @@ public class Drifty_CLI {
             messageBroker.msgLinkError("User interrupted the process of retrieving spotify playlist metadata! " + e.getMessage());
         }
         List<HashMap<String, Object>> playlistData = config.getFileData();
+        List<Job> resolvedJobs = new ArrayList<>();
         if (playlistData != null && !playlistData.isEmpty()) {
             int numberOfTracks = playlistData.size();
             for (HashMap<String, Object> songData : playlistData) {
@@ -393,11 +406,15 @@ public class Drifty_CLI {
                 fileName = songData.get("filename").toString();
                 String downloadLink = songData.get("downloadLink").toString();
                 messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
-                checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink)); // TODO: Add support for adding the parent playlist link to history
+                Job preparedJob = prepareJobForDownload(new Job(link, downloadsFolder, fileName, downloadLink));
+                if (preparedJob != null) {
+                    resolvedJobs.add(preparedJob);
+                }
             }
         } else {
             messageBroker.msgLinkError("Failed to retrieve playlist metadata!");
         }
+        return resolvedJobs;
     }
 
     private static void batchDownloader() {
@@ -454,6 +471,7 @@ public class Drifty_CLI {
                 fileNameMessage = numberOfFileNames + " filenames";
             }
             messageBroker.msgBatchInfo("You have provided\n\t" + linkMessage + "\n\t" + directoryMessage + "\n\t" + fileNameMessage);
+            List<Job> jobsToDownload = new ArrayList<>();
             for (int i = 0; i < numberOfLinks; i++) {
                 messageBroker.msgStyleInfo(BANNER_BORDER);
                 link = data.get("links").get(i);
@@ -480,11 +498,12 @@ public class Drifty_CLI {
                     fileName = null;
                 }
                 if (linkType.equals(LinkType.SPOTIFY) && link.contains("playlist")) {
-                    handleSpotifyPlaylist();
+                    jobsToDownload.addAll(resolveSpotifyPlaylistJobs());
                 } else {
-                    verifyJobAndDownload();
+                    jobsToDownload.addAll(resolvePreparedJobs());
                 }
             }
+            downloadJobsInParallel(jobsToDownload);
         } catch (IOException e) {
             messageBroker.msgDownloadError("Failed to load YAML data file (" + batchDownloadingFile + ") ! " + e.getMessage());
         } catch (YAMLException e) {
@@ -583,6 +602,10 @@ public class Drifty_CLI {
     }
 
     private static void verifyJobAndDownload() {
+        downloadJobsInParallel(resolvePreparedJobs());
+    }
+
+    private static List<Job> resolvePreparedJobs() {
         DownloadConfiguration config = new DownloadConfiguration(link, downloadsFolder, fileName);
         config.sanitizeLink();
         messageBroker.msgFilenameInfo("Retrieving file data...");
@@ -596,9 +619,10 @@ public class Drifty_CLI {
         }
         if (config.getStatusCode() != 0) {
             messageBroker.msgLinkError("Failed to fetch file data!");
-            return;
+            return List.of();
         }
         List<HashMap<String, Object>> fileData = config.getFileData();
+        List<Job> resolvedJobs = new ArrayList<>();
         if (fileData != null && !fileData.isEmpty()) {
             for (HashMap<String, Object> data : fileData) {
                 link = data.get("link").toString();
@@ -612,14 +636,25 @@ public class Drifty_CLI {
                     messageBroker.msgLinkInfo("[" + (fileData.indexOf(data) + 1) + "/" + fileData.size() + "] " + "Processing link : " + link);
                 }
                 messageBroker.msgFilenameInfo(FILENAME_DETECTED + "\"" + fileName + "\"");
-                checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, downloadLink));
+                Job preparedJob = prepareJobForDownload(new Job(link, downloadsFolder, fileName, downloadLink));
+                if (preparedJob != null) {
+                    resolvedJobs.add(preparedJob);
+                }
             }
         } else {
-            checkHistoryAndDownload(new Job(link, downloadsFolder, fileName, null));
+            Job preparedJob = prepareJobForDownload(new Job(link, downloadsFolder, fileName, null));
+            if (preparedJob != null) {
+                resolvedJobs.add(preparedJob);
+            }
         }
+        return resolvedJobs;
     }
 
     private static void checkHistoryAndDownload(Job job) {
+        executePreparedJob(prepareJobForDownload(job));
+    }
+
+    private static Job prepareJobForDownload(Job job) {
         boolean doesFileExist = job.fileExists();
         boolean hasHistory = jobHistory.exists(link);
         boolean fileExistsHasHistory = doesFileExist && hasHistory;
@@ -631,8 +666,7 @@ public class Drifty_CLI {
             if (link != null) {
                 job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
                 jobHistory.addJob(job, true);
-                FileDownloader downloader = new FileDownloader(job);
-                downloader.run();
+                return job;
             }
         } else if (fileExistsHasHistory) {
             messageBroker.msgHistoryWarning(String.format(MSG_FILE_EXISTS_HAS_HISTORY, job.getFilename(), job.getDir()), false);
@@ -645,22 +679,81 @@ public class Drifty_CLI {
                 if (link != null) {
                     job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
                     jobHistory.addJob(job, true);
-                    FileDownloader downloader = new FileDownloader(job);
-                    downloader.run();
+                    return job;
                 }
             } else {
                 messageBroker.msgHistoryWarning("Download cancelled!", false);
                 System.out.println();
+                return null;
             }
         } else {
-            jobHistory.addJob(job, true);
             renameFilenameIfRequired();
             if (link != null) {
                 job = new Job(link, downloadsFolder, fileName, job.getDownloadLink());
-                FileDownloader downloader = new FileDownloader(job);
-                downloader.run();
+                jobHistory.addJob(job, true);
+                return job;
             }
+            jobHistory.addJob(job, true);
         }
+        return null;
+    }
+
+    private static void executePreparedJob(Job job) {
+        if (job == null) {
+            return;
+        }
+        new FileDownloader(job).run();
+    }
+
+    private static void downloadJobsInParallel(List<Job> jobsToDownload) {
+        if (jobsToDownload.isEmpty()) {
+            messageBroker.msgBatchInfo("No jobs are ready to download.");
+            return;
+        }
+
+        BatchDownloadManager manager = new BatchDownloadManager(
+                new DownloadMetrics().getBatchThreadCount(),
+                new BatchDownloadListener() {
+                    @Override
+                    public void onBatchStart(BatchProgressSnapshot snapshot) {
+                        messageBroker.msgBatchInfo("Starting " + snapshot.totalJobs() + " downloads with up to " + new DownloadMetrics().getBatchThreadCount() + " parallel workers.");
+                    }
+
+                    @Override
+                    public void onBatchProgress(BatchProgressSnapshot snapshot) {
+                        String totalKnown = snapshot.totalBytes() > 0 ? UnitConverter.format(snapshot.totalBytes(), 2) : "unknown";
+                        messageBroker.msgBatchInfo(
+                                "Batch progress: running=" + snapshot.runningJobs()
+                                        + ", queued=" + snapshot.queuedJobs()
+                                        + ", completed=" + snapshot.completedJobs()
+                                        + ", failed=" + snapshot.failedJobs()
+                                        + ", downloaded=" + UnitConverter.format(snapshot.downloadedBytes(), 2)
+                                        + "/" + totalKnown
+                                        + ", speed=" + UnitConverter.format(snapshot.bytesPerSecond(), 2) + "/s"
+                        );
+                    }
+
+                    @Override
+                    public void onJobStarted(Job job, BatchProgressSnapshot snapshot) {
+                        messageBroker.msgDownloadInfo("Starting: " + job.getFilename());
+                    }
+
+                    @Override
+                    public void onJobCompleted(DownloadResult result, BatchProgressSnapshot snapshot) {
+                        if (result.success()) {
+                            messageBroker.msgDownloadInfo("Completed: " + result.job().getFilename());
+                        } else {
+                            messageBroker.msgDownloadError("Failed: " + result.job().getFilename());
+                        }
+                    }
+
+                    @Override
+                    public void onBatchCompleted(BatchDownloadResult result) {
+                        messageBroker.msgBatchInfo("Batch finished: " + result.completedJobs() + " completed, " + result.failedJobs() + " failed.");
+                    }
+                }
+        );
+        manager.execute(jobsToDownload, (job, listener) -> new FileDownloader(job, listener));
     }
 
     private static String normalizeUrl(String urlString) {
@@ -738,7 +831,7 @@ public class Drifty_CLI {
             if (data == null) {
                 data = new HashMap<>();
             }
-            data.computeIfAbsent("links", _ -> new ArrayList<>()); // Ensure 'links' list exists
+            data.computeIfAbsent("links", ignored -> new ArrayList<>()); // Ensure 'links' list exists
         } catch (YAMLException e) {
             String errorMessage = e.getMessage();
             if (errorMessage.contains("duplicate key")) {
