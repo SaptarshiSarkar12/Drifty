@@ -6,6 +6,8 @@ import properties.FileState;
 import properties.LinkType;
 import properties.Program;
 import support.DownloadMetrics;
+import support.DownloadProgressListener;
+import support.DownloadResult;
 import support.Job;
 import utils.DbConnection;
 import utils.MessageBroker;
@@ -24,15 +26,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static cli.support.Constants.*;
 import static init.Environment.currentSessionId;
 import static utils.Utility.sleep;
 
-public class FileDownloader implements Runnable {
+public class FileDownloader implements Runnable, Callable<DownloadResult> {
     private static final MessageBroker M = Environment.getMessageBroker();
     private final Job job;
     private final DownloadMetrics downloadMetrics;
+    private final DownloadProgressListener progressListener;
     private final int numberOfThreads;
     private final long threadMaxDataSize;
     private final String dir;
@@ -40,11 +45,15 @@ public class FileDownloader implements Runnable {
     private final String downloadLink;
     private final Path directoryPath;
     private final LinkType linkType;
+    private final boolean aggregateMode;
     private String fileName;
     private URL url;
-    private int fileId;
 
     public FileDownloader(Job job) {
+        this(job, null);
+    }
+
+    public FileDownloader(Job job, DownloadProgressListener progressListener) {
         this.job = job;
         this.fileLink = job.getSourceLink();
         this.downloadLink = job.getDownloadLink();
@@ -53,180 +62,275 @@ public class FileDownloader implements Runnable {
         this.dir = job.getDir();
         this.directoryPath = Paths.get(dir).toAbsolutePath();
         this.downloadMetrics = new DownloadMetrics();
+        this.aggregateMode = progressListener != null;
+        this.progressListener = progressListener == null ? new DownloadProgressListener() {
+        } : progressListener;
         this.numberOfThreads = downloadMetrics.getThreadCount();
         this.threadMaxDataSize = downloadMetrics.getMultiThreadingThreshold();
         downloadMetrics.setMultithreading(false);
     }
 
-    private void downloadFile() {
+    @Override
+    public DownloadResult call() {
+        String startDownloadingTime = timestamp();
+        int fileId = -1;
+        boolean started = false;
+        long totalSize = -1;
+        long downloadedSize = 0;
+        boolean success = false;
+        String message = "";
+
         try {
             DbConnection db = DbConnection.getInstance();
-            String endDownloadingTime;
-            try {
-                ReadableByteChannel readableByteChannel;
-                try {
-                    boolean supportsMultithreading = downloadMetrics.isMultithreadingEnabled();
-                    long totalSize = downloadMetrics.getTotalSize();
-                    if (supportsMultithreading) {
-                        List<FileOutputStream> fileOutputStreams = new ArrayList<>(numberOfThreads);
-                        List<Long> partSizes = new ArrayList<>(numberOfThreads);
-                        List<File> tempFiles = new ArrayList<>(numberOfThreads);
-                        List<DownloaderThread> downloaderThreads = new ArrayList<>(numberOfThreads);
-                        long partSize = Math.floorDiv(totalSize, numberOfThreads);
-                        long start;
-                        long end;
-                        FileOutputStream fileOut;
-                        File file;
-                        for (int i = 0; i < numberOfThreads; i++) {
-                            file = Files.createTempFile(fileName.hashCode() + String.valueOf(i), ".tmp").toFile();
-                            fileOut = new FileOutputStream(file);
-                            start = i == 0 ? 0 : ((i * partSize) + 1); // The start of the range of bytes to be downloaded by the thread
-                            end = (numberOfThreads - 1) == i ? totalSize : ((i * partSize) + partSize); // The end of the range of bytes to be downloaded by the thread
-                            DownloaderThread downloader = new DownloaderThread(url, fileOut, start, end);
-                            downloader.start();
-                            fileOutputStreams.add(fileOut);
-                            partSizes.add(end - start);
-                            downloaderThreads.add(downloader);
-                            tempFiles.add(file);
-                        }
-                        ProgressBarThread progressBarThread = new ProgressBarThread(fileOutputStreams, partSizes, fileName, dir, totalSize, downloadMetrics);
-                        progressBarThread.start();
-                        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
-                        // check if all the files are downloaded
-                        while (!mergeDownloadedFileParts(fileOutputStreams, partSizes, downloaderThreads, tempFiles)) {
-                            sleep(500);
-                        }
-                        for (File tempFile : tempFiles) {
-                            Files.deleteIfExists(tempFile.toPath());
-                        }
-                    } else {
-                        InputStream urlStream = url.openStream();
-                        readableByteChannel = Channels.newChannel(urlStream);
-                        FileOutputStream fos = new FileOutputStream(directoryPath.resolve(fileName).toFile());
-                        ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, dir, downloadMetrics);
-                        progressBarThread.start();
-                        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
-                        fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                        fos.close();
-                        urlStream.close();
-                    }
-                    downloadMetrics.setActive(false);
-                    // keep the main thread from closing the IO for a short amount of time so the UI thread can finish and give output
-                    Utility.sleep(1800);
+            fileId = db.prepareFileForDownload(fileName, fileLink, downloadLink, directoryPath.toString(), startDownloadingTime, currentSessionId);
 
-                    Path downloadedFilePath = directoryPath.resolve(fileName);
-                    long downloadedSize = Files.size(downloadedFilePath);
-                    endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
-                } catch (SecurityException e) {
-                    endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                    M.msgDownloadError("Write access to the download directory is DENIED! " + e.getMessage());
-                } catch (FileNotFoundException fileNotFoundException) {
-                    endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                    M.msgDownloadError(FILE_NOT_FOUND_ERROR);
-                } catch (IOException e) {
-                    endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                    db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                    M.msgDownloadError(FAILED_TO_DOWNLOAD_CONTENTS + e.getMessage());
+            if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
+                progressListener.onStart(job, -1);
+                started = true;
+                success = downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
+            } else {
+                url = new URI(downloadLink).toURL();
+                URLConnection openConnection = url.openConnection();
+                openConnection.connect();
+                totalSize = openConnection.getHeaderFieldLong("Content-Length", 0);
+                downloadMetrics.setTotalSize(totalSize);
+                String acceptRange = openConnection.getHeaderField("Accept-Ranges");
+                downloadMetrics.setMultithreading((totalSize > threadMaxDataSize) && ("bytes".equalsIgnoreCase(acceptRange)));
+                if (fileName.isEmpty()) {
+                    String[] webPaths = url.getFile().trim().split("/");
+                    fileName = webPaths[webPaths.length - 1];
+                    db.updateFileName(fileId, fileName);
                 }
-            } catch (NullPointerException e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgDownloadError(FAILED_READING_STREAM);
+                progressListener.onStart(job, totalSize);
+                started = true;
+                M.msgDownloadInfo("Trying to download \"" + fileName + "\" ...");
+                success = downloadMetrics.isMultithreadingEnabled() ? downloadFileInParts(totalSize) : downloadFileSequentially(totalSize);
             }
+
+            Path downloadedFilePath = directoryPath.resolve(fileName);
+            if (Files.exists(downloadedFilePath)) {
+                downloadedSize = Files.size(downloadedFilePath);
+            }
+
+            db.updateFileInfo(fileId, success ? FileState.COMPLETED : FileState.FAILED, timestamp(), success ? (int) downloadedSize : 0);
+            message = success ? String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) : String.format(FAILED_TO_DOWNLOAD_F, fileName);
+        } catch (MalformedURLException | URISyntaxException e) {
+            message = INVALID_LINK;
+            M.msgLinkError(INVALID_LINK);
+            updateFailure(fileId);
+        } catch (InvalidPathException e) {
+            message = "The downloaded file path (" + directoryPath.resolve(fileName) + ") is invalid! " + e.getMessage();
+            M.msgDownloadError(message);
+            updateFailure(fileId);
+        } catch (IOException e) {
+            message = String.format(FAILED_CONNECTION_F, url == null ? downloadLink : url);
+            M.msgDownloadError(message);
+            updateFailure(fileId);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            message = "An error occurred while trying to connect to the database! " + e.getMessage();
+            M.msgDownloadError(message);
+        } catch (RuntimeException e) {
+            message = e.getMessage() == null ? String.format(FAILED_TO_DOWNLOAD_F, fileName) : e.getMessage();
+            updateFailure(fileId);
+        } finally {
+            if (started) {
+                progressListener.onComplete(new DownloadResult(job, success, downloadedSize, totalSize, message));
+            }
         }
+
+        return new DownloadResult(job, success, downloadedSize, totalSize, message);
     }
 
-    private void downloadYoutubeOrInstagram(boolean isSpotifySong) {
-        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, downloadLink, "-o", fileName, "-t", (isSpotifySong ? "mp3" : "mp4"), "--js-runtimes", "deno:" + Program.get(Program.DENO)};
-        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
-        processBuilder.inheritIO();
+    @Override
+    public void run() {
+        call();
+    }
+
+    private boolean downloadFileSequentially(long totalSize) throws IOException {
+        Path targetPath = directoryPath.resolve(fileName);
+        long totalBytesRead = 0;
+        long bytesInTime = 0;
+        long start = System.currentTimeMillis();
         M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
-        Process process;
-        int exitValueOfYtDlp = 1;
+
+        try (
+                InputStream in = url.openStream();
+                ReadableByteChannel readableByteChannel = Channels.newChannel(in);
+                FileOutputStream fos = new FileOutputStream(targetPath.toFile())
+        )
+        {
+            if (aggregateMode) {
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    fos.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    progressListener.onProgress(job, bytesRead, totalBytesRead, totalSize);
+                    bytesInTime += bytesRead;
+                    maybeLogSpeed(totalSize, totalBytesRead, bytesInTime, start);
+                    if ((System.currentTimeMillis() - start) >= 1500) {
+                        start = System.currentTimeMillis();
+                        bytesInTime = 0;
+                    }
+                }
+            } else {
+                ProgressBarThread progressBarThread = new ProgressBarThread(fos, totalSize, fileName, dir, downloadMetrics);
+                progressBarThread.start();
+                fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+                downloadMetrics.setActive(false);
+                Utility.sleep(1800);
+            }
+        }
+
+        if (aggregateMode) {
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + OF_SIZE + UnitConverter.format(totalBytesRead, 2) + " at \"" + targetPath.toAbsolutePath() + "\"");
+        }
+        return true;
+    }
+
+    private boolean downloadFileInParts(long totalSize) throws IOException {
+        List<FileOutputStream> fileOutputStreams = new ArrayList<>(numberOfThreads);
+        List<Long> partSizes = new ArrayList<>(numberOfThreads);
+        List<File> tempFiles = new ArrayList<>(numberOfThreads);
+        List<DownloaderThread> downloaderThreads = new ArrayList<>(numberOfThreads);
+        Thread progressBarThread = null;
+
+        long partSize = Math.floorDiv(totalSize, numberOfThreads);
+
         try {
-            DbConnection db = DbConnection.getInstance();
-            String endDownloadingTime;
-            try {
-                process = processBuilder.start();
-                process.waitFor();
-                exitValueOfYtDlp = process.exitValue();
-            } catch (IOException e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgDownloadError("Failed to start download process for \"" + fileName + "\"");
-            } catch (Exception e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                String msg = e.getMessage();
-                String[] messageArray = msg.split(",");
-                if (messageArray.length >= 1 && messageArray[0].toLowerCase().trim().replace(" ", "").contains("cannotrunprogram")) { // If yt-dlp program is not marked as executable
-                    M.msgDownloadError(DRIFTY_COMPONENT_NOT_EXECUTABLE_ERROR);
-                } else if (messageArray.length >= 2 && "permissiondenied".equals(messageArray[1].toLowerCase().trim().replace(" ", ""))) { // If a private YouTube / Instagram video is asked to be downloaded
-                    M.msgDownloadError(PERMISSION_DENIED_ERROR);
-                } else if (messageArray.length >= 1 && "videounavailable".equals(messageArray[0].toLowerCase().trim().replace(" ", ""))) { // If YouTube / Instagram video is unavailable
-                    M.msgDownloadError(VIDEO_UNAVAILABLE_ERROR);
-                } else {
-                    M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
+            for (int i = 0; i < numberOfThreads; i++) {
+                File file = Files.createTempFile(
+                        fileName.hashCode() + String.valueOf(i),
+                        ".tmp"
+                ).toFile();
+
+                FileOutputStream fileOut = new FileOutputStream(file);
+
+                long start = i == 0 ? 0 : ((long) i * partSize) + 1;
+                long end = (numberOfThreads - 1) == i
+                        ? totalSize
+                        : ((long) i * partSize) + partSize;
+
+                DownloaderThread downloader = new DownloaderThread(
+                        url,
+                        fileOut,
+                        start,
+                        end
+                );
+
+                fileOutputStreams.add(fileOut);
+                partSizes.add(end - start);
+                downloaderThreads.add(downloader);
+                tempFiles.add(file);
+
+                downloader.start();
+            }
+
+            if (!aggregateMode) {
+                progressBarThread = new ProgressBarThread(
+                        fileOutputStreams,
+                        partSizes,
+                        fileName,
+                        dir,
+                        totalSize,
+                        downloadMetrics
+                );
+                progressBarThread.start();
+            }
+
+            M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+
+            boolean merged = false;
+            long previousTotal = 0;
+
+            while (!merged) {
+                long currentTotal = 0;
+
+                for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                    currentTotal += fileOutputStream.getChannel().size();
+                }
+
+                if (aggregateMode && currentTotal > previousTotal) {
+                    progressListener.onProgress(
+                            job,
+                            currentTotal - previousTotal,
+                            currentTotal,
+                            totalSize
+                    );
+                    previousTotal = currentTotal;
+                }
+
+                merged = mergeDownloadedFileParts(
+                        fileOutputStreams,
+                        partSizes,
+                        downloaderThreads,
+                        tempFiles
+                );
+
+                if (!merged) {
+                    sleep(250);
                 }
             }
-            try {
-                if (exitValueOfYtDlp == 0) {
-                    Path downloadedFilePath = directoryPath.resolve(fileName);
-                    long downloadedSize = Files.size(downloadedFilePath);
-                    M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + " (" + UnitConverter.format(downloadedSize, 2) + ")");
-                } else if (exitValueOfYtDlp == 1) {
-                    M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
-                    throw new Exception(String.format(FAILED_TO_DOWNLOAD_F, fileName));
-                } else {
-                    M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
-                    throw new Exception("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
+
+            return true;
+
+        } finally {
+            downloadMetrics.setActive(false);
+
+            if (progressBarThread != null) {
+                progressBarThread.interrupt();
+                try {
+                    progressBarThread.join(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
-            } catch (Exception e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgDownloadError("An Unknown Error occurred! " + e.getMessage());
-                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+
+            for (DownloaderThread downloaderThread : downloaderThreads) {
+                if (downloaderThread.isAlive()) {
+                    downloaderThread.interrupt();
+                }
+            }
+
+            for (FileOutputStream fileOutputStream : fileOutputStreams) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException ignored) {
+                }
+            }
+
+            for (File tempFile : tempFiles) {
+                try {
+                    Files.deleteIfExists(tempFile.toPath());
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 
     public boolean mergeDownloadedFileParts(List<FileOutputStream> fileOutputStreams, List<Long> partSizes, List<DownloaderThread> downloaderThreads, List<File> tempFiles) throws IOException {
-        // check if all files are downloaded
         int completed = 0;
-        FileOutputStream fileOutputStream;
-        DownloaderThread downloaderThread;
-        long partSize;
         for (int i = 0; i < numberOfThreads; i++) {
-            fileOutputStream = fileOutputStreams.get(i);
-            partSize = partSizes.get(i);
-            downloaderThread = downloaderThreads.get(i);
+            FileOutputStream fileOutputStream = fileOutputStreams.get(i);
+            long partSize = partSizes.get(i);
+            DownloaderThread downloaderThread = downloaderThreads.get(i);
             if (fileOutputStream.getChannel().size() < partSize) {
                 if (!downloaderThread.isAlive()) {
-                    M.msgDownloadError("Error encountered while downloading the file! Please try again.");
+                    throw new IOException("Error encountered while downloading the file! Please try again.");
                 }
             } else if (!downloaderThread.isAlive()) {
                 completed++;
             }
         }
-        // check if it is merged-able
+
         if (completed == numberOfThreads) {
             try (FileOutputStream fos = new FileOutputStream(directoryPath.resolve(fileName).toFile())) {
                 long position = 0;
-                for (int i = 0; i < numberOfThreads; i++) {
-                    File f = tempFiles.get(i);
-                    FileInputStream fs = new FileInputStream(f);
-                    ReadableByteChannel rbs = Channels.newChannel(fs);
-                    fos.getChannel().transferFrom(rbs, position, f.length());
-                    position += f.length();
-                    fs.close();
-                    rbs.close();
+                for (File f : tempFiles) {
+                    try (FileInputStream fs = new FileInputStream(f); ReadableByteChannel rbs = Channels.newChannel(fs)) {
+                        fos.getChannel().transferFrom(rbs, position, f.length());
+                        position += f.length();
+                    }
                 }
             }
             return true;
@@ -234,56 +338,64 @@ public class FileDownloader implements Runnable {
         return false;
     }
 
-    @Override
-    public void run() {
-        String startDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        int sessionId = currentSessionId;
+    private boolean downloadYoutubeOrInstagram(boolean isSpotifySong) throws IOException {
+        String[] fullCommand = new String[]{Program.get(Program.YT_DLP), "--quiet", "--progress", "-P", dir, downloadLink, "-o", fileName, "-t", (isSpotifySong ? "mp3" : "mp4"), "--js-runtimes", "deno:" + Program.get(Program.DENO)};
+        ProcessBuilder processBuilder = new ProcessBuilder(fullCommand);
+        processBuilder.inheritIO();
+        M.msgDownloadInfo(String.format(DOWNLOADING_F, fileName));
+        Process process = processBuilder.start();
         try {
-            DbConnection db = DbConnection.getInstance();
-            String endDownloadingTime;
-            try {
-                fileId = db.addFileRecord(fileName, fileLink, downloadLink, directoryPath.toString(), startDownloadingTime, sessionId);
-
-                // If the link is of a YouTube or Instagram video, then the following block of code will execute.
-                if (linkType.equals(LinkType.YOUTUBE) || linkType.equals(LinkType.INSTAGRAM)) {
-                    downloadYoutubeOrInstagram(LinkType.getLinkType(job.getSourceLink()).equals(LinkType.SPOTIFY));
-                } else {
-                    url = new URI(downloadLink).toURL();
-                    URLConnection openConnection = url.openConnection();
-                    openConnection.connect();
-                    long totalSize = openConnection.getHeaderFieldLong("Content-Length", 0);
-                    downloadMetrics.setTotalSize(totalSize);
-                    String acceptRange = openConnection.getHeaderField("Accept-Ranges");
-                    downloadMetrics.setMultithreading((totalSize > threadMaxDataSize) && ("bytes".equalsIgnoreCase(acceptRange)));
-                    if (fileName.isEmpty()) {
-                        String[] webPaths = url.getFile().trim().split("/");
-                        fileName = webPaths[webPaths.length - 1];
-                    }
-                    M.msgDownloadInfo("Trying to download \"" + fileName + "\" ...");
-                    downloadFile();
-                }
-                Path downloadedFilePath = directoryPath.resolve(fileName);
-                long downloadedSize = Files.size(downloadedFilePath);
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.COMPLETED, endDownloadingTime, (int) downloadedSize);
-            } catch (MalformedURLException | URISyntaxException e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgLinkError(INVALID_LINK);
-            } catch (InvalidPathException e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgDownloadError("The downloaded file path (" + directoryPath.resolve(fileName) + ") is invalid! " + e.getMessage());
-            } catch (IOException e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
-                M.msgDownloadError(String.format(FAILED_CONNECTION_F, url));
-            } catch (Exception e) {
-                endDownloadingTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-                db.updateFileInfo(fileId, FileState.FAILED, endDownloadingTime, 0);
+            if (!process.waitFor(10, TimeUnit.MINUTES)){
+                process.destroyForcibly();
+                throw new IOException("Download process timed out for \""+ fileName + "\"");
             }
-        } catch (SQLException e) {
-            M.msgDownloadError("An error occurred while trying to connect to the database! " + e.getMessage());
+        } catch (InterruptedException e) {
+            process.destroyForcibly();
+            Thread.currentThread().interrupt();
+            throw new IOException("Failed to wait for download process to finish for \"" + fileName + "\"", e);
+        } // Now yt-dlp has 10 mins of max runtime
+
+        int exitValueOfYtDlp = process.exitValue();
+        if (exitValueOfYtDlp == 0) {
+            Path downloadedFilePath = directoryPath.resolve(fileName);
+            long downloadedSize = Files.exists(downloadedFilePath) ? Files.size(downloadedFilePath) : 0;
+            M.msgDownloadInfo(String.format(SUCCESSFULLY_DOWNLOADED_F, fileName) + " (" + UnitConverter.format(downloadedSize, 2) + ")");
+            return true;
         }
+
+        if (exitValueOfYtDlp == 1) {
+            M.msgDownloadError(String.format(FAILED_TO_DOWNLOAD_F, fileName));
+            return false;
+        }
+
+        M.msgDownloadError("An Unknown Error occurred! Exit code: " + exitValueOfYtDlp);
+        return false;
+    }
+
+    private void updateFailure(int fileId) {
+        if (fileId < 0) {
+            return;
+        }
+        try {
+            DbConnection.getInstance().updateFileInfo(fileId, FileState.FAILED, timestamp(), 0);
+        } catch (SQLException ignored) {
+        }
+    }
+
+    private void maybeLogSpeed(long totalSize, long totalBytesRead, long bytesInTime, long start) {
+        if (!aggregateMode) {
+            return;
+        }
+        long end = System.currentTimeMillis();
+        double seconds = (end - start) / 1000.0;
+        if (seconds >= 1.5) {
+            String totalDownloaded = UnitConverter.format(totalBytesRead, 2);
+            double bytesTransferredPerSecond = bytesInTime / seconds;
+            M.msgDownloadInfo("Downloading at " + UnitConverter.format(bytesTransferredPerSecond, 2) + "/s (Downloaded " + totalDownloaded + " out of " + UnitConverter.format(totalSize, 2) + ")");
+        }
+    }
+
+    private String timestamp() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
     }
 }
