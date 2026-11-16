@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -50,11 +51,17 @@ public class UIComponentBuilder {
         return hbox;
     }
 
+    /** The scale defines the preferred size; the parent layout controls the displayed size. */
     public ImageView buildImageView(Image image, double scale) {
-        ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(image.getWidth() * scale);
-        return imageView;
+        return new ResizableImageView(image, scale);
+    }
+
+    public StackPane buildImageGraphic(Image image, double scale) {
+        ImageView imageView = buildImageView(image, scale);
+        StackPane graphic = new StackPane(imageView);
+        graphic.setPrefSize(imageView.prefWidth(-1), imageView.prefHeight(-1));
+        graphic.setMouseTransparent(true);
+        return graphic;
     }
 
     public TextField buildTextField() {

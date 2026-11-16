@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
@@ -29,11 +29,11 @@ public class Theme {
     }
 
     private static void setupButton(Image imageUp, Image imageDown, Button button) {
-        ImageView imageViewUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageUp, 0.45);
-        ImageView imageViewDown = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageDown, 0.45);
-        button.setOnMousePressed(ev -> button.setGraphic(imageViewDown));
-        button.setOnMouseReleased(ev -> button.setGraphic(imageViewUp));
-        button.setGraphic(imageViewUp);
+        StackPane graphicUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageGraphic(imageUp, 0.45);
+        StackPane graphicDown = UI_COMPONENT_BUILDER_INSTANCE.buildImageGraphic(imageDown, 0.45);
+        button.setOnMousePressed(ev -> button.setGraphic(graphicDown));
+        button.setOnMouseReleased(ev -> button.setGraphic(graphicUp));
+        button.setGraphic(graphicUp);
     }
 
     private static void setupButtonGraphics(String theme) {
