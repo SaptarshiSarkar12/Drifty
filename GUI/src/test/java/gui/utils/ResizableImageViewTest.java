@@ -19,6 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ui.MainGridPane;
 
+import java.util.Locale;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
@@ -193,7 +194,7 @@ public class ResizableImageViewTest {
         if (normalized.endsWith("%")) {
             return Double.parseDouble(normalized.substring(0, normalized.length() - 1)) / 100.0;
         }
-        if (normalized.toLowerCase().endsWith("dpi")) {
+        if (normalized.toLowerCase(Locale.ROOT).endsWith("dpi")) {
             return Double.parseDouble(normalized.substring(0, normalized.length() - 3).trim()) / 96.0;
         }
         return Double.parseDouble(normalized);
