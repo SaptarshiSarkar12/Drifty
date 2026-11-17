@@ -146,8 +146,16 @@ public class ResizableImageViewTest {
             stage.show();
             String requestedScale = System.getProperty("glass.win.uiScale");
             if (requestedScale != null) {
-                assertEquals(Double.parseDouble(requestedScale), stage.getOutputScaleX(), TOLERANCE);
-                assertEquals(Double.parseDouble(requestedScale), stage.getOutputScaleY(), TOLERANCE);
+                String normalizedScale = requestedScale.trim();
+                if (normalizedScale.endsWith("%")) {
+                    normalizedScale = Double.toString(Double.parseDouble(normalizedScale.substring(0, normalizedScale.length() - 1)) / 100.0);
+                } else if (normalizedScale.toLowerCase().endsWith("dpi")) {
+                    normalizedScale = Double.toString(Double.parseDouble(normalizedScale.substring(0, normalizedScale.length() - 3).trim()) / 96.0);
+                }
+                double expectedScale = Double.parseDouble(normalizedScale);
+
+                assertEquals(expectedScale, stage.getOutputScaleX(), TOLERANCE);
+                assertEquals(expectedScale, stage.getOutputScaleY(), TOLERANCE);
             }
             System.out.println("Verified window output scale: " + stage.getOutputScaleX() + "x" + stage.getOutputScaleY());
             try {
