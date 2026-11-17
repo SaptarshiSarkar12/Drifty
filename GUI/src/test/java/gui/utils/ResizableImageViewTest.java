@@ -146,16 +146,13 @@ public class ResizableImageViewTest {
             stage.show();
             String requestedScale = System.getProperty("glass.win.uiScale");
             if (requestedScale != null) {
-                String normalizedScale = requestedScale.trim();
-                if (normalizedScale.endsWith("%")) {
-                    normalizedScale = Double.toString(Double.parseDouble(normalizedScale.substring(0, normalizedScale.length() - 1)) / 100.0);
-                } else if (normalizedScale.toLowerCase().endsWith("dpi")) {
-                    normalizedScale = Double.toString(Double.parseDouble(normalizedScale.substring(0, normalizedScale.length() - 3).trim()) / 96.0);
+                try {
+                    double expectedScale = parseUiScale(requestedScale);
+                    assertEquals(expectedScale, stage.getOutputScaleX(), TOLERANCE);
+                    assertEquals(expectedScale, stage.getOutputScaleY(), TOLERANCE);
+                } catch (NumberFormatException e) {
+                    throw new AssertionError("Unsupported glass.win.uiScale value: " + requestedScale, e);
                 }
-                double expectedScale = Double.parseDouble(normalizedScale);
-
-                assertEquals(expectedScale, stage.getOutputScaleX(), TOLERANCE);
-                assertEquals(expectedScale, stage.getOutputScaleY(), TOLERANCE);
             }
             System.out.println("Verified window output scale: " + stage.getOutputScaleX() + "x" + stage.getOutputScaleY());
             try {
@@ -189,6 +186,17 @@ public class ResizableImageViewTest {
                 stage.close();
             }
         });
+    }
+
+    private static double parseUiScale(String scale) {
+        String normalized = scale.trim();
+        if (normalized.endsWith("%")) {
+            return Double.parseDouble(normalized.substring(0, normalized.length() - 1)) / 100.0;
+        }
+        if (normalized.toLowerCase().endsWith("dpi")) {
+            return Double.parseDouble(normalized.substring(0, normalized.length() - 3).trim()) / 96.0;
+        }
+        return Double.parseDouble(normalized);
     }
 
     private static ImageView image(int width, int height) {
