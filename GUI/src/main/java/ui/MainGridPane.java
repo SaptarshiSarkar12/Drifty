@@ -3,6 +3,7 @@ package ui;
 import settings.AppSettings;
 import gui.support.Constants;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,6 +13,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import support.Job;
 
 import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
@@ -28,7 +30,7 @@ public class MainGridPane extends GridPane {
     public final Button btnSave = initButton(Constants.IMG_SAVE_UP_DARK, Constants.IMG_SAVE_DOWN_DARK, Constants.IMG_SAVE_UP_LIGHT, Constants.IMG_SAVE_DOWN_LIGHT);
     public final CheckBox cbAutoPaste = new CheckBox();
     private final HBox boxAutoPaste = boxAutoPaste();
-    public static HBox boxLogo = UI_COMPONENT_BUILDER_INSTANCE.buildHBox(ivLogo);
+    public static StackPane boxLogo = new StackPane(ivLogo);
     public final Label lblLinkOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
     public final Label lblDirOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
     public final Label lblFilenameOut = UI_COMPONENT_BUILDER_INSTANCE.buildLabel();
@@ -51,6 +53,10 @@ public class MainGridPane extends GridPane {
         this.setHgap(20);
         this.setVgap(10);
         setColumnSpan(boxLogo, 4);
+        // GridPane measures spanning children at their preferred width, so reserve the banner's height explicitly.
+        boxLogo.prefHeightProperty().bind(Bindings.createDoubleBinding(
+                () -> ivLogo.prefHeight(Math.max(0, getWidth() - getInsets().getLeft() - getInsets().getRight())),
+                widthProperty(), insetsProperty(), ivLogo.imageProperty()));
         setColumnSpan(pBar, 4);
         setColumnSpan(boxAutoPaste, 2);
         setColumnSpan(ivDir, 3);
@@ -138,17 +144,19 @@ public class MainGridPane extends GridPane {
 
     private HBox boxAutoPaste() {
         HBox box = new HBox(10, ivAutoPaste, cbAutoPaste);
+        HBox.setHgrow(ivAutoPaste, Priority.ALWAYS);
         box.setAlignment(Pos.CENTER_RIGHT);
         return box;
     }
 
     private Button newButton(Image imageUp, Image imageDown) {
         Button button = new Button();
-        ImageView imageViewUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageUp, 0.45);
-        ImageView imageViewDn = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(imageDown, 0.45);
-        button.setOnMousePressed(e -> button.setGraphic(imageViewDn));
-        button.setOnMouseReleased(e -> button.setGraphic(imageViewUp));
-        button.setGraphic(imageViewUp);
+        button.setMaxWidth(Double.MAX_VALUE);
+        StackPane graphicUp = UI_COMPONENT_BUILDER_INSTANCE.buildImageGraphic(imageUp, 0.45);
+        StackPane graphicDown = UI_COMPONENT_BUILDER_INSTANCE.buildImageGraphic(imageDown, 0.45);
+        button.setOnMousePressed(e -> button.setGraphic(graphicDown));
+        button.setOnMouseReleased(e -> button.setGraphic(graphicUp));
+        button.setGraphic(graphicUp);
         button.getStyleClass().add("glassButton");
         return button;
     }

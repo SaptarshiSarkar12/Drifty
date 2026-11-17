@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -17,6 +18,8 @@ import settings.AppSettings;
 
 import java.util.Objects;
 
+import static gui.support.Constants.UI_COMPONENT_BUILDER_INSTANCE;
+
 public class Splash extends Preloader {
     private Stage stage;
     private Scene scene;
@@ -24,13 +27,13 @@ public class Splash extends Preloader {
     @Override
     public void init() {
         Image splashImage = new Image(Objects.requireNonNull(Constants.SPLASH).toExternalForm());
-        ImageView ivSplash = new ImageView(splashImage);
-        double fitWidth = Constants.SCREEN_WIDTH * .45;
-        ivSplash.setPreserveRatio(true);
-        ivSplash.setFitWidth(fitWidth);
+        double scale = Math.min(Constants.SCREEN_WIDTH * .45 / splashImage.getWidth(),
+                Constants.SCREEN_HEIGHT * .45 / splashImage.getHeight());
+        ImageView ivSplash = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(splashImage, scale);
         VBox vBox = new VBox();
         vBox.getChildren().addAll(ivSplash);
         vBox.setAlignment(Pos.CENTER);
+        VBox.setVgrow(ivSplash, Priority.ALWAYS);
         vBox.setStyle("-fx-background-color: transparent");
         scene = new Scene(vBox);
         scene.setFill(Color.TRANSPARENT);

@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 
 public class About {
     private static Scene aboutScene;
-    private static final ImageView IV_SPLASH = new ImageView(Constants.imgSplash);
+    private static final ImageView IV_SPLASH = UI_COMPONENT_BUILDER_INSTANCE.buildImageView(Constants.imgSplash, .45);
     private static final MessageBroker MSG_BROKER = Environment.getMessageBroker();
     private Label lblDescription;
     private Label lblDriftyVersion;
@@ -37,7 +37,6 @@ public class About {
         VBox aboutRoot = new VBox(10);
         aboutRoot.setPadding(new Insets(10));
         aboutRoot.setAlignment(Pos.TOP_CENTER);
-        setupImageView();
         createLabels();
         createHyperlinks();
         setupStage();
@@ -52,12 +51,6 @@ public class About {
         aboutRoot.getChildren().addAll(websiteLink, discordLink, githubLink);
         aboutScene = Constants.getScene(aboutRoot);
         applyThemeSettings(aboutRoot);
-    }
-
-    private void setupImageView() {
-        IV_SPLASH.setFitWidth(Constants.SCREEN_WIDTH * 0.2);
-        IV_SPLASH.setFitHeight(Constants.SCREEN_HEIGHT * 0.2);
-        IV_SPLASH.setPreserveRatio(true);
     }
 
     private void setupStage() {
