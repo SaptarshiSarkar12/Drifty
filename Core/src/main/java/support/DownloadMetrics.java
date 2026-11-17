@@ -46,4 +46,8 @@ public class DownloadMetrics {
         // 50 MB
         return 52428800;
     }
+
+    public int getBatchThreadCount() {
+        return Math.max(2, Math.min(Runtime.getRuntime().availableProcessors(), 4));
+    }
 }

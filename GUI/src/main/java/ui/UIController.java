@@ -13,9 +13,7 @@ import gui.utils.MessageBroker;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,7 +34,14 @@ import properties.OS;
 import support.Job;
 import support.JobHistory;
 import support.Jobs;
+import support.BatchDownloadListener;
+import support.BatchDownloadManager;
+import support.BatchDownloadResult;
+import support.BatchProgressSnapshot;
+import support.DownloadMetrics;
+import support.DownloadResult;
 import utils.DbConnection;
+import utils.UnitConverter;
 import utils.Utility;
 
 import java.io.File;
@@ -191,7 +196,7 @@ public final class UIController {
         Tooltip.install(form.tfFilename, new Tooltip("If the filename you enter already exists in the download folder, it will" + nl + "automatically be renamed to avoid file over-writes."));
         Tooltip.install(form.tfDir, new Tooltip("Right click anywhere to add a new download folder." + nl + "Drifty will accumulate a list of download folders" + nl + "so that duplicate downloads can be detected."));
         form.cbAutoPaste.setSelected(AppSettings.isGuiAutoPasteEnabled());
-        form.tfDir.textProperty().addListener(((_, oldValue, newValue) -> {
+        form.tfDir.textProperty().addListener(((observable, oldValue, newValue) -> {
             if (!newValue.equals(oldValue)) {
                 DIRECTORY_EXISTS.setValue(false);
                 if (newValue.isEmpty()) {
@@ -212,7 +217,7 @@ public final class UIController {
     }
 
     private void setControlActions() {
-        form.btnSave.setOnAction(_ -> new Thread(() -> {
+        form.btnSave.setOnAction(event -> new Thread(() -> {
             UPDATING_BATCH.setValue(true);
             String link = getLink();
             filename = getFilename();
@@ -229,7 +234,7 @@ public final class UIController {
             setDir(folders.getDownloadFolder());
             UPDATING_BATCH.setValue(false);
         }).start());
-        form.btnStart.setOnAction(_ -> new Thread(() -> {
+        form.btnStart.setOnAction(event -> new Thread(() -> {
             if (PROCESSING_BATCH.getValue().equals(true)) {
                 return;
             }
@@ -240,9 +245,9 @@ public final class UIController {
                 new Thread(batchDownloader()).start();
             }
         }).start());
-        form.tfDir.setOnAction(_ -> updateBatch());
-        form.tfFilename.setOnAction(_ -> updateBatch());
-        form.tfLink.setOnKeyTyped(_ -> processLink());
+        form.tfDir.setOnAction(event -> updateBatch());
+        form.tfFilename.setOnAction(event -> updateBatch());
+        form.tfLink.setOnKeyTyped(event -> processLink());
         form.listView.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 1) {
                 if (UPDATING_BATCH.getValue().equals(true)) {
@@ -418,43 +423,53 @@ public final class UIController {
         return () -> {
             PROCESSING_BATCH.setValue(true);
             UPDATING_BATCH.setValue(false);
-            form.lblDownloadInfo.setTextFill(GREEN);
-            IntegerProperty speedValueProperty = new SimpleIntegerProperty();
-            speedValueProperty.addListener(((_, oldValue, newValue) -> {
-                if (!oldValue.equals(newValue)) {
-                    speedValue += (int) newValue;
-                    speedValueUpdateCount++;
-                    if (speedValueUpdateCount == 5) {
-                        int speed = speedValue / 5;
-                        speedValueUpdateCount = 0;
-                        speedValue = 0;
-                        setFilenameOutput(GREEN, "Speed: " + speed + " KB/s");
-                    }
-                }
-            }));
+            Platform.runLater(() -> {
+                form.lblDownloadInfo.textProperty().unbind();
+                form.pBar.progressProperty().unbind();
+                form.lblDownloadInfo.setTextFill(GREEN);
+                form.pBar.setProgress(0.0);
+            });
             Jobs jobs = getJobs();
             if (jobs.notNull() && !jobs.isEmpty()) {
-                final int totalFiles = jobs.jobList().size();
-                int fileCount = 0;
                 LinkedList<Job> tempJobList = new LinkedList<>(jobs.jobList());
-                for (Job job : tempJobList) {
-                    fileCount++;
-                    M.msgBatchInfo("Processing file " + fileCount + " of " + totalFiles + ": " + job);
-                    FileDownloader downloadFile = new FileDownloader(job, form.tfLink.textProperty(), form.tfDir.textProperty(), form.tfFilename.textProperty(), form.lblDownloadInfo.textProperty(), speedValueProperty, form.pBar.progressProperty());
-                    try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
-                        executor.submit(downloadFile);
-                        while (downloadFile.notDone()) {
-                            sleep(500);
+                BatchDownloadManager manager = new BatchDownloadManager(
+                        new DownloadMetrics().getBatchThreadCount(),
+                        new BatchDownloadListener() {
+                            @Override
+                            public void onBatchStart(BatchProgressSnapshot snapshot) {
+                                updateAggregateBatchUi(snapshot, "Starting batch download...");
+                            }
+
+                            @Override
+                            public void onBatchProgress(BatchProgressSnapshot snapshot) {
+                                updateAggregateBatchUi(snapshot, null);
+                            }
+
+                            @Override
+                            public void onJobStarted(Job job, BatchProgressSnapshot snapshot) {
+                                M.msgBatchInfo("Starting download: " + job.getFilename());
+                                updateAggregateBatchUi(snapshot, "Downloading " + job.getFilename());
+                            }
+
+                            @Override
+                            public void onJobCompleted(DownloadResult result, BatchProgressSnapshot snapshot) {
+                                if (result.success()) {
+                                    removeJobFromList(result.job());
+                                }
+                                updateAggregateBatchUi(snapshot, result.message());
+                            }
+
+                            @Override
+                            public void onBatchCompleted(BatchDownloadResult result) {
+                                Platform.runLater(() -> {
+                                    form.pBar.setProgress(result.totalJobs() == 0 ? 0.0 : 1.0);
+                                    form.lblDownloadInfo.setTextFill(result.failedJobs() == 0 ? GREEN : YELLOW);
+                                    form.lblDownloadInfo.setText("Batch finished: " + result.completedJobs() + " completed, " + result.failedJobs() + " failed");
+                                });
+                            }
                         }
-                        // int exitCode = downloadFile.getExitCode();
-                        removeJobFromList(job);
-                        setDownloadInfoColor(GREEN);
-                        /* no effect, list with added job is dropped immediately
-                        if (exitCode == 0) { // Success
-                            getHistory().addJob(job, false);
-                        }*/
-                    }
-                }
+                );
+                manager.execute(tempJobList, (job, listener) -> new FileDownloader(job, listener));
             }
             clearLink();
             clearLinkOutput();
@@ -462,6 +477,19 @@ public final class UIController {
             clearFilenameOutput();
             PROCESSING_BATCH.setValue(false);
         };
+    }
+
+    private void updateAggregateBatchUi(BatchProgressSnapshot snapshot, String message) {
+        Platform.runLater(() -> {
+            double progress = snapshot.progress();
+            form.pBar.setProgress(progress);
+            setFilenameOutput(GREEN, "Speed: " + UnitConverter.format(snapshot.bytesPerSecond(), 2) + "/s");
+            String summary = message != null && !message.isBlank()
+                    ? message
+                    : "Running " + snapshot.runningJobs() + ", queued " + snapshot.queuedJobs() + ", completed " + snapshot.completedJobs() + ", failed " + snapshot.failedJobs();
+            form.lblDownloadInfo.setText(summary);
+            form.lblDownloadInfo.setTextFill(snapshot.failedJobs() > 0 ? YELLOW : GREEN);
+        });
     }
 
     private String fileExists(String filename) {
@@ -583,14 +611,14 @@ public final class UIController {
         MenuItem miClear = new MenuItem("Clear");
         MenuItem miHelp = new MenuItem("Help");
         SeparatorMenuItem separator = new SeparatorMenuItem();
-        miDel.setOnAction(_ -> {
+        miDel.setOnAction(event -> {
             Job job = form.listView.getSelectionModel().getSelectedItem();
             if (job != null) {
                 removeJobFromList(job);
                 clearControls();
             }
         });
-        miClear.setOnAction(_ -> {
+        miClear.setOnAction(event -> {
             /* no effect. Manipulates a newly created list that is dropped immediately
             getJobs().clear();
              */
@@ -603,7 +631,7 @@ public final class UIController {
             M.msgFilenameInfo("");
             M.msgDirInfo("");
         });
-        miHelp.setOnAction(_ -> handleHelpWindow());
+        miHelp.setOnAction(event -> handleHelpWindow());
         return new ContextMenu(miDel, miClear, separator, miHelp);
     }
 
@@ -611,11 +639,11 @@ public final class UIController {
         ContextMenu cm = new ContextMenu();
         for (String folder : folders.getFolders()) {
             MenuItem mi = new MenuItem(folder);
-            mi.setOnAction(_ -> setDir(folder));
+            mi.setOnAction(event -> setDir(folder));
             cm.getItems().add(mi);
         }
         MenuItem mi = new MenuItem("Add Folder");
-        mi.setOnAction(_ -> getDirectory());
+        mi.setOnAction(event -> getDirectory());
         cm.getItems().add(mi);
         cm.getStyleClass().add("rightClick");
         form.tfDir.setContextMenu(cm);
@@ -864,7 +892,7 @@ public final class UIController {
         helpStage.setScene(infoScene);
         helpStage.setAlwaysOnTop(true);
         helpStage.setTitle("Help");
-        helpStage.setOnCloseRequest(_ -> helpStage.close());
+        helpStage.setOnCloseRequest(event -> helpStage.close());
         VBox.setVgrow(vox, Priority.ALWAYS);
         VBox.setVgrow(INFO_TF, Priority.ALWAYS);
         scrollPane.setVvalue(0.0);
